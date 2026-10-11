@@ -193,14 +193,14 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "135.4969"
 columns = { KvantEnhet = "135.4969.kvantenhet", KvantEnhet2 = "135.4969.kvantenhet2", Kvantenhet = "135.4969.kvantenhet" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "f83b7b39d5b18a527408c9bfbc7548c08aa7994ba159daf85bdd2308f4e43822"
+expected_evidence_sha256 = "119ef8749a1fd07b36e602170353650048824622e2dee9f9c33993030599232d"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "135.4027"
 columns = { Asni = "135.4027.asni", VEngs = "135.4027.vengs", Vsni = "135.4027.vsni" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "501512f6de3145d33b98811e36a478fd994c9643ff9f30c2cb651fd19a81a61d"
+expected_evidence_sha256 = "6e144e43ba57cc17e7dfcb65301ab39cb0ec48558a244073d43155d5feba79f2"
 
 [[variable]]
 native_id = "135.4969.kvantenhet"

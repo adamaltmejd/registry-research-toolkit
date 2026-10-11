@@ -97,6 +97,7 @@ slug = "v99"
 variant = "people"
 column = "AMB"
 versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -104,6 +105,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "MISS"
 versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "accepted delivery"
 noted = "2026-09-25"
 native_variable_id = 99
@@ -112,6 +114,7 @@ native_variable_id = 99
 variant = "people"
 column = "NOW"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:118,member:119}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -119,6 +122,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "ADDN"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:128,member:129}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 upstream = "additional-physical-column-in-version"
@@ -128,6 +132,7 @@ native_variable_id = 30
 variant = "people"
 column = "ADDW"
 versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "accepted delivery"
 noted = "2026-09-25"
 upstream = "additional-physical-column-in-version"

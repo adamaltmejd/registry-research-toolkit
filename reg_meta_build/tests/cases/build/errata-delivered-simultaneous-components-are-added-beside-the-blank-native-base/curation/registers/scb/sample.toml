@@ -23,6 +23,7 @@ columns_ref = "exact simultaneous components"
 variant = "people"
 column = "A"
 versions = ["2021"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:20,member:30}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -30,6 +31,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "B"
 versions = ["2021"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:21,member:30}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -37,5 +39,6 @@ noted = "2026-09-25"
 variant = "people"
 column = "C"
 versions = ["2021"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:22,member:30}}
 evidence = "accepted delivery"
 noted = "2026-09-25"

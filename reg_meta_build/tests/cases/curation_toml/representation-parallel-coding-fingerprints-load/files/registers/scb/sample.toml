@@ -9,6 +9,7 @@ variant = "1.10"
 coding_metadata = "per_column"
 valid_from = "2020-01-01"
 valid_to = "2020-12-31"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Complete finite native domains"
 noted = "2026-09-30"
 [[representation.parallel.columns]]

@@ -487,7 +487,7 @@ code = "unknown_support_key"
 subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 86)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"8ff12bf4033492f51691a0b25c7828925dbdd44fe4792bfb6958a056eb5bef21\"]}"]
-expected_evidence_sha256 = "87504c4cc227419f06a64427aaf5a13f0c6b0c75c1cb42494cd038f2e9542621"
+expected_evidence_sha256 = "e987e29ca6f38af2a4bddb2320aebbab8a067aa0025d875d281123888af5a95a"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
 
@@ -664,77 +664,77 @@ variable = "86.66"
 columns = { UTBP2 = "86.66.person-2", UTBP3 = "86.66.person-3", UTBP4 = "86.66.person-4", UTBP5 = "86.66.person-5", UTBP6 = "86.66.person-6", UTBP7 = "86.66.person-7", UTBP8 = "86.66.person-8", UTBP1 = "86.66.person-1" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "8a265b76fd6ac1f0682594ded57d7382a15b8d5454c502c4fe2e66ca3ffc613d"
+expected_evidence_sha256 = "316abd0b2bd249fe0d8742e8a1b70131fcfc845da87faabe4547a8016ad616dc"
 
 [[identity.partition]]
 variable = "86.302"
 columns = { pnumd2 = "86.302.person-2", pnumd4 = "86.302.person-4", pnumd5 = "86.302.person-5", pnumd6 = "86.302.person-6", pnumd7 = "86.302.person-7", pnumd8 = "86.302.person-8", pnumd1 = "86.302.person-1", pnumd3 = "86.302.person-3" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "af4bc4881338c72d7d1d1ba7dced5bdfd552b69e9a45b0d1396d123ca4a2a5c2"
+expected_evidence_sha256 = "61d02cd28f9bd4a9c29eee03e475dfb8ca571945536a6dbcdc8a59a212b2d0ac"
 
 [[identity.partition]]
 variable = "86.18187"
 columns = { kasku2 = "86.18187.person-2", kasku3 = "86.18187.person-3", kasku4 = "86.18187.person-4", kasku5 = "86.18187.person-5", kasku6 = "86.18187.person-6", kasku7 = "86.18187.person-7", kasku8 = "86.18187.person-8", kasku1 = "86.18187.person-1" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "685f73e0d2526de548a6266ef9702f2e627b36c388766d8d2ef76e9881e0f5fe"
+expected_evidence_sha256 = "56cc70e9fb3395db28c6d4c7da6052005e7db4b8265b1922e3cfdd6eab8de3ec"
 
 [[identity.partition]]
 variable = "86.40903"
 columns = { VK2506 = "86.40903.literal-vk2506", VK2321 = "86.40903.literal-vk2321" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "b2d4761b59655737dfc7025e55a3ef9c72f82231f79737c1012b045832c9e945"
+expected_evidence_sha256 = "6e1639f6f9b2309391976ef167101a12e6e090b3221929f3450f9425ea89d2ec"
 
 [[identity.partition]]
 variable = "86.40904"
 columns = { VK2127 = "86.40904.literal-vk2127", VK2331 = "86.40904.literal-vk2331" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "19f4c419dc80db31306c538e96f50ce15ef06647e2830f969302071a0e426251"
+expected_evidence_sha256 = "19a2253b726acfd32a384155e2ec3edef9a874e20306f60deaf12360c429b5ec"
 
 [[identity.partition]]
 variable = "86.40919"
 columns = { VK2362 = "86.40919.literal-vk2362", VK2645 = "86.40919.literal-vk2645", VK2605 = "86.40919.literal-vk2605" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "ea354884e99b6ca887b2080068ceff7de74c35493e93e8ad419e02a504f0c053"
+expected_evidence_sha256 = "ef35e37eb28bcbc3f69da5081ea1dd26f6d921897b20f855b78af3e12ac1ead0"
 
 [[identity.partition]]
 variable = "86.40946"
 columns = { VK2525 = "86.40946.literal-vk2525", VK2504 = "86.40946.literal-vk2504" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "9ddace2c039a9a4336b9911e3cb283cadd585712f402c171415e8601779a1c66"
+expected_evidence_sha256 = "640d85382baef0c862bb0f36cff0f3379c33eb3ba02c34c2a288613fc00a8f77"
 
 [[identity.partition]]
 variable = "86.45373"
 columns = { U105 = "86.45373.literal-u105", U10 = "86.45373.aggregation-copy" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "8e8a971a16f711476c1f0489c00f9fcd67d52f99ab47dff36190a784afd40342"
+expected_evidence_sha256 = "989183a4d67d07c2bfbf864332b77913d0c2d6d40c225b6ab76cc4f3fa0d2d79"
 
 [[identity.partition]]
 variable = "86.45390"
 columns = { U2221 = "86.45390.vehicle-loans", U224 = "86.45390.other-loans", U22 = "86.45390.total-excluding-mortgages" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "a10077225d5e7f580fdd956d9c787f0f2fb68816c524041ba0400e877905215d"
+expected_evidence_sha256 = "dbd0b8452c356de9843d36429c51fde96524a5c6e0eb5976ea8486ef45f5c4d9"
 
 [[identity.partition]]
 variable = "86.45391"
 columns = { U242 = "86.45391.organisations", U241 = "86.45391.private-persons", U24 = "86.45391.total" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "5da08eae7179589f2f8d326aed895dd61257b1d9d7af128341d012d69757d841"
+expected_evidence_sha256 = "a92d006838c66dbc48b25525549e73832a34ac796defd2bd0098fb3c02282295"
 
 [[identity.partition]]
 variable = "86.46210"
 columns = { HUT_del = "86.46210.source-native-question", UNDNR = "86.46210.source-native-question" }
 unassigned_columns = []
 columns_ref = "Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-expected_evidence_sha256 = "559ae1e977476022b3bf27b4c44d4040c5a0084913d55b1820181363fc3d4e23"
+expected_evidence_sha256 = "725f47320ac27d20ffc9ff16c7da87a25924cc416e0647dee384d4f7bca89584"
 
 [[identity.column_owner]]
 variable = "86.66"
@@ -1149,6 +1149,7 @@ variant = "86.1664"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "HUT_del", source_editions = ["2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "UNDNR", source_editions = ["2021"] }]
+expected_evidence_sha256 = "725f47320ac27d20ffc9ff16c7da87a25924cc416e0647dee384d4f7bca89584"
 evidence = "Both supplied fields explicitly mean collection part, with the same six own supplied codes/labels and operation. Preserve both literal columns and source associations; shared coding is justified by complete own-domain equality. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
 noted = "2026-10-02"
 
@@ -1157,49 +1158,49 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "86.40955"
 columns = { U0722 = "86.40955.u0722", VK2524 = "86.40955.vk2524", VK2627 = "86.40955.vk2627" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "46f48f655e8423abd6448b94daddb2375f56f10cdb942878a1185efea945ac4e"
+expected_evidence_sha256 = "11a92aca1a4cb53332ffedbce047cb6fdb2456ef59f2dcc2008b6ae0f04b0392"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "86.40446"
 columns = { RAD106 = "86.40446.rad106", VK2773 = "86.40446.vk2773", VK2777 = "86.40446.vk2777" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "a5b5f74daf91deb88c1c06561d9d15f96ea61ad16b7af37ac2477f03301802ca"
+expected_evidence_sha256 = "3f3de1ad2ca285b22f478b784e4e2416bf73a5930e5af728b63b283cc4a42123"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "86.44"
 columns = { BKON = "86.44.bkon", BKONZ = "86.44.bkonz", PKOEN2 = "86.44.pkoen2", PKOEN3 = "86.44.pkoen3", PKOEN4 = "86.44.pkoen4", PKOEN5 = "86.44.pkoen5", PKOEN6 = "86.44.pkoen6", PKOEN7 = "86.44.pkoen7", PKOEN8 = "86.44.pkoen8", UBKOEN = "86.44.ubkoen", pkoen2 = "86.44.pkoen2", pkoen3 = "86.44.pkoen3", pkoen4 = "86.44.pkoen4", pkoen5 = "86.44.pkoen5", pkoen6 = "86.44.pkoen6", pkoen7 = "86.44.pkoen7", pkoen8 = "86.44.pkoen8", ubkoen = "86.44.ubkoen" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "0925a35cb540da979b55b5a6e9a10a9b41c8e26a8a23620a4a30f3c78757d896"
+expected_evidence_sha256 = "9b4a9c83d193bd1d77a0c34a24ec2ce907a8294d4dd9b00117dca61b1ddb580b"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "86.6267"
 columns = { BALD = "86.6267.bald", PALD2 = "86.6267.pald2", PALD3 = "86.6267.pald3", PALD4 = "86.6267.pald4", PALD5 = "86.6267.pald5", PALD6 = "86.6267.pald6", PALD7 = "86.6267.pald7", PALD8 = "86.6267.pald8", UBALD = "86.6267.ubald", pald2 = "86.6267.pald2", pald3 = "86.6267.pald3", pald4 = "86.6267.pald4", pald5 = "86.6267.pald5", pald6 = "86.6267.pald6", pald7 = "86.6267.pald7", pald8 = "86.6267.pald8", ubald = "86.6267.ubald" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "db3b2eb03bdd0ecbb9db528aebcf806e7ea97a7791ff3c51527c47144741a73e"
+expected_evidence_sha256 = "0576138927ba36fafc947738122db36c71ef0704287ddcdfd1f4a253a532b6bf"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "86.75"
 columns = { CARB1 = "86.75.carb1", CARB2 = "86.75.carb2", CARB3 = "86.75.carb3", CARB4 = "86.75.carb4", CARB5 = "86.75.carb5", CARB6 = "86.75.carb6", CARB7 = "86.75.carb7", CARB8 = "86.75.carb8", scarb00 = "86.75.scarb00", scarb01 = "86.75.scarb01", scarb02 = "86.75.scarb02" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "2c45af3fd36e0f4c20145c2e2e91b329c730fa46647fb982ab1be4b358797cb1"
+expected_evidence_sha256 = "597f4a1ace97e60ff9caa773860de54fb87926cc2633c21f7ee1564bb61bc4bb"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "86.11193"
 columns = { HVIKTES = "86.11193.hviktes", WVIKT00 = "86.11193.wvikt00", WVIKT01 = "86.11193.wvikt01", WVIKT99 = "86.11193.wvikt99", hviktes = "86.11193.hviktes" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "c72f6df8888fee5707be3e71d0ac2d26be180e54f232c7d2b5cbca70112c4536"
+expected_evidence_sha256 = "4a51ed011f2bf1e911f3ff877dd5a735ddd28301d38bb5b7e5ca8917f83d9f47"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "86.4545"
 columns = { P2SEI = "86.4545.p2sei", P3SEI = "86.4545.p3sei", P4SEI = "86.4545.p4sei", P5SEI = "86.4545.p5sei", P6SEI = "86.4545.p6sei", P7SEI = "86.4545.p7sei", P8SEI = "86.4545.p8sei", SOCEK1 = "86.4545.socek1", SOCEK2 = "86.4545.socek2", SOCEK3 = "86.4545.socek3", SOCEK4 = "86.4545.socek4", SOCEK5 = "86.4545.socek5", UPSEI = "86.4545.upsei", p2sei = "86.4545.p2sei", p3sei = "86.4545.p3sei", p4sei = "86.4545.p4sei", p5sei = "86.4545.p5sei", p6sei = "86.4545.p6sei", p7sei = "86.4545.p7sei", socek1 = "86.4545.socek1", socek2 = "86.4545.socek2", socek3 = "86.4545.socek3", socek4 = "86.4545.socek4", socek5 = "86.4545.socek5", upsei = "86.4545.upsei" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "9880f57fb28a8bba46227d50743db3e72951a2a576b75a0a08abb98fe7e86e21"
+expected_evidence_sha256 = "e685cd43f7c7315008e9d390c220fe40838d74d7daee45a406b3d86a43c0a989"
 
 [[variable]]
 native_id = "86.40955.u0722"

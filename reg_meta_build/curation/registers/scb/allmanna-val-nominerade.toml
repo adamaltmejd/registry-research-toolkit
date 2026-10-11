@@ -177,7 +177,7 @@ code = "unknown_support_key"
 subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 239)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"b17cc420d6cce6cf3aaa1d405cabba0c186aee34b413f4ecf0755c65c8742d1d\"]}"]
-expected_evidence_sha256 = "d8b8baad6a8bb6035a72ea861be5b41c11eadf5b32fe717a9518486edf3df21f"
+expected_evidence_sha256 = "083a737764dd419bdc1584c3b5c7c7bf9f3a2e776bdeac78a7b146c04e0bc176"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
 
@@ -187,19 +187,19 @@ variable = "239.22348"
 columns = { CDISPH = "239.22348", CDISPHB = "239.22348" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
-expected_evidence_sha256 = "6a899b666d8cf06ca66cef4662e0906d3dc40d50722dfdd70cd49866e4e6f5dd"
+expected_evidence_sha256 = "50bb961875092f07effc1a169008def5bf174cc716c4bab537df6810194ea20e"
 
 [[identity.partition]]
 variable = "239.14775"
 columns = { valkretsnamn = "239.14775.valkretsnamn", Valkretsnamn = "239.14775.valkretsnamn", RI_valkretskod = "239.14775.ri-valkretskod", riksdagsvalkrets = "239.14775.ri-valkretskod" }
 columns_ref = "Complete original native family and physical-peer closure. Roles follow explicit source definition, operation and own code-list vintage. SUN2000/SUN2020/group/detail/old levels are kept separate; constituency code and literal name stay separate; electricity components and address fields preserve distinct source roles and prior public paths. KNr collision remains separately reviewed, not accepted by this default mapping. All original types, units, periods and contradictory text remain unchanged. Batch53-native-role-proof.json."
-expected_evidence_sha256 = "3c6d622717003e6e13f30e8ff6c4c3f6312bf7f0bed8b584dcdaf92a146ea0df"
+expected_evidence_sha256 = "47f49f732b084e2d0b3f58e11e1e35d7e2a466ee4665978353aadf8f6dedef5c"
 
 [[identity.partition]]
 variable = "239.16239"
 columns = { Valkretsnamn = "239.16239.valkretsnamn", KO_valkretskod = "239.16239.ko-valkretskod", kommunvalkrets = "239.16239.ko-valkretskod" }
 columns_ref = "Complete original native family and physical-peer closure. Roles follow explicit source definition, operation and own code-list vintage. SUN2000/SUN2020/group/detail/old levels are kept separate; constituency code and literal name stay separate; electricity components and address fields preserve distinct source roles and prior public paths. KNr collision remains separately reviewed, not accepted by this default mapping. All original types, units, periods and contradictory text remain unchanged. Batch53-native-role-proof.json."
-expected_evidence_sha256 = "217cb893327b93b6c59eaae712800165d5c4da819b6827b76d1d1e181ce1818d"
+expected_evidence_sha256 = "d2a40cc79b7aa5c7e14b8a4ab8162ccc5b2e30e5cb8dcb60f151dfb527ba7604"
 
 [[representation.parallel]]
 valid_from = "1998-01-01"
@@ -209,6 +209,7 @@ variable = "239.14775.ri-valkretskod"
 variant = "239.466"
 column_metadata = "per_column"
 columns = [{ valid_from = "1998-01-01", valid_to = "1998-12-31", column = "RI_valkretskod", source_editions = ["1998"] }, { valid_from = "1998-01-01", valid_to = "1998-12-31", column = "riksdagsvalkrets", source_editions = ["1998"] }]
+expected_evidence_sha256 = "24e0db1cc633f662e9bf93c6d4e71c8e7781e42fbccc56cc4be385f939bab076"
 evidence = "The same exact1998 source record is already explicitly projected to both physical constituency-code names by maintained checked delivery curation. Source definition positively identifies a code; both representations retain their own literal names and metadata and any own list. No equality of observed values or extension of a domain is asserted. All original raw fields and exact projection are guarded. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 
@@ -220,5 +221,6 @@ variable = "239.16239.ko-valkretskod"
 variant = "239.477"
 column_metadata = "per_column"
 columns = [{ valid_from = "1998-01-01", valid_to = "1998-12-31", column = "KO_valkretskod", source_editions = ["1998"] }, { valid_from = "1998-01-01", valid_to = "1998-12-31", column = "kommunvalkrets", source_editions = ["1998"] }]
+expected_evidence_sha256 = "09d978aeab6bb55e860e7bad890ea91340b7d80cc8edbe337ef4fcf378549615"
 evidence = "The same exact1998 source record is already explicitly projected to both physical constituency-code names by maintained checked delivery curation. Source definition positively identifies a code; both representations retain their own literal names and metadata and any own list. No equality of observed values or extension of a domain is asserted. All original raw fields and exact projection are guarded. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"

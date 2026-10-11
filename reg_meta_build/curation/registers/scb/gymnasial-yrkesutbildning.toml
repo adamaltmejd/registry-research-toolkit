@@ -81,7 +81,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "352.462"
 columns = { Stratum_2 = "352.462.stratum-2", stratum = "352.462.stratum" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "fc39c784ac814c333b82f1abc2ca5ad9f3be3e5b979b6ed1bec3230c63a255e2"
+expected_evidence_sha256 = "2d933397de19b39ef0fe38a2a403b21607ed8eb4b5d149a28b6c9b959726a3fe"
 
 [[variable]]
 native_id = "352.462.stratum-2"

@@ -374,7 +374,7 @@ valid_from = "1987-07-01"
 valid_to = "1988-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "559de57733b5d5ef6c5064ec55ce25c7e876fed0f25d67306da8564861e21f0e"
+expected_evidence_sha256 = "877cab434cbf7fa29d5452f52bd64b05f08b93912bd1bb1f48dce11e18854ac3"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -385,7 +385,7 @@ valid_from = "1988-07-01"
 valid_to = "1989-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "d778e6ad0f5975abbca1df077c296d1ee89cb89e478cc66150ea144e666e1583"
+expected_evidence_sha256 = "c4be438f29b2adafead995af0597ea054438f0ca3b84f621f8441923f9150836"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -396,7 +396,7 @@ valid_from = "1989-07-01"
 valid_to = "1990-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "a726a50e629d8ca17828fecca14936919931335654c1d7a26caa32510ce44afa"
+expected_evidence_sha256 = "2fff982e5320177fde297f2895951797d152eba702309358a752c110f17e56b3"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -407,7 +407,7 @@ valid_from = "1990-07-01"
 valid_to = "1991-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "6376a1708a3e73f344324a9a64b1bd95a9712a73a7137f6bcce19e84c9188c32"
+expected_evidence_sha256 = "4118100400b78039f1e1977b838c6cf9055a5068c3d6b0494633e5370d200b49"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -418,7 +418,7 @@ valid_from = "1991-07-01"
 valid_to = "1992-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "8f3847fe93a10cc5dd69193b622fa88f04ebcac0a7ca79bc4690395cd77aba59"
+expected_evidence_sha256 = "af78121430dfafac9ca26bb0e5095cc1b602c08ecbaa06810292a06320ab42fd"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -429,7 +429,7 @@ valid_from = "1994-07-01"
 valid_to = "1995-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "553b88066b04c81927f768b81eabce7c46d8d8e2617146a0e8a4bf9636bfceb6"
+expected_evidence_sha256 = "61ff85bf8ddebc14b2bc20d4678e5d6114722c479ffac99718be2317c781ac47"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -440,7 +440,7 @@ valid_from = "1995-07-01"
 valid_to = "1996-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "0a847e9704a8a84010ef8cb295fabbc1eb9bc939d15d911a2a34a8eb8ca783af"
+expected_evidence_sha256 = "5328ca027935470d484c4c2f99bd39450fcca61cabe7b6ea911272a2af5c8af4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -451,7 +451,7 @@ valid_from = "1996-07-01"
 valid_to = "1997-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "51a58c203f7179a0103ceb6da40d337f82d6ec091b58fc908c8726e2e7e7f761"
+expected_evidence_sha256 = "f8a31d2c76e14b188f10cbf861b33aa0218ce3100180312f0a952a7fc2f7d303"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -462,7 +462,7 @@ valid_from = "1987-07-01"
 valid_to = "1988-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "4150a25799948051c6084e8a92012ca6116034740b94980cfb7969b8d5f9c628"
+expected_evidence_sha256 = "826925b1103da87774579634420178325403619a5b0bf7eb03291fc54c6d68d6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -473,7 +473,7 @@ valid_from = "1988-07-01"
 valid_to = "1989-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "7e1a84fbffa235b627f1562b63787cb6db5e08389ef8edb4035616906cfdcb59"
+expected_evidence_sha256 = "2b225146136d3969792f14ab1d9728c3a927ed25448bab660145271352f7c106"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -484,7 +484,7 @@ valid_from = "1989-07-01"
 valid_to = "1990-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "adca79f976ff4b52af9fa5feb98d9a23911dda4b20e948ad72ec87bed935dec6"
+expected_evidence_sha256 = "0a31db55e85c33321b203178e8aa7d378dd167008c0cbe1924dd486ad633a8fe"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -495,7 +495,7 @@ valid_from = "1990-07-01"
 valid_to = "1991-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "3032fe351882e8459279fdb4aaf222b155c7e159e784fa4211e7ddde197b6df3"
+expected_evidence_sha256 = "d1c9b5c1b71f4a80fb3fc0f1795077732a8abdd2392b91d2c774fbb2b6946f60"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -506,7 +506,7 @@ valid_from = "1991-07-01"
 valid_to = "1992-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "febd6989a0717c18539e6c834de8a1154e3d684eff020294d72f6023d2d070e5"
+expected_evidence_sha256 = "f29527f8c1f6b81ab1f10704457c2110a2259177c77c8d86d5dfdcf4a1917821"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -517,7 +517,7 @@ valid_from = "1994-07-01"
 valid_to = "1995-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "3bc518be6191cf3a326316757042582f6515f4219f83df7f033059290317729d"
+expected_evidence_sha256 = "13c806ec5a3562a450a5c25748314e3b02a41bf4dc95bc63b62602d77c64f5e7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -528,7 +528,7 @@ valid_from = "1995-07-01"
 valid_to = "1996-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "ec289b53297c7b68b544563309225ecb8adfdee5f7694701312af2d6be44c366"
+expected_evidence_sha256 = "7cd99ebaecf5b0100e57eac1efdb231bc253b9b9b826e62a3ff14ab122c85178"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -539,7 +539,7 @@ valid_from = "1996-07-01"
 valid_to = "1997-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "e0ee281787543d5ccb11175026cf693fc16aad181e84d480d48b196bfa8055b5"
+expected_evidence_sha256 = "7a237a189ec6520487861e6ff6ec28fb10123e78d46693b8666d37ae2a81feb5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -550,7 +550,7 @@ valid_from = "1987-07-01"
 valid_to = "1988-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "d4bb24bb456967606511cc94c90afe6ca5eeb68a069c932325c3be34133b4e51"
+expected_evidence_sha256 = "aaa8ab3d591a04e5217050528e5e15a456de4dd556b64cc9ac22e3385e1c3e8b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -561,7 +561,7 @@ valid_from = "1988-07-01"
 valid_to = "1989-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "434afd4a63fbaafb400cdf70cae0554728b25b1b08b4e8692aaff8fd11d53f1c"
+expected_evidence_sha256 = "913b1dd5b0af258eefaf1e5c1f2ce58335d9ba21ddd36f87ae18dea0f9228e40"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -572,7 +572,7 @@ valid_from = "1989-07-01"
 valid_to = "1990-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "212593a8f797a07498e3431f79b3666e7fc0c209fc89b2d8d21bc30ad97ff805"
+expected_evidence_sha256 = "1ff94519026b19300d59b6431224f627708f8469f549330418228ea3d870f041"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -583,7 +583,7 @@ valid_from = "1990-07-01"
 valid_to = "1991-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "9499e5bdbdc15507b709470667ee512d80a2d103781c3d9b189fd8887d308319"
+expected_evidence_sha256 = "519102e8308cb7e0add56a98a355b784a73de31885f1487979a0ac24145f3437"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -594,7 +594,7 @@ valid_from = "1991-07-01"
 valid_to = "1992-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "9cd2fb2a3837f711a7dd3a8331cdc192dafdf1ed0c30ce8b0ee147723d283c3a"
+expected_evidence_sha256 = "de425d86b4299f9ef6eac443dbc5d2926703e5f10c02746f3c746944536b7577"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -605,7 +605,7 @@ valid_from = "1994-07-01"
 valid_to = "1995-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "814a53b4083d37ca92e9fcbe5922a6975f01550fca743952d6547bce72f0c1d5"
+expected_evidence_sha256 = "069f752a797523866e2491d4003de9407b58a427b8c9f041c169855a780b126f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -616,7 +616,7 @@ valid_from = "1995-07-01"
 valid_to = "1996-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "ea0a59c1d84e5fbd8b962fed51145a43426f6319c5140fd19e97b5aeae00f5e1"
+expected_evidence_sha256 = "c0a8aff65ea81de494a3b4f0750c7b2fcda1adfc95b254cf42963fc6b4ae82dc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -627,35 +627,35 @@ valid_from = "1996-07-01"
 valid_to = "1997-06-30"
 reason = "The source supplies no own country/region response-domain association for this exact historical window. Retain all source wording, literal columns, dates and known year-specific lists. Country-name suffixes and lists from other vintages do not establish the stored values for this window; no code/label or classification membership is invented. Keep only this window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
-expected_evidence_sha256 = "4e2b7f9fa7428595dbde6c9b36bf77673659e50cd11b9536a3d07bb10717ef93"
+expected_evidence_sha256 = "8a8921159a434f4756869c44f8823b415a7716f284c5606619ea07850e0bf9aa"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "189.3614"
 columns = { MeritVarde = "189.3614.meritvarde", MeritVarde_M2 = "189.3614.meritvarde-m2", Meritvarde = "189.3614.meritvarde" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "6c61cbf7ef8cbd81be4111c1ec3d7beaac8c90251ddba69f772e43e0946524f5"
+expected_evidence_sha256 = "9abfe23fcd55189ec8df50c3359c4b00a3bde70acec51eb841a281a8644af1ad"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "189.67"
 columns = { UtlBakGr = "189.67.utlbakgr", UtlBakGr2 = "189.67.utlbakgr2", UtlSvBakg = "189.67.utlsvbakg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "345aa69bee6c77d0ecf730021048fd9a873cc90d5374fac1d2631b9e28ec488a"
+expected_evidence_sha256 = "0e8e5b6fcd9dffae4fcda5b1d012b2796e93d1d446ee2ff0f06c83002bade208"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "189.30636"
 columns = { HT7 = "189.30636.ht7", HT8 = "189.30636.ht8", HT9 = "189.30636.ht9", TV1_HT7 = "189.30636.tv1-ht7", TV1_HT8 = "189.30636.tv1-ht8", TV1_HT9 = "189.30636.tv1-ht9", TV1_VT7 = "189.30636.tv1-vt7", TV1_VT8 = "189.30636.tv1-vt8", TV1_VT9 = "189.30636.tv1-vt9", VT7 = "189.30636.vt7", VT8 = "189.30636.vt8", VT9 = "189.30636.vt9" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "83c07c0465e712cda7ef724606a8ebf40aa7bd4fc5ec02e61890d10b3f9ba7e3"
+expected_evidence_sha256 = "b27982614031df0757987ef6a33d62c6525f1de1891c01e0fa3ae8cb0b2d3241"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "189.30638"
 columns = { TV2_HT7 = "189.30638.tv2-ht7", TV2_HT8 = "189.30638.tv2-ht8", TV2_HT9 = "189.30638.tv2-ht9", TV2_VT7 = "189.30638.tv2-vt7", TV2_VT8 = "189.30638.tv2-vt8", TV2_VT9 = "189.30638.tv2-vt9" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "6f1a2c49ba673500ac5a0699f0c65f699cafff104551d40e5b9c4caeda86f432"
+expected_evidence_sha256 = "ced10a107212fc9fc4b4a6eb72805cf642ab6ad752ff2236d7cc3eeaeaf897cf"
 
 [[variable]]
 native_id = "189.3614.meritvarde"
@@ -758,6 +758,7 @@ variant = "189.265"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2003-07-01", valid_to = "2004-06-30", column = "MeritVarde", source_editions = ["Läsåret 2003/2004"] }, { valid_from = "2003-07-01", valid_to = "2004-06-30", column = "Meritvarde", source_editions = ["Läsåret 2003/2004"] }]
+expected_evidence_sha256 = "17d1d3bda3a218941e71dda345188b33f2cbb6794306054c8b694fc1238a42ca"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -770,5 +771,6 @@ variant = "189.265"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2004-07-01", valid_to = "2005-06-30", column = "MeritVarde", source_editions = ["Läsåret 2004/2005"] }, { valid_from = "2004-07-01", valid_to = "2005-06-30", column = "Meritvarde", source_editions = ["Läsåret 2004/2005"] }]
+expected_evidence_sha256 = "b12b85e9cd7b868f6da6219570c6325af75c1dd937222d33e706f4aa06a60b9c"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"

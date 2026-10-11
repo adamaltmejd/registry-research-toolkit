@@ -191,7 +191,7 @@ valid_from = "2013-07-01"
 valid_to = "2013-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "d2a5c0282b1285289420821d09d017443abc6e4bd6b348869ce6ac374423247a"
+expected_evidence_sha256 = "823c5a14b3a38af7380cc68bc335d9b8f12fd2b02dddff91655a5980b2478d2c"
 expected_diagnostic_sha256 = "39e85599deabb357647f19c82e158966d46cf56444e6c98fd379bda7419a53ee"
 
 [[acknowledge]]
@@ -203,7 +203,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-06-30"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "e067740ec01cd4fa701e676513275aa52aa57e497c401538d97940dd9d9ee15d"
+expected_evidence_sha256 = "f74ad5a440662371ab56d035830869158049672f7eb860687c6af6aad98878d9"
 expected_diagnostic_sha256 = "31980feec68f6f93053889dd9285ccaa7d2851676b9c113e247509da4aa4b85b"
 
 [[acknowledge]]
@@ -215,7 +215,7 @@ valid_from = "2014-07-01"
 valid_to = "2014-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-residual18-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "40d0f052b8807b8277a50296fbf2303909560dd4f4b1ac3ad52b7d2c08203376"
+expected_evidence_sha256 = "fc1af6b48ed13d5a91f3d4edbfe1c75d2d35074c65802e91e7774ce8262778ba"
 expected_diagnostic_sha256 = "858816a77002df2293aafb578ead0d730a4cc6d28bf3771b3c26dbc8b838e837"
 
 [[identity.partition]]
@@ -223,7 +223,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "342.67"
 columns = { UTL_BAKG = "342.67.utl-bakg", UtlBakGr = "342.67.utlbakgr", UtlBakGr2 = "342.67.utlbakgr2", UtlSvBakg = "342.67.utlsvbakg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "6290acc6969124428b70789a9ed7cb87fcd02190c9d20dabeb56a23cfff4b31e"
+expected_evidence_sha256 = "1afe6a226143675b673b88efc78c22d9b05c3edeaae49e5394ff4657b22f41d0"
 
 [[variable]]
 native_id = "342.67.utl-bakg"

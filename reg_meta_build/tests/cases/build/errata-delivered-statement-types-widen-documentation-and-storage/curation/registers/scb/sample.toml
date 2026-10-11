@@ -97,6 +97,7 @@ slug = "v99"
 variant = "people"
 column = "V1"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:104}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -104,6 +105,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "V2"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:105}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -111,6 +113,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "V3"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:106}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -118,6 +121,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "V4"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:107}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -125,6 +129,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "V5"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:108}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -132,6 +137,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "V6"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:109}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -139,6 +145,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "V7"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:110}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -146,6 +153,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "V8"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:111}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -153,6 +161,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "STMT"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:132,member:133}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -160,6 +169,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "BLK"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:130,member:131}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 
@@ -167,6 +177,7 @@ noted = "2026-09-25"
 variant = "people"
 column = "ANC"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:114}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 native_variable_id = 22

@@ -2866,7 +2866,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "2847a9ec920081ef48b4b9d316ba78e35d0aba648ca45e6145949ce26d274983"
+expected_evidence_sha256 = "ce88b861ad36f47483f68bfabe6f9fc50cd90e28ee893b0e5e713f8125cff882"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2877,7 +2877,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "cc6d655e3b5d72b78bb995b7f7a3365f2a3fc37ff4515d9fcaa74cdc995cc3fc"
+expected_evidence_sha256 = "1dfdb991ae43c6019cbcde1ac5b5a0c80822d2c4e69a15ce853c63372635755f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2888,7 +2888,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "10678752ff50dcb4181cdbb3b666136f80258c7268bc4088a28b7ca005f5b4d1"
+expected_evidence_sha256 = "823b3a07754782506039927fbc3a282f4b0f0db60bd70e434fbd09e4168c6f88"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2899,7 +2899,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "bc563e76cca9103ce17fb6f1013aaa74ea574d664a4e2acb7fd982b0ad3dcf4e"
+expected_evidence_sha256 = "a2498a2adabca926a9edaaa89f3823b625cfd70b39eb1ad79f22123b85d5952c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2910,7 +2910,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "667f58ec4f2f11e63e26ed56ee859724ff0f49999e996643466addf408d623f1"
+expected_evidence_sha256 = "4051eee068b608b6efce9f64f0c941fd3a4e1a0ba724cc6d5466229773997c66"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2921,7 +2921,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "c95be10b15c20e46740d7818f91444ed0ca86b276098ec956cad8d9f06991e5b"
+expected_evidence_sha256 = "c594f96268a129949254af7908262542677b31df3e9f1695f452ffec1c84dbe8"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2932,7 +2932,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "f251c4379541f35159458e9e6820d79bb0059b71ab34a12b4ded4bfbfb5deb99"
+expected_evidence_sha256 = "c785c10cf24bbc6a9b2ef19f50787a21d15e5ce460e7a2e52b2de7b998459963"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2943,7 +2943,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "872dd4adaebaf32bead3ee8b8ccf123ae2dfd237ee4bc9e01eea6705a65a9680"
+expected_evidence_sha256 = "434ae2f6b7eb919df67946e5ff0579f914b5dc8b7dcc86ab22fa131d399ad9b4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2954,7 +2954,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "c229286d88dd5ffd3a5f690f10be7ef6ab988aa596c3a29a57eff77f4989b745"
+expected_evidence_sha256 = "8af0bd71e5fe491a6061cca9bed820ed0069fd01c2b373e79abe424a68540c81"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2965,7 +2965,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "8952f22e064fad5658c699fb13b0ad8bc5d6ede13a69e897bc35bcef6dd35101"
+expected_evidence_sha256 = "d4ba1ab121343c1d3235b82f6409fb3c656b76c12f52e4cb945adff871b60484"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2976,7 +2976,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "42294606ce3cab21946de271f2917c7d05bb28941a669eacfa25c0397a456e87"
+expected_evidence_sha256 = "a953fe16432d252d7fe01510ed6ce1e3db29e0175469f0eb8438461907806017"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2987,7 +2987,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "c582bf801c5f1963f8946d5404ef6e100d1f6439a2bf35795547b2b4a8c568c6"
+expected_evidence_sha256 = "600d26928b3c1c59acd8021b944a5ceed557abcfb807cd0d3a361bcd50741ef8"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -2998,7 +2998,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "cc044bf084168e5001966fc2d000ca063bd6018cf0f92b74ebe30c3f6d1750a5"
+expected_evidence_sha256 = "e3678d76ea8f24b66f41c7286c01bfd712a4e8ef217e789f9ee9fa84c95ae99a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3009,7 +3009,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "b3f7ddf5f73592c24ef81f97e338604a45c9444ce061c01c7b28dd2c02c45def"
+expected_evidence_sha256 = "0c50f2fb35f80c3790b631d76d80fcced571b01afa270fd6d1462ece2e4494f5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3020,7 +3020,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "65cbfb215bc558a44dd95a4e46288da56e5cc162d68c58aa53ecf2dd90200a5e"
+expected_evidence_sha256 = "e2947883f7c9a82181bf4b511e8b5a4a388732f2490b3cb9973a406e664cbb01"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3031,7 +3031,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "0d7065c340ff643c7772259d5ff0a9644da5def490cc69953ae07781397eec8d"
+expected_evidence_sha256 = "963fdf1181f63025cce8ec6d70054d12ad6099de30859dfc9000acc93445a4ac"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3042,7 +3042,7 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "cc2a05baf2c19cf9d99c2d91f8dd62076d9c7f65e1827c569ee7b974f3e31bdf"
+expected_evidence_sha256 = "3eedaa1c322a3c366dae1923e395d2235a63c9c1ce53264723734c293510771a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3053,7 +3053,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "fcc84e689f94facf4501b759457eb850d93fa9feba58ecbeef4720815de529c5"
+expected_evidence_sha256 = "f0930e34f8b0216075db6f3729d915e71818f946559a5e3beacd9bd6bee7c05d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3064,7 +3064,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "f0823a5e14e980d7c9f48fc577fe7bc911d6df0e9ad6b10e7d01633da3d29821"
+expected_evidence_sha256 = "ac00aeaaa48baf1b046ac0222ed82b82bd16af7b6e608fc287119193052eab82"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3075,7 +3075,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "7bf9835ed846b71c699d5ab4996f27d198b5005289ede47bae84659e087f05b5"
+expected_evidence_sha256 = "2f2a7626e88bcdf5940bc03c35a377d7517d9f8018fcf607fa62ab039ec253e0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3086,7 +3086,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "67024256579b2c244a04debeb345e28d2c6cda098a422694a6b50570aa5ab9e9"
+expected_evidence_sha256 = "869e1a9899c6a77a3238c71802a74fbf2dcd9391119fb1921b9f3c419d14703f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3097,7 +3097,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "1b9e7689836c7a59ca41710e3744e52f33f5850d89f7ff5240ed1b98b76d5b0e"
+expected_evidence_sha256 = "01a2a138ba80dd3cacdbae05edcb42f2acf2dace78478136724a441c236caf01"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3108,7 +3108,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "c277ccab521517f5eaa007ce5092412a58cbd2b61df47abc8396316cec6417ce"
+expected_evidence_sha256 = "12806f74e069ffe572a4789c3ce9af65c8987b9702833252fa66cca44fc3620e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3119,7 +3119,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "45137cdc3cf7fae60a1ee7c6728f0b3118bbbaeb7b81ae24db0ecae7cf159456"
+expected_evidence_sha256 = "8160129c7b14994c2aeb244a1c7f4cf7def8aacf02eab3df7bd3a30b41abe0ef"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3130,7 +3130,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "007df18018db0786586a0bc61d89d36205a7d2d4fa2479c8c449e2d520ff8ab3"
+expected_evidence_sha256 = "7285f1180d3abf70d5214298f91179e25e26ab6f26b94bc0655c8c2d3c7820a7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3141,7 +3141,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "97a449d57b14c997fc89ca161eb9d8f48fd17c28dc74e83d7f25bd40e61e3269"
+expected_evidence_sha256 = "b11509c779f7dd628493e81d8996bd6c8109cf3f3938c32e245dde62ad6e41cd"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3152,7 +3152,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "6fe9a7dfb5ba014e272ea83a5f75508660868716125e2b5029daae93c505945b"
+expected_evidence_sha256 = "3adc724164c1e29b5a1e17688b7a8b366037f4a6992850df0d25e0948af52967"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3163,7 +3163,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "e14c02404d18519445a9cf7fc753d78addcd8a1a0421abca215dfa203a80def4"
+expected_evidence_sha256 = "118d9d5601583d673e4c69ad3c6a4d8ff1c037de6010b0c4bc65b0759df793f4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3174,7 +3174,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "6a0d69f50c996e8fb2912d075ac71f3e05ddabe18c660f4eeed169248c6b2176"
+expected_evidence_sha256 = "0775a883b37f84cf65c1cd9ee46505d5c5019f9dafbf7b85e36a4526c3f4f296"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3185,7 +3185,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "fbb3abeb7692fc450f1ee22aab8f1b038d0f07568f8905f17b71b03cdf4f7fc1"
+expected_evidence_sha256 = "6fada5524a209f5bb5b62dbe80b2e3441e36abfc1f322042b3c2002d6f41509b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3196,7 +3196,7 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "8240ef594de549b503dc5f7768ba165b954300648a257d2584c83c7381372542"
+expected_evidence_sha256 = "c5cc63a0ec6791118e1b22f495e294a96e732a153b644a2a63373df59debb020"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3207,7 +3207,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "619d5f3975aaba72acbf0a9482fe7039b377f34f14bd59355227947e09b4a8cb"
+expected_evidence_sha256 = "8872b38654a6b516d37cd41f130e8c4d4769ee4f2cdb1df55b0c35b7496bb5a6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3218,7 +3218,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "9acb9c83f7551506dd39674a07ecb15bf4832c260b3dbe33ddcbe766ed75933c"
+expected_evidence_sha256 = "0889d88a8d91a46e18d5e7f94585526381bbe8e13b72d3880f4c8632373543f4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3229,7 +3229,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "64c436c1067af5c4f21785b08ccf5253b3bbbd1c44825d200d86c84f6c997ac9"
+expected_evidence_sha256 = "4740e2b7927c4631f64f9eae0eb0075f057434be4d9ebfc2edaed739f33520c0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3240,7 +3240,7 @@ valid_from = "1993-01-01"
 valid_to = "1993-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "9db1dcbfc126f03a093ee6f33bdc0d01bfed84d64140855f06b86ec8bafb4282"
+expected_evidence_sha256 = "410d4e6def52f0f22b6d9d4c7083fd60f1ddc729af55645334ff3d404492029d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3251,7 +3251,7 @@ valid_from = "1994-01-01"
 valid_to = "1994-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "171afef1bf11440805f4b40ef0b013f01c68a697426a8eecaf29b05e7362b854"
+expected_evidence_sha256 = "a0331d67e0ccf6464d96a3ffc8e13aaca2c733278c531ecf8b723a320ec5bb9e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3262,7 +3262,7 @@ valid_from = "1995-01-01"
 valid_to = "1995-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "8e6600e807ca361b288389f7d9a2565f1ebbd479ceb540b8d3ac7f1e17377d1e"
+expected_evidence_sha256 = "74139ab4b5aacf48acd6ec0f904252f7d89c590d301200159034b7e5a2e24879"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3273,7 +3273,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "2447b2aa0a2be7778f6ecd3621364f9324fbdc0dbe389df074f4141b6eb8139a"
+expected_evidence_sha256 = "d0871f37947ab0e0c3b6fd1c914d9eedf48c2e59aa28003defd74d3a16aa1712"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3284,7 +3284,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4b2ae4235fbbc7b244fa34ede789b2ad2fe2dad960490b9137fd2bbecb0cdae1"
+expected_evidence_sha256 = "0d74e98b37c06720a69571b22d83dbc3544220e96af6b5ea2b4b8ac04959031c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3295,7 +3295,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "eaff3adf0403b086bf464d11fae9fed4be2802d9c4095182a258e7ee6f0dc4e5"
+expected_evidence_sha256 = "1e4fb5d6b540c4e7f373dfbe535784bb8e519b875b53c5acecf79de065374fac"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3306,7 +3306,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "b6e72326b3d1aa64ddda2c47905d037184525d562ad4d92d5dabd0b126fd5e1b"
+expected_evidence_sha256 = "18f00f997cac41e84b4d433eea205f97227013a6d4363e36f1cf3e6e080a4e1f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3317,7 +3317,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4c303611fbf71b2fd5ab1b5557fc5962851318d80bfaa681d130b4ed60b7cfbf"
+expected_evidence_sha256 = "bb8c6445bf99620f9594ef55c92d6216b11b109b263f3dc6fdef10834a649406"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3328,7 +3328,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "37c28e5986b80778b16ba6d3f0e94273ea501f9b7b16c7551afb85fd69db124b"
+expected_evidence_sha256 = "d4cdb3abd3083ca3f2417a6f057784c8e4bd6c83c2e5890daec0fa1bd70a4771"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3339,7 +3339,7 @@ valid_from = "2015-08-17"
 valid_to = "2015-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "acde034da0e154238d3ed200a3b221fd317eaddd16967f65df8b9b5b15b58dd0"
+expected_evidence_sha256 = "881b443dea744743da5586499982abdf8b0b5e5a58a8aca83e878d6471d9b1fb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3350,7 +3350,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a0f512a4702de76381dc622a3331247ae9ed81f19388decc7767a9d8e319858e"
+expected_evidence_sha256 = "9d4fe9dfcdec16c3d0e59a8f447744f455c3e5cf51ed9d098c2e19a083bc93b0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3361,7 +3361,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "19bc6ee69bc1a1f879f4daafd5be49824d54735a5e95be83e3cf6f4f36bb74fd"
+expected_evidence_sha256 = "b82e2ee9df69aa73147ddf4173e92b29f03ed7b4909153503e7058999752a250"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3372,7 +3372,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "3cf919acf9cfa660c8d41771a4fd8e313f8636cf19ab9c038aaad111748a3d93"
+expected_evidence_sha256 = "335efcc7a2cf6ab18f58ac2319d82702a5432583c4b16335a0e50dbec103b32c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3383,7 +3383,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "8d3b8342b66510623223a62098710454447b6818b5fa0941f57ea3d7ec9b45c3"
+expected_evidence_sha256 = "0593142b2b5b92bdf5ae1bc103545076813d0af4801c39c911f6662b5c39d743"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3394,7 +3394,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a3194a35377d8c8fe95f3311f485010f56ccfb26a7d095c7bc7f385f1afd494f"
+expected_evidence_sha256 = "5a6d5f348db2e25bf06eba421c1318a2cb5aebb357552a60038a912172e5b319"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3405,7 +3405,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a954b052551d3c6727829b07ac48e5ec7f33faca79318ab88923f7749acff5b5"
+expected_evidence_sha256 = "105bf508934351158394a31dd02217255aa7f9c21b8e3c03727e10d23a1672ea"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3416,7 +3416,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "8ea5e22e2a7acc85f879512ec3ea343cb398bff4ac814a32f2c4c5700cc1c11d"
+expected_evidence_sha256 = "a76044a84a65ae4a7ed6078a5d2e036b8f1d7c409fc01aaeed89f356b8c0311c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3427,7 +3427,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "ad73fd304bdbe0ffb2b51917aa3025775a3cb0c390f3b59d32b4d233995d87e0"
+expected_evidence_sha256 = "6d1a3fb6396d5295f01c3d29c7efa5bdd5b3db2e0e6d70ed90fd4ea0c78e1b1d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3438,7 +3438,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "32f605862631d521e95667db7f0820e3843968e9d0a815810d016ea5aa293581"
+expected_evidence_sha256 = "ae8bdb6afb16e7356a113b17f66ab8b716a83ff9ac1112945684f5c128789c89"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3449,7 +3449,7 @@ valid_from = "2015-08-17"
 valid_to = "2015-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "8cc14d15b9435b0de25890d15c9c63450e27417b8f1b68d0bea18e8f1c468ed1"
+expected_evidence_sha256 = "797f80cadceaad2996dbe25306f8a37a7b5fbfebebdd45adb098bb368607df08"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3460,7 +3460,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "2c8de06a16721a36efd4d80a9546e1c436bb8182c8eba8fcce9d7b290b9d58cc"
+expected_evidence_sha256 = "fd94cb2ded0fadd560cb7fa6b907caa9bcd9523bdb93f7ee6b5e30ffb95cfeb8"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3471,7 +3471,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "b1f32f1754f4cd0f1ec7e2c28d9a730181d74a68c854323ddba04444ffe5c00e"
+expected_evidence_sha256 = "890f1abc705bc5ff20699dedea7fe3944361c1a4dd0f23f8582de20a35659ba7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3482,7 +3482,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "3b584805fb8c75e08afead27e765e84b7fba650dac8acd979d8e097adf4cb030"
+expected_evidence_sha256 = "4aa08629dfa26cc2d71f1de5a5ce015a11b8c94929b0f97c7f2c1111c38f55c8"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3493,7 +3493,7 @@ valid_from = "1990-01-01"
 valid_to = "1990-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "b61d06750ce148ecbae7ac22f219da760026348ab1ce9314dc5ae4c6c502a1fb"
+expected_evidence_sha256 = "6513b40dfe2a38a4b2323519bb96ba4f21cb82629ba99ef60bdb72b1e24d595f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3504,7 +3504,7 @@ valid_from = "1991-01-01"
 valid_to = "1991-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "c295aeab10da441ba503af66029f9c69bd51250b329a5b468bd4bcd9376107a6"
+expected_evidence_sha256 = "d6946c3a4e246e84773fa4d10febfe74bb39b2147d7e8ef3ee00234024f7f3a0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3515,7 +3515,7 @@ valid_from = "1990-01-01"
 valid_to = "1990-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "ccc354595dedd885b3c7dace6f584cb6e5b73684f0ee85ce50e4e5cd07af798b"
+expected_evidence_sha256 = "da4e19d35f0d9997dd456304ed3b267302e5dcd8d022f1fce54ca34a207eaa22"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3526,7 +3526,7 @@ valid_from = "1991-01-01"
 valid_to = "1991-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "86bbb67073d3ac0cba927b98907bf1a8b438b200b2a1702d5331938df2e918ee"
+expected_evidence_sha256 = "33095b2981aae9aa976332c571db244bae8843bcd9d584138104caf2b592f804"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3537,7 +3537,7 @@ valid_from = "1996-01-01"
 valid_to = "1996-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "899abc63bd9dd41cc03f8c4116c84fe7a03c5a01e851390e588fca3c1cf58b5a"
+expected_evidence_sha256 = "a236d4f4ab92c3b9cad64a2338820ed0b271f9eac752f99792a6d0e3df2b1585"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3548,7 +3548,7 @@ valid_from = "1997-01-01"
 valid_to = "1997-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "282d4a73339dfba00c37020ee3e2088314a9a979a61cc30f34647dbd49c19f96"
+expected_evidence_sha256 = "cc63962de7aa09b3ba389ea3c0ffe0838a2da8f4862dfd666e97b5ad3f897607"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3559,7 +3559,7 @@ valid_from = "1998-01-01"
 valid_to = "1998-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "30fcdbd076413ec0de280666f9b43a8c2fe9e82225ab4f4d4466b2c4980a0795"
+expected_evidence_sha256 = "aad806d2c0fb55fa7ab3875801fe5997f599e3cbfb8eab645c3aa56c6ee635be"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3570,7 +3570,7 @@ valid_from = "1999-01-01"
 valid_to = "1999-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "7c7f6adb393d3c4e756fb51b1a75dd661cb895d7028214480f526d352ff23578"
+expected_evidence_sha256 = "cc304a3a608913a2c0ff097b53294e6e9aefe37b883a46489497d58abafd5042"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3581,7 +3581,7 @@ valid_from = "2000-01-01"
 valid_to = "2000-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "6b71818cba8e55f15bff7a1e2d3c8a6e166684123fc06cb42dbb6b437b1db795"
+expected_evidence_sha256 = "a330b9baf98a7efdb73db661cf5b00f829a6bd01b5702852cdc3a88b7a25e588"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3592,7 +3592,7 @@ valid_from = "2001-01-01"
 valid_to = "2001-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "dfb2ce91a35f3c8fe940d31752482a9c434aeae574fdf726e0bf722a470cdf5e"
+expected_evidence_sha256 = "fa9ec1aa8eac39854cb7405738067294820c0d131666e51cc45711be767b3ab5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3603,7 +3603,7 @@ valid_from = "2002-01-01"
 valid_to = "2002-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "00bc5a77f22908f277d1f2a391fee07ae79e7e802c5a8743459fbb1649996131"
+expected_evidence_sha256 = "4998582eed9f89a8bce11ca24c24efcad77bb38c53ff8cee0ae03c7051c176c6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3614,7 +3614,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "62c5f33dda94624caf612de2041d8227ddbdcf2690bdec5e0ab49e61f28c7ada"
+expected_evidence_sha256 = "8c3db60ae7e7a973a2ddaff29140cf2235c77043a208c38da95d4993598e79dd"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3625,7 +3625,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4fccc533a4502ee86650ba5bcb26bb755d27be00655ef76fa4f21f5f69cb344b"
+expected_evidence_sha256 = "9df85e428e28f0d9a8db664d4d2703d62aeecc31a1e4209ba6a581a845612875"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3636,7 +3636,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "bef9ffbd19e00b59f343ead60868c405817814deb7b6669fd7d36ece3e86cdd5"
+expected_evidence_sha256 = "a7d4ebed84b4dc9dde4a1009977b14c43e5433c321f48e8561bbd7fc86e63a9e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3647,7 +3647,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "5bbeeed1cce91ea9cc4d9c89d6d52e80a3c1b929535ad7b8b99de4041dcbc2ad"
+expected_evidence_sha256 = "4de13f1dc7970d42b535ad6c0aa6ce9fbf8f6333c58e7d9bb5c14d584c27a324"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3658,7 +3658,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "3e1bbdc31cdaff800f438db8ce2ef80381d183dd8a84e9d953c70640a2dee2bd"
+expected_evidence_sha256 = "c314b0ed85470f163b4a47e7b2a685213129e5a9468a018e8a8f3c87566fcd52"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3669,7 +3669,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a4df05c5bb4a9c2a254e3ab592d1abf941f8d04ea76907bdb0a0b3f95b441d02"
+expected_evidence_sha256 = "ea5f706ec3c016ef35605585d67527d830220c9b1d5ff5ca66258500720e6704"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3680,7 +3680,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a67361991f8b385e20a8679285f8479c9b4a8e9b2ab9a6601d297d1f1eccbc72"
+expected_evidence_sha256 = "50a20223a081a7586fab84ae47397111092b2b727031a921013665e3c2b225cc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3691,7 +3691,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "58bbae71dcb134260385d59793b57b5e6813c424046800dc5578cacf2983bc2c"
+expected_evidence_sha256 = "a5e1f3fcd335c25668920ada057217304f530874a00df9d2fa8d73039cfd26dc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3702,7 +3702,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a358ee04ed9847f6e684ade3f51b0c7d2f18ea803f52ff53c63b7cb0b30b2ad5"
+expected_evidence_sha256 = "d08fea3ba7e6f419b72f73adc53f4d6edcc2376a9317ef88f4231464f659d084"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3713,7 +3713,7 @@ valid_from = "2015-08-17"
 valid_to = "2015-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "22a2870eb9ef095795959008bab0699cb617c231a7070b511e8722ad7960a3a1"
+expected_evidence_sha256 = "9b31936540cab59ec8d91e5189e2ce99e31947581fb005c43f4f7b5d2769ee74"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3724,7 +3724,7 @@ valid_from = "2018-03-15"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "114d0e95e3fe50b0e0f6c8c5822209837fbacdc05d1d77d2f118a5fb51463fc7"
+expected_evidence_sha256 = "f50ea5f7ddd3506c8e9e7ac99e759bd2cb85fe195092b217a54a9c01344a26d5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3735,7 +3735,7 @@ valid_from = "2013-03-18"
 valid_to = "2013-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "286a8492b6566b0562c9816bba4711f1d48c2f653804fda01e13d5f4530c1a73"
+expected_evidence_sha256 = "8f8b8ffb964d66d4477f1ef45ea986a631f8c2c00dc3bbf2deb3c0b25bf81087"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3746,7 +3746,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "cff48c9e50ed2d448c8f527b94b995012d33c57d273401dccb3264f06a47f440"
+expected_evidence_sha256 = "675fb47c3043142f911ac54cfb08033ba6766377cdf847b30d5d7e21c2112eb2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3757,7 +3757,7 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "883d6e29eb82a2c4ed02c1563c89c5c25b6d09226d923ba0dc3704828cb045ac"
+expected_evidence_sha256 = "5ee3c41f7bbfeb9de99b08a173ee8ad23243a1e7bd14f7be3a5fbc09f0cb6348"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3768,7 +3768,7 @@ valid_from = "2018-03-15"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a78f36da4ef518814b73bb036cb68cd1abe13e1ead91b7f9d201b1f8df51b666"
+expected_evidence_sha256 = "20a0a66e7d29df55191fbfae77ecf9154bf6480c6f8abbc5c533862766a3b1be"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3779,7 +3779,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "15875ac7e45545c45762dbf3e5c3bff449e194a4a0cc8b2ea18d797eae694907"
+expected_evidence_sha256 = "4aecfab500589bd86ffe9340a99535fcaede485333e8d0141ab952728d145bd2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3790,7 +3790,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "e73442631c1733b2e1722e8f38d60593dbced649436625c53ff678346264e89c"
+expected_evidence_sha256 = "e956f118178f686aa0fbee66faddff24092df1e3cf2fba3ac13e17fea98ccb52"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3801,7 +3801,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "f3e2e34181929af718228c1894f0f3470e66c1ecc3d104239a4c1012d1edd1c4"
+expected_evidence_sha256 = "bd9ddd90da0ce43c64a0f7bbb7882491eac8807e72a77faa9272bfed510a9f49"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3812,7 +3812,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "1a79ad3eedc10a31247a7dcbd2c3f7578b72fc1ed21a65b586fbf388e1a6bc03"
+expected_evidence_sha256 = "4448e96cf88814cbfd563806952282d491c3a8d07c0d77009608907f59eb4f8c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3823,7 +3823,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "7fe531e5cdcb10255d2d69ed723cc94ed6f410070df15e1e34e5022181d73c6e"
+expected_evidence_sha256 = "1e907523545ecbb95c32ddf35833a6ceee35800f2142f118a13278a4a8c17224"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3834,7 +3834,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "124a2b1d86e9d688e5cff38de190a46976e60c44cfd696469f32527c30cc957b"
+expected_evidence_sha256 = "98d1fa8f8da6ba7f7259dfbb5b4da27f658c6f2b82d49c97e848dcc33bd32495"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3845,7 +3845,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "a73d9d61ac914c0f9bedfa24332578e16a4ba2cb5032357a9707aae4f0168395"
+expected_evidence_sha256 = "a64504d3c9940301cc9047157341d5374eaf34f325f4c50944fde4d28b186874"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3856,7 +3856,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "5312697ed8b3f287cd6bf449087c61f87d5c445de8030961167a2b1f071c6cbf"
+expected_evidence_sha256 = "00920f2d2b3acdc44a76545d315d6a6599678f7e4044a86f9aefba0240a41469"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3867,7 +3867,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "b083cbedbd8837db73cd0dac71ccbc68373028842e9ec4b3c7d5fee2cc020289"
+expected_evidence_sha256 = "3a6d043a4c950f5b3925da04e1645e23d3290f0534e51d21c275b03087d2e80b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3878,7 +3878,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "6f7efed70c821ae17ec73a398ed6b739272dece15f7a326a4fed1b476c066b64"
+expected_evidence_sha256 = "bd8be9181f9ef107c5f24e3a56be80fd3957715b42ef53e00983b6683a668630"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3889,7 +3889,7 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "31e59d8e54a9832145f0cd8b62ab5db5e926766dd7b1a5fae6976338ffc76dc6"
+expected_evidence_sha256 = "497c355f24cd6f1ac7ab90f79b9580345260b75dbbf1e88f7619e0f3ddc8f0f0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3900,7 +3900,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "bfe7f0d91a5ee453fdf67f26cfc3635dcbc06372ef93d024a3c0e782d24a9b32"
+expected_evidence_sha256 = "eef8d675a422df6de285f75c98a997c2b8cba9dc2939607cd3516a63f3bb3222"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3911,7 +3911,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "fe2956b23c64a6159f6e384bcaf2007c7a616aef95a8341929e1f1282d6aee8e"
+expected_evidence_sha256 = "47ae212182aaac6cf39df0553220065018c29f96413cff71568403f4fbe29d3a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3922,7 +3922,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "f278f9778706de85c8ddd6623af5d3ab9cf09afaa05f8da72035bd0588e5ee65"
+expected_evidence_sha256 = "d42c4b784433a39b5144467ad597afa50b8c5cb20ef9b2a53396ca02e5f04bc2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3933,7 +3933,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "d561dfa0d4761c0951c696d16a8f7dc0e1392ea336ff06d0a0bda8fcb22a9681"
+expected_evidence_sha256 = "3c5a39247b9a900f1b3027b0beb75ad3409933eb8d5a54674f1eede67f7bf4d0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3944,7 +3944,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4043f2905e58b3d229621b661d7419b5642154bdfd3de92090c298cd3d3836e7"
+expected_evidence_sha256 = "087694b2082310835a0cbc66396558c04994bc83ce15413de9db02c3d5c110bc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3955,7 +3955,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "e4b4407bc7f530ec0faf33b726016e67ee6227f8557d79fbc047eb44424c8111"
+expected_evidence_sha256 = "d8a1d895b111fd4d241a4a270f0b2fa29df7733c8a5b1a74dd91429dda0a0c5a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3966,7 +3966,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "3744713abc8d0348957ecb88458e936f60268429b5c5f8be84fbbef916926cff"
+expected_evidence_sha256 = "f4af43cca135c7ad1af108d9252e8981525e33365cc251024ec1a44e701f329d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3977,7 +3977,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "616b0753e9e2f3a6f05761d56f70d100b561c3e5405478b7fef2afd49245e7b3"
+expected_evidence_sha256 = "5dc64c7480fff7e4666aebf46a63a75c8ece2d18c9bfa03b6bdbd6c267dbd0fe"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3988,7 +3988,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "7655c55771b60bdbfe0c0ab358f185e2951e1ae6585043156940d481145ef4d2"
+expected_evidence_sha256 = "8cb25000fc18a150f42727ebf61dfde0e1dd6ec6e96725587f690c3aed61e0d7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -3999,7 +3999,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "23acfd6919b844359cbdaf21729ad894895a7541e898bb4bedae4f507206a653"
+expected_evidence_sha256 = "b785fccc93df6d75a17b1c5971a2a8f313b9a910b557860e58a821a5aa9efd4b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4010,7 +4010,7 @@ valid_from = "2012-01-01"
 valid_to = "2012-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "c894fdfe36cd5fed3d8e9f20c27d8c5cb4f1ebc444cbcd5566497c9da2f526d6"
+expected_evidence_sha256 = "f9cecb42820155210f2ad8d94c1ae6dc2664e95c4bb6f823c7c9835895a43cfb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4021,7 +4021,7 @@ valid_from = "2013-01-01"
 valid_to = "2013-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "edfe561b9c02a671959b7158979cdcf056790014e4407e67d6758d1211f2c3ac"
+expected_evidence_sha256 = "e7ba672bd40b0089ce498167a9c39fd230f451864a84e2cf13d16b7206166158"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4032,7 +4032,7 @@ valid_from = "2014-01-01"
 valid_to = "2014-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "157445a8ec06c37d01d15aaa7b143cf066dcd0bd4ae8fb026fbc512908103524"
+expected_evidence_sha256 = "03cfd94df905eebc2cf35277ff824babc30a830c6a91693576676a860f91156b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4043,7 +4043,7 @@ valid_from = "2015-01-01"
 valid_to = "2015-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "1cacd5fbafa65fdb38f84bc1b6af3c9d21807050e9b8f668b49d7f717f1e28b4"
+expected_evidence_sha256 = "26dac2927515958c0b2679d76784de7fa631955b6b55d3b323fbf77ae0de67ea"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4054,7 +4054,7 @@ valid_from = "2016-01-01"
 valid_to = "2016-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "832e6928f1e164d980bbf383918565f7f2f14d751770cc5243e2714df33ee03b"
+expected_evidence_sha256 = "8dde4a486f427def3513e682d581a461720fd5096a07501d88ebf31b6da71a55"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4065,7 +4065,7 @@ valid_from = "2017-01-01"
 valid_to = "2017-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "7b3c0b93a07761ca6c6d5ff2d5f5a3f3003648595fafaa52272b90141f73cb60"
+expected_evidence_sha256 = "2c1d35a9cf3f03c3c6d184829033752fde72653bd1a2d5521ba707b89d1b6f61"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4076,7 +4076,7 @@ valid_from = "2018-01-01"
 valid_to = "2018-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "42bb51a960f9aa2b392baccf0110a02085a11d905c35f41c4c1def8f1dda5724"
+expected_evidence_sha256 = "36d699833a507e1bf2ba4f5602bf6eaeba0ed694d3942f0e0599283dceb48c31"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4087,7 +4087,7 @@ valid_from = "1996-01-01"
 valid_to = "1996-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "bc8a16e7f55ffa15e784a54f48fccf9da9d22eebf546fcae0a0aa11ee0b14db6"
+expected_evidence_sha256 = "b84bd7743672ed7fbe8dadcce220885d075fb6d1cbd16bea0cd29e99d8277174"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4098,7 +4098,7 @@ valid_from = "1996-01-01"
 valid_to = "1996-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "04b02daa8c38d9917560ecab7b7a0a0e401f2fe9ba04c666ab38d65388fce43f"
+expected_evidence_sha256 = "bbd47c7fba97b4602e8d7ac33f5ac4839de8971cecda43df7e552aa838116ebd"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4109,7 +4109,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "1028e44d3c4496dd41fc33e4a70212609fe52343f22c78cb803f49f0832cadf3"
+expected_evidence_sha256 = "f0423a477adc6e156c76fac76cee7ccdcee09f3aeabf4994bdcf8091c93d379d"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4120,7 +4120,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "2a4957bd3edef31006bff59ae978425074cf9372781fc59b6ee53fa3bda02004"
+expected_evidence_sha256 = "ed43da89ebc3115aacbdd0b904ee68618e8128c96b5cf8297ef5f5849c6bd553"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4131,7 +4131,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "4f3c8344a1e9c5e9eb942bae89b70a3a2bcb6bd82f4f49f3de49a6385a6dfc7a"
+expected_evidence_sha256 = "57b65c12f002be27a62c607d469058d133a96cfa44d34aee54db0f35888690b5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4142,7 +4142,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "bc9791b6c7455e0a1917c4b3a369d485d02733ea1c765a62bf5384a32c5e4738"
+expected_evidence_sha256 = "bc02aabfc745b1f07e68b2343d1f2e872f04804e224f2c15d5e0c5ca1c7e0501"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4153,7 +4153,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "ed2f84394c8de2a475c2e464872280781815c1bee2d22d90f97466490758737f"
+expected_evidence_sha256 = "9ac25e2f2d6313daf992bd1f6a6990ef7d94191f3f56eaec048e2038e5b7739b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4164,7 +4164,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "85f55052d539b3021e49f28df23aa20ee2b2838809083e77000a96608c1e1e50"
+expected_evidence_sha256 = "bebf7eb1d50f9ef9170089e7d950e9153c7374706e02380041b5c1c2aa0e409f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4175,7 +4175,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "80417e30aa30d06986e4c1199883c960929b9207f1b6f6cefba19af3e78418ec"
+expected_evidence_sha256 = "88e6c0a69028b522142aa8849cfbb4c5e5568bf0a931a47225a4b1ff7db41425"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4186,7 +4186,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "d368f2b47b5355e61309503c2161360e25b1245d694bf9ed18a3a1cee5d5f7eb"
+expected_evidence_sha256 = "56d02f8294836e6a0b54d7ba653b2bf64bb7da3952496b84461b1a6609a35e85"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4197,7 +4197,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "e4ba1b46bf4f818451ed23250ee110bbcff37886ec7bb0138a7f9924fd8fc77d"
+expected_evidence_sha256 = "8cd8d5ad01984b121846f8170cc76e6edfc3eeb66b2cfaff0c65ea10d7144a47"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4208,7 +4208,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "897f97efba3e7c7eac95dd9228d9dd5001243288f9ab4857a213b3c3082e30f8"
+expected_evidence_sha256 = "a054664ebbd3e89b77952cf17358812e218e46cf2c2f48d6522fd1c6db3af1a8"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4219,7 +4219,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "155f55941fcbfe612ab7dc245cd587637d9f5a4ca2cfd25cdabaacdc5558236c"
+expected_evidence_sha256 = "1d92761cc5bd4ebb17d78e271c1bbf048ec734d2c633e57d39f9420c6821c5b6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4230,7 +4230,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "13c6436a66fb526db7dfeba9c4290d06d1c67743fb2f6be898f08d679958b923"
+expected_evidence_sha256 = "34064688b9c0f1211e847213959660eddb65698fc71738748c7c02ae755f6e1f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4241,7 +4241,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "af35cb6b333d70921720eb27610f727d7fd3598698ce892be6484d0a92b0bfac"
+expected_evidence_sha256 = "56f21423d4ad88ba60fff6784592f2e5cf02a5566d9b4e1e286d21739dc3e976"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4252,7 +4252,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "d196c9f3c5af8603f005b1c51b4c7de61815bd5ac820c4fe8076823411fba7a2"
+expected_evidence_sha256 = "3529dc5f132395711cfed4b74fce88215f398f159f109cd2e4908db3605ed357"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4263,7 +4263,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "5ae9a5d9854f56753c4d18d29eaabf5e663ec0f8fee23f706ca79b84aa08c268"
+expected_evidence_sha256 = "74136b1bee6104a901d1a4bc9b1ad4ab59d18277da2dc499dc5e03b4e1fb90bb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4274,7 +4274,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "9dd7b0fdef2e779a63e4b93393fd0f81c0f81fc49611c5c1767e40a3154b4017"
+expected_evidence_sha256 = "e6c04ca92a39f8c65bfa9c873c6b3dda49d8ef205218a7a47fa7b44082e1c3e9"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4285,7 +4285,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "2fdc6146f7ea00d58633966d70b9c9fa6a02679b894962052292e7c5ce3664d4"
+expected_evidence_sha256 = "1fa4ae9564ad164f5d4aa39d2de97de2d96bd489a1584efc057c3db8c4143227"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4296,7 +4296,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Preserve its source facts and retain an unavailable value set; domains from other editions are not assumed to apply."
 evidence = "Complete accepted 14-family source review (3427 physical originals), direct native value binding and maintained naming/coding resolver. Earlier or later source lists remain intact. This is an exact missing-domain limitation, not a continuity assumption or a code correction. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-ack-proof.json."
-expected_evidence_sha256 = "3dab9512e37400ee8b714ef38a8d82d0020d1033e5be0a39bfad1d35ec431d35"
+expected_evidence_sha256 = "a885c6caad8a30f4c288439b91ea37978bb74a132df4aa4595f27e10522a0c14"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4307,7 +4307,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "b6b6ee9347f0e9e33876e9fc31708f7d10eb7c6164fc88a4a0bcf34000074e48"
+expected_evidence_sha256 = "4e94b60a9a718545c1c1e67797d3d415f19726a81edd0dba3c0cba9c0915e07b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4318,7 +4318,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "c61cb787c09eb57256721b69166e1d3019f7b03625cc2bb85e72e75b43f56b01"
+expected_evidence_sha256 = "c18dc269ae48ac6f1aa7be2d39a5fb104c4f723f238bf4586ac00c4d59b0b53b"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4329,7 +4329,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "c60b908310921e3f31a9e7682ad8721d5722f109c05e3d80932f8debab425af1"
+expected_evidence_sha256 = "7cef7c241643cf301b0451a52a81202a81d498b2066144af0c67045feb1f51c2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4340,7 +4340,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "ea1ac00dba70aadff8e112e1245c9f1a435fd89188d69d2aa6ccf4b98bc63d40"
+expected_evidence_sha256 = "3979ec4446c1f9f7098e8e39835031875b0c979b650b76776a9257a67218c2c0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4351,7 +4351,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "523fb5ca340816be55d3cddd9905930a7f27094a767b75b51e0833dcc3a4a1bd"
+expected_evidence_sha256 = "80b45835b2dbde1746d123191897ae46c284b7a1f34706d11ab60ad1f239ff01"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4362,7 +4362,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "d5b8475f348d31da02e3ec4a307d047b60b046f42d4885f3d688e3357608e460"
+expected_evidence_sha256 = "093c6e79cfd15f4afc292e2a77dfb687b26355b38735c6edb0f51890a63a4f26"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4373,7 +4373,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "fc05b7aee9253c923c94968b58de61ffa5198c257608a93bf0d866c34dd64fb1"
+expected_evidence_sha256 = "2fdc491cb77b0bbc89565f9241039ff2a58ddb74ba9d65c448babafbfedcc16e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4384,7 +4384,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "dfd7275c6b5a74b45948ce23eb2161cddb6ac8861a9fd9104d69a9e2a0e72bdc"
+expected_evidence_sha256 = "58b6c902dc3e17b0f2f8452293eee763de001510b78896bf9a04dfbcc66e7cbd"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4395,7 +4395,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "e5c69e4438818be7b797af0cbf29efa3b670e22d8d855e4ae43692529d7e2aef"
+expected_evidence_sha256 = "2d8b910c94a0ac96168d5d118f544669a0e1ddeccb8e037a63e7de54f889bd82"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4406,7 +4406,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "a4d9a587263ce2f929be8ba308d50a6df16e4b06eca2023ce05adb9a1b6a0881"
+expected_evidence_sha256 = "79ff9cb742269522e34b2f47833998ffc141457b6a27be4cdcd2946d30a4671f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4417,7 +4417,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "e64552e31eb82199be64092eaeeac84b81c9f11f7fa1ab21660f0a507c9bfed9"
+expected_evidence_sha256 = "104e60a24854f991423d3b950c156a36c8d7f3ab6cd9073d23fc004a151759d0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4428,7 +4428,7 @@ valid_from = "2009-01-01"
 valid_to = "2009-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "1a221641003f5cfaaf190b76bdd2981f246ca642cf3108c4f14891cbaeabf408"
+expected_evidence_sha256 = "47b06e00b69fa66542d7d7843e8cbef253d1042bb5bb17987240fad69af68615"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4439,7 +4439,7 @@ valid_from = "2010-01-01"
 valid_to = "2010-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "a03c5382d0fb907763b7245032441ef6822daf88dacb4a4151fc4d8939904c76"
+expected_evidence_sha256 = "def25d6ff887343ce83b235f87a5d16e3c157dbfe152fe402bab52d4056c5c77"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4450,7 +4450,7 @@ valid_from = "2011-01-01"
 valid_to = "2011-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "f838122b193b2eb793e37b85f76b7aaa9d95afbd77983dee66f440bb6f518a98"
+expected_evidence_sha256 = "fb9ece2caa2088cb98bbd72da2e3dd26eea612cc3905e6ece724c68153450329"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4461,7 +4461,7 @@ valid_from = "1994-01-01"
 valid_to = "1994-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "0059cfbaaaa791827741b48a668600aa1a20644263952baf7d28f9802a61e90e"
+expected_evidence_sha256 = "dd618ac1a8b98b09be560991f8b75c24c9cda668f84eaf1958b57d69f9ca1618"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4472,7 +4472,7 @@ valid_from = "1995-01-01"
 valid_to = "1995-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "b3cdb1ea9fb53a87d008b213b0fcbfb3cd77c5f444622bcf9383054d0c97e9a1"
+expected_evidence_sha256 = "3d8dff4d16023d78bab2ad42e6e3e29931a896cdb552a44ff6d4b1a9c0f5fd65"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4483,7 +4483,7 @@ valid_from = "1994-01-01"
 valid_to = "1994-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "bcabe3379f199eec16c3e149acb66f3e79f58fc544550a740a1c2f65392ad1c8"
+expected_evidence_sha256 = "21f0f038bc0b672cefa74346fc34de4966ed5e7362dc830c5197d88875debdb6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4494,7 +4494,7 @@ valid_from = "1995-01-01"
 valid_to = "1995-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "43ade461a6416c470a5c247487cefe2c90d145bedffc6f9e8f1c9b2ba28288ed"
+expected_evidence_sha256 = "31ab8ad8456d6d3ee9242e00bf88e6d9a25194a7f23fdd6a4ff4879cb085d2b4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4505,7 +4505,7 @@ valid_from = "1996-01-01"
 valid_to = "1996-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "510a0a07237d0d0a2843c87c0e21dc5bf0d6a0179f55f6133856316956650229"
+expected_evidence_sha256 = "0a3d05d2b6802feb0e93a9a6ed06aeb723c264cbeb5c43fc6aa9a1a0e0d0ea67"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4516,7 +4516,7 @@ valid_from = "1994-01-01"
 valid_to = "1994-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "21e6d13c729542312d1ac4f5d85aa69cbd87198be1e2acf917c9a70e6d9eedb9"
+expected_evidence_sha256 = "074fb32e70599a6751565b27aa57337490c2145611f790b8bf5f8aca22f0034e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4527,7 +4527,7 @@ valid_from = "1995-01-01"
 valid_to = "1995-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "7b808a0d86cf65ae03d97f71073dd753b8218b01ad63e836708a4927672a7c46"
+expected_evidence_sha256 = "096e47a0a9e639d125ddfbef88406eef5e84c5bcbb4af15b20df7868ce051345"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -4538,7 +4538,7 @@ valid_from = "1996-01-01"
 valid_to = "1996-12-31"
 reason = "The supplied LINDA edition has no own code association for this exact delivery window. Retain the source facts and an unavailable value set; lists from other editions are not assumed to apply."
 evidence = "Approved exact missing-domain limitation policy. Complete accepted14-family source audit (3427originals) and actual literal primary/summary/integer-identifier support witnesses restore formation for these22additional gaps. No own association or source-declared classification supports a continuity domain. All supported domains remain intact. Proof: Batch48-LINDA-coding-gap-source-audit.json and Batch48-LINDA-coding-gap-actual-support-proof.json."
-expected_evidence_sha256 = "abd8f6fca2cf6fe621b49a7759a6e2b2f6f39558d53bf322df06fbcf0eb975e9"
+expected_evidence_sha256 = "88b90d3100094e8ff8a0684d24bd138e759a69d6e00b6ac94a2af2f4081b1d4a"
 
 [[variable]]
 native_id = "29.39429.uskog8"
@@ -17848,42 +17848,42 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "29.39924"
 columns = { INDTJ1 = "29.39924.indtj1", INDTJ2 = "29.39924.indtj2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "a7caca5cd36b1e1fd8546a2840964186a7c352d4adc38ab6e1601663f7085fdf"
+expected_evidence_sha256 = "205cabb09f69e91fe7c6eaf85ae419f43d2561c64a6a8fe063d0144d04d1d54d"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "29.4027"
 columns = { BKUNGR = "29.4027.bkungr", BKUNGR07 = "29.4027.bkungr07" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "3564389ae8b1c4a6429219502ebb542701f3c4dd4eb21db60d29c35a804d6994"
+expected_evidence_sha256 = "1754795f301dc0b01cbd7974635b33eb504fb9cba2d4bfed154c3611e0740312"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "29.1075"
 columns = { CFTAG = "29.1075.cftag", CFTAG03 = "29.1075.cftag03" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "f138c75b0eb1de1d73599dd9c73af58edc6c1ce45b0c104a4d9183bbc27e7d3d"
+expected_evidence_sha256 = "a2cbbb44a21dd15739cf2dbc41c3554352feb750f92b8637ae84c89aa732bb33"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "29.1080"
 columns = { CMIX = "29.1080.cmix", CMIX03 = "29.1080.cmix03" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "3f506237e1a723eeb0118e3d6faf8982c9b28fbcd732a2ff9a0488a10c3440c4"
+expected_evidence_sha256 = "def12c08588a6a279a897e7ef78bb685878d748c0e6f1e7fec9ee5006e6d025a"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "29.85"
 columns = { CFAKT = "29.85.cfakt", CFAKT03 = "29.85.cfakt03" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "2562f78d59812ea8cad85dcb8ba0a69e874b3805b82efc763011cc6d76d19d2b"
+expected_evidence_sha256 = "d36a8db8576b7652807ef058ce250bad70c9e7d330549b6ce97211ccce9c8790"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "29.5629"
 columns = { AKBF = "29.5629.akbf", BLKFA = "29.5629.blkfa", BLKFF = "29.5629.blkff" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "e12f2b4cc8706aa5f1d077704f463f95577e7159fcccede9f2249d4f1564b745"
+expected_evidence_sha256 = "fc39804e32080860b8655411b1b2b10ebfede52e75359ff4dc375e42eeb65bbe"
 
 [[variable]]
 native_id = "29.39924.indtj1"
@@ -17946,7 +17946,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "22bb71ef3f5bc8a2fac7e9ff5624dd571b59e77179d8434ce5e93158832a6ee0"
+expected_evidence_sha256 = "361662080ff44cb879aa993793ddba0c765d10b94c1a0b7e5929e933ea5b7435"
 expected_diagnostic_sha256 = "2e804252dce8534a24124d975c5a678d915f3bec695298b60c73081751b00eb5"
 
 [[acknowledge]]
@@ -17958,7 +17958,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "ae2a8f7012e3b189b5e5b7f01a542e4b540f3f47a8157feeda98a1e7d069de15"
+expected_evidence_sha256 = "0106039c1d2d5340a7b10a045b39bb3ffce629e9a868c51df5ce44d3749ccc1c"
 expected_diagnostic_sha256 = "e445af819793a12ab9a20ef0e1bba18ab81b0a2174aa66a0b4dbf92802c2178e"
 
 [[acknowledge]]
@@ -17970,7 +17970,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "4f7061bac7dee85050bf393c91d1c176ee4157f68bfd2c9264f6ba8a5a58fd2c"
+expected_evidence_sha256 = "691b86310b55541aa85d4bff13d269e10fc57b5d3c92948ee2086b3054f44257"
 expected_diagnostic_sha256 = "71604fdbe1e478ac0270540d66bb0c8eea937e967169deeced7be00bbe8e45aa"
 
 [[acknowledge]]
@@ -17982,7 +17982,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "b386baacd44d21edad29efbf6c1b8a90e4006b5a301ff1e69c6b27b3b9a98cc6"
+expected_evidence_sha256 = "a43067019249bfc065992ee2ab30fd566d88da3e925c3f44904fb64ed746afd2"
 expected_diagnostic_sha256 = "b89a7c3cf92bceb810eec4cc24437d92388f2bc787e8a607b7f5056b31c26677"
 
 [[acknowledge]]
@@ -17994,7 +17994,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "e999c8ce64c5bd6419068b9fc88e7cbf1f3865ea8a74048d6f7f202359cbf977"
+expected_evidence_sha256 = "65869b80398284944632b7a8d07b0df7735878978193e05ac2bcc5af5ad4edd5"
 expected_diagnostic_sha256 = "9e30cc3a8c856fb6464ee4a3d912b4c8036fdcc8161ac87b5f1c4f452e0f2812"
 
 [[acknowledge]]
@@ -18006,7 +18006,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Existing marker-only associations are retained where present; they do not establish stored membership or a label/free-text role. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch54-pin-residual-own-binding-review.json and Batch54-pin-missing-binding-applicability.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "6fdf557e59e1ab309deae0961f4803618cfa7335220e3e17acb72e614ec8be73"
+expected_evidence_sha256 = "bfd88a8bbd9afad26a58ad230500289cea2fe23b6b9295f91be0a9139a9c2c7f"
 expected_diagnostic_sha256 = "453d464e7bd7808f509891c94cd8ff7cc98070088f12766ba1439257bd0277e1"
 
 [[acknowledge]]
@@ -18016,5 +18016,5 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["data_type", "data_length"]
 reason = "Retain both exact physical/catalog fields, all source facts and their own coding. The derived shared-definition sibling group lacks safe shape evidence and stays unavailable; a shared description does not establish compatible stored values or roles. No ordering field or source membership is withdrawn."
 evidence = "Complete native-family and physical-peer census, source-supported literal partitions and actual source replay Batch53-hard-family-source-review.json; finite original-fact and diagnostic guards. Standing retained-unavailable policy for unproven derived relations."
-expected_evidence_sha256 = "b70f080bb09b0c122204b9b1af2aa24a72a134e41fd12df552d7130adf4ee12c"
+expected_evidence_sha256 = "b758f81eeef156dba38b677dfb8b743c30f839de173783eaeee62012e3c67d24"
 expected_diagnostic_sha256 = "f1e9aac83763abdb27d3d2fcd97b6730ec8fe68d49ffc89c3f9553330a6c87df"

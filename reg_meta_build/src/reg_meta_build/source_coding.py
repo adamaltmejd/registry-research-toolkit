@@ -15,8 +15,6 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import ConfigDict, TypeAdapter
-
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_intervals import coding_scope_bounds
 
@@ -508,15 +506,3 @@ def copied_coding_fingerprints(claims: Iterable[CodeListClaim]) -> tuple[str, ..
             else fingerprint
         )
     return tuple(sorted(fingerprints))
-
-
-_CODING_SOURCE_JSON = TypeAdapter(
-    object, config=ConfigDict(ser_json_inf_nan="constants")
-)
-
-
-def coding_source_sha256(value: CodeListClaim | SourceValueAssociation) -> str:
-    """Pin every ordered physical assertion and raw validity, including duplicates."""
-    return canonical_sha256(
-        _CODING_SOURCE_JSON.dump_python(value, mode="json", warnings="error")
-    )

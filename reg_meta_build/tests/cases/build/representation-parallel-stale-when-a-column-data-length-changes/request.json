@@ -1,0 +1,31 @@
+{
+  "note": "The deferred per-column fact leg of the parallel guard. The curation is representation-parallel-pooled-columns-keep-their-outer-windows (the allowed twin, built from the reviewed delivery) with its evidence pin read from that reviewed delivery; this build delivers Second (CVID 101) with data length 17 instead of 1. Shared column metadata would reconcile the two lengths into a disputed fact on the 2022 state; the pin stales the entry first, so no state carries its provenance. The digest covers each declared column member's own content, not the delivery revision (maintainer decision 5), so the change to Second's own record is what stales the entry.",
+  "fails_if": "`compile_parallel_representations` stops comparing the entry's `expected_evidence_sha256` with the full originals of its declared columns' members, so Second's changed data length still binds the shared 2022 state instead of staling the entry",
+  "sources": {
+    "description": "scb-income-pooled-first-and-second after Second (CVID 101) changed its data length from 1 to 17.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "First",
+          "cvid": 100,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2020-2022",
+          "regver_id": 110
+        },
+        {
+          "colname": "Second",
+          "cvid": 101,
+          "var_id": 1,
+          "varname": "Income",
+          "year": "2020",
+          "versionname": "2022-2024",
+          "regver_id": 111,
+          "data_length": "17"
+        }
+      ]
+    }
+  },
+  "authored_from": "scb-income-pooled-first-and-second"
+}

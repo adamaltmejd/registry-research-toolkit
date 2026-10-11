@@ -18,7 +18,7 @@ from reg_meta_build.source_coordinates import source_register_key
 from reg_meta_build.source_curation import (
     AcknowledgeDecision,
     ResolutionDiagnostic,
-    acknowledgement_hashes_sha256,
+    acknowledgement_evidence_sha256,
     settle_acknowledgements,
 )
 
@@ -54,7 +54,10 @@ def lineage_acknowledgement_sha256(
     variants: tuple[tuple[ResolvedRegister, ResolvedVariant], ...],
     metadata: ResolvedMetadata,
 ) -> str:
-    """Pin originals and the complete candidate distinction, not only its error text."""
+    """Pin originals and the complete candidate distinction, not only its error text.
+
+    Each original contributes its own content, not its delivery revision or row.
+    """
     related = {
         f"{v.register_ref.provider}/{v.register_ref.slug}/{v.slug}"
         for v in (consumer, *candidates)
@@ -83,10 +86,7 @@ def lineage_acknowledgement_sha256(
             key=canonical_sha256,
         ),
     }
-    return acknowledgement_hashes_sha256(
-        (canonical_sha256(r.model_dump(mode="json")) for r in originals),
-        (canonical_sha256(context),),
-    )
+    return acknowledgement_evidence_sha256(originals, (canonical_sha256(context),))
 
 
 def _contested_variants(state: ResolvedState, sources: list[ResolvedState]) -> bool:

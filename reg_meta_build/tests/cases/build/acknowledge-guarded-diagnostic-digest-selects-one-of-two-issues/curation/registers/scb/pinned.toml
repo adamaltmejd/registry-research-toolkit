@@ -17,6 +17,7 @@ variable = "1.5"
 variant = "1.10"
 valid_from = "2020-01-01"
 valid_to = "2020-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:600,member:601}}
 evidence = "Reviewed parallel columns"
 noted = "2026-10-09"
 case_aliases = true

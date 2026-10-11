@@ -1,0 +1,24 @@
+[register]
+provider = "scb"
+slug = "unpinned"
+native_id = "2"
+[[variant]]
+native_id = "2.20"
+slug = "people"
+[[variable]]
+native_id = "2.5"
+slug = "income"
+[[identity.partition]]
+variable = "2.5"
+columns = { A = "2.5", B = "2.5" }
+columns_ref = "reviewed two-literal source-native income"
+
+[[acknowledge]]
+code = "conflicting_code_memberships"
+subject = "scb/unpinned/income"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:2\", \"variant:20\", \"edition:830\", \"variable:5\", \"member:810\"]}", "{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:2\", \"variant:20\", \"edition:830\", \"variable:5\", \"member:811\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "Both literals' lists disagree; their coding stays unavailable."
+evidence = "Synthetic fixture issue."

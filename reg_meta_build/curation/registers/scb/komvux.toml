@@ -523,7 +523,7 @@ valid_from = "1996-07-01"
 valid_to = "1996-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "5458f6926a6b2eecf87a3471301be28fa6e8ad4630695241e47a4dfb83ecfdeb"
+expected_evidence_sha256 = "bb9881283ac6b546177be944bf6f702f491756bb20c27b0de734bc58d74fcb36"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -534,7 +534,7 @@ valid_from = "1996-01-01"
 valid_to = "1996-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "698d2cf8f80328ae78faad07c49fb97b37800907b82d5d4b7361baeb4178545e"
+expected_evidence_sha256 = "cd3baae5dc3f7375649058a8f50eceedba0957f0fb92cba9cd9924f83b6914a5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -545,7 +545,7 @@ valid_from = "1997-01-01"
 valid_to = "1997-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "aaf6a0fb7574a219ff2c3aa32d27d75605df6592daa67bb156a2d1724465c5dd"
+expected_evidence_sha256 = "31057609f3c5841d511b5bb7c274bbdf9b2052331cce1136d06562565f30342e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -556,7 +556,7 @@ valid_from = "1979-07-01"
 valid_to = "1979-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "f107564c0798423c7d8a5718513c867dad13ee73026fcf09dbc71bb41deddf83"
+expected_evidence_sha256 = "a0e7559559575de6a186fe578db17d2df2c942363331e06e177a93a642630bbe"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -567,7 +567,7 @@ valid_from = "1980-07-01"
 valid_to = "1980-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "679553b5946030517865b1ef2973a8887279d597b0d8ea80eb33906e876dd88f"
+expected_evidence_sha256 = "291ecdfc9b716a790cf03bce7c43b067b2a2b1131e2e52cce9e8ea5285ae4a25"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -578,7 +578,7 @@ valid_from = "1981-07-01"
 valid_to = "1981-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "832fced9740f47098258fd4d65371215c9d398bcae349d826e0b0193c0945f15"
+expected_evidence_sha256 = "abad00231d9e87619e5fb8e5b5542b10859cef3d9fa0cad9d4359586e9b5ea70"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -589,7 +589,7 @@ valid_from = "1982-07-01"
 valid_to = "1982-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "b6a5f469a4b33751e459e55fb5bb419e842553025e04355b7bf48634c8911f8a"
+expected_evidence_sha256 = "564e00505e7cf41f7e6df240c040471b12c57d6ac2d78b774c3242f308f03072"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -600,7 +600,7 @@ valid_from = "1983-07-01"
 valid_to = "1983-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "a30c571ae376a76a34a254c51e54f33c5fefbf1f7072fee4db10b51cd2a350f7"
+expected_evidence_sha256 = "1f41804093d1c239d0e7ee168e1b45a5a99cd2f05ac6148fee2747e51461bfef"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -611,7 +611,7 @@ valid_from = "1984-07-01"
 valid_to = "1984-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "5794a2d7ad4d2dcd0ca554695eca56037122d1e782fa6dc9c6804e6098f6a95d"
+expected_evidence_sha256 = "2d866b42ec7ae67bff44637eec860f6916e6231c3f04dffb775b73bda750d42f"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -622,7 +622,7 @@ valid_from = "1985-07-01"
 valid_to = "1985-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "0c7d66a50247cc9e93d5aa20aaa16495a1fef20e1cc8afe4c796819e2c14a252"
+expected_evidence_sha256 = "3d2f26c8efc77974ada17b22f4751bedd61ce68bf47bc6d0aa235c67b83028f0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -633,7 +633,7 @@ valid_from = "1986-07-01"
 valid_to = "1986-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "ed8111b49cf9e491da2beee1a06bd51dd8c59bf2fa2c2a5349ca8dd2d8a834df"
+expected_evidence_sha256 = "ce4ceab4595747c8c3e877b2033ff18d87c1139820a34f2cc7c078701fea9fa7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -644,7 +644,7 @@ valid_from = "1996-07-01"
 valid_to = "1996-12-31"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "f660efa467bce5907c43f266b63bcb78cce5b868faec58ff32f099dde1aad86a"
+expected_evidence_sha256 = "5194c43b75814b62decb7024e1c41f29519dc8c61f42ea0579d31518723e10a7"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -655,7 +655,7 @@ valid_from = "1980-01-01"
 valid_to = "1980-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "b779609baf812be29233e5b495ebb684146cfd7ed2f2eba19e9b7abec456f9d3"
+expected_evidence_sha256 = "a82096084a7ecc4ad33a9960ba1c584f8d9f7722d4099ba6ef30a8c7bbe118f4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -666,7 +666,7 @@ valid_from = "1981-01-01"
 valid_to = "1981-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "21762f98fcb6d0ec47d5d977c4129e82f582eedf76facdf4612507cec164e2f4"
+expected_evidence_sha256 = "4e27695c8885deb84d1751399d1f296d0eb6d781e6255ffe68c6913b61e96a3a"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -677,7 +677,7 @@ valid_from = "1982-01-01"
 valid_to = "1982-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "7bc52b3e60734538480c0c5260261f97d670e5210c32c606e6519da94f1aac94"
+expected_evidence_sha256 = "268b2bae46278b0a560490924b8ea551ddb77790df0a754a113cd78ab8402737"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -688,7 +688,7 @@ valid_from = "1983-01-01"
 valid_to = "1983-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "10bd7a574c0174b196a29793055fb078249d5b32d7e633221225ca74372daec6"
+expected_evidence_sha256 = "fd092f5cf51a190a3405ebdcd67d198299de7a7254bddb7611a866a174f89cbd"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -699,7 +699,7 @@ valid_from = "1984-01-01"
 valid_to = "1984-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "6937839f89546ed4a3ef043920a5adb5f14350f08127649d063cd05c3d138bf8"
+expected_evidence_sha256 = "cc21066f8671d3ad56fc6dfb2cacc339e3f9320d1d7192d5cafca1a490925e77"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -710,7 +710,7 @@ valid_from = "1985-01-01"
 valid_to = "1985-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "acc233e5f2d48eee5225f26f83075fbe2e571f459efcd70ed829204608ab3697"
+expected_evidence_sha256 = "191ebb310daf5947173b4af2c089caf8a4497d421e033c7e7c2d63f06c775e49"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -721,7 +721,7 @@ valid_from = "1986-01-01"
 valid_to = "1986-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "17f6a3e93ece2b60f3b28f2dd1448ccd29a7ae3359d4970cd79843c308fbd451"
+expected_evidence_sha256 = "559021a3a56affb2c7a77d0186a36d61be290b2c4fbd7f9bed24d52d365cedf6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -732,7 +732,7 @@ valid_from = "1987-01-01"
 valid_to = "1987-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "426da7d3eba088c5c3490b6a570bd6057a0b277a7b3c482240d4d9606207ec6b"
+expected_evidence_sha256 = "276041e2660a3ab1e655217e138c367cf9f18ecf8479fd16bd5b285a103f77cc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -743,7 +743,7 @@ valid_from = "1997-01-01"
 valid_to = "1997-06-30"
 reason = "The supplied historical school-code rows have no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Later school lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "fb709719fefe9163707fb66c119f3b9e4066c80c4a42aaa1bb855a4531532bca"
+expected_evidence_sha256 = "5c14da01b8c41c826077b11dd5dac99cb66d6b83bb64dd195d1cf255a1b79e32"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -754,7 +754,7 @@ valid_from = "1997-07-01"
 valid_to = "1998-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "4c8ed9dbcb94f13713c67506dc7433196a297aecc332f68f00cf577524d0837f"
+expected_evidence_sha256 = "4c09b9428c3acf221afeb4f3a2093d458e50c369a54d7981da859348868edb61"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -765,7 +765,7 @@ valid_from = "1998-07-01"
 valid_to = "1999-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "00f8acb1086c929a5d4f1e5e2eefd4df019ba0d39e03b26f211abc02184cff8a"
+expected_evidence_sha256 = "6c50b2f7e66b76859eb00e92752de5725b521116cb55afbcb0f3f7116f0b102e"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -776,7 +776,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "a3525ef27652ec5218d3904c23966d26457f553b61cdcfe7ec687634db92680d"
+expected_evidence_sha256 = "b87b564945cb78a46bf33ac466adf6117c955f9b7fccfdd017def7b0f62045f0"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -787,7 +787,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "d048be5588e08937c15de1be793d5a464120a66e0411a1b450861604949b0bce"
+expected_evidence_sha256 = "3fa47a4654b817f22458eb3061bbd7eee3cfdbd5e729ca018f9afac0a64a95a2"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -798,7 +798,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "a021dea8269b3578e15f339023b3528d5a2f58ad8af963d59972a9a661a461ad"
+expected_evidence_sha256 = "2c89c3f3399f47ce5cdbada8c017689480307b819b6a859b1d27b413694c7713"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -809,7 +809,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "fa4e953dafcd77e67a7d6074badeeb7fccddecfa7ca457045dd07ad95c00dc9d"
+expected_evidence_sha256 = "2de70e17d8ef0bd6d852fa3f437fc3b61b3f64dcf677b561f273368f4a9c44a5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -820,7 +820,7 @@ valid_from = "1997-07-01"
 valid_to = "1997-12-31"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "2b45a3c7c55fad1165ecb310c177bc0f06fec517b9a8392e6b47e2f568dd2241"
+expected_evidence_sha256 = "2846dc6796d00ea979a6e7dfeb3b5b0eb27e588b73bf2d8bca3d7a2ebfc077fb"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -831,7 +831,7 @@ valid_from = "1998-01-01"
 valid_to = "1998-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "40b85f11c3fe2b29bf38e8e6748fccb71070d412e9c8df2c9f84ba664807d9fc"
+expected_evidence_sha256 = "0c7c36114eb8ba6994720bcaf0b5ab170945819a4c1c20634ba7fb774941a486"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -842,7 +842,7 @@ valid_from = "1999-01-01"
 valid_to = "1999-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "c8c45e59b7102c97bb4e585aea31e0c8a72aca81a2be5db7752c70c7dec3a464"
+expected_evidence_sha256 = "59c86a840b9f13cc291cc8342fab27c838e025f675c301d0ef8c0e84f0395f5c"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -853,7 +853,7 @@ valid_from = "2000-01-01"
 valid_to = "2000-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "3fa7de2083f0f4f10932682244fbee7902c3435c1debb2e44b26f9b765ef3dfd"
+expected_evidence_sha256 = "986721dfde345037c4b2b2c2252dc6bf3613c14312210f31e711696ce90ce8dc"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -864,7 +864,7 @@ valid_from = "1997-07-01"
 valid_to = "1998-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "74252c7f0728e8989d1f493931910670a2df86a400a3e0b61fb77943d08fa74b"
+expected_evidence_sha256 = "5a6288a3dc345e8c5c6a4f65a69718e11a56521125d06af6d028a1f6604f7c54"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -875,7 +875,7 @@ valid_from = "1997-07-01"
 valid_to = "1997-12-31"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "7e28b6fdf6962bbc3e3297730f981117bfe927085aba920d71c80e2ef03187ab"
+expected_evidence_sha256 = "a93aa88f0a2312c1ecd02fa45e4de1e118ebae53bf7a43ba85992e26a2db51d5"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -886,7 +886,7 @@ valid_from = "1998-01-01"
 valid_to = "1998-06-30"
 reason = "The supplied RTB birth-country row has no own response list for this exact window. Retain the source definition and physical column; historical stored codes remain unavailable. Year-specific later lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "067fffbf8b6ee174bd5bbec4d18bfda21ffdcb5f3a6d5117f47f9110ea359734"
+expected_evidence_sha256 = "94378f389974bfeeb5dc1267bb926115968add008ca65985b5447c5516795a43"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -897,7 +897,7 @@ valid_from = "2014-07-01"
 valid_to = "2014-12-31"
 reason = "The supplied gymnasium-association identifier row has no own response list for this exact window. Retain the source definition and physical column; historical stored identifiers remain unavailable. Later association lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "8cd1b00bab57cf4cf01a41d5d2b63219233f555e007e5f2a435f6b482ad29c63"
+expected_evidence_sha256 = "bcefddd16cd44c8ef7aea8e502ee1fc4699f2a4882955a378af5eb3554108fd6"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -908,7 +908,7 @@ valid_from = "2016-07-01"
 valid_to = "2016-12-31"
 reason = "The supplied gymnasium-association identifier row has no own response list for this exact window. Retain the source definition and physical column; historical stored identifiers remain unavailable. Later association lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "86c983eaabdaa978e78c8b9758e92883c9c387d2bd9eee267d09ed33257141b1"
+expected_evidence_sha256 = "99d788e142c93adede83027c354687b51760e0d64f7272c321b4c279df73f5f4"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -919,4 +919,4 @@ valid_from = "2015-01-01"
 valid_to = "2015-06-30"
 reason = "The supplied gymnasium-association identifier row has no own response list for this exact window. Retain the source definition and physical column; historical stored identifiers remain unavailable. Later association lists do not establish this historical domain."
 evidence = "Complete accepted source family with actual register support and own coding associations reviewed. No source list, declared official classification or historical stored encoding is supplied for this exact window. Preserve known domains elsewhere and all original facts. Standing unavailable-domain policy; Batch50-Komvux-residual4-source-proof.json."
-expected_evidence_sha256 = "d2148a6d2b5adc701d4ca681831fa4e132e5db96827433913244da716f7678c5"
+expected_evidence_sha256 = "8140b83f3b07fb5d111dc7331ed138cb6ec5061ef50d0d49e7d946e10a02ca0e"

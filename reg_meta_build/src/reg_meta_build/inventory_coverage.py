@@ -112,6 +112,11 @@ _Coord = tuple[str, str]
 # an uncurated one, cannot reach a build.
 _TODO_EVIDENCE = "TODO: the evidence that SCB delivered this row"
 _TODO_NOTED = "TODO: YYYY-MM-DD"
+# A delivered entry's source-evidence pin, read off the accepted prepared records
+# once the entry is curated; the loader refuses this placeholder too.
+_TODO_EVIDENCE_SHA256 = (
+    "TODO: acknowledgement_evidence_sha256 of the documented column and target rows"
+)
 # An `[[errata.column]]`'s evidence is the other half of the same fact: what says the
 # column exists, plus the export saying nothing about it. The first clause is the
 # only part that differs by `source`.
@@ -482,8 +487,9 @@ def errata_worklist(report: CoverageReport) -> str:
         "# reg_meta_build/curation/registers/scb/<slug>.toml entries for the columns the steward holds",
         "# in editions the flavored catalog has no state or alias window for.",
         "#",
-        "# CURATE, don't paste wholesale: `evidence` and `noted` ride as TODO",
-        "# placeholders, and the loader refuses a placeholder `noted`, so nothing",
+        "# CURATE, don't paste wholesale: `evidence`, `noted` and a delivered entry's",
+        "# `expected_evidence_sha256` ride as TODO placeholders, and the loader",
+        "# refuses a placeholder `noted` or evidence pin, so nothing",
         "# here reaches a build until a maintainer has established that SCB really",
         "# delivered the row and dated the finding. A variable already minted by a",
         "# [[errata.column]] entry has no real SCB row for [[errata.delivered]] to clone; its miss",
@@ -849,6 +855,7 @@ def _delivered_stanza(miss: CoverageMiss) -> str:
             ("variant", _toml_str(miss.variant)),
             ("column", _toml_str(miss.column)),
             ("versions", f"[{versions}]"),
+            ("expected_evidence_sha256", _toml_str(_TODO_EVIDENCE_SHA256)),
         ),
     )
 

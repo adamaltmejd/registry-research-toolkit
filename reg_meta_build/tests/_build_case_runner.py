@@ -59,7 +59,6 @@ from reg_meta_build.prepared_catalog import (
     open_prepared_catalog_sources,
 )
 from reg_meta_build.source_coding import (
-    coding_source_sha256,
     copied_coding_fingerprints,
 )
 from reg_meta_build.source_coordinates import native_variant_key
@@ -67,7 +66,7 @@ from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
     capture_expectations,
 )
-from reg_meta_build.source_evidence import canonical_sha256
+from reg_meta_build.source_evidence import canonical_sha256, evidence_sha256
 from reg_meta_build.source_naming import authored_naming_id
 from reg_meta_build.source_occurrences import source_occurrence
 from reg_meta_build.source_records import SourceFields
@@ -260,7 +259,7 @@ class PreparedSet:
 
     def coding_sha256(self, records: tuple[SourceRecord, ...]) -> list[str]:
         """The bound physical code-list evidence of ``records``, as curators pin it."""
-        return [coding_source_sha256(claim) for claim in self.claims(records)]
+        return [evidence_sha256(claim) for claim in self.claims(records)]
 
     def opened(self):
         return _opened(self.prepared, self.commit, self.digest)
@@ -285,7 +284,7 @@ class PreparedSet:
     def table_sha256(self, table: str) -> str:
         """The content hash of the one prepared evidence table named ``table``."""
         (found,) = (t for t in self.opened().records.iter_tables() if t.name == table)
-        return canonical_sha256(found.model_dump(mode="json"))
+        return evidence_sha256(found)
 
 
 # Authoring reads open a cache entry's accepted sources once per process: an entry
@@ -426,6 +425,7 @@ def _column(record: SourceRecord) -> str:
 
 _FILTERS: dict[str, Callable[[SourceRecord], object]] = {
     "source": lambda r: r.source,
+    "register": lambda r: str(r.subject.native.register_id),
     "key": lambda r: r.locators[0].semantic_record_key[-1],
     "column": _column,
     "member": lambda r: r.subject.member.name,
@@ -513,7 +513,7 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
     "expected_records": lambda s, a: [
         expectation.model_dump(mode="json")
         for expectation in capture_expectations(
-            _select(s.records(), a), fields=_fields(a), parents=True, coding=True
+            _select(s.records(), a), fields=_fields(a), parents=True
         )
     ],
     "expected_fields": lambda s, a: [
@@ -539,11 +539,9 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
         copied_coding_fingerprints(s.claims(_select(s.records(), a)))
     ),
     "association": lambda s, a: _association(s, a).locator,
-    "association_sha256": lambda s, a: coding_source_sha256(_association(s, a)),
+    "association_sha256": lambda s, a: evidence_sha256(_association(s, a)),
     "relationship_row": lambda s, a: s.relationship(a["table"]).locator.physical_record,
-    "relationship_sha256": lambda s, a: canonical_sha256(
-        s.relationship(a["table"]).model_dump(mode="json")
-    ),
+    "relationship_sha256": lambda s, a: evidence_sha256(s.relationship(a["table"])),
     "table_sha256": lambda s, a: s.table_sha256(a["table"]),
     "naming_id": lambda s, a: authored_naming_id(
         a["kind"],
@@ -561,14 +559,23 @@ def _variant_key(record: SourceRecord) -> list:
     return list(key)
 
 
-def render_curation(source: Path, target: Path, authored: PreparedSet) -> Path:
-    """Copy a case's curation tree, resolving each `{{directive arg=value}}`."""
+def render_curation(
+    source: Path, target: Path, authored: PreparedSet, built: PreparedSet
+) -> Path:
+    """Copy a case's curation tree, resolving each `{{directive arg=value}}`.
+
+    A directive reads ``authored`` unless it says ``read=built``.
+    """
 
     def resolve(match: re.Match[str]) -> str:
         name, raw = match.group(1), match.group(2).split()
         args = dict(item.split("=", 1) for item in raw)
         assert name in _DIRECTIVES, f"unknown curation placeholder: {name}"
-        return toml_inline(_DIRECTIVES[name](authored, args))
+        read = args.pop("read", "authored")
+        assert read in {"authored", "built"}, f"unknown placeholder read: {read}"
+        return toml_inline(
+            _DIRECTIVES[name](built if read == "built" else authored, args)
+        )
 
     for path in source.rglob("*"):
         if path.is_file():
@@ -1541,7 +1548,7 @@ def run_step(
     expected = json.loads((step / "expected.json").read_text(encoding="utf-8"))
     built = cache.get(source_spec(request["sources"]))
     authored = cache.get(source_spec(request.get("authored_from", request["sources"])))
-    curation = render_curation(step / "curation", scratch / "curation", authored)
+    curation = render_curation(step / "curation", scratch / "curation", authored, built)
     output, report = scratch / "reg_meta.db", scratch / "report"
     registers = tuple(request.get("registers", ()))
     rebuild = bool(expected.get("rebuilt_identical"))

@@ -136,8 +136,9 @@ semantic key, physical locators and original cells. Source-local coordinates ide
 register, variant, edition, variable/question, member and delivery column where
 supplied. Sparse typed fields preserve names, definitions, type/length, flags,
 availability, classification declarations, source attribution and reference-period text.
-Code-list references point to separately stored evidence rather than expanding every
-code into every record.
+Code lists are stored separately and bind to records through their value associations,
+rather than expanding every code into every record; a record carries no code-list
+reference of its own.
 
 Missing optional metadata, an absent occurrence, a source-defined unknown and an
 explicit negative are different. Absence does not establish unavailability. An explicit
@@ -148,7 +149,8 @@ The semantic record identity excludes revision and physical location. Original p
 remain evidence, so a raw whitespace edit may still change an observation identity.
 Curation therefore compares the relevant normalized projections and scoped membership,
 not raw record-ID equality. Moving spreadsheet rows or changing unrelated fields does
-not invalidate an otherwise identical decision.
+not invalidate an otherwise identical decision. Evidence digests follow the same rule
+("Evidence digests" under "Entries and pins").
 
 Authority depends on the fact and scope, rather than a universal file ordering:
 
@@ -263,15 +265,16 @@ associations, validity declarations, disconnected identifiers and duplicates. Mi
 empty and zero stay distinct. A delivered blank code is missing data and never a member,
 labelled or not (SCB's `["", "Uppgift saknas"]` included), as Socialstyrelsen code rows
 already treat it: binding keeps its association as evidence and states no member, so it
-neither publishes nor withholds the list. An undelivered code is structurally missing
-and stays unknown membership, which withholds. A descriptor label is not a global
-code-list ID. Exact validity dates are not truncated to years or silently repaired. An
-edition's explicit item associations establish membership across its finite scope when
-known global item dates would leave gaps. This is the accepted continuity assumption
-when no independent period information is supplied. Original item dates remain evidence
-and every widened association emits a warning. Supplied and section windows still
-restrict membership; unknown or conflicting validity, ambiguous joins and competing
-lists still withhold.
+neither publishes nor withholds the list. Curation cannot author one either: a blank
+(empty or whitespace-only) coding member or classification sentinel code is refused at
+load. An undelivered code is structurally missing and stays unknown membership, which
+withholds. A descriptor label is not a global code-list ID. Exact validity dates are not
+truncated to years or silently repaired. An edition's explicit item associations
+establish membership across its finite scope when known global item dates would leave
+gaps. This is the accepted continuity assumption when no independent period information
+is supplied. Original item dates remain evidence and every widened association emits a
+warning. Supplied and section windows still restrict membership; unknown or conflicting
+validity, ambiguous joins and competing lists still withhold.
 
 The exact `Tal` and `Beskrivande text` rows whose code, version and level agree are type
 declarations, not enumerated codes. Cleaning records that distinction on the descriptor;
@@ -328,7 +331,7 @@ native variant coordinate include the row's Deldatamängdsetikett as well as
 Deldatamängdsnamn. Unique tokens retain their existing keys. An authored SOS route names
 the chosen labeled row exactly; renaming or removing it makes the route stale. LOVA's
 `A_LOVA` routes to its Huvudtabell row and `A_LOVA_LISA` to its ekonomi/arbetsmarknad
-row. The prepared source-records schema is 15; older stores must be re-prepared.
+row. The prepared source-records schema is 16; older stores must be re-prepared.
 
 An authored thin-provider variant may declare `period_scope = "pooled"` with two
 explicit, ordered ISO date bounds. The reader retains this declaration and the
@@ -471,11 +474,11 @@ preserve a source-labelled range separately from annual editions, with a scoped
 assigns annual availability to the range.
 
 An SCB `[[identity.partition]]` may use `expected_evidence_sha256` to pin the entire
-reviewed native family, including blank columns, every source field, parent fact, coding
-reference and physical multiplicity. Its native key selects the complete family; a
-second projection selector is unnecessary. Fresh compilation and replay refuse changed,
-added or missing originals. A finite map can retain the native owner and public key
-without introducing an artificial split.
+reviewed native family, including blank columns, every source field, parent fact and
+physical multiplicity, but not the rest of the delivery. Its native key selects the
+complete family; a second projection selector is unnecessary. Fresh compilation and
+replay refuse changed, added or missing originals. A finite map can retain the native
+owner and public key without introducing an artificial split.
 
 An SCB `[[identity.column_owner]]` binds a literal column to an accepted owner within
 explicit source editions. Optional `expected_fields` pin reviewed source facts using the
@@ -486,15 +489,14 @@ compilation hydrates full originals and replay checks every original fact. This 
 multiple original prose claims for one exact physical column and edition under one owner
 without selecting or correcting either claim. The two guard forms are exclusive. Guarded
 entries require a finite edition list. Complete-record guards retain all fields, parent
-facts, coding references and original multiplicity; missing, added or changed originals
-refuse both compilation and replay. Field guards require unique known fields, and the
-compiled complete family also guards every supplied field during replay. This supports a
-reused column whose explicitly documented amount or rate role changes between editions
-without normalizing units or borrowing another owner's meaning. Physical source
-multiplicity remains governed by the prepared-source pins and ordered inventory. A
-complete native default column map may retain that owner alongside exact guarded scoped
-overrides; only matched source members take a split owner, and all declared owners
-remain covered.
+facts and original multiplicity; missing, added or changed originals refuse both
+compilation and replay. Field guards require unique known fields, and the compiled
+complete family also guards every supplied field during replay. This supports a reused
+column whose explicitly documented amount or rate role changes between editions without
+normalizing units or borrowing another owner's meaning. Physical source multiplicity
+remains governed by the prepared-source pins and ordered inventory. A complete native
+default column map may retain that owner alongside exact guarded scoped overrides; only
+matched source members take a split owner, and all declared owners remain covered.
 
 An SCB `[[identity.unassigned]]` withholds an entire native family's catalog ownership
 when none of its physical fields has a supported owner. It requires the complete
@@ -508,7 +510,10 @@ Finite `[[representation.parallel]]` declarations may use `case_aliases = true` 
 case-equivalent column spellings under one source-native identity with equal nonblank
 names and definitions. This requires per-column metadata and makes no co-delivery claim;
 source members may export either spelling. Literal metadata, source coding, windows and
-replay membership remain guarded. Other literal changes need their own identity
+replay membership remain guarded. The entry's required `expected_evidence_sha256` pins
+its members: it covers every member of either spelling in the declared editions, so a
+new member delivered under a declared spelling stales the entry (`stale_curation_entry`)
+instead of joining the shared state. Other literal changes need their own identity
 evidence.
 
 SOS `[[identity.split]]` can partition a complete native family by literal supplied
@@ -542,17 +547,24 @@ literal edition name. For a name the period parser cannot interpret, its documen
 parser can interpret, makes the entry stale. No register coverage or nearby edition
 supplies an inferred period, and other unparseable names remain unsupported.
 `[[errata.delivered]]` carries `variant`, literal `column`, existing `versions`,
-`evidence`, `noted`, and optional `upstream` and `native_variable_id`; it adds omitted
-rows for a column documented elsewhere on the variant and names edition tokens verbatim.
-The native-variable anchor selects one documented identity when the same column literal
-belongs to multiple variables in the variant's history. An anchor must occur under that
-column; without one, the column must identify exactly one variable across the complete
-variant history. `[[errata.column]]` carries the variable identity (`name` and
-`definition`), a source and evidence, plus either named versions, bounded
-`holdings_period`, or the legacy undated `all_versions = true`; it mints a variable for
-a column SCB documents nowhere on that variant. Its identity is `(register, column)`, so
-two variants of one register use the same variable identity. `source` records the
-evidence class; it does not change the materialized rows.
+`expected_evidence_sha256`, `evidence`, `noted`, and optional `upstream` and
+`native_variable_id`; it adds omitted rows for a column documented elsewhere on the
+variant and names edition tokens verbatim. The native-variable anchor selects one
+documented identity when the same column literal belongs to multiple variables in the
+variant's history. An anchor must occur under that column; without one, the column must
+identify exactly one variable across the complete variant history. The required evidence
+digest (`acknowledgement_evidence_sha256`) covers the full originals the entry relies
+on: every documented row of the column, the native rows it rewrites or keeps beside its
+additions, and, for an additional physical column, the complete native family. It leaves
+out the edition support, which for a declared edition is the whole variant. A changed
+digest makes the entry stale, so a drifted sibling definition is reviewed again rather
+than cloned. Each original contributes its own content, not its delivery's revision, so
+a change elsewhere in the delivery leaves the entry fresh. `[[errata.column]]` carries
+the variable identity (`name` and `definition`), a source and evidence, plus either
+named versions, bounded `holdings_period`, or the legacy undated `all_versions = true`;
+it mints a variable for a column SCB documents nowhere on that variant. Its identity is
+`(register, column)`, so two variants of one register use the same variable identity.
+`source` records the evidence class; it does not change the materialized rows.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column anywhere on this variant? One column/variant omission is exactly
@@ -665,6 +677,28 @@ which is an error. Unrelated later editions, layout changes and deliveries elsew
 therefore never stale it. Compiled `CodingDecision` cases capture checked evidence in
 memory for the current build.
 
+Evidence digests. Every pinned digest over delivered evidence goes through one function,
+`evidence_sha256` (source_evidence.py): the `expected_evidence_sha256` of owners,
+partitions, corrections, coding entries, errata and acknowledgements
+(`acknowledgement_evidence_sha256` over the guarded originals plus their bound coding
+claims), lineage and source-event acknowledgements, `raw_codings` and association
+digests, marker-binding fingerprints, and documentary payload, table and originals
+digests. It hashes a record's or claim's own content: fields, parent facts, delivered
+cells, semantic keys, file and table names, and content-addressed value and descriptor
+keys. It drops what only says where and in which delivery a fact arrived (the delivery
+revision, which a nested revision collapses to its dataset, row numbers, physical record
+and cell coordinates) and the derived record and claim ids. Collections gathered from
+several rows (a record's locators, list members, their associations and validity rows)
+compare as multisets: order is immaterial, multiplicity is not. Cells, derivation
+clauses and operands keep the order positions address, and an evidence table keeps its
+row order, which places a row under its section. A new delivery or a row re-sort
+therefore stales only the entries whose own records or lists changed. A code-list claim
+id names its list's dataset rather than its revision, so an `expected_diagnostic_sha256`
+over a coding diagnostic, whose detail lists claim ids, also survives an unrelated
+delivery. Explicit pins stay explicit: a coding `source_authority` still names its
+source revision and physical row locators, and a `[[coding.support]]` association or a
+documentary row names its physical row.
+
 Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision is
 window-grained. The compiler checks each window against that column's complete source
 lists; optional `keep_members` and `list_members` are literal `[code, label]` pairs when
@@ -680,10 +714,10 @@ and multiplicity. It is exclusive with `source_authority`. Compilation still cap
 full field, parent, coding and peer guards for runtime application. Source review and
 the decision's reason explain the meaning; the digest only guards that evidence. Raw
 coding fingerprints are shared within one application call, never cached across inputs.
-Physical coding fingerprints serialize the supplied dataclass/model graph directly
-through the installed JSON adapter before canonical hashing. This retains every ordered
-assertion and raw validity value without a deep copy or an encode/parse roundtrip;
-serialization warnings remain errors.
+Raw coding fingerprints serialize the supplied dataclass/model graph directly through
+the installed JSON adapter, then hash its evidence content. This retains every assertion
+and raw validity value, duplicates included, without row positions, a deep copy or an
+encode/parse roundtrip; serialization warnings remain errors.
 
 `coding.uncoded` may explicitly declare `stored_role = "label"` or `"free_text"` when
 reviewed source metadata identifies a stored text component whose attached numeric books
@@ -712,39 +746,39 @@ and both coverage fields. They reconcile literal wording only when the source de
 positively establishes the same quantity; they do not convert values, merge differing
 scales or infer absent units. A `source_attribution` correction requires an exact
 edition, all supplied fields and complete original-record expectations, including
-parents and coding references. It can normalize an abbreviation explicitly defined in
-the source to the existing variant name; it does not introduce inferred aliases. The
-catalog stores the interpreted attribution while immutable source evidence retains the
-original text. `[[errata.occurrence_period]]` entries require one exact native source
-edition for SCB. SOS rows lack that coordinate and instead require both literal supplied
-coverage fields alongside the exact native variable, subset and column. Both entry types
-guard the original edition text, both original scopes and all four supplied prose
-fields, including absent or unknown values. Complete native-family support and peer
-guards retain unrelated editions and coding references. Period entries carry explicit
-replacement `TemporalScope` values; omitting an interval's `end` in TOML means an open
-end, while unknown and pooled scopes retain their labels and bounds. These entries emit
-existing checked field/period effects and never rewrite the original source records. A
-finite scoped name correction selects exact original source scopes and carries those
-same scopes into its conditional replay effect. A monthly row sharing an annual row's
-semantic reference cannot inherit that name correction.
+parents. It can normalize an abbreviation explicitly defined in the source to the
+existing variant name; it does not introduce inferred aliases. The catalog stores the
+interpreted attribution while immutable source evidence retains the original text.
+`[[errata.occurrence_period]]` entries require one exact native source edition for SCB.
+SOS rows lack that coordinate and instead require both literal supplied coverage fields
+alongside the exact native variable, subset and column. Both entry types guard the
+original edition text, both original scopes and all four supplied prose fields,
+including absent or unknown values. Complete native-family support and peer guards
+retain unrelated editions. Period entries carry explicit replacement `TemporalScope`
+values; omitting an interval's `end` in TOML means an open end, while unknown and pooled
+scopes retain their labels and bounds. These entries emit existing checked field/period
+effects and never rewrite the original source records. A finite scoped name correction
+selects exact original source scopes and carries those same scopes into its conditional
+replay effect. A monthly row sharing an annual row's semantic reference cannot inherit
+that name correction.
 
 Field entries may pin duplicate observations with `expected_records`, using complete
 original `RecordExpectation` alternatives. Except for the source-defined attribution
 normalization above, their replacement must already occur in a guarded source
-alternative. Exact fields, subjects, scopes, parents and coding references remain
-checked at compilation and replay; conditional field effects change only the matching
-original interpretation. This permits punctuation and reference-prose aliases without
-discarding either physical original or inventing a replacement value. A `column_name`
-correction cannot list `expected_records`: compilation could never apply it, so the
-loader refuses it (`register_entry_invalid`).
+alternative. Exact fields, subjects, scopes and parents remain checked at compilation
+and replay; conditional field effects change only the matching original interpretation.
+This permits punctuation and reference-prose aliases without discarding either physical
+original or inventing a replacement value. A `column_name` correction cannot list
+`expected_records`: compilation could never apply it, so the loader refuses it
+(`register_entry_invalid`).
 
 A name correction may instead cite `authority_records` from the same native family. The
 replacement must occur literally in those complete remaining source peers. Full target
-and authority facts, parents and coding references, plus a combined raw-evidence
-fingerprint, are checked at compilation and application. The fingerprint retains
-physical multiplicity; removing an otherwise identical row invalidates the case. Guarded
-SOS identity splits use the same complete-family boundary and may emit an exact
-source-role warning while retaining each original quantity assertion and response list.
+and authority facts and parents, plus a combined raw-evidence fingerprint, are checked
+at compilation and application. The fingerprint retains physical multiplicity; removing
+an otherwise identical row invalidates the case. Guarded SOS identity splits use the
+same complete-family boundary and may emit an exact source-role warning while retaining
+each original quantity assertion and response list.
 
 Period entries may cite exact supplied subset metadata through `authority`. Compilation
 checks its full source projection, register and routed variant, positive coverage and
@@ -1020,14 +1054,14 @@ availability or expand documentary range and blank tokens into stored codes. An 
 explicit `data_warning` records an unverified storage interpretation while retaining
 those exact source tokens and all original coding evidence. Exact code strings,
 including an explicitly documented empty string, are preserved. The compiler captures
-original fields, scopes, coding references and complete column peers; changed finite
-claims invalidate application, and any supplied complete list in the window makes an
-ordinary documented entry stale. The guarded witness label certificate additionally
-requires every positive target domain to match after exact reviewed label normalization.
-Contradictory documented assignments withhold only their overlap. Original claims and
-nonmembership associations stay in source accounting. Raw type-marker whitespace is not
-a finite-membership guard: those associations cannot establish a list and are retained
-in the documentary audit.
+original fields, scopes and complete column peers; changed finite claims invalidate
+application, and any supplied complete list in the window makes an ordinary documented
+entry stale. The guarded witness label certificate additionally requires every positive
+target domain to match after exact reviewed label normalization. Contradictory
+documented assignments withhold only their overlap. Original claims and nonmembership
+associations stay in source accounting. Raw type-marker whitespace is not a
+finite-membership guard: those associations cannot establish a list and are retained in
+the documentary audit.
 
 A finite source-row authority can also certify an explicit complete enumeration in a
 named prose field. It records the exact ASCII decimal-code-and-label lines and requires
@@ -1140,13 +1174,17 @@ after reconciliation; it never selects a metadata donor.
 `[[representation.parallel]]` authoring binds an already curated variable and variant to
 exact literal columns, source edition labels and full supplied source windows. Its
 metadata window must equal their intersection. Compilation verifies complete overlapping
-peers and captures their original fields, periods and coding references, then emits the
-existing parallel-column decision only for that intersection. Original pooled source
-windows remain unchanged, including the outer periods owned by each column. This surface
-accepts one literal column per source edition; same-edition competing columns require
-separate evidence and are not inferred from a shared native identifier. Later source
-drift stales the checked case. Metadata and coding conflicts still pass through the
-existing reconciliation diagnostics.
+peers and captures their original fields and periods, then emits the existing
+parallel-column decision only for that intersection. Original pooled source windows
+remain unchanged, including the outer periods owned by each column. This surface accepts
+one literal column per source edition; same-edition competing columns require separate
+evidence and are not inferred from a shared native identifier. A required
+`expected_evidence_sha256` (`acknowledgement_evidence_sha256`) pins the full originals
+of every member of the declared columns in their declared editions, so later source
+drift, such as one column's changed data length, stales the entry rather than being
+reconciled into the shared state. The digest covers those members only, so a change to
+another column or register of the same delivery leaves the entry fresh. Metadata and
+coding conflicts still pass through the existing reconciliation diagnostics.
 
 Same-edition co-delivery remains refused by default. A reviewed `co_delivered = true`
 entry requires per-column metadata, one positive stable native question name and
@@ -1423,10 +1461,11 @@ publication accepts acknowledged issues. A warning comes from a rule such as
 acknowledgement. The compiled `AcknowledgeDecision` reaches issues raised while its
 source scope resolves. An optional `expected_evidence_sha256` pins the full original
 records named by its refs and their bound physical coding assertions. The canonical
-fingerprint ignores content ordering but retains multiplicity, source fields, parent
-facts, physical delivered cells, coding references, and raw coding associations and
-validity evidence. A changed fingerprint leaves the original error intact and adds a
-stale acknowledgement error. Unguarded entries retain exact issue matching.
+fingerprint (`evidence_sha256` per original and claim) ignores content ordering, row
+positions and the delivery revision but retains multiplicity, source fields, parent
+facts, physical delivered cells, and raw coding associations and validity evidence. A
+changed fingerprint leaves the original error intact and adds a stale acknowledgement
+error. Unguarded entries retain exact issue matching.
 
 A `[[coding.warning]]` declaration records a reviewed source metadata conflict while
 retaining its type and response domain unchanged. It uses the coding compiler's exact
@@ -2109,12 +2148,13 @@ without adding state or coding edges.
 
 `documentary.retained` is the exact guarded disposition for a supplied declaration whose
 catalog endpoints are not established. Full declaration and physical-table digests
-retain raw cells, provenance, periods and row multiplicity. An admitted source/register
-scope is required, but no variable owner or code namespace is invented. The builder-only
-resolved record persists under `retained_unattached` with a null owner and no endpoint
-rows; its reviewed reason becomes a register data warning. Missing, changed or
-duplicated evidence still fails compilation. Builder schema `8.0.0` admits this explicit
-status; reader models remain unchanged.
+retain raw cells, provenance, periods, row order and multiplicity, but not the delivery
+revision. An admitted source/register scope is required, but no variable owner or code
+namespace is invented. The builder-only resolved record persists under
+`retained_unattached` with a null owner and no endpoint rows; its reviewed reason
+becomes a register data warning. Missing, changed or duplicated evidence still fails
+compilation. Builder schema `8.0.0` admits this explicit status; reader models remain
+unchanged.
 
 The shared evidence primitives and crosswalk/derivation declarations live in
 `reg_meta_build.source_evidence` and `reg_meta_build.documentary`. Build ingestion and

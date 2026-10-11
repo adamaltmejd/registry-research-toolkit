@@ -385,7 +385,7 @@ valid_from = "2019-01-01"
 valid_to = "2019-06-30"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "79b002ab519cbe2bec709b6dbf365575d0190354b1ce57f1ff663461a5317c27"
+expected_evidence_sha256 = "297c0252f8f010dcd65f5873bff6b474115d6220a9e685850d160f6cf050d636"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -396,7 +396,7 @@ valid_from = "2020-01-01"
 valid_to = "2020-06-30"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "79b002ab519cbe2bec709b6dbf365575d0190354b1ce57f1ff663461a5317c27"
+expected_evidence_sha256 = "297c0252f8f010dcd65f5873bff6b474115d6220a9e685850d160f6cf050d636"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -407,7 +407,7 @@ valid_from = "2021-01-01"
 valid_to = "2021-06-30"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "79b002ab519cbe2bec709b6dbf365575d0190354b1ce57f1ff663461a5317c27"
+expected_evidence_sha256 = "297c0252f8f010dcd65f5873bff6b474115d6220a9e685850d160f6cf050d636"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -418,7 +418,7 @@ valid_from = "2022-01-01"
 valid_to = "2022-06-30"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "79b002ab519cbe2bec709b6dbf365575d0190354b1ce57f1ff663461a5317c27"
+expected_evidence_sha256 = "297c0252f8f010dcd65f5873bff6b474115d6220a9e685850d160f6cf050d636"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -429,7 +429,7 @@ valid_from = "2023-01-01"
 valid_to = "2023-06-30"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "79b002ab519cbe2bec709b6dbf365575d0190354b1ce57f1ff663461a5317c27"
+expected_evidence_sha256 = "297c0252f8f010dcd65f5873bff6b474115d6220a9e685850d160f6cf050d636"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -440,7 +440,7 @@ valid_from = "2024-01-01"
 valid_to = "2024-06-30"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "79b002ab519cbe2bec709b6dbf365575d0190354b1ce57f1ff663461a5317c27"
+expected_evidence_sha256 = "297c0252f8f010dcd65f5873bff6b474115d6220a9e685850d160f6cf050d636"
 
 [[variable]]
 native_id = "105.66.sun2000niva-old"
@@ -454,13 +454,13 @@ slug = "sun2020niva-old"
 variable = "105.66"
 columns = { SUN2000Niva = "105.66.sun2000niva", SUN2000Niva_old = "105.66.sun2000niva-old", SUN2000Niva_OLD = "105.66.sun2000niva-old", SUN2020Niva = "105.66.sun2020niva", SUN2020Niva_old = "105.66.sun2020niva-old", SUN2020Niva_OLD = "105.66.sun2020niva-old" }
 columns_ref = "Complete original native family and physical-peer closure. Roles follow explicit source definition, operation and own code-list vintage. SUN2000/SUN2020/group/detail/old levels are kept separate; constituency code and literal name stay separate; electricity components and address fields preserve distinct source roles and prior public paths. KNr collision remains separately reviewed, not accepted by this default mapping. All original types, units, periods and contradictory text remain unchanged. Batch53-native-role-proof.json."
-expected_evidence_sha256 = "531cd6899270abea97f709f06037a08ad076d8ca3f02ab3656af8afae64d88a1"
+expected_evidence_sha256 = "2bf5894bd876db78da7bffa7c280aeb4439d81af883a1f5edfe475d52c8ae3d4"
 
 [[identity.partition]]
 variable = "105.257"
 columns = { FodelseLandNamn = "105.257", FodelseLandnamn = "105.257" }
 columns_ref = "Complete native family and physical-peer census; the same literal name/definition and own RTB dictionaries establish this one native quantity. Explicitly retain both delivery spellings in every original variant/year, without global spelling folding or changing any coding. Exact overlapping SFI2018 representations remain separately bounded. Batch53-SCB-finish-source-proof.json."
-expected_evidence_sha256 = "33563727db0be09313af8229aa0d7ddb0772283db82b48c2ae51c27b6d1af1f4"
+expected_evidence_sha256 = "8fedea047f603291454eaa72198db5944027553f46aa57559cfc9b0cd5208d95"
 
 [[representation.parallel]]
 valid_from = "2018-01-01"
@@ -470,6 +470,7 @@ variable = "105.14815.skolkommun"
 variant = "105.1557"
 column_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "SkolKommun", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-06-30", column = "Skolkommun", source_editions = ["2018 vårterminen"] }]
+expected_evidence_sha256 = "88f19619326a4e2cab08a558c5790c7a58cb3d9b07f2fbc2607c6c8326c56dd8"
 evidence = "Complete native and physical-peer census: these supplied columns differ only by letter case and declare the same native member and definition. Keep each source field and coding, without manufacturing observations or correcting storage. Exact original edition witnesses bound only this alias overlap. Batch53-case-alias-proof.json."
 noted = "2026-10-02"
 
@@ -481,6 +482,7 @@ variable = "105.257"
 variant = "105.1557"
 column_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "FodelseLandNamn", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-06-30", column = "FodelseLandnamn", source_editions = ["2018 vårterminen"] }]
+expected_evidence_sha256 = "24dbd1431820c89dcd00a1c53ab26423d564770386f88c40675599377b9f35ca"
 evidence = "Complete native and physical-peer census: these supplied columns differ only by letter case and declare the same native member and definition. Keep each source field and coding, without manufacturing observations or correcting storage. Exact original edition witnesses bound only this alias overlap. Batch53-case-alias-proof.json."
 noted = "2026-10-02"
 
@@ -492,5 +494,6 @@ variable = "105.32738.skollan"
 variant = "105.1557"
 column_metadata = "per_column"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "SkolLan", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-06-30", column = "Skollan", source_editions = ["2018 vårterminen"] }]
+expected_evidence_sha256 = "ed071e723acc1a0c6eab1eef54fc028fef6dfd125da569a7696a98d9733abffc"
 evidence = "Complete native and physical-peer census: these supplied columns differ only by letter case and declare the same native member and definition. Keep each source field and coding, without manufacturing observations or correcting storage. Exact original edition witnesses bound only this alias overlap. Batch53-case-alias-proof.json."
 noted = "2026-10-02"

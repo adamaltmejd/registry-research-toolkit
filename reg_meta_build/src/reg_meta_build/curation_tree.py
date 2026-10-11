@@ -359,6 +359,9 @@ class ErrataDeliveredEntry(_CurationModel):
     upstream: str | None = None
     native_variable_id: int | None = None
     storage_column: str | None = None
+    # Full originals of the documented column and the rows the entry rewrites or
+    # keeps beside its additions; a drifted definition makes the entry stale.
+    expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
     @model_validator(mode="after")
     def _additional_delivery_anchor(self) -> ErrataDeliveredEntry:
@@ -511,7 +514,6 @@ def _complete_original_expectations(records: list[RecordExpectation]) -> bool:
         and projection.edition_scope is not None
         and projection.edition_period_scope is not None
         and projection.parent_facts is not None
-        and projection.code_set_references is not None
         for record in records
         for projection in record.alternatives
     )
@@ -688,7 +690,6 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
                     or p.edition_scope is None
                     or p.edition_period_scope is None
                     or p.parent_facts is None
-                    or p.code_set_references is None
                     for p in (*alternatives, *authority)
                 )
                 or not any(
@@ -1032,6 +1033,8 @@ class ParallelRepresentationEntry(FiniteCurationWindow):
     column_metadata: Literal["shared", "per_column"] = "shared"
     coding_metadata: Literal["shared", "per_column"] = "shared"
     columns: list[ParallelRepresentationColumn] = Field(min_length=2)
+    # Full originals of every declared column's members in its declared editions.
+    expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     evidence: str
     noted: str
 
@@ -1527,12 +1530,13 @@ def _coding_window(window: list[str]) -> None:
         raise ValueError("coding window bounds are reversed")
 
 
-def _coding_members(
-    value: list[list[str]], *, allow_empty_code: bool = False
-) -> list[list[str]]:
+def _coding_members(value: list[list[str]]) -> list[list[str]]:
     if not value or any(len(pair) != 2 for pair in value):
         raise ValueError("members must be nonempty [code, label] pairs")
-    if any((not code and not allow_empty_code) or not label for code, label in value):
+    # A blank code is missing data, never a member, authored or delivered.
+    if any(not code.strip() for code, _ in value):
+        raise ValueError("member codes must be nonblank")
+    if any(not label for _, label in value):
         raise ValueError("member codes and labels must be nonempty")
     if len({tuple(pair) for pair in value}) != len(value):
         raise ValueError("members must be unique")
@@ -1606,7 +1610,7 @@ class CodingChoiceEntry(_CheckedCodingEntry):
     @field_validator("keep_members")
     @classmethod
     def _members(cls, value: list[list[str]] | None) -> list[list[str]] | None:
-        return None if value is None else _coding_members(value, allow_empty_code=True)
+        return None if value is None else _coding_members(value)
 
     @model_validator(mode="after")
     def _exclusive_members(self) -> CodingChoiceEntry:
@@ -1745,7 +1749,6 @@ class PreparedCodingAuthority(_CurationModel):
                     or alternative.edition_scope is None
                     or alternative.edition_period_scope is None
                     or alternative.parent_facts is None
-                    or alternative.code_set_references is None
                 ):
                     raise ValueError(
                         "source authority requires complete original facts and scopes"

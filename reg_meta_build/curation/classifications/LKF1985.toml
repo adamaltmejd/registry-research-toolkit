@@ -8,9 +8,6 @@ valid_from = 1985
 valid_to = 1985
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 codes_file = "lkf1985.csv"
-sentinel_codes = [
-  { code = "", meaning = "Uppgift saknas" },
-]
 
 [binding]
 value_set_labels = [

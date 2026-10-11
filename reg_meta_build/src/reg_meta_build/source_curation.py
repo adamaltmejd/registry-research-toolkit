@@ -47,6 +47,7 @@ from .source_evidence import (
     SourceField,
     SourceRecordRef,
     canonical_sha256,
+    evidence_sha256,
 )
 
 if TYPE_CHECKING:
@@ -87,13 +88,6 @@ class FieldExpectation(_CurationModel):
         field = SourceField(status=status, value=self.value)
         SourceFields.require_typed_field(self.name, field)
         return self
-
-
-class CodeSetExpectation(_CurationModel):
-    """A source-local code-set identity, independent of physical layout."""
-
-    reference_id: str = Field(min_length=1)
-    content_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
 
 class ParentFactProjection(_CurationModel):
@@ -153,7 +147,6 @@ class RecordProjection(_CurationModel):
     edition_period_scope: TemporalScope | None = None
     subject: SourceSubject | None = None
     native: NativeCoordinates | None = None
-    code_set_references: tuple[CodeSetExpectation, ...] | None = None
     parent_facts: tuple[ParentFactProjection, ...] | None = None
 
     @field_validator("native")
@@ -174,17 +167,6 @@ class RecordProjection(_CurationModel):
     ) -> tuple[ParentFactProjection, ...] | None:
         return None if parents is None else tuple(sorted(parents, key=_model_token))
 
-    @field_validator("code_set_references")
-    @classmethod
-    def _ordered_code_references(
-        cls, references: tuple[CodeSetExpectation, ...] | None
-    ) -> tuple[CodeSetExpectation, ...] | None:
-        if references is None:
-            return None
-        return tuple(
-            sorted(set(references), key=lambda r: (r.reference_id, r.content_sha256))
-        )
-
     @field_validator("fields")
     @classmethod
     def _ordered_fields(
@@ -203,7 +185,6 @@ class RecordProjection(_CurationModel):
             and self.edition_period_scope is None
             and self.subject is None
             and self.native is None
-            and self.code_set_references is None
             and self.parent_facts is None
         ):
             raise ValueError("a record projection must select at least one fact")
@@ -216,13 +197,12 @@ class RecordProjection(_CurationModel):
 
 def _projection_shape(
     projection: RecordProjection,
-) -> tuple[tuple[str, ...], bool, bool, bool, bool, bool, tuple[str, ...]]:
+) -> tuple[tuple[str, ...], bool, bool, bool, bool, tuple[str, ...]]:
     return (
         tuple(field.name for field in projection.fields),
         projection.edition_scope is not None,
         projection.edition_period_scope is not None,
         projection.subject is not None,
-        projection.code_set_references is not None,
         projection.parent_facts is not None,
         tuple(
             name
@@ -242,6 +222,15 @@ class RecordExpectation(_CurationModel):
 
     ref: SourceRecordRef
     alternatives: tuple[RecordProjection, ...]
+
+    @field_validator("alternatives")
+    @classmethod
+    def _ordered_alternatives(
+        cls, alternatives: tuple[RecordProjection, ...]
+    ) -> tuple[RecordProjection, ...]:
+        # A set of alternatives: authored order is never evidence, so a projection
+        # change that reorders tokens cannot stale an otherwise identical guard.
+        return tuple(sorted(alternatives, key=_model_token))
 
     @model_validator(mode="after")
     def _finite_consistent_alternatives(
@@ -340,14 +329,16 @@ class PeerGuard(_CurationModel):
 def acknowledgement_evidence_sha256(
     records: Iterable[SourceRecord], coding_sha256: Iterable[str] = ()
 ) -> str:
-    """Pin full originals and bound physical coding evidence, including duplicates.
+    """Pin the guarded originals and their bound coding evidence, including duplicates.
 
-    Content ordering is immaterial; multiplicity is not. Coding tokens come from
-    coding_source_sha256, which retains raw associations and validity evidence.
+    Each original contributes its own content (evidence_sha256), so a change to an
+    unrelated record of the same delivery, a new delivery revision or a row re-sort
+    leaves the digest unchanged. Content ordering is immaterial; multiplicity is not.
+    Coding tokens are evidence_sha256 of the bound claims, which retain raw
+    associations and validity evidence.
     """
     return acknowledgement_hashes_sha256(
-        (canonical_sha256(record.model_dump(mode="json")) for record in records),
-        coding_sha256,
+        (evidence_sha256(record) for record in records), coding_sha256
     )
 
 
@@ -801,7 +792,6 @@ class DeliveryMetadataDecision(_CurationModel):
                     or projection.edition_scope is None
                     or projection.edition_period_scope is None
                     or projection.parent_facts is None
-                    or projection.code_set_references is None
                 ):
                     raise ValueError(
                         "delivery metadata need complete original source projections"
@@ -1068,7 +1058,9 @@ class DocumentedCodingSelection(_CurationModel):
             FiniteCurationWindow(valid_from=self.witness[0], valid_to=self.witness[1])
         if not self.version_label.strip() or not self.members:
             raise ValueError("documented coding needs a label and finite members")
-        # Empty-string codes are literal values; labels must still supply meaning.
+        # A blank code is missing data, never a member, authored or delivered.
+        if any(not code.strip() for code, _ in self.members):
+            raise ValueError("documented member codes must be nonblank")
         if any(not label.strip() for _, label in self.members):
             raise ValueError("documented member labels must be nonempty")
         if len({code for code, _ in self.members}) != len(self.members):
@@ -1350,17 +1342,6 @@ def _project_record(record: SourceRecord, shape: RecordProjection) -> RecordProj
         )
         if shape.parent_facts is not None
         else None,
-        code_set_references=(
-            tuple(
-                CodeSetExpectation(
-                    reference_id=reference.reference_id,
-                    content_sha256=reference.content_sha256,
-                )
-                for reference in record.code_set_references
-            )
-            if shape.code_set_references is not None
-            else None
-        ),
     )
 
 
@@ -1612,7 +1593,6 @@ class SourceEvidence:
                 if shape.native is not None
                 else None,
                 shape.parent_facts is not None,
-                shape.code_set_references is not None,
             ),
         )
         if key not in self.projections:
@@ -1873,7 +1853,6 @@ __all__ = [
     "AcknowledgeDecision",
     "ApplicabilityIssue",
     "CaseEvaluation",
-    "CodeSetExpectation",
     "CurationCase",
     "FieldExpectation",
     "ParentFactProjection",
@@ -1898,7 +1877,6 @@ def capture_expectations(
     *,
     fields: tuple[str, ...],
     parents: bool = False,
-    coding: bool = False,
 ) -> tuple[RecordExpectation, ...]:
     """Capture a finite conversion baseline; never call this to refresh stale cases."""
     grouped = defaultdict(dict)
@@ -1914,15 +1892,6 @@ def capture_expectations(
             subject=record.subject,
             edition_scope=record.edition_scope,
             edition_period_scope=record.edition_period_scope,
-            code_set_references=tuple(
-                CodeSetExpectation(
-                    reference_id=ref.reference_id,
-                    content_sha256=ref.content_sha256,
-                )
-                for ref in record.code_set_references
-            )
-            if coding
-            else None,
             parent_facts=tuple(
                 parent_fact_projection(parent) for parent in record.parent_facts
             )
@@ -1932,9 +1901,7 @@ def capture_expectations(
         token = canonical_sha256(projection.model_dump(mode="json"))
         grouped[record_ref(record)][token] = projection
     return tuple(
-        RecordExpectation(
-            ref=ref, alternatives=tuple(items[key] for key in sorted(items))
-        )
+        RecordExpectation(ref=ref, alternatives=tuple(items.values()))
         for ref, items in sorted(
             grouped.items(),
             key=lambda item: (item[0].source, item[0].semantic_record_key),

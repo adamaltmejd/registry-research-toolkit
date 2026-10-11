@@ -12,7 +12,11 @@ from reg_meta_build.curation_tree import (
 from reg_meta_build.id import mint
 from reg_meta_build.prepared_catalog import ReferenceEvidence
 from reg_meta_build.resolved_metadata import RetainedDocumentaryRelationship
-from reg_meta_build.source_curation import ResolutionDiagnostic, SourceRecordRef
+from reg_meta_build.source_curation import (
+    ResolutionDiagnostic,
+    SourceRecordRef,
+    acknowledgement_evidence_sha256,
+)
 
 from .documentary import (
     DocumentaryRelationship,
@@ -20,7 +24,7 @@ from .documentary import (
     SourceCodeCrosswalkDeclaration,
     SourceDerivationDeclaration,
 )
-from .source_evidence import canonical_sha256
+from .source_evidence import evidence_sha256
 
 if TYPE_CHECKING:
     from reg_meta_build.curation_tree import CurationTree, RegisterCuration
@@ -101,16 +105,11 @@ def compile_documentary_bindings(
         matches = declarations[entry.source, entry.table, entry.row]
         table_matches = tables[entry.source, entry.table]
         errors = []
-        if (
-            len(matches) != 1
-            or canonical_sha256(matches[0].model_dump(mode="json"))
-            != entry.payload_sha256
-        ):
+        if len(matches) != 1 or evidence_sha256(matches[0]) != entry.payload_sha256:
             errors.append("exact declaration payload is missing, ambiguous or changed")
         if (
             len(table_matches) != 1
-            or canonical_sha256(table_matches[0].model_dump(mode="json"))
-            != entry.table_sha256
+            or evidence_sha256(table_matches[0]) != entry.table_sha256
         ):
             errors.append(
                 "complete physical table peers are missing, ambiguous or changed"
@@ -151,10 +150,7 @@ def compile_documentary_bindings(
                 )
                 continue
             key, records = found[0]
-            if (
-                canonical_sha256([r.model_dump(mode="json") for r in records])
-                != expected
-            ):
+            if acknowledgement_evidence_sha256(records) != expected:
                 errors.append(f"complete endpoint originals changed for {native!r}")
             if variable_families.get(fqid) != {(entry.source, key)}:
                 errors.append(
@@ -170,10 +166,7 @@ def compile_documentary_bindings(
                 for _, members in families[entry.source, guard.native]
                 for r in members
             ]
-            if (
-                canonical_sha256([r.model_dump(mode="json") for r in records])
-                != guard.originals_sha256
-            ):
+            if acknowledgement_evidence_sha256(records) != guard.originals_sha256:
                 errors.append(f"negative native endpoint {guard.native!r} changed")
         coordinate = entry.source, entry.table, entry.row
         if counts[coordinate] != 1:

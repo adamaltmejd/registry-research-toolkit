@@ -1,0 +1,12 @@
+{
+  "replaces": [
+    "test_curation_compile_native_partitions.py::test_authored_native_partition_pins_complete_originals_on_fresh_compile[missing_duplicate]"
+  ],
+  "note": "A guarded original disappears: BASE's second physical OLD row (CVID 101, the copy that also delivers a VariabelExtern_kommentar cell) is no longer delivered, while the first copy is unchanged. The replaced test's [missing_duplicate] variant: every original the family delivered is in the digest, so base is reported stale and quantity is withheld. The two copies differ in that cell (SCB refuses byte-identical rows), so this step pins a missing original, not the multiset rule for identical evidence, which test_source_coding.py pins. Expected values are the pre-narrowing step 2 oracle (the stale base partition and no base variables), which a change to a guarded original keeps.",
+  "fails_if": "the partition digest stops covering every original of the family (for example only the first record per semantic key), so base's partition still applies after one of its two OLD rows disappears",
+  "sources": "scb-native-partitions-duplicate-dropped",
+  "authored_from": "scb-native-partitions-reviewed",
+  "registers": [
+    "1"
+  ]
+}

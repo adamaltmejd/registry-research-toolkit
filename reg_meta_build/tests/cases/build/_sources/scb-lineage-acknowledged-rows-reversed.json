@@ -1,0 +1,422 @@
+{
+  "description": "scb-lineage-acknowledged with its Registerinformation rows in reverse order: the same rows and contents at other physical positions.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 8003,
+        "var_id": 802,
+        "colname": "FILLER",
+        "year": "2000",
+        "regver_id": 820,
+        "register": [
+          "Second origin (SND)",
+          8,
+          82
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 8002,
+        "var_id": 801,
+        "colname": "TWO_ORIGINS",
+        "year": "2000",
+        "regver_id": 810,
+        "register": [
+          "Second origin (SND)",
+          8,
+          81
+        ],
+        "cells": {
+          "Registervariantnamn": "Other"
+        }
+      },
+      {
+        "cvid": 8001,
+        "var_id": 801,
+        "colname": "TWO_ORIGINS",
+        "year": "2000",
+        "regver_id": 800,
+        "register": [
+          "Second origin (SND)",
+          8,
+          80
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 7003,
+        "var_id": 702,
+        "colname": "FILLER",
+        "year": "2000",
+        "regver_id": 720,
+        "register": [
+          "First origin (FST)",
+          7,
+          72
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 7002,
+        "var_id": 701,
+        "colname": "TWO_ORIGINS",
+        "year": "2000",
+        "regver_id": 710,
+        "register": [
+          "First origin (FST)",
+          7,
+          71
+        ],
+        "cells": {
+          "Registervariantnamn": "Other"
+        }
+      },
+      {
+        "cvid": 7001,
+        "var_id": 701,
+        "colname": "TWO_ORIGINS",
+        "year": "2000",
+        "regver_id": 700,
+        "register": [
+          "First origin (FST)",
+          7,
+          70
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 6004,
+        "var_id": 603,
+        "colname": "NEW_SOURCE",
+        "year": "2000",
+        "regver_id": 600,
+        "register": [
+          "Identity edge register (IDE)",
+          6,
+          60
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 6003,
+        "var_id": 602,
+        "colname": "FILLER",
+        "year": "2000",
+        "regver_id": 620,
+        "register": [
+          "Identity edge register (IDE)",
+          6,
+          62
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 6002,
+        "var_id": 601,
+        "colname": "LINKED",
+        "year": "2000",
+        "regver_id": 610,
+        "register": [
+          "Identity edge register (IDE)",
+          6,
+          61
+        ],
+        "cells": {
+          "Registervariantnamn": "Other"
+        }
+      },
+      {
+        "cvid": 6001,
+        "var_id": 601,
+        "colname": "LINKED",
+        "year": "2000",
+        "regver_id": 600,
+        "register": [
+          "Identity edge register (IDE)",
+          6,
+          60
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 5003,
+        "var_id": 502,
+        "colname": "FILLER",
+        "year": "2000",
+        "regver_id": 520,
+        "register": [
+          "Changed candidate register (CHG)",
+          5,
+          52
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 5002,
+        "var_id": 501,
+        "colname": "CHANGED",
+        "year": "2000",
+        "regver_id": 510,
+        "register": [
+          "Changed candidate register (CHG)",
+          5,
+          51
+        ],
+        "cells": {
+          "Registervariantnamn": "Other"
+        }
+      },
+      {
+        "cvid": 5001,
+        "var_id": 501,
+        "colname": "CHANGED",
+        "year": "2000",
+        "regver_id": 500,
+        "register": [
+          "Changed candidate register (CHG)",
+          5,
+          50
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 4003,
+        "var_id": 402,
+        "colname": "FILLER",
+        "year": "2000",
+        "regver_id": 420,
+        "register": [
+          "Added candidate register (ADD)",
+          4,
+          42
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 4002,
+        "var_id": 401,
+        "colname": "ADDED",
+        "year": "2000",
+        "regver_id": 410,
+        "register": [
+          "Added candidate register (ADD)",
+          4,
+          41
+        ],
+        "cells": {
+          "Registervariantnamn": "Other"
+        }
+      },
+      {
+        "cvid": 4001,
+        "var_id": 401,
+        "colname": "ADDED",
+        "year": "2000",
+        "regver_id": 400,
+        "register": [
+          "Added candidate register (ADD)",
+          4,
+          40
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 3003,
+        "var_id": 302,
+        "colname": "FILLER",
+        "year": "2000",
+        "regver_id": 320,
+        "register": [
+          "Original register (ORI)",
+          3,
+          32
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 3002,
+        "var_id": 301,
+        "colname": "ORIGINAL",
+        "year": "2000",
+        "regver_id": 310,
+        "register": [
+          "Original register (ORI)",
+          3,
+          31
+        ],
+        "cells": {
+          "Registervariantnamn": "Other"
+        }
+      },
+      {
+        "cvid": 3001,
+        "var_id": 301,
+        "colname": "ORIGINAL",
+        "year": "2000",
+        "regver_id": 300,
+        "register": [
+          "Original register (ORI)",
+          3,
+          30
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 2003,
+        "var_id": 202,
+        "colname": "FILLER",
+        "year": "2000",
+        "regver_id": 220,
+        "register": [
+          "Exact register (EXA)",
+          2,
+          22
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 2002,
+        "var_id": 201,
+        "colname": "EXACT",
+        "year": "2000",
+        "regver_id": 210,
+        "register": [
+          "Exact register (EXA)",
+          2,
+          21
+        ],
+        "cells": {
+          "Registervariantnamn": "Other"
+        }
+      },
+      {
+        "cvid": 2001,
+        "var_id": 201,
+        "colname": "EXACT",
+        "year": "2000",
+        "regver_id": 200,
+        "register": [
+          "Exact register (EXA)",
+          2,
+          20
+        ],
+        "cells": {
+          "Registervariantnamn": "People"
+        }
+      },
+      {
+        "cvid": 1007,
+        "var_id": 106,
+        "colname": "TWO_ORIGINS",
+        "year": "2001",
+        "regver_id": 111,
+        "register": [
+          "EXAMPLE",
+          1,
+          10
+        ],
+        "varsource": "Second origin (SND) : People"
+      },
+      {
+        "cvid": 1006,
+        "var_id": 106,
+        "colname": "TWO_ORIGINS",
+        "year": "2000",
+        "register": [
+          "EXAMPLE",
+          1,
+          10
+        ],
+        "varsource": "First origin (FST) : People"
+      },
+      {
+        "cvid": 1005,
+        "var_id": 105,
+        "colname": "LINKED",
+        "year": "2000",
+        "register": [
+          "EXAMPLE",
+          1,
+          10
+        ],
+        "varsource": "Identity edge register (IDE) : People"
+      },
+      {
+        "cvid": 1004,
+        "var_id": 104,
+        "colname": "CHANGED",
+        "year": "2000",
+        "register": [
+          "EXAMPLE",
+          1,
+          10
+        ],
+        "varsource": "Changed candidate register (CHG) : People"
+      },
+      {
+        "cvid": 1003,
+        "var_id": 103,
+        "colname": "ADDED",
+        "year": "2000",
+        "register": [
+          "EXAMPLE",
+          1,
+          10
+        ],
+        "varsource": "Added candidate register (ADD) : People"
+      },
+      {
+        "cvid": 1002,
+        "var_id": 102,
+        "colname": "ORIGINAL",
+        "year": "2000",
+        "register": [
+          "EXAMPLE",
+          1,
+          10
+        ],
+        "varsource": "Original register (ORI) : People"
+      },
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "EXACT",
+        "year": "2000",
+        "register": [
+          "EXAMPLE",
+          1,
+          10
+        ],
+        "varsource": "Exact register (EXA) : People"
+      }
+    ]
+  }
+}

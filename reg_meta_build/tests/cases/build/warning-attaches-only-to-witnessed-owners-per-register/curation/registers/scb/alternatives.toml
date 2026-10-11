@@ -19,6 +19,7 @@ co_delivered = true
 column_metadata = "per_column"
 valid_from = "2020-01-01"
 valid_to = "2021-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=3 key=member:3001,member:3002}}
 evidence = "Reviewed physical alternatives"
 noted = "2026-10-06"
 columns = [{column = "First", valid_from = "2020-01-01", valid_to = "2021-12-31", source_editions = ["2020", "2021"]}, {column = "Second", valid_from = "2020-01-01", valid_to = "2021-12-31", source_editions = ["2020", "2021"]}]

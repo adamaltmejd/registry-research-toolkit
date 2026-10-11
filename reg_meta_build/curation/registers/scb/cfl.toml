@@ -120,7 +120,7 @@ valid_from = "2003-07-01"
 valid_to = "2003-12-31"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "93c8446330182a63bfc60988f277a3080971949911d24c6e01f7e680661e46a1"
+expected_evidence_sha256 = "10d7454ffda9fab70a7f918d91bb90205e20d384df413e2e82aa88c2dd06828f"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -131,7 +131,7 @@ valid_from = "2004-07-01"
 valid_to = "2004-12-31"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "93c8446330182a63bfc60988f277a3080971949911d24c6e01f7e680661e46a1"
+expected_evidence_sha256 = "10d7454ffda9fab70a7f918d91bb90205e20d384df413e2e82aa88c2dd06828f"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -142,7 +142,7 @@ valid_from = "2005-07-01"
 valid_to = "2005-12-31"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "93c8446330182a63bfc60988f277a3080971949911d24c6e01f7e680661e46a1"
+expected_evidence_sha256 = "10d7454ffda9fab70a7f918d91bb90205e20d384df413e2e82aa88c2dd06828f"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -153,7 +153,7 @@ valid_from = "2002-07-01"
 valid_to = "2002-12-31"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "d023771618a98d76d47cc14f9fde5329c55ab7d44b53a4e08113adbc103f6869"
+expected_evidence_sha256 = "34236620ad0523c0c99095098af3c37ad5b96e512f6d0704c600e9c42ae5586f"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -164,7 +164,7 @@ valid_from = "2003-07-01"
 valid_to = "2003-12-31"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "d023771618a98d76d47cc14f9fde5329c55ab7d44b53a4e08113adbc103f6869"
+expected_evidence_sha256 = "34236620ad0523c0c99095098af3c37ad5b96e512f6d0704c600e9c42ae5586f"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -175,7 +175,7 @@ valid_from = "2004-07-01"
 valid_to = "2004-12-31"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "d023771618a98d76d47cc14f9fde5329c55ab7d44b53a4e08113adbc103f6869"
+expected_evidence_sha256 = "34236620ad0523c0c99095098af3c37ad5b96e512f6d0704c600e9c42ae5586f"
 
 [[acknowledge]]
 code = "conflicting_coding_labels"
@@ -186,7 +186,7 @@ valid_from = "2006-07-01"
 valid_to = "2006-12-31"
 reason = "The exact active source code-and-label memberships agree, but the supplied lists have different native titles or version names. Keep the known response domain and leave its common title empty. Preserve every original list title, classification declaration, coding association and date; this does not select a preferred book or normalize contrary categories."
 evidence = "Complete accepted native-family review with actual same-register primary/summary/integer-identifier support, production maintained naming and curation compilation, and pinned declared classification books. Exact full-original and bound-coding guard. Proof: Batch48-coding-title-current-source-proof.json."
-expected_evidence_sha256 = "d023771618a98d76d47cc14f9fde5329c55ab7d44b53a4e08113adbc103f6869"
+expected_evidence_sha256 = "34236620ad0523c0c99095098af3c37ad5b96e512f6d0704c600e9c42ae5586f"
 
 [[coding.choice]]
 variable = "251.257"
@@ -196,7 +196,7 @@ periods = [["2007-01-01", "2007-06-30"]]
 reason = "Complete own active source lists were reviewed for reviewed label case only. Select this exact supplied domain; preserve all original labels, periods, membership metadata and associations. No codes are manufactured, recoded or borrowed. Ordinary code meanings agree; contrary domains are excluded."
 source = "Complete native-family, actual support and own active-list review: Batch52-CFL-FEK-active-domain-review.json; reviewed selections Batch52-CFL-FEK-choice-review.json."
 data_warning = "Competing own source lists differ only by reviewed label case only. The catalog uses one complete reviewed supplied list; both source alternatives remain evidence."
-expected_evidence_sha256 = "7c7769df3c8e73fea0a2536d81cfd7c18e29406c39e1519d056763a2c5a077cf"
+expected_evidence_sha256 = "6500510c99171effd88d5f22f71e139baffd41a751d451e9a8458c376a5e94d9"
 keep = "Länder och världsdelar enligt RTB 2007"
 keep_members = [["AFGHANISTAN", "Afghanistan"], ["ALBANIEN", "Albanien"], ["ALGERIET", "Algeriet"], ["ANDORRA", "Andorra"], ["ANGOLA", "Angola"], ["ANGUILLA", "Anguilla"], ["ANTIGUA OCH BARBUDA", "Antigua och Barbuda"], ["ARABEMIRATEN, FÖRENADE", "Arabemiraten, Förenade"], ["ARABREPUBLIKEN EGYPTEN", "Arabrepubliken Egypten"], ["ARGENTINA", "Argentina"], ["ARMENIEN", "Armenien"], ["AUSTRALIEN", "Australien"], ["AVREG. ENL 26§ FBF", "Avreg. enl 26§ Fbf"], ["AZERBAJDJAN", "Azerbajdjan"], ["BAHAMAS", "Bahamas"], ["BAHRAIN", "Bahrain"], ["BANGLADESH", "Bangladesh"], ["BARBADOS", "Barbados"], ["BELGIEN", "Belgien"], ["BELIZE", "Belize"], ["BENIN", "Benin"], ["BERMUDA", "Bermuda"], ["BHUTAN", "Bhutan"], ["BOLIVIA", "Bolivia"], ["BOSNIEN-HERCEGOVINA", "Bosnien-Hercegovina"], ["BOTSWANA", "Botswana"], ["BRASILIEN", "Brasilien"], ["BRUNEI DARUSSALAM", "Brunei Darussalam"], ["BULGARIEN", "Bulgarien"], ["BURKINA FASO", "Burkina Faso"], ["BURUNDI", "Burundi"], ["CENTRALAFRIKANSKA REPUBLIKEN", "Centralafrikanska Republiken"], ["CHILE", "Chile"], ["COLOMBIA", "Colombia"], ["COMORERNA", "Comorerna"], ["COSTA RICA", "Costa Rica"], ["CYPERN", "Cypern"], ["DANMARK", "Danmark"], ["DANMARK DK", "Danmark Dk"], ["DANZIG", "Danzig"], ["DJIBOUTI", "Djibouti"], ["DOMINICA", "Dominica"], ["DOMINIKANSKA REPUBLIKEN", "Dominikanska Republiken"], ["ECUADOR", "Ecuador"], ["EGYPTEN", "Egypten"], ["EKVATORIALGUINEA", "Ekvatorialguinea"], ["EL SALVADOR", "El Salvador"], ["ELFENBENSKUSTEN", "Elfenbenskusten"], ["ERITREA", "Eritrea"], ["ESTLAND", "Estland"], ["ETIOPIEN", "Etiopien"], ["FIJI", "Fiji"], ["FILIPPINERNA", "Filippinerna"], ["FINLAND", "Finland"], ["FRANKRIKE", "Frankrike"], ["FRANSKA MAROCKO", "Franska Marocko"], ["GABON", "Gabon"], ["GAMBIA", "Gambia"], ["GAZA-OMRÅDET", "Gaza-området"], ["GEORGIEN", "Georgien"], ["GHANA", "Ghana"], ["GIBRALTAR", "Gibraltar"], ["GREKLAND", "Grekland"], ["GRENADA", "Grenada"], ["GUATEMALA", "Guatemala"], ["GUINEA", "Guinea"], ["GUINEA-BISSAU", "Guinea-Bissau"], ["GUYANA", "Guyana"], ["HAITI", "Haiti"], ["HONDURAS", "Honduras"], ["HONGKONG", "Hongkong"], ["INDIEN", "Indien"], ["INDONESIEN", "Indonesien"], ["INT. NAT. TERRITORIUM", "Int. nat. territorium"], ["IRAK", "Irak"], ["IRAN", "Iran"], ["IRLAND", "Irland"], ["ISLAND", "Island"], ["ISRAEL", "Israel"], ["ITALIEN", "Italien"], ["JAMAICA", "Jamaica"], ["JAPAN", "Japan"], ["JORDANIEN", "Jordanien"], ["JUGOSLAVIEN", "Jugoslavien"], ["JUNGFRUÖARNA, BRITTISKA", "Jungfruöarna, Brittiska"], ["KAMBODJA", "Kambodja"], ["KAMERUN", "Kamerun"], ["KANADA", "Kanada"], ["KAP VERDE", "Kap Verde"], ["KAZAKSTAN", "Kazakstan"], ["KENYA", "Kenya"], ["KINA", "Kina"], ["KIRGIZISTAN", "Kirgizistan"], ["KIRIBATI", "Kiribati"], ["KONGO", "Kongo"], ["KONGO, DEMOKRATISKA REPUBLIKEN", "Kongo, Demokratiska Republiken"], ["KOREA, NORD-", "Korea, Nord-"], ["KOREA, SYD-", "Korea, Syd-"], ["KROATIEN", "Kroatien"], ["KUBA", "Kuba"], ["KUWAIT", "Kuwait"], ["LAOS", "Laos"], ["LESOTHO", "Lesotho"], ["LETTLAND", "Lettland"], ["LIBANON", "Libanon"], ["LIBERIA", "Liberia"], ["LIBYEN", "Libyen"], ["LIECHTENSTEIN", "Liechtenstein"], ["LITAUEN", "Litauen"], ["LUXEMBURG", "Luxemburg"], ["MADAGASKAR", "Madagaskar"], ["MAKEDONIEN", "Makedonien"], ["MALAJISKA FÖRBUNDET", "Malajiska Förbundet"], ["MALAWI", "Malawi"], ["MALAYSIA", "Malaysia"], ["MALDIVERNA", "Maldiverna"], ["MALI", "Mali"], ["MALTA", "Malta"], ["MAROCKO", "Marocko"], ["MARSHALLÖARNA", "Marshallöarna"], ["MAURETANIEN", "Mauretanien"], ["MAURITIUS", "Mauritius"], ["MEXIKO", "Mexiko"], ["MIKRONESIEN", "Mikronesien"], ["MOCAMBIQUE", "Mocambique"], ["MOLDAVIEN", "Moldavien"], ["MONACO", "Monaco"], ["MONGOLIET", "Mongoliet"], ["MONTENEGRO", "Montenegro"], ["MYANMAR", "Myanmar"], ["NAMIBIA", "Namibia"], ["NAURU", "Nauru"], ["NEDERLÄNDERNA", "Nederländerna"], ["NEPAL", "Nepal"], ["NICARAGUA", "Nicaragua"], ["NIGER", "Niger"], ["NIGERIA", "Nigeria"], ["NORGE", "Norge"], ["NYA ZEELAND", "Nya Zeeland"], ["OB", "Ob"], ["OKÄNT", "Okänt"], ["OKÄNT LAND", "Okänt land"], ["OKÄNT ÖÖ", "Okänt ÖÖ"], ["OMAN", "Oman"], ["PAKISTAN", "Pakistan"], ["PALAU", "Palau"], ["PALESTINA", "Palestina"], ["PANAMA", "Panama"], ["PAPUA NYA GUINEA", "Papua Nya Guinea"], ["PARAGUAY", "Paraguay"], ["PERU", "Peru"], ["POLEN", "Polen"], ["PORTUGAL", "Portugal"], ["QATAR", "Qatar"], ["RUMÄNIEN", "Rumänien"], ["RWANDA", "Rwanda"], ["RYSSLAND", "Ryssland"], ["S:T KITTS OCH NEVIS", "S:t Kitts och Nevis"], ["S:T LUCIA", "S:t Lucia"], ["S:T VINCENT OCH GRENADINERNA", "S:t Vincent och Grenadinerna"], ["SALOMONÖARNA", "Salomonöarna"], ["SAMOA", "Samoa"], ["SAN MARINO", "San Marino"], ["SAO TOME OCH PRINCIPE", "Sao Tome och Principe"], ["SAUDIARABIEN", "Saudiarabien"], ["SCHWEIZ", "Schweiz"], ["SENEGAL", "Senegal"], ["SERBIEN", "Serbien"], ["SERBIEN OCH MONTENEGRO", "Serbien och Montenegro"], ["SEYCHELLERNA", "Seychellerna"], ["SIERRA LEONE", "Sierra Leone"], ["SIKKIM", "Sikkim"], ["SINGAPORE", "Singapore"], ["SLOVAKIEN", "Slovakien"], ["SLOVENIEN", "Slovenien"], ["SOMALIA", "Somalia"], ["SOVJETUNIONEN", "Sovjetunionen"], ["SPANIEN", "Spanien"], ["SRI LANKA", "Sri Lanka"], ["STATSLÖS", "Statslös"], ["STORBRITANNIEN OCH NORDIRLAND", "Storbritannien och Nordirland"], ["SUDAN", "Sudan"], ["SURINAM", "Surinam"], ["SWAZILAND", "Swaziland"], ["SYDAFRIKA", "Sydafrika"], ["SYDJEMEN", "Sydjemen"], ["SYRIEN", "Syrien"], ["Sverige", "Sverige"], ["TADJIKISTAN", "Tadjikistan"], ["TAIWAN", "Taiwan"], ["TANZANIA", "Tanzania"], ["TCHAD", "Tchad"], ["THAILAND", "Thailand"], ["TJECKIEN", "Tjeckien"], ["TJECKOSLOVAKIEN", "Tjeckoslovakien"], ["TOGO", "Togo"], ["TONGA", "Tonga"], ["TRINIDAD OCH TOBAGO", "Trinidad och Tobago"], ["TUNISIEN", "Tunisien"], ["TURKIET", "Turkiet"], ["TURKMENISTAN", "Turkmenistan"], ["TUVALU", "Tuvalu"], ["TYSKA DEM REP (DDR)", "Tyska Dem Rep (DDR)"], ["TYSKLAND", "Tyskland"], ["UGANDA", "Uganda"], ["UKRAINA", "Ukraina"], ["UNDER UTREDNING", "Under utredning"], ["UNGERN", "Ungern"], ["UPPGIFT SAKNAS", "Uppgift saknas"], ["UPPHÖRT LAND", "Upphört land"], ["URUGUAY", "Uruguay"], ["USA", "Usa"], ["UZBEKISTAN", "Uzbekistan"], ["VANUATU", "Vanuatu"], ["VATIKANSTATEN", "Vatikanstaten"], ["VENEZUELA", "Venezuela"], ["VIETNAM", "Vietnam"], ["VIETNAM, REP", "Vietnam, Rep"], ["VITRYSSLAND", "Vitryssland"], ["VÄSTBANKEN", "Västbanken"], ["VÄSTRA SAMOA", "Västra Samoa"], ["YEMEN", "Yemen"], ["ZAMBIA", "Zambia"], ["ZANZIBAR", "Zanzibar"], ["ZIMBABWE", "Zimbabwe"], ["ÖSTERRIKE", "Österrike"], ["ÖSTTIMOR", "Östtimor"]]
 over = ["Länder och världsdelar enligt RTB 2006"]
@@ -209,7 +209,7 @@ periods = [["2005-07-01", "2005-12-31"]]
 reason = "Complete own active source lists were reviewed for reviewed equivalent county labels. Select this exact supplied domain; preserve all original labels, periods, membership metadata and associations. No codes are manufactured, recoded or borrowed. Ordinary code meanings agree; contrary domains are excluded."
 source = "Complete native-family, actual support and own active-list review: Batch52-CFL-FEK-active-domain-review.json; reviewed selections Batch52-CFL-FEK-choice-review.json."
 data_warning = "Competing own source lists differ only by reviewed equivalent county labels. The catalog uses one complete reviewed supplied list; both source alternatives remain evidence."
-expected_evidence_sha256 = "d023771618a98d76d47cc14f9fde5329c55ab7d44b53a4e08113adbc103f6869"
+expected_evidence_sha256 = "34236620ad0523c0c99095098af3c37ad5b96e512f6d0704c600e9c42ae5586f"
 keep = "LKF 2005-01-01/ Län, kommuner och församlingar"
 keep_members = [["01", "Stockholms län"], ["03", "Uppsala län"], ["04", "Södermanlands län"], ["05", "Östergötlands län"], ["06", "Jönköpings län"], ["07", "Kronobergs län"], ["08", "Kalmar län"], ["09", "Gotlands län"], ["10", "Blekinge län"], ["12", "Skåne län"], ["13", "Hallands län"], ["14", "Västra Götalands län"], ["17", "Värmlands län"], ["18", "Örebro län"], ["19", "Västmanlands län"], ["20", "Dalarnas län"], ["21", "Gävleborgs län"], ["22", "Västernorrlands län"], ["23", "Jämtlands län"], ["24", "Västerbottens län"], ["25", "Norrbottens län"]]
 over = ["LKF 2006-01-01/ Län, kommuner och församlingar"]
@@ -222,7 +222,7 @@ periods = [["2002-07-01", "2002-12-31"], ["2003-07-01", "2003-12-31"]]
 reason = "Complete own active source lists were reviewed for explicit missing-value token. Select this exact supplied domain; preserve all original labels, periods, membership metadata and associations. No codes are manufactured, recoded or borrowed. Ordinary code meanings agree; contrary domains are excluded."
 source = "Complete native-family, actual support and own active-list review: Batch52-CFL-FEK-active-domain-review.json; reviewed selections Batch52-CFL-FEK-choice-review.json."
 data_warning = "Competing own source lists differ only by explicit missing-value token. The catalog uses one complete reviewed supplied list; both source alternatives remain evidence."
-expected_evidence_sha256 = "c5d53d1a0664b2ad09f9c3ca68cc70b628c553c281a023651ed1732c656906ff"
+expected_evidence_sha256 = "958e690af9ac4ce2390824ecd1b789ac07898acca19d305bfb81173f0c940749"
 keep = "SUN 2000 NivaOld"
 keep_members = [["0", "Uppgift saknas"], ["1", "Förgymnasial utbildning kortare än 9 år"], ["2", "Förgymnasial utbildning 9 år"], ["3", "Gymnasial utbildning högst 2-årig"], ["4", "Gymnasial utbildning 3 år"], ["5", "Eftergymnasial utbildning kortare än 3 år"], ["6", "Eftergymnasial utbildning 3 år eller längre (exkl. forskarutbildning)"], ["7", "Forskarutbildning"]]
 over = ["SUN 2000 NivaOld"]
@@ -236,8 +236,8 @@ valid_from = "2002-07-01"
 valid_to = "2002-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ca56fbad94d631a43dff6c92fa756a3a6e760e0170cff632ddf587f0e4c05fcc"
-expected_diagnostic_sha256 = "6ffa731ad9a7d632b1a4a2824368d91edeaa17b92652806988c160bfbfacc49d"
+expected_evidence_sha256 = "32d970eff79b78f0561f058c63dee3cf885792bbe2e6182536557d59ebec7665"
+expected_diagnostic_sha256 = "a4ba4d56576b993914deb22ac25adeca293c6126b0f43faf6c14f652bec4948c"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -248,8 +248,8 @@ valid_from = "2003-01-01"
 valid_to = "2003-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ca56fbad94d631a43dff6c92fa756a3a6e760e0170cff632ddf587f0e4c05fcc"
-expected_diagnostic_sha256 = "66076473650b7f41cd47f512e1029d40a941fb5a855b26130f58bb7b73d44a6d"
+expected_evidence_sha256 = "32d970eff79b78f0561f058c63dee3cf885792bbe2e6182536557d59ebec7665"
+expected_diagnostic_sha256 = "c0155d0c5300040175b2be2621e63bdf5b5df5826fa59588005389a2ed8e58ab"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -260,8 +260,8 @@ valid_from = "2003-07-01"
 valid_to = "2003-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ca56fbad94d631a43dff6c92fa756a3a6e760e0170cff632ddf587f0e4c05fcc"
-expected_diagnostic_sha256 = "f741768692edb7c7d4c0d06deb404473768f3ba7b35f28bd8e0e8d4cce55027f"
+expected_evidence_sha256 = "32d970eff79b78f0561f058c63dee3cf885792bbe2e6182536557d59ebec7665"
+expected_diagnostic_sha256 = "a2853e66ba7fee52a7951ab7af0cc3470fd69d821b9f3c8ed289c13b2da21bab"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -272,8 +272,8 @@ valid_from = "2004-01-01"
 valid_to = "2004-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ca56fbad94d631a43dff6c92fa756a3a6e760e0170cff632ddf587f0e4c05fcc"
-expected_diagnostic_sha256 = "cbbfbf98abc21cc3f3f5a36dc32838b6dfc35974a3c263860147d00d3c9151f7"
+expected_evidence_sha256 = "32d970eff79b78f0561f058c63dee3cf885792bbe2e6182536557d59ebec7665"
+expected_diagnostic_sha256 = "573278b0f42c79c048e71036964808b0b6a608e4f2013214e52287f97e4881b9"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -284,8 +284,8 @@ valid_from = "2004-07-01"
 valid_to = "2004-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ca56fbad94d631a43dff6c92fa756a3a6e760e0170cff632ddf587f0e4c05fcc"
-expected_diagnostic_sha256 = "7fe7898fb43e49c04e5a2093d4d1a5a64021bc94de41b50fa000cd54ce0c8889"
+expected_evidence_sha256 = "32d970eff79b78f0561f058c63dee3cf885792bbe2e6182536557d59ebec7665"
+expected_diagnostic_sha256 = "e71251989e50fbbfdd933c63c05082d80526b335b2d3a4beea8351f74c9fa65e"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -296,8 +296,8 @@ valid_from = "2005-01-01"
 valid_to = "2005-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ca56fbad94d631a43dff6c92fa756a3a6e760e0170cff632ddf587f0e4c05fcc"
-expected_diagnostic_sha256 = "c08cdf80847cf20ee98baf55f6c4e339d8179f289b826674f4f80fecb0c31099"
+expected_evidence_sha256 = "32d970eff79b78f0561f058c63dee3cf885792bbe2e6182536557d59ebec7665"
+expected_diagnostic_sha256 = "fd5c1c9c3937238f5bbdb5fcd6fa68b440727579e6d13fac9633652015d6a415"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -308,8 +308,8 @@ valid_from = "2006-01-01"
 valid_to = "2006-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ca56fbad94d631a43dff6c92fa756a3a6e760e0170cff632ddf587f0e4c05fcc"
-expected_diagnostic_sha256 = "8aa6a965ca5642cfda49648a656855505f5a234b1ae784748485564e6f5d744f"
+expected_evidence_sha256 = "32d970eff79b78f0561f058c63dee3cf885792bbe2e6182536557d59ebec7665"
+expected_diagnostic_sha256 = "2cb76eb10c464d31880434e860422651450a9bb013f779683185ed976bca5967"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -320,8 +320,8 @@ valid_from = "2002-07-01"
 valid_to = "2002-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "93c8446330182a63bfc60988f277a3080971949911d24c6e01f7e680661e46a1"
-expected_diagnostic_sha256 = "9a6439762822fdf58d5f383ecbd7074d133c0e224d9b77e33759fd9520618b22"
+expected_evidence_sha256 = "10d7454ffda9fab70a7f918d91bb90205e20d384df413e2e82aa88c2dd06828f"
+expected_diagnostic_sha256 = "85ffa8739de2772f01d314f32b691b40f7523a192d666932febfd72fca664766"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -332,8 +332,8 @@ valid_from = "2006-07-01"
 valid_to = "2006-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "93c8446330182a63bfc60988f277a3080971949911d24c6e01f7e680661e46a1"
-expected_diagnostic_sha256 = "f4462be1034ca458be9a5c9144a72ceef5c61bb9b4f45d4e022585ef23b39987"
+expected_evidence_sha256 = "10d7454ffda9fab70a7f918d91bb90205e20d384df413e2e82aa88c2dd06828f"
+expected_diagnostic_sha256 = "48abbc3910241896b53a7b1eafe2debb68a015a03a099f7946f3147e18808541"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -344,8 +344,8 @@ valid_from = "2003-01-01"
 valid_to = "2003-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "7c7769df3c8e73fea0a2536d81cfd7c18e29406c39e1519d056763a2c5a077cf"
-expected_diagnostic_sha256 = "448a64e32ff33c91a8b4dbcc471d40763a1dd688516eafbf3a03f6026e9b2b5c"
+expected_evidence_sha256 = "6500510c99171effd88d5f22f71e139baffd41a751d451e9a8458c376a5e94d9"
+expected_diagnostic_sha256 = "8c4767a71c00a1409cfad26ee22fe6d3f2de85438eaa0681b38999bb1d53c325"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -356,8 +356,8 @@ valid_from = "2003-07-01"
 valid_to = "2003-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "7c7769df3c8e73fea0a2536d81cfd7c18e29406c39e1519d056763a2c5a077cf"
-expected_diagnostic_sha256 = "8f5b6ab7e43eb68b1dd19ae4a749d9998e728231072c3b9124dba11c0b121121"
+expected_evidence_sha256 = "6500510c99171effd88d5f22f71e139baffd41a751d451e9a8458c376a5e94d9"
+expected_diagnostic_sha256 = "d9ce597481a8c7c0a47f3dd08b2651e6e3e94c70fc7e17b164fb40ff28cc6aef"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -368,8 +368,8 @@ valid_from = "2004-01-01"
 valid_to = "2004-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "7c7769df3c8e73fea0a2536d81cfd7c18e29406c39e1519d056763a2c5a077cf"
-expected_diagnostic_sha256 = "07f1c8269b6cb96aef703f95f2d20a1dd0bb38e368f4e4cd5762aea3187e776e"
+expected_evidence_sha256 = "6500510c99171effd88d5f22f71e139baffd41a751d451e9a8458c376a5e94d9"
+expected_diagnostic_sha256 = "ee718f7685452132202b76e80f21b8f0ce0f6b80d08c7110f3f937a63f917483"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -380,8 +380,8 @@ valid_from = "2005-01-01"
 valid_to = "2005-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "7c7769df3c8e73fea0a2536d81cfd7c18e29406c39e1519d056763a2c5a077cf"
-expected_diagnostic_sha256 = "3f7203019ab04a1137755401c9937a1f38216deacb9fde3e978f37b87db57a7b"
+expected_evidence_sha256 = "6500510c99171effd88d5f22f71e139baffd41a751d451e9a8458c376a5e94d9"
+expected_diagnostic_sha256 = "fce990c8c7976b79ac7056b516ff8f040522ce6cff740293b5ffda4301bbaa59"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -392,8 +392,8 @@ valid_from = "2006-01-01"
 valid_to = "2006-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "7c7769df3c8e73fea0a2536d81cfd7c18e29406c39e1519d056763a2c5a077cf"
-expected_diagnostic_sha256 = "246f6468b5e2d6e93f31de0a66cbe9f395648005e871e73a94c0b38cf161a929"
+expected_evidence_sha256 = "6500510c99171effd88d5f22f71e139baffd41a751d451e9a8458c376a5e94d9"
+expected_diagnostic_sha256 = "47aec1b5a7b5261737e4fe8fa4a54c4802024d4f758ebf22d74f598da1a16980"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -404,8 +404,8 @@ valid_from = "2002-07-01"
 valid_to = "2002-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "daa3cc0063b6a5dc414ef74fad22ac7e6db37cce1178d51e9a210bf770a36272"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "4a16aab49aed9ba3d284e009e9a166f425c1b911384a6b590c69b13eaff06d0b"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -416,8 +416,8 @@ valid_from = "2003-01-01"
 valid_to = "2003-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "9d9598801b78cdd96bca72cab006ad3183a51ef70da5507818a98f5e0941a48a"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "e5b9d710aeb3e7656b3c8e51f3548c5ec16f098962a9b5f016ae3cc4c786cf8f"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -428,8 +428,8 @@ valid_from = "2003-07-01"
 valid_to = "2003-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "3000cf7d971668f39a2b68a60ef468b7a6cc5eb091c225c0501d2fa434a61802"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "e51308feb961fbe24d2a662cac5c529d46891c2350b858108dd57555447e6dfd"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -440,8 +440,8 @@ valid_from = "2004-01-01"
 valid_to = "2004-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "b545356f12565f06450e5a2d3802c511ba780757902fb4d20e086f79cba01121"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "550018226205587260ff47a6ba0363de52baeb114a947252943b72865ef23088"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -452,8 +452,8 @@ valid_from = "2004-07-01"
 valid_to = "2004-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "79f2e461647e7cc19243156ecedfdc526fc128d2c3e81aa8114d066e3cd264e8"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "13e8bce8abe019db700e0829ed937ae41ad289432fadf9ed9bae030f5b88f48b"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -464,8 +464,8 @@ valid_from = "2005-01-01"
 valid_to = "2005-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "32d79567c5d51697afcc34b561becfd739952857cf42fc9089b7c9047ed3a49f"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "3f2b932bb99f60c03d9af17ae87feabbc29f9a4ddca8871074808ac4aed62e2b"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -476,8 +476,8 @@ valid_from = "2005-07-01"
 valid_to = "2005-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "456b56cfc1e48d605d4026e85027aaad6d164ad2d5f15dd20c5419a27ca3db1f"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "9d6bb03b4e86ddeb431921fe8bd8af7b0974601cb69b8c1a71fbb2cb47ae4c35"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -488,8 +488,8 @@ valid_from = "2006-01-01"
 valid_to = "2006-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "30c763c62ef2dfcae44f8168f18c82a1b6291f43fc48f0d723add6a2f348acfc"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "8a60e52e974096783657d7bbd5ce0bb7fa1ea5a6a9ede5434775e1996f667b53"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -500,8 +500,8 @@ valid_from = "2006-07-01"
 valid_to = "2006-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "e18899d6e99130c7af10562965a9ef5a96e9ddcf397111e69672e75e6131a6c4"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "047ef0e392b5838f838376004e3fddda8131bfa715d20b84cfdee911b0bfb0c3"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -512,8 +512,8 @@ valid_from = "2007-01-01"
 valid_to = "2007-06-30"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "ab5717960abbb45f2cecc9b8ed87f38044086708448e4a644d1d9cf2fc1870fd"
-expected_diagnostic_sha256 = "183278dcd4e6b13401c672920d1522b9ffced6f3eb0c4ab29824b62b1cae443f"
+expected_evidence_sha256 = "5c22778083b199bed8828c5a3c436eab2a74f047f90a6bdde733a78a2761e913"
+expected_diagnostic_sha256 = "0648bef92115b29d6b12712ecf0b131e8c42c5178537ed4ebe863e994e4cd654"
 
 [[acknowledge]]
 code = "conflicting_code_memberships"
@@ -524,15 +524,15 @@ valid_from = "2006-07-01"
 valid_to = "2006-12-31"
 reason = "The exact overlapping own source lists have substantively different codes or contrary labels, including course-list coverage, country/geographic vintages or code0 meanings. The supplied facts do not establish one effective domain for this window. Preserve every original source list, code, date and association; retain the field and its declared classification while leaving only the ambiguous coding unavailable. Do not fabricate a union or select a historical vintage without evidence."
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "771920debf4f0614ce30c24a06f6ef048b78a527e48128c2a43d667e6972be0a"
-expected_diagnostic_sha256 = "77ef14060d9fd4493b60b028c5595cc1de7de22db4a94f3f68ac3dbb5dc63102"
+expected_evidence_sha256 = "5dca2a7c2830c77a171785ecc6780a0b72d92c97bd694862765df83fa365485f"
+expected_diagnostic_sha256 = "3f2ef2d50f7fa1429b737e9b01c6bb2d5d3f87e4a25375c2da477f66882e2b97"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "251.1280"
 columns = { Poang = "251.1280.poang", Poang1 = "251.1280.poang1", Poang2 = "251.1280.poang2", Poang3 = "251.1280.poang3", TPoang = "251.1280.tpoang" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "eb4da88b18b661305ef9bf8a6b4e3e997d3267551219e8685698ea7a8263b609"
+expected_evidence_sha256 = "0e0825c3f1d32dcfab1290a0be1e55858a501cae38ef2737e7e9f067b0330907"
 
 [[variable]]
 native_id = "251.1280.poang"

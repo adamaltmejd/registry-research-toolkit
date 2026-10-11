@@ -50,7 +50,7 @@ code = "unknown_support_key"
 subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 227)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"a018f07005db07fe85bfc3f33e324821b1aee4fad4eb665702cc2668b55dd484\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"09d25d5fb484d164f1aaac51b69d00b14777588dc29678ca899e4bdca88e80dc\"]}"]
-expected_evidence_sha256 = "4d26c8740ab2becf5dad69d2c95449b9f66489cabe8ad12e3d5143c57c04d140"
+expected_evidence_sha256 = "bf962679dc0b91136ecc39f31113198cbc88e60803b2eb20f90f9b5679ed2741"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
 
@@ -63,7 +63,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "2e1ac0674227094ccd37df05b3949993992149717e6f13ac9d4fdd23f6ed15cf"
+expected_evidence_sha256 = "f21c4a1e7ecae6f4ff6067ac646b8407f90e3b43ab4e9cda3672845bf682535c"
 expected_diagnostic_sha256 = "eb43632875e0ef99056043e1a86172a4da04b05b4dc30725b21c063efc7bcc19"
 
 [[acknowledge]]
@@ -75,7 +75,7 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "80b0a7545e7a434fd269f678431b2085d43a11d1daf02c884621b991ad7324c3"
+expected_evidence_sha256 = "0d60ee6e9129d0b47bc0042f0ef84c2f402f1beb313a761d1cbcf2761fea89fa"
 expected_diagnostic_sha256 = "3cb479f0456cfbaa26403c8ed96778ed0c3e70104258225e225c48b06fbd0024"
 
 [[acknowledge]]
@@ -87,7 +87,7 @@ valid_from = "2005-01-01"
 valid_to = "2005-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "45019cb45a021149555d291866765bc56109615b631398f944d96e664ed782ad"
+expected_evidence_sha256 = "47fc105a05e9c7c0f1b5e57a33511d706c26b6571cd431ec49e249ad872c97fc"
 expected_diagnostic_sha256 = "3f8099668e8355cdb9376dd37c5968a96fba1791fcda1224d92f3c5a20833342"
 
 [[acknowledge]]
@@ -99,7 +99,7 @@ valid_from = "2006-01-01"
 valid_to = "2006-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "fc276cc1ef29d2fb50d6b7fead8f6f8ea455a98c7a995e6c113476d567bc4fb0"
+expected_evidence_sha256 = "0589c59db215a58b8601adf4a112e7762722097db16425cc0f2f476e26e7eaa7"
 expected_diagnostic_sha256 = "28e93e66d1c1aadde46a9aeb71119a8471845348d8ebea59afc402ef135c22ba"
 
 [[acknowledge]]
@@ -111,7 +111,7 @@ valid_from = "2007-01-01"
 valid_to = "2007-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "2010324c9087156031993b362b646ec73b1149d6510d262c7d735c17ee8cce83"
+expected_evidence_sha256 = "9e04e26de9b996cf4b156dbe71ce6bc8eca09f21b0289e684fde6eb5204c9c2a"
 expected_diagnostic_sha256 = "f26fede1fc70558da864355beeebcd57d1f404a2c5ab256c00dbc4949bd7b960"
 
 [[acknowledge]]
@@ -123,7 +123,7 @@ valid_from = "2008-01-01"
 valid_to = "2008-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "7e57a9fa9df26156e8825fa9df43c5cc459f61de66c67db20fbdd223fdb173af"
+expected_evidence_sha256 = "6476563271ed80d6fcc3e2644887001915d529495dfa3f0b9e9cdf55dfc63698"
 expected_diagnostic_sha256 = "d445ce97b8eac20327e3131090fddf8a6f4425e6f34dd935504ba85d1db0075e"
 
 [[acknowledge]]
@@ -135,7 +135,7 @@ valid_from = "2003-01-01"
 valid_to = "2003-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "a7ad51087a180e39071da3d52186505181d0c66b6a4db99fa16136e0b6aef234"
+expected_evidence_sha256 = "655c28d3b0b126493689af16592e47c035339399714dff427e80a3e2cad49344"
 expected_diagnostic_sha256 = "928b006104c802ca36806b3f51231872f6729bf73cb4ce4fdbaeb28fb94075b6"
 
 [[acknowledge]]
@@ -147,5 +147,5 @@ valid_from = "2004-01-01"
 valid_to = "2004-12-31"
 reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "399c508efaf980c4610c3da21f7c8815b79d6d63a4596ec8f3617fa6da9ac4d2"
+expected_evidence_sha256 = "2996978319840b61c7195848bf3e8c4d61e14f8fb65e38363e3ce86748488416"
 expected_diagnostic_sha256 = "272af2f66965d5d1d3122d8a7b3951ccbb24fac303af0bd90b28bd976cd9b3e6"

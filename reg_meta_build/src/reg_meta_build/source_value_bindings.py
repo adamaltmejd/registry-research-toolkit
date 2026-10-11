@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
-from dataclasses import asdict, dataclass, replace
+from dataclasses import dataclass, replace
 from datetime import date
 from functools import lru_cache
 from typing import TYPE_CHECKING
@@ -33,7 +33,7 @@ from reg_meta_build.source_records import (
 )
 from reg_meta_build.source_values import SourceValueWindow, exact_sheet_pointer
 
-from .source_evidence import canonical_sha256
+from .source_evidence import canonical_sha256, evidence_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -161,11 +161,7 @@ def marker_binding_fingerprints(
             or binding.item_validity_set_aside
         ):
             return None
-        payload = asdict(binding)
-        payload["record_locators"] = [
-            locator.model_dump(mode="json") for locator in binding.record_locators
-        ]
-        fingerprints.append(canonical_sha256((scope.model_dump(mode="json"), payload)))
+        fingerprints.append(evidence_sha256((scope, binding)))
     return tuple(sorted(fingerprints)) if fingerprints else None
 
 
@@ -477,9 +473,11 @@ class ValueBindingSession:
                 assert not associations, "an unresolved list states no member"
                 issues["unresolved_member_list", descriptor_key] = []
                 continue
+            # Named by the code list's dataset, not its delivery revision, so an
+            # unchanged claim keeps its id across deliveries.
             claim_id = canonical_sha256(
                 [
-                    self.session.source.manifest.revision.revision_id,
+                    self.session.source.manifest.revision.dataset,
                     ("native_member", record.source, record.subject.member.native_id)
                     if join.member_target == "native_member"
                     else ("record", record.record_id),

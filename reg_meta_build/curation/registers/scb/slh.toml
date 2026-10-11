@@ -101,7 +101,7 @@ code = "unknown_support_key"
 subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 186)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"02e2d0e7b7f41e6705d787a75d83d450cf9e7e840d0561c0a9c96da34f3d19a1\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"40739762cbb67eac8dca7814e33d29ef8ca90332be04e33851685b268ebef64e\"]}"]
-expected_evidence_sha256 = "2083f13eb6d9a8b089aed481ef690f298c16ad6cdd9f9c9d2e80660252bd4ae0"
+expected_evidence_sha256 = "d4bc238a04795ccf4e156917a230ecb93e9b9a6165f57a8da0b37ad9cca79a65"
 reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
 evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
 
@@ -111,28 +111,28 @@ variable = "186.784"
 columns = { SUN2000Inr = "186.784", SUN2020Inr = "186.784" }
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
-expected_evidence_sha256 = "3ba5f1381a80498fd30791d5aee81c2ada3570805cb9f110337ba79b69eab725"
+expected_evidence_sha256 = "62a95be4d14c03ecabbf5c56c45f43ba656d6542bcad2d82aedd713a7e3a77b6"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "186.66"
 columns = { SUN2000Niva = "186.66.sun2000niva", SUN2020Niva = "186.66.sun2020niva", Sun2000Niva_old = "186.66.sun2000niva-old", utbnv = "186.66.utbnv" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "54b094b21fa149caccc7545b8f210c4696cddecf2f9204a1d961a47d35cb9841"
+expected_evidence_sha256 = "e28b101d496d15fa7072a52fb4301c6adc47d5cfbb52f0b9d25e8a443b406a77"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "186.774"
 columns = { SUN2000Grp = "186.774.sun2000grp", SUN2000Niva_old = "186.774.sun2000niva-old", Sun2000Niva_old = "186.774.sun2000niva-old" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "756ff6b3e8dc6f0dc89c9b6e36688d81ab1422b5b7bdd099af0ec305d8dee577"
+expected_evidence_sha256 = "9bf8529f734dc1010b3863ba69f963289d40f2bd4013f7814ecb1fe331cb7d24"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "186.120"
 columns = { ssyk12_3 = "186.120.ssyk12-3", ssyk12_4 = "186.120.ssyk12-4" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "b40f16e1dd3b92110e3f21b0fadee79348c236f2ae3a0353f25f4d7c7ce41e30"
+expected_evidence_sha256 = "3230d7257427a2109328aff6eb845c2790f507edafa4d3f99bc6e9ed9ef9bb3c"
 
 [[variable]]
 native_id = "186.66.sun2000niva"

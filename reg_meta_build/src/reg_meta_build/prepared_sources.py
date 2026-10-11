@@ -32,7 +32,6 @@ from reg_meta_build.input_snapshot import SnapshotError, _git
 from reg_meta_build.source_coordinates import native_register_key, native_variable_key
 from reg_meta_build.source_files import _file_sha256
 from reg_meta_build.source_records import (
-    CodeSetReference,
     NativeCoordinates,
     ScopeInterval,
     SourceCoordinate,
@@ -61,9 +60,9 @@ if TYPE_CHECKING:
     from reg_meta_build.source_support import SourceSupportJoin
 
 _FORMAT = "reg-meta-prepared-source-records"
-# Y-264: SCB Okänd units become unknown and SQL data types use shared classes;
-# schema-14 artifacts must be re-prepared.
-_SCHEMA_VERSION = 15
+# Records no longer carry code-set references (never populated), which changes
+# every record id; schema-15 artifacts must be re-prepared.
+_SCHEMA_VERSION = 16
 _MANIFEST = "manifest.json"
 _DATABASE = "files/records.sqlite"
 _HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
@@ -80,7 +79,7 @@ class _PreparedModel(BaseModel):
 
 class _ManifestDocument(_PreparedModel):
     format: Literal["reg-meta-prepared-source-records"] = _FORMAT
-    schema_version: Literal[15] = _SCHEMA_VERSION
+    schema_version: Literal[16] = _SCHEMA_VERSION
     scope: str
     partial: Literal[True] = True
     record_count: int
@@ -156,7 +155,7 @@ def _manifest(payload: bytes) -> PreparedSourceManifest:
 
 
 _DDL = """
-PRAGMA user_version=15;
+PRAGMA user_version=16;
 CREATE TABLE payload (
     id INTEGER PRIMARY KEY,
     kind TEXT NOT NULL,
@@ -184,7 +183,6 @@ CREATE TABLE occurrence (
     language TEXT,
     original_period_text TEXT,
     context_payload INTEGER NOT NULL REFERENCES payload(id),
-    codes_payload INTEGER NOT NULL REFERENCES payload(id),
     parents_payload INTEGER NOT NULL REFERENCES payload(id),
     family_payload INTEGER REFERENCES payload(id)
 );
@@ -324,7 +322,7 @@ def _write_record(
     subject = record.subject
     key = _json(record.locators[0].semantic_record_key)
     conn.execute(
-        "INSERT INTO occurrence VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO occurrence VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         (
             ordinal,
             record.source,
@@ -348,10 +346,6 @@ def _write_record(
             record.language,
             record.original_period_text,
             payloads.put("strings", record.context),
-            payloads.put(
-                "codes",
-                [code.model_dump(mode="json") for code in record.code_set_references],
-            ),
             payloads.parents(record.parent_facts),
             payloads.put("native_family", family)
             if (family := native_variable_key(record)) is not None
@@ -661,8 +655,6 @@ def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
             ):
                 raise PreparedSourceError("invalid prepared string tuple")
             return tuple(decoded)
-        if kind == "codes":
-            return tuple(CodeSetReference.model_construct(**value) for value in decoded)
         if kind == "coordinates":
             return tuple(SourceCoordinate.model_construct(**value) for value in decoded)
         raise PreparedSourceError(f"unknown prepared payload kind {kind}")
@@ -740,7 +732,6 @@ def _read_record(
         fields=payload(row["fields_payload"], "fields"),
         parent_facts=payload(row["parents_payload"], "parents"),
         language=row["language"],
-        code_set_references=payload(row["codes_payload"], "codes"),
         original_period_text=row["original_period_text"],
         context=payload(row["context_payload"], "strings"),
         delivered_cells=cells,

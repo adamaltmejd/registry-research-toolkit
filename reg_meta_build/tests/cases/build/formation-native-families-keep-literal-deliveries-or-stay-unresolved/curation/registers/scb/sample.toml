@@ -105,5 +105,6 @@ columns_ref = "Y-167 fixture reference"
 variant = "people"
 column = "X0115"
 versions = ["2002"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:4211,member:4212}}
 evidence = "accepted delivery"
 noted = "2026-10-10"

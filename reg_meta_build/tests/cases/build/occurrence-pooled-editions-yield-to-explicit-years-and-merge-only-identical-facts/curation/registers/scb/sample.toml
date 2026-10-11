@@ -38,3 +38,9 @@ slug = "gap"
 [[variable]]
 native_id = "1.411"
 slug = "overlap-uncoded"
+[[variable]]
+native_id = "1.412"
+slug = "unit-diff"
+[[variable]]
+native_id = "1.413"
+slug = "unit-same"

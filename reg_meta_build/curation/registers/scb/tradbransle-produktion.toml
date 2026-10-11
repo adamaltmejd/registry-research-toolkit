@@ -56,7 +56,7 @@ slug = "bransleslag"
 variable = "358.1839"
 columns = { PeOrgNr = "358.1839", Peorgnr = "358.1839", peorgnr = "358.1839" }
 columns_ref = "Complete source-native family census verifies only literal casing differs: one exported native ID, common nonblank name and definition, and no identifier conflict. Retain every source field, parent, period and ordered own coding association. No semantic reformulation, value equality or co-delivery assertion. Batch53-owned-identity-family-review.json."
-expected_evidence_sha256 = "88fa3bdee9a572c101ad2c6312d84749457ea704b65beb3eec5390a78661d351"
+expected_evidence_sha256 = "4f4f3ce4090565808ea138586a80207de5577f84767162dbc4d90523941021c2"
 
 [[representation.parallel]]
 valid_from = "2017-01-01"
@@ -67,6 +67,7 @@ variant = "358.1286"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2017-01-01", valid_to = "2017-12-31", column = "PeOrgNr", source_editions = ["2017"] }, { valid_from = "2017-01-01", valid_to = "2017-12-31", column = "peorgnr", source_editions = ["2017"] }]
+expected_evidence_sha256 = "7bc9de6c15f1c6d68e53e5b37105a5ffecd829496bab602b5c913d79f2148332"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -79,6 +80,7 @@ variant = "358.1286"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "PeOrgNr", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "peorgnr", source_editions = ["2018"] }]
+expected_evidence_sha256 = "543ed5b04d4df975ef6237e1e1788451b61f292d7284bb3f00ec216a212d2ff9"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -91,6 +93,7 @@ variant = "358.1286"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2019-01-01", valid_to = "2019-12-31", column = "PeOrgNr", source_editions = ["2019"] }, { valid_from = "2019-01-01", valid_to = "2019-12-31", column = "peorgnr", source_editions = ["2019"] }]
+expected_evidence_sha256 = "352f2e549d548bb1b8f05ddf30a8fae0fa6e95ec8c802c7848d4ceaf5a7e17f2"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -103,6 +106,7 @@ variant = "358.1286"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2020-01-01", valid_to = "2020-12-31", column = "PeOrgNr", source_editions = ["2020"] }, { valid_from = "2020-01-01", valid_to = "2020-12-31", column = "peorgnr", source_editions = ["2020"] }]
+expected_evidence_sha256 = "bec092c324328efd39039d2a75c96b707897e3b07eae07c694199c0d01293002"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -115,6 +119,7 @@ variant = "358.1286"
 column_metadata = "per_column"
 coding_metadata = "shared"
 columns = [{ valid_from = "2021-01-01", valid_to = "2021-12-31", column = "PeOrgNr", source_editions = ["2021"] }, { valid_from = "2021-01-01", valid_to = "2021-12-31", column = "peorgnr", source_editions = ["2021"] }]
+expected_evidence_sha256 = "2e357e11664a79b68e8687463a9d74e0ce1add9868631757f677c7e396d97d4b"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
 
@@ -123,28 +128,28 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "358.39651"
 columns = { Prod_1 = "358.39651.prod-1", Prod_2 = "358.39651.prod-2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "e02b46c79d0bf8dbfffc6b6c1a214b9f566b7b5459bca569e43fa0a4007f7f47"
+expected_evidence_sha256 = "ab4ae20fcfd4b6148386ca74d22fbb40705e50aed0093a75ed4548c7f9537e8a"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "358.4027"
 columns = { NG2007 = "358.4027.ng2007", Ng1 = "358.4027.ng1" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "7e5aff57feab469120357f6e6755acbe22a7d42eaa76be23420543188074bc7c"
+expected_evidence_sha256 = "2457db258c7d01bb37a95b4cd1a04b86ebaebb941c8d5dcf17977f1057ae6e66"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "358.83"
 columns = { Bid = "358.83.bid", Ravarakat = "358.83.ravarakat" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "48e03557b56d7b75acab531400a1c08ffd8352d8f32f9760a270fb0e130ba21e"
+expected_evidence_sha256 = "df37e26068727fb423ea39526578287fd43a01f847a8fbd0047437e54a3702ac"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "358.4600"
 columns = { ID = "358.4600.id", SCBid = "358.4600.scbid", id = "358.4600.id" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "9992c99919daa8a071efbc59b20765d9074efebf157d0a1eb953fdc316b8fe26"
+expected_evidence_sha256 = "4d22158768ee6a99d2b12712dd234486772e98b216bf63cc7749781af5565029"
 
 [[variable]]
 native_id = "358.39651.prod-1"
@@ -181,5 +186,5 @@ refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"regi
 fields = ["data_type", "data_length"]
 reason = "Retain both exact physical/catalog fields, all source facts and their own coding. The derived shared-definition sibling group lacks safe shape evidence and stays unavailable; a shared description does not establish compatible stored values or roles. No ordering field or source membership is withdrawn."
 evidence = "Complete native-family and physical-peer census, source-supported literal partitions and actual source replay Batch53-hard-family-source-review.json; finite original-fact and diagnostic guards. Standing retained-unavailable policy for unproven derived relations."
-expected_evidence_sha256 = "b9667d64c663d39078f91730c7096ddca89b537ff4d9f5e4fbe8e6e089ce5875"
+expected_evidence_sha256 = "9679bd72eff25595bfb0bf8608527dc01528b4a86b06257795a33b5668844714"
 expected_diagnostic_sha256 = "bbe5bd710aa2fa3e9e80810a7c1a42714938ff9920a6a57a3c171800b9128299"

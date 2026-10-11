@@ -339,13 +339,8 @@ def apply_classification_cases(
                 else ("column_name",),
                 case_id=case.case_id,
             )
-            if target.ref not in guarded or any(
-                projection.code_set_references is None
-                for projection in target.alternatives
-            ):
-                raise ValueError(
-                    "classification requires guarded original coding evidence"
-                )
+            if target.ref not in guarded:
+                raise ValueError("classification requires guarded original membership")
     evaluations = evaluate_cases(ordered, records)
     selected, diagnostics = _source_bindings(
         occurrences,

@@ -9,7 +9,6 @@ valid_to = 1991
 url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
 codes_file = "lkf1991.csv"
 sentinel_codes = [
-  { code = "", meaning = "Ej förvärvsarbetande eller uppgift om sysselsättning saknas" },
   { code = "9999", meaning = "Arbetsstället beläget i utlandet" },
   { code = "0000", meaning = "Uppgift saknas" },
   { code = "******", meaning = "Uppgift saknas" },

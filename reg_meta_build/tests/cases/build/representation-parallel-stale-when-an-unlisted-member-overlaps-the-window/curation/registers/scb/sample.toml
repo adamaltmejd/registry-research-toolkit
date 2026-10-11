@@ -17,6 +17,7 @@ variable = "1.1"
 variant = "1.10"
 valid_from = "2022-01-01"
 valid_to = "2022-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:100,member:101}}
 evidence = "Reviewed original boundary"
 noted = "2026-09-29"
 columns = [{column = "First", valid_from = "2020-01-01", valid_to = "2022-12-31", source_editions = ["2020-2022"]}, {column = "Second", valid_from = "2022-01-01", valid_to = "2024-12-31", source_editions = ["2022-2024"]}]

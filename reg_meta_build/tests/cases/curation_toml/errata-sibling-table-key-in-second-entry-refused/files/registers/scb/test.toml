@@ -7,6 +7,7 @@ native_id = "1"
 variant = "v"
 column = "C"
 versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "source"
 noted = "2026-09-24"
 
@@ -14,6 +15,7 @@ noted = "2026-09-24"
 variant = "v"
 column = "D"
 versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "source"
 noted = "2026-09-24"
 definition = "Definition"

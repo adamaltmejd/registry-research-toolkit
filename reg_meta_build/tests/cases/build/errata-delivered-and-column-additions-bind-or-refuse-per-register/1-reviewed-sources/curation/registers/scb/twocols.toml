@@ -17,6 +17,7 @@ columns_ref = "exact fixture"
 variant = "people"
 column = "A"
 versions = ["2008 - 2010"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=23 key=member:2301,member:2303}}
 evidence = "accepted A delivery"
 noted = "2026-09-28"
 
@@ -24,6 +25,7 @@ noted = "2026-09-28"
 variant = "people"
 column = "B"
 versions = ["2009 - 2010"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=23 key=member:2302,member:2304}}
 evidence = "accepted B delivery"
 noted = "2026-09-28"
 

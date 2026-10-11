@@ -17,6 +17,7 @@ slug = "anchor"
 variant = "people"
 column = "VALUE"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=40 key=member:4000}}
 evidence = "accepted holding"
 noted = "2026-09-28"
 

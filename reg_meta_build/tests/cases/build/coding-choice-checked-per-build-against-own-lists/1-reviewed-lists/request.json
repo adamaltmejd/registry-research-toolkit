@@ -3,6 +3,6 @@
     "test_source_coding_choices_boundary.py::test_each_build_checks_a_choice_against_its_own_source_lists"
   ],
   "note": "One process builds two inputs whose competing list changed between them; each build's choice is reviewed for its own input.",
-  "fails_if": "the compact evidence digest `compile_coding_register` computes for VALUE drops the bound code-list fingerprints (`coding_source_sha256` of each claim) that a curator's `coding_evidence_sha256` covers, so even the first build's freshly reviewed choice is stale",
+  "fails_if": "the compact evidence digest `compile_coding_register` computes for VALUE drops the bound code-list fingerprints (`evidence_sha256` of each claim) that a curator's `coding_evidence_sha256` covers, so even the first build's freshly reviewed choice is stale",
   "sources": "scb-value-competing-lists"
 }

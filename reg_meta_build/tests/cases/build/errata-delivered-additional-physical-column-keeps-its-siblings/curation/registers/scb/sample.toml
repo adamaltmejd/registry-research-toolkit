@@ -97,6 +97,7 @@ slug = "v99"
 variant = "people"
 column = "ADD"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:120,member:121,member:122,member:123}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 upstream = "additional-physical-column-in-version"
@@ -106,6 +107,7 @@ native_variable_id = 27
 variant = "people"
 column = "ADDP"
 versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:124,member:125}}
 evidence = "accepted delivery"
 noted = "2026-09-25"
 upstream = "additional-physical-column-in-version"

@@ -115,12 +115,8 @@ def resolve_representation_cases(
                 ),
                 case_id=case.case_id,
             )
-            if target.ref not in guarded or any(
-                p.code_set_references is None for p in target.alternatives
-            ):
-                raise ValueError(
-                    "representations require guarded original membership and coding references"
-                )
+            if target.ref not in guarded:
+                raise ValueError("representations require guarded original membership")
     evidence = (
         records if isinstance(records, SourceEvidence) else SourceEvidence(records)
     )

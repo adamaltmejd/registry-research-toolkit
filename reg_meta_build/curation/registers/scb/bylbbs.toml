@@ -148,14 +148,14 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "76.5092"
 columns = { HusKat = "76.5092.huskat", HusTyp = "76.5092.hustyp", HusTypNS = "76.5092.hustypns", Hustyp2 = "76.5092.hustyp2", HustypNS = "76.5092.hustypns" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "7480b0eac451f9b5e24583c99a76bc5bb76cc0d39e4f96871854089296ff93e5"
+expected_evidence_sha256 = "2c3abe71ddffb91e8b6ffdfca2251ea1af43bb0bbe03cb8be2db06443de18cba"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "76.17376"
 columns = { ArManPabEg = "76.17376.armanpabeg", ArManPabFaktisk = "76.17376.armanpabfaktisk", DatPabBA = "76.17376.datpabba", DatPabEg = "76.17376.datpabeg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "09321dc66afa8543e30b12d3d61e044b7f9ad11f0e18cb5bc2fc4b63d5667fa1"
+expected_evidence_sha256 = "1d648888e7d2592f986c91f3b6d57ae8a62b4379e4713552447d019bc7257ca7"
 
 [[variable]]
 native_id = "76.5092.huskat"

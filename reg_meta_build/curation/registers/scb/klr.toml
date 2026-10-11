@@ -123,41 +123,41 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "90.50"
 columns = { Man = "90.50.man", Manad = "90.50.manad" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "cde2812a2cce25b12eeca8eae315eca99445b2ea62f2835e68595fa61583198a"
+expected_evidence_sha256 = "88adde673554b95b3ce3d9e885070f657eaf7fab53f5a02446c283689262d705"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "90.5735"
 columns = { AvtTM = "90.5735.avttm", AvtTVeM = "90.5735.avttvem" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "1a191ff17ffb9d3a3b0059ec99d66c6f004c84d92c036c675fa512baa4416b29"
+expected_evidence_sha256 = "63e1a6e9f617ea37cac4bad8cfb2ba5178a81b16373ac7a99e6f90618b8e52c2"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "90.5071"
 columns = { AntDel = "90.5071.antdel", Deltid = "90.5071.deltid" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "5075a587a04b59dcc08f43fa9d03174e137067fc0c831f5b3513425f0d9b3334"
+expected_evidence_sha256 = "f37340b40be67a44e3f3e64c5ee893dba8a0d654387071a3ab277d67de9157a0"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "90.5061"
 columns = { AntHel = "90.5061.anthel", Heltid = "90.5061.heltid" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "1c623f03fc570137423283517ae3abc74d9723cbd7c02eca685d2f474e8f2ae9"
+expected_evidence_sha256 = "3ee5eaf4aa330924347cce847ae88fb6bb8239ae506bd393e2cda65e2d7d732b"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "90.5074"
 columns = { AntTim = "90.5074.anttim", Timanst = "90.5074.timanst" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "8dc6fd066f55c90de1de5661e5fa5cbbd655d8e79b525f12f554d39b426462b3"
+expected_evidence_sha256 = "8bd8f5f831de168ee1cd868812f3b4c17454f6a858375d31b37a578740490b89"
 
 [[identity.partition]]
 variable = "90.2543"
 columns = { UtbRetro = "90.2543", Utbretro = "90.2543" }
 columns_ref = "Batch55: complete native family has 84 physical originals with identical native ID, name and definition. Column names differ only in case. Keep the existing utbretro catalog identity and every delivery's original spelling and integer/decimal storage type."
-expected_evidence_sha256 = "8c9c8e7213509b71f8b02d810765164b95e67c226e49b8d5c2659b896fef9d0d"
+expected_evidence_sha256 = "c662f4301f0ac84171e650b6904470f18aa012a84a32c2e5d7dcff514cf0e6b6"
 
 [[representation.parallel]]
 valid_from = "2009-01-01"
@@ -167,5 +167,6 @@ variable = "90.2543"
 variant = "90.165"
 column_metadata = "per_column"
 columns = [{ valid_from = "2009-01-01", valid_to = "2009-12-31", column = "UtbRetro", source_editions = ["2009"] }, { valid_from = "2009-01-01", valid_to = "2009-12-31", column = "Utbretro", source_editions = ["2009"] }]
+expected_evidence_sha256 = "af4e6813db9921fbd94b51f3b5c694119216523636b38f3eaa9a97bb239efa80"
 evidence = "The complete SHA-guarded native family has case-equivalent spellings with identical name and definition. Edition 2009 repeats the same native member with both numeric and integer storage declarations. Retain each literal spelling and its storage facts as alternative case aliases; do not assert co-delivery, value equality or one preferred storage type."
 noted = "2026-10-02"

@@ -83,7 +83,6 @@ def test_occurrence_period_parent_authority_guards_fresh_and_stored_cases(
                     (authority,),
                     fields=tuple(SourceFields.model_fields),
                     parents=True,
-                    coding=True,
                 )
             )
         }

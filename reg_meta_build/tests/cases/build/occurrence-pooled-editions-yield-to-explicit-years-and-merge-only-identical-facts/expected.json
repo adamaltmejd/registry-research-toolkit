@@ -55,6 +55,18 @@
     },
     {
       "table": "states",
+      "where": {"variable": ["unit-diff", "unit-same"]},
+      "fields": ["variable", "valid_from", "valid_to", "pooled", "measurement_unit"],
+      "rows": [
+        ["unit-diff", "2016-01-01", "2017-12-31", true, "Kronor"],
+        ["unit-diff", "2018-01-01", "2018-12-31", true, null],
+        ["unit-diff", "2019-01-01", "2020-12-31", true, "Procent"],
+        ["unit-same", "2016-01-01", "2020-12-31", true, "Kronor"]
+      ],
+      "note": "The unit is a fact formation carries onto the state, so it decides the merge like the type does. unit-diff: Kronor and Procent are no observed spelling pair, so 2018 reconciles to an unknown unit and the three cuts stay three marked states, Kronor, none, Procent (one state over 2016-2020 in Kronor would hide the Procent edition and the disputed 2018). unit-same: equal units still re-join into one marked state over the hull."
+    },
+    {
+      "table": "states",
       "where": {"variable": "overlap-uncoded"},
       "fields": ["variable", "valid_from", "valid_to", "pooled"],
       "rows": [
@@ -81,8 +93,11 @@
         ]
       },
       "fields": ["subject", "code", "fields", "withheld_output", "valid_from", "valid_to"],
-      "rows": [["scb/projection/proj", "unsupported_occurrence", ["period"], ["occurrence"], null, null]],
-      "note": "Every code occurrence resolution reports. Each old pooled test asserted `result.issues == ()` except the range-less one, whose only issue names the period and withholds its occurrence. annual-facts-conflict's empty conflict is the filter's claim: reconciled with its pooled date, the 2013 integer would conflict."
+      "rows": [
+        ["scb/projection/proj", "unsupported_occurrence", ["period"], ["occurrence"], null, null],
+        ["scb/sample/unit-diff", "conflicting_occurrence_facts", ["measurement_unit"], ["measurement_unit"], "2018-01-01", "2018-12-31"]
+      ],
+      "note": "Every code occurrence resolution reports. Each old pooled test asserted `result.issues == ()` except the range-less one, whose only issue names the period and withholds its occurrence. annual-facts-conflict's empty conflict is the filter's claim: reconciled with its pooled date, the 2013 integer would conflict. unit-diff's two editions overlap on 2018 with different units, the one disputed fact and year."
     }
   ]
 }

@@ -7,7 +7,7 @@
     },
     {
       "table": "states",
-      "fields": ["register", "column", "valid_from", "valid_to", "provenance", "definition"],
+      "fields": ["register", "column", "valid_from", "valid_to", "provenance", "definition", "operational_definition", "source_register_text"],
       "rows": {"step": "1-delivered"}
     },
     {

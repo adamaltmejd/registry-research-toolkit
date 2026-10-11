@@ -16,7 +16,6 @@ from _csv_fixtures import commit_fixture, init_fixture_repo
 from reg_meta_build.prepared_sources import prepare_source_records
 from reg_meta_build.source_evidence import DeliveredCell, RecordLocator, SourceRevision
 from reg_meta_build.source_records import (
-    CodeSetReference,
     NativeCoordinates,
     SourceCoordinate,
     SourceFields,
@@ -117,13 +116,6 @@ def prepared_record(
         context=("fixture context",),
         language="sv",
         original_period_text=" original scope ",
-        code_set_references=(
-            CodeSetReference(
-                reference_id="declared-list",
-                content_sha256="1" * 64,
-                physical_locator="Codes!A1:B8",
-            ),
-        ),
         delivered_cells=(
             DeliveredCell(
                 name="Variable",

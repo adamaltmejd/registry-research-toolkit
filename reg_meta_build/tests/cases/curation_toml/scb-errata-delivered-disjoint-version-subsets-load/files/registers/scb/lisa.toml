@@ -17,6 +17,7 @@ column = "Kon"
 versions = ["2010"]
 native_variable_id = 39310
 upstream = "blank-column-name-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Exact blank source row."
 noted = "2026-09-12"
 [[errata.delivered]]
@@ -24,5 +25,6 @@ variant = "individer-15plus"
 column = "KON"
 versions = ["2011"]
 native_variable_id = 39310
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 evidence = "Existing holdings assertion."
 noted = "2026-09-12"

@@ -1,0 +1,296 @@
+{
+  "description": "scb-partition-families with the rows of every delivered file in reverse order (Registerinformation and Vardemangder): the same rows, contents and multiplicities at other physical positions.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "TXT_E",
+        "cvid": 231,
+        "var_id": 23,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "TXT_D",
+        "cvid": 221,
+        "var_id": 22,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ]
+      },
+      {
+        "colname": "OE_KEEP",
+        "cvid": 212,
+        "var_id": 21,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "OE_KEEP",
+        "cvid": 211,
+        "var_id": 21,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "OD_PARENT",
+        "cvid": 202,
+        "var_id": 20,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ],
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "OD_PARENT",
+        "cvid": 201,
+        "var_id": 20,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          13
+        ],
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "OC_FIELD",
+        "cvid": 132,
+        "var_id": 13,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "OC_FIELD",
+        "cvid": 131,
+        "var_id": 13,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "SB_B",
+        "cvid": 191,
+        "var_id": 19,
+        "year": "2020",
+        "regver_id": 2020,
+        "vardesc": "Sibling description"
+      },
+      {
+        "colname": "SB_A",
+        "cvid": 191,
+        "var_id": 19,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "EN_B",
+        "cvid": 181,
+        "var_id": 18,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "EN_A",
+        "cvid": 181,
+        "var_id": 18,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "TXT_C",
+        "cvid": 171,
+        "var_id": 17,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "TXT_B",
+        "cvid": 161,
+        "var_id": 16,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "TXT_A",
+        "cvid": 151,
+        "var_id": 15,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "PP_ID",
+        "cvid": 144,
+        "var_id": 14,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          12
+        ]
+      },
+      {
+        "colname": "PP_ID",
+        "cvid": 143,
+        "var_id": 14,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "PP_ID",
+        "cvid": 142,
+        "var_id": 14,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TESTREG",
+          1,
+          11
+        ]
+      },
+      {
+        "colname": "PP_OTHER",
+        "cvid": 141,
+        "var_id": 14,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "OB_ADD",
+        "cvid": 122,
+        "var_id": 12,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "OB_ADD",
+        "cvid": 121,
+        "var_id": 12,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "OA_REMOVE",
+        "cvid": 112,
+        "var_id": 11,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Sum of components"
+      },
+      {
+        "colname": "OA_REMOVE",
+        "cvid": 111,
+        "var_id": 11,
+        "year": "2020",
+        "regver_id": 2020,
+        "varopdef": "Derived amount"
+      },
+      {
+        "colname": "ED_B",
+        "cvid": 102,
+        "var_id": 10,
+        "year": "2021",
+        "regver_id": 2021
+      },
+      {
+        "colname": "ED_B",
+        "cvid": 101,
+        "var_id": 10,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "ED_A",
+        "cvid": 92,
+        "var_id": 9,
+        "year": "2021",
+        "regver_id": 2021
+      },
+      {
+        "colname": "ED_A",
+        "cvid": 91,
+        "var_id": 9,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "MAP_LEFT",
+        "cvid": 82,
+        "var_id": 8,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "MAP_ONE",
+        "cvid": 81,
+        "var_id": 8,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "IM_LEFT",
+        "cvid": 72,
+        "var_id": 7,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "KEPT",
+        "cvid": 71,
+        "var_id": 7,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "PA_LEFT",
+        "cvid": 62,
+        "var_id": 6,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "PA_OWNED",
+        "cvid": 61,
+        "var_id": 6,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "UA_TWO",
+        "cvid": 52,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020
+      },
+      {
+        "colname": "UA_ONE",
+        "cvid": 51,
+        "var_id": 5,
+        "year": "2020",
+        "regver_id": 2020
+      }
+    ],
+    "vardemangder": [
+      "Reference classification|1|2|Other|231|7232",
+      "Reference classification|1|1|Description|231|7231",
+      "Reference classification|1|1|Description|221|7221",
+      "Reference classification|1|1|Description|171|7171",
+      "Reference classification|1|1|Description|161|7161",
+      "Reference classification|1|1|Description|151|7151"
+    ]
+  }
+}

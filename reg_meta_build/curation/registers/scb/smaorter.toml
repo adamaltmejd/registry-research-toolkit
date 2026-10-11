@@ -53,7 +53,7 @@ data_warning = "Catalog components follow literal exported physical fields. Shar
 variable = "157.39462"
 columns = { OBJECTID = "157.39462.objectid", UUID = "157.39462.uuid" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
-expected_evidence_sha256 = "1299d729d025440d15b6e54aa5f74aad7d836f551ac7821fe60ec1ecc63b2b95"
+expected_evidence_sha256 = "87eda396168f9321cfd056766c456a25ea95b5ce1b820aa414b01d5209c40758"
 
 [[variable]]
 native_id = "157.39462.objectid"
