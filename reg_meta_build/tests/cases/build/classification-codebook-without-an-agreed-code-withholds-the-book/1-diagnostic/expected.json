@@ -34,10 +34,33 @@
         "detail": {"contains": "its binding"}
       },
       "fields": ["severity", "fields", "valid_from", "valid_to"],
-      "note": "AMOUNT's declared EMP2007 binding and VALUE's 'Older list' label binding to emp2007 are each withheld for their one 2020 delivery.",
+      "note": "AMOUNT's declared EMP2007 binding, VALUE's 'Older list' label binding to emp2007 and FAMILY's family reference EMP are each withheld for their one 2020 delivery.",
       "rows": [
         ["error", ["classification"], "2020-01-01", "2020-12-31"],
+        ["error", ["classification"], "2020-01-01", "2020-12-31"],
         ["error", ["classification"], "2020-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "withheld_catalog_dependency",
+        "subject": {"contains": "FAMILY"},
+        "detail": {"contains": ["Classification 'emp2007' is withheld", "'EMP'"]}
+      },
+      "fields": ["severity", "valid_from", "valid_to"],
+      "note": "Which edition of family EMP covers FAMILY's 2020 delivery cannot be checked while emp2007 is withheld, so the reference names emp2007 and is withheld with it, although emp2020 alone would cover 2020.",
+      "rows": [
+        ["error", "2020-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"case_id": {"contains": "coding.sentinel/1/period/1"}},
+      "fields": ["code", "subject"],
+      "note": "VALUE's scoped sentinel certificate names emp2007, so it certifies sentinels of no published book.",
+      "rows": [
+        ["withheld_catalog_dependency", "1.101"]
       ]
     },
     {
@@ -83,7 +106,7 @@
     {
       "table": "states",
       "fields": ["register", "variable"],
-      "rows": [["sample", "value"], ["remote", "amount"], ["remote", "score"]]
+      "rows": [["sample", "value"], ["remote", "amount"], ["remote", "family"], ["remote", "score"]]
     }
   ]
 }

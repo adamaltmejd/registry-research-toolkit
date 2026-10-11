@@ -11,3 +11,6 @@ native_id = {{naming_id kind=variable provider=fk register_key=remote member_key
 [[variable]]
 slug = "score"
 native_id = {{naming_id kind=variable provider=fk register_key=remote member_key=SCORE}}
+[[variable]]
+slug = "family"
+native_id = {{naming_id kind=variable provider=fk register_key=remote member_key=FAMILY}}

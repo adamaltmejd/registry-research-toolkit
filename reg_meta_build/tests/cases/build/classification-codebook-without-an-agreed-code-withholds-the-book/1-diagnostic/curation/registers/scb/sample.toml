@@ -8,3 +8,13 @@ slug = "people"
 [[variable]]
 native_id = "1.101"
 slug = "value"
+
+[[coding.sentinel]]
+variable = "1.101"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+classification = "emp2007"
+members = [["1", "First"]]
+reason = "Reviewed coding"
+source = "fixture"
