@@ -17,7 +17,7 @@
 #   tool     the MCP tool that exposes it. A tool exposing several operations takes an
 #            `operation` argument naming one; its other arguments are that operation's
 #            params. No tool: HTTP only, and `note` says why.
-#   params   name = type. Types: ref (FQID or bare name, section 7; a one-segment ref
+#   params   name = type. Types: ref (FQID or bare name; a one-segment ref
 #            resolves as a FQID first, then as a bare name, so an exact ref never turns
 #            ambiguous), period (the FQID/project period grammar), scope ("holdings" | "reference", default the
 #            artifact's), limit (1..200, default 50), cursor (opaque `next_cursor`),

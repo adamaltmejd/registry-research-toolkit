@@ -2830,7 +2830,7 @@
       },
       "Error": {
         "type": "object",
-        "description": "The error document `{code, class, message, remediation, fields}` (section 7).",
+        "description": "The error document `{code, class, message, remediation, fields}`.",
         "required": [
           "code",
           "class",
@@ -4647,7 +4647,7 @@
       },
       "Scope": {
         "type": "string",
-        "description": "The read scope (section 7); every read takes it.",
+        "description": "The read scope; every read takes it.",
         "enum": [
           "holdings",
           "reference"

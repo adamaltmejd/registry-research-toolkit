@@ -752,7 +752,7 @@ export interface components {
             name?: string | null;
             slug: string;
         };
-        /** @description The error document `{code, class, message, remediation, fields}` (section 7). */
+        /** @description The error document `{code, class, message, remediation, fields}`. */
         Error: {
             class: string;
             code: string;
@@ -1263,7 +1263,7 @@ export interface components {
             next_cursor?: string | null;
         };
         /**
-         * @description The read scope (section 7); every read takes it.
+         * @description The read scope; every read takes it.
          * @enum {string}
          */
         Scope: "holdings" | "reference";

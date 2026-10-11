@@ -1,4 +1,4 @@
-//! MCP (section 7): `reg-meta mcp` over stdio and `/mcp` on `serve` over streamable
+//! MCP: `reg-meta mcp` over stdio and `/mcp` on `serve` over streamable
 //! HTTP. A tool exposes the registered operations that name it. Its schemas are the
 //! operations' `OpenAPI` ones, and a call returns the HTTP response document: `{data,
 //! meta}`, or `{error, meta}` as a tool error.

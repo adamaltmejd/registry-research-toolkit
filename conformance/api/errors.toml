@@ -6,7 +6,7 @@
 #
 # code       stable; `fields` lists the keys of its `fields` object.
 # class      usage 400/422, not_found 404, conflict 409, order_blocked 422,
-#            unavailable 503, internal 500 (section 7); limit 413/429 (HTTP only).
+#            unavailable 503, internal 500; limit 413/429 (HTTP only).
 # surface    operation: any operation, either transport. http: the HTTP transport only.
 #            startup: `serve` or `mcp` refuses to start (never listens).
 # status     the HTTP status (operation and http codes).
@@ -117,7 +117,7 @@ surface = "operation"
 status = 422
 fields = ["findings"]
 replaces = ["order_blocked", "OrderBlockedModel"]
-note = "`findings` is today's [{code, message, source, variable, period}], with message rendered from fields (section 5)."
+note = "`findings` is today's [{code, message, source, variable, period}], with message rendered from fields."
 
 [[code]]
 code = "catalog_unavailable"

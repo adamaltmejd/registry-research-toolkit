@@ -26,7 +26,7 @@ pub const CONTRACT_VERSION: &str = "4.0.0";
 pub const SCHEMA: (u32, u32) = (10, 0);
 const DB_FILENAME: &str = "reg_meta.db";
 
-/// The read scope (section 7); every read takes it.
+/// The read scope; every read takes it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, ToSchema)]
 #[serde(rename_all = "lowercase")]
 pub enum Scope {

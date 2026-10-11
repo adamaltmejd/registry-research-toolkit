@@ -1,4 +1,4 @@
-//! Cursors (section 7): opaque, bound to the catalog generation and to the request
+//! Cursors: opaque, bound to the catalog generation and to the request
 //! they continue. Today `search`'s.
 
 use crate::{Code, Error, hex};

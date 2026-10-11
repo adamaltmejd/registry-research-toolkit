@@ -1,5 +1,5 @@
 //! `states`: a variable's representations over the compiled `expanded_state`, with
-//! the request-dependent rules of section 3 applied at read time: the window
+//! the request-dependent rules applied at read time: the window
 //! fallback, held and requested clipping and warning attribution
 //! (`crates/DESIGN.md`, "Compiled states and request-time rules").
 
