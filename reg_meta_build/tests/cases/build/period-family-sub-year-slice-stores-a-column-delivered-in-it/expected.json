@@ -1,0 +1,11 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {"register": "checked"},
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "note": "July to December stores the least label among the month columns delivered in it, LonFinkAug; LonFinkApr, the least of all twelve, is not delivered then. January to June lacks the moved January column, so the missing-metadata gate withholds it (no row).",
+      "rows": [["lone-per-manad", "LonFinkAug", "2020-07-01", "2020-12-31"]]
+    }
+  ]
+}

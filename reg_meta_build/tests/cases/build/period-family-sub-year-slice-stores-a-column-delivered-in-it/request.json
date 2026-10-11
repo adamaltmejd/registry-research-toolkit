@@ -1,0 +1,6 @@
+{
+  "note": "The CHECKED month family of period-family-months-merge-or-go-stale-per-register (register 3 only), with one reviewed errata period: the January column's 2020 delivery is moved to 2020-07-01..2020-12-31. The family's shared state is then cut at 2020-07-01, while each month column keeps its calendar-month window. form_representations stores a slice under the least label among the columns whose window overlaps it (or the one column covering it whole; no month window covers a half year). July to December stores LonFinkAug; LonFinkApr, the least of all twelve labels, is not delivered then. January to June lacks the moved January column, so the missing-metadata gate withholds it. The expected values follow from those rules and the month names, not from a run. Pins the sub-year slice #1376 probed.",
+  "fails_if": "`form_representations` (source_representations.py) picks the stored column of a shared state from all of the decision's columns instead of those delivered in the slice, so the July-December state is stored under LonFinkApr, a column not delivered in that half year; or stores a slice in which a declared column has no metadata",
+  "sources": "scb-month-families",
+  "registers": ["3"]
+}
