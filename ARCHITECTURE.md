@@ -427,7 +427,7 @@ steward reference visibility does not grant orderability. The existing
 The corpus depends on public contracts rather than private Python internals. Private
 imports/internal patches and oversized test modules are gated by repo lints with no
 exemptions or file allowlists; the per-package test sweep (plans 06a–06c, #1169) emptied
-the last ones. The Rust reader port reused these oracles unchanged.
+the last ones. The Rust reader runs against these oracles.
 
 ### Discipline against ballooning
 
@@ -453,15 +453,15 @@ it is revisited only when the toolkit graduates to a wider user base.
 The Model A refactor spec dissolved into the docs below. Per-PR landing history lives in
 git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
 
-  | Old spec section                                                                                                        | New home                        |
-  | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-  | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview          | this file                       |
-  | §5 object model, FQID grammar, edge semantics, library API, glossary; §6.8.3 semantic rules; §15 step 12 order manifest | `crates/DESIGN.md`              |
-  | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                           | `reg_meta_build/DESIGN.md`      |
-  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                     | `crates/reg-core/DESIGN.md`     |
-  | §9 webapp                                                                                                               | `reg_webapp/DESIGN.md`          |
-  | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                                 | `archive/mona-subsystem`        |
-  | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–11, remaining §16     | issues #707, #1453–#1456, #1297 |
+  | Old spec section                                                                                                        | New home                                                 |
+  | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+  | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview          | this file                                                |
+  | §5 object model, FQID grammar, edge semantics, library API, glossary; §6.8.3 semantic rules; §15 step 12 order manifest | `crates/DESIGN.md`                                       |
+  | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                           | `reg_meta_build/DESIGN.md`                               |
+  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                     | `crates/reg-core/DESIGN.md`                              |
+  | §9 webapp                                                                                                               | `reg_webapp/DESIGN.md`                                   |
+  | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                                 | `archive/mona-subsystem`                                 |
+  | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–11, remaining §16     | issues #707, #1453–#1456, #1297, #1296, #212, #209, #472 |
 
 The Rust runtime refactor's tracker dissolved the same way: its design into
 [`crates/DESIGN.md`](crates/DESIGN.md) (runtime, contracts, interface),

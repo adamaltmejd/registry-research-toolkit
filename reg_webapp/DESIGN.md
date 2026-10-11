@@ -266,13 +266,12 @@ absent enrichment. Those members carry the zero-state coverage shape
 (`state_count == 0`, null bounds, not open-ended) instead of `coverage = None`, so
 downstream period lenses can distinguish "never delivered" from "unknown".
 
-**Where coverage is computed.** Reference-scope variable and column coverage are grouped
-reads over `variable_state` in the Rust reader
+**Where coverage is computed.** Reference-scope variable, column and register coverage
+are grouped reads over `variable_state` in the Rust reader
 (`crates/reg-catalog/src/ops/show/browse.rs`), behind the ETag/edge cache. The covering
 index `idx_variable_state_coverage` on
 `variable_state(variable_id, valid_from, valid_to)` (#371) lets the grouped MIN/MAX span
-scan be satisfied index-only. Holdings coverage and register spans fold the compiled
-deliveries below.
+scan be satisfied index-only. Holdings coverage folds the compiled deliveries below.
 
 - **Additive / payload-skew (#317)**: `coverage` is optional and the SPA doesn't read it
   yet — it must tolerate its presence AND absence. It's None on a node that wasn't
