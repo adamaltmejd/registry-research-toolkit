@@ -1,0 +1,36 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "acknowledged": {"unresolved_lineage_ambiguous_source_variant": 5}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "unresolved_lineage_ambiguous_source_variant", "subject": "scb/example/two-origins"},
+      "fields": ["severity", "valid_from", "acknowledged_by"],
+      "rows": [["error", "2000-01-01", null], ["error", "2001-01-01", null]],
+      "note": "Placeholder pins acknowledge nothing."
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["subject", "withheld_output"],
+      "rows": [["scb/example/two-origins", ["curation/registers/scb/example.toml#/acknowledge/6"]]]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {
+          "contains": [
+            "expected_evidence_sha256 = \"f5b4dc68be08e6fb438bb61bda604800bb245ad01aa2e15ae986695a704dd788\"",
+            "expected_diagnostic_sha256 = \"d8b592aebab3ebfcf51df390f877b0b7d92a7280a24fd62edec040d28c8eaf2e\""
+          ]
+        }
+      },
+      "fields": ["subject"],
+      "rows": [["scb/example/two-origins"]],
+      "note": "Step 1's 2000 TWO_ORIGINS pins, as TOML lines."
+    }
+  ]
+}
