@@ -18,7 +18,7 @@ slug = "vardevariabel-finansiell-aktivitet"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 325)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 325)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2a11778578431d56ef626ab2e714cec62ba2394b9a8fbb05cb3b9e3fa4c4923e\"]}"]
 expected_evidence_sha256 = "5826dd11a226fbc84da56d5bbcbf694f281984a35c325ead2fe00c57193f1e7a"

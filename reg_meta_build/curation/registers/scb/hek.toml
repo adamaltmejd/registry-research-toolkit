@@ -3352,7 +3352,7 @@ slug = "faktorinkomst"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 97)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 97)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"a01151da51c7abfa4aa640decbc76d392b2849ceda140c0378bd8b32ae987508\"]}"]
 expected_evidence_sha256 = "e7d13bcac347ea96369fbe8e492b070006ea4697440b652d01d5238e6c65a529"

@@ -1,0 +1,19 @@
+{
+  "replaces": [
+    "test_source_classification_bindings.py::test_pooled_declaration_yields_to_an_explicit_year"
+  ],
+  "note": "A source declaration on a pooled edition loses to explicit coverage, as in occurrence resolution (Y-202): it binds only the years no explicit occurrence of its column covers, so the explicit year keeps its own declaration and evidence. The one build route to a pooled declaration beside an explicit one on one column is an [[errata.column]] naming both a pooled and an annual edition in `versions` (scb_errata.py `convert_column_entry`: one addition per named edition, each with its edition's scope, all declaring the entry's one `classification`). One entry carries one book, so the replaced test's two contrary books (b pooled, a in 2017, and `multiple_classifications_declared` when unclipped) have no build shape; the same clip is observable here in the 2017 warning's refs. A [[coding.documented]] list gives the column a code 9 that book a lacks, so each bound state warns `nonconforming_classification_codes` citing its binding's evidence.",
+  "fails_if": "`_source_bindings` (source_classification_bindings.py) binds a pooled declaration over its whole pooled range instead of the `_binding_bounds` clip (the declaration site back to `occurrence_bounds`), so the 2017 warning also cites the pooled edition 1618; or the clip drops the pooled declaration on the years it alone covers, so 2016 or 2018 loses 'a' and its warning",
+  "sources": {
+    "description": "SCB register 1 (variant 10) delivers VALUE in the pooled edition '2016 - 2018' (1618, member 1011) and the explicit 2017 (2017, member 1012). The curation adds column DECL by [[errata.column]] in both editions, declaring book A, with a documented list {1 One, 9 Nine} over 2016-2018. Book a has code 1 only.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1011, "var_id": 101, "colname": "VALUE", "year": "2018", "versionname": "2016 - 2018", "regver_id": 1618},
+        {"cvid": 1012, "var_id": 101, "colname": "VALUE", "year": "2017", "regver_id": 2017}
+      ]
+    },
+    "files": {
+      "classifications/a.csv": ["code,label", "1,One"]
+    }
+  }
+}

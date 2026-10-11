@@ -95,14 +95,11 @@ def scope_support_diagnostics(
         if not issue.refs:
             unresolved.append(issue)
         for context, refs in groups.items():
-            revisions = tuple(
-                sorted({r.source_revision_id for ref in refs for r in rows[ref]})
-            )
+            # Content identity only: the refs (and an acknowledgement's evidence pin)
+            # name the exact support records, so a new delivery of unchanged rows
+            # keeps the subject and its acknowledgement.
             value = issue.model_copy(
-                update={
-                    "refs": tuple(refs),
-                    "subject": repr((issue.subject, context, revisions)),
-                }
+                update={"refs": tuple(refs), "subject": repr((issue.subject, context))}
             )
             if context is None:
                 unresolved.append(value)

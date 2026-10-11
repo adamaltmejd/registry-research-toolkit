@@ -1,0 +1,37 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "states",
+      "where": {"variable": "decl"},
+      "fields": ["variable", "valid_from", "valid_to", "pooled"],
+      "rows": [
+        ["decl", "2016-01-01", "2016-12-31", 1],
+        ["decl", "2017-01-01", "2017-12-31", 0],
+        ["decl", "2018-01-01", "2018-12-31", 1]
+      ],
+      "note": "The explicit 2017 cuts the pooled 2016-2018 edition: two pooled states around one unpooled state."
+    },
+    {
+      "table": "state_classifications",
+      "where": {"variable": "decl"},
+      "fields": ["variable", "valid_from", "valid_to", "classification"],
+      "rows": [
+        ["decl", "2016-01-01", "2016-12-31", "a"],
+        ["decl", "2017-01-01", "2017-12-31", "a"],
+        ["decl", "2018-01-01", "2018-12-31", "a"]
+      ],
+      "note": "Both editions declare a: the pooled declaration binds the pooled years it alone covers, the explicit one 2017."
+    },
+    {
+      "table": "issue_refs",
+      "fields": ["code", "severity", "valid_from", "valid_to", "key"],
+      "rows": [
+        ["nonconforming_classification_codes", "warning", "2016-01-01", "2016-12-31", ["register:1", "variant:10", "edition:1618", "variable:101", "member:1011"]],
+        ["nonconforming_classification_codes", "warning", "2017-01-01", "2017-12-31", ["register:1", "variant:10", "edition:2017", "variable:101", "member:1012"]],
+        ["nonconforming_classification_codes", "warning", "2018-01-01", "2018-12-31", ["register:1", "variant:10", "edition:1618", "variable:101", "member:1011"]]
+      ],
+      "note": "The only issues: the documented code 9, which a lacks, once per bound state. An errata.column occurrence's evidence is its edition's delivered records (VALUE's member of that edition). The 2017 warning cites only the 2017 edition, never the pooled edition 1618 it overrides; an acknowledgement pins an issue's refs."
+    }
+  ]
+}

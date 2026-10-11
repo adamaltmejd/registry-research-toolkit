@@ -504,7 +504,7 @@ slug = "imputeringsstatus"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 165)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 165)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"62140944493131c62c7bf909183c1d8ee56356fcaf8f5be27ffe6e1e8cebfbd4\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"77a3100298674851a0c175421bd196bb7f9964fb2841298e47ae789ded720695\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"5977114c1fd480b4f5d28f60e4170e84339af30621d94ea5070101d83cc835ef\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"270595f6930476f9ccf3bc3db0d6c35f612022db069cea9aa745858efb9204e7\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6427ce5736ec9ac660fd903bae2a3d45e86e4398d557818a06d3bc003cfcf41a\"]}"]
 expected_evidence_sha256 = "4cc31169f33d9eae198f0917d23608d6cd0f090b5dd9da13775224c284401911"

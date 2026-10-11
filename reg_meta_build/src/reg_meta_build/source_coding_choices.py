@@ -472,7 +472,6 @@ def documented_period_block(
                 window,
                 None,
                 (),
-                missing_validity="unrestricted",
                 invalid_item=False,
             )
             if (

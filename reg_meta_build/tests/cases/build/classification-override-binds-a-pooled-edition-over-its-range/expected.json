@@ -1,0 +1,16 @@
+{
+  "projections": [
+    {
+      "table": "state_classifications",
+      "fields": ["column", "valid_from", "valid_to", "classification"],
+      "rows": [
+        ["POOLED", "2016-01-01", "2018-12-31", "a"]
+      ]
+    },
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    }
+  ]
+}

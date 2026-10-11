@@ -1,0 +1,5 @@
+{
+  "note": "Register 1 pins both delivered variants, 1.10 and 1.11, `people`. One naming conversion refuses both, each located at its [[variant]] entry. A delivered variant with no name withholds its register (`unnamed_delivered_variant`, once per variant), so `scb/sample` forms nothing. A relations.toml variant edge from `scb/sample` variant `people` is withheld through that register: one `withheld_catalog_dependency` per cause, carrying the unnamed variant's source refs. The variant needs no FQID of its own in the withheld map: every variant reference names its register as a parent.",
+  "fails_if": "a refused variant name stops withholding its register (source_scope.py `unnamed_delivered_variant`), or `CatalogDependencies.require` stops falling back to the withheld parent register, so the variant edge is reported `catalog_dependency_missing` and the build aborts",
+  "sources": "scb-two-variants-and-anchor"
+}

@@ -92,7 +92,7 @@ slug = "arsverken-programvaruutv-ovriga"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 259)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 259)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"95969867ed8071d07ed529cf178d959ac7c7bb92f89b8bb44632b17db9cb6851\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"45a98ba19e2c668df42202ec6b5d69e4592c621536269883f5ad60204e6dc33b\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"9c6c4466811d355cb72a656caab8f5a43e25d8ec23145cfaf196515fe5bd045f\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6044017102460fc40780b09aeef2329eea0c24e0375c1d8d74bc945ea69a52c3\"]}"]
 expected_evidence_sha256 = "9c456a0d1b86c220b165b18028d989062ff51a0bcac576bae29be0dd17c31511"

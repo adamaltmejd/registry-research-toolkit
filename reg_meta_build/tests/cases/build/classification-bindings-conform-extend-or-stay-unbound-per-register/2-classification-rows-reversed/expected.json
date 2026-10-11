@@ -17,6 +17,7 @@
         ["cls", "miss", "2019-01-01", "2019-12-31", "fix"],
         ["cls", "miss", "2020-01-01", "2020-12-31", "fix"],
         ["openreg", "opencol", "2010-01-01", "9999-12-31", "fix"],
+        ["pooled", "poolcol", "2020-01-01", "2021-12-31", "fix"],
         ["member", "memcol", "2020-01-01", "2020-12-31", "new"],
         ["canon", "outcol", "2020-01-01", "2020-12-31", "fix"],
         ["canon", "twocol", "2020-01-01", "2020-12-31", "fix"],
@@ -40,7 +41,7 @@
         ["sub", "sub", "2020-07-01", "2020-12-31", "alt"],
         ["sub", "sub", "2020-07-01", "2020-12-31", "fix"]
       ],
-      "note": "Every binding the build makes, one or more per register. Absent on purpose: UNRESURL and UNRESFRAG (an unknown reference beside a known one binds nothing), SPANCOL, OVLCOL and NONECOL (a family alias no single edition covers), POOLCOL (pooled scope), NOCODES (an override needs inline codes), NOVAR (its row names no Deldatamängd, so the declaration has no column) and the sample VALUE (no declaration). SPLIT: the second book holds only in 2020, so 2019 and 2021 keep one book. OVR: the override replaces the matching rule, so 'fix' is absent. SUB: the label rule binds 'fix' over the whole 2020 coding segment and the [[coding.sentinel]] binds 'alt' over Jul-Dec only, so the segment is cut at 2020-07-01: 'fix' holds Jan-Jun and Jul-Dec as two pieces, 'alt' only Jul-Dec (the replaced tests' Jan-Jun / Jul-Dec split inside one year). MISS: the declaration binds 2019, where the source delivers no code list, as well as 2020. MEMCOL: 'NEW' is a family member's own short name and names that edition directly; the register's 2020 lies inside NEW's coverage."
+      "note": "Every binding the build makes, one or more per register. Absent on purpose: UNRESURL and UNRESFRAG (an unknown reference beside a known one binds nothing), SPANCOL, OVLCOL and NONECOL (a family alias no single edition covers), NOCODES (an override needs inline codes), NOVAR (its row names no Deldatamängd, so the declaration has no column) and the sample VALUE (no declaration). SPLIT: the second book holds only in 2020, so 2019 and 2021 keep one book. OVR: the override replaces the matching rule, so 'fix' is absent. SUB: the label rule binds 'fix' over the whole 2020 coding segment and the [[coding.sentinel]] binds 'alt' over Jul-Dec only, so the segment is cut at 2020-07-01: 'fix' holds Jan-Jun and Jul-Dec as two pieces, 'alt' only Jul-Dec (the replaced tests' Jan-Jun / Jul-Dec split inside one year). MISS: the declaration binds 2019, where the source delivers no code list, as well as 2020. POOLCOL: the pooled variant's range-carrying scope binds its declaration once over the whole pooled range, 2020-2021, never per year (Y-207). MEMCOL: 'NEW' is a family member's own short name and names that edition directly; the register's 2020 lies inside NEW's coverage."
     },
     {
       "table": "state_classifications",
@@ -217,7 +218,6 @@
         ["unresolved_classification_reference", "error", "2019-01-01", "2021-12-31", ["register:span", "variable:SPANCOL"]],
         ["unresolved_classification_reference", "error", "2020-01-01", "2020-12-31", ["register:overlap", "variable:OVLCOL"]],
         ["unresolved_classification_reference", "error", "1990-01-01", "1991-12-31", ["register:none", "variable:NONECOL"]],
-        ["unsupported_classification_scope", "error", null, null, ["register:pooled", "variable:POOLCOL"]],
         ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:OUTCOL"]],
         ["multiple_classifications_declared", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:TWOCOL"]],
         ["nonconforming_classification_codes", "warning", "2020-01-01", "2020-12-31", ["register:canon", "variable:TWOCOL"]],

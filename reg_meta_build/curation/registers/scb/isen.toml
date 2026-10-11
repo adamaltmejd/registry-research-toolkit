@@ -234,7 +234,7 @@ slug = "naringsgren-arbetsstalle"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 132)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 132)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"c5c43de4c3f66acc1af500da6396d2374cf9323f605c594afe048e6ba3dc6215\"]}"]
 expected_evidence_sha256 = "fd86c7cc4eeda91ac020ae37fa5ac77431d5dc7516fb9cb2035b0fa6b079f162"

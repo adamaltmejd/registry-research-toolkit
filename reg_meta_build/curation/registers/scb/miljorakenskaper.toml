@@ -62,7 +62,7 @@ slug = "arbetsstallenummer-i-huvudsysslan"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 295)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 295)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"17a80be3d0434534ed7b79af2faff626217939e9a5336d5c9462118f0f8976d1\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"c7fbdb46a00ddedc54ab6503b137254006968fc13625f19bf30863b2afce437a\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"515bd3764d7bbd6430f4290460815677e613cc5a5fbd3cca133c7ebdd6a557ce\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"c40629f46e3a22aa6964c6edffea0e5e4dd5a67c0f0df6f07882172f05e36e23\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"7338c9f589d262ae51d82bf6465cad190fa1309c7f9fce8de7d51d2b3e031ff7\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"f2d8730bd60b8c4020620098cfd76e0a85fc3b4157e225254f9a36392d8f6119\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"f7b6a83604911548b7d0645685cb9fff256b42ac44ca279f2e2e3032cdd33b67\"]}"]
 expected_evidence_sha256 = "cb7fb4f569143716c1011b38196666b9dc9a5e4f41f7918d53a2a592c57f4ce7"

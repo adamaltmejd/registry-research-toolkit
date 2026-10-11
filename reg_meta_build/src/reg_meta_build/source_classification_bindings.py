@@ -8,7 +8,6 @@ from datetime import date
 from itertools import pairwise
 from typing import TYPE_CHECKING
 
-from reg_meta_build._resolved_common import covers_window
 from reg_meta_build.normalization import normalize_text
 from reg_meta_build.resolved_catalog import (
     ResolvedClassificationLink,
@@ -19,21 +18,16 @@ from reg_meta_build.source_coding import (
     CodingIssue,
     CodingResolution,
     CodingSegment,
-    copied_coding_fingerprints,
 )
-from reg_meta_build.source_coding_choices import coding_expectations
 from reg_meta_build.source_curation import (
     ClassificationDecision,
     CurationCase,
     ResolutionDiagnostic,
-    SourceEvidence,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked, record_ref
-from reg_meta_build.source_intervals import coding_scope_bounds, scope_bounds
+from reg_meta_build.source_intervals import occurrence_bounds, occurrence_pooled
 from reg_meta_build.source_records import SourceFields
-
-from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Mapping
@@ -85,6 +79,8 @@ def _source_bindings(
     and fields have already passed occurrence-case checks. They remain attached
     to their original evidence and cannot introduce delivery availability here.
     """
+    occurrences = tuple(occurrences)
+    explicit = _explicit_coverage(occurrences)
     selected: dict[NativeKey, list[_Binding]] = defaultdict(list)
     diagnostics = []
     for occurrence in occurrences:
@@ -95,10 +91,7 @@ def _source_bindings(
         if not refs:
             raise ValueError("source classification requires original evidence")
         key = occurrence.column_key
-        scope = occurrence.edition_period_scope
-        if scope.kind == "not_applicable":
-            scope = occurrence.edition_scope
-        bounds = scope_bounds(scope)
+        bounds = _binding_bounds(occurrence, explicit)
         code = None
         slug = None
         unspecified = (
@@ -220,23 +213,83 @@ def _sentinel_map(classification: ResolvedClassification) -> dict[str, str]:
     }
 
 
+def _explicit_coverage(
+    occurrences: Iterable[EffectiveOccurrence],
+) -> dict[NativeKey, list[tuple[int, int]]]:
+    """Each column's known windows from explicit (non-pooled) catalog occurrences."""
+    covered: dict[NativeKey, list[tuple[int, int]]] = defaultdict(list)
+    for occurrence in occurrences:
+        key = occurrence.column_key
+        if occurrence.use != "catalog" or key is None:
+            continue
+        if not occurrence_pooled(occurrence):
+            covered[key].extend(occurrence_bounds(occurrence) or ())
+    for windows in covered.values():
+        windows.sort()
+    return covered
+
+
+def _binding_bounds(
+    occurrence: EffectiveOccurrence,
+    explicit: Mapping[NativeKey, list[tuple[int, int]]],
+) -> tuple[tuple[int, int], ...] | None:
+    """The windows an occurrence's classification evidence applies to.
+
+    A range-carrying pooled occurrence counts over its whole pooled range
+    (Y-207), but as in occurrence resolution (Y-202) it loses to explicit
+    coverage: it is clipped to the spans no explicit occurrence of the same
+    column covers, so a pooled edition never binds or evidences an explicit
+    span. A fully covered pooled occurrence keeps no window (`()`); a pooled
+    scope without a range stays unbounded (`None`).
+    """
+    bounds = occurrence_bounds(occurrence)
+    if bounds is None or not occurrence_pooled(occurrence):
+        return bounds
+    covered = (
+        explicit.get(occurrence.column_key, ())
+        if occurrence.column_key is not None
+        else ()
+    )
+    pieces = []
+    for lo, hi in bounds:
+        start = lo
+        for covered_lo, covered_hi in covered:
+            if covered_hi < start or covered_lo > hi:
+                continue
+            if covered_lo > start:
+                pieces.append((start, covered_lo - 1))
+            start = max(start, covered_hi + 1)
+        if start <= hi:
+            pieces.append((start, hi))
+    return tuple(pieces)
+
+
+def _column_evidence(
+    occurrences: Iterable[EffectiveOccurrence],
+) -> dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]]:
+    """Each catalog occurrence's binding windows and evidence, per column."""
+    occurrences = tuple(occurrences)
+    explicit = _explicit_coverage(occurrences)
+    evidence: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
+        defaultdict(list)
+    )
+    for occurrence in occurrences:
+        key = occurrence.column_key
+        if occurrence.use != "catalog" or key is None:
+            continue
+        refs = tuple(sorted({record_ref(r) for r in occurrence.evidence}, key=repr))
+        for lo, hi in _binding_bounds(occurrence, explicit) or ():
+            evidence[key].append((lo, hi, refs))
+    return evidence
+
+
 def _label_rule_bindings(
     coding: Mapping[NativeKey, CodingResolution],
     occurrences: Iterable[EffectiveOccurrence],
     labels: Mapping[str, str],
 ) -> dict[NativeKey, list[_Binding]]:
     """Bind every listed claim label on each included post-choice segment."""
-    by_column: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
-        defaultdict(list)
-    )
-    for occurrence in occurrences:
-        if occurrence.use == "catalog" and occurrence.column_key is not None:
-            scope = occurrence.edition_period_scope
-            if scope.kind == "not_applicable":
-                scope = occurrence.edition_scope
-            refs = tuple(sorted({record_ref(r) for r in occurrence.evidence}, key=repr))
-            for lo, hi in scope_bounds(scope) or ():
-                by_column[occurrence.column_key].append((lo, hi, refs))
+    by_column = _column_evidence(occurrences)
     selected: dict[NativeKey, list[_Binding]] = defaultdict(list)
     for key, resolution in coding.items():
         claims = {claim.claim_id: claim for claim in resolution.claims}
@@ -319,9 +372,8 @@ def apply_classification_cases(
     if len({c.case_id for c in ordered}) != len(ordered):
         raise ValueError("classification case IDs must be unique")
     for case in ordered:
-        if not isinstance(case.decision, ClassificationDecision):
-            raise TypeError("classification application requires classification cases")
         decision = case.decision
+        assert isinstance(decision, ClassificationDecision)
         if decision.column_key not in coding:
             raise ValueError("classification has an unconverted column identity")
         if decision.classification not in classifications:
@@ -333,11 +385,7 @@ def apply_classification_cases(
         guarded = {ref for guard in case.peer_guards for ref in guard.expected_members}
         for target in (*case.targets, *case.support):
             _require_checked(
-                target,
-                tuple(SourceFields.model_fields)
-                if decision.sentinel_members
-                else ("column_name",),
-                case_id=case.case_id,
+                target, tuple(SourceFields.model_fields), case_id=case.case_id
             )
             if target.ref not in guarded:
                 raise ValueError("classification requires guarded original membership")
@@ -377,21 +425,15 @@ def apply_classification_cases(
     override_bindings: dict[NativeKey, list[_Binding]] = defaultdict(list)
     if override is not None:
         slug, ref = override
-        for occurrence in occurrences:
-            key = occurrence.column_key
-            if occurrence.use != "catalog" or key is None or key not in coding:
+        for key, windows in _column_evidence(occurrences).items():
+            if key not in coding:
                 continue
-            scope = occurrence.edition_period_scope
-            if scope.kind == "not_applicable":
-                scope = occurrence.edition_scope
-            for lo, hi in scope_bounds(scope) or ():
+            for lo, hi, refs in windows:
                 binding = _Binding(
                     date.fromordinal(lo).isoformat(),
                     date.fromordinal(hi).isoformat(),
                     slug,
-                    tuple(
-                        sorted({record_ref(r) for r in occurrence.evidence}, key=repr)
-                    ),
+                    refs,
                     (f"{ref}: override -> {slug}",),
                     inline_only=True,
                     override=True,
@@ -453,15 +495,13 @@ def apply_classification_cases(
     diagnostics.extend(dict.fromkeys(withheld_bindings))
     canonical = {}
     sentinel_maps = {}
+    # Compile pins each sentinel case's codings, source fingerprints, book digest and
+    # window from this same resolve_source_scope call (compile_coding_register), and
+    # refuses noncanonical-overlap or uncovered windows there; no case is persisted.
+    # So application re-checks none of them.
     for case, evaluation in zip(ordered, evaluations, strict=True):
         decision = case.decision
         assert isinstance(decision, ClassificationDecision)
-        classification = classifications[decision.classification]
-        if classification.slug not in canonical:
-            canonical[classification.slug] = frozenset(
-                c.code for c in classification.codes
-            )
-            sentinel_maps[classification.slug] = _sentinel_map(classification)
         for issue in evaluation.issues:
             diagnostics.append(
                 ResolutionDiagnostic(
@@ -480,78 +520,27 @@ def apply_classification_cases(
             )
         if evaluation.status != "applicable":
             continue
-        if decision.sentinel_members:
-            base = coding[decision.column_key]
-            delivery_changed = False
-            if (
-                isinstance(records, SourceEvidence)
-                and records.effective_scopes is not None
-            ):
-                windows = (
-                    (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
-                    for scope in records.effective_scopes.get(decision.column_key, ())
-                    for lo, hi in (coding_scope_bounds(scope) or ())
-                )
-                delivery_changed = not covers_window(
-                    windows, decision.valid_from, decision.valid_to
-                )
-            if (
-                delivery_changed
-                or copied_coding_fingerprints(base.claims)
-                != decision.expected_source_codings
-                or coding_expectations(
-                    base.claims, decision.valid_from, decision.valid_to
-                )
-                != decision.expected_codings
-                or canonical_sha256(classification.model_dump(mode="json"))
-                != decision.expected_classification
-            ):
-                diagnostics.append(
-                    ResolutionDiagnostic(
-                        code="classification_evidence_changed",
-                        severity="error",
-                        subject=repr(decision.column_key),
-                        case_id=case.case_id,
-                        detail="The scoped sentinel source coding or codebook changed; no sentinel decision was applied.",
-                        refs=tuple(t.ref for t in case.targets),
-                        fields=("coding", "classification"),
-                        valid_from=decision.valid_from,
-                        valid_to=decision.valid_to,
-                        withheld_output=("state.classification",),
-                    )
-                )
-                continue
-            if any(
-                code in canonical[classification.slug]
-                for code, _ in decision.sentinel_members
-            ):
-                raise ValueError("scoped sentinels must not overlap canonical codes")
-        certificate = None
-        if decision.sentinel_members:
-            literal_column = decision.column_key[-1]
-            if not isinstance(literal_column, str):
-                raise ValueError(
-                    "scoped sentinel decision needs an exact literal column"
-                )
-            certificate = ResolvedScopedSentinels(
-                valid_from=decision.valid_from,
-                valid_to=decision.valid_to,
-                delivery_column_name=literal_column,
-                classification_sha256=decision.expected_classification,
-                source_fingerprints=decision.expected_source_codings,
-                members=decision.sentinel_members,
-                provenance=f"{case.case_id}: {decision.reason}\n{decision.provenance}",
-            )
+        literal_column = decision.column_key[-1]
+        assert isinstance(literal_column, str)
+        provenance = f"{case.case_id}: {decision.reason}\n{decision.provenance}"
         selected[decision.column_key].append(
             _Binding(
                 decision.valid_from,
                 decision.valid_to,
                 decision.classification,
                 tuple(t.ref for t in (*case.targets, *case.support)),
-                (f"{case.case_id}: {decision.reason}\n{decision.provenance}",),
+                (provenance,),
                 inline_only=True,
                 sentinel_members=decision.sentinel_members,
-                sentinel_certificate=certificate,
+                sentinel_certificate=ResolvedScopedSentinels(
+                    valid_from=decision.valid_from,
+                    valid_to=decision.valid_to,
+                    delivery_column_name=literal_column,
+                    classification_sha256=decision.expected_classification,
+                    source_fingerprints=decision.expected_source_codings,
+                    members=decision.sentinel_members,
+                    provenance=provenance,
+                ),
             )
         )
 

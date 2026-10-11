@@ -1,0 +1,22 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": ["naming_slug_collision", "unresolved_catalog_identity", "withheld_catalog_dependency", "deferred_out_of_slice_reference", "catalog_dependency_missing"]
+      },
+      "fields": ["code", "severity", "subject", "case_id"],
+      "rows": [
+        ["deferred_out_of_slice_reference", "warning", "variable_same_as:0", null],
+        ["deferred_out_of_slice_reference", "warning", "variable_same_as:1", null]
+      ]
+    },
+    {
+      "table": "edges",
+      "where": {"type": "same_as"},
+      "fields": ["a", "b"],
+      "rows": []
+    }
+  ]
+}

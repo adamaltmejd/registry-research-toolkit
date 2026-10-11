@@ -149,7 +149,7 @@ slug = "koncerntillhorighet"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 246)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 246)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"f560dacdf4efa9d5c3ed2791ff523ea8c32c1bdc28e72ec8b34a8d8db1fdd27a\"]}"]
 expected_evidence_sha256 = "aa3d371bcc080dc2777fcae19c291572632bbf82c20c5adbdf0d573b63007cbb"

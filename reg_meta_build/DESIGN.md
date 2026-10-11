@@ -839,6 +839,16 @@ edition needs a split or `native_variable_id`, never a fold into one owner. Rela
 different variables remain connected through groups; a shared stem or suffix is not
 evidence that they are one variable.
 
+Two native identities that take one slug in one FQID scope are both refused with
+`naming_slug_collision`, whichever naming sources assign it (native names, split
+partitions, matrix answers, period families, errata columns). Each refusal is located at
+the curation entry that gave the slug. A refused name forms nothing. A refused variable
+is withheld as `unresolved_catalog_identity` under the FQID its slug would have taken. A
+refused variant leaves its delivered variant unnamed, which withholds its register.
+Curation that references either is withheld with `withheld_catalog_dependency`, never
+reported missing. Register slugs cannot collide, because each register file's path is
+its slug.
+
 Variant-scoped column owners may select exact source edition labels when the source
 documents a change of measurement basis within one column. Every selected label must
 exist; competing owners or a stale selector withhold the whole ownership decision.
@@ -933,10 +943,14 @@ it: where an explicit occurrence overlaps, it wins and the span resolves as an o
 state, with pooled evidence excluded from field reconciliation on that span, so a pooled
 span never overlaps an explicit span on the same (variable, variant, column). A pooled
 scope that carries no range stays unresolvable (an unsupported occurrence, as before).
-Coding membership on a pooled edition is bound over the whole pooled range (Y-207). The
-marker persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0)
-through `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a
-build whose pooled-marked window overlaps an unmarked window on one column.
+Coding membership on a pooled edition is bound over the whole pooled range (Y-207), and
+so is a classification book named for it by a source declaration, a `value_set_labels`
+rule or a `[[binding.variable]]` override (`occurrence_bounds`). A declaration, rule or
+override binds or cites the pooled edition only where no explicit occurrence of the
+column covers the span, so an explicit span keeps its own books and evidence. The marker
+persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0) through
+`ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a build
+whose pooled-marked window overlaps an unmarked window on one column.
 
 Occurrence resolution and coding cut a column at every change in the active editions or
 code lists, so one state per cut would repeat identical facts edition by edition. One
@@ -949,24 +963,25 @@ texts, provenance and the pooled flag; population is a variant fact, so one vari
 never mixes two. It compares resolved facts, not evidence identity, so two editions that
 state the same thing merge. Adjacent pooled cuts of overlapping pooled editions (Y-209)
 are one case of it, but the interval resolver also re-joins them first
-(`_merge_adjacent_pooled`, on reconciled facts and coding evidence): coding reports
-`missing_coding_period` per resolver segment, before this merge, and curation
-acknowledges those issues over the pooled window, not one per cut. A gap, a pooled state
-beside an explicit one, or any differing fact keeps states apart, and an open-ended
-state never joins a closed run: readers count it as its opening year only, so absorbing
-the closed years would drop them from coverage (a pooled cut is always closed, so the
-resolver's re-join never meets one). Each value-set version is its own lane: states of
-one variant and version never overlap, so the lane sorted by start fixes the result, and
-a state of another version overlapping the lane never interrupts it; the output does not
-depend on input order. The merged state keeps its earliest segment's `valid_from`, hence
-its `state_id`; absorbed segments' IDs stop resolving (pre-v1). It runs after formation
-and representation slicing, so lineage, warnings, coverage and the writer all see the
-merged states; data warnings attach to a state by window overlap at read time, so a
-warning on an absorbed segment attaches to the merged state. A merged consumer state can
-span a change of source variant (2018 through one, 2019 through another); lineage
-resolves it period by period, one edge per source state, and reports an ambiguous source
-variant only where two source variants deliver on one day of the consumer window
-(`_contested_variants` in `catalog_lineage.py`).
+(`_merge_adjacent_pooled`, on reconciled facts, coding evidence and the correction
+provenance the state carries, so a correction never spreads to a cut it did not reach):
+coding reports `missing_coding_period` per resolver segment, before this merge, and
+curation acknowledges those issues over the pooled window, not one per cut. A gap, a
+pooled state beside an explicit one, or any differing fact keeps states apart, and an
+open-ended state never joins a closed run: readers count it as its opening year only, so
+absorbing the closed years would drop them from coverage (a pooled cut is always closed,
+so the resolver's re-join never meets one). Each value-set version is its own lane:
+states of one variant and version never overlap, so the lane sorted by start fixes the
+result, and a state of another version overlapping the lane never interrupts it; the
+output does not depend on input order. The merged state keeps its earliest segment's
+`valid_from`, hence its `state_id`; absorbed segments' IDs stop resolving (pre-v1). It
+runs after formation and representation slicing, so lineage, warnings, coverage and the
+writer all see the merged states; data warnings attach to a state by window overlap at
+read time, so a warning on an absorbed segment attaches to the merged state. A merged
+consumer state can span a change of source variant (2018 through one, 2019 through
+another); lineage resolves it period by period, one edge per source state, and reports
+an ambiguous source variant only where two source variants deliver on one day of the
+consumer window (`_contested_variants` in `catalog_lineage.py`).
 
 Operational definitions and source references are state-grain. Separate resolved periods
 and variants each keep their own exact text and provenance, so differing texts across
@@ -1145,10 +1160,12 @@ Where one literal code has substantive meanings in other source lists, finite
 `coding.sentinel` entries name exact source code-label pairs at one accepted owner,
 variant and column. They compile through the existing coding compiler into checked
 classification decisions. Complete original fields, scopes, coding, effective peers,
-effective delivery and the selected codebook are guarded. Changed evidence withholds the
-scoped decision. Only matching pairs inside the reviewed windows become local sentinels;
-source lists and global codebooks remain unchanged. Missing memberships, competing lists
-remain errors; other noncanonical codes are retained as source extensions.
+effective delivery and the selected codebook are guarded when the entry compiles, from
+the same build it is applied to; application re-evaluates only the case's targets and
+peer guards. Changed evidence withholds the scoped decision. Only matching pairs inside
+the reviewed windows become local sentinels; source lists and global codebooks remain
+unchanged. Missing memberships, competing lists remain errors; other noncanonical codes
+are retained as source extensions.
 
 The resolver carries each accepted local exception to the writer as a checked
 certificate: literal column, finite state window, exact code-label pairs, selected
@@ -1582,12 +1599,13 @@ there would silently drop a real edge. It defers a reference only when the other
 provably exists but was not selected, known without forming it: the unselected scope
 files' naming declares those registers, variants and variables (a naming-ambiguity name
 is a declared variable whose ownership is unresolved, which the complete build withholds
-with a cause), and the prepared store holds their observed register names and native
-IDs. Only a register, variant or variable reference is deferred: compile keeps a group
-member in its group's register and a representation succession within one register, so
-an entry naming a representation outside the slice is skipped whole. Such a reference (a
-`same_as` or succession edge, a group or tag member, a code/label pair, a source event
-or a source label) is withheld as one warning code, `deferred_out_of_slice_reference`;
+with a cause; so is a variant or variable name a slug collision refused), and the
+prepared store holds their observed register names and native IDs. Only a register,
+variant or variable reference is deferred: compile keeps a group member in its group's
+register and a representation succession within one register, so an entry naming a
+representation outside the slice is skipped whole. Such a reference (a `same_as` or
+succession edge, a group or tag member, a code/label pair, a source event or a source
+label) is withheld as one warning code, `deferred_out_of_slice_reference`;
 `deferred_references` counts distinct references. A target no scope declares, including
 an undeclared variable in an existing unselected register, stays the complete build's
 error, and a source label matching no known register stays a literal label. Source
@@ -1609,18 +1627,26 @@ evidence and defer endpoint resolution with the same warning; selected or unknow
 sources still report unbound relationships as errors.
 
 Source-wide support and value-list diagnostics retain their complete raw events and
-physical accounting. A scoped build routes an issue only through declared source joins
-and positively observed, unambiguous register coordinates. Selected-register issues
-remain errors and use the existing exact acknowledgment mechanism; proven unselected
-register issues become explicit out-of-slice warnings. Unknown or ambiguous contexts
-remain errors, and complete builds never use this slice deferral. Unbound list subjects
-include the source revision, complete descriptor digest, literal lookup tokens and
-physical association count, so an empty target reference cannot become a general future
-acknowledgment. Explicit source-diagnostic acknowledgments require equality with the
-positively observed delivery register. An ordinary issue is acknowledgeable only when it
-names source refs that are all present among its scope's originals, so a stale case
-naming an absent record stays an error. No support flags, coding domains or missing
-variable targets are inferred.
+physical accounting. Those raw `support_source_issue` and `value_source_issue` events
+are evidence, not verdicts: a support event's `severity` is the diagnostic's own, taken
+before scoping and acknowledgment. Only `issue` events and the counts in `summary.json`
+are the build's verdict. A scoped build routes an issue only through declared source
+joins and positively observed, unambiguous register coordinates. Selected-register
+issues remain errors and use the existing exact acknowledgment mechanism; proven
+unselected register issues become explicit out-of-slice warnings. Unknown or ambiguous
+contexts remain errors, and complete builds never use this slice deferral. Unbound list
+subjects include the source revision, complete descriptor digest, literal lookup tokens
+and physical association count, so an empty target reference cannot become a general
+future acknowledgment. Support and member-list subjects carry content identity only: the
+support row's literal key with its observed register context, or the occurrence's native
+column. Those issues always name their exact source records as refs, and an
+acknowledgment's evidence pin hashes the records' content without delivery positions. A
+new delivery of unchanged rows therefore keeps its acknowledgment, while a changed key
+changes the ref and a changed pinned field stales the entry. Explicit source-diagnostic
+acknowledgments require equality with the positively observed delivery register. An
+ordinary issue is acknowledgeable only when it names source refs that are all present
+among its scope's originals, so a stale case naming an absent record stays an error. No
+support flags, coding domains or missing variable targets are inferred.
 
 The scoped output is create-only and marked incomplete and nonpublishable in both modes.
 The summary records the register list, `publication_ready` false and `corpus_validation`

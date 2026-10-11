@@ -1,0 +1,17 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject", "case_id"],
+      "rows": [
+        ["deferred_out_of_slice_reference", "warning", "variant_successions:0", null]
+      ]
+    },
+    {
+      "table": "successions",
+      "fields": ["grain", "predecessor", "successor", "predecessor_variant", "successor_variant"],
+      "rows": []
+    }
+  ]
+}

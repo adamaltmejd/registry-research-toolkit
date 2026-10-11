@@ -1,0 +1,20 @@
+{
+  "note": "POOLED is delivered only by the pooled edition '2016 - 2018', under a version label no book lists, so only book a's `[[binding.variable]]` override names a book for it. The override binds the one pooled state over the whole pooled range, like pooled coding (Y-207).",
+  "fails_if": "`apply_classification_cases` (source_classification_bindings.py) reads the override's occurrence windows with `scope_bounds`, which leaves a pooled scope unbounded, instead of the pooled-aware `_column_evidence`: POOLED loses 'a' and the override binds nothing",
+  "sources": {
+    "description": "SCB VALUE (2020) and POOLED, whose only edition is the pooled '2016 - 2018' carrying codes 1/2 under the value-set version 'Pooled report'; book a with codes 1/2 overrides scb/sample/pooled.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 1004, "var_id": 104, "colname": "POOLED", "varname": "POOLED", "year": "2018", "versionname": "2016 - 2018", "regver_id": 1618}
+      ],
+      "vardemangder": [
+        "Pooled report|1|1|One|1004|10041",
+        "Pooled report|1|2|Two|1004|10042"
+      ]
+    },
+    "files": {
+      "classifications/a.csv": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

@@ -106,7 +106,7 @@ slug = "byggnadstyp"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 282)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 282)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6093cbace05be7bf482a91d6beb905b1d301a287793e41139e6585cedf6fd2ae\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2e89fbf6e53d4ddc6db119a5869de9fdf48d198ad62c422c0af55614581a8842\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"21b51a6ffb222c83d85ffbd707617b1f7d9c806bdd6e9385cca8b44793c7ce49\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6c718328d5a42efabef55cd387b19dcf27eda05d3c966562599b5a76c7440728\"]}"]
 expected_evidence_sha256 = "f50b10fa3cbf0fddf5f460d6a0ab0228034d5021894dde2031aff0aba80fe323"

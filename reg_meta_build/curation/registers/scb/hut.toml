@@ -484,7 +484,7 @@ slug = "arbetsinkomst"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 86)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 86)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"8ff12bf4033492f51691a0b25c7828925dbdd44fe4792bfb6958a056eb5bef21\"]}"]
 expected_evidence_sha256 = "e987e29ca6f38af2a4bddb2320aebbab8a067aa0025d875d281123888af5a95a"
