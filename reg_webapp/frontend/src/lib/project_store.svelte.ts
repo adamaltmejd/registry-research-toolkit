@@ -59,7 +59,7 @@ import {
   uniqueSourceName,
   updateField,
 } from "./project_data";
-import { checkProject } from "./reg_core";
+import { checkProject, sourcePeriodIntervals } from "./reg_core";
 import { windowDisjointFindings } from "./validation";
 import { windowStore } from "./window.svelte";
 
@@ -941,7 +941,9 @@ export const projectStore = {
         more: ProjectSourcePeriod,
       ): ProjectSourcePeriod => {
         const merged = periodCoverageUnion(have, more);
-        if (datedIntervals(merged) === null) {
+        // Refused only when reg-core rejects it: a year-independent `_default`
+        // merge is valid though it has no dated days.
+        if ("error" in sourcePeriodIntervals(merged)) {
           refused = true;
         }
         return merged;

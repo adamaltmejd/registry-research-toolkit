@@ -205,6 +205,25 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
         expect(JSON.stringify(storedProject())).toBe(before);
       }
     }
+    // A year-independent re-add of a binding inheriting a `_default` source is a
+    // valid merge with no dated days: a duplicate no-op, not a refusal. Fails if
+    // validity is judged by dated days alone.
+    projectStore.newProject(SEED);
+    projectStore.updateField("sources", [
+      {
+        name: "LISA",
+        register_variant: "scb/lisa/v1",
+        period: "_default",
+        bindings: [{ variable: "scb/lisa/alder", type: "categorical" }],
+      },
+    ]);
+    const before = JSON.stringify(storedProject());
+    expect(
+      projectStore.applyStagedDiff({
+        adds: [add("scb/lisa/v1", "scb/lisa/alder", "_default")],
+      }),
+    ).toBe(true);
+    expect(JSON.stringify(storedProject())).toBe(before);
   });
 
   it("preserves token-grammar add windows as source-period coverage", () => {
