@@ -51,6 +51,7 @@ from _sos_fixtures import (
 )
 from openpyxl import Workbook, load_workbook
 from reader_artifacts import build_inputs_digest, generation_dir
+from reg_meta_build.db import stored_data_warnings
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.materialize import build_catalog
 from reg_meta_build.pipeline import check_curation
@@ -835,8 +836,14 @@ def _sha256(text: str) -> str:
 def _warning_rows(outcome: Outcome, warnings: list[dict]) -> list[dict]:
     """Warnings in the `DataWarning` shape, projected with their coordinates as slugs
     and `detail_hash_of` naming what `diagnostic_detail_sha256` hashes."""
+    # A warning copies its diagnostic's refs, so `refs` stands in for the subject the
+    # warning does not carry: two issues sharing a code and detail stay apart.
     issue_hashes = {
-        (event["code"], _sha256(event.get("detail") or ""))
+        (
+            event["code"],
+            _sha256(event.get("detail") or ""),
+            tuple(_refs(event.get("refs"))),
+        )
         for event in outcome.events
         if event["kind"] == "issue"
     }
@@ -857,7 +864,8 @@ def _warning_rows(outcome: Outcome, warnings: list[dict]) -> list[dict]:
                 "detail": payload["detail"],
                 "summary": payload.get("summary"),
                 "detail_hash_of": "issue"
-                if (payload["code"], digest) in issue_hashes
+                if (payload["code"], digest, tuple(_refs(payload.get("refs"))))
+                in issue_hashes
                 else "detail"
                 if _sha256(payload["detail"]) == digest
                 else None,
@@ -872,26 +880,9 @@ def _warning_rows(outcome: Outcome, warnings: list[dict]) -> list[dict]:
 
 
 def _warnings(outcome: Outcome) -> list[dict]:
-    return _warning_rows(
-        outcome,
-        [
-            row | json.loads(row["evidence_json"])
-            for row in outcome._sql(
-                "SELECT p.slug || '/' || r.slug AS register_fqid, "
-                "p.slug || '/' || r.slug || '/' || v.slug AS variable_fqid, "
-                "rv.slug AS variant, w.delivery_column_name, w.valid_from, "
-                "w.valid_to, w.code, w.severity, st.text AS summary, "
-                "dt.text AS detail, w.evidence_json FROM data_warning w "
-                "JOIN register r USING (register_id) "
-                "JOIN provider p USING (provider_id) "
-                "LEFT JOIN variable v ON v.variable_id = w.variable_id "
-                "LEFT JOIN register_variant rv "
-                "ON rv.register_variant_id = w.register_variant_id "
-                "JOIN data_warning_text st ON st.text_id = w.summary_id "
-                "JOIN data_warning_text dt ON dt.text_id = w.detail_id"
-            )
-        ],
-    )
+    with closing(sqlite3.connect(outcome.db)) as conn:
+        stored = stored_data_warnings(conn)
+    return _warning_rows(outcome, [w.model_dump(mode="json") for w in stored])
 
 
 def _report_warnings(outcome: Outcome) -> list[dict]:

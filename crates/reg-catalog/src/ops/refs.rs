@@ -1,4 +1,4 @@
-//! Refs (section 7): a FQID, a group ref or a bare name, resolved in the read scope.
+//! Refs: a FQID, a group ref or a bare name, resolved in the read scope.
 //! [`resolve`] takes any kind (`show`); [`register`] takes a register only
 //! (`search`'s `register`, `docs_related`).
 

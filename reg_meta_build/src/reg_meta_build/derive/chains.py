@@ -85,7 +85,7 @@ def succession_terminals(conn: sqlite3.Connection) -> list[tuple[str, str]]:
 
 
 # The reader's edition walk and one-dimensional families, moved from
-# `reg_meta.catalog` (package 4.2b): `Catalog.classification_chain` and
+# `reg_meta.catalog`: `Catalog.classification_chain` and
 # `Catalog.list_classification_families` with what they call, reduced to the fields
 # derive stores. Every anchor is a live `classification` slug, so the reader's FQID
 # parse and its `same_as` canonicalization are the identity here and stay behind.

@@ -1,5 +1,4 @@
-//! The interval algebra over inclusive ISO date intervals (`RUST_RUNTIME_SPEC.md`
-//! package 3e.2): a project period, a state's
+//! The interval algebra over inclusive ISO date intervals: a project period, a state's
 //! window, an availability clip and a co-delivery all expand, intersect, merge and
 //! render through it, so they never disagree about bounds or spelling.
 //!
@@ -91,8 +90,11 @@ pub fn render(intervals: &[Interval]) -> String {
             if !token.contains("..") {
                 return token;
             }
-            let start = if lo.ends_with("-01-01") { &lo[..4] } else { lo };
-            let end = if hi.ends_with("-12-31") { &hi[..4] } else { hi };
+            // The year is what precedes the suffix: four digits for an ISO date, and
+            // no byte slicing, so any string renders without a panic (the SPA calls
+            // this through `reg-core-wasm`).
+            let start = lo.strip_suffix("-01-01").unwrap_or(lo);
+            let end = hi.strip_suffix("-12-31").unwrap_or(hi);
             format!("{start}..{end}")
         })
         .collect::<Vec<_>>()

@@ -1,4 +1,4 @@
-//! The FQID and period grammars (`RUST_RUNTIME_SPEC.md` sections 5 and 7).
+//! The FQID and period grammars (`crates/DESIGN.md`, "FQID grammar").
 //!
 //! FQIDs follow `crates/DESIGN.md` "FQID grammar"; periods take the seven token forms
 //! listed there plus a `from..to` range. Each grammar has exactly one spelling per
@@ -331,8 +331,7 @@ pub fn prev_iso_day(s: &str) -> String {
 ///
 /// The retired Python reader rendered a non-leap February window as
 /// `YYYY-02-01..YYYY-02-28`; this renders `YYYY-02`, the token
-/// the grammar expands to exactly those bounds (a Rust-only fix, stage 3b–3e
-/// decision 6).
+/// the grammar expands to exactly those bounds (a Rust-only fix).
 #[must_use]
 pub fn period_token_for_bounds(lo: &str, hi: &str) -> String {
     let explicit = || format!("{lo}..{hi}");

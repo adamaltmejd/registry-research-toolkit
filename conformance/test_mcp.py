@@ -1,4 +1,4 @@
-"""MCP equivalence (RUST_RUNTIME_SPEC.md section 9): the MCP tools answer exactly what
+"""MCP equivalence (conformance/README.md): the MCP tools answer exactly what
 the HTTP operations answer.
 
 Raw JSON-RPC over `httpx2` against `/mcp` on the `--server-cmd` server (stateless

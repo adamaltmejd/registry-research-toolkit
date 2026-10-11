@@ -88,7 +88,7 @@ codes! {
         "Install a documentation database with a supported schema version.";
 }
 
-/// The error document `{code, class, message, remediation, fields}` (section 7).
+/// The error document `{code, class, message, remediation, fields}`.
 #[derive(Debug, Serialize, ToSchema)]
 pub struct Error {
     #[serde(skip)]

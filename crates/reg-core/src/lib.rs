@@ -2,11 +2,9 @@
 //!
 //! This crate holds the FQID and period grammars ([`Fqid`], [`Period`]), the text
 //! folds, and the `project_data.json` types ([`project`]) with their structural
-//! validator ([`validate_structural`]), all of `RUST_RUNTIME_SPEC.md` section 5, and
-//! the interval algebra over ISO date intervals ([`merge`], [`render`]). Each fold
-//! matches today's Python reader
-//! (`reg_meta`) byte for byte, except on characters whose Unicode data changed after
-//! Python's UCD version.
+//! validator ([`validate_structural`]), and the interval algebra over ISO date
+//! intervals ([`merge`], [`render`]): the shared contracts of `crates/DESIGN.md`, "One
+//! implementation per contract".
 //!
 //! All Unicode data is on one version, [`UNICODE_VERSION`] (17.0.0): Rust std's
 //! `to_lowercase` and `White_Space`, `unicode-normalization` 0.1.25 (NFKD, canonical

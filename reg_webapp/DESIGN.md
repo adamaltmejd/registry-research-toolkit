@@ -3,11 +3,11 @@
 Svelte SPA on the Rust server (`reg-meta serve`), which answers every `/api` route: the
 catalog reads (context, search, docs, the catalog pages) and the project operations
 (validate / order). The SPA is the researcher's authoring client. There is no Python web
-server: `RUST_RUNTIME_SPEC.md` package F deleted the FastAPI app. This file records the
-package-local design rationale. Cross-cutting topology (package tree, dependency graph,
-perf budgets, version policy, testing-strategy overview) lives in the root
-`ARCHITECTURE.md`; remaining/unbuilt work lives in `REFACTOR_SPEC.md`. The API contract
-is `conformance/api/operations.toml` with its snapshot `crates/reg-meta/openapi.json`.
+server. This file records the package-local design rationale. Cross-cutting topology
+(package tree, dependency graph, perf budgets, version policy, testing-strategy
+overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in
+`REFACTOR_SPEC.md`. The API contract is `conformance/api/operations.toml` with its
+snapshot `crates/reg-meta/openapi.json`.
 
 **Compiled holdings.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog or steward artifact and delegates
@@ -142,8 +142,8 @@ surface the folded group.
 ## Global catalog search (the Rust server, 3a.11)
 
 `GET /api/search` is answered by the Rust server (`reg-meta serve`, the `search`
-operation in `conformance/api/operations.toml`): one ranked list per call (decision 17),
-as `{data: {items, next_cursor}, meta}`. With `type` the list is one arm's hits
+operation in `conformance/api/operations.toml`): one ranked list per call, as
+`{data: {items, next_cursor}, meta}`. With `type` the list is one arm's hits
 (`register`, `variable`, `classification`, `classification_code`, `register_value`), its
 curated pins first; without it, every arm's hits ranked together, grouped variable
 members hidden. Ranking, curated pins (`reg_meta_build/curation/search_pins.toml`, read
@@ -192,17 +192,17 @@ and classifications are its navigable targets.
 
 ## Docs library (the Rust server's `docs` operations)
 
-`/api/docs/*` (#354/#742) is served by the Rust server since package 3b.6 (the vite dev
-proxy sends `/api/docs` there). The operations (`conformance/api/operations.toml`) read
-the prebuilt `reg_meta_docs.db` beside the catalog, each answering `{data, meta}`:
+`/api/docs/*` (#354/#742) is served by the Rust server (the vite dev proxy sends
+`/api/docs` there). The operations (`conformance/api/operations.toml`) read the prebuilt
+`reg_meta_docs.db` beside the catalog, each answering `{data, meta}`:
 
 - `docs_search` (`GET /api/docs/search?q=&register=&limit=&cursor=`): with `q`, the
   entries matching every word, best first, with an FTS `snippet`; without `q`, every
   entry by filename. `register` is a register ref (FQID or bare name); the page carries
   `total` and `register_ingested` (whether that register has docs). It absorbs the old
   `/api/docs/for-variable` hook (`q` = the variable's name). The index holds
-  `fold_search` text (decision 16, folded by the docs build), and snippets come from the
-  stored body, so they keep case and diacritics.
+  `fold_search` text (folded by the docs build), and snippets come from the stored body,
+  so they keep case and diacritics.
 - `docs_get` (`GET /api/docs/doc/{identifier}`): metadata, source pointer, a BOUNDED
   `excerpt` and the full markdown `body` for agents. The SPA renders only the excerpt
   (marker+Gemini conversion quality + republication exposure).
@@ -495,10 +495,9 @@ variable pages to add one column each.
 operation in `crates/reg-catalog/src/ops/slice_3a.rs`). One call returns the steward
 branding, schema version, import date, the steward's period span, the `reg_meta` version
 and the headline `sizes` (`{providers, registers, variables}` in the read scope), as
-`{data, meta}`; it replaces FastAPI's `/api/context` and `/api/stats`
-(`RUST_RUNTIME_SPEC.md` decision 15). App fetches it once and threads `steward` and
-`sizes` to Home, which makes no request of its own. The SPA's types for it are generated
-from the committed `crates/reg-meta/openapi.json` into
+`{data, meta}`; it replaces FastAPI's `/api/context` and `/api/stats`. App fetches it
+once and threads `steward` and `sizes` to Home, which makes no request of its own. The
+SPA's types for it are generated from the committed `crates/reg-meta/openapi.json` into
 `frontend/src/lib/api-types-rust.ts` (a `cargo test` keeps the snapshot equal to the
 server). Locally, the Vite dev proxy sends `/api/context` to the Rust server and the
 rest of `/api` here.
@@ -1245,28 +1244,27 @@ and officially documents the Cloudflare-in-front topology
 (`fly.io/docs/networking/understanding-cloudflare`). Lock-in is nil: the artifact is the
 plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 
-- **The image runs the Rust server alone** (RUST_RUNTIME_SPEC.md package 3a.9, decision
-  15): `reg-meta serve` with the baked DB pair and the steward branding, no uvicorn and
-  no Python at runtime. The Dockerfile has three stages: the `regmeta-db` bake (Debian
-  slim with `curl` and `zstd`: download the release assets, verify each against the
-  SHA-256 digest GitHub records for it, unpack), a pinned Rust stage building
-  `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate. The image serves
-  the API and `/mcp` only; the edge workers serve the SPA, which `container-build.yml`'s
-  edge jobs build themselves. Since 3e.4 the Rust server answers every route the SPA
-  calls; package F deleted the FastAPI app.
-- **Hosted MCP** (decision 12): `/mcp` on `catalog.swecov.se`. The global worker
-  forwards `/mcp` (`ROUTE_MCP` in `wrangler.jsonc` only; the SWECOV worker does not,
-  since a steward catalog is never served over hosted MCP), and `fly.toml` passes
-  `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
-  `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
-  Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
-  request came through the edge with a shared secret (`EDGE_TOKEN` on the worker,
-  `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only such a request is
-  keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
-  keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret
-  every edge `/mcp` client shares the proxy's bucket. After each global edge deploy,
-  `container-build.yml` sends `initialize`, `tools/list` and one `search` to the public
-  `/mcp`.
+- **The image runs the Rust server alone**: `reg-meta serve` with the baked DB pair and
+  the steward branding, no uvicorn and no Python at runtime. The Dockerfile has three
+  stages: the `regmeta-db` bake (Debian slim with `curl` and `zstd`: download the
+  release assets, verify each against the SHA-256 digest GitHub records for it, unpack),
+  a pinned Rust stage building `reg-meta`, and a Debian slim runtime with `curl` for the
+  smoke gate. The image serves the API and `/mcp` only; the edge workers serve the SPA,
+  which `container-build.yml`'s edge jobs build themselves. Since 3e.4 the Rust server
+  answers every route the SPA calls.
+- **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
+  `catalog.swecov.se`. The global worker forwards `/mcp` (`ROUTE_MCP` in
+  `wrangler.jsonc` only; the SWECOV worker does not, since a steward catalog is never
+  served over hosted MCP), and `fly.toml` passes `REG_META_PUBLIC_HOST`, which rmcp's
+  allowed hosts admit beside the loopback names. `/mcp` and the project POSTs share one
+  rate limit per client address (60 a minute; Cost protection, below). Behind Fly the
+  peer is Fly's proxy, so the worker proves a request came through the edge with a
+  shared secret (`EDGE_TOKEN` on the worker, `REG_META_EDGE_TOKEN` on the Fly app, sent
+  as `x-edge-token`); only such a request is keyed on its `CF-Connecting-IP`. Any other
+  request, a direct-origin hit included, is keyed on its peer, so a forged
+  `CF-Connecting-IP` buys nothing. Without the secret every edge `/mcp` client shares
+  the proxy's bucket. After each global edge deploy, `container-build.yml` sends
+  `initialize`, `tools/list` and one `search` to the public `/mcp`.
 - **Apps**: `reg-webapp-global` serves `catalog.swecov.se`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
@@ -1616,15 +1614,20 @@ rebuild once per commit rather than once per pick (this is the write path the #9
 multi-select consumer commits through). Find-or-create for a staged add keys on
 `register_variant` **alone** — not `(register_variant, period)` — so two picks against
 the same variant land in the same source regardless of period; a disjoint window is
-folded into the existing source's period via `mergePeriods` (`period.ts`) rather than
-minting a second source: when both periods are pure year grammar it coalesces into the
-sorted, disjoint #307 list form (adjacency-merging touching/overlapping intervals),
-otherwise (either side is token grammar) it REPLACES with the incoming period, since
-mixed-grain union has no defined sort. `applyStagedDiff` is now the SOLE catalog→project
-mutation path (the store's earlier single-pick `addFromCatalog` handoff was dead since
-#992/#993 and was deleted in #1104). `updateField` (the project's own `name` /
-`window`), `removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other
-mutators the cart UI calls — a source's own generated `name` is not editable anywhere.
+folded into the existing source's period via `periodCoverageUnion` (`period.ts`) rather
+than minting a second source: the union of the days both periods request, through
+reg-core (WASM) — merged (overlapping and day-adjacent days join) into the sorted,
+disjoint #307 list form. Two year-only periods are rendered whole
+(`2005..2010,2015..2020`). Otherwise a segment whose days the merge leaves untouched
+keeps the spelling it was written in (`2020-H1` plus `2022` is `2020-H1,2022`), and only
+an interval the merge created or changed is rendered (`2019-Q1` plus `2019-Q2` is
+`VT2019`; a span no token covers is a range like `2019..2020-06-30`). When either side
+has no days to place (`_default`, or a period reg-core refuses) the incoming period
+replaces it. `applyStagedDiff` is now the SOLE catalog→project mutation path (the
+store's earlier single-pick `addFromCatalog` handoff was dead since #992/#993 and was
+deleted in #1104). `updateField` (the project's own `name` / `window`),
+`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
+the cart UI calls — a source's own generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
 **period** is the one field the cart edits (Y-81), one From/To row per segment for a
@@ -1637,16 +1640,16 @@ source-wide rewrite has to be looked at against, so that is where it is made. Th
 authors it in the catalog's own period vocabulary — exact-year fields and one Apply, the
 same entry `PeriodPicker` carries beside its slider, plus "Add years" and a per-row
 Remove (hidden at one row) — and writes back through the same wire shaping a pick uses.
-Applying sorts and merges the rows into the disjoint ascending wire `mergePeriods` would
-produce, refusing a within-row disorder or a genuine cross-row overlap in the same
-status line rather than silently collapsing one; a token period (`HT2018`) is a
-different vocabulary the rows do not author, and is shown as it stands. Where the years
-the period covers differ from the project's `window` (narrower, wider, or holed;
-`periodWindowRelation`) the card MARKS it ("Differs from study window 2005–2020"): the
-window is an authoring seed, not an inheritance (reg-core puts `period` on `Source`
-alone), so divergence is shown rather than warned about. The one divergence that is more
-than shown is a period with no years inside the window at all, which blocks the order
-(see "Common study window").
+Applying sorts and merges the rows into the disjoint ascending wire
+`periodCoverageUnion` would produce, refusing a within-row disorder or a genuine
+cross-row overlap in the same status line rather than silently collapsing one; a token
+period (`HT2018`) is a different vocabulary the rows do not author, and is shown as it
+stands. Where the years the period covers differ from the project's `window` (narrower,
+wider, or holed; `periodWindowRelation`) the card MARKS it ("Differs from study window
+2005–2020"): the window is an authoring seed, not an inheritance (reg-core puts `period`
+on `Source` alone), so divergence is shown rather than warned about. The one divergence
+that is more than shown is a period with no years inside the window at all, which blocks
+the order (see "Common study window").
 
 The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
 coordinate: a draft may carry several differently named sources on one register variant
@@ -1710,7 +1713,14 @@ rune store holding one draft per session.
   draft gets those issues as its validation at once and is never POSTed, so a stale
   green answer for an earlier draft is discarded and cannot reopen the order download;
   an accepted draft is POSTed to `/validate` (debounced) for the semantic layer, which
-  needs the catalog. A new draft takes `project_schema_version()`.
+  needs the catalog. A new draft takes `project_schema_version()`. Periods go through
+  the same module: the period grammar and project periods (a source period's days, a
+  study window's days) are reg-core's, never parsed or bounded in the SPA (`period.ts`
+  composes reg-core's answers; the catalog's delivery-window day arithmetic in
+  `catalog.ts` is a separate, older matter, #1426). The study-window coverage hint stays
+  at year grain (a period with a non-year endpoint gets none); the disjointness finding
+  compares days. The type-to-filter fold is the server search's `fold_search` through
+  the same module, not a TS copy.
 - **Project-file versions.** Any JSON object opens (the shape is the only ingress
   check): the server reads exactly reg-core's `SCHEMA_VERSION` and answers any other as
   the single `unsupported_schema_version` issue, which the browser now shows on open. No

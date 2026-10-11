@@ -1,6 +1,6 @@
 """The build's slug rules: reg-core's slug grammar plus the slot reservations.
 
-The grammar is `reg_core_py.check_slug` (`RUST_RUNTIME_SPEC.md` section 5); what this
+The grammar is `reg_core_py.check_slug` (`crates/DESIGN.md`, "FQID grammar"); what this
 module adds is build policy with no Rust consumer: `_default` is the variant-less
 register_variant coordinate, two slugs are reserved in one slot each because an SPA
 route would capture them (`reg_webapp/frontend/src/lib/router.svelte.ts`).

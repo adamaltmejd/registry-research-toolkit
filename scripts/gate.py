@@ -54,9 +54,10 @@ ALL = ("g0", "rust", "release", "flows", "frontend")
 # other session's gate, while the cap still keeps parallel sessions off load 30.
 SLOTS = 3
 HEAVY = {"g0", "crates", "rust", "release", "flows", "regen", "g1"}
-# The SPA's reg-core .wasm, gzipped (RUST_RUNTIME_SPEC.md "Stage 5 decisions", D2:
-# provisional). Over it, the frontend step fails: the budget is a maintainer call.
-WASM_GZ_BUDGET = 150_000
+# The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
+# it, the frontend step fails: raising the budget is a maintainer call. It includes the
+# search fold (about 150 KB gz measured with it).
+WASM_GZ_BUDGET = 200_000
 
 
 def run(command, cwd=ROOT, env=None, **kwargs):

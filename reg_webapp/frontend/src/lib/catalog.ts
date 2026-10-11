@@ -21,13 +21,16 @@ import {
 } from "./api";
 import {
   type Coverage,
-  periodRangeEndpoints,
-  periodTokenBounds,
-  periodTokenForBounds,
-  periodWireBounds,
+  datedIntervals,
   VALUE_SET_VERSION_NONE,
 } from "./period";
 import type { DraftBinding, ProjectBinding } from "./project_data";
+import {
+  foldSearch,
+  renderIntervals,
+  sourcePeriodFromWire,
+  studyWindowInterval,
+} from "./reg_core";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -400,56 +403,10 @@ export function axisNoun(axes: readonly GroupAxisModel[]): string {
 // The catalog/authoring lists render at scale (238 registers, 740 variables) —
 // every list surface needs an in-memory substring filter. One shared matcher so
 // all four surfaces fold identically, and identically to the server's search
-// (`fold_search`, RUST_RUNTIME_SPEC.md section 5): "lon" matches both "Löne…"
+// (`fold_search`, crates/DESIGN.md "Text folds"): "lon" matches both "Löne…"
 // and "lön" (diacritic-blind), "strasse" matches "Straße", and the needle is
-// matched against BOTH display name AND slug/FQID.
-
-// U+0345 COMBINING GREEK YPOGEGRAMMENI has canonical combining class 240, the
-// highest assigned. NFD's canonical reordering moves any mark with a smaller
-// nonzero class in front of it, so a mark that ends up first has ccc != 0. JS
-// exposes no ccc property; this reads it off the normalizer instead.
-const CCC_240 = "\u0345";
-const hasNonzeroCcc = (mark: string): boolean =>
-  mark === CCC_240 || (CCC_240 + mark).normalize("NFD").startsWith(mark);
-
-/** Python `str.casefold()` of one code point (CaseFolding.txt, full folding).
- * Lower-upper-lower reaches the full fold (ß → SS → ss, ς → Σ → σ, ﬁ → FI → fi)
- * with two exceptions: casefold leaves dotless ı alone (its uppercase I folds to
- * i), and it folds Cherokee to the CAPITAL letters (ꭰ → Ꭰ). */
-function caseFoldCodePoint(c: string): string {
-  if (c === "\u0131") return c;
-  if (/\p{Script=Cherokee}/u.test(c)) return c.toUpperCase();
-  return c.toLowerCase().toUpperCase().toLowerCase();
-}
-
-/** One `fold_search` pass: case fold, NFKD, drop marks with ccc != 0. ASCII
- * other than A–Z already is its own fold, so only A–Z and non-ASCII code points
- * take the per-code-point case fold (a 4x speedup on catalog names). */
-function foldPass(s: string): string {
-  return s
-    .replace(/[^\0-@[-\x7f]/gu, caseFoldCodePoint)
-    .normalize("NFKD")
-    .replace(/\p{M}/gu, (m) => (hasNonzeroCcc(m) ? "" : m));
-}
-
-/** Python `str.isspace`: White_Space plus the information separators. */
-// biome-ignore lint/suspicious/noControlCharactersInRegex: U+001C–U+001F are whitespace to Python's str.split.
-const PY_WHITESPACE = /[\p{White_Space}\x1c-\x1f]+/u;
-
-/** Fold a string for diacritic-blind, case-insensitive substring matching: the
- * server's `fold_search` (reg-core), so the client filter and
- * the server search agree. Case fold, NFKD, drop combining marks, repeated until
- * nothing changes (a second pass catches a capital NFKD emits, U+1D2C → A → a);
- * then one space between words, where whitespace is Python's `str.isspace`
- * (White_Space plus U+001C–U+001F). The oracle is
- * conformance/cases/folds/fold_search.jsonl. */
-export function foldText(s: string): string {
-  let text = foldPass(s);
-  for (let next = foldPass(text); next !== text; next = foldPass(text)) {
-    text = next;
-  }
-  return text.split(PY_WHITESPACE).filter(Boolean).join(" ");
-}
+// matched against BOTH display name AND slug/FQID. The fold is reg-core's own
+// (`foldSearch`, through WASM), not a copy.
 
 /** Whether any of `haystacks` contains the folded `needle` (substring). An empty
  * (or whitespace-only) needle matches everything — the unfiltered full-list
@@ -458,11 +415,11 @@ export function matchesFilter(
   needle: string,
   ...haystacks: (string | null | undefined)[]
 ): boolean {
-  const q = foldText(needle);
+  const q = foldSearch(needle);
   if (!q) {
     return true;
   }
-  return haystacks.some((h) => h != null && foldText(h).includes(q));
+  return haystacks.some((h) => h != null && foldSearch(h).includes(q));
 }
 
 /** Filter `items` by `matchesFilter` over `keys(item)`, THEN rank the survivors
@@ -481,7 +438,7 @@ export function rankFilter<T>(
   needle: string,
   keys: (item: T) => (string | null | undefined)[],
 ): T[] {
-  const q = foldText(needle);
+  const q = foldSearch(needle);
   const matched = items.filter((it) => matchesFilter(needle, ...keys(it)));
   if (!q) {
     return matched;
@@ -489,7 +446,7 @@ export function rankFilter<T>(
   // 0 = exact, 1 = prefix, 2 = other. `Array.prototype.sort` is stable, so
   // equal-tier rows keep their incoming (alphabetical) order.
   const tier = (it: T): number => {
-    const folded = keys(it).map((k) => (k == null ? null : foldText(k)));
+    const folded = keys(it).map((k) => (k == null ? null : foldSearch(k)));
     if (folded.some((f) => f === q)) {
       return 0;
     }
@@ -557,7 +514,7 @@ export function fqidSegments(fqidPath: string): string[] {
 /** The leaf slug of an FQID — its last `/`-separated segment (`scb/rtb` →
  * `"rtb"`, a bare `"rtb"` → `"rtb"`). A ranking key for the browse type-to-filter
  * (`rankFilter`): the leaf slug exact-/prefix-matches the needle even though the
- * full FQID's provider prefix would block it (`foldText("scb/rtb")` doesn't start
+ * full FQID's provider prefix would block it (`foldSearch("scb/rtb")` doesn't start
  * with `"rtb"`), so a slug-named target (`scb/rtb` for "rtb") outranks a purpose-
  * blurb-only match (#674). */
 export function leafSlug(fqid: string): string {
@@ -1075,31 +1032,19 @@ export interface PickerVariantSegment {
 
 /** The WIRE segment for ONE inclusive ISO window, or null when a bound is a sentinel
  * (open-ended `9999-12-31` / unknown-start `0001-01-01`) — an unbounded side has no
- * in-grammar token. Emits the EXACT span, not a year-rounded one:
- * `periodTokenForBounds` renders the coarsest token that round-trips to these exact
- * bounds — a full year → the bare year, but a SUB-ANNUAL span
- * (`2020-01-01`..`2020-01-31` → `2020-01`, a quarter → `YYYY-Q[1-4]`, a single day →
- * the day) keeps its grain so the committed source covers only the column's real
- * window, not the whole year (which would pull in sibling columns for the rest of
- * the year — #678 fix). A window no single token covers is the explicit `lo..hi`
- * range. */
+ * in-grammar token. Emits the EXACT span, not a year-rounded one (reg-core's
+ * `render`): the coarsest token whose days are exactly these — a full year → the
+ * bare year, but a SUB-ANNUAL span (`2020-01-01`..`2020-01-31` → `2020-01`, a
+ * quarter → `YYYY-Q[1-4]`, a single day → the day) keeps its grain so the committed
+ * source covers only the column's real window, not the whole year (which would pull
+ * in sibling columns for the rest of the year — #678 fix). A window no single token
+ * covers is a range whose year-aligned endpoints are bare years
+ * (`2010..2020`, `2019..2020-06-30`). */
 function windowWireSegment(from: string, to: string): string | null {
   if (from === YEARLESS_VALID_FROM || to === OPEN_ENDED_VALID_TO) {
     return null;
   }
-  const token = periodTokenForBounds(from, to);
-  // A multi-year span comes back as the explicit ISO range `lo..hi`; collapse
-  // YEAR-ALIGNED endpoints to bare years (`2010-01-01..2020-12-31` → `2010..2020`)
-  // so a whole-year multi-year span stays a clean year range. A sub-annual endpoint
-  // (not Jan-1 / Dec-31 aligned) is preserved exactly — never widened to its year.
-  const range = periodRangeEndpoints(token);
-  if (range) {
-    const [lo, hi] = range;
-    const loYear = lo.endsWith("-01-01") ? lo.slice(0, 4) : lo;
-    const hiYear = hi.endsWith("-12-31") ? hi.slice(0, 4) : hi;
-    return `${loYear}..${hiYear}`;
-  }
-  return token;
+  return renderIntervals([[from, to]]);
 }
 
 /** The WIRE period for a representation row's DISJOINT delivery windows, or null
@@ -1170,23 +1115,26 @@ export function deliveryWindows(
 
 /** The inclusive ISO bounds to clamp a picker row's span to on Add, given the active
  * `?period` wire and the year-grain dim window (#678). The `?period` wins at its REAL
- * grain (`periodWireBounds` — so a sub-annual `2020-Q1` stays `2020-01-01..2020-03-31`
- * rather than collapsing to the outer year, the #678 finding); else the year-grain
- * dim window expanded to `[lo-01-01, hi-12-31]`; else null (no clamp — full-span add).
- * Pure — unit-tested. */
+ * grain (the first and last day reg-core places it on — so a sub-annual `2020-Q1`
+ * stays `2020-01-01..2020-03-31` rather than collapsing to the outer year, the #678
+ * finding); else the year-grain dim window's days; else null (no clamp — full-span
+ * add). A `?period` reg-core refuses falls through to the window. Pure — unit-tested. */
 export function addWindowBounds(
   period: string | null | undefined,
   window: [number, number] | null,
 ): { from: string; to: string } | null {
-  if (period) {
-    const bounds = periodWireBounds(period);
-    if (bounds) {
-      return bounds;
-    }
-  }
-  return window
-    ? { from: `${window[0]}-01-01`, to: `${window[1]}-12-31` }
+  const periodDays = period
+    ? datedIntervals(sourcePeriodFromWire(period))
     : null;
+  const first = periodDays?.[0];
+  const last = periodDays?.at(-1);
+  if (first && last) {
+    return { from: first[0], to: last[1] };
+  }
+  const windowDays = window
+    ? studyWindowInterval({ from: window[0], to: window[1] })
+    : null;
+  return windowDays ? { from: windowDays[0], to: windowDays[1] } : null;
 }
 
 /** The wire period to COMMIT for a selected picker row, given the active period
@@ -2382,35 +2330,24 @@ export function clusterBands<T>(
 /** The active period window the picker DIMS against, as an inclusive year pair
  * `[lo, hi]`, or `null` when there is no active window (every row reads as
  * in-window). Precedence mirrors the leaf's resolution: an active `?period` wire
- * wins (parsed to its outer year span — a single token via `periodTokenBounds`,
- * a `lo..hi` range via its endpoints, a `a,b` comma-union via the min/max of its
- * parts); else the global `ProjectStudyWindow` (already year ints). A `?period` that
- * doesn't parse to any bound (e.g. `_default`) falls back to the window, then to
- * null. simplify: year-grain overlap is deliberate — the dim is an at-a-glance
- * relevance cue, not the hard period gate (selection works on any row). */
+ * wins (its outer year span: the years of the first and last day reg-core places it
+ * on, a `a,b` comma-union included); else the global `ProjectStudyWindow` (already
+ * year ints). A `?period` with no days (`_default`, or one reg-core refuses) falls
+ * back to the window, then to null. simplify: year-grain overlap is deliberate — the
+ * dim is an at-a-glance relevance cue, not the hard period gate (selection works on
+ * any row). */
 export function pickerWindowYears(
   periodWire: string | null | undefined,
   window: { from: number; to: number } | null,
 ): [number, number] | null {
-  if (periodWire) {
-    let lo: number | null = null;
-    let hi: number | null = null;
-    for (const part of periodWire.split(",")) {
-      const endpoints = periodRangeEndpoints(part) ?? [
-        part.trim(),
-        part.trim(),
-      ];
-      const loBounds = periodTokenBounds(endpoints[0]);
-      const hiBounds = periodTokenBounds(endpoints[1]);
-      const partLo = loBounds ? yearOf(loBounds.from) : null;
-      const partHi = hiBounds ? yearOf(hiBounds.to) : null;
-      if (partLo !== null) {
-        lo = lo === null ? partLo : Math.min(lo, partLo);
-      }
-      if (partHi !== null) {
-        hi = hi === null ? partHi : Math.max(hi, partHi);
-      }
-    }
+  const days = periodWire
+    ? datedIntervals(sourcePeriodFromWire(periodWire))
+    : null;
+  const first = days?.[0];
+  const last = days?.at(-1);
+  if (first && last) {
+    const lo = yearOf(first[0]);
+    const hi = yearOf(last[1]);
     if (lo !== null && hi !== null) {
       return [lo, hi];
     }

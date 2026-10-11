@@ -1,6 +1,5 @@
 //! The structural validator of `project_data.json`: every rule checkable from the
-//! document alone, ported from `reg_schema/structural.py` (`RUST_RUNTIME_SPEC.md`
-//! package 3e.1).
+//! document alone (`crates/reg-core/DESIGN.md`).
 //!
 //! It reads the raw JSON tree, not the [`crate::project`] types, because it must
 //! report on documents those types cannot hold, and it accumulates every issue rather
@@ -286,8 +285,18 @@ fn segment(v: &Value) -> Option<(Date, Date)> {
         .or_else(|| period_range(v))
 }
 
-fn check_period(period: &Value, base: &str, issues: &mut Issues) {
-    let path = format!("{base}/period");
+/// The structural rules of one `Source.period` on its own, with paths relative to
+/// the period (`""`, `/0`): what the project check applies at
+/// `/sources/<i>/period`, less `"_default"`'s need for a concrete `register_variant`,
+/// which is the source's rule. [`crate::project::SourcePeriod::from_value`] runs it.
+#[must_use]
+pub(crate) fn validate_source_period(period: &Value) -> ValidationResult {
+    let mut issues = Issues::default();
+    check_period(period, String::new(), &mut issues);
+    ValidationResult { issues: issues.0 }
+}
+
+fn check_period(period: &Value, path: String, issues: &mut Issues) {
     if period == "_default" || endpoint(period).is_some() {
         return;
     }
@@ -548,7 +557,7 @@ fn check_source<'a>(
     }
 
     if let Some(period) = required(source, "period", base, "source 'period'", issues) {
-        check_period(period, base, issues);
+        check_period(period, format!("{base}/period"), issues);
         if period == "_default" && variant.as_ref().is_none_or(|v| v[2] == "_default") {
             issues.error(
                 "invalid_period",

@@ -1,0 +1,6 @@
+[[tag]]
+slug = "income"
+label = "Income"
+  [[tag.member]]
+  variable = "scb/lisa/dispink04"
+  stared = true

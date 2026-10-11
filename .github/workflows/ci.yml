@@ -71,7 +71,7 @@ jobs:
       - run: uv sync --frozen
       # `crates`: cargo fmt, clippy, test and machete. `rust`: the workspace build, then the
       # whole conformance suite against `reg-meta serve` and `reg-meta mcp`, out of
-      # process (RUST_RUNTIME_SPEC.md section 10). `release`: the release-admission
+      # process. `release`: the release-admission
       # run on the synthetic steward artifact. Commands: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py crates rust release
 
@@ -144,7 +144,7 @@ jobs:
               - 'reg_webapp/frontend/**'
               - 'crates/reg-meta/openapi.json'
               # Oracles the frontend unit tests read: the fold corpus
-              # (catalog.fold.test.ts) and the server's unsupported-version case
+              # and the server's unsupported-version case
               # (reg_core.test.ts); reg-core's structural corpus is under
               # crates/reg-core below. The grammar corpus pins the periods the
               # module parses.

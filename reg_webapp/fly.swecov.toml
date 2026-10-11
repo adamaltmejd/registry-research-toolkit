@@ -11,7 +11,7 @@
 # The bake fetches `reg_meta_swecov.db.zst` (plus the shared docs asset) from that
 # reg_meta/v* release, verifies both digests, and fails the build if the release
 # lacks it. The image
-# serves it as `--catalog swecov`, with no public MCP host (decision 12: steward
+# serves it as `--catalog swecov`, with no public MCP host (crates/DESIGN.md, "Hosted MCP": steward
 # catalogs are never served over hosted MCP).
 
 app = "reg-webapp-swecov"

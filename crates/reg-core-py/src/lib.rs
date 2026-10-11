@@ -1,4 +1,4 @@
-//! `reg-core-py`: the Python module the build imports (`RUST_RUNTIME_SPEC.md` section 6).
+//! `reg-core-py`: the Python module the build imports (`crates/DESIGN.md`, "Crates and run modes").
 
 use pyo3::prelude::*;
 
