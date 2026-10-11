@@ -20,7 +20,10 @@ from _swecov_fixtures import (
     inventory_worklist as _inventory_worklist,
     run_inventory as _run_inventory,
 )
-from reg_meta_build.inventory import load_inventory as load_delivery_inventory
+from reg_meta_build.inventory import (
+    edition_bounds,
+    load_inventory as load_delivery_inventory,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -61,6 +64,30 @@ def test_inventory_overlay_preserves_physical_column_with_checked_representation
     assert physical.mappings[0].representation == "T_kolumn"
     assert str(physical.mappings[0].variable) == "inera/bestallda-prover/t-kolumn"
     assert next(c for c in table.columns if c.name == "Unknown").mappings == ()
+
+
+def test_inventory_overlay_maps_column_of_range_edition_table(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A multi-year table (its edition a curated `{ from, to }` range) takes a
+    reviewed mapping pinned to that same range. Fails if `[[mapping]]` accepts
+    only a single year or token edition, which refuses the overlay (#1293)."""
+    overlay = (
+        '[[edition]]\ntable = "TSERIES"\nedition = { from = 2018, to = 2019 }\n\n'
+        "[[mapping]]\n"
+        'register_variant = "inera/bestallda-prover/_default"\n'
+        'variable = "inera/bestallda-prover/t-kolumn"\n'
+        'representation = "T_kolumn"\n'
+        'table = "TSERIES"\n'
+        'column = "Physical"\n'
+        "edition = { from = 2018, to = 2019 }\n"
+        'reason = "Exact reviewed source coordinate"\n'
+    )
+    steward = _run_inventory(tmp_path, flavored_db, overlay, "TSERIES", ["Physical"])
+    (table,) = load_delivery_inventory(steward / "inventory.toml").tables
+    assert edition_bounds(table.edition) == (("2018-01-01", "2019-12-31"),)
+    (physical,) = table.columns
+    assert [m.representation for m in physical.mappings] == ["T_kolumn"]
 
 
 @pytest.mark.parametrize(

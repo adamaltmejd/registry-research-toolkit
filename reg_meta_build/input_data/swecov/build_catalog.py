@@ -51,7 +51,7 @@ from pydantic import (
     model_validator,
 )
 from reg_meta_build.holdings_census import census_rows
-from reg_meta_build.inventory import ColumnMapping, InventoryColumn, edition_bounds
+from reg_meta_build.inventory import ColumnMapping, InventoryColumn, InventoryTable
 from reg_meta_build.swecov_policy import load_source_policy as _load_source_policy
 
 if TYPE_CHECKING:
@@ -2072,12 +2072,22 @@ class InventoryMappingOverride(ColumnMapping):
     select_owner: bool = False
     table: str = Field(min_length=1)
     column: str = Field(min_length=1)
-    edition: int | str
+    # The raw `[[edition]]` shape (year, token, `{ from, to }` range or list), so
+    # the override compares equal to the table edition it is pinned to.
+    edition: int | str | dict[str, int | str] | list[int | str | dict[str, int | str]]
     reason: str = Field(min_length=1)
 
     @model_validator(mode="after")
     def _finite_edition(self) -> InventoryMappingOverride:
-        edition_bounds(str(self.edition))
+        # The inventory table's own edition validator: same shapes, same
+        # finiteness rule.
+        InventoryTable.model_validate(
+            {
+                "id": self.table,
+                "edition": self.edition,
+                "column": [{"name": self.column}],
+            }
+        )
         return self
 
 
