@@ -39,6 +39,5 @@ target/
 # `readme = "README.md"`, so hatchling's editable build reads them in-image.
 archive/
 REFACTOR_SPEC.md
-RUST_RUNTIME_SPEC.md
 ARCHITECTURE.md
 AGENTS.md

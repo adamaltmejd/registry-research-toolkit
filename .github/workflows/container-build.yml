@@ -672,7 +672,7 @@ jobs:
           code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
           echo "If-None-Match -> $code"
           [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
-      # Public-host MCP smoke (RUST_RUNTIME_SPEC.md package 3a.9): the hosted
+      # Public-host MCP smoke: the hosted
       # endpoint answers JSON-RPC through the edge — `initialize`, `tools/list`
       # naming `search`, and one `search` call that is not a tool error. Fails
       # when the worker stops routing /mcp, the origin's allowed hosts drop the
@@ -693,7 +693,7 @@ jobs:
           rpc tools/list '{}' | jq -e '[.result.tools[].name] | index("search")'
           rpc tools/call '{"name": "search", "arguments": {"q": "inkomst", "limit": 1}}' \
             | jq -e '.result.isError == false'
-      # Public docs smoke (RUST_RUNTIME_SPEC.md package 3b.6): the docs pages'
+      # Public docs smoke: the docs pages'
       # operations answer through the edge — a search hit, that hit's document, and
       # AES's first related PDF. Fails when the deployed image lacks a compatible
       # docs database (`docs_unavailable`) or a docs route stops answering.
@@ -708,7 +708,7 @@ jobs:
           type=$(curl -sfS -o /dev/null -w '%{content_type}' "$api/file/scb/aes/$pdf")
           echo "related document: $type"
           [ "$type" = "application/pdf" ] || { echo "FATAL: related document is $type" >&2; exit 1; }
-      # Public catalog smoke (RUST_RUNTIME_SPEC.md package C): the catalog
+      # Public catalog smoke: the catalog
       # pages' reads answer through the edge from the Rust server — the root, a
       # register, one of its variables and that variable's states, one of its
       # concept groups and a classification. Fails when the worker stops
@@ -730,7 +730,7 @@ jobs:
           get "catalog/$group" | jq -e '.data.kind == "concept_group"'
           classification=$(get catalog/class | jq -er '.data.children[0].fqid')
           get "catalog/$classification" | jq -e '.data.kind == "classification"'
-      # Public project smoke (RUST_RUNTIME_SPEC.md package 3e.4): the project
+      # Public project smoke: the project
       # editor's POSTs answer through the edge from the Rust server — an empty
       # project validates clean, and its order download is refused with the
       # located `order_blocked` document. Fails when the worker stops routing

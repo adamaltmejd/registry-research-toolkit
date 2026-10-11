@@ -85,7 +85,7 @@ def browse_deliveries(conn: sqlite3.Connection, scope: Scope) -> list[BrowseRow]
 
 
 # The reader's `Catalog.register_variable_deliveries`, moved from `reg_meta.catalog`
-# (package 4.2b) with its holdings branch, reduced to the fields browse stores.
+# with its holdings branch, reduced to the fields browse stores.
 
 # (variant, column, period_scope, state_count, windows as (valid_from, valid_to))
 type _Delivery = tuple[str, str | None, str, int, tuple[tuple[str, str], ...]]

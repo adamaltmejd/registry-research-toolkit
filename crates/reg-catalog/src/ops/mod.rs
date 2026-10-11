@@ -1,4 +1,4 @@
-//! The operation set (section 7). Each slice registers its operations in its own file
+//! The operation set. Each slice registers its operations in its own file
 //! (`slice_3a.rs`, ...), and both transports are generated from the registrations: the
 //! HTTP routes and `/openapi.json` here and in `reg-meta`, and the MCP tools in
 //! `reg-meta`. Shared request pieces live in their own modules: refs (`refs.rs`) and
@@ -128,7 +128,7 @@ impl Param {
 #[derive(Clone, Copy)]
 pub enum Type {
     String,
-    /// A FQID or a bare name (section 7).
+    /// A FQID or a bare name.
     Ref,
     /// The FQID/project period grammar.
     Period,
@@ -217,7 +217,7 @@ pub struct Operation {
     pub result: fn(&mut Components) -> RefOr<Schema>,
 }
 
-/// A raw-bytes response (section 7): the body and the headers it adds besides its
+/// A raw-bytes response: the body and the headers it adds besides its
 /// download's media type.
 pub struct Raw {
     pub bytes: Vec<u8>,

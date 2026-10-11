@@ -82,10 +82,8 @@ the split below misses joins its nearest module. Today's split: `reg_meta_build/
 `sources/`, `ir/` and the top-level modules by size, with
 `input_data/swecov/build_catalog.py`; `reg_webapp/frontend` (the app root, `lib/`,
 config and `scripts/`); `reg_webapp/edge` with the Dockerfile and deploy scripts; the
-repo-local skills' helper scripts; `scripts/`; and `crates/` (Rust; while
-`RUST_RUNTIME_SPEC.md` is open, its findings go to that refactor's owner, not to land
-here). The test trees are the `test-audit` skill's: run its sweep in the same waves and
-merge its list into step 3.
+repo-local skills' helper scripts; `scripts/`; and `crates/` (Rust). The test trees are
+the `test-audit` skill's: run its sweep in the same waves and merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read CLAUDE.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step

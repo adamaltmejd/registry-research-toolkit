@@ -252,7 +252,7 @@ describe("applyStagedPicks", () => {
     // cannot see it, and only asking `cancelled` a second time can.
     let gone = false;
     // Fails if the batch commits after a states read its host outlived
-    // (the resolve now reads `getStates`, RUST_RUNTIME_SPEC.md package C).
+    // (the resolve reads `getStates`).
     vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
       gone = true;
       const variant = params?.variant ?? "";

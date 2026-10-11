@@ -69,8 +69,8 @@ otherwise); an expected `build_error` is that build's located refusal, and such 
 sends no requests.
 
 The Rust server (`reg-meta serve`), on the whole suite, the `api` corpus and the MCP
-equivalence suite included (the Rust HTTP run of `RUST_RUNTIME_SPEC.md` section 10, part
-of G0 and CI), and the release-admission command on the synthetic steward artifact:
+equivalence suite included (the Rust HTTP run, part of G0 and CI), and the
+release-admission command on the synthetic steward artifact:
 
 ```sh
 uv run --no-project scripts/gate.py rust release
@@ -80,18 +80,18 @@ uv run --no-project scripts/gate.py rust release
 on a selected catalog artifact `validate_built_db` applies the real-corpus floors, which
 it cannot meet.
 
-`test_mcp.py` (section 9's MCP equivalence) sends raw JSON-RPC to `/mcp` on the
-`--server-cmd` server: each `search` step of the `api` cases it names, as a tool call,
-returns the HTTP body as `structuredContent` (an error with `isError`), and those steps
-cover every error `search` lists in `operations.toml`. `tools/list`, over HTTP and
-stdio, equals the golden `cases/mcp/tools-list.json`, and its names are the `tool` of
-each served operation. The server builds each tool's schemas from its OpenAPI entry, so
-a schema change shows as a reviewed diff of that file. The body cap and the rate limit
-on `/mcp` answer with their error documents, and the drained bucket also refuses the
-address's project POSTs while its reads pass; the burst runs on a server of its own.
-`--mcp-cmd` is a command template (`{db}`, `{catalog}`) for one stdio session:
-initialize, list the tools and call `search`. Without `--server-cmd` the module skips;
-without `--mcp-cmd` the stdio session does.
+`test_mcp.py` (MCP equivalence) sends raw JSON-RPC to `/mcp` on the `--server-cmd`
+server: each `search` step of the `api` cases it names, as a tool call, returns the HTTP
+body as `structuredContent` (an error with `isError`), and those steps cover every error
+`search` lists in `operations.toml`. `tools/list`, over HTTP and stdio, equals the
+golden `cases/mcp/tools-list.json`, and its names are the `tool` of each served
+operation. The server builds each tool's schemas from its OpenAPI entry, so a schema
+change shows as a reviewed diff of that file. The body cap and the rate limit on `/mcp`
+answer with their error documents, and the drained bucket also refuses the address's
+project POSTs while its reads pass; the burst runs on a server of its own. `--mcp-cmd`
+is a command template (`{db}`, `{catalog}`) for one stdio session: initialize, list the
+tools and call `search`. Without `--server-cmd` the module skips; without `--mcp-cmd`
+the stdio session does.
 
 ## Fixture cache
 
@@ -204,3 +204,42 @@ the same comparison by default. Private identifiers never become repository fixt
 failure messages. Exhaustive canonical-representative resolution, pinned historical
 orders, reference dbdiff, performance, cold boot and rendered acceptance remain
 maintainer checks. This suite alone makes no release or deployment acceptance claim.
+
+## Verification gates
+
+Three gates, named G0–G2 so they are not confused with the test tiers of
+`ARCHITECTURE.md` ("Tiers", which also has their budgets):
+
+- **G0**, every change: `scripts/gate.py g0` (lint, `cargo test --workspace`, this suite
+  and the touched packages) and `scripts/gate.py rust` (this suite against the Rust
+  server), all on synthetic artifacts.
+- **G1**, at releases: the differential harness on the pinned real artifacts.
+- **G2**, maintainer-run at releases: a full base build, derive, and G1 on the result.
+
+**G1** (`uv run --no-project scripts/gate.py g1`, which runs
+`python -m conformance.differential`) compares the pinned release's `reg-meta` server,
+reading the release originals, with the checkout's server reading copies the checkout's
+builder derived from them. It runs on both artifact kinds (the global catalog and the
+SWECOV steward artifact) and both scopes, over generated requests: every register,
+seeded variable samples, holdings strata and the search-eval terms
+(`differential/cases.py`, `differential/served.py`). Both arms run the same server, so
+requests go to both unchanged and answers compare as raw bytes. The baseline is the
+release tag's own code, built in a detached worktree of the tag, never the checkout
+under change, and it never reads a copy derived by the code under change, so a
+regression moved into derive cannot validate itself. Artifacts and the baseline build
+live in a shared cache (`$REG_META_G1_CACHE`); the report goes to
+`<cache>/report/report.json`. Warm runs stay under 5 minutes; a cold run is reported,
+not budgeted.
+
+Each accepted difference is a named semantic exception in `differential/config.toml`,
+scoped by case glob and JSON pointer prefixes, with its reason. A deliberate behavior
+change that diverges from the baseline gets a narrow exception linked to the `api` case
+that pins the new behavior, kept until the next re-pin. `derived-generation` and
+`reader-version` are the standing exceptions: identity differs between originals and
+derived copies, behavior does not.
+
+**The pin** is data in `differential/config.toml`: the release tag, each asset's GitHub
+SHA-256 digest (checked as it streams into the cache) and the seed. A re-pin moves it to
+a newer release: run G1 on the old pin and the new one, record any difference as an
+exception or a fix, and edit only that file. Re-pin at each release. G1 is deleted if it
+stops catching anything.

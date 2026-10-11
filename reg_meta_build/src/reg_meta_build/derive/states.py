@@ -75,7 +75,7 @@ def named_rows(conn: sqlite3.Connection) -> Iterator[sqlite3.Connection]:
         conn.row_factory = factory
 
 
-# The resolver's whole-history rules, moved from `reg_meta.catalog` (package 4.2).
+# The resolver's whole-history rules, moved from `reg_meta.catalog`.
 
 type _StoredAliasWindow = tuple[
     str,

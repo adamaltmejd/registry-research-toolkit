@@ -1,6 +1,5 @@
 //! The structural validator of `project_data.json`: every rule checkable from the
-//! document alone, ported from `reg_schema/structural.py` (`RUST_RUNTIME_SPEC.md`
-//! package 3e.1).
+//! document alone (`crates/reg-core/DESIGN.md`).
 //!
 //! It reads the raw JSON tree, not the [`crate::project`] types, because it must
 //! report on documents those types cannot hold, and it accumulates every issue rather

@@ -1,4 +1,4 @@
-//! `reg-meta`: run modes only, no query CLI (`RUST_RUNTIME_SPEC.md` sections 6 and 7).
+//! `reg-meta`: run modes only, no query CLI (`crates/DESIGN.md`, "Agent and web interface").
 //!
 //! ```text
 //! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N [--host ADDR]

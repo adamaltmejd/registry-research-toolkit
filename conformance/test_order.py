@@ -1,5 +1,5 @@
 """Order manifests and located findings over HTTP, against independently authored
-case data and the committed `order.json` bytes (RUST_RUNTIME_SPEC.md section 9).
+case data and the committed `order.json` bytes (conformance/README.md).
 
 Runs against the `--server-cmd` server only, like the `api` corpus. A case that
 orders commits its `order.json` (the existing ones are the frozen Python CLI's); a

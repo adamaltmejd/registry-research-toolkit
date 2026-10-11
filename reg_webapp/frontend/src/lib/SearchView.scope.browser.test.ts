@@ -114,7 +114,7 @@ describe("SearchView — scoped-search ?type= toggle (#393 item 1)", () => {
   });
 
   it("degrades an unknown ?type= to 'all': one untyped page and one page per arm", async () => {
-    // Decision 17: the top-results strip is one untyped call (5 hits); every arm
+    // One ranked list per call: the top-results strip is one untyped call (5 hits); every arm
     // has its own call (3 hits). Fails if the view sends the unknown type, drops
     // an arm, or changes a page size.
     mockSearch(ONE_REGISTER);

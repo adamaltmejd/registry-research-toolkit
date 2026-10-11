@@ -1,5 +1,5 @@
 {
-  "note": "Rows of each chain table in key order, read from the fixture and RUST_RUNTIME_SPEC.md 3d.1 at the policy year 2026: v2 -> v3 and a2020 -> a2030 (2030) are not yet active; the split scb/reg/split and root1996 are their own terminals, so neither has a row; pre1990 walks to the split root1996 and stops there.",
+  "note": "Rows of each chain table in key order, read from the fixture and the succession rules of reg_meta_build/DESIGN.md at the policy year 2026: v2 -> v3 and a2020 -> a2030 (2030) are not yet active; the split scb/reg/split and root1996 are their own terminals, so neither has a row; pre1990 walks to the split root1996 and stops there.",
   "succession_terminal": [
     ["class/a2000", "class/a2020"],
     ["class/a2010", "class/a2020"],
