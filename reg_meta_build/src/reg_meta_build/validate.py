@@ -632,8 +632,8 @@ def _check_var_year_codes_anchor(
 
 
 # The per-column window checks below, by diagnostic code, word their failures with
-# `resolved_catalog.column_state_overlap_failure`; formation reports the same
-# failure before write (`resolved_catalog.column_state_overlaps`).
+# `resolved_catalog.column_state_overlap_failure`; formation reports the value-set
+# failures before write (`resolved_catalog.column_state_overlaps`).
 def _check_one_value_set_per_period(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:

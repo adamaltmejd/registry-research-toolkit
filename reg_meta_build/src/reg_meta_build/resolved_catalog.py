@@ -613,8 +613,8 @@ def unresolved_variable_flags(variable: ResolvedVariable) -> tuple[str, ...]:
 
 
 # The wording of the per-column window checks `validate_built_db` runs, by
-# diagnostic code. Formation reports the same failure before write
-# (`column_state_overlaps`).
+# diagnostic code. Formation reports the value-set failures before write
+# (`column_state_overlaps`); the pooled one only the validator can report.
 _COLUMN_STATE_OVERLAPS = {
     "overlapping_distinct_value_sets": (
         "overlapping distinct-value_set state pair(s)",
@@ -641,8 +641,10 @@ def column_state_overlap_failure(
     )
 
 
-# The conflicting pair of each per-column window check `validate_built_db` runs
-# on written states, by diagnostic code.
+# The conflicting pair of each per-column value-set check `validate_built_db` runs
+# on written states, by diagnostic code. No pooled check: occurrence resolution
+# cuts a pooled span around every explicit occurrence of the same column
+# (`source_intervals`), and folded spellings share one representation first.
 _COLUMN_STATE_CONFLICTS = {
     "overlapping_distinct_value_sets": lambda a, b: (
         a.value_set is not None
@@ -652,7 +654,6 @@ _COLUMN_STATE_CONFLICTS = {
     "overlapping_codeless_codebearing_states": lambda a, b: (
         (a.value_set is None) != (b.value_set is None)
     ),
-    "overlapping_pooled_explicit_states": lambda a, b: a.pooled != b.pooled,
 }
 
 
@@ -895,9 +896,9 @@ def _prepare_classification_succession(
                 "between editions of one family from their names.",
             )
         seen[pair] = edge.note
-        for slug in pair:
-            if slug not in by_slug and slug not in withheld:
-                raise ValueError(f"unknown classification succession endpoint: {slug}")
+        # Compile refuses a curated edge to an uncompiled book (relations_invalid);
+        # derived edges come from the books themselves.
+        assert all(s in by_slug or s in withheld for s in pair), pair
         graph.add(edge.successor, edge.predecessor)
         if (
             edge.effective_year is None
