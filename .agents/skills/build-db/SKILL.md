@@ -25,10 +25,6 @@ run on the machine at a time and holds a heavy-job slot, so a concurrent run que
 instead of slowing both. A `waiting for one of 1 real-seed slots` line means another
 session's run holds it: let it finish rather than working around the lock.
 
-During the SWECOV restoration, the builder produces schema 8 databases while readers
-still require schema 6. Keep restoration changes in `reg_meta_build`; reader and UI
-adaptation is a later task. Verify candidate outputs with builder-owned openers or
-read-only SQLite, rather than changing consumer compatibility to make a proof pass.
 `precheck-slugs` matches the slug tree against a built catalog by slug path: every
 register and variant row must be pinned and every pin must name a row.
 `--update-snapshot` also refreshes the naming snapshot.

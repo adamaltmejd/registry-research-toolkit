@@ -105,7 +105,8 @@ All 12 `representation` values were blank. The exporter uses a resolved display 
 a best-effort delivery-column label when a representation is absent, but its provisional
 schema has no edition, physical table, or physical-column coordinate. This is the real
 extraction blocker. It matches the unfinished physical materializer already recorded in
-§12 of `REFACTOR_SPEC.md`; blank representations alone are not the defect.
+§12 of the since-retired refactor tracker; blank representations alone are not the
+defect.
 
 The three downloaded files above are local provenance evidence and will not be available
 to isolated Yard lanes. Any admitted implementation ticket needs a small, sanitized
@@ -214,7 +215,7 @@ Fail closed when any row cannot be grounded to a held physical column.
 - A round-trip test proves byte-stable materialization for a fixed catalog and steward
   inventory.
 
-**Relevant code/design:** `REFACTOR_SPEC.md` physical materializer work;
+**Relevant code/design:** the retired refactor tracker's physical materializer work;
 `reg_webapp/backend/src/reg_webapp/order_export.py`; `reg_webapp/DESIGN.md`
 order-manifest sections.
 
@@ -305,7 +306,7 @@ same.
   requested cells.
 
 **Relevant code/design:** `reg_webapp/frontend/src/lib/stores/project_store.svelte.ts`;
-§12 of `REFACTOR_SPEC.md`; `reg_schema/DESIGN.md`.
+§12 of the since-retired refactor tracker; `reg_schema/DESIGN.md`.
 
 ## P1 — high-risk usability and correctness problems
 

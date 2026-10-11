@@ -27,12 +27,13 @@ not walked. Every command below starts at the **repo root**.
 - Playwright's Chromium. The frontend's vitest-browser setup already installs it; if
   missing: `(cd reg_webapp/frontend && bunx playwright install chromium)`.
 - A catalog to serve. `--fixture-db` builds a synthetic one and needs nothing installed
-  — that is the default path below. Serving a real catalog instead needs a DB where
-  `reg_meta_build.db.db_path_from_args(None)` resolves (`REG_META_DB` > XDG, e.g.
-  `~/.local/share/reg_meta/reg_meta.db`), at a schema the Rust server admits: it refuses
-  a catalog below its minimum (`SCHEMA` in `crates/reg-catalog`, 9.2 today), so the
-  0.42.0 release does not serve until a 9.3 release ships. `dev.sh` then fails at
-  startup with the Rust server's `schema_incompatible` error; use `--fixture-db`.
+  — that is the default path below. To serve a real catalog, set `REG_META_DB` to a
+  directory holding a downloaded release asset (`reg_meta.db` and `reg_meta_docs.db`,
+  fetched with `curl` and unpacked with `zstd` as the root `README.md` shows). Without
+  either, `dev.sh` falls back to the builder's default XDG path, which nothing
+  populates. The Rust server refuses a catalog whose schema it does not admit (`SCHEMA`
+  in `crates/reg-catalog/src/lib.rs`, 10.0 today) with a `schema_incompatible` error at
+  startup.
 
 ## Setup
 
@@ -157,11 +158,10 @@ Use it to verify *layout and interaction*, not catalog realism: the fixture has 
 handful of rows, so density/overflow questions want a real or scratch DB instead.
 
 **Alternative: a released or custom `REG_META_DB`.** Without `--fixture-db`, `dev.sh`
-renders against the default DB path and inherits the caller's `REG_META_DB` (a
-*directory*), which wins over the installed default (see Prerequisites). So a change
-whose rendering depends on DB content not yet in the installed/released DB — a
-`build-db` / curation change — is verified by building a scratch DB and pointing the dev
-server at it; **no release required**:
+serves the caller's `REG_META_DB` (a *directory*; see Prerequisites). So a change whose
+rendering depends on DB content not yet in a release — a `build-db` / curation change —
+is verified by building a scratch DB and pointing the dev server at it; **no release
+required**:
 
 ```sh
 db_dir="$(mktemp -d "${TMPDIR:-/tmp}/regmeta-verify.XXXXXX")"
@@ -171,8 +171,6 @@ REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot 
 ```
 
 (Verified: a non-default `REG_META_DB` directory renders correctly through `dev.sh`.)
-Don't assume the installed/last-released DB is the only one the dev server can serve —
-it's the default, not a constraint.
 
 **Interactive (humans).** `dev.sh` with no mode starts the same auto-free-port servers
 and stays up until Ctrl-C (which tears them all down). It prints the URLs — open the
@@ -262,9 +260,9 @@ includes the Playwright browser project).
   `reg_webapp/frontend/`. `cd` there first, or use `dev.sh`.
 - Screenshot shows breadcrumbs + `Loading…` only → data fetch hadn't landed; re-run (the
   driver waits via `settled()`), or raise its 10s timeout.
-- The Rust server exits at boot complaining about the DB/schema → no resolvable reg_meta
-  DB, or one with a stale `SCHEMA_VERSION`. Use `--fixture-db`, or install/refresh a DB
-  per Prerequisites.
+- The Rust server exits at boot complaining about the DB/schema → no `REG_META_DB`, or
+  one with a schema the server does not admit. Use `--fixture-db`, or point
+  `REG_META_DB` at a current release asset per Prerequisites.
 - Chromium fails to launch → if every rung of the launch ladder (above) failed, the
   driver reports each rung's own error, unabridged — read the FIRST one, it is the
   failure of the sandboxed launch. In a sandboxed shell prefer `dev.sh smoke` / `shot`

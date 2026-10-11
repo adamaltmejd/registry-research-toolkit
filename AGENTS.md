@@ -1,8 +1,8 @@
 # Registry Research Toolkit
 
 Multi-package workspace for Swedish register research: catalog metadata, schema
-validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design
-and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
+validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design;
+remaining work lives in GitHub issues.
 
 ## Packages
 
@@ -19,7 +19,7 @@ and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
 The `reg_monabundle` (MONA bundle build + runtime + PII scanner) and `mock_data_wizard`
 (local mock-data generation) packages have been archived to branch
 `archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`) and removed from `main`,
-pending a from-scratch MONA rebuild. See `REFACTOR_SPEC.md` and tracking issue #707.
+pending a from-scratch MONA rebuild, tracked in #707.
 
 ## MONA constraint
 
@@ -38,8 +38,7 @@ state.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
 - **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
-  for cross-PR coordination. Current tracker: `REFACTOR_SPEC.md` (the remaining post-A5
-  work; the earlier `MIGRATION_PLAN.md` was retired once A5 shipped). Each tracker
+  for cross-PR coordination. There is currently no tracker. Each tracker
   is **scoped and self-deleting**: it ships with an explicit completion gate (e.g.
   "deleted when stage X ships"), gets deleted at that gate, and never outlives the
   refactor it tracks. Per-package DESIGN.md notes for the same effort are still
@@ -109,9 +108,10 @@ below are what an agent must follow when writing, changing or deleting a test. T
   only where it pins behavior a boundary case cannot reach well (a grammar, interval
   algebra, a pure fold), stated as input → expected output, and it must survive a
   rewrite of the code behind it.
-- **Assert only at a named boundary**: built-artifact content, CLI JSON, library return
-  models, HTTP responses, `project_data.json` validation results, order-manifest bytes,
-  curation-TOML load or located failure, the FQID and period grammars. Anything else is
+- **Assert only at a named boundary**: built-artifact content, the builder's CLI JSON,
+  HTTP and MCP responses, `reg-core` validation results for `project_data.json`,
+  order-manifest bytes, curation-TOML load or located failure, the FQID and period
+  grammars. Anything else is
   reached through one of those, not tested on its own; conformance cases use only public
   contracts (`ARCHITECTURE.md` → "Testing strategy"). No private-name imports
   (`from x import _helper`) and no patching of internal modules; mock only process
@@ -179,9 +179,8 @@ below are what an agent must follow when writing, changing or deleting a test. T
 
 ## Stack
 
-Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.md` for
-the cross-package invariants and each `<package>/DESIGN.md` for the detail;
-`REFACTOR_SPEC.md` tracks the remaining work.
+See `ARCHITECTURE.md` for the cross-package invariants and each `<package>/DESIGN.md`
+for the detail; remaining work lives in GitHub issues.
 
 - **Builder** (`reg_meta_build`, Python):
   - Modeling: Pydantic v2 `_IRBase` models for the build-time IR core and
@@ -273,8 +272,7 @@ match: extend or comment on it rather than opening a duplicate.
 (e.g. `feat(reg_meta_build): …`, `fix(reg_webapp): …`).
 
 **Labels** — exactly **one area label** — a package (`reg_meta` for the Rust runtime,
-`reg_meta_build`, `reg_monabundle`, `reg_webapp`, `mock_data_wizard`) or `cross-package`
-— plus a **type**: `enhancement`, `bug`, or `documentation`.
+`reg_meta_build`, `reg_webapp`) or `cross-package` — plus a **type**: `enhancement`, `bug`, or `documentation`.
 
 **Ingestion trust gate** — this repo is public, so automation reads issue/PR content
 **only** through `scripts/gh_issue.py`, a fail-closed maintainer-author trust gate:
@@ -299,5 +297,4 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 For per-package design rationale, see `<package>/DESIGN.md` (the catalog object model
 lives in `crates/DESIGN.md`; per-provider source-delivery shapes in
 `reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph,
-repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see
-`REFACTOR_SPEC.md`.
+repo-wide invariants), see `ARCHITECTURE.md`.

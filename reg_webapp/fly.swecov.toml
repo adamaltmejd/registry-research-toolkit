@@ -1,4 +1,4 @@
-# Fly.io config for the reg_webapp `swecov` deployment (REFACTOR_SPEC.md §11).
+# Fly.io config for the reg_webapp `swecov` deployment.
 #
 # Deploy from the REPO ROOT — the Dockerfile needs the Cargo workspace as build
 # context (see reg_webapp/Dockerfile header):

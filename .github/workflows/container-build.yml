@@ -1,5 +1,5 @@
 # reg_webapp build + deploy — origin image AND Cloudflare edge worker
-# (REFACTOR_SPEC.md §6.5; topology in reg_webapp/DESIGN.md → "Deployment").
+# (topology in reg_webapp/DESIGN.md → "Deployment").
 #
 # PRs: build-ONLY — proves the multi-stage Dockerfile still builds, including
 # the digest-verified DB bake, the `reg-meta` Rust build and the #224
