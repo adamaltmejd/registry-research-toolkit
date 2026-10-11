@@ -331,7 +331,7 @@ native variant coordinate include the row's Deldatamängdsetikett as well as
 Deldatamängdsnamn. Unique tokens retain their existing keys. An authored SOS route names
 the chosen labeled row exactly; renaming or removing it makes the route stale. LOVA's
 `A_LOVA` routes to its Huvudtabell row and `A_LOVA_LISA` to its ekonomi/arbetsmarknad
-row. The prepared source-records schema is 15; older stores must be re-prepared.
+row. The prepared source-records schema is 16; older stores must be re-prepared.
 
 An authored thin-provider variant may declare `period_scope = "pooled"` with two
 explicit, ordered ISO date bounds. The reader retains this declaration and the
