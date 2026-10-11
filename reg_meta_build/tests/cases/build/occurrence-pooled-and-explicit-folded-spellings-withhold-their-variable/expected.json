@@ -1,0 +1,19 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "subject"],
+      "rows": [
+        ["overlapping_pooled_explicit_states", "scb/twin/income"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": ["twin"]},
+      "fields": ["register", "column", "valid_from", "valid_to"],
+      "rows": []
+    }
+  ]
+}

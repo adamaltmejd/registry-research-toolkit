@@ -613,8 +613,8 @@ def unresolved_variable_flags(variable: ResolvedVariable) -> tuple[str, ...]:
 
 
 # The wording of the per-column window checks `validate_built_db` runs, by
-# diagnostic code. Formation reports the value-set failures before write
-# (`column_state_overlaps`); the pooled one only the validator can report.
+# diagnostic code. Formation reports the same failure before write
+# (`column_state_overlaps`).
 _COLUMN_STATE_OVERLAPS = {
     "overlapping_distinct_value_sets": (
         "overlapping distinct-value_set state pair(s)",
@@ -641,10 +641,8 @@ def column_state_overlap_failure(
     )
 
 
-# The conflicting pair of each per-column value-set check `validate_built_db` runs
-# on written states, by diagnostic code. No pooled check: occurrence resolution
-# cuts a pooled span around every explicit occurrence of the same column
-# (`source_intervals`), and folded spellings share one representation first.
+# The conflicting pair of each per-column window check `validate_built_db` runs
+# on written states, by diagnostic code.
 _COLUMN_STATE_CONFLICTS = {
     "overlapping_distinct_value_sets": lambda a, b: (
         a.value_set is not None
@@ -654,6 +652,10 @@ _COLUMN_STATE_CONFLICTS = {
     "overlapping_codeless_codebearing_states": lambda a, b: (
         (a.value_set is None) != (b.value_set is None)
     ),
+    # Reached when case-folded spellings carry different code-list version labels:
+    # the pooled span is not cut around the other spelling's explicit year (build
+    # case occurrence-pooled-and-explicit-folded-spellings-withhold-their-variable).
+    "overlapping_pooled_explicit_states": lambda a, b: a.pooled != b.pooled,
 }
 
 

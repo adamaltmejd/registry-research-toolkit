@@ -1,0 +1,35 @@
+{
+  "note": "Under one version label the pooled FOLDED span (2012 - 2014) is cut around the annual folded year (2013), leaving pooled 2012 and 2014. Under two version labels it is not cut, so both states cover 2013 on the folded column unless formation withholds the variable. The two lists have one membership (01 Label), so no value-set check fires first.",
+  "fails_if": "`_COLUMN_STATE_CONFLICTS` (resolved_catalog.py) drops `overlapping_pooled_explicit_states`, so formation writes both states and the writer's validation aborts the diagnostic build",
+  "sources": {
+    "description": "TWIN (register 4) delivers Income (var 5) as FOLDED in the pooled edition 2012 - 2014 with First list 01 Label, and as folded in the annual edition 2013 with Second list 01 Label.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "FOLDED",
+          "cvid": 400,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2014",
+          "regver_id": 420,
+          "versionname": "2012 - 2014",
+          "register": ["TWIN", 4, 40]
+        },
+        {
+          "colname": "folded",
+          "cvid": 401,
+          "var_id": 5,
+          "varname": "Income",
+          "year": "2013",
+          "regver_id": 421,
+          "versionname": "2013",
+          "register": ["TWIN", 4, 40]
+        }
+      ],
+      "vardemangder": [
+        "First list|1|01|Label|400|4000",
+        "Second list|1|01|Label|401|4010"
+      ]
+    }
+  }
+}
