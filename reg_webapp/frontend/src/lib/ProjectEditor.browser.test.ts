@@ -283,16 +283,19 @@ describe("ProjectEditor renders the ValidationPanel", () => {
         ]),
       ],
     });
-    vi.mocked(fetch).mockImplementation(async (url) => ({
-      ok: true,
-      status: 200,
-      json: async () => ({
-        data: String(url).endsWith("/catalog/scb/lisa")
-          ? register
-          : { ok: true, issues: [] },
-        meta: {},
-      }),
-    }) as Response);
+    vi.mocked(fetch).mockImplementation(
+      async (url) =>
+        ({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            data: String(url).endsWith("/catalog/scb/lisa")
+              ? register
+              : { ok: true, issues: [] },
+            meta: {},
+          }),
+        }) as Response,
+    );
     seedSources(["scb/lisa/v1"]);
     // A window the 2000 source overlaps but does not fill (one wholly outside it
     // is a blocking finding instead — study_window.browser.test.ts).

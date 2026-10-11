@@ -186,7 +186,8 @@ export function sourceNames(registerVariant: string): SourceNames {
   // The variants ride the register's own node, which carries its variables too:
   // one read per register, shared by every source on it.
   const registerNodeRead = registerRead(registerFqid);
-  const loading = root.loading || registersRead.loading || registerNodeRead.loading;
+  const loading =
+    root.loading || registersRead.loading || registerNodeRead.loading;
   // Trimmed to null, so "no name" is ONE condition: the heading falls back to the
   // coordinate on a blank register name, and the gate below has to agree with it
   // or the card shows a coordinate heading with a variant line beside it.
