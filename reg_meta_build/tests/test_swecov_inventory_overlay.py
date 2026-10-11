@@ -66,28 +66,54 @@ def test_inventory_overlay_preserves_physical_column_with_checked_representation
     assert next(c for c in table.columns if c.name == "Unknown").mappings == ()
 
 
-def test_inventory_overlay_maps_column_of_range_edition_table(
-    tmp_path: Path, flavored_db: Path
-) -> None:
-    """A multi-year table (its edition a curated `{ from, to }` range) takes a
-    reviewed mapping pinned to that same range. Fails if `[[mapping]]` accepts
-    only a single year or token edition, which refuses the overlay (#1293)."""
-    overlay = (
-        '[[edition]]\ntable = "TSERIES"\nedition = { from = 2018, to = 2019 }\n\n'
+def _range_mapping_overlay(edition: str) -> str:
+    """A `TSERIES` table with an `[[edition]]` and a mapping pinned to it."""
+    return (
+        f'[[edition]]\ntable = "TSERIES"\nedition = {edition}\n\n'
         "[[mapping]]\n"
         'register_variant = "inera/bestallda-prover/_default"\n'
         'variable = "inera/bestallda-prover/t-kolumn"\n'
         'representation = "T_kolumn"\n'
         'table = "TSERIES"\n'
         'column = "Physical"\n'
-        "edition = { from = 2018, to = 2019 }\n"
+        f"edition = {edition}\n"
         'reason = "Exact reviewed source coordinate"\n'
     )
+
+
+def test_inventory_overlay_maps_column_of_range_edition_table(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A multi-year table (its edition a curated `{ from, to }` range) takes a
+    reviewed mapping pinned to that same range. Fails if `[[mapping]]` accepts
+    only a single year or token edition, which refuses the overlay (#1293)."""
+    overlay = _range_mapping_overlay("{ from = 2018, to = 2019 }")
     steward = _run_inventory(tmp_path, flavored_db, overlay, "TSERIES", ["Physical"])
     (table,) = load_delivery_inventory(steward / "inventory.toml").tables
     assert edition_bounds(table.edition) == (("2018-01-01", "2019-12-31"),)
     (physical,) = table.columns
     assert [m.representation for m in physical.mappings] == ["T_kolumn"]
+
+
+def test_inventory_overlay_refuses_range_mapping_without_full_coverage(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """The coverage guard holds for a range edition too: the catalog state ends
+    mid-2019, so a mapping over 2018–2019 is refused. Fails if a range edition
+    skips the coverage check that a single-year mapping gets."""
+    db = _overlay_db(
+        tmp_path, flavored_db, valid_to="2019-06-30", competing_owner=False
+    )
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _run_inventory(
+            tmp_path,
+            db,
+            _range_mapping_overlay("{ from = 2018, to = 2019 }"),
+            "TSERIES",
+            ["Physical"],
+        )
+    (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
+    assert entry["code"] == "stale_declared_mapping_target"
 
 
 @pytest.mark.parametrize(
