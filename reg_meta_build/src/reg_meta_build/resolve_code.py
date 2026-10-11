@@ -10,7 +10,8 @@ the writer alone runs, so a writer-only change still reuses a bundle:
   do not, and a module that imports by name at run time pulls in its whole package
   (`import_closure`, which the real-seed cache's prepare key also walks), plus the
   non-Python files beside a walked module. A `__version__ = "..."` value in a source
-  file is normalized away: a release bumps it, and no resolution reads it;
+  file is normalized away (`source_sha256`, which the prepare key also uses): a
+  release bumps it, and no resolution reads it;
 - every file of the imported native `reg_core_py` package, extension included;
 - the Python version.
 
@@ -165,12 +166,13 @@ def _sha256(path: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def _source_sha256(path: Path) -> str:
+def source_sha256(path: Path) -> str:
     """A walked file's digest, with any `__version__` value normalized away.
 
     A release bumps `reg_meta_build/__init__.py`'s `__version__`, which no resolution
-    reads (only the CLI's help line does), so a release build keeps reusing the
-    bundle its candidate resolved.
+    or preparation reads (only the CLI's help line does), so a release build keeps
+    reusing the bundle its candidate resolved, and the real-seed cache's prepare key
+    (which hashes its walked files with this) the preparation.
     """
     data = path.read_bytes()
     if path.suffix == ".py":
@@ -190,7 +192,7 @@ def resolve_code_digests(source_root: Path | None = None) -> dict[str, object]:
     return {
         "python": sys.version,
         "sources": {
-            path.relative_to(source_root).as_posix(): _source_sha256(path)
+            path.relative_to(source_root).as_posix(): source_sha256(path)
             for path in sorted(code_files(modules.values()))
         },
         "native": {
