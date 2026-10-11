@@ -1,0 +1,34 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+[[variable]]
+native_id = "1.102"
+slug = "anchor"
+
+[[errata.delivered]]
+variant = "people"
+column = "VALUE"
+versions = ["2022"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:1001,member:1003}}
+evidence = "accepted holding"
+noted = "2026-10-11"
+
+[[coding.documented]]
+variable = "1.101"
+variant = "people"
+column = "VALUE"
+periods = [["2022-01-01", "2022-12-31"]]
+members = [["1", "One"], ["2", "Two"]]
+version_label = "Book"
+document_url = "https://example.org/book.pdf"
+document_sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+document_pages = [1]
+reason = "Reviewed coding"
+source = "fixture"
