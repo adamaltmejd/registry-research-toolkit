@@ -1,0 +1,11 @@
+{
+  "loader": "tags",
+  "fails_if": "load_tags accepts a misspelled `[[tag.member]]` key and reads the member with the default it shadows (`starred = false`)",
+  "error": {
+    "code": "tags_invalid",
+    "locator": "curation/tags.toml [[tag]] entry 1 [[tag.member]] entry 1",
+    "message_contains": [
+      "tag 'income' member has unknown key(s): ['stared']"
+    ]
+  }
+}

@@ -581,8 +581,9 @@ fn variable_arm(
     // folds to the query are ordered ahead of the bound; ties break on the FQID.
     let sql = format!(
         "WITH exact(variable_id) AS (SELECT v.variable_id FROM variable_fts vf \
-         JOIN variable v ON v.variable_id = vf.rowid JOIN register r USING(register_id) \
-         JOIN provider p USING(provider_id) WHERE variable_fts MATCH ?1 \
+         JOIN variable v ON v.variable_id = vf.rowid \
+         JOIN register r ON r.register_id = v.register_id \
+         JOIN provider p ON p.provider_id = r.provider_id WHERE variable_fts MATCH ?1 \
          AND (fold_search(v.name) = ?2 OR EXISTS (SELECT 1 FROM variable_alias va \
          WHERE va.variable_id = v.variable_id AND fold_search(va.delivery_column_name) = ?2 \
          AND {exact_held})) ORDER BY p.slug, r.slug, v.slug LIMIT {HORIZON}) \

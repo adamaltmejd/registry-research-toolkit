@@ -337,9 +337,9 @@ The `warnings` rows are the catalog's `data_warning` rows; the `report_warnings`
 are every warning the build formed, as the build report records it, so a build-only code
 (`data_warnings.BUILD_ONLY_CODES`) appears only there. `detail_hash_of` says what the
 warning's `diagnostic_detail_sha256` hashes: `issue` when it is the detail of a
-report-ledger issue with the warning's `code`, else `detail` when it is the warning's
-own `detail`, else null. A case states where a warning's text came from without writing
-a hash.
+report-ledger issue with the warning's `code` and `refs`, else `detail` when it is the
+warning's own `detail`, else null. A case states where a warning's text came from
+without writing a hash.
 
 A `refs` value (on `warnings`, `report_warnings` and `source_issues`) lists source
 record refs as `<source>#<semantic key parts joined by />`. An issue's refs are the
