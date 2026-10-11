@@ -3,17 +3,27 @@
     {
       "table": "state_classifications",
       "where": {
-        "column": ["DETAILED", "GROUPED"]
+        "column": ["DETAILED", "GROUPED", "POOLED", "MIXED"]
       },
-      "fields": ["column", "classification"],
+      "fields": ["column", "valid_from", "valid_to", "classification"],
       "rows": [
-        ["DETAILED", "a"]
-      ]
+        ["DETAILED", "2020-01-01", "2020-12-31", "a"],
+        ["POOLED", "2016-01-01", "2018-12-31", "a"],
+        ["MIXED", "2016-01-01", "2016-12-31", "a"],
+        ["MIXED", "2017-01-01", "2017-12-31", "a"],
+        ["MIXED", "2018-01-01", "2018-12-31", "a"]
+      ],
+      "note": "POOLED is delivered only by the pooled edition '2016 - 2018' under the listed version label, so its one pooled state binds a over the whole pooled range. MIXED's explicit 2017 cuts the same pooled range: the pooled 2016 and 2018 and the explicit 2017 each bind a."
     },
     {
-      "table": "issues",
-      "fields": ["code"],
-      "rows": []
+      "table": "issue_refs",
+      "fields": ["code", "valid_from", "valid_to", "key"],
+      "rows": [
+        ["nonconforming_classification_codes", "2016-01-01", "2016-12-31", ["register:1", "variant:10", "edition:1618", "variable:105", "member:1005"]],
+        ["nonconforming_classification_codes", "2017-01-01", "2017-12-31", ["register:1", "variant:10", "edition:2017", "variable:105", "member:1006"]],
+        ["nonconforming_classification_codes", "2018-01-01", "2018-12-31", ["register:1", "variant:10", "edition:1618", "variable:105", "member:1005"]]
+      ],
+      "note": "The only issues are MIXED's code 3, which a lacks, once per bound state. Each cites the evidence of its own span: the pooled years cite the pooled edition 1618, the explicit 2017 only its own edition, never the pooled edition it overrides (an acknowledgement pins an issue's refs, so a pooled ref here would stale annual acknowledgements)."
     }
   ]
 }

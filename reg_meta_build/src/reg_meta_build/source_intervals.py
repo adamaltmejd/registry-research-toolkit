@@ -148,7 +148,7 @@ def pooled_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     return ((bounds[0], bounds[1]),)
 
 
-def _occurrence_pooled(occurrence: EffectiveOccurrence) -> bool:
+def occurrence_pooled(occurrence: EffectiveOccurrence) -> bool:
     """Whether an occurrence's effective scope is pooled (Y-202).
 
     Mirrors `occurrence_bounds`' `not_applicable` fallback so the pooled
@@ -167,7 +167,7 @@ def _segment_pooled(effective: tuple[EffectiveOccurrence, ...]) -> bool:
     ordinary — pooled loses to explicit annual."""
     if not effective:
         return False
-    return all(_occurrence_pooled(occurrence) for occurrence in effective)
+    return all(occurrence_pooled(occurrence) for occurrence in effective)
 
 
 # Y-209: the state-grain facts deciding whether adjacent pooled cuts describe
@@ -640,7 +640,7 @@ def resolve_occurrence_intervals(
             # reconciliation, so their facts can neither conflict with nor
             # influence the resulting state.
             winners = (
-                tuple(record for record in effective if not _occurrence_pooled(record))
+                tuple(record for record in effective if not occurrence_pooled(record))
                 or effective
             )
             lower, upper = (
