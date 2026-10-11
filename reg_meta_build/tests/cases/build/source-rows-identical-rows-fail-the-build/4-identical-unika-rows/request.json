@@ -1,0 +1,16 @@
+{
+  "fails_if": "the build refuses repeated rows only in the scope sources it loads per register, so a byte-identical repeated row of a support source (the Unika summary join) is accepted and the build completes",
+  "note": "The Unika summary repeats VALUE's row. A support source prepares records the same way a scope source does, so the two rows share one record id, and the build refuses them with the same located code as a repeated Registerinformation row (step 1). The header is row 1, so the data rows are 2 and 3. Registerinformation itself delivers VALUE once.",
+  "sources": {
+    "description": "Register 1 delivers VALUE (member 1001) once, and its Unika summary row twice.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ],
+      "unika": [
+        "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
+      ]
+    }
+  }
+}

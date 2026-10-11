@@ -1136,15 +1136,18 @@ def _resolve(
                         "classification": book.slug,
                     },
                 )
+            support_records = tuple(
+                r
+                for source in sorted(
+                    {j.source for j in prepared.manifest.support_joins}
+                )
+                for r in prepared.records.iter_records(source=source)
+            )
+            # A support join is read whole here, never per scope, so it gets the
+            # scope sources' repeated-row refusal on this read.
+            _refuse_duplicated_rows(support_records)
             support = SourceSupportBindings(
-                prepared.manifest.support_joins,
-                (
-                    r
-                    for source in sorted(
-                        {j.source for j in prepared.manifest.support_joins}
-                    )
-                    for r in prepared.records.iter_records(source=source)
-                ),
+                prepared.manifest.support_joins, support_records
             )
             for target in prepared.records.iter_support_targets(
                 prepared.manifest.support_joins

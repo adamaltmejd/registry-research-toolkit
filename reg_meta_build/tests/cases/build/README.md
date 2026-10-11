@@ -65,7 +65,7 @@ the behavior in plain words. For example,
   | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                                                                                     |
   | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                                                                              |
   | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                                                                                   |
-  | `source-rows-`         | physical source rows the build refuses when it loads a scope                                                                                                                     |
+  | `source-rows-`         | physical source rows the build refuses when it loads a scope or a support join                                                                                                    |
   | `warning-`             | the data warnings a build publishes: the register, variable and state each one attaches to, and where its text comes from                                                        |
   | `value-sets-`          | stored value sets: one per distinct membership, its id kept across builds, and the per-column state overlaps formation withholds                                                 |
   | `lineage-`             | source register attribution from a delivered source label, and the state lineage edges, lineage warnings and `[[acknowledge]]` entries it resolves                               |

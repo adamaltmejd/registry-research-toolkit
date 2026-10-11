@@ -1,0 +1,9 @@
+{
+  "error": {
+    "code": "source_rows_duplicated",
+    "exit_code": 10,
+    "message_contains": [
+      "UnikaRegisterOchVariabler.csv row:2 and UnikaRegisterOchVariabler.csv row:3 are identical rows"
+    ]
+  }
+}

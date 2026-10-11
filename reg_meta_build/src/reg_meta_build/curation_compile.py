@@ -546,8 +546,6 @@ class _ColumnPartitionPlan:
     owners: dict[str, tuple[str, ...]]
     scoped_owners: Mapping[tuple[SourceRecordRef, str], str]
     unassigned: tuple[str, ...]
-    unresolved: set[str]
-    candidates: dict[str, list[str]]
 
 
 def _column_partition_plan(
@@ -607,7 +605,6 @@ def _column_partition_plan(
         if column not in scoped_columns:
             candidates[derive_variable_slug(column) or "x"].append(column)
     unassigned = ()
-    unresolved = set()
     if declared_columns is not None:
         if not declaration_reference or not declaration_reference.strip():
             raise ValueError(
@@ -654,12 +651,7 @@ def _column_partition_plan(
                 tuple(candidates[key[len(source_id) + 1 :]]), columns
             )
         }
-        unresolved = (
-            set(split_ids) - partition_columns.keys() - set(scoped_owners.values())
-        )
-    return _ColumnPartitionPlan(
-        columns, partition_columns, scoped_owners, unassigned, unresolved, candidates
-    )
+    return _ColumnPartitionPlan(columns, partition_columns, scoped_owners, unassigned)
 
 
 def convert_column_partitions(
@@ -717,25 +709,6 @@ def convert_column_partitions(
                 ),
                 fields=("identity", "column_name"),
                 withheld_output=(source_id,),
-            ),
-        )
-    elif plan.unresolved:
-        diagnostics = (
-            ResolutionDiagnostic(
-                code="split_identity_conversion_pending",
-                severity="error",
-                subject=source_id,
-                detail=(
-                    "Some accepted naming discriminators do not identify unique literal column partitions. "
-                    f"Unresolved split keys={sorted(plan.unresolved)!r}; "
-                    f"independently bound keys={sorted(partition_columns)!r}. "
-                    f"Accepted suffixes={sorted(key[len(source_id) + 1 :] for key in split_ids)!r}; "
-                    f"source columns={dict(plan.candidates)!r}. "
-                    "Convert the existing rename/shape/identity decision; do not guess from column similarity."
-                ),
-                refs=tuple(sorted({record_ref(record) for record in records}, key=str)),
-                fields=("identity", "column_name"),
-                withheld_output=tuple(sorted(plan.unresolved)),
             ),
         )
     if not partition_columns and not scoped_owners:
@@ -2546,17 +2519,13 @@ def compile_partitions(
                     diagnostics.append(_stale_partition(ref, source_id, str(exc)))
                     null_bases[scope_key].add(native)
                     converted = ColumnPartitionConversion((), None, ())
-                if partitions:
-                    for diagnostic in converted.diagnostics:
-                        # Valid partial ownership retains source uncertainty. Only
-                        # this finding belongs under source-scoped exact ACKs;
-                        # invalid/stale curation contracts remain compiler errors.
-                        if diagnostic.code == "unassigned_original_columns":
-                            source_diagnostics[scope_key].append(
-                                (native[:5], diagnostic)
-                            )
-                        else:
-                            diagnostics.append(diagnostic)
+                for diagnostic in converted.diagnostics:
+                    # Valid partial ownership retains source uncertainty, so its
+                    # one finding (`unassigned_original_columns`) belongs under
+                    # source-scoped exact ACKs; invalid/stale curation contracts
+                    # are compiler errors reported above. An implicit split that
+                    # binds no literal is reported by `_partition_ambiguity` below.
+                    source_diagnostics[scope_key].append((native[:5], diagnostic))
                 if converted.case is not None:
                     if any(
                         entry.expected_evidence_sha256 is not None
@@ -5763,7 +5732,7 @@ def compile_occurrence_corrections(
                 scope, register_key = location
                 effects = tuple(
                     CheckedFieldChange(
-                        ref=record_ref(record),
+                        ref=ref,
                         replacement=FieldExpectation(
                             name=entry.field, status="value", value=entry.value
                         ),
@@ -5800,7 +5769,7 @@ def compile_occurrence_corrections(
                     )
                     if isinstance(entry, ErrataFieldEntry)
                     else CheckedSourceUse(
-                        ref=record_ref(record),
+                        ref=ref,
                         when=(
                             next(
                                 field
@@ -5815,11 +5784,13 @@ def compile_occurrence_corrections(
                     )
                     if isinstance(entry, ErrataSupportEntry)
                     else CheckedPeriodChange(
-                        ref=record_ref(record),
+                        ref=ref,
                         edition_scope=entry.edition_scope,
                         edition_period_scope=entry.edition_period_scope,
                     )
-                    for record in selected
+                    # The physical alternatives of one source record share its ref,
+                    # so they get one effect, not one per alternative.
+                    for ref in dict.fromkeys(record_ref(record) for record in selected)
                 )
                 expected_names = set(expected)
                 if isinstance(entry, ErrataSupportEntry):
