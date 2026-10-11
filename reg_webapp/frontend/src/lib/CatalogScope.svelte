@@ -26,7 +26,12 @@ const { steward }: { steward: string | null | undefined } = $props();
   /* Default paragraph margins, like the page's other muted notes; a gap-laid-out
      parent (Home's hero) zeroes them. */
   .scope {
+    max-width: 80ch;
     font-size: var(--text-sm);
     color: var(--text-muted);
+  }
+  /* Links are ink at 600 (DESIGN.md); lightness alone does not set it off from muted text. */
+  .scope a {
+    font-weight: 600;
   }
 </style>
