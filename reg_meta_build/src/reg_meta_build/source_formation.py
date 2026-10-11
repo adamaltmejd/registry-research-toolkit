@@ -107,6 +107,8 @@ class VariableFormation:
     # Supported delivery this family still claims, less every period an explicit
     # coding or representation outcome withholds.
     coverage: tuple[CoverageObligation, ...] = ()
+    # Failures a strict build raises that this diagnostic formation withheld instead.
+    strict_refusals: int = 0
 
 
 def _state_from_segment(
@@ -731,7 +733,8 @@ def form_native_variable(
     A formed variable also returns the delivery its supported occurrences still
     claim after the explicit coding/representation outcomes that withhold periods.
     States that would fail the written catalog's per-column window checks raise
-    in a strict build; a diagnostic build reports them and withholds the variable.
+    in a strict build; a diagnostic build reports them, withholds the variable and
+    counts them as `strict_refusals`.
     """
     effective = tuple(effective_occurrence(record) for record in records)
     if any(record.use != "catalog" for record in effective):
@@ -1350,4 +1353,5 @@ def form_native_variable(
         withheld_variants,
         withheld_representations,
         coverage,
+        strict_refusals=len(overlaps),
     )
