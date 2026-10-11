@@ -162,9 +162,9 @@ BUNDLE_REFUSAL_PREFIX = "resolved_bundle_"
 PACKAGE_SOURCE = "reg_meta_build/src"
 # The prepare key's code boundary, as roots of a static import walk
 # (`prepare_code_files`): the preparation entry point, and the modules the CLI's
-# `prepare-sources` handler imports from. Not `db`: the CLI's output-confinement check
-# calls it only for an `--output` this tool never passes, and the walk from here does
-# not reach it.
+# `prepare-sources` handler imports from. Not `db`: the walk from here does not reach
+# it, and the CLI calls it only for parser help text and for the confinement check of
+# an `--output` this tool never passes, neither of which reaches the prepared output.
 #
 # Revisit when `prepare-sources` gains an option or a new input, when the CLI handler
 # starts calling a module outside this walk, or when a module in the walk starts
