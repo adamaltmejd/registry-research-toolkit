@@ -1,4 +1,4 @@
-# Fly.io config for the reg_webapp `global` deployment (REFACTOR_SPEC.md §6.5).
+# Fly.io config for the reg_webapp `global` deployment.
 #
 # Deploy from the REPO ROOT — the Dockerfile needs the uv and Cargo workspaces as
 # build context (see reg_webapp/Dockerfile header):

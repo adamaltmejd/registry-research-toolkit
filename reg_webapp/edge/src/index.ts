@@ -5,7 +5,7 @@
 // `fetch(request)` on the same zone is a subrequest to the DNS origin — it does
 // NOT re-enter this worker, and it runs through Cloudflare's cache, so the
 // origin's ETag/Cache-Control contract governs API
-// caching exactly as a classic proxied origin (REFACTOR_SPEC.md §6.5 / #220).
+// caching exactly as a classic proxied origin (#220).
 
 interface Env {
   ASSETS: Fetcher;

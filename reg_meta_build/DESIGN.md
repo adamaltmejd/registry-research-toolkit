@@ -1,11 +1,12 @@
 # Design: reg_meta_build
 
 `reg_meta_build` prepares machine-readable register metadata, applies checked curation,
-and builds the SQLite catalogs queried by `reg_meta`. It also builds the separate
-`reg_meta_docs.db` document index. It is maintainer tooling, not a runtime dependency of
-the query package.
+and builds the SQLite catalogs that the Rust reader in `crates/` serves. It also builds
+the separate `reg_meta_docs.db` document index. It is maintainer tooling, not a runtime
+dependency of the reader.
 
-The builder imports nothing from `reg_meta`. It owns the catalog and docs schema
+The builder shares the grammars and the project validator with the reader through
+`reg-core-py`, and imports nothing else from it. It owns the catalog and docs schema
 constants, input handling, curation, materialization and validation; the Rust server
 reads what it writes. Cross-package constraints live in
 [../ARCHITECTURE.md](../ARCHITECTURE.md).
@@ -1862,9 +1863,11 @@ The order of build work: remove the remaining algorithmic waste (byte-identical,
 verified with `dbdiff`); resolve registers in parallel processes, merged in a fixed
 order; cache per-register resolve results by content; keep Pydantic validation at trust
 boundaries only; then re-profile, and move specific kernels into `reg-core` through
-`reg-core-py` only if object overhead still dominates. The open items are #1423, #1424
-and #1425. Revisit a Rust build only once the curation rules stabilize, and then stage
-by stage behind the same artifact-equality gate, never as one rewrite.
+`reg-core-py` only if object overhead still dominates. The whole-bundle resolve cache
+has shipped: `build-db --resolved-out` persists the resolve phase and `materialize-db`
+reuses it (#1397, #1399, #1400, #1403). The open items are #1423, #1424 and #1425.
+Revisit a Rust build only once the curation rules stabilize, and then stage by stage
+behind the same artifact-equality gate, never as one rewrite.
 
 ## Commands
 
@@ -1896,13 +1899,13 @@ produce review material; they do not approve or apply new curation during a buil
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
-global database built under schema 9, adds steward-private providers and their
-registers, variables and states, then compiles accepted physical holdings into the same
-SQLite artifact. A base built under an older schema is rebuilt, never migrated. Rebuild
-the schema-9 public base once and reuse it for steward compilation; do not rerun public
-preparation for each compiler edit. Facts about an existing global provider belong in
-common global curation. Steward extension does not mutate the base or resolve global
-source conflicts.
+global database built under the current `SCHEMA_VERSION` (10.0.0), adds steward-private
+providers and their registers, variables and states, then compiles accepted physical
+holdings into the same SQLite artifact. A base built under an older schema is rebuilt,
+never migrated. Rebuild the public base once per schema and reuse it for steward
+compilation; do not rerun public preparation for each compiler edit. Facts about an
+existing global provider belong in common global curation. Steward extension does not
+mutate the base or resolve global source conflicts.
 
 `sources/curated.py` is steward-only. Its `<provider>.toml` requires a `[provider]` name
 and source label, explicit variable keys and nonempty state arrays. Repeated variable
@@ -2252,8 +2255,8 @@ redistribution is permitted. Missing required local binaries and unregistered PD
 reported according to the document-build contract. This indexing does not interpret
 documents to change catalog facts.
 
-`doc_db.py` owns the build and FTS creation. Read schema constants and helpers remain in
-`reg_meta`, so querying the document database does not import maintainer tooling.
+`doc_db.py` owns the build and FTS creation. The reader's docs schema gate is
+`DOC_SCHEMA` in `crates/reg-catalog/src/docs.rs`, which mirrors `DOC_SCHEMA_VERSION`.
 
 `doc_fts` holds `fold_search` text (doc schema 1.3.0) under
 `unicode61 remove_diacritics 0`, so `fold_search` is the only fold, as in the catalog's

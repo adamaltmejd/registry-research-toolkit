@@ -5,9 +5,9 @@ catalog reads (context, search, docs, the catalog pages) and the project operati
 (validate / order). The SPA is the researcher's authoring client. There is no Python web
 server. This file records the package-local design rationale. Cross-cutting topology
 (package tree, dependency graph, perf budgets, version policy, testing-strategy
-overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in
-`REFACTOR_SPEC.md`. The API contract is `conformance/api/operations.toml` with its
-snapshot `crates/reg-meta/openapi.json`.
+overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in GitHub
+issues. The API contract is `conformance/api/operations.toml` with its snapshot
+`crates/reg-meta/openapi.json`.
 
 **Compiled holdings.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog or steward artifact and delegates
@@ -139,7 +139,7 @@ Ungrouped leaves render as before, and the type-to-filter matches a group on its
 label/key or any member's name/FQID (`groupMatchesFilter`), so member searches still
 surface the folded group.
 
-## Global catalog search (the Rust server, 3a.11)
+## Global catalog search (the Rust server)
 
 `GET /api/search` is answered by the Rust server (`reg-meta serve`, the `search`
 operation in `conformance/api/operations.toml`): one ranked list per call, as
@@ -266,16 +266,13 @@ absent enrichment. Those members carry the zero-state coverage shape
 (`state_count == 0`, null bounds, not open-ended) instead of `coverage = None`, so
 downstream period lenses can distinguish "never delivered" from "unknown".
 
-**Query-time, not materialized — measured first** (the #351 design decision). The
-aggregates are grouped reads over `variable_state` in the reader. Measured on reg_meta's
-Python reader against the real v0.11.0 DB: the worst register (scb/ulf, 7.3k variables)
-computes per-variable coverage in \~9 ms (\~60 ms end-to-end serializing all 7.3k
-binding nodes); the heaviest provider (scb, 238 registers) \~34 ms end-to-end. Both sit
-behind the ETag/edge cache, so build-time materialized columns (which would ride the
-batched Lane R schema bump) are NOT needed. The covering index
-`idx_variable_state_coverage` on `variable_state(variable_id, valid_from, valid_to)`
-(#371, the 5.4.0 schema cut) lets the grouped MIN/MAX span scan be satisfied index-only
-(no table b-tree lookup; EXPLAIN QUERY PLAN reports `USING COVERING INDEX`).
+**Where coverage is computed.** Reference-scope variable and column coverage are grouped
+reads over `variable_state` in the Rust reader
+(`crates/reg-catalog/src/ops/show/browse.rs`), behind the ETag/edge cache. The covering
+index `idx_variable_state_coverage` on
+`variable_state(variable_id, valid_from, valid_to)` (#371) lets the grouped MIN/MAX span
+scan be satisfied index-only. Holdings coverage and register spans fold the compiled
+deliveries below.
 
 - **Additive / payload-skew (#317)**: `coverage` is optional and the SPA doesn't read it
   yet — it must tolerate its presence AND absence. It's None on a node that wasn't
@@ -294,55 +291,32 @@ batched Lane R schema bump) are NOT needed. The covering index
 ### Per-variable deliveries (Y-82)
 
 A register-child also carries `deliveries`: the `(variant, delivery column)` pairs that
-deliver the variable, each with that pair's own `VariableCoverage` window AND — since
-Y-104 — its disjoint `windows`. It answers the two questions the coverage span can't —
-*which variant delivers this?* and *what column name does a researcher know it by?*
-(LISA's `forvink-ers` is `ForvErs` on paper). One more read in the same query-time
-family (`Catalog.register_variable_deliveries`), keyed by
-`(variable, register_variant, delivery_column_name)` over the same `variable_state` rows
-and behind the same ETag/edge cache — no new endpoint, no build-time materialization.
-Selecting `delivery_column_name` puts it outside `idx_variable_state_coverage` (as it
-does its `register_column_coverage` sibling), so it reaches the row rather than being
-satisfied index-only; both joins are LEFT to pin the join order, because with inner
-joins SQLite drives from `variable_state` and scans the WHOLE table instead of searching
-`idx_variable_state_variable` per register.
+deliver the variable, each with its own `VariableCoverage` window and — since Y-104 —
+its disjoint `windows`. It answers the two questions the coverage span can't: *which
+variant delivers this?* and *what column name does a researcher know it by?* (LISA's
+`forvink-ers` is `ForvErs` on paper).
 
-- **Windows, not a GROUP BY (Y-104)**: 7,295 of the corpus's 77,843 delivery groups
-  (9.4%) do not tile contiguously, so the MIN/MAX span asserted an unbroken delivery for
-  one group in eleven. The reads return ONE ROW PER STATE now — the GROUP BY dropped and
-  nothing put in its place, since the fuse sorts and an `ORDER BY` no step reads costs a
-  temp b-tree over the whole per-register row set and un-pins the join order the
-  all-LEFT joins exist to hold (the per-register
-  `SEARCH v USING COVERING INDEX idx_variable_slug` degrades to a catalog-wide `SCAN v`)
-  — and Python fuses each group's eras into disjoint `windows`, the SPA's
-  `deliveryWindows` rule moved to the model so both ends agree by construction.
-  `coverage` is unchanged: it is the span over those windows, which is still what a
-  browse row prints. The ceiling is row volume — scb/ulf, the corpus's largest register
-  by states, is 22,684 rows over 10,785 groups — and gap-and-islands SQL is the upgrade
-  if that stops fitting.
+The deliveries are compiled at build, not computed per request: `reg-meta-build derive`
+(`reg_meta_build/src/reg_meta_build/derive/browse.py`) writes one `browse_delivery` row
+per delivery and scope, with its windows in `delivery_window`, and the validator checks
+both against a recomputation. The reader lists the rows of the requested scope.
+
+- **Windows, not a span (Y-104)**: 7,295 of the corpus's 77,843 delivery groups (9.4%)
+  do not tile contiguously, so a MIN/MAX span would assert an unbroken delivery for one
+  group in eleven. Each delivery carries its disjoint windows; `coverage` is the span
+  over them, which is what a browse row prints.
 - `column` is None for a state SCB named no delivery column for. The variant still
-  delivers the variable, so the row is KEPT — unlike `register_column_coverage`, whose
-  per-column keys can't express a NULL key. Variants with a NULL slug are excluded
-  (symmetric with `Catalog.list_variants`: an unslugged variant isn't addressable).
+  delivers the variable, so the row is kept. Variants with a NULL slug are excluded (an
+  unslugged variant isn't addressable).
 - **Alias-backed columns (Y-93)**: `variable_state` names only the state's own column,
-  so a #319 monthly family (`LonFinkJan` … `LonFinkDec`) or a #945 co-delivered spelling
-  was absent from the listing and the filter found nothing under the name the researcher
-  knows. Two more reads — one aggregate over `variable_alias_window`, one listing of
-  `variable_alias`, each with the same LEFT-JOIN pinning and its own per-register
-  `SEARCH` — add them with the coverage each column is delivered over: a windowed column
-  over ITS windows, which replace the base state's claim where the two name the same
-  column (as `Catalog._expand_state_windows` expands it for the binding leaf); a column
-  with no window over the variant's states. Both are joined to `variable`, never to each
-  other: joining the window table to the alias table costs the join-order pinning and
-  the plan degrades to a catalog-wide `SCAN v`. This is the `get_datacolumns` view of
-  "delivered under" — every column of the alias history is a name to be found by — and
-  NOT the resolver's: a browse row names columns rather than promising a resolution,
-  which is why it keeps a window no state contains where `_expand_state_windows` drops
-  it. Compiler validation checks deliverability before publication; see
-  reg_meta_build/DESIGN.md for the compiled mapping and state contracts. Columns are
-  identified case-insensitively (`py_lower`, the rule the build validates
-  `variable_alias ⊇ state columns` with), so an alias that only re-spells a listed
-  column is that one delivery.
+  so a monthly family (`LonFinkJan` … `LonFinkDec`) or a #945 co-delivered spelling
+  would be absent from the listing. The derive adds every column of the alias history
+  with the coverage it is delivered over: a windowed column over its windows, which
+  replace the base state's claim where the two name the same column; a column with no
+  window over the variant's states. This is the "delivered under" view, not the
+  resolver's: a browse row names columns rather than promising a resolution, so it keeps
+  an alias window no state contains. Columns are identified case-insensitively
+  (`py_lower`), so an alias that only re-spells a listed column is that one delivery.
 - **Steward semantics**: the shared reader limits deliveries to mapped variants and
   canonical representations in holdings scope. Discovery unions held mappings across
   variants; each returned delivery retains its own variant and windows. Reference scope
@@ -489,18 +463,17 @@ variable pages to add one column each.
   distance through a long list (LISA's ~740 variables) still leaves the count and the
   Add in reach at the bottom edge.
 
-## Context and catalog sizes (the Rust server, 3a.10)
+## Context and catalog sizes (the Rust server)
 
 `GET /api/context` is answered by the Rust server (`reg-meta serve`, the `context`
 operation in `crates/reg-catalog/src/ops/slice_3a.rs`). One call returns the steward
 branding, schema version, import date, the steward's period span, the `reg_meta` version
 and the headline `sizes` (`{providers, registers, variables}` in the read scope), as
-`{data, meta}`; it replaces FastAPI's `/api/context` and `/api/stats`. App fetches it
-once and threads `steward` and `sizes` to Home, which makes no request of its own. The
-SPA's types for it are generated from the committed `crates/reg-meta/openapi.json` into
-`frontend/src/lib/api-types-rust.ts` (a `cargo test` keeps the snapshot equal to the
-server). Locally, the Vite dev proxy sends `/api/context` to the Rust server and the
-rest of `/api` here.
+`{data, meta}`. App fetches it once and threads `steward` and `sizes` to Home, which
+makes no request of its own. The SPA's types for it are generated from the committed
+`crates/reg-meta/openapi.json` into `frontend/src/lib/api-types-rust.ts` (a `cargo test`
+keeps the snapshot equal to the server). Locally, the Vite dev proxy sends
+`/api/context` to the Rust server and the rest of `/api` here.
 
 ## ETag / Cache-Control
 
@@ -537,8 +510,7 @@ path meets it, so no second in-process response cache is warranted.
   `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
   orthogonal to caching policy), so the per-route policy needs no edge change.
 - The **edge** side (Cloudflare edge caching / DDoS shielding / edge rate-limits) is a
-  deploy/maintainer concern and not backend code. Remaining: edge config — see
-  `REFACTOR_SPEC.md`.
+  deploy/maintainer concern and not backend code.
 
 ## Production performance baseline (2026-07-14)
 
@@ -622,11 +594,6 @@ The Docker image copies the branding root to `/opt/reg_webapp/stewards/` and pas
 as `--stewards`. SWECOV is the proving steward; extracting its branding and delivery
 pipeline into its own system remains separate from this runtime cut. No generic
 per-steward extension surface is introduced.
-
-## Pydantic boundary
-
-The webapp defines no Pydantic models of its own: every `/api` response is a Rust server
-document, typed for the SPA from `crates/reg-meta/openapi.json`.
 
 ## OpenAPI snapshot + TS codegen (the drift gate)
 
@@ -1250,8 +1217,8 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   release assets, verify each against the SHA-256 digest GitHub records for it, unpack),
   a pinned Rust stage building `reg-meta`, and a Debian slim runtime with `curl` for the
   smoke gate. The image serves the API and `/mcp` only; the edge workers serve the SPA,
-  which `container-build.yml`'s edge jobs build themselves. Since 3e.4 the Rust server
-  answers every route the SPA calls.
+  which `container-build.yml`'s edge jobs build themselves. The Rust server answers
+  every route the SPA calls.
 - **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
   `catalog.swecov.se`. The global worker forwards `/mcp` (`ROUTE_MCP` in
   `wrangler.jsonc` only; the SWECOV worker does not, since a steward catalog is never
@@ -1419,11 +1386,12 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   MISS→HIT per URL, ETag→body mapping consistent, and conditional GETs answer 304 from
   the edge (`CF-Cache-Status: HIT`, no origin traffic). The path-based FQID surface
   stands; no query-string fallback needed before publishing the OpenAPI.
-- **V1 performance-probe extension (pending)** — add a representative `/api/search`
-  MISS→HIT + `Age`/`CF-Cache-Status` assertion and prove its warm conditional request
-  performs no origin route work. Probe static responses separately: emitted hashed
-  `/assets/*` files must be long-lived `immutable`, while `index.html` and SPA fallback
-  documents must revalidate. The original #220 path gate remains unchanged.
+- **V1 performance-probe extension (pending, #1455)** — add a representative
+  `/api/search` MISS→HIT + `Age`/`CF-Cache-Status` assertion and prove its warm
+  conditional request performs no origin route work. Probe static responses separately:
+  emitted hashed `/assets/*` files must be long-lived `immutable`, while `index.html`
+  and SPA fallback documents must revalidate. The original #220 path gate remains
+  unchanged.
 - **V1 programmatic boundary (decision 2026-07-14)**: the local agent/CLI reads the
   selected compiled SQLite generation directly, so it does not depend on the deployed
   API or impersonate a browser to evade zone bot protection. V1 deployment supports the
@@ -1455,7 +1423,7 @@ Older catalog-only fixtures continue to serve unrelated route tests. Real pinned
 artifacts are checked separately for order parity, latency, and rendered evidence;
 synthetic success is not a real-corpus or deployment claim.
 
-## Project operations (the Rust server, 3e.4)
+## Project operations (the Rust server)
 
 The project editor POSTs the WHOLE serialized draft, a raw object, to two operations of
 the `order` MCP tool (`crates/reg-catalog/src/ops/slice_3e.rs`). The body is parsed
@@ -1490,9 +1458,10 @@ manifest): steward holdings on a steward artifact, canonical columns on the glob
 
 ## Semantic validation
 
-The semantic layer, its rules and its issue codes are `ops/validate.rs`, ported from
-`reg_meta`'s frozen `semantic.py` (`crates/DESIGN.md` → Project semantic validation),
-whose CLI adapter `reg-meta validate` G1 compares it with.
+The semantic layer, its rules and its issue codes are `ops/validate.rs`
+(`crates/DESIGN.md` → Project semantic validation). G1 compares its results between the
+pinned release's server and the checkout's, over derived copies of the release artifacts
+(`conformance/differential/`).
 
 ## Cost protection (`crates/reg-meta/src/limit.rs`)
 
@@ -1899,9 +1868,9 @@ orientation map. Read GETs are edge-cacheable, write POSTs are not.
   | POST   | `/api/project/order`                 | Rust   | `order`: the manifest; 422 `project_invalid` or `order_blocked` (with every finding) when not an order.                   |
   | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact `order.json` bytes, an attachment (the SPA's download).                                    |
 
-Global FTS search shipped as `GET /api/search` (#350) and moved to the Rust server in
-3a.11; the docs library shipped as `/api/docs/*` (#354) and moved to the Rust server in
-3b.6 (with `/api/docs/related/{ref}` and its file download).
+Global FTS search shipped as `GET /api/search` (#350) and the docs library as
+`/api/docs/*` (#354); both moved to the Rust server, the docs with
+`/api/docs/related/{ref}` and its file download.
 
 ## Input-validation gates (security boundary)
 
@@ -1914,9 +1883,9 @@ operation is refused as `invalid_parameter`.
 ## Forward-looking open UX notes
 
 These are unresolved UX questions, not built behavior — recorded so they aren't
-re-discovered. The underlying data-layer lineage rationale lives in `reg_meta` /
-`reg_meta_build` (the `variable_state_lineage` interval-overlap edges); these are purely
-the authoring-UI presentation.
+re-discovered. The underlying data-layer lineage rationale lives in `crates/DESIGN.md`
+and `reg_meta_build/DESIGN.md` (the `variable_state_lineage` interval-overlap edges);
+these are purely the authoring-UI presentation.
 
 - **LISA composite-source presentation.** \~64% of LISA's variable slugs are sourced
   from RTB/RAMS/FastPak/IoT and carry inbound lineage edges. How the catalog UI surfaces
