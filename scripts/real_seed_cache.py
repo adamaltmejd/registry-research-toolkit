@@ -588,6 +588,10 @@ def adopt_prepare(args: argparse.Namespace, home: Path, key: str, fields: dict) 
     bundle is checked against the key. The record then passes the lookup's own
     acceptance check, or is dropped.
     """
+    # A valid record already serves this key; never trade it for an unchecked tree.
+    if hit := lookup_prepare(home, key):
+        emit(hit)
+        return 0
     prepared = Path(args.adopt)
     manifest = json.loads((prepared / "manifest.json").read_text())
     recorded = [
