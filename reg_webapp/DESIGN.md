@@ -1719,7 +1719,8 @@ rune store holding one draft per session.
   the same module: the SPA never parses period grammar or computes a date bound
   (`period.ts` composes reg-core's answers). The study-window coverage hint stays at
   year grain (a period with a non-year endpoint gets none); the disjointness finding
-  compares days.
+  compares days. The type-to-filter fold is the server search's `fold_search` through
+  the same module, not a TS copy.
 - **Project-file versions.** Any JSON object opens (the shape is the only ingress
   check): the server reads exactly reg-core's `SCHEMA_VERSION` and answers any other as
   the single `unsupported_schema_version` issue, which the browser now shows on open. No

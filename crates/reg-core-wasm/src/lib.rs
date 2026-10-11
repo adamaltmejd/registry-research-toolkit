@@ -167,6 +167,17 @@ pub fn render(json: &str) -> String {
     json!(intervals(json).map(|i| reg_core::render(&i))).to_string()
 }
 
+/// `reg_core::fold_search`: the server search's fold (case fold, NFKD, drop nonzero
+/// combining classes to a fixed point, single spaces), so the SPA's type-to-filter
+/// folds exactly as the server's search does. Total: its only panic is a missing fixed
+/// point, which `reg-core`'s every-scalar sweep rules out for every string (each pass
+/// maps characters independently).
+#[wasm_bindgen]
+#[must_use]
+pub fn fold_search(text: &str) -> String {
+    reg_core::fold_search(text)
+}
+
 /// The source period in JSON text once its structural check accepts it, so that
 /// `SourcePeriod::intervals` cannot panic; else why not.
 fn checked_period(json: &str) -> Result<SourcePeriod, String> {

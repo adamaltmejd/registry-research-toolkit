@@ -13,6 +13,7 @@ import type { ValidationResultModel } from "./api";
 import type { ProjectSourcePeriod } from "./project_data";
 import init, {
   check_project,
+  fold_search,
   initSync,
   merge,
   overlap,
@@ -64,6 +65,16 @@ export function projectSchemaVersion(): string {
 export function checkProject(json: string): ValidationResultModel {
   requireReady();
   return JSON.parse(check_project(json)) as ValidationResultModel;
+}
+
+/** The server search's fold (`reg_core::fold_search`): full case folding, NFKD,
+ * combining marks dropped, repeated to a fixed point, then one space between
+ * words (Python's `str.isspace`). The SPA's type-to-filter folds with it, so
+ * the client filter and the server search agree. The oracle is
+ * conformance/cases/folds/fold_search.jsonl. */
+export function foldSearch(text: string): string {
+  requireReady();
+  return fold_search(text);
 }
 
 // ── Periods ──────────────────────────────────────────────────────────────────

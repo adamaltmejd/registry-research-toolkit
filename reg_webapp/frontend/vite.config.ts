@@ -79,7 +79,7 @@ export default defineConfig({
         extends: true,
         // Unit tests read cross-package oracles, which Vite refuses outside the
         // allowed roots (default: this package): the server fold's corpus
-        // (catalog.fold.test.ts), reg-core's structural corpus (reg_core.test.ts,
+        // (reg_core.test.ts), reg-core's structural corpus (reg_core.test.ts,
         // validation.test.ts), the server's unsupported-version case, the period
         // grammar corpora and the interval algebra's golden cases
         // (reg_core.test.ts). Allow those directories, not the whole repo. A

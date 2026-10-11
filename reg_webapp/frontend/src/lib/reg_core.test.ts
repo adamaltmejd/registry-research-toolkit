@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+// The fold corpus the server's `fold_search` is generated from and checked against.
+import foldCorpus from "../../../../conformance/cases/folds/fold_search.jsonl?raw";
 // The period grammar corpora reg-core's own tests run (`crates/reg-core/tests/grammar.rs`).
 import periodCorpus from "../../../../conformance/cases/grammar/period.jsonl?raw";
 import sourcePeriodCorpus from "../../../../conformance/cases/grammar/source_period.jsonl?raw";
@@ -6,6 +8,7 @@ import sourcePeriodCorpus from "../../../../conformance/cases/grammar/source_per
 import intervalGolden from "../../../../crates/reg-core/tests/interval/golden.json";
 import {
   checkProject,
+  foldSearch,
   type Interval,
   mergeIntervals,
   overlapIntervals,
@@ -97,7 +100,18 @@ describe("checkProject (reg-core-wasm)", () => {
   });
 });
 
-/** One JSON object per line (the grammar corpora's format). */
+// Fails when the module's fold drifts from the server search's: the client
+// filter and the server search must fold every corpus case the same way.
+it("folds every fold_search corpus case as the server does", () => {
+  const cases = jsonl<{ in: string; out: string }>(foldCorpus);
+  expect(cases.length).toBeGreaterThan(0);
+  const mismatches = cases
+    .map((c) => ({ in: c.in, expected: c.out, got: foldSearch(c.in) }))
+    .filter((c) => c.got !== c.expected);
+  expect(mismatches).toEqual([]);
+});
+
+/** One JSON object per line (the grammar and fold corpora's format). */
 function jsonl<T>(text: string): T[] {
   return text
     .split("\n")

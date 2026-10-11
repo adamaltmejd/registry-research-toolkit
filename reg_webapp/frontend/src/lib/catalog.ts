@@ -25,7 +25,7 @@ import {
   VALUE_SET_VERSION_NONE,
 } from "./period";
 import type { DraftBinding, ProjectBinding } from "./project_data";
-import { renderIntervals, sourcePeriodFromWire } from "./reg_core";
+import { foldSearch, renderIntervals, sourcePeriodFromWire } from "./reg_core";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -400,54 +400,8 @@ export function axisNoun(axes: readonly GroupAxisModel[]): string {
 // all four surfaces fold identically, and identically to the server's search
 // (`fold_search`, RUST_RUNTIME_SPEC.md section 5): "lon" matches both "Löne…"
 // and "lön" (diacritic-blind), "strasse" matches "Straße", and the needle is
-// matched against BOTH display name AND slug/FQID.
-
-// U+0345 COMBINING GREEK YPOGEGRAMMENI has canonical combining class 240, the
-// highest assigned. NFD's canonical reordering moves any mark with a smaller
-// nonzero class in front of it, so a mark that ends up first has ccc != 0. JS
-// exposes no ccc property; this reads it off the normalizer instead.
-const CCC_240 = "\u0345";
-const hasNonzeroCcc = (mark: string): boolean =>
-  mark === CCC_240 || (CCC_240 + mark).normalize("NFD").startsWith(mark);
-
-/** Python `str.casefold()` of one code point (CaseFolding.txt, full folding).
- * Lower-upper-lower reaches the full fold (ß → SS → ss, ς → Σ → σ, ﬁ → FI → fi)
- * with two exceptions: casefold leaves dotless ı alone (its uppercase I folds to
- * i), and it folds Cherokee to the CAPITAL letters (ꭰ → Ꭰ). */
-function caseFoldCodePoint(c: string): string {
-  if (c === "\u0131") return c;
-  if (/\p{Script=Cherokee}/u.test(c)) return c.toUpperCase();
-  return c.toLowerCase().toUpperCase().toLowerCase();
-}
-
-/** One `fold_search` pass: case fold, NFKD, drop marks with ccc != 0. ASCII
- * other than A–Z already is its own fold, so only A–Z and non-ASCII code points
- * take the per-code-point case fold (a 4x speedup on catalog names). */
-function foldPass(s: string): string {
-  return s
-    .replace(/[^\0-@[-\x7f]/gu, caseFoldCodePoint)
-    .normalize("NFKD")
-    .replace(/\p{M}/gu, (m) => (hasNonzeroCcc(m) ? "" : m));
-}
-
-/** Python `str.isspace`: White_Space plus the information separators. */
-// biome-ignore lint/suspicious/noControlCharactersInRegex: U+001C–U+001F are whitespace to Python's str.split.
-const PY_WHITESPACE = /[\p{White_Space}\x1c-\x1f]+/u;
-
-/** Fold a string for diacritic-blind, case-insensitive substring matching: the
- * server's `fold_search` (reg-core), so the client filter and
- * the server search agree. Case fold, NFKD, drop combining marks, repeated until
- * nothing changes (a second pass catches a capital NFKD emits, U+1D2C → A → a);
- * then one space between words, where whitespace is Python's `str.isspace`
- * (White_Space plus U+001C–U+001F). The oracle is
- * conformance/cases/folds/fold_search.jsonl. */
-export function foldText(s: string): string {
-  let text = foldPass(s);
-  for (let next = foldPass(text); next !== text; next = foldPass(text)) {
-    text = next;
-  }
-  return text.split(PY_WHITESPACE).filter(Boolean).join(" ");
-}
+// matched against BOTH display name AND slug/FQID. The fold is reg-core's own
+// (`foldSearch`, through WASM), not a copy.
 
 /** Whether any of `haystacks` contains the folded `needle` (substring). An empty
  * (or whitespace-only) needle matches everything — the unfiltered full-list
@@ -456,11 +410,11 @@ export function matchesFilter(
   needle: string,
   ...haystacks: (string | null | undefined)[]
 ): boolean {
-  const q = foldText(needle);
+  const q = foldSearch(needle);
   if (!q) {
     return true;
   }
-  return haystacks.some((h) => h != null && foldText(h).includes(q));
+  return haystacks.some((h) => h != null && foldSearch(h).includes(q));
 }
 
 /** Filter `items` by `matchesFilter` over `keys(item)`, THEN rank the survivors
@@ -479,7 +433,7 @@ export function rankFilter<T>(
   needle: string,
   keys: (item: T) => (string | null | undefined)[],
 ): T[] {
-  const q = foldText(needle);
+  const q = foldSearch(needle);
   const matched = items.filter((it) => matchesFilter(needle, ...keys(it)));
   if (!q) {
     return matched;
@@ -487,7 +441,7 @@ export function rankFilter<T>(
   // 0 = exact, 1 = prefix, 2 = other. `Array.prototype.sort` is stable, so
   // equal-tier rows keep their incoming (alphabetical) order.
   const tier = (it: T): number => {
-    const folded = keys(it).map((k) => (k == null ? null : foldText(k)));
+    const folded = keys(it).map((k) => (k == null ? null : foldSearch(k)));
     if (folded.some((f) => f === q)) {
       return 0;
     }
@@ -555,7 +509,7 @@ export function fqidSegments(fqidPath: string): string[] {
 /** The leaf slug of an FQID — its last `/`-separated segment (`scb/rtb` →
  * `"rtb"`, a bare `"rtb"` → `"rtb"`). A ranking key for the browse type-to-filter
  * (`rankFilter`): the leaf slug exact-/prefix-matches the needle even though the
- * full FQID's provider prefix would block it (`foldText("scb/rtb")` doesn't start
+ * full FQID's provider prefix would block it (`foldSearch("scb/rtb")` doesn't start
  * with `"rtb"`), so a slug-named target (`scb/rtb` for "rtb") outranks a purpose-
  * blurb-only match (#674). */
 export function leafSlug(fqid: string): string {
