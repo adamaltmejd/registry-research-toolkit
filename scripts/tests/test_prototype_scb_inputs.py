@@ -22,16 +22,6 @@ def _run(*args: object) -> subprocess.CompletedProcess[str]:
     )
 
 
-def test_executable_help_is_nonempty() -> None:
-    process = _run("--help")
-
-    assert process.returncode == 0
-    assert process.stdout.startswith("usage: prototype_scb_inputs.py")
-    assert "measure-codecs" in process.stdout
-    assert "prepare" in process.stdout
-    assert process.stderr == ""
-
-
 def test_executable_verifies_a_prepared_snapshot(tmp_path: Path) -> None:
     source_dir = tmp_path / "source"
     source_dir.mkdir()

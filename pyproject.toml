@@ -32,7 +32,7 @@ testpaths = [
   "scripts/tests",
 ]
 markers = [
-  "release: tests needing a published release asset — downloaded from GitHub, or an already-fetched one the runner points at",
+  "release: conformance cases run against a real artifact selected with --run-release --artifact-dir",
 ]
 
 [tool.ruff]
@@ -77,7 +77,7 @@ combine-as-imports = true
 # Tests use sibling-module sys.path injection and JSON-shaped fixtures that
 # defeat ty's narrowing. The three excluded scripts import optional deps (xlrd,
 # openpyxl, pymupdf4llm) that aren't in workspace pyproject.toml. The dev
-# skill's fixture builder imports a reg_meta_build test helper by path. None of
+# server's fixture builder imports a reg_meta_build test helper by path. None of
 # these categories are part of the shipped library surface, so exclude from the
 # type baseline.
 exclude = [
@@ -86,7 +86,7 @@ exclude = [
   "scripts/fetch_sos_classifications.py",
   "scripts/parse_lisa_docs.py",
   "conformance/**",
-  "reg_webapp/.claude/skills/**",
+  "reg_webapp/dev/fixture_db.py",
 ]
 
 [tool.uv]

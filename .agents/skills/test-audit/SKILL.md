@@ -9,33 +9,21 @@ description: >-
 
 # Test audit
 
-AGENTS.md → "Testing policy" is the policy. ARCHITECTURE.md → "Testing strategy" names
-the boundaries, their oracles and each package's time budget. This file is what to do
-with them at two moments. The unit is the assertion block: each block is a claim about
-one boundary.
-
-The boundaries: the built artifact (`validate_built_db` plus content snapshot), CLI JSON
-and documented library return models, HTTP responses and the `openapi.json` snapshot,
-order-manifest bytes, `project_data.json` validation
-(`crates/reg-core/tests/project/corpus/`), curation-TOML load or located failure, and
-the FQID and period grammars with interval algebra. In the frontend: rendered DOM, the
-accessibility tree and the codegen'd API types.
+AGENTS.md → "Testing policy" is the policy. ARCHITECTURE.md → "Testing strategy" lists
+the boundaries ("Boundaries and oracles"), their oracles and each package's time budget
+("Tiers"). This file is what to do with them at two moments. The unit is the assertion
+block: each block is a claim about one boundary.
 
 ## At review: the change touches a test
 
-Four answers, from the diff and the PR body. A missing one sends the change back.
+Four answers, from the diff and the PR body, each checked against its policy rule. A
+missing one sends the change back.
 
-1. Which boundary and which stated behavior. A new test needs a new behavior; a bug fix
-   adds a case to the owning corpus.
+1. Which boundary (from the table) and which stated behavior.
 2. Which change to the product makes it fail, named in the test's comment.
 3. Why the boundary's existing cases do not already catch that failure, and whether this
-   is the behavior's hardest case: a second run, reordered input, an interval edge, a
-   refusal beside its allowed twin.
-4. Where each expected value comes from: a golden file, the source fixture, the spec, or
-   agreement between two adapters. Never the code under test or a copy of its logic.
-
-A unit test passes only when it pins behavior a boundary case cannot reach well, such as
-a grammar or a pure fold, and would survive a rewrite of the code behind it.
+   is the behavior's hardest case.
+4. Where each expected value comes from.
 
 Do not run the sabotage by hand. Review the named change as the failure proof.
 

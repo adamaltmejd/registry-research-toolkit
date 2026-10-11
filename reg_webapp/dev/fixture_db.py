@@ -11,12 +11,19 @@ It needs the repo checkout: the catalog builder rides on ``reg_meta_build``'s
 
 simplify: seeded Python rows, not readable source; port the content to a conformance
 case that ``conformance/fixture_cache.py`` builds when this file next needs a change.
+No existing reader case covers it (``reader/fixture`` has only ``scb/example`` and
+``sos``; ``fixtures/compiled`` only ``scb/lisa/kon``), so the port is a new source
+case: ``scb/lisa`` variant ``individer-15plus`` (``kon``, ``forsamling``'s per-year
+parish value sets, ``lonfink``'s alias windows, ``lan``, ``forvink-ers``),
+``scb/rams`` (``standard``/``quarterly`` panel keys, ``syss``, the ``ink`` concept
+group), ``fk/midas``, the ``sun`` classification group and succession, tags, data
+warnings, same_as/replaced_by/lineage edges, and the docs DB (``Kon.md``).
 
 The content is fixed (no randomness, no clock): the same interpreter builds a
 byte-identical pair on every run, which is what makes a screenshot diff meaningful.
 
 Usage:
-    uv run python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py <dir>
+    uv run python reg_webapp/dev/fixture_db.py <dir>
 """
 
 from __future__ import annotations
@@ -31,8 +38,8 @@ from pathlib import Path
 import reg_meta_build.db
 import reg_meta_build.doc_db
 
-# reg_webapp/.claude/skills/run-reg-webapp/ → the repository root.
-_REPO = Path(__file__).resolve().parents[4]
+# reg_webapp/dev/ → the repository root.
+_REPO = Path(__file__).resolve().parents[2]
 _SLUGGED_DB_DIR = _REPO / "reg_meta_build" / "tests"
 _READER_FIXTURE_DIR = _REPO / "conformance/cases/reader/fixture"
 FIXTURE_IMPORT_DATE = json.loads(

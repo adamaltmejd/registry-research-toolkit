@@ -3,9 +3,8 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 dist/
-# Root-anchored: only the repo-root packaging dir, NOT the real
-# `reg_monabundle/src/reg_monabundle/build/` source package (the bundle
-# amalgamator). `__pycache__/` above still ignores byte-code anywhere.
+# Root-anchored: only the repo-root packaging dir, so a source package named
+# `build/` elsewhere stays tracked.
 /build/
 
 # Environments
@@ -33,14 +32,6 @@ Thumbs.db
 
 # Project
 .tmp/
-# Stable host-local accepted catalog-input repository. It is deliberately outside
-# disposable reports/worktrees and never has a product-Git or remote publication path.
-/.local/catalog-inputs/
-# Separate local input candidates contain copied source evidence, not product files.
-/.local/worktrees/
-# Private accepted inputs and retained compiler proofs stay local.
-/.local/private-swecov-candidates/
-/.local/holdings-02-builder-compilation/
 
 # Input data (SCB CSVs, Socialstyrelsen metadata, source PDFs — not committed).
 # Listed per-subdirectory so the maintainer-curated classifications/ folder
@@ -75,32 +66,8 @@ reg_meta_build/input_data/classifications/sos/*.xlsx
 # keep it out of status noise.
 reg_meta_build/input_data/classifications/sos/landskoder.csv
 
-# mock-data-wizard generated output
-mock_data/
-mock_output/
-mdw_runner.py
-mdw_step1_discovery.json
-mdw_step2_config.json
-mdw_step3_stats.json
-extract_stats*.R
-
-# mock-data-wizard runtime artifacts (transient — fcntl sidecar, run logs)
-.mock_data_config.lock
-mdw_log_*.txt
-
-# Local test workspaces (real user data, not part of the toolkit)
-/covid-education-immigrants-test/
-
 # Personal exploration scripts (not part of the toolkit's curated scripts/)
 scripts/sample_*.py
-
-# MONA probe artefacts -- can contain workspace metadata (paths,
-# hostnames, DSNs); inspect before sharing. The findings that matter
-# live in mock_data_wizard/DESIGN.md.
-mdw_probe_*.log
-mdw_python_probe_*.log
-mdw_py_probe_*.csv
-mdw_upload_probe_*.txt
 
 # reg_meta database (built from SCB exports, not committed)
 *.db
@@ -127,5 +94,7 @@ archive/
 .claude/worktrees/
 .claude/settings.local.json
 
-# Local scratch: per-task probes, benchmarks and verification receipts.
+# Host-local state that never reaches Git: scratch probes, benchmarks, verification
+# receipts, and the accepted catalog-input repository, input candidates and private
+# compiler proofs under it.
 .local/

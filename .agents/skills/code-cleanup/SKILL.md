@@ -61,10 +61,10 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
   Confirm each hit with `rg` across the workspace and the frontend before calling it
   dead.
 - **Trace tables**, kept in the scratchpad: every argparse flag and subcommand, to its
-  README or DESIGN.md line, to a test; every `openapi.json` path, to a conformance or
-  backend case; every curation-TOML key the loader accepts, to a committed use. A gap is
-  a finding: code without a stated behavior is YAGNI, and a stated behavior without a
-  test is either a gap or a line to cut.
+  README or DESIGN.md line, to a test; every `openapi.json` path, to a conformance case;
+  every curation-TOML key the loader accepts, to a committed use. A gap is a finding:
+  code without a stated behavior is YAGNI, and a stated behavior without a test is
+  either a gap or a line to cut.
 - **Deferrals.** `rg -n -i 'TODO|FIXME|XXX|revisit|simplify:'`. A `simplify:` whose
   named upgrade trigger has fired, or that names none, is a finding. So is a root
   tracker past its completion gate.

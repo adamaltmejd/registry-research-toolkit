@@ -4,12 +4,6 @@ Cross-cutting design for the Registry Research Toolkit — the topology, depende
 and repo-wide invariants that no single package owns. Package-local rationale lives in
 each `<package>/DESIGN.md`; remaining (not-yet-built) work lives in GitHub issues.
 
-This document is the durable home for what used to be §1–§4, §9.3, §11–§13, and the §16
-overview of the now-dissolved Model A refactor spec. The Model A migration (the
-two-level catalog, the FQID grammar, the IR/adapter build, the `project_data.json` v2
-schema, the webapp + SPA) shipped; its design rationale now lives in the package
-DESIGN.md files this document points to.
-
 ## Domain
 
 Swedish register research uses administrative microdata produced by Statistics Sweden
@@ -74,10 +68,9 @@ order manifest for web and MCP, with no per-steward export template. The materia
 reads the selected compiled artifact for `global`/`swecov`; inventory remains a builder
 input.
 
-Current shipped coverage is browse/search the catalog → choose variables and periods →
-automatic validation → the versioned JSON order manifest. The former mock-data bootstrap
-is archived pending the from-scratch MONA rebuild. Population definition (a predicate
-over base registers, executed only inside MONA) is deliberately out of scope.
+Coverage is browse/search the catalog → choose variables and periods → automatic
+validation → the versioned JSON order manifest. Population definition (a predicate over
+base registers, executed only inside MONA) is deliberately out of scope.
 
 ## Package layout
 
@@ -103,10 +96,6 @@ registry-research-toolkit/
       global/       # steward.json only (full universe)
       swecov/       # steward.json (compiled holdings artifact)
 ```
-
-> The `reg_monabundle` and `mock_data_wizard` packages have been archived to
-> `archive/mona-subsystem` (tag `mona-subsystem-pre-rebuild`), pending a from-scratch
-> MONA rebuild (#707). The `global/` and `swecov/` steward dirs are populated.
 
 Dependency graph (acyclic):
 
@@ -188,27 +177,31 @@ upstream. None of these inputs cross the MONA boundary, and no source reconcilia
 changes the rule that PII stays in MONA and only aggregate, disclosure-controlled
 results leave it.
 
+Shared literal source evidence types live in `reg_meta_build` (`source_evidence.py`);
+the Rust reader reads the documentary relationships from the artifact. Documentary
+owner/operand links are metadata, not state availability, equivalence, lineage or
+executable transformation edges.
+
 ### Real-seed output cache
 
 Real-seed `prepare-sources` and `build-db` runs take one to two hours each, so
-`scripts/real_seed_cache.py` reuses their outputs by input key (#1329). It is tooling
-over the builder's existing reports and checks, not builder code. Each key covers only
-what its step reads, so a resolution change reuses the preparation; the module docstring
-lists the fields. The invariant is that a key leaving out a real input would return
-stale output silently, so every key errs generous, a hit re-checks what it returns, only
+`scripts/real_seed_cache.py` reuses their outputs by input key. It is tooling over the
+builder's existing reports and checks, not builder code. Each key covers only what its
+step reads, so a resolution change reuses the preparation; the module docstring lists
+the fields. The invariant is that a key leaving out a real input would return stale
+output silently, so every key errs generous, a hit re-checks what it returns, only
 completed runs are stored, and `build --verify` reruns uncached and compares bytes. The
 digest, staging and eviction helpers it shares with the G1 derive cache and the
 synthetic fixture cache live in `scripts/keyed_cache.py`. The builder persists its
-resolve phase, so the cache reuses a resolved bundle and reruns only materialization
-(#1397, #1399, #1400, #1403).
+resolve phase, so the cache reuses a resolved bundle and reruns only materialization.
 
 ### Catalog artifact identity and read scope
 
-**Compiled-holdings contract (2026-10-04).** A publishable `reg_meta.db` identifies
-itself through `import_manifest.catalog_artifact_kind`: `catalog` for a global reference
-artifact, `steward` for reference metadata plus that steward's compiled holdings. Both
-use the same schema. A steward installation needs no separate global DB to inspect
-unheld metadata. The optional sibling `reg_meta_docs.db` remains separately paired; full
+**Compiled-holdings contract.** A publishable `reg_meta.db` identifies itself through
+`import_manifest.catalog_artifact_kind`: `catalog` for a global reference artifact,
+`steward` for reference metadata plus that steward's compiled holdings. Both use the
+same schema. A steward installation needs no separate global DB to inspect unheld
+metadata. The optional sibling `reg_meta_docs.db` remains separately paired; full
 document content is outside the single-file guarantee. Diagnostic/incomplete artifacts
 remain nonpublishable and fail runtime admission.
 
@@ -272,9 +265,12 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   (`crates/reg-core/tests/project/corpus/load_test_200col/`), but the load-test harness
   and CI perf gate are remaining work (#1455).
 - **Project schema version.** Schema breakage is signalled by `project_data.json`'s
-  `schema_version` (major 2+ = Model A — 3 since the whole-history `Source.period`
-  sentinel was removed; bare `_default` now selects year-independent data only at a
-  concrete variant). Per the compatibility policy below, v1 ships no migration shims.
+  `schema_version`. `reg-core` accepts exactly its `SCHEMA_VERSION` and refuses any
+  other with an `unsupported_schema_version` issue rather than migrating it
+  ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). Pre-v1 there are no
+  migration scripts, deprecation wrappers or compatibility shims: breaking changes are
+  clean breaks and testers re-author affected projects (`AGENTS.md` → "Maturity and
+  compatibility").
 
 ## API style
 
@@ -286,37 +282,29 @@ grammar is the thing a future port must reproduce. See
 
 ## Testing strategy
 
-The toolkit is a deterministic compiler feeding an immutable artifact to stateless
-readers, so its behavior is observable at a small number of boundaries that outlive the
-code behind them. Tests assert at those boundaries and nowhere else; the binding rules
-for agents are in `AGENTS.md` → "Testing policy". This section names the boundaries, the
-oracle each one uses, and the three cost tiers tests run in.
+The binding rules are in `AGENTS.md` → "Testing policy". This section names the
+boundaries tests assert at, the oracle each one uses, and the three cost tiers tests run
+in.
 
 ### Boundaries and oracles
 
-  | Boundary                                 | Oracle (data, not code)                                                                                 | Status  |
-  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- | ------- |
-  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                      | shipped |
-  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB    | shipped |
-  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                | shipped |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                             | shipped |
-  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                              | shipped |
-  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                            | shipped |
-  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, policy and authored mappings | shipped |
+This is the complete list of boundaries a test may assert at.
 
-A function that is not one of these is reached through one that is. Structural artifact
-invariants have one authority, `validate_built_db`; tests run it, they do not re-derive
-its checks. Expected outputs are files reviewed in the diff; a golden that changes is a
-content decision, not a test fix.
+  | Boundary                                 | Oracle (data, not code)                                                                                 |
+  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                      |
+  | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                      |
+  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB    |
+  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                             |
+  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                              |
+  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                            |
+  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, policy and authored mappings |
+  | Frontend                                 | rendered DOM, the accessibility tree and the codegen'd API types                                        |
+  | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                              |
 
 Compiled holdings admission, scoped browse/search and selection guards are pinned
 through source-built request/expected corpora in `conformance/cases/`.
-
-Conformance cases exercise only public contracts: HTTP and MCP responses, order
-manifests and `project_data.json` validation results. Cases assert observable domain
-results or located errors, never object internals, call graphs or query implementation,
-and no product adapter exists solely to expose a test seam. Requests and expected
-results stay readable as data.
 
 ### Tiers
 
@@ -326,11 +314,10 @@ results stay readable as data.
    Each package stays inside its budget below.
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. The `rust`
-   job's 4-minute timeout is the 3-minute `crates/` budget plus room for a cold
-   rust-cache after a `Cargo.lock` change and its save, and it also covers the gate's
-   `rust` and `release` steps (`scripts/gate.py`: the workspace build, the whole
-   conformance suite against the Rust server, release admission on the synthetic steward
-   artifact). The `lint` job runs `gate.py lint` (ruff, panache, ty). The
+   job's 6-minute timeout covers `crates/` and the gate's `rust` and `release` steps
+   (`scripts/gate.py`: the workspace build, the whole conformance suite against the Rust
+   server, release admission on the synthetic steward artifact), with room for a cold
+   rust-cache and its save. The `lint` job runs `gate.py lint` (ruff, panache, ty). The
    `reg-webapp-frontend` job has a 6-minute timeout and includes the codegen drift
    check; the OpenAPI snapshot is a `crates/reg-meta` test. A job that exceeds its
    budget fails. The Playwright drivers (`dev.sh smoke`, the gate's `flows` step) are
@@ -361,10 +348,10 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
   | Suite                                         | Local | CI job | Rationale                                                                                                                            |
   | --------------------------------------------- | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
   | `reg_meta_build/tests`                        | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
-  | `conformance`                                 | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                              |
-  | `scripts/tests`                               | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints, the opt-in marker gate); a few nested pytest runs dominate.                    |
-  | `crates/` (`cargo test --workspace`)          | 10 s  | 3 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
-  | Rust conformance run (`scripts/gate.py rust`) | 30 s  | 3 min  | The whole conformance suite against the Rust server; Shares the `rust` job with `crates/`.                                           |
+  | `conformance`                                 | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven HTTP, MCP, order and validate cases.                              |
+  | `scripts/tests`                               | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); a few nested pytest runs dominate.                                            |
+  | `crates/` (`cargo test --workspace`)          | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
+  | Rust conformance run (`scripts/gate.py rust`) | 30 s  | 6 min  | The whole conformance suite against the Rust server; Shares the `rust` job with `crates/`.                                           |
   | frontend (`bun run test`)                     | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
 
 Three verification gates cut across the tiers. They are named G0–G2 so they are not
@@ -422,46 +409,8 @@ mappings, periods or unmapped reasons. Catalog artifacts permit global fallback 
 steward reference visibility does not grant orderability. The existing
 `crates/reg-core/tests/project/corpus/` serves its Rust and TS consumers.
 
-The corpus depends on public contracts rather than private Python internals. Private
-imports/internal patches and oversized test modules are gated by repo lints with no
-exemptions or file allowlists; the per-package test sweep (plans 06a–06c, #1169) emptied
-the last ones. The Rust reader runs against these oracles.
+Private imports, internal patches and oversized test modules are gated by repo lints
+with no exemptions or file allowlists. The Rust reader runs against these oracles.
 
 Coverage is measured as boundaries with a corpus, not as line percentage; a boundary
 without a corpus is the gap.
-
-## Maturity and compatibility policy
-
-Pre-v1, small group of testers, no external users. Breaking changes are clean breaks;
-testers re-author affected projects. The toolkit does **not** ship migration scripts,
-deprecation wrappers, or backwards-compatibility shims — `project_data.json` carries a
-`schema_version` so a future self *can* migrate, but `reg-core` refuses an incompatible
-document with an `unsupported_schema_version` issue rather than shimming it. This policy
-is the canonical statement in [`AGENTS.md`](AGENTS.md) ("Maturity and compatibility");
-it is revisited only when the toolkit graduates to a wider user base.
-
-## Where the dissolved spec went
-
-The Model A refactor spec dissolved into the docs below. Per-PR landing history lives in
-git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
-
-  | Old spec section                                                                                                        | New home                                                 |
-  | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-  | §1 background, §2/§3 product, §4 layout/deps, §9.3 REST, §11 changes, §12 invariants, §13 policy, §16 overview          | this file                                                |
-  | §5 object model, FQID grammar, edge semantics, library API, glossary; §6.8.3 semantic rules; §15 step 12 order manifest | `crates/DESIGN.md`                                       |
-  | §4.4 IR/adapter, §5.3 slug curation, §5.4 immutability, §5.6 lineage, §5.7 triage, ID minting                           | `reg_meta_build/DESIGN.md`                               |
-  | §5.9, §6 `project_data.json` schema + structural/return-shape rules                                                     | `crates/reg-core/DESIGN.md`                              |
-  | §9 webapp                                                                                                               | `reg_webapp/DESIGN.md`                                   |
-  | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                                 | `archive/mona-subsystem`                                 |
-  | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–11, remaining §16     | issues #707, #1453–#1456, #1297, #1296, #212, #209, #472 |
-
-The Rust runtime refactor's tracker dissolved the same way: its design into
-[`crates/DESIGN.md`](crates/DESIGN.md) (runtime, contracts, interface),
-[`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md) (base and derive, build
-performance) and [`conformance/README.md`](conformance/README.md) (verification gates),
-its open build work into issues.
-
-Shared literal source evidence types live in `reg_meta_build` (`source_evidence.py`);
-the Rust reader reads the documentary relationships from the artifact. Documentary
-owner/operand links are metadata, not state availability, equivalence, lineage or
-executable transformation edges.

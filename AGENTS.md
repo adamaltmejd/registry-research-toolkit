@@ -40,11 +40,11 @@ state.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
 - **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
-  for cross-PR coordination. There is currently no tracker. Each tracker
-  is **scoped and self-deleting**: it ships with an explicit completion gate (e.g.
-  "deleted when stage X ships"), gets deleted at that gate, and never outlives the
-  refactor it tracks. Per-package DESIGN.md notes for the same effort are still
-  preferred where the scope is package-local.
+  for cross-PR coordination. There is currently no tracker. Each tracker is **scoped and
+  self-deleting**: it ships with an explicit completion gate (e.g. "deleted when stage X
+  ships"), gets deleted at that gate, and never outlives the refactor it tracks.
+  Per-package DESIGN.md notes for the same effort are still preferred where the scope is
+  package-local.
 
 # Maturity and compatibility
 
@@ -109,15 +109,11 @@ below are what an agent must follow when writing, changing or deleting a test. T
   only where it pins behavior a boundary case cannot reach well (a grammar, interval
   algebra, a pure fold), stated as input → expected output, and it must survive a
   rewrite of the code behind it.
-- **Assert only at a named boundary**: built-artifact content, the builder's CLI JSON,
-  HTTP and MCP responses, `reg-core` validation results for `project_data.json`,
-  order-manifest bytes, curation-TOML load or located failure, the FQID and period
-  grammars. Anything else is
-  reached through one of those, not tested on its own; conformance cases use only public
-  contracts (`ARCHITECTURE.md` → "Testing strategy"). No private-name imports
-  (`from x import _helper`) and no patching of internal modules; mock only process
-  boundaries: network, clock, filesystem, subprocess. Repository tooling under
-  `scripts/tests` asserts that tool's own contract (skill discovery, a lint's verdict).
+- **Assert only at a named boundary**, one of the table in `ARCHITECTURE.md` →
+  "Boundaries and oracles". Anything else is reached through one of those, not tested
+  on its own. No private-name imports (`from x import _helper`) and no patching of
+  internal modules; mock only process boundaries: network, clock, filesystem,
+  subprocess.
 - **Oracles are data.** Expected behavior lives in golden corpora and snapshot files
   (`input → expected`) readable without Python. Changing an expected file is a content
   decision reviewed in the diff, with the reason in the commit. Never weaken, regenerate
@@ -150,9 +146,8 @@ below are what an agent must follow when writing, changing or deleting a test. T
   to a slower tier (real-seed or release gate) or goes.
 - **Report what ran.** Name the checks you ran and the ones you did not; never claim an
   unrun check passed.
-- **Frontend follows the same rule**: assert on rendered DOM, the accessibility tree and
-  the codegen'd API types, not component internals. No screenshot regression. A
-  UI-specific regime is a separate, later decision.
+- **Frontend follows the same rule**: no component internals and no screenshot
+  regression. A UI-specific regime is a separate, later decision.
 
 # Python conventions
 
@@ -183,12 +178,13 @@ below are what an agent must follow when writing, changing or deleting a test. T
 
 # Run (dev servers)
 
-- `reg_webapp` local dev (Rust server + Vite with an `/api` proxy): the
-  `/run-reg-webapp` skill (`reg_webapp/.claude/skills/run-reg-webapp/`) has the verified
-  launch steps + a Playwright driver for smoke/screenshots. `.claude/launch.json`
-  registers a single `reg-webapp` config for `preview_start` (its entry point is
-  `dev.sh preview`, so `autoPort` makes parallel sessions collision-free and the proxy
-  is auto-wired); for one-shot screenshots use `dev.sh smoke` / `dev.sh shot`.
+- `reg_webapp` local dev (Rust server + Vite with an `/api` proxy):
+  `reg_webapp/dev/dev.sh` and its Playwright driver; the `/run-reg-webapp` skill
+  (`reg_webapp/.claude/skills/run-reg-webapp/`) explains the modes.
+  `.claude/launch.json` registers a single `reg-webapp` config for `preview_start` (its
+  entry point is `dev.sh preview`, so `autoPort` makes parallel sessions collision-free
+  and the proxy is auto-wired); for one-shot screenshots use `dev.sh smoke` /
+  `dev.sh shot`.
 - `reg_webapp` frontend work follows the design language in
   `reg_webapp/frontend/DESIGN.md`: author with the `reg-webapp-frontend-design` skill
   and judge the result with `reg-webapp-design-reviewer`.
@@ -215,8 +211,8 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - Local prerequisites: `cargo install cargo-machete --locked`;
   `rustup target add wasm32-unknown-unknown` and `wasm-bindgen-cli` at the version
   `crates/reg-core-wasm/Cargo.toml` pins.
-- A new worktree needs its own environment: `uv sync --frozen` and, for the frontend,
-  `bun install --frozen-lockfile` in `reg_webapp/frontend`.
+- A new worktree needs no setup step: Python syncs on the first `uv run`, and `dev.sh`
+  and the gate's `frontend` step run `bun install --frozen-lockfile` on demand.
 - `reg_meta_build/docs/lisa/*.md` are build artifacts — fix
   `scripts/parse_lisa_docs.py`, not the output.
 

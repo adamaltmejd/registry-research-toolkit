@@ -13,6 +13,23 @@ from reg_meta_build.errors import RegMetaError
 
 def pytest_addoption(parser):
     parser.addoption(
+        "--run-release",
+        action="store_true",
+        default=False,
+        help="admit a real artifact (tier 3); requires --artifact-dir",
+    )
+    parser.addoption(
+        "--artifact-dir",
+        default=None,
+        help="conformance artifact directory (requires --run-release)",
+    )
+    parser.addoption(
+        "--holdings-input",
+        default=None,
+        help="accepted holdings input directory (requires --run-release and "
+        "--artifact-dir)",
+    )
+    parser.addoption(
         "--server-cmd",
         default=None,
         help="run conformance HTTP cases against a server started from this "

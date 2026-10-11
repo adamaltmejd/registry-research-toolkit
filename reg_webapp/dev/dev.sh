@@ -155,21 +155,22 @@ if [ "$mode" = shot ] && [ "$#" -eq 0 ]; then
 	exit 2 # validate before booting servers
 fi
 
-# THIS script's checkout (…/reg_webapp/.claude/skills/run-reg-webapp/dev.sh → repo
-# root), not the caller's cwd: running another checkout's absolute dev.sh must serve
-# that checkout, never whichever one the caller happened to be standing in.
-root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd) || exit 1
+# THIS script's checkout (…/reg_webapp/dev/dev.sh → repo root), not the caller's
+# cwd: running another checkout's absolute dev.sh must serve that checkout, never
+# whichever one the caller happened to be standing in.
+root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd) || exit 1
 cd "$root" || exit 1
 
-# This checkout's OWN environment, never main's: a fresh worktree has neither until
-# it is installed by hand. The venv runs freeport, the --fixture-db builder and the
-# default DB resolution; node_modules runs Vite and the driver.
-if [ ! -x ".venv/bin/python" ]; then
-	echo "dev: .venv/bin/python missing — run 'uv sync --frozen' from $root." >&2
+# This checkout's OWN environment, never main's, installed on demand (near-instant
+# when already in sync). The venv runs freeport, the --fixture-db builder and the
+# default DB resolution; node_modules runs Vite and the driver. `env -u`: an
+# inherited UV_PROJECT_ENVIRONMENT would sync another checkout's venv (#1337).
+if ! env -u UV_PROJECT_ENVIRONMENT uv sync --frozen --quiet; then
+	echo "dev: 'uv sync --frozen' failed — see output above." >&2
 	exit 1
 fi
-if [ ! -d "reg_webapp/frontend/node_modules" ]; then
-	echo "dev: reg_webapp/frontend/node_modules missing — run 'bun install --frozen-lockfile' in $root/reg_webapp/frontend." >&2
+if ! (cd reg_webapp/frontend && bun install --frozen-lockfile --silent); then
+	echo "dev: 'bun install --frozen-lockfile' failed — see output above." >&2
 	exit 1
 fi
 
@@ -257,9 +258,9 @@ if [ -n "$fixture_db" ]; then
 	# Match cleanup's empty-array guard for macOS system Bash 3.2 + nounset.
 	if ! (
 		if [ ${#fixture_catalog_args[@]} -gt 0 ]; then
-			.venv/bin/python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py "$fixture_db_dir" "${fixture_catalog_args[@]}" >/dev/null
+			.venv/bin/python reg_webapp/dev/fixture_db.py "$fixture_db_dir" "${fixture_catalog_args[@]}" >/dev/null
 		else
-			.venv/bin/python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py "$fixture_db_dir" >/dev/null
+			.venv/bin/python reg_webapp/dev/fixture_db.py "$fixture_db_dir" >/dev/null
 		fi
 	); then
 		echo "dev: --fixture-db build failed — see output above." >&2
@@ -317,7 +318,7 @@ smoke)
 	# every server down (no leak). Exit status is the driver's.
 	echo "dev: smoke on $dev_url (auto-teardown on exit)" >&2
 	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
-		bun ../.claude/skills/run-reg-webapp/driver.mjs smoke)
+		bun ../dev/driver.mjs smoke)
 	exit $?
 	;;
 flows)
@@ -325,7 +326,7 @@ flows)
 	# EXIT trap tears every server (and their process groups) down either way.
 	echo "dev: flows ${*:-(all scenarios)} on $dev_url → $out_dir (auto-teardown on exit)" >&2
 	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
-		bun ../.claude/skills/run-reg-webapp/driver.mjs flows "$out_dir" "$@")
+		bun ../dev/driver.mjs flows "$out_dir" "$@")
 	exit $?
 	;;
 shot)
@@ -334,7 +335,7 @@ shot)
 	for vp in "${viewports[@]}"; do
 		for route in "$@"; do
 			(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" REG_WEBAPP_VIEWPORT="$vp" \
-				bun ../.claude/skills/run-reg-webapp/driver.mjs shot "$route") || rc=$?
+				bun ../dev/driver.mjs shot "$route") || rc=$?
 		done
 	done
 	exit "$rc"

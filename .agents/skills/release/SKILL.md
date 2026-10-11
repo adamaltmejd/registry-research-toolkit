@@ -272,9 +272,10 @@ gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[] | [.name, .digest]
 ```
 
 Then run the release-tier artifact conformance on each new catalog (global and SWECOV),
-downloaded from the draft and decompressed into its own directory, with the command in
-`AGENTS.md` → "Lint and test" (`--run-release --artifact-dir=... --server-cmd=...`). A
-red run stops publication: fix the asset and re-run.
+downloaded from the draft and decompressed into its own directory, with the conformance
+command the `scripts/gate.py` `release` step runs, pointed at that directory
+(`--run-release --artifact-dir=... --server-cmd=...`; `cargo build --workspace` first).
+A red run stops publication: fix the asset and re-run.
 
 ### 9. Publish the draft release
 

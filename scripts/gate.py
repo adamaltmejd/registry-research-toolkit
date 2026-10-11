@@ -123,13 +123,15 @@ def release() -> None:
 
 def flows() -> None:
     out = Path(tempfile.mkdtemp(prefix="gate-flows-"))
-    dev = ROOT / "reg_webapp/.claude/skills/run-reg-webapp/dev.sh"
+    dev = ROOT / "reg_webapp/dev/dev.sh"
     run(["bash", dev, "--fixture-db", "flows", out], stdin=subprocess.DEVNULL)
     # Kept on failure: the screenshots are the evidence.
     shutil.rmtree(out)
 
 
 def frontend() -> None:
+    # On demand, so a fresh worktree needs no setup; a no-op when in sync.
+    run(["bun", "install", "--frozen-lockfile"], cwd=FRONTEND)
     # The SPA's reg-core module: a Rust build, so it takes a heavy slot (the rest of
     # this step does not).
     with heavy_lock():

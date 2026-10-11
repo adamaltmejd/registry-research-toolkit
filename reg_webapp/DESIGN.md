@@ -28,8 +28,9 @@ private data.
 
 ```text
 reg_webapp/
-  .claude/skills/run-reg-webapp/  # dev.sh, the browser flows, fixture_db.py (the
-                                  # synthetic catalog + docs DB pair, dev.sh --fixture-db)
+  .claude/skills/run-reg-webapp/  # the skill: how to use dev/
+  dev/                    # dev.sh, the browser flows (driver.mjs), fixture_db.py (the
+                          # synthetic catalog + docs DB pair, dev.sh --fixture-db)
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
     src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
   stewards/               # per-steward branding, read by `reg-meta serve --stewards`
@@ -373,9 +374,8 @@ variable pages to add one column each.
   add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
   committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.svelte` is
   the one confirmation/refusal row. The binding leaf, the concept group and the register
-  list are hosts: they own their own selection and scope and nothing else. It was two
-  copies of the same forty lines before this ticket — the leaf-helper duplication
-  AGENTS.md names.
+  list are hosts: they own their own selection and scope and nothing else. Do not copy
+  the sequence into a new host — that is the leaf-helper duplication AGENTS.md names.
 - **The study window IS the period here.** The list carries no Period control (that
   belongs to a subject page), so an add is clipped to the rail's window, and without one
   an open-ended column has no finite period to commit — the batch is refused whole
@@ -483,12 +483,11 @@ answer (`validate`, `order`, the manifest download) carries no validator.
 head).** App code, compiled catalog DB, steward branding configuration and paired docs
 DB are immutable for a process lifetime; changing any of them replaces the process. At
 startup, derive one content-backed HTTP generation token from those inputs, including
-catalog `generation_id`. Loose delivery inventory is no longer an HTTP input. Include
-read scope in the canonical request identity and caches/cursors. For known pure GET
-reads, derive the validator from that token plus steward and the canonical request
-identity, and satisfy a matching `If-None-Match` before route execution, DB work, or
-body serialization. This makes a 304 cheap without weakening exact representation
-identity.
+catalog `generation_id`. Loose delivery inventory is not an HTTP input. Include read
+scope in the canonical request identity and caches/cursors. For known pure GET reads,
+derive the validator from that token plus steward and the canonical request identity,
+and satisfy a matching `If-None-Match` before route execution, DB work, or body
+serialization. This makes a 304 cheap without weakening exact representation identity.
 
 Browser and shared-cache freshness are separate concerns. Keep a short browser window
 where prompt redeploy visibility matters, but let the Cloudflare cache retain immutable,
@@ -511,46 +510,15 @@ path meets it, so no second in-process response cache is warranted.
 - The **edge** side (Cloudflare edge caching / DDoS shielding / edge rate-limits) is a
   deploy/maintainer concern and not backend code.
 
-## Production performance baseline (2026-07-14)
+## Production performance budgets
 
-The table is the pre-correction production baseline that motivated #1135 and #1136.
-Chrome 150 traces used browser-cold isolated contexts, 1× CPU, and no network
-throttling. No CrUX field data was available, and DevTools emitted neither TBT nor Speed
-Index; do not substitute Lighthouse values for the missing trace metrics.
+The v1 regression budgets, measured with browser-cold Chrome traces (1x CPU, no
+throttling; never substitute Lighthouse values for missing trace metrics):
 
-  | Journey            | TTFB   | FCP    | LCP      | CLS   | Interpretation                                               |
-  | ------------------ | ------ | ------ | -------- | ----- | ------------------------------------------------------------ |
-  | Home `/`           | 319 ms | 548 ms | 546 ms   | 0.008 | Good; no homepage optimization lane                          |
-  | Search `?q=person` | 66 ms  | 152 ms | 2,918 ms | 0.044 | Backend/cache wait dominates LCP                             |
-  | ICD-11-SE detail   | 78 ms  | 184 ms | 264 ms   | 0.303 | LCP is the shell footer; classification content shifts later |
-
-Search INP was 26 ms (0.1 ms input delay, 2 ms processing, 24 ms presentation), so the
-interaction and subsequent DOM work are not the search bottleneck. The API took 2,759 ms
-cold and 1,330 ms repeat/revalidated for only 6.9 KB compressed / 28.4 KB decoded; 97.7%
-of LCP was render delay awaiting results. #1135 shipped bounded SQL candidates, stable
-cursors, and bounded folding/backfill instead of full-result/count work. On its final
-head, 25 distinct direct-origin requests measured 276.1 ms p95 (280.4 ms maximum), and a
-browser-cold trace measured 380 ms LCP. The v1 regression budgets remain 500 ms
-cache-miss p95 and browser-cold LCP below 2.5 s; warm edge hits must not execute the
-origin.
-
-ICD-11-SE transferred 542.5 KB / decoded 3.28 MB in 398 ms. The client sensibly grouped
-17,159 `X` codes into only 675 DOM nodes, so DOM virtualization is not the missing fix;
-the complete code corpus should not cross the initial detail boundary. One asynchronous
-replacement contributed 0.295 CLS at roughly 709 ms, and repeat CLS remained 0.118.
-#1136 made the canvas a flex column, let the routed region fill the viewport remainder,
-added bounded catalog-loading skeletons, and reserved the multi-edition graph slot only
-while it is pending or renderable. Exact-head ICD-11-SE traces then measured CLS 0.0616
-cold and 0.0158 repeat (LCP 108 ms and 80 ms). Cold and repeat CLS < 0.1 remains the
-regression budget. The separate 3.28 MB payload correction under `CodeList` is still
-pending.
-
-Content-hashed JS (\~103 KB), CSS (\~17 KB), and initially used fonts (\~130 KB)
-currently revalidate, costing roughly 24–46 ms per main asset on repeat visits. Hashed
-`/assets/*` responses must get a long-lived `immutable` policy through Workers Assets'
-`frontend/public/_headers` support; `index.html` and SPA fallback documents remain
-revalidatable. This is P2: render-blocking CSS cost only 26–39 ms and DevTools estimated
-zero FCP/LCP savings from removing it.
+- Search: cache-miss origin p95 under 500 ms, browser-cold LCP under 2.5 s; a warm edge
+  hit must not execute the origin.
+- Catalog detail pages: cold and repeat CLS under 0.1. A large code list is grouped in
+  the DOM, so the fix for a heavy detail page is a smaller payload, not virtualization.
 
 ## Compiled artifact identity and read scope
 
@@ -627,92 +595,22 @@ covers — #632 (a hand-extracted slider that pre-dated this decision) is the ca
 motivating example. See the § UI primitives section below for the adoption rationale
 (#689).
 
-## UI primitives — Bits UI + scoped CSS (bake-off #689)
+## UI primitives — Bits UI + scoped CSS
 
-A two-arm spike ahead of the #664/#665/#666 redesign wave evaluated what the frontend
-should use as its UI foundation. The question was purely about styling strategy — **both
-arms sat on Bits UI** for accessible behavior (shadcn-svelte = Bits UI + Tailwind v4),
-so the a11y win was not a differentiator.
+Bits UI supplies behavior and ARIA; Svelte scoped CSS reading the app's design tokens
+supplies all styling. A bake-off (#689) against shadcn-svelte + Tailwind v4 (also built
+on Bits UI, so accessibility was not the differentiator) rejected Tailwind: eight extra
+deps, about 1,000 lines of vendored components to own, a second token system
+disconnected from the app's, more than double the CSS, and tooling friction on this
+plain-Vite SPA (shadcn's CLI assumes SvelteKit; Biome rejects Tailwind v4 directives).
+Even the Tailwind arm had to style its widget with the app's own tokens. Revisit only if
+the app stops having its own design language.
 
-**Arm A** — Bits UI + Svelte scoped CSS + a CSS-custom-property design-token set. **Arm
-B** — Bits UI via shadcn-svelte + Tailwind v4.
-
-Both rebuilt `SearchOmnibox.svelte` as an accessible `Combobox`. The verdict: **adopt
-Arm A.**
-
-### Evidence
-
-**Footprint.** Arm A: 1 new runtime dep (`bits-ui@2.18.1`) + a small token block in
-`App.svelte`. Arm B: 8 deps (`tailwindcss`, `@tailwindcss/vite`, `bits-ui`, `clsx`,
-`tailwind-merge`, `tailwind-variants`, `@lucide/svelte`, `tw-animate-css`) + \~1061 LOC
-of vendored `ui/**` components to own + a second, parallel token system (shadcn's oklch
-palette, disconnected from the app's existing `--border`/`--accent`/`--surface` tokens).
-
-**Bundle.** JS was roughly a wash (\~+25–32 kB gzip each arm, dominated by the shared
-Bits UI runtime). The distinguishing cost was CSS: Arm A near-flat (+0.3 kB gzip); Arm
-B's Tailwind utility layer more than doubled CSS (+7.3 kB gzip).
-
-**Tooling friction (Arm B only).** shadcn-svelte's CLI assumes SvelteKit — its `init`
-cannot run non-interactively on this plain-Vite SPA (needed a manual `$lib` alias +
-manual theme transcription + undeclared peer deps). Biome rejected Tailwind v4
-directives and the vendored files violated repo lint conventions; the vendor directory
-had to be excluded from lint entirely. No such friction on Arm A.
-
-**The telling detail.** Even in Arm B, the integration-correct choice was to style the
-omnibox with the existing app tokens, not Tailwind's palette — shadcn's oklch set is a
-disconnected parallel system that doesn't match the app's design language. The Tailwind
-arm didn't actually want Tailwind for the part that mattered.
-
-**Conclusion.** For a \~35-component bespoke app with its own design language, Bits UI
-captures the entire accessibility goal. Tailwind/shadcn's added cost — deps, vendored
-ownership, dual token systems, CSS growth, persistent tooling and lint friction — is
-disproportionate. This is independent of the #679 MONA-austerity loosening; the frontend
-was never MONA-constrained — the adoption gap was purely historical.
-
-### What shipped
-
-- `bits-ui@2.18.1` added to `frontend/package.json` as the single new runtime dep.
-- `App.svelte` `:global(:root)` extended with a purposeful design-token set —
-  `--space-1`/`2`/`3`/`4`, `--text-sm`/`--text-base`, `--radius`, `--focus-ring`,
-  `--surface-hover`, `--surface-selected` — alongside the pre-existing palette
-  (`--border`, `--muted`, `--accent`, `--accent-bg`, `--surface`). These are the
-  geometry, type, and interaction-state tokens the bare palette lacked; the existing
-  color palette stays the source of truth. (Historical: this #689 stub was wholesale
-  superseded by #802's two-layer role system — see § Token architecture below — so
-  `--muted`/`--text-base` are no longer current token names; the alias bridge that
-  carried them onto the new roles was deleted in #827.)
-- `SearchOmnibox.svelte` was rebuilt by #689 as a **Bits UI `Combobox`** with live
-  `/api/search` suggestions. **Superseded by #808**: the suggestion dropdown was removed
-  — it duplicated the `/search` results page, and the omnibox auto-routes every query to
-  `/search` anyway, so the popup only ever flashed. `SearchOmnibox` is now a plain
-  routing input and the `/search` results page is the single search surface. The
-  `/search?q=` routing + URL↔box sync it established are preserved: Enter routes to
-  `/search` from other pages, and typing live-refines in place while already on
-  `/search` (no debounced navigation off-route).
-- `CatalogPicker.svelte` filtered lists (variant / provider / register / leaf variables)
-  migrated to **Bits UI `Command`**: single tab-stop, arrow-key nav, `role="listbox"` /
-  `role="option"` ARIA. `rankFilter` stays the single source of truth (`Command`'s own
-  scorer is disabled via `shouldFilter={false}`). **Superseded by the #991 cart model
-  (#992/#993)**: `CatalogPicker.svelte` was deleted — `/project` is a read-only cart
-  now, and authoring moved to the catalog subject page's own picker (see § The picker —
-  slice axis × time axis). The friction note below is retained as a still-relevant
-  caveat about `Command` + `ConceptGroupRow`, not as documentation of a live component.
-
-### CatalogPicker / Command friction (relevant to #664/#666)
-
-`Command` fits the **homogeneous** filtered lists (variant / provider / register) with
-zero friction. The **folded `ConceptGroupRow`** (a nested expandable widget) cannot be a
-flat `role="option"` — it is rendered as `role="presentation"` inside the listbox, which
-**splits the keyboard model**: arrow-nav covers the leaf options; Tab reaches the group
-expanders. The picker's most important list (740 grouped variables) therefore gets only
-partial keyboard nav from the primitive. Worth knowing going into the #664 subject-page
-and #666 history-graph work.
-
-### Rollout
-
-Incremental — no big-bang rewrite. New redesign UI (#664/#665/#666) builds on Bits UI +
-the token set; high-risk existing hand-rolled widgets migrate opportunistically as the
-redesign is the natural migration window.
+Caveat: Bits UI `Command` fits homogeneous filtered lists, but a nested expandable row
+(a folded `ConceptGroupRow`) cannot be a flat `role="option"`. Rendered as
+`role="presentation"` inside the listbox, it splits the keyboard model: arrow keys reach
+the leaf options, Tab reaches the group expanders. Expect this wherever a
+`Command`-hosted list meets grouped rows.
 
 ## Visual language (design system)
 
@@ -753,16 +651,13 @@ skips visual regressions.
 
 ### Shared primitives (Bits UI behavior + scoped CSS)
 
-The recurring visual units live in `frontend/src/lib/ui/` (shipped in #804, exported via
-`index.ts`): `Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `Button`, `KeyValue`,
-`Skeleton`, and `EmptyState`. `AppShell` shipped in #803 (rail + topbar command bar —
-see § Surface & layout language). Behavior comes from Bits UI (`Command`, `Dialog`,
-`Combobox`, etc.); styling is scoped CSS reading **only** semantic tokens. The #689
-`Command` + folded-`ConceptGroupRow` keyboard-split caveat (`role="presentation"`,
-originally observed in the now-deleted `CatalogPicker` — see § CatalogPicker / Command
-friction) still stands wherever a future `Command`-hosted list meets grouped rows.
+The recurring visual units live in `frontend/src/lib/ui/` (exported via `index.ts`):
+`Panel`, `DataTable`, `Breadcrumbs`, `Tag`, `Button`, `KeyValue`, `Skeleton`, and
+`EmptyState`, plus `AppShell` (rail + topbar command bar). Behavior comes from Bits UI
+(`Command`, `Dialog`, `Combobox`, etc.); styling is scoped CSS reading **only** semantic
+tokens. The `Command` + grouped-row keyboard-split caveat in § UI primitives applies.
 
-Load-bearing decisions downstream children (#806–#809) must not re-litigate:
+Load-bearing decisions not to re-litigate:
 
 - **`DataTable` ARIA roles — explicit and unconditional.** Every table element carries
   its ARIA role explicitly (`table`, `rowgroup`, `row`, `columnheader`, `cell`). This is
@@ -802,10 +697,9 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   label clears AA without per-component overrides. Status tones **require** a leading
   `glyph` snippet (the accent-vs-status rule: hue alone is never sufficient); the glyph
   is `aria-hidden`, so status meaning must also appear in the label text.
-- **`Tag` is copy-faced.** (Y-105, superseding Y-83's "declares no font-family") The
-  base `.tag` rule sets `font-family: var(--font-ui)` — a tag label is a word of UI text
-  — and the `mono` prop opts a tag into the mono face for the exception, an identifier
-  shown as a tag.
+- **`Tag` is copy-faced.** The base `.tag` rule sets `font-family: var(--font-ui)` — a
+  tag label is a word of UI text — and the `mono` prop opts a tag into the mono face for
+  the exception, an identifier shown as a tag.
 - **Focus-ring convention.** Every interactive primitive applies
   `:focus-visible { box-shadow: var(--focus-ring) }` in its own scoped CSS — no global
   stylesheet owns this.
@@ -840,17 +734,6 @@ Load-bearing decisions downstream children (#806–#809) must not re-litigate:
   `RepresentationPicker`'s scoped CSS until the register list grew ticks of its own
   (Y-83): a second consumer makes it cross-component, so it moved here rather than being
   re-typed — the same reason `.micro-label` lives here.
-
-### Migration discipline
-
-No big-bang. Land the foundation first (tokens → type → shell), then migrate
-page-by-page, ordered by traffic and by what the redesign wave is already rewriting:
-browse/landing → subject page (with #664) → search → project editor → history/graph
-(with #666/#678). Hard rules: components consume **semantic roles only** (so dark mode
-and re-tints are free); each migrated page keeps its `*.browser.test.ts` green and ships
-a `dev.sh shot` before/after as visual proof (the merge-gate UI requirement). The
-foundation should land **before** #664/#666 bake in new screens, or we pay to migrate
-them twice.
 
 ## Site-wide catalog vintage footer (#355 decision 2)
 
@@ -1054,12 +937,12 @@ kind:
   picker row.
 
 The **time axis** is the shared `PeriodPicker` (see the Project-window store section): a
-slider-only year-window control seeded from the project window and subject coverage. It
-no longer exposes range, list, or free-text authoring modes. Richer server-supported
-`?period` wires (terms, comma lists, `_default`) remain valid deep-link state; when one
-is active, the picker displays that value read-only with a Clear affordance and does not
-silently rewrite it unless the user moves the slider to a year window. The control does
-a different job per kind:
+slider-only year-window control seeded from the project window and subject coverage,
+with no range, list, or free-text authoring modes. Richer server-supported `?period`
+wires (terms, comma lists, `_default`) remain valid deep-link state; when one is active,
+the picker displays that value read-only with a Clear affordance and does not silently
+rewrite it unless the user moves the slider to a year window. The control does a
+different job per kind:
 
 - On the **variable** it drives resolution: a local change writes `?period` (precedence
   `?period` > project window > full history), which **refetches** the `resolve_at`
@@ -1078,12 +961,10 @@ one-sided `until <year>` form when the start is unknown (#658).
 
 ### Shared section components
 
-- **`ValueSetView`** (#905, replacing the retired `StatesView`) — the pure value-set /
-  coding viewer for a variable's `variable_state` rows. It is **presentation-only**: no
-  fetch, no navigation, no resolution state. The `RepresentationPicker` now owns the
-  `?variant` / `?value_set_version` narrowing (the `onpickVariant` /
-  `onpickValueSetVersion` callbacks and the `inScope` / out-of-scope greying that lived
-  in `StatesView` are retired). `ValueSetView` receives the already-resolved `states`
+- **`ValueSetView`** — the pure value-set / coding viewer for a variable's
+  `variable_state` rows. It is **presentation-only**: no fetch, no navigation, no
+  resolution state. The `RepresentationPicker` owns the `?variant` /
+  `?value_set_version` narrowing. `ValueSetView` receives the already-resolved `states`
   list from `BindingLeafView` and renders in one of three modes:
 
   - **Single-state detail** (`states.length === 1`): variant, validity, non-empty
@@ -1115,16 +996,16 @@ one-sided `until <year>` form when the start is unknown (#658).
 
 - **`CodeList`** (#638 PR3) — the single value-set / code viewer. A variable's value set
   and a classification's code list are the same shape (a code → label set, and a value
-  set often *is* a classification), so they render identically: `ValueSetView` (#905,
-  superseding the retired `StatesView`) uses it for each distinct value set in the
-  multi-state view (and for the single value set in the detail mode), and
-  `ClassificationCodesPanel` for the edition's codes, both through `ValueSetCodes`,
-  which reads the codes a server page at a time and owns the **size-dependent filter**
-  (a search box appears only at ≥ `CODE_FILTER_THRESHOLD` codes — pointless for a
-  handful). `CodeList` renders the loaded pages verbatim in a height-constrained scroll;
-  a levelled code indents by its depth below the shallowest level loaded, so a
-  classification that starts at level 2 renders flat. Classification conformance
-  warnings render on the variable value-set surface, not inside the shared code list.
+  set often *is* a classification), so they render identically: `ValueSetView` uses it
+  for each distinct value set in the multi-state view (and for the single value set in
+  the detail mode), and `ClassificationCodesPanel` for the edition's codes, both through
+  `ValueSetCodes`, which reads the codes a server page at a time and owns the
+  **size-dependent filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD`
+  codes — pointless for a handful). `CodeList` renders the loaded pages verbatim in a
+  height-constrained scroll; a levelled code indents by its depth below the shallowest
+  level loaded, so a classification that starts at level 2 renders flat. Classification
+  conformance warnings render on the variable value-set surface, not inside the shared
+  code list.
 
   **V1 payload correction (decision 2026-07-14; not implemented at this head).** A
   classification or value-set detail response does not embed its complete code corpus.
@@ -1497,11 +1378,7 @@ of its own but a source's **period** (Y-81, below). `ProjectEditor` / `SourceEdi
 project's own name, and the New/Open/Download project_data.json/Download order.json
 actions — validation runs automatically on every edit, with no separate Validate action.
 A wrong variable, variant or representation gets fixed by picking again from the catalog
-subject page, not by editing the cart row. `CatalogPicker.svelte`,
-`PeriodEditor.svelte`, and `FieldIssues.svelte` — the general in-cart editing UI — were
-deleted along with the store methods that only existed to serve them (`addSource`,
-`addBinding`, `updateSource`, `updateBinding`, `applyPickedBinding`,
-`bindingDerivation`).
+subject page, not by editing the cart row; there is no general in-cart editing UI.
 
 A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
 a `representation` only where a pick had to choose between co-existing columns — so the
@@ -1532,25 +1409,20 @@ says whether a register name needs its provider — leaves the row showing the c
 it already holds: a machine coordinate is honest where an invented name is not. Nothing
 read is ever written back into the draft.
 
-This retires the \~400-line client-side **re-derivation engine** (`bindingDerivations` /
-`rederiveGen` / `rederiveSource` / `applyResolution` / `applyDerivedResult` and the
-per-binding `BindingDerivation` provenance markers) that used to re-resolve every
-binding whenever its source's period or variant changed, with a clobber-vs-keep
-heuristic to decide whether a re-derived value should overwrite an author's edit. Under
-the cart model every field is **written once, at pick time**: the subject-page picker
-stages concrete `(period, variant, representation)` rows with final `type` /
-`representation`, then `applyStagedDiff` commits the diff in one mutation. Nothing
-re-derives afterwards, so there is no provenance state to track and no clobber decision
-to get wrong. A source's bindings can go stale relative to its period after the fact
-(e.g. the author widens the period); that drift is the **server validator's job** to
-surface (`range_period_partially_covered` for a widening past availability,
+Every field is **written once, at pick time**: the subject-page picker stages concrete
+`(period, variant, representation)` rows with final `type` / `representation`, then
+`applyStagedDiff` commits the diff in one mutation. Nothing re-derives afterwards, so
+there is no provenance state to track and no decision about whether a re-derived value
+may overwrite an author's edit; do not reintroduce a client-side re-derivation engine. A
+source's bindings can go stale relative to its period after the fact (e.g. the author
+widens the period); that drift is the **server validator's job** to surface
+(`range_period_partially_covered` for a widening past availability,
 `period_outside_state_validity` when nothing is left,
 `binding_state_drifts_within_period` across a transition — see `crates/DESIGN.md` →
-Project semantic validation) — the auto-validate flow that surfaces this on every edit
-is the sibling #994 (shipped — see § "Browser storage + project-file persistence"
-below). `ValidationPanel` carries a "Fix in catalog" link on each finding that resolves
-a catalog coordinate, so the remediation path is always back to the catalog, never a
-cart-side patch.
+Project semantic validation), and auto-validation surfaces it on every edit (§ "Browser
+storage + project-file persistence" below). `ValidationPanel` carries a "Fix in catalog"
+link on each finding that resolves a catalog coordinate, so the remediation path is
+always back to the catalog, never a cart-side patch.
 
 The one field a pick does NOT write is `display_name`, which it leaves **absent**. The
 field is optional — an absent one resolves to the reg_meta default from `variable_alias`
@@ -1591,11 +1463,10 @@ keeps the spelling it was written in (`2020-H1` plus `2022` is `2020-H1,2022`), 
 an interval the merge created or changed is rendered (`2019-Q1` plus `2019-Q2` is
 `VT2019`; a span no token covers is a range like `2019..2020-06-30`). When either side
 has no days to place (`_default`, or a period reg-core refuses) the incoming period
-replaces it. `applyStagedDiff` is now the SOLE catalog→project mutation path (the
-store's earlier single-pick `addFromCatalog` handoff was dead since #992/#993 and was
-deleted in #1104). `updateField` (the project's own `name` / `window`),
-`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
-the cart UI calls — a source's own generated `name` is not editable anywhere.
+replaces it. `applyStagedDiff` is the SOLE catalog→project mutation path. `updateField`
+(the project's own `name` / `window`), `removeSource`/`removeBinding` and
+`applySourcePeriodEdit` are the only other mutators the cart UI calls — a source's own
+generated `name` is not editable anywhere.
 
 Bindings, variant and representation are written once at PICK time; a source's
 **period** is the one field the cart edits (Y-81), one From/To row per segment for a
@@ -1631,10 +1502,9 @@ changing years, filtering rows or following a `?period` link leaves the draft al
 `RepresentationPicker` has no period-change path at all: a partial leaf/group cannot
 infer a source-wide rewrite from the columns it happens to show, so that rewrite happens
 on the `/project` card only. Coverage and type drift after the edit stay the server
-validator's job, as above. (Y-81 retired the catalog-side Y-15 correction that used to
-do this from a "Project sources on this page" box on every leaf and group page: the
-catalog surface had to re-state a source the cart already shows whole, and nobody found
-it there.)
+validator's job, as above. Do not move period correction back onto catalog pages: a
+catalog page would have to re-state a source the cart already shows whole, and an
+earlier per-page "Project sources on this page" box went unused.
 
 ## Browser storage + project-file persistence (the SPA store)
 
@@ -1738,24 +1608,23 @@ needed), and the thumbs are hard-clamped to coverage via `DualThumbTrack`'s opt-
 local change writes `?period` only (never the global window). The user-deviation hint
 (`?period`/drag ≠ window) fires only on an explicit `?period` or a live thumb drag — not
 on the untouched coverage-clamped default seed (`userChosen`); the data narrowing the
-window is not a user deviation. This supersedes the #615/#639 "grey only after drag"
-posture for this slider: #639's anti-alarm intent is preserved (the up-front band is a
-passive "no data here", not a selection warning), while an explicit out-of-coverage
-`?period` still renders honestly with its not-delivered gap. Open-ended coverage
-additionally surfaces a **"coverage through \<vintage\>"** note (M21). The per-page
-picker shares the rail slider's vintage ceiling (#631): `App.svelte` threads the ceiling
-(`context.import_date`'s year) down through `CatalogNodeView` → `BindingLeafView` →
-`PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker` (#638). On the
-concept-group subject page the picker is a **client-side availability lens** over the
-union of member coverage spans — it greys members not delivered in the active window but
-drives no refetch (`getConceptGroup` takes no period parameter). The vintage is the
-ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still delivered") projects to —
-the catalog only knows delivery up to its vintage — so the coverage band ends at the
-vintage and a selection past it reads as "not delivered after `<vintage>`". It is NOT a
-floor on the slider bounds: a FINITE coverage keeps its real end (never extended to the
-vintage), and a window/selection past the vintage still widens the bounds (the thumb
-renders the real value) without extending coverage. Wall-clock is the pre-context
-fallback only.
+window is not a user deviation. The up-front band is a passive "no data here", not a
+selection warning, so it does not alarm on the default seed, while an explicit
+out-of-coverage `?period` still renders honestly with its not-delivered gap. Open-ended
+coverage additionally surfaces a **"coverage through \<vintage\>"** note (M21). The
+per-page picker shares the rail slider's vintage ceiling (#631): `App.svelte` threads
+the ceiling (`context.import_date`'s year) down through `CatalogNodeView` →
+`BindingLeafView` → `PeriodPicker`, and also through `ConceptGroupView` → `PeriodPicker`
+(#638). On the concept-group subject page the picker is a **client-side availability
+lens** over the union of member coverage spans — it greys members not delivered in the
+active window but drives no refetch (`getConceptGroup` takes no period parameter). The
+vintage is the ceiling an OPEN-ENDED coverage (`coverage.to === null`, "still
+delivered") projects to — the catalog only knows delivery up to its vintage — so the
+coverage band ends at the vintage and a selection past it reads as "not delivered after
+`<vintage>`". It is NOT a floor on the slider bounds: a FINITE coverage keeps its real
+end (never extended to the vintage), and a window/selection past the vintage still
+widens the bounds (the thumb renders the real value) without extending coverage.
+Wall-clock is the pre-context fallback only.
 
 Precedence — two backing stores, one source of truth:
 
@@ -1867,10 +1736,6 @@ orientation map. Read GETs are edge-cacheable, write POSTs are not.
   | POST   | `/api/project/order`                 | Rust   | `order`: the manifest; 422 `project_invalid` or `order_blocked` (with every finding) when not an order.                   |
   | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact `order.json` bytes, an attachment (the SPA's download).                                    |
 
-Global FTS search shipped as `GET /api/search` (#350) and the docs library as
-`/api/docs/*` (#354); both moved to the Rust server, the docs with
-`/api/docs/related/{ref}` and its file download.
-
 ## Input-validation gates (security boundary)
 
 Hostile input on the catalog and docs reads (a malformed ref, a traversal-shaped path, a
@@ -1890,10 +1755,6 @@ these are purely the authoring-UI presentation.
   from RTB/RAMS/FastPak/IoT and carry inbound lineage edges. How the catalog UI surfaces
   that origin when a user authors a LISA variable list — hover tooltip, inline note,
   "see also" panel — is undecided. The data is present; the question is purely UX.
-- **Per-steward repo autonomy.** SWECOV lives in this monorepo only as the proving
-  steward for pre-v1 testing. Before release, extract it to its own steward repo/system
-  and keep that shape reusable for later stewards; do not let the in-repo SWECOV
-  directory become the permanent distribution contract.
 - **Realign-patch lifecycle** (gated behind the unbuilt merged-mode realign flow).
   Whether the realign-review UI writes an accepted patch back into git automatically or
   just produces a new `project_data.json` the user replaces manually.

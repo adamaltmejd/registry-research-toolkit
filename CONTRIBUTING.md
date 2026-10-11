@@ -20,10 +20,8 @@ uv run python -m pytest                   # the Python suites (builder, conforma
 cargo test --workspace                    # the crates
 ```
 
-Expensive test suites are gated behind `--run-<name>` flags. To add a new category, add
-an entry to `OPTIONAL_MARKERS` in `conftest.py` and decorate tests with
-`@pytest.mark.<name>`. Today the only one is `--run-release`: the conformance checks on
-a real artifact (see `conformance/README.md`).
+Conformance checks on a real artifact run only with `--run-release --artifact-dir=...`
+(see `conformance/README.md`).
 
 There are no git hooks: CI (`ci.yml`) runs the gate on every PR to main, and merges
 require it green. Run the relevant steps locally before pushing.

@@ -3,8 +3,7 @@
 The generator (`input_data/swecov/build_catalog.py`) is tracked but maintainer-run:
 its CSV/workbook inputs are confidential and stay untracked, so these tests feed it
 SYNTHETIC columns and a synthetic `holdings_enriched.json` — no real delivery data,
-no `derived/` artifact of the maintainer's, no network. Loaded by path (the way
-`reg_webapp/backend/tests/conftest.py` reaches `scripts/fixture_db.py`) because
+no `derived/` artifact of the maintainer's, no network. Loaded by path because
 `input_data/` is a seed area, not an importable package.
 
 Its public contract is the `cmd_*` entry points, called in-process with an
