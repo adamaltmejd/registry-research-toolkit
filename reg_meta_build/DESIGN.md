@@ -1495,6 +1495,16 @@ variant is selected. Positively unselected sources defer these acknowledgements 
 scoped builds; full builds still refuse missing or changed evidence. Settled global
 warnings use the same catalog warning projection and writer as scoped limitations.
 
+Both global kinds need the resolved catalog to compute their fingerprints, so the build
+report is where a curator reads them. A stale global acknowledgement names the current
+`expected_evidence_sha256` and, when its code, subject, refs, fields and period select
+exactly one error, that error's `expected_diagnostic_sha256`, as TOML lines in its
+detail. A curator writes the entry from the reported issue with placeholder digests,
+builds (a full build, or a slice that also selects the labelled source registers), and
+copies the pins after reviewing the issue. The digests are printed, never applied: an
+entry still acknowledges only what its committed pins match. Register-scoped
+acknowledgements do not print their pins yet.
+
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
 prepared scope set and writes only independently supported output to a separate new
 path. It never aborts on a per-variable or per-family inconsistency: it withholds the

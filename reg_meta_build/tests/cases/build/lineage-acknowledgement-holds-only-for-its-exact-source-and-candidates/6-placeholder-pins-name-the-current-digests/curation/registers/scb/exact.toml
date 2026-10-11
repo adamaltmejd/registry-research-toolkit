@@ -1,0 +1,19 @@
+[register]
+provider = "scb"
+slug = "exact"
+native_id = "2"
+[[variant]]
+native_id = "2.20"
+slug = "people"
+[[variant]]
+native_id = "2.21"
+slug = "other"
+[[variant]]
+native_id = "2.22"
+slug = "duplicate"
+[[variable]]
+native_id = "2.201"
+slug = "exact"
+[[variable]]
+native_id = "2.202"
+slug = "filler"

@@ -1780,28 +1780,27 @@ class ResolutionDiagnostic(_CurationModel):
     acknowledged_by: str | None = None
 
 
+def _acknowledged_identity(
+    item: ResolutionDiagnostic | AcknowledgeDecision,
+) -> tuple[object, ...]:
+    """The issue an acknowledgement names, its digest aside."""
+    return (
+        item.code,
+        item.subject,
+        item.refs,
+        item.fields,
+        item.valid_from,
+        item.valid_to,
+    )
+
+
 def acknowledged_diagnostic(
     issue: ResolutionDiagnostic, decision: AcknowledgeDecision, case_id: str
 ) -> ResolutionDiagnostic | None:
     """Match one exact issue; a warning never restores its withheld output."""
     if (
         issue.severity != "error"
-        or (
-            issue.code,
-            issue.subject,
-            issue.refs,
-            issue.fields,
-            issue.valid_from,
-            issue.valid_to,
-        )
-        != (
-            decision.code,
-            decision.subject,
-            decision.refs,
-            decision.fields,
-            decision.valid_from,
-            decision.valid_to,
-        )
+        or _acknowledged_identity(issue) != _acknowledged_identity(decision)
         or (
             decision.expected_diagnostic_sha256 is not None
             and canonical_sha256(issue.model_dump(mode="json"))
@@ -1828,19 +1827,43 @@ def settle_acknowledgements(
             if (warning := acknowledged_diagnostic(issue, decision, case.case_id))
             is not None
         }
+        current_evidence = evidence_sha256.get(case.case_id)
         if len(matches) == 1 and (
             decision.expected_evidence_sha256 is not None
-            and evidence_sha256.get(case.case_id) == decision.expected_evidence_sha256
+            and current_evidence == decision.expected_evidence_sha256
         ):
             result = [matches.get(issue, issue) for issue in result]
         else:
+            # The curator's pin source: both digests as the build computes them
+            # now, so a reviewed entry is pinned (or re-pinned) by copying them.
+            # The issue digest is named only when the entry's identity, digest
+            # aside, selects exactly one distinct error (identical copies count
+            # once, as the matcher counts them).
+            named = list(
+                dict.fromkeys(
+                    issue
+                    for issue in result
+                    if issue.severity == "error"
+                    and _acknowledged_identity(issue)
+                    == _acknowledged_identity(decision)
+                )
+            )
+            pins = []
+            if current_evidence is not None:
+                pins.append(f'expected_evidence_sha256 = "{current_evidence}"')
+            if len(named) == 1:
+                pins.append(
+                    "expected_diagnostic_sha256 = "
+                    f'"{canonical_sha256(named[0].model_dump(mode="json"))}"'
+                )
             result.append(
                 ResolutionDiagnostic(
                     code="stale_curation_entry",
                     severity="error",
                     case_id=case.case_id,
                     subject=decision.subject,
-                    detail="The exact global acknowledgement no longer matches one issue with unchanged complete evidence and owner.",
+                    detail="The exact global acknowledgement no longer matches one issue with unchanged complete evidence and owner."
+                    + (f" Current pins: {'; '.join(pins)}." if pins else ""),
                     refs=decision.refs,
                     fields=decision.fields,
                     withheld_output=(case.case_id,),
