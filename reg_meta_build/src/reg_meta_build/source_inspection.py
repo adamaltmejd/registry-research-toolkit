@@ -542,6 +542,7 @@ def source_interpreter_commit() -> str:
             package / "edition_bounds.py",
             package / "source_evidence.py",
             package / "_curation.py",
+            package / "native_sources.py",
             package / "sources" / "lisa.py",
             package / "sources" / "scb_records.py",
             *_native_sources(repo),

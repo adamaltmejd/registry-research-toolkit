@@ -597,7 +597,8 @@ def adopt_prepare(args: argparse.Namespace, home: Path, key: str, fields: dict) 
     keyed = [
         fields["bundle_commit"],
         fields["bundle_manifest_sha256"],
-        fields["bundle_path"].removesuffix("/"),
+        # `--show-prefix` is empty at the repository root, where the manifest says ".".
+        fields["bundle_path"].removesuffix("/") or ".",
     ]
     if recorded != keyed:
         sys.exit(f"real-seed-cache: {prepared} was prepared from another bundle")
@@ -626,6 +627,10 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         return 0
     home = cache_dir("prepare")
     if args.adopt:
+        if args.output_dir is not None:
+            sys.exit(
+                "real-seed-cache: --adopt records an existing tree; drop --output-dir"
+            )
         return adopt_prepare(args, home, key, fields)
     if hit := lookup_prepare(home, key):
         emit(hit)
