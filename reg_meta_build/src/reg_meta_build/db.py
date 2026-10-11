@@ -1937,7 +1937,12 @@ def stored_data_warnings(conn: sqlite3.Connection) -> list[DataWarning]:
                 )
             )
         except ValidationError as exc:
-            raise ValueError(f"data_warning {warning_id}: {exc}") from exc
+            # Locations and types only: the default message echoes the row's input.
+            errors = "; ".join(
+                f"{'.'.join(map(str, e['loc'])) or '<row>'}: {e['msg']} [{e['type']}]"
+                for e in exc.errors(include_input=False, include_url=False)
+            )
+            raise ValueError(f"data_warning {warning_id}: {errors}") from exc
     return warnings
 
 
