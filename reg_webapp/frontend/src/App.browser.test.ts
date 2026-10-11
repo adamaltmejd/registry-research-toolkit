@@ -89,6 +89,19 @@ describe("App renders the landing page from one context read", () => {
       .toBeVisible();
     expect(getContext).toHaveBeenCalledTimes(1);
   });
+
+  it("names the global catalog's scope and links the SWECOV catalog (#1461)", async () => {
+    // Fails if Home stops saying what the global catalog leaves out, which reads
+    // as "no such data" to someone searching for a SWECOV-only source.
+    await render(App);
+
+    await expect
+      .element(page.getByText(/This catalog covers Swedish national registers/))
+      .toBeVisible();
+    await expect
+      .element(page.getByRole("link", { name: "SWECOV catalog" }))
+      .toHaveAttribute("href", "https://data.swecov.se");
+  });
 });
 
 describe("App owns the draft lifecycle", () => {

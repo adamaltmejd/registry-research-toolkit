@@ -12,7 +12,10 @@ issues. The API contract is `conformance/api/operations.toml` with its snapshot
 **Compiled holdings.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog or steward artifact and delegates
 scope-sensitive reads to the shared SQL reader. Steward configuration supplies branding;
-it does not supply holdings. The optional SPA scope switch is deferred. HTTP browse
+it does not supply holdings. The optional SPA scope switch is deferred. Serving the
+global catalog, Home and `/project` say its scope and link the SWECOV catalog
+(`CatalogScope.svelte`, #1461); the address is a constant in the SPA, since
+`/api/context` carries no related-catalog link. HTTP browse
 clients can request reference or holdings scope explicitly.
 
 ## Why no auth — cost protection instead

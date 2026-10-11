@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { CatalogSizes, Steward } from "./api";
+import CatalogScope from "./CatalogScope.svelte";
 
 // The landing/home page (#675), served at `/` — split from the data browser
 // (`/catalog`). It welcomes the visitor with the deployment's `long_name`, a
@@ -47,6 +48,7 @@ const entries = [
       {/if}
     </h1>
     <p class="tagline">Browse and search Swedish register metadata.</p>
+    <CatalogScope steward={steward?.id} />
     {#if sizes}
       <p class="stats">
         {sizes.providers.toLocaleString()} providers ·
@@ -87,6 +89,9 @@ const entries = [
     margin: 0;
     font-size: 1.6rem;
     font-weight: var(--heading-weight);
+  }
+  .hero :global(.scope) {
+    margin: 0;
   }
   .tagline {
     margin: 0;
