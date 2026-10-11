@@ -1,4 +1,4 @@
-//! One Unicode version for all of `reg-core`'s Unicode data (`RUST_RUNTIME_SPEC.md` §5).
+//! One Unicode version for all of `reg-core`'s Unicode data (`crates/DESIGN.md`, "Text folds").
 
 #[test]
 fn unicode_data_is_on_one_version() {

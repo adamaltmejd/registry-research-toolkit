@@ -351,7 +351,7 @@ fn arm(
     Ok((list, pinned))
 }
 
-/// Every arm's first `DEPTH` rows in one stable total order (decision 17): pins
+/// Every arm's first `DEPTH` rows in one stable total order (one ranked list per call): pins
 /// first in pin order, then best-bets score descending, arm order and the arm's own
 /// position. Rows with today's candidate key once (the first), and variables that a
 /// listed variable group holds hidden.

@@ -1,8 +1,8 @@
 # Grammar corpus
 
-The oracle for the FQID and period grammars of `RUST_RUNTIME_SPEC.md` sections 5 and 7,
-read by `crates/reg-core/tests/grammar.rs` (`cargo test --workspace`) and, the period
-files, by the SPA's unit suite through `reg-core-wasm`
+The oracle for the FQID and period grammars of `crates/DESIGN.md` ("FQID grammar"), read
+by `crates/reg-core/tests/grammar.rs` (`cargo test --workspace`) and, the period files,
+by the SPA's unit suite through `reg-core-wasm`
 (`reg_webapp/frontend/src/lib/reg_core.test.ts`). The files are hand-written from the
 grammar in `crates/DESIGN.md` → "FQID grammar", not generated from an implementation.
 

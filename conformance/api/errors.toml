@@ -1,8 +1,8 @@
-# Error catalog (RUST_RUNTIME_SPEC.md package 1.1). An error is the document
+# Error catalog (crates/DESIGN.md, "Agent and web interface"). An error is the document
 # {code, class, message, remediation, fields} (operations.toml, shape.Error). HTTP sends
 # it as `{"error": ..., "meta": ...}` with the code's status; MCP returns the same
 # document as a tool error; a process that refuses to start prints it on stderr and
-# exits with the code's `exit`. Approved at checkpoint 1.
+# exits with the code's `exit`. Changing a code is a maintainer decision.
 #
 # code       stable; `fields` lists the keys of its `fields` object.
 # class      usage 400/422, not_found 404, conflict 409, order_blocked 422,

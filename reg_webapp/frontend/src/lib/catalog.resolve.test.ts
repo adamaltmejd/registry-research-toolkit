@@ -34,7 +34,7 @@ describe("resolveBindingAt", () => {
       }),
     ];
     // Fails if resolveBindingAt stops reading the `period` states facet or
-    // resolves co-existing columns to one type (RUST_RUNTIME_SPEC.md package C).
+    // resolves co-existing columns to one type.
     vi.mocked(getStates).mockResolvedValue(states);
     const r = await resolveBindingAt("scb/lisa/yrke", "2015", "v1");
     expect(r.kind).toBe("ambiguous");

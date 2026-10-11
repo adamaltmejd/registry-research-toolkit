@@ -561,7 +561,7 @@ CREATE TABLE IF NOT EXISTS coded_variable_stats (
 
 # Derived search indexes (derive/search_index.py `derive_search_indexes`). Regular FTS5 tables
 # holding `fold_search` text, so one fold serves the build and the reader
-# (RUST_RUNTIME_SPEC.md decision 16): the tokenizer only splits. Key columns are
+# (crates/DESIGN.md, "Search"): the tokenizer only splits. Key columns are
 # stored verbatim and UNINDEXED, so joins hold and they never match as tokens.
 # Display text comes from the base tables, never from these.
 SEARCH_INDEX_DDL = """\

@@ -1,7 +1,8 @@
-# Operation table (RUST_RUNTIME_SPEC.md package 1.1): the API contract the Rust server
-# implements, defined once and exposed over HTTP and MCP (section 7). Error codes live in
+# Operation table: the API contract the Rust server implements, defined once and
+# exposed over HTTP and MCP (crates/DESIGN.md, "Agent and web interface"). Error codes live in
 # `errors.toml`; `conformance/test_api_spec.py` lints both and the `api` cases.
-# Approved at checkpoint 1; choices section 7 does not dictate say so in `note`.
+# Changing it is a maintainer decision; choices the interface rules do not dictate say
+# so in `note`.
 #
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
 # `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads

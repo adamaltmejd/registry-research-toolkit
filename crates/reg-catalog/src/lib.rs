@@ -1,4 +1,4 @@
-//! `reg-catalog`: the reader (`RUST_RUNTIME_SPEC.md` sections 6 and 7). It opens and
+//! `reg-catalog`: the reader (`crates/DESIGN.md`, "Crates and run modes"). It opens and
 //! admits one catalog artifact and defines the operation set ([`ops`]), which the
 //! `reg-meta` binary serves.
 

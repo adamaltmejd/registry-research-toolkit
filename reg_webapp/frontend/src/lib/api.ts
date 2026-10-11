@@ -185,7 +185,7 @@ export function triggerDownload(blob: Blob, filename: string): void {
   URL.revokeObjectURL(url);
 }
 
-// ── Catalog surface (the Rust server, RUST_RUNTIME_SPEC.md package C) ──────────
+// ── Catalog surface (the Rust server) ──────────────────────────────────────────
 // Every catalog read answers `{data, meta}`; the helpers below return `data`.
 // `show` summarizes any ref (no ref is the catalog root); the heavy parts are
 // facets, each its own request: a variable's `states`, `warnings`, `lineage` and
@@ -385,7 +385,7 @@ const STATES_PAGE = 200;
  * `_default` (and no period) is the whole history, one read without `period`; a
  * comma list (a source's disjoint windows) is one read per member, merged and
  * deduplicated by `key`. Project validation accepts the list grammar, catalog
- * reads one period each (RUST_RUNTIME_SPEC.md package C). */
+ * reads one period each. */
 async function readPerPeriod<T>(
   period: string | null | undefined,
   read: (period: string | undefined) => Promise<T[]>,
@@ -526,7 +526,7 @@ export function getLineage(ref: string): Promise<LineageModel> {
   return rustGet<LineageModel>(`/lineage/${encodeFqid(ref)}`);
 }
 
-// ── Project surface (the Rust server, RUST_RUNTIME_SPEC.md package 3e.4) ─────
+// ── Project surface (the Rust server) ──────────────────────────────────────────
 // `validate` and `order` take the WHOLE serialized draft as the POST body, a raw
 // object: malformed uploads (including unknown root keys) must reach the server
 // unchanged so `validate` can diagnose them.
@@ -604,7 +604,7 @@ export function orderFindingsFromError(e: unknown): OrderBlocking[] {
 }
 
 // ── Search surface (#379) ───────────────────────────────────────────────────
-// The Rust server's `search` (`GET /api/search?q=`, decision 17): one ranked list
+// The Rust server's `search` (`GET /api/search?q=`): one ranked list
 // per call, `{items, next_cursor}` inside `{data, meta}`. With `type` the list is
 // one arm's hits (its pins first); without it, every arm's hits ranked together
 // (grouped variable members hidden). A concept-group hit (`type:"group"`) is not

@@ -11,7 +11,7 @@ interface Env {
   ASSETS: Fetcher;
   DEPLOY_VERSION: string;
   // "true" in wrangler.jsonc only: the global catalog is the hosted MCP endpoint
-  // (RUST_RUNTIME_SPEC.md decision 12); a steward deployment serves none.
+  // (crates/DESIGN.md, "Hosted MCP"); a steward deployment serves none.
   ROUTE_MCP?: string;
   // Secret (`wrangler secret put EDGE_TOKEN`), equal to the origin's
   // REG_META_EDGE_TOKEN: it proves a request came through this worker, so the
