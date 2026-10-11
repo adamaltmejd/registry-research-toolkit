@@ -81,11 +81,14 @@ def _snapshot_variables(slug_dir: Path) -> dict[str, str]:
     return json.loads(snapshot_path(slug_dir).read_text(encoding="utf-8"))["variable"]
 
 
-def _assert_refused(code: int, data: dict, slug_dir: Path, pin: Path) -> None:
+def _assert_refused(code: int, data: dict, slug_dir: Path, pin: str) -> None:
+    """`pin` is the auto file's repo-relative path: the refusal and its `git`
+    remediation name it so, never the host-specific absolute path (#1449)."""
     assert code == 10
     (error,) = data["parse_errors"]
     assert error["code"] == "slug_pin_uncommitted"
-    assert str(pin) in error["message"]
+    assert pin in error["message"] and pin in error["remediation"]
+    assert str(slug_dir.parent) not in error["message"] + error["remediation"]
     assert data["snapshot"]["update_skipped_reason"] == "parse_errors"
     assert not snapshot_path(slug_dir).exists()
 
@@ -114,7 +117,7 @@ def test_uncommitted_pinned_auto_refused(catalog, tmp_path, capsys, state):
 
     code, data = run_precheck(db_dir, slug_dir, capsys)
 
-    _assert_refused(code, data, slug_dir, slug_dir / _AUTO)
+    _assert_refused(code, data, slug_dir, f"slugs/{_AUTO}")
 
 
 def test_committed_pinned_auto_accepted(catalog, tmp_path, capsys):
@@ -170,7 +173,7 @@ def test_inherited_git_routing_ignored(catalog, tmp_path, capsys, monkeypatch):
 
     code, data = run_precheck(db_dir, slug_dir, capsys)
 
-    _assert_refused(code, data, slug_dir, slug_dir / _AUTO)
+    _assert_refused(code, data, slug_dir, f"slugs/{_AUTO}")
 
 
 def test_unreadable_git_fails_closed(catalog, tmp_path, capsys):
@@ -218,7 +221,7 @@ def test_register_tree_guard_reads_the_loaders_pin_path(catalog, tmp_path, capsy
 
     code, data = run_precheck(db_dir, root, capsys)
 
-    _assert_refused(code, data, root, pin)
+    _assert_refused(code, data, root, "registers/scb/sample.auto.toml")
 
     _git(root, "add", "-f", str(pin))
     _git(root, "commit", "-m", "pin")

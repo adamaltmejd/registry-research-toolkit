@@ -37,7 +37,12 @@ import reg_meta_build
 
 # The digest and staging helpers are shared with the tooling caches.
 sys.path.append(str(Path(__file__).resolve().parents[1] / "scripts"))
-from keyed_cache import NATIVE_SOURCES as _NATIVE_SOURCES, staged, tree_digest
+from keyed_cache import (
+    NATIVE_SOURCES as _NATIVE_SOURCES,
+    native_doc,
+    staged,
+    tree_digest,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -165,6 +170,14 @@ def installed_distributions() -> list[str]:
     )
 
 
+def _native_files(root: Path) -> list[Path]:
+    """The files under the native source `root` the key hashes: not its
+    documentation (`native_doc`)."""
+    files = [root] if root.is_file() else [p for p in root.rglob("*") if p.is_file()]
+    repo = CASES.parents[1]
+    return [p for p in files if not native_doc(p.relative_to(repo).as_posix())]
+
+
 def build_inputs_digest(
     *,
     packages: Sequence[Path] = BUILD_PACKAGES,
@@ -184,7 +197,9 @@ def build_inputs_digest(
     return canonical_sha256(
         {
             "packages": [tree_digest(package) for package in packages],
-            "native": [tree_digest(path) for path in NATIVE_SOURCES],
+            "native": [
+                tree_digest(path, _native_files(path)) for path in NATIVE_SOURCES
+            ],
             "builder": tree_digest(builder),
             "distributions": list(
                 distributions

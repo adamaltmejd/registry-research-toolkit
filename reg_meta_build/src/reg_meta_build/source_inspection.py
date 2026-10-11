@@ -20,7 +20,7 @@ from reg_meta_build.input_snapshot import (
     _tracked_source_commit,
     _update_record_hash,
 )
-from reg_meta_build.native_sources import native_sources
+from reg_meta_build.native_sources import native_doc, native_sources
 from reg_meta_build.source_records import (
     NativeCoordinates,
     ScopeInterval,
@@ -514,8 +514,13 @@ def _annual_targets_within_workbook_scope(
 def _native_sources(repo: Path) -> list[Path]:
     """The tracked sources `reg_core_py` (the FQID and period grammar) is built from.
     The extension loads from the environment, not the checkout, so its sources are
-    named by path."""
-    tracked = _git(repo, "ls-files", "--", *native_sources(repo)).splitlines()
+    named by path. Their documentation (`native_doc`) is not pinned."""
+    sources = native_sources(repo)
+    tracked = [
+        path
+        for path in _git(repo, "ls-files", "--", *sources).splitlines()
+        if not native_doc(path, sources)
+    ]
     if not any(path.startswith("crates/reg-core-py/") for path in tracked):
         raise SnapshotError(
             "source record interpreter dependency reg-core-py is not tracked in "

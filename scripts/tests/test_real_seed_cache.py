@@ -386,6 +386,17 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
         True,
     )
 
+    # Fails if the key hashes documentation under the native sources (a docs-only
+    # edit to `crates/reg-core` cost a full build, #1476), or if leaving it out drops
+    # a Rust source the extension is compiled from.
+    native = key()
+    with (tree / "crates/reg-core/DESIGN.md").open("a") as doc:
+        doc.write("\nEdited.\n")
+    documented = key()
+    with (tree / "crates/reg-core/src/lib.rs").open("a") as source:
+        source.write("\n// edited\n")
+    assert (documented, key() != native) == (native, True)
+
     with (package / "sources/sos.py").open("a") as source:
         source.write("\nimport reg_extra\n")
     code, refused = keyed()

@@ -1,0 +1,7 @@
+{
+  "exit_code": 1,
+  "stdout_contains": [
+    "(+1) v=1\n",
+    "(-1) v=\"1\"\n"
+  ]
+}

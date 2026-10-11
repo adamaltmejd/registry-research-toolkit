@@ -32,10 +32,19 @@ _REPO = Path(__file__).resolve().parents[1]
 # The sources `reg-core-py` is built from, read from its uv `cache-keys`: `uv run`
 # rebuilds the extension when they change, and so must every cache of builder output.
 # The builder's source-record pin reads the same list; the file is loaded by path, as
-# this module runs without the project environment.
-NATIVE_SOURCES = runpy.run_path(
+# this module runs without the project environment. Documentation under them
+# (`native_doc`) is never keyed.
+_NATIVE = runpy.run_path(
     str(_REPO / "reg_meta_build/src/reg_meta_build/native_sources.py")
-)["native_sources"](_REPO)
+)
+NATIVE_SOURCES = _NATIVE["native_sources"](_REPO)
+
+
+def native_doc(path: str) -> bool:
+    """Whether the repo-relative file `path` is documentation under `NATIVE_SOURCES`."""
+    return _NATIVE["native_doc"](path, NATIVE_SOURCES)
+
+
 # What builder output depends on: the builder, the locked dependencies and the
 # native extension. Repo-relative, in key order.
 BUILDER_SOURCES = ("reg_meta_build/src", "uv.lock", *NATIVE_SOURCES)

@@ -1,0 +1,13 @@
+{
+  "replaces": "none: new behavior (#1449)",
+  "fails_if": "the text report prints a sample cell's value without its storage class (say with `str()`), so integer 1 and text '1' print alike and the one differing row reads as the same row on both sides",
+  "note": "#1449. `--json` keeps the storage class (`storage-class-alone-is-a-content-difference`); the text report marks it by printing a text value as a JSON string, quoted, and a number bare.",
+  "argv": [
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

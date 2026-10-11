@@ -1444,6 +1444,13 @@ def _cmd_inspect_source_records(
             ),
         ) from exc
     data = report.model_dump(mode="json", exclude_none=True)
+    # `scb_edition_present` is three-valued: unknown prints as null, so it never
+    # reads like an absent key. Every other None field is a field with no value and
+    # stays out (a source record has dozens).
+    for outcome, dumped in zip(
+        report.comparison_outcomes, data["comparison_outcomes"], strict=True
+    ):
+        dumped["scb_edition_present"] = outcome.scb_edition_present
     data["semantic_sha256"] = report_semantic_sha256(report)
     return success_envelope(
         command="inspect-source-records",
