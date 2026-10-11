@@ -16,11 +16,11 @@ from __future__ import annotations
 
 import hashlib
 import os
+import runpy
 import shutil
 import sys
 import tempfile
 import time
-import tomllib
 from contextlib import contextmanager, suppress
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -28,41 +28,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
-NATIVE_PROJECT = "crates/reg-core-py"
-
-
-def _native_sources() -> tuple[str, ...]:
-    """`NATIVE_PROJECT`'s uv `cache-keys` as repo-relative paths, in their order.
-
-    Each entry must be a `file` key naming one path or a whole directory (`<dir>/**`);
-    any other key or glob is refused rather than dropped, since a dropped source would
-    go unkeyed.
-    """
-    repo = Path(__file__).resolve().parents[1]
-    project = repo / NATIVE_PROJECT
-    keys = tomllib.loads((project / "pyproject.toml").read_text())["tool"]["uv"][
-        "cache-keys"
-    ]
-    sources = []
-    for key in keys:
-        base = (
-            key["file"].removesuffix("**").removesuffix("/")
-            if isinstance(key, dict) and key.keys() == {"file"}
-            else None
-        )
-        if base is None or any(char in base for char in "*?[{"):
-            raise RuntimeError(
-                f"{NATIVE_PROJECT}/pyproject.toml cache-key {key!r} is not a path or "
-                "`<dir>/**`; extend keyed_cache._native_sources to key it"
-            )
-        path = Path(os.path.normpath(project / base))
-        sources.append(path.relative_to(repo).as_posix())
-    return tuple(sources)
-
-
+_REPO = Path(__file__).resolve().parents[1]
 # The sources `reg-core-py` is built from, read from its uv `cache-keys`: `uv run`
 # rebuilds the extension when they change, and so must every cache of builder output.
-NATIVE_SOURCES = _native_sources()
+# The builder's source-record pin reads the same list; the file is loaded by path, as
+# this module runs without the project environment.
+NATIVE_SOURCES = runpy.run_path(
+    str(_REPO / "reg_meta_build/src/reg_meta_build/native_sources.py")
+)["native_sources"](_REPO)
 # What builder output depends on: the builder, the locked dependencies and the
 # native extension. Repo-relative, in key order.
 BUILDER_SOURCES = ("reg_meta_build/src", "uv.lock", *NATIVE_SOURCES)

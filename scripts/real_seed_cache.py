@@ -31,27 +31,36 @@ The prepare and build keys hash code as the working-tree content of the files gi
 would commit: tracked files, uncommitted edits included, and untracked files
 `.gitignore` does not exclude (a new module the code imports), but not ignored junk
 (`.DS_Store`, build output). The native extension sources are the uv `cache-keys` of
-`crates/reg-core-py` (`keyed_cache.NATIVE_SOURCES`); since the extension is compiled,
-every key also holds `rustc -V`, run from the repository root.
+`crates/reg-core-py` (`keyed_cache.NATIVE_SOURCES`, read by
+`reg_meta_build.native_sources`); since the extension is compiled, every key also holds
+`rustc -V`, run from the repository root.
 
 Prepare key: the raw bundle commit, `catalog-bundle.json` digest and the bundle's path
 in its repository (the manifest records it); the content of every file in the code
-boundary (`prepare_code_files`: the builder's own static import walk, which the probe
-runs, `uv.lock`, and the native extension sources because a walked module imports
-`reg_core_py`); the Python, SQLite
-and Rust toolchain versions. A prepare entry is an index record (prepared path and
+boundary (`prepare_code_files`: the builder's own static import walk from the
+`prepare-sources` entry point, which the probe runs, less the comparison-only modules
+it reaches (`PREPARE_UNKEYED`), plus `uv.lock`, and the native extension sources
+because a walked module imports `reg_core_py`); the Python, SQLite and Rust toolchain
+versions. A release's version bumps leave it unchanged (`prepare_code`): a walked
+file's `__version__` value is normalized as the resolve fingerprint does, and
+`uv.lock` and `Cargo.lock` leave out the workspace members' own versions; a
+third-party pin still moves it. A prepare entry is an index record (prepared path and
 top-level manifest digest), not a copy of the 14 GB tree the maintainer commits to a
 local acceptance repository. A lookup runs the builder's own warm-build check
 (`open_prepared_catalog_sources`) against that repository's current HEAD; a hit
 returns HEAD as the acceptance commit. A tree not yet committed at HEAD, with its
 payload inventory complete, is reported as awaiting acceptance, without a rerun. Any
-other failed check drops the record and misses.
+other failed check drops the record and misses. `prepare --adopt DIR` records an
+accepted tree of the same bundle under the current key without a rerun (one prepared
+under an earlier key, when the maintainer judges the code change cannot reach it); the
+record must pass the same lookup check.
 
-Build key: the content of `reg_meta_build/src`, `uv.lock` and the native extension
-sources; the builder's own `curation_tree_sha256` of the selected curation tree; the
-prepared commit and manifest digest; the mode and the `--registers` scopes as a sorted
-set (the builder selects by set); the Python, SQLite and Rust toolchain versions; and
-for a publishable build the checkout's HEAD, which the database records.
+Build key: the raw content of `reg_meta_build/src`, `uv.lock` and the native extension
+sources (a build may record versions); the builder's own `curation_tree_sha256` of the
+selected curation tree; the prepared commit and manifest digest; the mode and the
+`--registers` scopes as a sorted set (the builder selects by set); the Python, SQLite
+and Rust toolchain versions; and for a publishable build the checkout's HEAD, which
+the database records.
 Every build lookup, hit or miss, first runs the admission checks the builder runs
 before it resolves anything (the prepared tree at the pinned commit and, for a
 publishable build, a clean builder checkout at the keyed commit); a failure exits 10
@@ -65,7 +74,7 @@ entries stay, and so does any entry used within 6 hours.
 Resolve key: the builder's own `resolve_code_sha256` (`reg_meta_build.resolve_code`:
 the static import closure of `pipeline`, the `reg_core_py` package files and the
 Python version, reported by the probe), `uv.lock` (third-party versions, which that
-fingerprint leaves out; `resolve_lock_sha256` leaves out the workspace members' own
+fingerprint leaves out; `lock_sha256` leaves out the workspace members' own
 versions), the `curation_tree_sha256`, the prepared commit and manifest
 digest, the mode, the `--registers` scopes as a sorted set, and the Python, SQLite and
 Rust toolchain versions; never HEAD (`materialize-db` stamps the running commit). A
@@ -153,7 +162,9 @@ BUNDLE_REFUSAL_PREFIX = "resolved_bundle_"
 PACKAGE_SOURCE = "reg_meta_build/src"
 # The prepare key's code boundary, as roots of a static import walk
 # (`prepare_code_files`): the preparation entry point, and the modules the CLI's
-# `prepare-sources` handler and its output-confinement check import from.
+# `prepare-sources` handler imports from. Not `db`: the walk from here does not reach
+# it, and the CLI calls it only for parser help text and for the confinement check of
+# an `--output` this tool never passes, neither of which reaches the prepared output.
 #
 # Revisit when `prepare-sources` gains an option or a new input, when the CLI handler
 # starts calling a module outside this walk, or when a module in the walk starts
@@ -165,10 +176,18 @@ PACKAGE_SOURCE = "reg_meta_build/src"
 PREPARE_ROOTS = (
     "reg_meta_build.prepared_catalog",
     "reg_meta_build.input_snapshot",
-    "reg_meta_build.db",
     "reg_meta_build.source_files",
     "reg_meta_build._curation",
 )
+# Walked but not keyed: modules the walk reaches only through code `prepare-sources`
+# never calls. `input_snapshot` imports `dbdiff` at load for `verify_build_lock`, a
+# build-lock comparison. The walk still follows their imports, and the key refuses an
+# entry the walk no longer reaches, so a stale one names itself.
+PREPARE_UNKEYED = ("reg_meta_build/src/reg_meta_build/dbdiff.py",)
+# Lock files whose workspace members' own versions the prepare key leaves out
+# (`lock_sha256`; the resolve key holds `uv.lock` the same way): a release bumps them,
+# and nothing prepared or resolved reads them.
+VERSIONED_LOCKS = ("uv.lock", "Cargo.lock")
 # Keyed by content but not walked: the CLI imports every subcommand's module at load,
 # so walking it would key prepare on the whole builder. Their import-time code runs
 # but does not reach the prepared output.
@@ -177,7 +196,8 @@ PREPARE_ENTRY_FILES = ("reg_meta_build/src/reg_meta_build/cli.py",)
 # and SQLite the builder runs on, the builder's own curation digest (the value a
 # build records as `curation_tree_sha256`), the builder's resolve-code fingerprint
 # (the value a resolved bundle records), the builder's own import walk from the
-# prepare roots (the files it reaches and the other packages it imports), the
+# prepare roots (the files it reaches, digested as the fingerprint digests them, and
+# the other packages it imports), the
 # builder's warm-build check of an
 # accepted prepared tree at its repository's HEAD, and the admission checks a build
 # runs before it resolves anything (the same check of the prepared pins and, for a
@@ -215,15 +235,16 @@ if request.get("resolve_code"):
             "message": f"{type(exc).__name__}: {exc}",
         }
 if request.get("prepare_roots"):
-    from reg_meta_build.resolve_code import code_files, import_closure
+    from reg_meta_build.resolve_code import code_files, import_closure, source_sha256
     try:
         modules, imports = import_closure(
             Path(request["source_root"]), request["prepare_roots"]
         )
         facts["prepare_code"] = {
-            "files": sorted(
-                p.relative_to(root).as_posix() for p in code_files(modules.values())
-            ),
+            "files": {
+                p.relative_to(root).as_posix(): source_sha256(p)
+                for p in sorted(code_files(modules.values()))
+            },
             "imports": sorted(imports),
         }
     except Exception as exc:
@@ -401,22 +422,43 @@ def prepare_code_files(walk: dict) -> list[str]:
     imports, whether or not the prepare path reaches them. A module that imports by
     name at run time (`import_module`) pulls in its whole package. Data files beside
     any walked module count, as do the native extension sources when a walked module
-    imports `reg_core_py`, and `uv.lock` always.
+    imports `reg_core_py`, and `uv.lock` always; `PREPARE_UNKEYED` does not.
     """
     if unkeyed := sorted(set(walk["imports"]) & workspace_packages()):
         sys.exit(
             f"real-seed-cache: the prepare walk reaches workspace packages {unkeyed} "
             "that it does not key; extend the walk to them"
         )
+    walked = set(walk["files"])
+    if stale := sorted(set(PREPARE_UNKEYED) - walked):
+        sys.exit(
+            f"real-seed-cache: the prepare walk no longer reaches {stale}; drop them "
+            "from PREPARE_UNKEYED"
+        )
     # A walked module git ignores stays listed, so `code_digests` refuses it; ignored
     # data beside a module is junk, never keyed.
-    files = {path for path in walk["files"] if path.endswith(".py")}
-    files |= repo_files(walk["files"])
+    files = {path for path in walked if path.endswith(".py")} | repo_files(walked)
+    files -= set(PREPARE_UNKEYED)
     files.update(PREPARE_ENTRY_FILES)
     files.add("uv.lock")
     if "reg_core_py" in walk["imports"]:
         files.update(NATIVE_SOURCES)
     return sorted(files)
+
+
+def prepare_code(walk: dict) -> dict[str, str]:
+    """The prepare key's code digests: `prepare_code_files`, with a release's version
+    bumps left out.
+
+    A walked file keeps the digest the probe reported, which normalizes `__version__`
+    as the resolve fingerprint does; a lock leaves out its workspace members' own
+    versions (`lock_sha256`). Every other change, a third-party pin included, still
+    moves the key.
+    """
+    code = code_digests(prepare_code_files(walk))
+    code.update({path: sha for path, sha in walk["files"].items() if path in code})
+    code.update({lock: lock_sha256(lock) for lock in VERSIONED_LOCKS if lock in code})
+    return code
 
 
 # -- prepare -----------------------------------------------------------------------
@@ -431,7 +473,7 @@ def prepare_fields(args: argparse.Namespace) -> dict:
         "bundle_commit": args.input_commit,
         "bundle_manifest_sha256": args.input_manifest_sha256,
         "bundle_path": git(Path(args.input_bundle), "rev-parse", "--show-prefix"),
-        "code": code_digests(prepare_code_files(facts.pop("prepare_code"))),
+        "code": prepare_code(facts.pop("prepare_code")),
         "runtime": {**facts, "rustc": rustc_version()},
     }
 
@@ -538,6 +580,49 @@ def run_prepare(args: argparse.Namespace, output: Path) -> dict | None:
     return result
 
 
+def adopt_prepare(args: argparse.Namespace, home: Path, key: str, fields: dict) -> int:
+    """Record the prepared tree `args.adopt` under `key` without a rerun.
+
+    For a tree prepared under another key that the maintainer judges this key's code
+    would prepare the same way: that judgment is the caller's, and only the tree's
+    bundle is checked against the key. The record then passes the lookup's own
+    acceptance check, or is dropped.
+    """
+    # A valid record already serves this key; never trade it for an unchecked tree.
+    if hit := lookup_prepare(home, key):
+        emit(hit)
+        return 0
+    prepared = Path(args.adopt)
+    manifest = json.loads((prepared / "manifest.json").read_text())
+    recorded = [
+        manifest.get(name)
+        for name in ("input_commit", "bundle_manifest_sha256", "bundle_path")
+    ]
+    keyed = [
+        fields["bundle_commit"],
+        fields["bundle_manifest_sha256"],
+        # `--show-prefix` is empty at the repository root, where the manifest says ".".
+        fields["bundle_path"].removesuffix("/") or ".",
+    ]
+    if recorded != keyed:
+        sys.exit(f"real-seed-cache: {prepared} was prepared from another bundle")
+    write_json(
+        home / f"{key}.json",
+        {
+            "key": key,
+            "fields": fields,
+            "prepared_path": str(prepared),
+            "manifest_sha256": file_sha256(prepared / "manifest.json"),
+            "adopted": True,
+        },
+    )
+    if hit := lookup_prepare(home, key):
+        emit(hit)
+        return 0
+    emit({"hit": False, "stored": False, "reason": "not an accepted prepared tree"})
+    return 1
+
+
 def cmd_prepare(args: argparse.Namespace) -> int:
     fields = prepare_fields(args)
     key = digest(fields)
@@ -545,6 +630,12 @@ def cmd_prepare(args: argparse.Namespace) -> int:
         emit({"key": key, "fields": fields})
         return 0
     home = cache_dir("prepare")
+    if args.adopt:
+        if args.output_dir is not None:
+            sys.exit(
+                "real-seed-cache: --adopt records an existing tree; drop --output-dir"
+            )
+        return adopt_prepare(args, home, key, fields)
     if hit := lookup_prepare(home, key):
         emit(hit)
         return 0
@@ -559,7 +650,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             emit(hit)
             return 0
         result = run_prepare(args, output)
-        if result is None or code_digests(fields["code"]) != fields["code"]:
+        if result is None or prepare_fields(args)["code"] != fields["code"]:
             reason = (
                 "prepare-sources failed"
                 if result is None
@@ -592,21 +683,27 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 # -- build -------------------------------------------------------------------------
 
 
-def resolve_lock_sha256() -> str:
-    """`uv.lock` as the resolve key holds it: every third-party pin, without the
-    workspace members' own versions.
+def lock_sha256(name: str) -> str:
+    """The lock file `name` (one of `VERSIONED_LOCKS`) as the prepare and resolve
+    keys hold it: every third-party pin, without the workspace members' own versions.
 
     A release bumps a member's version (and `reg_meta_build`'s `__version__`, which
-    the builder's fingerprint normalizes), and no resolution reads it, so the
-    release build keeps reusing the bundle its candidate resolved. The build key
-    still holds the raw file. `Cargo.lock`, which a `reg_meta` release bumps, is not
-    in this key: the fingerprint holds the compiled `reg_core_py` instead.
+    the builder's fingerprint normalizes), and no preparation or resolution reads it,
+    so the release build keeps reusing the preparation and bundle its candidate made.
+    The build key still holds the raw files. The resolve key holds only `uv.lock`;
+    for `Cargo.lock`, which a `reg_meta` release bumps, its fingerprint holds the
+    compiled `reg_core_py` instead.
     """
-    lock = tomllib.loads((ROOT / "uv.lock").read_text())
-    members = set(lock["manifest"]["members"])
-    for package in lock["package"]:
-        if package["name"] in members:
-            del package["version"]
+    lock = tomllib.loads((ROOT / name).read_text())
+    if name == "uv.lock":
+        members = set(lock["manifest"]["members"])
+        local = [p for p in lock["package"] if p["name"] in members]
+    else:
+        # Cargo records no `source` for a workspace (path) package, and one for every
+        # registry or git dependency.
+        local = [p for p in lock["package"] if "source" not in p]
+    for package in local:
+        del package["version"]
     return digest(lock)
 
 
@@ -661,7 +758,7 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
         "step": "resolve",
         **shared,
         "resolve_code_sha256": resolve_code,
-        "uv_lock": resolve_lock_sha256(),
+        "uv_lock": lock_sha256("uv.lock"),
     }
     return {"step": "build", **shared, **code}, resolve
 
@@ -1018,8 +1115,14 @@ def main() -> int:
         "--input-manifest-sha256", required=True, help="raw catalog-bundle.json digest"
     )
     prepare.add_argument("--output-dir", help="new directory to prepare into on a miss")
-    prepare.add_argument(
+    prepare_mode = prepare.add_mutually_exclusive_group()
+    prepare_mode.add_argument(
         "--key", action="store_true", help="print the key and its fields only"
+    )
+    prepare_mode.add_argument(
+        "--adopt",
+        metavar="DIR",
+        help="record an accepted prepared tree of the same bundle under this key",
     )
     build = sub.add_parser("build", help="build-db, or its stored entry")
     build.add_argument("--prepared", required=True)
@@ -1055,7 +1158,7 @@ def main() -> int:
         )
     # Resolved once, so the key and the builder (run from the repository root) read
     # the same paths.
-    for name in ("input_bundle", "output_dir", "prepared", "curation_dir"):
+    for name in ("input_bundle", "output_dir", "adopt", "prepared", "curation_dir"):
         if getattr(args, name, None):
             setattr(args, name, str(Path(getattr(args, name)).expanduser().resolve()))
     return cmd_prepare(args) if args.command == "prepare" else cmd_build(args)

@@ -20,6 +20,7 @@ from reg_meta_build.input_snapshot import (
     _tracked_source_commit,
     _update_record_hash,
 )
+from reg_meta_build.native_sources import native_sources
 from reg_meta_build.source_records import (
     NativeCoordinates,
     ScopeInterval,
@@ -510,14 +511,11 @@ def _annual_targets_within_workbook_scope(
     return tuple(targets)
 
 
-# The sources `reg_core_py` (the FQID and period grammar) is built from: its uv
-# `cache-keys`. The extension loads from the environment, not the checkout, so its
-# sources are named by path.
-_NATIVE_SOURCES = ("crates/reg-core", "crates/reg-core-py", "Cargo.toml", "Cargo.lock")
-
-
 def _native_sources(repo: Path) -> list[Path]:
-    tracked = _git(repo, "ls-files", "--", *_NATIVE_SOURCES).splitlines()
+    """The tracked sources `reg_core_py` (the FQID and period grammar) is built from.
+    The extension loads from the environment, not the checkout, so its sources are
+    named by path."""
+    tracked = _git(repo, "ls-files", "--", *native_sources(repo)).splitlines()
     if not any(path.startswith("crates/reg-core-py/") for path in tracked):
         raise SnapshotError(
             "source record interpreter dependency reg-core-py is not tracked in "
@@ -544,6 +542,7 @@ def source_interpreter_commit() -> str:
             package / "edition_bounds.py",
             package / "source_evidence.py",
             package / "_curation.py",
+            package / "native_sources.py",
             package / "sources" / "lisa.py",
             package / "sources" / "scb_records.py",
             *_native_sources(repo),

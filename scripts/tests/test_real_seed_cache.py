@@ -357,6 +357,35 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
         key() == untracked_edited,
     ) == (True, True, True)
 
+    # Fails if the prepare key holds a module the walk reaches only through
+    # comparison code prepare never runs (a dbdiff-only change missed an accepted
+    # 14 GB preparation, #1452), or a release's version bumps: `__version__`, or a
+    # workspace member's own version in `uv.lock` or `Cargo.lock`.
+    with (package / "dbdiff.py").open("a") as source:
+        source.write("\n# edited\n")
+    init = package / "__init__.py"
+    init.write_text(init.read_text().replace('__version__ = "', '__version__ = "9'))
+    uv_lock, cargo_lock = tree / "uv.lock", tree / "Cargo.lock"
+
+    def bump(lock: Path, package: str) -> None:
+        pin = f'name = "{package}"\nversion = "'
+        assert pin in lock.read_text()
+        lock.write_text(lock.read_text().replace(pin, pin + "9"))
+
+    bump(uv_lock, "reg-meta-build")
+    bump(cargo_lock, "reg-meta")
+    released = key()
+    # Fails if that leaves out a third-party pin: a dependency bump in either lock
+    # would hit a preparation made with the old dependency.
+    bump(uv_lock, "openpyxl")
+    uv_bumped = key()
+    bump(cargo_lock, "serde")
+    assert (released, uv_bumped != released, key() != uv_bumped) == (
+        untracked_edited,
+        True,
+        True,
+    )
+
     with (package / "sources/sos.py").open("a") as source:
         source.write("\nimport reg_extra\n")
     code, refused = keyed()
