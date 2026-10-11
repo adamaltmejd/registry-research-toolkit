@@ -845,10 +845,12 @@ export const projectStore = {
    *                  name/period/metadata instead of minting a fresh source.
    * The next draft + rebuilt id mirror are computed BEFORE assigning either, so the
    * replacement is atomic (like open/new) and `dirty`/autosave recompute once.
+   * Returns false WITHOUT mutating on a null draft, or when a re-add's merged
+   * binding period is one reg-core rejects (#1462).
    */
-  applyStagedDiff(diff: StagedDiff): void {
+  applyStagedDiff(diff: StagedDiff): boolean {
     if (draft == null) {
-      return;
+      return false;
     }
     // The slots as stored. Each spread below is on a slot an accessor matched by a
     // non-empty `register_variant` or `name`, which only an object has.
@@ -894,6 +896,9 @@ export const projectStore = {
     //     period-less add made in this batch is never pinned: it inherits the
     //     source period the batch ends with, whatever the add order.
     const inheriting = new Set<unknown>();
+    // A re-add's merged binding period that reg-core rejects (`2099` plus
+    // `LA2099` union to overlapping members) refuses the whole batch.
+    let refused = false;
     for (const add of diff.adds ?? []) {
       const idx = sources.findIndex(
         (s) => safeSourceRegisterVariant(s) === add.registerVariant,
@@ -931,6 +936,16 @@ export const projectStore = {
       const own = isEmptyPeriod(add.period) ? null : add.period;
       // Only the added (or re-added) binding is rewritten; the rest stay as they
       // are, bar the pin above.
+      const mergedOwn = (
+        have: ProjectSourcePeriod,
+        more: ProjectSourcePeriod,
+      ): ProjectSourcePeriod => {
+        const merged = periodCoverageUnion(have, more);
+        if (datedIntervals(merged) === null) {
+          refused = true;
+        }
+        return merged;
+      };
       // The binding that survives this add, tracked in `inheriting` when it
       // takes the source period: a period-less add (or re-add) makes it inherit,
       // and a dated re-add keeps an inheriting binding inheriting.
@@ -953,9 +968,7 @@ export const projectStore = {
                 ? survive(
                     b,
                     // A re-add extends that binding's own years by the add's.
-                    own === null
-                      ? null
-                      : periodCoverageUnion(b.period ?? current, own),
+                    own === null ? null : mergedOwn(b.period ?? current, own),
                   )
                 : b,
             );
@@ -999,6 +1012,10 @@ export const projectStore = {
       );
     }
 
+    if (refused) {
+      return false;
+    }
+
     // (d) prune → drop a source ONLY when this batch removed a binding from it AND it
     //     is now empty. Scoping to `removedVariants` means a remove+add of the same
     //     register_variant keeps the source (the add refilled it), while a remove-only
@@ -1027,6 +1044,7 @@ export const projectStore = {
     if (ids !== null) {
       sourceIds = ids;
     }
+    return true;
   },
 
   /**

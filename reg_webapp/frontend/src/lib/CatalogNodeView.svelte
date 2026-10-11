@@ -772,7 +772,9 @@ const committedColumns = $derived.by((): Map<string, CommittedMarker> => {
         column.rows.every((row) => {
           const match = committedRows.get(pickerRowKey(band, row));
           if (match !== undefined) {
-            markers.push(committedMarker(match.period, boundedProjectWindow));
+            markers.push(
+              committedMarker(match.sourcePeriod, boundedProjectWindow),
+            );
           }
           // THIS VARIANT's eras for the name must be inside what was committed, not
           // just the ROW's: a #902 rename chain is ONE row spanning the whole chain,

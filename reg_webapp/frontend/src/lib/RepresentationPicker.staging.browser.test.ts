@@ -68,6 +68,7 @@ function committedRowsFor(
         representation: row.representation,
         sourceName: "Source",
         period: 2000,
+        sourcePeriod: 2000,
       },
     ],
   ]);
@@ -616,6 +617,7 @@ describe("RepresentationPicker dimension marking + filters (#908)", () => {
             representation: null,
             sourceName: "Source",
             period: 2020,
+            sourcePeriod: 2020,
           },
         ];
       }),

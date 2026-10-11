@@ -50,8 +50,12 @@ export interface PickerCommittedRow {
   variable: string;
   representation: string | null;
   sourceName: string;
-  /** The committed binding's period: its own (#1462), else its source's. */
+  /** The committed binding's period: its own (#1462), else its source's. What
+   * a delivery name's eras are checked against. */
   period: ProjectSourcePeriod;
+  /** The source's period: what the study-window marker reads, since blocking is
+   * source-level (reg_webapp/DESIGN.md). */
+  sourcePeriod: ProjectSourcePeriod;
   removals?: StagedRemove[];
 }
 
@@ -333,6 +337,7 @@ export function committedPickerRows(
           representation: bindingRepresentation(binding),
           sourceName: safeSourceName(source),
           period: bindingPeriod(binding) ?? period,
+          sourcePeriod: period,
         });
       }
       if (matched.length !== segments.length) {
@@ -837,7 +842,11 @@ export async function applyStagedPicks(
   const removes = payload.removes.flatMap((r) =>
     stagedRemoveForCommitted(r.committed),
   );
-  projectStore.applyStagedDiff({ adds, removes });
+  // A re-add whose merged binding period reg-core rejects refuses the batch
+  // without touching the draft (#1462).
+  if (!projectStore.applyStagedDiff({ adds, removes })) {
+    return { kind: "period-required" };
+  }
   return {
     kind: "applied",
     outcome: {

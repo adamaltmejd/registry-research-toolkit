@@ -170,6 +170,43 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     }
   });
 
+  it("refuses a re-add whose merged binding period reg-core rejects, beside its allowed twin (#1462)", () => {
+    // `2099` plus `LA2099` union to overlapping list members: the batch is
+    // refused and the draft untouched. Fails if the merged binding period is
+    // written unchecked. `2098` plus `LA2099` merges cleanly and lands.
+    for (const [own, ok] of [
+      [2099, false],
+      [2098, true],
+    ] as const) {
+      projectStore.newProject(SEED);
+      projectStore.updateField("sources", [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/v1",
+          period: { from: own, to: "LA2099" },
+          bindings: [
+            { variable: "scb/lisa/kon", type: "categorical" },
+            { variable: "scb/lisa/alder", type: "categorical", period: own },
+          ],
+        },
+      ]);
+      const before = JSON.stringify(storedProject());
+      expect(
+        projectStore.applyStagedDiff({
+          adds: [add("scb/lisa/v1", "scb/lisa/alder", "LA2099")],
+        }),
+      ).toBe(ok);
+      if (ok) {
+        expect(storedProject()?.sources[0].bindings[1].period).toEqual([
+          2098,
+          "LA2099",
+        ]);
+      } else {
+        expect(JSON.stringify(storedProject())).toBe(before);
+      }
+    }
+  });
+
   it("preserves token-grammar add windows as source-period coverage", () => {
     projectStore.newProject(SEED);
     projectStore.applyStagedDiff({

@@ -168,6 +168,13 @@ describe("committedPickerRows", () => {
       from: 2019,
       to: 2020,
     });
+    // The study-window marker reads the source's period: blocking is
+    // source-level, so a binding narrower than the window is not marked
+    // outside it. Fails if the marker is fed the binding's period.
+    expect(committed.get(pickerRowKey(b, newer))?.sourcePeriod).toEqual({
+      from: 2014,
+      to: 2020,
+    });
   });
 
   it("keys family rows by variant family and removes every concrete source", () => {
