@@ -182,7 +182,7 @@ slug = "bostadstyp"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 164)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 164)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"78f50a7b514af613a140f6822a42e8ca98afad51958f5af809e6385e7aa86fae\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"f45b854ddb8de165cee08e245ed91900647eddbeb697af0d20d90180ebf16b89\"]}"]
 expected_evidence_sha256 = "45b0d27aa715d0158544d16847ebc5895a956c6e6161870898467ce16c309ed3"

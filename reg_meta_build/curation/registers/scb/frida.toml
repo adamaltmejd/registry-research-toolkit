@@ -6302,7 +6302,7 @@ source = "codeless_overlap.toml#/resolve/23"  # v18 accepted-codeless:23:*, 2 ca
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 121)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 121)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e909cb4b13240ce6b30405acafbf18a1eb8233950da20dc3b15e41e97965db8f\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"3349f49d1368164aabf89785462920baa9b637805f7e7ae30b93d408beb29872\"]}"]
 expected_evidence_sha256 = "b3022d75e4694b0f228f21f1a384752e6500fe6df81ad1b9ba555df5188bb7f2"

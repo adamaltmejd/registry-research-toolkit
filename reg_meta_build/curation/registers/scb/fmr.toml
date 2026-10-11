@@ -22,7 +22,7 @@ slug = "balans-transaktionsvarde"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 181)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 181)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"56dcc3e48a50e6def89e0195ccb4bae330ba1e2f02005895a37936d678937ca8\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e2c940a9752238246c7b74cadc11b152637462bc52a8929d016c96f0e332460a\"]}"]
 expected_evidence_sha256 = "a387cddbe4ee1b3bfdf96e2a9aa79a1dddad399b58d09dbde78e39ca17be19cb"

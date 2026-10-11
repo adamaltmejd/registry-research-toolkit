@@ -18,7 +18,7 @@ slug = "varde"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 299)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 299)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"5dc24989144df2b52cadb5be89fc5433ba5b20b7fd459410e930a1fb03d2208c\"]}"]
 expected_evidence_sha256 = "2bc57e36b5e55f7b3a9f0ec49a1e3162a2b50a64fc577a5953673014958651fa"

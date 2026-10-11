@@ -105,7 +105,7 @@ slug = "totalbostadsarea"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 72)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 72)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"96c690ca810fa8b84506f377c05ffc6628af73121f63d6d47c12e3321ff3ce0e\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"37e5a3b59a5c422570f34a9a6d6bb6381b1d64797a7922970a8c550b37f851df\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"a7ea977ce180ddf90425d46f8cd357035a7656dd392146fe67385b3be9c843ba\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"41bd39baabe8da91d61ed186779bfa932a483b056a21c7efa24324e9dd5d2c92\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"35a0b3b573212d7b688d8cde60cdc1932e83a93d5ac7b3230d4d1226ca0c56de\"]}"]
 expected_evidence_sha256 = "4423fca45690e30f3203be9bdfac34845cb345e238ca0b5009252a15e580b99e"

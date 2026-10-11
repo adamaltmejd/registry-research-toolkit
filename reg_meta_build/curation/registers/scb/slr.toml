@@ -230,7 +230,7 @@ slug = "antal-semesterdagar"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 51)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 51)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"494a470e3217ea8cea40bbd86a2af120ca92f580edc39dffd7dbf696e120c40a\"]}"]
 expected_evidence_sha256 = "ba698625e05321e5c65952327202691aa5f27cf0684e232314e29c3e4b550392"

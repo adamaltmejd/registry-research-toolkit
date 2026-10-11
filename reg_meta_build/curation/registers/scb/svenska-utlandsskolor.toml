@@ -124,7 +124,7 @@ slug = "arskurs"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 192)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 192)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2b1c8c7fb1fd3fd6595789e24f166e4f450e8eb0cc255999a71b88e7de3ab33b\"]}"]
 expected_evidence_sha256 = "ed40984eda2162a5f2295e42371d3a7bd1525b4ef781bff00ca3f5388f2716a8"

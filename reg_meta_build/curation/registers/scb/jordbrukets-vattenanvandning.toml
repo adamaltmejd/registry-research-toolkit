@@ -42,7 +42,7 @@ slug = "vattendistrikt"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 289)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 289)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"066abdc915ae12ae08da1605d80e9f7d55d54ba8ee530513221ba162c89c0b94\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"bfb58f918c8a46bc04a0a4f61674f1cbf5f889c1fa88f294fd8e43adeb7fe220\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"14feda718660f4fc08b1ccceeebfc6defd8406cc165c978c3946bbaff7781a57\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e0f04672b6303bbd04f9545d56a760d5e435e2d78b416ee31683bdb7b50f0f3e\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e2fd697a1a673a6eb3db0eee295a4b42751c49474eae6b7967d50c2f86d171fc\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6c68347eda58c56e8b27a7f40ee3691dde8f8e9d09f3caedfec977d5c2501e50\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6e17968dadb6a3c15ec6611052d1bf17877b55e247b49bc2e00757a239ebbdaa\"]}"]
 expected_evidence_sha256 = "5addeb9405aef6332d1f5b1bec4263d2d48458db9c12778a2fa3fad71e076f1f"

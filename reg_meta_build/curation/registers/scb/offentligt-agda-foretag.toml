@@ -215,7 +215,7 @@ slug = "koncernniva"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 114)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 114)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"d5d7af37df1534930bd2feaf57c3bfb1c0ee1459053cc1ab5b0c19cb617ae2cd\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"e06c0a006446ef1896d1431d8222d337a54d542cac1b730811900c025526302a\"]}"]
 expected_evidence_sha256 = "43d5580a84efaf5f125666e256a8338021abaf4c6e7f8dd92f5ce4f3cd67aa92"

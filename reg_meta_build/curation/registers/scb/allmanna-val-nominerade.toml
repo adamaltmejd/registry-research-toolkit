@@ -174,7 +174,7 @@ slug = "parti-kort"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 239)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 239)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"b17cc420d6cce6cf3aaa1d405cabba0c186aee34b413f4ecf0755c65c8742d1d\"]}"]
 expected_evidence_sha256 = "083a737764dd419bdc1584c3b5c7c7bf9f3a2e776bdeac78a7b146c04e0bc176"

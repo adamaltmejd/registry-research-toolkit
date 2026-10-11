@@ -5923,7 +5923,7 @@ expected_evidence_sha256 = "4116937bc7e277b4aa229db31f6f1b9ec2f3857d9e972964ef88
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 237)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 237)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"21a88016485e8ca52be9184d8a43aca137b0b839dc57a490910ea46409613dd0\"]}"]
 expected_evidence_sha256 = "76679d7f776bcafb4471d3e679ad672c568b6f96fff488996ae5d70e2c66e37d"

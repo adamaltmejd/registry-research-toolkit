@@ -227,7 +227,7 @@ slug = "versionsnummer"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 296)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 296)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"ea2f4d7fe3beaf8492d8bf390d2c8cc2115cb0c07f9f5b6d03c998ffec2965f6\"]}"]
 expected_evidence_sha256 = "da1393d77a0f3f7fdffbd4abe4e4c8ea8e7250f51dd0fec40f750001a9673427"

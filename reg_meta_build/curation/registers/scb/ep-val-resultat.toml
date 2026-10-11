@@ -166,7 +166,7 @@ slug = "personroster-totalt"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 240)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 240)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2b49cb830ebc2922707be7b1723aa8e8fbfb1068d07cc9aece7157f2e520a53c\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"ef62c2a6ad912a5732dbf1a0e299b1e8872a183597a11c915357d84a48c24faa\"]}"]
 expected_evidence_sha256 = "4425af0fc5bc6acbb128735c26e180ff40acd6d77fbacba600f52e219833406a"

@@ -36,7 +36,7 @@ slug = "natpris-1-jan-industrikunder"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 284)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 284)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"39d2bc215c4e8647e06394d001b000da25adaf1e12b256a07f317ac4aa322586\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"216601f31eceec393fddd6f9755ffc3c2a9c3f66de109065c45fcbdba1b2a1a4\"]}"]
 expected_evidence_sha256 = "d1302f868115afca4e013666676dd8def65b8ac3bd8827ca05ece82ef5622902"

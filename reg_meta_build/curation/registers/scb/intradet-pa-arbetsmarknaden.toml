@@ -1373,7 +1373,7 @@ slug = "lilla-n-per-stratum-2"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 111)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 111)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"0a4771f6caa674f09da503cf1aae771309f13736e431bad15009621c137cf103\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"4946e2d3506cc276601a612767d4f4cb7bd496616e1a7e67de97255f883951e9\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"0436a62ff44d4e6e7d819bc3b5bcc57786d5451ef85b77b873032d192b5de38e\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"3484fc6b7685f4053de64558b7a71a5ee03277df6e55c04c0b36781d2fb941ad\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2edcad13685d4b5d5a2505ab42d9224b23e22a92c1f871c2b0d9817cbe73a68b\"]}"]
 expected_evidence_sha256 = "1b2ab28ec1a704899fe6a9858ecd325f3abf11b10d7272af22e4fb03337df735"
