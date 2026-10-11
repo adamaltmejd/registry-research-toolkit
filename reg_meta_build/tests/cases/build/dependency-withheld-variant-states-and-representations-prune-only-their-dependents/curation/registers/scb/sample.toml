@@ -34,5 +34,5 @@ columns_ref = "reviewed shared identity"
 register = "scb/sample"
 key = "columns"
 label = "Columns"
-axes = []
-members = [{ variable = "value", delivery_column = "VALUE" }, { variable = "par", delivery_column = "PAR_A" }, { variable = "par", delivery_column = "PAR_B" }]
+axes = [{ axis = "column", label = "Column" }]
+members = [{ variable = "value", delivery_column = "VALUE", coords = [{ axis = "column", value = "c", label = "Column" }] }, { variable = "par", delivery_column = "PAR_A", coords = [{ axis = "column", value = "c", label = "Column" }] }, { variable = "par", delivery_column = "PAR_B", coords = [{ axis = "column", value = "c", label = "Column" }] }]
