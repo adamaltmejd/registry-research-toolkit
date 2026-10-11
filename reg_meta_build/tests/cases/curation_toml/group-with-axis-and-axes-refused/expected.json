@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "With both shapes set, `axes` won and `axis` was ignored. Allowed twin: group-member-shapes-load, whose groups each name one shape.",
+  "fails_if": "the register loader accepts a [[group]] that sets both `axis` and `axes` and silently keeps one of them",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "set exactly one of `axis` or `axes`"
+    ]
+  }
+}

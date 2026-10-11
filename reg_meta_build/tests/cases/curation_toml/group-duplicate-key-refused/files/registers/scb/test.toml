@@ -7,9 +7,11 @@ native_id = "1"
 register = "scb/test"
 key = "family"
 label = "Family"
+axes = []
 members = [{ variable = "a" }, { variable = "b" }]
 [[group]]
 register = "scb/test"
 key = "family"
 label = "Other family"
+axes = []
 members = [{ variable = "c" }, { variable = "d" }]

@@ -27,9 +27,11 @@ slug = "else"
 register = "scb/sample"
 key = "first"
 label = "First"
+axes = []
 members = [{ variable = "value" }, { variable = "two" }]
 [[group]]
 register = "scb/sample"
 key = "second"
 label = "Second"
+axes = []
 members = [{ variable = "two" }, { variable = "else" }]
