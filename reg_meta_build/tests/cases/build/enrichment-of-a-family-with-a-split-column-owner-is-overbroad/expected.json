@@ -1,0 +1,20 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "overbroad_curation_entry"},
+      "fields": ["locator"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/enrichment.description/1"]
+      ]
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "provider_key", "description"],
+      "rows": [
+        ["a", "5", null],
+        ["b", "5.b", null]
+      ]
+    }
+  ]
+}
