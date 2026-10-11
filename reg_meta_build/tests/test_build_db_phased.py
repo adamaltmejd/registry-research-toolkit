@@ -23,6 +23,15 @@ if TYPE_CHECKING:
 # classification books and successions, and same-as relations, so the writer gets
 # every input a diagnostic build passes it.
 CLASSIFIED = Path(__file__).resolve().parent / "cases" / "cli" / "_classified"
+# A partition split whose only pin is an inactive generated one: a strict build
+# refuses it (`naming_partition_unconverted`), a diagnostic one withholds it.
+UNCONVERTED_SPLIT = (
+    Path(__file__).resolve().parent
+    / "cases"
+    / "build"
+    / "split-partition-inactive-generated-split-of-case-twins-withholds-the-split"
+    / "1-churning-zone"
+)
 
 
 def _pins(catalog: CatalogFixture) -> list[str]:
@@ -110,6 +119,163 @@ def test_rerun_is_byte_identical(
         **json.loads(json.dumps(unphased)),
         "database": None,
     }
+
+
+def test_strict_places_a_zero_error_diagnostic_bundle_as_a_strict_build(
+    prepared_cache: PreparedCache, tmp_path: Path, capsys
+) -> None:
+    # Fails if a strict materialize-db refuses a diagnostic bundle that has no
+    # errors and took no strict refusal (the release build would resolve again), or
+    # places it with the resolving run's mode instead of the requested one: the
+    # manifest's catalog_artifact_kind, the status or publication_ready would differ
+    # from the strict build's. Scoped, so no clean builder checkout is needed; the
+    # publishable leg (commit stamp, corpus guards) is the same code path.
+    prepared = prepared_cache.get(
+        json.loads((CLASSIFIED / "source.json").read_text(encoding="utf-8"))
+    )
+    shutil.copytree(CLASSIFIED / "curation", tmp_path / "curation")
+    catalog = CatalogFixture(
+        prepared.prepared, prepared.commit, prepared.digest, tmp_path / "curation"
+    )
+    registers = "11,12,13"
+    unphased = catalog.build(
+        tmp_path / "a.db", tmp_path / "a-report", registers=tuple(registers.split(","))
+    )
+    assert unphased["status"] == "complete"
+    assert (
+        run(
+            [
+                "build-db",
+                *_pins(catalog),
+                "--diagnostic",
+                "--diagnostic-db-path",
+                str(tmp_path / "b.db"),
+                "--registers",
+                registers,
+                "--report-dir",
+                str(tmp_path / "b-report"),
+                "--resolved-out",
+                str(tmp_path / "bundle"),
+            ]
+        )
+        == EXIT_CONFIG
+    )
+    capsys.readouterr()
+    assert (
+        run(
+            [
+                "--db",
+                str(tmp_path / "c"),
+                "materialize-db",
+                "--resolved",
+                str(tmp_path / "bundle"),
+                "--registers",
+                registers,
+                "--report-dir",
+                str(tmp_path / "c-report"),
+            ]
+        )
+        == 0
+    )
+    phased = json.loads(capsys.readouterr().out)
+    assert (tmp_path / "c/reg_meta.db").read_bytes() == (tmp_path / "a.db").read_bytes()
+    assert (tmp_path / "c-report/events.jsonl.gz").read_bytes() == (
+        tmp_path / "a-report/events.jsonl.gz"
+    ).read_bytes()
+    assert {**phased, "database": None} == {
+        **json.loads(json.dumps(unphased)),
+        "database": None,
+    }
+
+
+def test_strict_refuses_a_diagnostic_bundle_that_took_a_strict_refusal(
+    prepared_cache: PreparedCache, tmp_path: Path, capsys
+) -> None:
+    # Fails if a strict materialize-db places a diagnostic bundle that withheld an
+    # unconverted partition split a strict build refuses, once an acknowledgement
+    # has settled its only error: zero errors alone would admit it, and the strict
+    # catalog would silently lack the split a strict build never completes without.
+    request = json.loads((UNCONVERTED_SPLIT / "request.json").read_text("utf-8"))
+    prepared = prepared_cache.get(request["sources"])
+    shutil.copytree(UNCONVERTED_SPLIT / "curation", tmp_path / "curation")
+    (tmp_path / "curation" / "classifications").mkdir()
+    register = tmp_path / "curation" / "registers" / "scb" / "sample.toml"
+    # The split's two source rows (CVIDs 20 and 21), as the ledger names them.
+    refs = [
+        json.dumps(
+            json.dumps(
+                {
+                    "source": "scb-registerinformation",
+                    "semantic_record_key": [
+                        "register:1",
+                        "variant:10",
+                        f"edition:{year}",
+                        "variable:5",
+                        f"member:{cvid}",
+                    ],
+                }
+            )
+        )
+        for year, cvid in ((2020, 20), (2021, 21))
+    ]
+    register.write_text(
+        register.read_text(encoding="utf-8") + "[[acknowledge]]\n"
+        'code = "unresolved_catalog_identity"\n'
+        "subject = \"('scb-registerinformation', 'scb', 'register', 'native-int', 1, "
+        "'variable', 'native-int', 5, 'accepted-partition', '1.5.kon')\"\n"
+        f"refs = [{', '.join(refs)}]\n"
+        'fields = ["identity"]\n'
+        'reason = "Accepted while the split stays unconverted."\n'
+        'evidence = "Synthetic fixture issue."\n',
+        encoding="utf-8",
+    )
+    catalog = CatalogFixture(
+        prepared.prepared, prepared.commit, prepared.digest, tmp_path / "curation"
+    )
+    assert (
+        run(
+            [
+                "build-db",
+                *_pins(catalog),
+                "--diagnostic",
+                "--diagnostic-db-path",
+                str(tmp_path / "built.db"),
+                "--registers",
+                "1",
+                "--report-dir",
+                str(tmp_path / "report"),
+                "--resolved-out",
+                str(tmp_path / "bundle"),
+            ]
+        )
+        == EXIT_CONFIG
+    )
+    built = json.loads(capsys.readouterr().out)
+    assert (built["counts"].get("error", 0), built["acknowledged"]) == (
+        0,
+        {"unresolved_catalog_identity": 1},
+    )
+    assert (
+        run(
+            [
+                "--db",
+                str(tmp_path / "placed"),
+                "materialize-db",
+                "--resolved",
+                str(tmp_path / "bundle"),
+                "--registers",
+                "1",
+                "--report-dir",
+                str(tmp_path / "placed-report"),
+            ]
+        )
+        == EXIT_CONFIG
+    )
+    error = json.loads(capsys.readouterr().out)["error"]
+    assert error["code"] == "resolved_bundle_strict_refused"
+    assert str(tmp_path / "bundle" / "bundle.json") in error["message"]
+    assert not (tmp_path / "placed-report").exists()
+    assert not list(tmp_path.glob("placed*"))
 
 
 @pytest.mark.parametrize(

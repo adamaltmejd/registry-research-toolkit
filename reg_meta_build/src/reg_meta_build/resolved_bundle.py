@@ -17,6 +17,13 @@ Layout:
 Each frame has its own pickler and unpickler, so the pickle memo stays bounded by
 the largest variable. Loading checks every payload's size and SHA-256 before any
 unpickling and admits only `reg_meta_build` models through `find_class`.
+
+A bundle serves either mode. A strict resolution that did not raise took neither
+strict/diagnostic fork (`source_scope` names them), so a diagnostic one of the same
+inputs is identical. A diagnostic resolution equals the strict one only if it took
+neither fork (`strict_refusals == 0`), so only such a bundle, and only with no
+errors, is placed strictly. Publishability and `publication_ready` follow the
+request, never the resolving run.
 """
 
 from __future__ import annotations
@@ -57,7 +64,7 @@ if TYPE_CHECKING:
     )
     from reg_meta_build.resolved_metadata import ResolvedMetadata
 
-FORMAT_VERSION = 2
+FORMAT_VERSION = 3
 BUNDLE_FILE = "bundle.json"
 CODE_SETS_FILE = "code_sets.pickle.zst"
 HANDOFF_FILE = "handoff.pickle.zst"
@@ -68,8 +75,9 @@ BUNDLE_INVALID = "resolved_bundle_invalid"
 BUNDLE_DIGEST_MISMATCH = "resolved_bundle_digest_mismatch"
 BUNDLE_GLOBAL_REFUSED = "resolved_bundle_global_refused"
 BUNDLE_COUNT_MISMATCH = "resolved_bundle_count_mismatch"
-BUNDLE_MODE_MISMATCH = "resolved_bundle_mode_mismatch"
+BUNDLE_SCOPE_MISMATCH = "resolved_bundle_scope_mismatch"
 BUNDLE_BLOCKED = "resolved_bundle_blocked"
+BUNDLE_STRICT_REFUSED = "resolved_bundle_strict_refused"
 BUNDLE_CODE_MISMATCH = "resolved_bundle_code_mismatch"
 
 
@@ -132,13 +140,17 @@ class BundlePayloads(_Record):
 class BundleRecord(_Record):
     """`bundle.json`: what was resolved, from which pins, and the payload digests."""
 
-    format_version: Literal[2]
+    format_version: Literal[3]
     # `resolve_code.resolve_code_sha256()` of the builder that resolved.
     resolve_code_sha256: str = Field(pattern=_SHA256)
+    # The resolving run's mode, not a requirement on the materializing one.
     mode: Literal["strict", "diagnostic"]
     # The `--registers` selection as a sorted set; empty for a full build.
     registers: tuple[str, ...]
     publishable: bool
+    # Times a diagnostic resolution took a path a strict one refuses
+    # (`build_result.counts.strict_refusals`); always 0 for a strict bundle.
+    strict_refusals: int = Field(ge=0)
     prepared_commit: str = Field(pattern=r"^[0-9a-f]{40}$")
     prepared_manifest_sha256: str = Field(pattern=_SHA256)
     curation_tree_sha256: str = Field(pattern=_SHA256)
@@ -155,6 +167,16 @@ class BundleRecord(_Record):
             raise ValueError("registers must be a sorted set")
         if self.publishable != (self.mode == "strict" and not self.registers):
             raise ValueError("publishable must mean a strict full build")
+        counts = self.build_result.get("counts")
+        recorded = (
+            counts.get("strict_refusals", 0) if isinstance(counts, dict) else None
+        )
+        if recorded != self.strict_refusals or (
+            self.mode == "strict" and self.strict_refusals
+        ):
+            raise ValueError(
+                "strict_refusals must match build_result and be 0 for a strict bundle"
+            )
         if (
             self.build_result.get("variables"),
             self.build_result.get("states"),
@@ -263,6 +285,8 @@ def write_resolved_bundle(
     shutil.copyfile(resolved.ledger, directory / EVENTS_FILE)
     registers = result.get("registers", [])
     assert isinstance(registers, list)
+    counts = result["counts"]
+    assert isinstance(counts, dict)
     manifest = resolved.manifest
     record = BundleRecord(
         format_version=FORMAT_VERSION,
@@ -270,6 +294,7 @@ def write_resolved_bundle(
         mode="diagnostic" if resolved.diagnostic else "strict",
         registers=tuple(registers),
         publishable=resolved.publishable,
+        strict_refusals=counts.get("strict_refusals", 0),
         prepared_commit=manifest["prepared_commit"],
         prepared_manifest_sha256=manifest["prepared_manifest_sha256"],
         curation_tree_sha256=manifest["curation_tree_sha256"],
@@ -329,30 +354,43 @@ def admit_bundle_mode(
     diagnostic: bool,
     registers: tuple[str, ...],
 ) -> None:
-    """Refuse a bundle resolved for another artifact, or a blocked strict one."""
-    requested = (
-        "diagnostic" if diagnostic else "strict",
-        tuple(sorted(set(registers))),
-    )
-    if requested != (record.mode, record.registers):
+    """Refuse a bundle resolved for other registers, or one a strict request may
+    not place: a diagnostic bundle that took a path a strict resolution refuses, or
+    any bundle with resolution errors. Either mode's bundle is otherwise placed in
+    either mode."""
+    requested = tuple(sorted(set(registers)))
+    if requested != record.registers:
         raise _refusal(
-            BUNDLE_MODE_MISMATCH,
-            f"{directory / BUNDLE_FILE}: resolved as {record.mode} for registers "
-            f"{list(record.registers)}, requested {requested[0]} for "
-            f"{list(requested[1])}",
-            "Request the bundle's own mode and --registers, or resolve the requested "
+            BUNDLE_SCOPE_MISMATCH,
+            f"{directory / BUNDLE_FILE}: resolved for registers "
+            f"{list(record.registers)}, requested {list(requested)}",
+            "Request the bundle's own --registers, or resolve the requested "
             "artifact with build-db.",
             usage=True,
         )
+    if diagnostic:
+        return
+    if record.strict_refusals:
+        raise _refusal(
+            BUNDLE_STRICT_REFUSED,
+            f"{directory / BUNDLE_FILE}: this diagnostic resolution took "
+            f"{record.strict_refusals} path(s) a strict resolution refuses (a "
+            "per-column state overlap, or a partition split with no converted "
+            "naming), so it is not the strict resolution of its inputs",
+            "Find the overlapping_* issues, and the issues on an "
+            "'accepted-partition' key, in the bundle's events.jsonl.gz; fix their "
+            "curation rather than acknowledge them and resolve again, or place this "
+            "bundle with --diagnostic.",
+        )
     counts = record.build_result.get("counts")
     errors = counts.get("error", 0) if isinstance(counts, dict) else None
-    if record.mode == "strict" and errors != 0:
+    if errors != 0:
         raise _refusal(
             BUNDLE_BLOCKED,
-            f"{directory / BUNDLE_FILE}: a strict bundle with {errors} resolution "
-            "errors cannot be materialized",
+            f"{directory / BUNDLE_FILE}: a bundle with {errors} resolution errors "
+            "cannot be materialized strictly",
             "Resolve the errors in the bundle's events.jsonl.gz and rebuild, or "
-            "materialize a diagnostic bundle.",
+            "place the bundle with --diagnostic.",
         )
 
 
@@ -362,11 +400,14 @@ def load_resolved_bundle(
     *,
     output: Path,
     report_dir: Path,
+    diagnostic: bool,
 ) -> ResolvedBuild:
     """Verify and unpickle an admitted bundle; its ledger is placed by the caller.
 
     `report_dir / events.jsonl.gz` is where materialization appends its member.
-    The writer revalidates every model strictly.
+    The writer revalidates every model strictly. `diagnostic` is the requested
+    mode: with the bundle's registers it sets publishability and
+    `publication_ready`, whichever mode resolved.
     """
     for name, payload in (
         (HANDOFF_FILE, record.payloads.handoff),
@@ -413,14 +454,21 @@ def load_resolved_bundle(
             f"{result['states']}",
             _REBUILD,
         )
+    publishable = not diagnostic and not record.registers
+    counts = result["counts"]
+    assert isinstance(counts, dict)
     return ResolvedBuild(
         output=output,
         report_dir=report_dir,
         ledger=report_dir / "events.jsonl.gz",
-        diagnostic=record.mode == "diagnostic",
+        diagnostic=diagnostic,
         scoped=bool(record.registers),
-        publishable=record.publishable,
-        build_result=dict(result),
+        publishable=publishable,
+        # As `pipeline._resolve` sets it for the requested mode.
+        build_result={
+            **result,
+            "publication_ready": publishable and not counts.get("error", 0),
+        },
         variables=tuple(variables),
         **header,
     )

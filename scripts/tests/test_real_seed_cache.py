@@ -273,7 +273,7 @@ def test_resolve_key_ignores_release_version_bumps_only(tmp_path: Path) -> None:
     tree = _copied_tree(tmp_path)
     lock = tree / "uv.lock"
 
-    def keys() -> tuple[str, str]:
+    def keys(*mode: str) -> tuple[str, str]:
         code, out = _tool(
             tmp_path,
             "build",
@@ -284,7 +284,7 @@ def test_resolve_key_ignores_release_version_bumps_only(tmp_path: Path) -> None:
             "a" * 40,
             "--input-manifest-sha256",
             "b" * 64,
-            "--diagnostic",
+            *(mode or ("--diagnostic",)),
             tool=tree / "scripts/real_seed_cache.py",
         )
         assert code == 0, out
@@ -302,6 +302,12 @@ def test_resolve_key_ignores_release_version_bumps_only(tmp_path: Path) -> None:
         resolve,
         True,
     )
+    # Fails if the resolve key holds the mode: the strict release build would miss
+    # the bundle its diagnostic candidate resolved. The build key keeps it.
+    # (Scoped, so the strict key needs no committed HEAD.)
+    strict = keys("--registers", "1")
+    diagnostic = keys("--registers", "1", "--diagnostic")
+    assert (strict[0] != diagnostic[0], strict[1]) == (True, diagnostic[1])
 
 
 def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:

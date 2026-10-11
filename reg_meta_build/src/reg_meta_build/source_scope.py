@@ -98,6 +98,9 @@ class ScopeResolution:
     siblings: SiblingResolution
     coverage: tuple[CoverageObligation, ...]
     acknowledged: dict[str, int]
+    # How often a diagnostic resolution took a path a strict one refuses (the two
+    # forks below); nonzero bars its resolved bundle from a strict materialization.
+    strict_refusals: int
 
 
 def declared_register_fqids(
@@ -175,6 +178,9 @@ def resolve_source_scope(
 
     Two strict/diagnostic forks: the unmapped-key withholding below, and
     formation's per-column state overlaps, which a diagnostic build withholds.
+    Each time a diagnostic build takes one it counts a `strict_refusal`: an
+    acknowledgement can still settle the error it reports, so a zero error count
+    alone does not show that a strict build would have completed.
 
     Missing mappings and unsupported decisions are implementation failures, with
     one diagnostic exception treated as an explicit None provider key (unresolved
@@ -673,6 +679,7 @@ def resolve_source_scope(
         late[key].append(case)
     variables = {}
     coverage: list[CoverageObligation] = []
+    strict_refusals = 0
     for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
         occurrences = tuple(items)
         refs = tuple(
@@ -695,6 +702,7 @@ def resolve_source_scope(
                         "pin that partitions the variable.",
                     )
                 raise ValueError(f"missing explicit provider key mapping: {key!r}")
+            strict_refusals += 1
             provider_key = None
         else:
             provider_key = provider_keys[key]
@@ -872,6 +880,7 @@ def resolve_source_scope(
             else None
         )
         coverage.extend(formed.coverage)
+        strict_refusals += formed.strict_refusals
         # Physical alternatives can emit one identical missing-domain issue twice.
         emitted_missing_coding: set[ResolutionDiagnostic] = set()
         for issue in formed.diagnostics:
@@ -1028,6 +1037,7 @@ def resolve_source_scope(
         siblings,
         tuple(coverage),
         dict(Counter(issue.code for issue in acknowledged)),
+        strict_refusals,
     )
 
 

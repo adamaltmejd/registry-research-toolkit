@@ -1341,6 +1341,9 @@ def _resolve(
                     ):
                         data_warnings[warning.warning_id] = warning
                     acknowledged.update(result.acknowledged)
+                    if result.strict_refusals:
+                        # Only a diagnostic build counts one; a strict build raised.
+                        counts["strict_refusals"] += result.strict_refusals
                     coverage.extend(result.coverage)
                     sibling_pairs.update(result.siblings.pairs)
                     for pair in result.siblings.decisions:

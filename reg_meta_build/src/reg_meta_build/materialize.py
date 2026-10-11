@@ -1174,12 +1174,15 @@ def materialize_resolved(
     diagnostic: bool = False,
     registers: tuple[str, ...] = (),
 ) -> dict[str, object]:
-    """Place a resolved bundle (`build_catalog(resolved_out=...)`) as the build
-    that wrote it would have.
+    """Place a resolved bundle (`build_catalog(resolved_out=...)`) as a build of
+    its inputs in the requested mode would have.
 
-    The bundle must come from this builder's resolve code, the requested mode and
-    registers must be the bundle's, and a strict bundle must have no errors. The report directory gets the bundle's ledger member,
-    then materialization's, so it reads as the unphased build's report.
+    The bundle must come from this builder's resolve code and the requested
+    registers must be the bundle's. Either mode places a bundle of either mode,
+    except that a strict request refuses one with errors or a diagnostic one that
+    took a path a strict resolution refuses (`resolved_bundle.admit_bundle_mode`).
+    The report directory gets the bundle's ledger member, then materialization's,
+    so it reads as the unphased build's report.
     """
     started = time.perf_counter()
     bundle, output, report_dir = (
@@ -1187,16 +1190,17 @@ def materialize_resolved(
         output.resolve(),
         report_dir.resolve(),
     )
+    publishable = not diagnostic and not registers
     record = read_bundle_record(bundle)
     admit_bundle_code(record, bundle)
     admit_bundle_mode(record, bundle, diagnostic=diagnostic, registers=registers)
-    admit_catalog_outputs(output, report_dir, (bundle,), publishable=record.publishable)
+    admit_catalog_outputs(output, report_dir, (bundle,), publishable=publishable)
     if report_dir.exists():
         raise ValueError(f"the report directory must be new: {report_dir}")
     # Captured before the load, as `build_catalog` captures it before resolving.
-    revision = builder_commit() if record.publishable else None
+    revision = builder_commit() if publishable else None
     resolved = load_resolved_bundle(
-        bundle, record, output=output, report_dir=report_dir
+        bundle, record, output=output, report_dir=report_dir, diagnostic=diagnostic
     )
     report_dir.mkdir(parents=True)
     shutil.copyfile(bundle / EVENTS_FILE, resolved.ledger)

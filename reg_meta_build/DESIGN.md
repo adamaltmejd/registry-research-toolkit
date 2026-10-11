@@ -65,10 +65,10 @@ report are unchanged. `materialize-db --resolved DIR` places it with
 `materialize.materialize_resolved`, so a builder change that touches only the writer,
 the DDL, derive or validation can skip resolution. The bundle holds:
 
-- `bundle.json`, a strict record: format version, the resolve-code fingerprint, mode,
-  the `--registers` selection, publishability, the prepared pins, the curation tree
-  hash, the pre-write build result, variable/state/code-set counts and each payload's
-  SHA-256 and size;
+- `bundle.json`, a strict record: format version, the resolve-code fingerprint, the
+  resolving mode, the `--registers` selection, publishability, `strict_refusals`, the
+  prepared pins, the curation tree hash, the pre-write build result, variable/state/
+  code-set counts and each payload's SHA-256 and size;
 - `handoff.pickle.zst`, the writer's inputs: one frame holding every `ResolvedBuild`
   field that is neither a path nor recorded in `bundle.json`, then one frame per
   variable, which bounds the pickle memo;
@@ -94,17 +94,33 @@ The walk must not reach the writer modules (`materialize`, `db`, `derive`, `vali
 `artifact_identity`); the fingerprint raises if it does, so a writer-only change keeps
 reusing bundles. Loading refuses, each with a located error code: a `bundle.json` that
 fails strict validation (`resolved_bundle_invalid`); other resolve code
-(`resolved_bundle_code_mismatch`); a requested mode or register selection other than the
-bundle's (`resolved_bundle_mode_mismatch`); a strict bundle with resolution errors
-(`resolved_bundle_blocked`), the same publication guard as a strict build; a payload
-whose size or SHA-256 differs (`resolved_bundle_digest_mismatch`); any pickled global
-that is not a Pydantic model defined in a `reg_meta_build` module
-(`resolved_bundle_global_refused`); unreadable frames (`resolved_bundle_invalid`); and
-loaded counts that differ from the build result (`resolved_bundle_count_mismatch`). The
-writer then revalidates every model strictly. A publishable materialization captures and
-stamps the builder commit as `build_catalog` does, at materialization time. The report
-starts from the bundle's ledger member, so the materialized report's ledger is
-byte-identical to the unphased build's.
+(`resolved_bundle_code_mismatch`); a requested register selection other than the
+bundle's (`resolved_bundle_scope_mismatch`); for a strict request, a diagnostic bundle
+that took a path a strict resolution refuses (`resolved_bundle_strict_refused`, below)
+and any bundle with resolution errors (`resolved_bundle_blocked`), the same publication
+guard as a strict build; a payload whose size or SHA-256 differs
+(`resolved_bundle_digest_mismatch`); any pickled global that is not a Pydantic model
+defined in a `reg_meta_build` module (`resolved_bundle_global_refused`); unreadable
+frames (`resolved_bundle_invalid`); and loaded counts that differ from the build result
+(`resolved_bundle_count_mismatch`). The writer then revalidates every model strictly. A
+publishable materialization captures and stamps the builder commit as `build_catalog`
+does, at materialization time. The report starts from the bundle's ledger member, so the
+materialized report's ledger is byte-identical to the unphased build's.
+
+The materializing mode is the request's, not the resolving run's, so the release flow's
+strict build can place its diagnostic candidate's bundle (#1404). Resolution reads the
+mode at exactly two forks, both in `source_scope`: formation's per-column state overlaps
+and a partition split with no converted naming. Strict raises at each; diagnostic
+withholds the output, reports an error and counts a `strict_refusal`. Any error code can
+be acknowledged, so a diagnostic run that took a fork can still end with zero errors,
+and its resolution then differs from a strict one, which never completes. The other mode
+reads agree once errors are zero: `check_delivery_coverage` raises in strict mode and in
+diagnostic mode reports errors that no acknowledgement covers, and `publishable` (the
+commit stamp, `publication_ready`, output replacement) is recomputed from the request
+when the bundle is placed. So a strict request places a diagnostic bundle only with zero
+errors and zero `strict_refusals`. The reverse needs no guard: a strict resolution that
+did not raise took neither fork and has no coverage loss, which is exactly the
+diagnostic resolution of the same inputs.
 
   | Step | Module family                                                                              | Role                                                                                              |
   | ---- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |

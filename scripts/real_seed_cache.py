@@ -76,8 +76,10 @@ the static import closure of `pipeline`, the `reg_core_py` package files and the
 Python version, reported by the probe), `uv.lock` (third-party versions, which that
 fingerprint leaves out; `lock_sha256` leaves out the workspace members' own
 versions), the `curation_tree_sha256`, the prepared commit and manifest
-digest, the mode, the `--registers` scopes as a sorted set, and the Python, SQLite and
-Rust toolchain versions; never HEAD (`materialize-db` stamps the running commit). A
+digest, the `--registers` scopes as a sorted set, and the Python, SQLite and
+Rust toolchain versions; never HEAD (`materialize-db` stamps the running commit) and
+never the mode: `materialize-db` places a bundle of either mode in the requested one,
+so the release flow's strict build reuses its diagnostic candidate's resolution. A
 resolve entry holds the `bundle` a full miss wrote with `build-db --resolved-out`; it
 is stored only with its completed build, and only if `bundle.json` records the key's
 resolve fields (`RESOLVE_RECORDED`). A blocked strict build stores neither entry. The
@@ -88,7 +90,11 @@ bundle, under the lock, and stores the build entry by the rules above, with
 `phased_from` naming the resolve key in its `entry.json`. If `materialize-db` refuses
 the bundle (`resolved_bundle_*`: stale resolve code, damaged payload, invalid
 record), the resolve entry is dropped and the build runs in full; a stale bundle is
-never placed and never an error. Any other failure of a phased run is a failed run
+never placed and never an error. When a strict build is refused a diagnostic bundle
+with resolution errors or one that took a path strict resolution refuses
+(`resolved_bundle_blocked`, `resolved_bundle_strict_refused`), it also runs in full
+(and fails the same way), but the entry stays: it still serves diagnostic builds. Any
+other failure of a phased run is a failed run
 like a full one (a full build would reach the same writer). `--verify` compares
 decompressed ledger bytes, so it checks a phased entry against a full build even if
 their gzip members differ.
@@ -148,15 +154,17 @@ BUNDLE_RECORD = "bundle.json"
 # stored only if they agree.
 RESOLVE_RECORDED = (
     "resolve_code_sha256",
-    "mode",
     "registers",
     "prepared_commit",
     "prepared_manifest_sha256",
     "curation_tree_sha256",
 )
 # `materialize-db`'s refusals of a bundle it will not place (stale code, damaged or
-# invalid payload, another mode): the entry is dropped and the build runs in full.
+# invalid payload, other registers): the entry is dropped and the build runs in full.
 BUNDLE_REFUSAL_PREFIX = "resolved_bundle_"
+# Refusals of a sound bundle that only a strict request makes: the build runs in full
+# and the entry stays for diagnostic builds.
+STRICT_ONLY_REFUSALS = ("resolved_bundle_blocked", "resolved_bundle_strict_refused")
 # The source root of the one workspace package the prepare walk follows (the
 # builder's `resolve_code.import_closure` walks only `reg_meta_build`); the key
 # refuses any other workspace package the walk reaches.
@@ -751,7 +759,6 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
         sys.exit(EXIT_CONFIG)
     resolve_code = facts.pop("resolve_code_sha256")
     shared = {
-        "mode": "diagnostic" if args.diagnostic else "strict",
         "registers": sorted(set(args.registers.split(","))) if args.registers else [],
         "prepared_commit": args.input_commit,
         "prepared_manifest_sha256": args.input_manifest_sha256,
@@ -759,14 +766,17 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
         "runtime": {**facts, "rustc": rustc_version()},
     }
     # No HEAD: `materialize-db` stamps the running builder's commit, so a bundle
-    # serves every commit whose resolve code is the same.
+    # serves every commit whose resolve code is the same. No mode: it places a
+    # bundle of either mode in the requested one, refusing a strict placement it
+    # cannot vouch for.
     resolve = {
         "step": "resolve",
         **shared,
         "resolve_code_sha256": resolve_code,
         "uv_lock": lock_sha256("uv.lock"),
     }
-    return {"step": "build", **shared, **code}, resolve
+    mode = "diagnostic" if args.diagnostic else "strict"
+    return {"step": "build", "mode": mode, **shared, **code}, resolve
 
 
 def database_name(args: argparse.Namespace) -> str:
@@ -985,12 +995,15 @@ def cmd_build(args: argparse.Namespace) -> int:
             run_dir, code = run_build(args, home, resolved=bundle)
             phased = True
             if refusal := refused_bundle(run_dir):
-                # A stale or damaged entry: never an error, never placed.
+                # Never an error, never placed. A stale or damaged entry goes; a
+                # diagnostic bundle a strict build may not place stays.
+                kept = refusal in STRICT_ONLY_REFUSALS
                 sys.stderr.write(
                     f"real-seed-cache: materialize-db refused {bundle} ({refusal}); "
-                    "dropping it and building in full\n"
+                    f"{'keeping' if kept else 'dropping'} it and building in full\n"
                 )
-                shutil.rmtree(bundle.parent, ignore_errors=True)
+                if not kept:
+                    shutil.rmtree(bundle.parent, ignore_errors=True)
                 shutil.rmtree(run_dir, ignore_errors=True)
                 phased = False
         if not phased:

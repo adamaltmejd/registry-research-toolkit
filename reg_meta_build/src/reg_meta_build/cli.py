@@ -435,10 +435,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Place the catalog from a resolved bundle written by build-db --resolved-out.",
         description=(
             "Load a resolved bundle (build-db --resolved-out) and place its catalog "
-            "exactly as that build would have: same database bytes, same report. "
-            "The mode and --registers must be the bundle's, and a strict bundle must "
-            "have no resolution errors. A bundle is a cache artifact of the builder "
-            "revision that wrote it, not a public format."
+            "exactly as a build in the requested mode would have: same database "
+            "bytes, same report. --registers must be the bundle's. Either mode "
+            "places a bundle of either mode, but a strict placement refuses a bundle "
+            "with resolution errors, or a diagnostic bundle that took a path a strict "
+            "build refuses. A bundle is a cache artifact of the builder revision that "
+            "wrote it, not a public format."
         ),
     )
     materialize_p.add_argument(
@@ -452,7 +454,7 @@ def _build_parser() -> argparse.ArgumentParser:
     materialize_p.add_argument(
         "--diagnostic",
         action="store_true",
-        help="Place a diagnostic bundle's nonpublishable catalog.",
+        help="Place the bundle as a nonpublishable diagnostic catalog.",
     )
     materialize_p.add_argument(
         "--diagnostic-db-path",
