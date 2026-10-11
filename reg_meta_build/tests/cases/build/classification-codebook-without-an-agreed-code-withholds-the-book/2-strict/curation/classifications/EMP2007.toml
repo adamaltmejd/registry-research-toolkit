@@ -3,5 +3,9 @@ short_name = "EMP2007"
 slug = "emp2007"
 name = "EMP 2007"
 codes_file = "emp2007.csv"
+family = "emp"
+family_aliases = ["EMP"]
+valid_to = 2019
+
 [binding]
 value_set_labels = ["Older list"]

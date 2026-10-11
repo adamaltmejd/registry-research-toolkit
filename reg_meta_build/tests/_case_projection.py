@@ -1,12 +1,22 @@
-"""Projection comparison shared by the case corpora (`cases/curation_toml/`,
-`cases/cli/`): an expected JSON projection against the actual JSON value.
+"""Projection shared by the case corpora (`cases/curation_toml/`, `cases/prepare/`,
+`cases/cli/`): a loaded result as JSON data, and an expected JSON projection
+compared against the actual JSON value.
 
 Each corpus README states the rules; this module is their one implementation.
 """
 
 from __future__ import annotations
 
+import dataclasses
+import enum
+import json
+from collections.abc import Mapping
+from datetime import date
+from pathlib import Path
 from typing import Any
+
+from pydantic import BaseModel
+from reg_core_py import Fqid
 
 MATCH_MODES = frozenset({"exact", "includes"})
 
@@ -147,3 +157,32 @@ def unclaimed(expected: Any, path: str = "$result", *, exact: bool) -> str | Non
         if found := unclaimed(item, item_path, exact=exact):
             return found
     return None
+
+
+def to_json(value: Any) -> Any:
+    """The loaded result as JSON data: models by their TOML (alias) field names,
+    dataclasses by field, FQIDs as their string, tuples and lists as lists, sets
+    sorted, and a tuple mapping key joined with `/`."""
+    if isinstance(value, Fqid):
+        return str(value)
+    if isinstance(value, BaseModel):
+        return to_json(value.model_dump(mode="python", by_alias=True))
+    if dataclasses.is_dataclass(value) and not isinstance(value, type):
+        return {
+            field.name: to_json(getattr(value, field.name))
+            for field in dataclasses.fields(value)
+        }
+    if isinstance(value, Mapping):
+        return {
+            "/".join(key) if isinstance(key, tuple) else str(key): to_json(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [to_json(item) for item in value]
+    if isinstance(value, (set, frozenset)):
+        return sorted((to_json(item) for item in value), key=json.dumps)
+    if isinstance(value, enum.Enum):
+        return to_json(value.value)
+    if isinstance(value, (Path, date)):
+        return str(value)
+    return value

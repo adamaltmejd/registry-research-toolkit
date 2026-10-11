@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_prepare_cases.py::_parse_sos_refusal"
+  ],
+  "fails_if": "`_cmd_parse_sos` (cli.py) wraps the parser's located SosParseError in a command code of its own, so the command no longer reports source_file_unreadable",
+  "note": "The CLI mapping `cases/prepare/sos-parse-xls-format-refused` is reported under, asserted at the command instead of re-typed in that runner: the same legacy .xls delivery, named on the command line. That prepare case owns the parser's refusal itself.",
+  "argv": ["parse-sos", "{work}/Socialstyrelsen/Metadata Test (TST)_webb.xls"]
+}

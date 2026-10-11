@@ -1,0 +1,46 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.5.first"
+slug = "first"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "FIRST"
+owner = "1.5.first"
+ref = "first construct"
+source_editions = ["2020"]
+[[variable]]
+native_id = "1.5.second"
+slug = "second"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.10"
+column = "SECOND"
+owner = "1.5.second"
+ref = "second construct"
+source_editions = ["2020"]
+[[variable]]
+native_id = "1.6"
+slug = "authority"
+
+[[errata.support]]
+variable = "1.5"
+variant = "1.10"
+column = "FIRST"
+edition = "2020"
+expected_fields = {{expected_fields source=scb-registerinformation variable=5 column=FIRST edition=2020 fields=prose}}
+expected_period_text = {{period_text source=scb-registerinformation variable=5 column=FIRST edition=2020}}
+expected_scope = {{edition_scope source=scb-registerinformation variable=5 column=FIRST edition=2020}}
+expected_period = {{period_scope source=scb-registerinformation variable=5 column=FIRST edition=2020}}
+evidence = "Primary questionnaire identifies the authoritative physical question"
+noted = "2026-09-30"
+authority = { variable = "1.6", variant = "1.10", column = "FIRST", edition = "2020", expected_fields = {{expected_fields source=scb-registerinformation variable=6 column=FIRST edition=2020 fields=prose}}, expected_period_text = {{period_text source=scb-registerinformation variable=6 column=FIRST edition=2020}}, expected_scope = {{edition_scope source=scb-registerinformation variable=6 column=FIRST edition=2020}}, expected_period = {{period_scope source=scb-registerinformation variable=6 column=FIRST edition=2020}}, evidence = "Primary questionnaire identifies the authoritative physical question", noted = "2026-09-30" }
+# Recorded by running the code under test on this fixture; no public
+# authoring tool computes it (carried over from the replaced test).
+expected_coding_sha256 = "96c8c7e3a00a4d463682506ea758b8b5341cc0bcacae2f85e23b2243c1b72896"

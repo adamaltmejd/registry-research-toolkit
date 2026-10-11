@@ -1,0 +1,15 @@
+{
+  "exit_code": 10,
+  "files": {
+    "located.json": {
+      "includes": {
+        "error": {
+          "code": "scb_native_id_invalid"
+        }
+      },
+      "contains": ["Registerinformation.csv at row 2, field RegVerID"]
+    },
+    "candidate": {"absent": true},
+    "prepared/keep.txt": {"unchanged": true}
+  }
+}

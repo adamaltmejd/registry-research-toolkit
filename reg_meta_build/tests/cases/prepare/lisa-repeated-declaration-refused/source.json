@@ -1,0 +1,14 @@
+{
+  "description": "The LISA fixture with a second AmPolTyp declaration at Individ!A601, in the same table and section as row 600, its Kolumnnamn padded (' AmPolTyp ') and its other cells distinct.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {
+      "Individ!A601": " AmPolTyp ",
+      "Individ!B601": "Arbetsmarknadspolitisk åtgärd, annan typ",
+      "Individ!C601": "1995-2000",
+      "Individ!D601": "LISA",
+      "Individ!E601": "Nej"
+    }
+  }
+}

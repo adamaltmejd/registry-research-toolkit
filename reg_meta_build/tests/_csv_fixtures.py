@@ -957,8 +957,10 @@ def summary_rows(rows: list[str]) -> list[str]:
     out = []
     for row in rows:
         cells = dict(zip(header, row.split("|"), strict=True))
-        if cells["Kolumnnamn"] in {"", '""'}:
-            continue  # A member without a physical column has no column summary.
+        if cells["Kolumnnamn"].strip() in {"", '""'}:
+            # A member without a physical column has no column summary; a summary
+            # row keyed by a blank name would only add an unknown_support_key.
+            continue
         year = cells["Registerversion_ForstaGodkannandeDatum"][:4]
         line = "|".join(
             (

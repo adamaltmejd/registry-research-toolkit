@@ -24,7 +24,7 @@ cases/build/
 
 A case that needs more than one build in one process has numbered step directories
 instead (`1-<label>/`, `2-<label>/`). Each step has the same three parts, and the steps
-run in order in one test.
+run in the numeric order of their prefixes in one test.
 
 ## Naming
 

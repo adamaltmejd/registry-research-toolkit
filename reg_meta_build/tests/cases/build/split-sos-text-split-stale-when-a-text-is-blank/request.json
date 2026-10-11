@@ -2,12 +2,16 @@
   "replaces": [
     "test_curation_split_sos_boundary.py::test_text_split_is_stale_unless_the_delivered_texts_match[name-blank-text]"
   ],
-  "fails_if": "the SOS split check in `curation_compile` accepts delivered names that are a subset of the declared parts, so with Other's row now blank the First and Second rows are routed to their owners although the declared Other is missing",
+  "fails_if": "the SOS split check in `curation_compile` drops its blank-row guard (`None in values`), so a row with a blank name beside the declared First and Second rows no longer makes the split stale",
   "sources": {
-    "description": "PAR_OV ATC rows of one source record key whose labels are First, Second, None.",
+    "description": "PAR_OV ATC rows of one source record key whose labels are First, Second and a blank.",
     "scb": {
       "registerinformation": [
-        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE"
+        }
       ]
     },
     "sos": [
@@ -52,5 +56,6 @@
         ]
       }
     ]
-  }
+  },
+  "note": "The delivered non-blank names equal the declared parts exactly, so only the blank third row can make the split stale; the declared-text-missing and undeclared-text-delivered cases hold the set comparison."
 }

@@ -1,0 +1,46 @@
+{
+  "fails_if": "the deferred partition compile keeps an unselected register's unmatched split pins as declared names (for example as naming-ambiguity entries, as `_partition_ambiguity` did before it split them off), so the slice defers the edge to scb/sample/other as a warning and completes",
+  "sources": {
+    "description": "Step 1's delivery (variable 5 of register 1 delivers Kon in 2020, KON and LEFT in 2021) plus register 2 (OTHERREG, variant 20), whose variable 201 delivers OTHER.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "Kon",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "KON",
+          "cvid": 21,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021
+        },
+        {
+          "colname": "LEFT",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021
+        },
+        {
+          "cvid": 2001,
+          "var_id": 201,
+          "colname": "OTHER",
+          "varname": "OtherVar",
+          "register": [
+            "OTHERREG",
+            2,
+            20
+          ]
+        }
+      ]
+    }
+  },
+  "registers": [
+    "2"
+  ],
+  "note": "Step 9's slice with the edge to scb/sample/other, the pin step 1 reports stale. The deferred partition compile discards an unselected register's unmatched splits (`_unmatched`), so the pin declares nothing: the slice cannot prove the target exists and keeps the complete build's missing-dependency refusal (reg_meta_build/DESIGN.md, register-scoped builds: a target no scope declares stays the complete build's error)."
+}

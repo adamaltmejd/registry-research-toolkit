@@ -1,0 +1,8 @@
+{
+  "description": "The LISA fixture with AmPolTyp's Känslig1 cell Individ!E600 written as 'Kanske', none of the declared values Ja, Nej and I vissa fall.",
+  "workbook": {
+    "file": "supplemental/scb-lisa-variable-availability/source.xlsx",
+    "from": "lisa",
+    "cells": {"Individ!E600": "Kanske"}
+  }
+}

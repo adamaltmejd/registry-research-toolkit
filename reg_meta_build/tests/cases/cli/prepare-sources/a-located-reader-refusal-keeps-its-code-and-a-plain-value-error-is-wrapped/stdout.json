@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "source_preparation_failed",
+    "message": "prepared catalog output already exists: {work}/prepared"
+  }
+}

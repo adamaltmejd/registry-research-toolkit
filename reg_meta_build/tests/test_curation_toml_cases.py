@@ -12,19 +12,13 @@ fixture IO and no subprocess.
 
 from __future__ import annotations
 
-import dataclasses
-import enum
 import hashlib
 import json
-from collections.abc import Mapping
-from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import pytest
-from _case_projection import MATCH_MODES, mismatch, unclaimed
-from pydantic import BaseModel
-from reg_core_py import Fqid
+from _case_projection import MATCH_MODES, mismatch, to_json, unclaimed
 from reg_meta_build.cis2016_matrix import MatrixSelector, load_matrix
 from reg_meta_build.concept_groups import (
     load_concept_groups,
@@ -135,35 +129,6 @@ LOADERS: dict[str, Callable[[Path, dict[str, Any]], Any]] = {
     ),
     "curated_source": _curated_source,
 }
-
-
-def to_json(value: Any) -> Any:
-    """The loaded result as JSON data: models by their TOML (alias) field names,
-    dataclasses by field, FQIDs as their string, tuples and lists as lists, sets
-    sorted, and a tuple mapping key joined with `/`."""
-    if isinstance(value, Fqid):
-        return str(value)
-    if isinstance(value, BaseModel):
-        return to_json(value.model_dump(mode="python", by_alias=True))
-    if dataclasses.is_dataclass(value) and not isinstance(value, type):
-        return {
-            field.name: to_json(getattr(value, field.name))
-            for field in dataclasses.fields(value)
-        }
-    if isinstance(value, Mapping):
-        return {
-            "/".join(key) if isinstance(key, tuple) else str(key): to_json(item)
-            for key, item in value.items()
-        }
-    if isinstance(value, (list, tuple)):
-        return [to_json(item) for item in value]
-    if isinstance(value, (set, frozenset)):
-        return sorted((to_json(item) for item in value), key=json.dumps)
-    if isinstance(value, enum.Enum):
-        return to_json(value.value)
-    if isinstance(value, (Path, date)):
-        return str(value)
-    return value
 
 
 def read_case(case: Path) -> dict[str, Any]:

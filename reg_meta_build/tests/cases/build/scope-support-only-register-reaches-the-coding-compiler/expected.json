@@ -10,6 +10,18 @@
       "rows": [
         ["stale_curation_entry"]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "case_id": {"contains": "coding.support/1/period/1"},
+        "detail": {"contains": "resolves to 0 column keys; expected one"}
+      },
+      "fields": ["code"],
+      "note": "The coding compiler's own stale detail. A register the compiler never reaches is reported stale too, by the pipeline's fallback (`matches no selected source scope`), so only this detail shows that the compiler ran.",
+      "rows": [
+        ["stale_curation_entry"]
+      ]
     }
   ]
 }

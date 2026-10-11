@@ -1,5 +1,5 @@
 {
-  "description": "SCB register 1 delivers VALUE under two value-set versions with the same member: 'Older list', which book EMP 2007 binds by label, and 'Newer list', which EMP 2020 binds. FK's thin register remote delivers AMOUNT, which declares classification EMP2007, and SCORE, which declares EMP2020. Books EMP 2000, EMP 2007 and EMP 2020 form one edition chain; EMP 2007's CSV gives its only code two labels; book NIL's CSV has a header and no rows.",
+  "description": "SCB register 1 delivers VALUE under two value-set versions with the same member: 'Older list', which book EMP 2007 binds by label, and 'Newer list', which EMP 2020 binds. FK's thin register remote delivers AMOUNT, which declares classification EMP2007, SCORE, which declares EMP2020, and FAMILY, which declares EMP, the family alias of books EMP 2007 (to 2019) and EMP 2020 (from 2020). Books EMP 2000, EMP 2007 and EMP 2020 form one edition chain; EMP 2007's CSV gives its only code two labels; book NIL's CSV has a header and no rows.",
   "scb": {
     "registerinformation": [
       {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
@@ -25,7 +25,12 @@
       "name = \"Score\"",
       "column = \"SCORE\"",
       "data_type = \"int\"",
-      "classification = \"EMP2020\""
+      "classification = \"EMP2020\"",
+      "[[register.variable]]",
+      "name = \"Family\"",
+      "column = \"FAMILY\"",
+      "data_type = \"int\"",
+      "classification = \"EMP\""
     ],
     "classifications/emp2000.csv": ["code,label", "1,First"],
     "classifications/emp2007.csv": ["code,label", "1,First", "1,Competing"],

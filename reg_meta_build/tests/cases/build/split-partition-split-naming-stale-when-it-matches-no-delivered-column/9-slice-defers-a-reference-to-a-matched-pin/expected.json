@@ -1,0 +1,13 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity"],
+      "rows": [
+        ["deferred_out_of_slice_reference", "warning"]
+      ],
+      "note": "The only issue: the edge to the matched split is deferred to the complete build. Register 1 lies outside the slice, so its unmatched pin 1.5.other, which step 1 reports stale, is not evaluated here."
+    }
+  ]
+}

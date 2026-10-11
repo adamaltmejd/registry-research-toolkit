@@ -1,0 +1,11 @@
+{
+  "reader": "lisa_workbook",
+  "fails_if": "the LISA reader keys a declaration by its raw Kolumnnamn instead of the normalized one, or keeps a repeated (table, section, column) declaration as a second record instead of refusing at its row, so one semantic key names two availability claims",
+  "note": "The hardest form: the repeat differs from row 600 in every cell, and its Kolumnnamn only by padding, so only the normalized semantic key `(table, section, column)` refuses it.",
+  "error": {
+    "code": "lisa_layout_unsupported",
+    "type": "LisaWorkbookError",
+    "locator": "Individ!A601",
+    "message_contains": ["duplicate semantic LISA declaration", "'AmPolTyp'"]
+  }
+}
