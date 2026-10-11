@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 from _build_case_runner import scb_row
-from _case_projection import MATCH_MODES, mismatch, unclaimed
+from _case_projection import MATCH_MODES, mismatch, to_json, unclaimed
 from _csv_fixtures import (
     IDENTIFIERARE_HEADER,
     write_csv,
@@ -50,7 +50,6 @@ from reg_meta_build.sources.scb_reference_records import (
 from reg_meta_build.sources.scb_values import clean_scb_values
 from reg_meta_build.sources.sos import parse_directory, parse_register_file
 from reg_meta_build.sources.sos_records import clean_sos_source
-from test_curation_toml_cases import to_json
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping
@@ -344,7 +343,7 @@ READERS: dict[str, Reader] = {
 
 
 def result_json(result: Any) -> Any:
-    """The reader's result as JSON data (`test_curation_toml_cases.to_json`), with
+    """The reader's result as JSON data (`_case_projection.to_json`), with
     each value-list association joined to the value and the list it names, as
     `value` and `descriptor`."""
     data = to_json(result)

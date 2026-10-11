@@ -1,0 +1,144 @@
+{
+  "reader": "scb_records",
+  "replaces": [
+    "test_source_parent_facts.py::test_parent_facts_have_neutral_scope_and_exact_field_cells",
+    "test_source_parent_facts.py::test_blank_parent_facts_preserve_unknown_and_raw_representation"
+  ],
+  "fails_if": "the SCB records reader moves a register, variant, edition, population or object-type fact onto the member's own fields, scopes the population to anything but its edition, validates or reparses a first-approval date, strips the leading indentation of a multi-line paragraph, points a parent field at another column, or reads a whitespace Registersyfte as an undelivered one (or the reverse) in its raw value or record identity",
+  "note": "Values are `var_row`'s defaults for TESTREG (Registersyfte `Testning`, Registervariantbeskrivning `Alla individer`, Populationdefinition `Alla personer`, Objekttypdefinition `Fysisk person`). Registerversion_ForstaGodkannandeDatum is column 11 of the Registerinformation header. A paragraph field keeps its leading indentation and loses only trailing whitespace. The two blank Registersyfte rows read the same unknown purpose, but keep their raw cells, and so their identities, apart. `#2` is the shared source revision.",
+  "projections": [
+    {
+      "of": "",
+      "rows": [
+        {
+          "record": {
+            "record_id": "scb-registerinformation:record:sha256:#1",
+            "parent_facts": {
+              "$contains": [
+                {
+                  "kind": "register",
+                  "fields": {
+                    "purpose": {
+                      "$exact": {
+                        "status": "unknown",
+                        "value": null,
+                        "raw_value": null
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "record": {
+            "record_id": "scb-registerinformation:record:sha256:#3",
+            "parent_facts": {
+              "$contains": [
+                {
+                  "kind": "register",
+                  "fields": {
+                    "purpose": {
+                      "$exact": {
+                        "status": "unknown",
+                        "value": null,
+                        "raw_value": "  "
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "record": {
+            "subject": {
+              "native": {
+                "edition_id": 110
+              }
+            },
+            "fields": {
+              "population_definition": null,
+              "purpose": null,
+              "documentation_status": null
+            },
+            "parent_facts": [
+              {
+                "kind": "register",
+                "fields": {
+                  "purpose": {
+                    "status": "value",
+                    "value": "Testning"
+                  }
+                }
+              },
+              {
+                "kind": "variant",
+                "fields": {
+                  "description": {
+                    "status": "value",
+                    "value": "Alla individer"
+                  }
+                }
+              },
+              {
+                "kind": "edition",
+                "coordinate": {
+                  "native_id": 110
+                },
+                "fields": {
+                  "first_approved_at": {
+                    "status": "value",
+                    "value": "2019-02-29"
+                  },
+                  "documentation_status": {
+                    "status": "value",
+                    "value": "Published",
+                    "raw_value": " Published "
+                  },
+                  "measurement_information": {
+                    "status": "value",
+                    "value": "  A paragraph\n\n  detail"
+                  }
+                },
+                "field_cells": {
+                  "$contains": [
+                    {
+                      "field": "first_approved_at",
+                      "positions": [
+                        11
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "kind": "population",
+                "edition": {
+                  "native_id": 110
+                },
+                "fields": {
+                  "population_definition": {
+                    "status": "value",
+                    "value": "Alla personer"
+                  }
+                }
+              },
+              {
+                "kind": "object_type",
+                "fields": {
+                  "definition": {
+                    "status": "value",
+                    "value": "Fysisk person"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

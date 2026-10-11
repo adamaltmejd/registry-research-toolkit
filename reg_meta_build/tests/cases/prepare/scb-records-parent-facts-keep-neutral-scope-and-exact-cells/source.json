@@ -1,0 +1,33 @@
+{
+  "description": "Three rows of one TESTREG member (CVID 1001, edition 110). The first leaves Registersyfte undelivered (an empty field) and the second delivers it as two spaces. The third carries a padded multi-line Registerversionmätinformation, an impossible first-approval date (`2019-02-29`) and a padded documentation status.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "VALUE",
+        "cells": {
+          "Registersyfte": ""
+        }
+      },
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "VALUE",
+        "cells": {
+          "Registersyfte": "  "
+        }
+      },
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "VALUE",
+        "cells": {
+          "Registerversionmätinformation": "\"  A paragraph\n\n  detail  \"",
+          "Registerversion_ForstaGodkannandeDatum": "2019-02-29",
+          "Registerversion_DocStaus": " Published "
+        }
+      }
+    ]
+  }
+}
