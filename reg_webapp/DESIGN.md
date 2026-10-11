@@ -1707,8 +1707,8 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   study-window coverage hint says which years of the window a source covers, at neutral
   tone: a narrower period is usually deliberate. It offers "Extend in catalog" only when
   the source's register read (shared with the card's name read) shows its columns
-  delivered at its variant in an uncovered year; while that read is out or failed, the
-  hint stays without the offer.
+  delivered at its variant in an uncovered year (an era with an unknown start is no such
+  evidence); while that read is out or failed, the hint stays without the offer.
 - **"Apply window overlap" is the one rewrite.** It reads each dated source's register
   (the register list's `VariableDelivery.windows`), plans each source's overlap from its
   own columns at its own variant (`planWindowOverlap`), and asks before writing: the

@@ -22,7 +22,12 @@
 
 import type { VariableChild } from "./api";
 import type { components as RustComponents } from "./api-types-rust";
-import { catalogHref, deliveryWindows, registerPrefixOf } from "./catalog";
+import {
+  catalogHref,
+  deliveryWindows,
+  registerPrefixOf,
+  YEARLESS_VALID_FROM,
+} from "./catalog";
 import { periodLabel, periodWindowRelation, yearWindowLabel } from "./period";
 import {
   type ProjectStudyWindow,
@@ -449,8 +454,13 @@ function deliveredInGaps(
   children: readonly VariableChild[],
   gaps: readonly ProjectStudyWindow[],
 ): boolean {
+  // An era with an unknown start (`0001-01-01`) is no evidence of data in any
+  // particular year, so it never earns the offer; an open-ended end
+  // (`9999-12-31`, still delivered) is a known fact and does.
   const delivered: Interval[] = deliveryWindows(
-    sourceDeliveryEras(source, children).eras,
+    sourceDeliveryEras(source, children).eras.filter(
+      (era) => era.from !== YEARLESS_VALID_FROM,
+    ),
   ).map((w) => [w.from, w.to]);
   const missing = gaps
     .map(studyWindowInterval)

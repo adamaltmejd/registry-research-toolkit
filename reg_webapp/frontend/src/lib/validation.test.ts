@@ -191,7 +191,8 @@ describe("windowCoverageHints", () => {
   it("offers Extend only where the catalog delivers the source's columns in an uncovered year (#1463)", () => {
     // Fails if Extend is offered for every narrower source again (the `narrow`
     // source's column is delivered only inside its own period), or if a delivery
-    // in the gap stops reaching the hint (`extendable`).
+    // in the gap stops reaching the hint (`extendable`), or if an era with an
+    // unknown start counts as data in the gap years (`unknown_start`).
     const children = new Map([
       [
         "scb/nvr",
@@ -231,6 +232,25 @@ describe("windowCoverageHints", () => {
           },
         ],
       ],
+      [
+        "scb/rams",
+        [
+          {
+            fqid: "scb/rams/syss",
+            name: "Syss",
+            coverage: null,
+            deliveries: [
+              {
+                variant: "v1",
+                column: "Syss",
+                period_scope: "intervals",
+                coverage: null,
+                windows: [{ valid_from: "0001-01-01", valid_to: "9999-12-31" }],
+              },
+            ],
+          },
+        ],
+      ],
     ]) as unknown as Map<string, VariableChild[]>;
     const hints = windowCoverageHints(
       { from: 2014, to: 2022 },
@@ -246,6 +266,12 @@ describe("windowCoverageHints", () => {
           register_variant: "scb/lisa/v1",
           period: { from: 2018, to: 2022 },
           bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+        },
+        {
+          name: "unknown_start",
+          register_variant: "scb/rams/v1",
+          period: 2022,
+          bindings: [{ variable: "scb/rams/syss", type: "categorical" }],
         },
       ],
       (register) => children.get(register) ?? null,
@@ -263,6 +289,11 @@ describe("windowCoverageHints", () => {
           "Source 'extendable' covers 2018..2022 of your study window 2014..2022. The catalog has deliveries for some of the other years.",
         catalogHref: "/catalog/scb/lisa",
         catalogLabel: "scb/lisa",
+      },
+      {
+        label: "Source 'unknown_start'",
+        message:
+          "Source 'unknown_start' covers 2022 of your study window 2014..2022.",
       },
     ]);
   });
