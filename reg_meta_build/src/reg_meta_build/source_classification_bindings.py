@@ -79,6 +79,8 @@ def _source_bindings(
     and fields have already passed occurrence-case checks. They remain attached
     to their original evidence and cannot introduce delivery availability here.
     """
+    occurrences = tuple(occurrences)
+    explicit = _explicit_coverage(occurrences)
     selected: dict[NativeKey, list[_Binding]] = defaultdict(list)
     diagnostics = []
     for occurrence in occurrences:
@@ -89,7 +91,7 @@ def _source_bindings(
         if not refs:
             raise ValueError("source classification requires original evidence")
         key = occurrence.column_key
-        bounds = occurrence_bounds(occurrence)
+        bounds = _binding_bounds(occurrence, explicit)
         code = None
         slug = None
         unspecified = (
@@ -211,21 +213,64 @@ def _sentinel_map(classification: ResolvedClassification) -> dict[str, str]:
     }
 
 
-def _column_evidence(
+def _explicit_coverage(
     occurrences: Iterable[EffectiveOccurrence],
-) -> dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]]:
-    """Each catalog occurrence's known windows and evidence, per column.
+) -> dict[NativeKey, list[tuple[int, int]]]:
+    """Each column's known windows from explicit (non-pooled) catalog occurrences."""
+    covered: dict[NativeKey, list[tuple[int, int]]] = defaultdict(list)
+    for occurrence in occurrences:
+        key = occurrence.column_key
+        if occurrence.use != "catalog" or key is None:
+            continue
+        if not occurrence_pooled(occurrence):
+            covered[key].extend(occurrence_bounds(occurrence) or ())
+    for windows in covered.values():
+        windows.sort()
+    return covered
+
+
+def _binding_bounds(
+    occurrence: EffectiveOccurrence,
+    explicit: Mapping[NativeKey, list[tuple[int, int]]],
+) -> tuple[tuple[int, int], ...] | None:
+    """The windows an occurrence's classification evidence applies to.
 
     A range-carrying pooled occurrence counts over its whole pooled range
     (Y-207), but as in occurrence resolution (Y-202) it loses to explicit
-    coverage: its window is clipped to the spans no explicit occurrence of the
-    same column covers, so a pooled edition never joins the evidence of an
-    explicit span's binding.
+    coverage: it is clipped to the spans no explicit occurrence of the same
+    column covers, so a pooled edition never binds or evidences an explicit
+    span. A fully covered pooled occurrence keeps no window (`()`); a pooled
+    scope without a range stays unbounded (`None`).
     """
-    explicit: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
-        defaultdict(list)
+    bounds = occurrence_bounds(occurrence)
+    if bounds is None or not occurrence_pooled(occurrence):
+        return bounds
+    covered = (
+        explicit.get(occurrence.column_key, ())
+        if occurrence.column_key is not None
+        else ()
     )
-    pooled: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
+    pieces = []
+    for lo, hi in bounds:
+        start = lo
+        for covered_lo, covered_hi in covered:
+            if covered_hi < start or covered_lo > hi:
+                continue
+            if covered_lo > start:
+                pieces.append((start, covered_lo - 1))
+            start = max(start, covered_hi + 1)
+        if start <= hi:
+            pieces.append((start, hi))
+    return tuple(pieces)
+
+
+def _column_evidence(
+    occurrences: Iterable[EffectiveOccurrence],
+) -> dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]]:
+    """Each catalog occurrence's binding windows and evidence, per column."""
+    occurrences = tuple(occurrences)
+    explicit = _explicit_coverage(occurrences)
+    evidence: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
         defaultdict(list)
     )
     for occurrence in occurrences:
@@ -233,22 +278,9 @@ def _column_evidence(
         if occurrence.use != "catalog" or key is None:
             continue
         refs = tuple(sorted({record_ref(r) for r in occurrence.evidence}, key=repr))
-        target = pooled if occurrence_pooled(occurrence) else explicit
-        for lo, hi in occurrence_bounds(occurrence) or ():
-            target[key].append((lo, hi, refs))
-    for key, windows in pooled.items():
-        covered = sorted((lo, hi) for lo, hi, _ in explicit.get(key, ()))
-        for lo, hi, refs in windows:
-            start = lo
-            for covered_lo, covered_hi in covered:
-                if covered_hi < start or covered_lo > hi:
-                    continue
-                if covered_lo > start:
-                    explicit[key].append((start, covered_lo - 1, refs))
-                start = max(start, covered_hi + 1)
-            if start <= hi:
-                explicit[key].append((start, hi, refs))
-    return explicit
+        for lo, hi in _binding_bounds(occurrence, explicit) or ():
+            evidence[key].append((lo, hi, refs))
+    return evidence
 
 
 def _label_rule_bindings(
