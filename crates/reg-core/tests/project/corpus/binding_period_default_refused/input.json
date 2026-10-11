@@ -1,0 +1,32 @@
+{
+  "schema_version": "3.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "binding_period_default",
+  "sources": [
+    {
+      "name": "dated",
+      "register_variant": "scb/lisa/individer-16plus",
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon",
+          "type": "categorical",
+          "period": "_default"
+        }
+      ]
+    },
+    {
+      "name": "year_independent",
+      "register_variant": "scb/lisa/individer-16plus",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon",
+          "type": "categorical",
+          "period": 2018
+        }
+      ]
+    }
+  ]
+}

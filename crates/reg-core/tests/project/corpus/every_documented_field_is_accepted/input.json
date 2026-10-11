@@ -39,7 +39,8 @@
           "type": "categorical",
           "display_name": "Ssyk4",
           "value_set": "class/ssyk2012",
-          "representation": "Ssyk4_2012_J16"
+          "representation": "Ssyk4_2012_J16",
+          "period": 2018
         }
       ]
     }

@@ -3,7 +3,7 @@
 //! The types are the retired `reg_schema.project_data` models. They keep the raw spelling
 //! of every value (an int year stays an int, `"2018"` stays a string), and serialize
 //! as Pydantic's `model_dump(mode="json")` does: every optional field present, absent
-//! as `null`, `panels` as `[]`, a bare-string panel member as `{"source": ...}`. That
+//! as `null` (except `Binding.period`, omitted when unset), `panels` as `[]`, a bare-string panel member as `{"source": ...}`. That
 //! shape is what [`project_hash`] hashes.
 //!
 //! [`ProjectData::from_value`] is the only way to build a project from JSON: it runs
@@ -253,6 +253,22 @@ pub struct Binding {
     pub value_set: Option<String>,
     #[serde(default)]
     pub representation: Option<String>,
+    /// The years this column is ordered for, inside the source period; absent
+    /// inherits the source period. Never `"_default"`.
+    // Omitted when unset (unlike the other optionals' `null`), so a project without
+    // binding periods keeps its `project_hash`. An explicit `null` still reads as
+    // absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub period: Option<SourcePeriod>,
+}
+
+impl Source {
+    /// The period `binding` (one of this source's) is ordered for: its own, else
+    /// the source's.
+    #[must_use]
+    pub fn binding_period<'a>(&'a self, binding: &'a Binding) -> &'a SourcePeriod {
+        binding.period.as_ref().unwrap_or(&self.period)
+    }
 }
 
 /// A period endpoint as written: an int year or a period-token string (`"_default"`
@@ -283,8 +299,8 @@ pub enum PeriodSegment {
     Range(PeriodRange),
 }
 
-/// `Source.period`: one segment, or a sorted, disjoint list of them (an interrupted
-/// series).
+/// `Source.period` (and a `Binding.period` inside it): one segment, or a sorted,
+/// disjoint list of them (an interrupted series).
 //
 // A list variant comes first in each untagged enum: serde also reads a struct from a
 // JSON array, by position, so `["2018-01", "2018-04"]` would otherwise become a

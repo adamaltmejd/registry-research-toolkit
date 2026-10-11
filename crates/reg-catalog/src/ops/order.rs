@@ -289,24 +289,35 @@ struct Ids {
 
 impl Order<'_> {
     fn source(&mut self, source: &Source) -> Result<(), Error> {
-        let requested = match source.period.intervals() {
-            Ok(requested) => requested,
-            Err(reason) => {
-                self.findings.push(Blocking {
-                    source: Some(source.name.clone()),
-                    ..Blocking::whole(
-                        "period_not_orderable",
-                        format!(
-                            "source {} has no orderable period: {reason}",
-                            quote(&source.name)
-                        ),
-                    )
-                });
-                return Ok(());
-            }
-        };
+        if let Err(reason) = source.period.intervals() {
+            self.findings.push(Blocking {
+                source: Some(source.name.clone()),
+                ..Blocking::whole(
+                    "period_not_orderable",
+                    format!(
+                        "source {} has no orderable period: {reason}",
+                        quote(&source.name)
+                    ),
+                )
+            });
+            return Ok(());
+        }
+        // The source period is the extraction scope; each column is extracted for
+        // its binding's own years (`Source::binding_period`), which lie inside it.
         for binding in &source.bindings {
-            self.binding(source, binding, requested.as_deref())?;
+            match source.binding_period(binding).intervals() {
+                Ok(requested) => self.binding(source, binding, requested.as_deref())?,
+                Err(reason) => self.finding(
+                    source,
+                    binding,
+                    "period_not_orderable",
+                    format!(
+                        "column {} has no orderable period: {reason}",
+                        quote(&binding.variable)
+                    ),
+                    None,
+                ),
+            }
         }
         Ok(())
     }

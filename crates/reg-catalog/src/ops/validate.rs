@@ -95,23 +95,36 @@ impl Semantic<'_> {
 
     fn source(&mut self, base: &str, source: &Source) -> Result<(), Error> {
         let variant_ok = self.register_variant(base, &source.register_variant)?;
-        let requested = match source.period.intervals() {
-            Ok(requested) => requested,
-            Err(reason) => {
-                self.push(
-                    IssueLevel::Error,
-                    "period_not_orderable",
-                    format!("{base}/period"),
-                    format!(
-                        "source {} has no orderable period: {reason}",
-                        quote(&source.name)
-                    ),
-                );
-                return Ok(());
-            }
-        };
+        if let Err(reason) = source.period.intervals() {
+            self.push(
+                IssueLevel::Error,
+                "period_not_orderable",
+                format!("{base}/period"),
+                format!(
+                    "source {} has no orderable period: {reason}",
+                    quote(&source.name)
+                ),
+            );
+            return Ok(());
+        }
         for (i, binding) in source.bindings.iter().enumerate() {
             let base = format!("{base}/bindings/{i}");
+            // Each binding is checked over its own years (`Source::binding_period`).
+            let requested = match source.binding_period(binding).intervals() {
+                Ok(requested) => requested,
+                Err(reason) => {
+                    self.push(
+                        IssueLevel::Error,
+                        "period_not_orderable",
+                        format!("{base}/period"),
+                        format!(
+                            "column {} has no orderable period: {reason}",
+                            quote(&binding.variable)
+                        ),
+                    );
+                    continue;
+                }
+            };
             self.binding(&base, source, binding, variant_ok, requested.as_deref())?;
         }
         Ok(())
