@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "Same contract as the worklist loader's axis-less member refusal (`_parse_member` in concept_groups.py). Only the second member sets a column. Allowed twin: group-member-shapes-load, whose `axes = []` umbrella lists bare variables.",
+  "fails_if": "the register loader accepts `delivery_column` on a member of an `axes = []` group, which the worklist loader refuses",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "an axis-less group (`axes = []`) lists whole members"
+    ]
+  }
+}

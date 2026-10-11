@@ -1,0 +1,9 @@
+[classification]
+short_name = "A"
+slug = "a"
+name = "A"
+codes_file = "a.csv"
+valid_from = 2007
+valid_to = 2002
+
+[binding]

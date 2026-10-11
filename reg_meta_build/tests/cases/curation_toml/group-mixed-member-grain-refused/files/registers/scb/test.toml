@@ -7,5 +7,5 @@ native_id = "1"
 register = "scb/test"
 key = "mixed"
 label = "Mixed"
-axes = []
-members = [{ variable = "a" }, { variable = "a", delivery_column = "A_COL" }]
+axes = [{ axis = "kind", label = "Kind" }]
+members = [{ variable = "a", coords = [{ axis = "kind", value = "1", label = "One" }] }, { variable = "a", delivery_column = "A_COL", coords = [{ axis = "kind", value = "1", label = "One" }] }]

@@ -71,6 +71,7 @@ from .source_evidence import (  # noqa: TC001 - Pydantic resolves nested authori
     RecordLocator,
     SourceRevision,
 )
+from .source_intervals import coding_scope_bounds
 from .source_records import SourceFields, TemporalScope
 from .tags import load_tags
 
@@ -147,9 +148,16 @@ class ClassificationMetadata(_CurationModel):
         return family
 
     @model_validator(mode="after")
-    def _family_alias_ownership(self) -> ClassificationMetadata:
+    def _coherent(self) -> ClassificationMetadata:
         if self.family_aliases and self.family is None:
             raise ValueError("family aliases require a family")
+        # Early twin of ResolvedClassification._coherent, which stays the invariant.
+        if (
+            self.valid_from is not None
+            and self.valid_to is not None
+            and self.valid_from > self.valid_to
+        ):
+            raise ValueError("classification validity bounds are reversed")
         return self
 
     @field_validator("slug")
@@ -823,6 +831,16 @@ class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
 
     @model_validator(mode="after")
     def _changed_period(self) -> ErrataOccurrencePeriodEntry:
+        # The compile resolves these bounds with the same reader and treats an
+        # unreadable one as unresolved, so the entry would only go stale.
+        for field in ("edition_scope", "edition_period_scope"):
+            scope = getattr(self, field)
+            if (
+                scope.kind == "intervals" or scope.pooled_start is not None
+            ) and coding_scope_bounds(scope) is None:
+                raise ValueError(
+                    f"{field} bounds must be an ISO date or a year before 9999"
+                )
         if (
             self.expected_scope == self.edition_scope
             and self.expected_period == self.edition_period_scope
@@ -915,12 +933,15 @@ class RegisterGroupEntry(_CurationModel):
                 "umbrella with `axes = []`"
             )
         if self.axes == [] and any(
-            member.value is not None or member.label is not None
+            member.value is not None
+            or member.label is not None
+            or member.coords is not None
+            or member.delivery_column is not None
             for member in self.members
         ):
             raise ValueError(
-                "an axis-less group (`axes = []`) lists whole members; "
-                "a member cannot set `value` or `label`"
+                "an axis-less group (`axes = []`) lists whole members; a member "
+                "cannot set `value`, `label`, `coords` or `delivery_column`"
             )
         return self
 

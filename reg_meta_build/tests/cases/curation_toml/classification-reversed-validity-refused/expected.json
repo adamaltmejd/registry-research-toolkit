@@ -1,0 +1,11 @@
+{
+  "loader": "classifications",
+  "fails_if": "load_classifications accepts a book whose valid_from follows its valid_to, so only a full build (ResolvedClassification) refuses it and check-curation stays silent",
+  "error": {
+    "code": "classification_entry_invalid",
+    "locator": "classifications/A.toml: `classification`",
+    "message_contains": [
+      "classification validity bounds are reversed"
+    ]
+  }
+}
