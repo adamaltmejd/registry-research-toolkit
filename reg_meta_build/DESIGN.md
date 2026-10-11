@@ -1778,9 +1778,12 @@ covers identity, coverage, coding and dependent navigation/search content. A sou
 preview must say so. A real input update requires both impacts and an explained full
 semantic comparison.
 
-`dbdiff.py` compares schema and unordered row multisets, preserving multiplicity. It
-ignores only documented volatile metadata and FTS shadow contents; base content and
-index schemas remain checked. It is read-only and usable independently:
+`dbdiff.py` compares schema and unordered row multisets, preserving multiplicity. A
+catalog table's own dense id is left out and each reference compares through the
+referenced row's natural key, so a build that only renumbers ids compares identical; an
+id or reference column missing from its explicit map fails closed (exit 2). It ignores
+only documented volatile metadata and FTS shadow contents; base content and index
+schemas remain checked. It is read-only and usable independently:
 
 ```sh
 python -m reg_meta_build.dbdiff OLD.db NEW.db
