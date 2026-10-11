@@ -1,0 +1,8 @@
+{
+  "replaces": [
+    "test_curation_support_errata_boundary.py::test_checked_support_is_stale_when_authority_codes_change"
+  ],
+  "note": "The reviewed delivery the entry was authored from. The recorded `expected_coding_sha256` matches it, so step 2 goes stale because its delivery changed, not because the recorded fingerprint never matched.",
+  "fails_if": "the support coding fingerprint (`_support_coding_sha256`) stops covering the authority family's code-list claims, so the reviewed delivery no longer matches its recorded fingerprint and the support decision goes stale",
+  "sources": "scb-support-question"
+}

@@ -1,0 +1,31 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {
+        "source": "scb-registerinformation",
+        "use": "support"
+      },
+      "fields": [
+        "column_name",
+        "key"
+      ],
+      "rows": [
+        [
+          "FIRST",
+          "member:20"
+        ]
+      ]
+    }
+  ]
+}

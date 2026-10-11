@@ -3,13 +3,25 @@
     "test_curation_support_errata_boundary.py::test_checked_support_is_stale_when_its_shared_target_changes[shared-record-extra]"
   ],
   "note": "Both still select and match; the coding fingerprint over the guarded families moves because the shared record gains a THIRD projection.",
-  "fails_if": "the support compile stops comparing `_support_coding_sha256` with `expected_coding_sha256`, so the THIRD projection added to shared CVID 20 leaves the support decision applied instead of stale",
+  "fails_if": "the support coding fingerprint (`_support_coding_sha256`) stops keying each guarded record's codings by its literal column, or the support compile stops comparing it with `expected_coding_sha256`, so the THIRD projection added to shared CVID 20 leaves the support decision applied instead of stale",
   "sources": {
     "description": "scb-support-question changed: Both still select and match; the coding fingerprint over the guarded families moves because the shared record gains a THIRD projection.",
     "scb": {
       "registerinformation": [
-        {"colname": "FIRST", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
-        {"colname": "SECOND", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
+        {
+          "colname": "FIRST",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
+        {
+          "colname": "SECOND",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        },
         {
           "colname": "FIRST",
           "cvid": 21,
@@ -26,7 +38,13 @@
           "regver_id": 2021,
           "varname": "Authority"
         },
-        {"colname": "THIRD", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020}
+        {
+          "colname": "THIRD",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020
+        }
       ],
       "vardemangder": [
         "Svar|1|1|Legacy category|20|7102",
