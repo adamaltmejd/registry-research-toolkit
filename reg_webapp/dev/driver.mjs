@@ -4,7 +4,7 @@
 //
 // Run from reg_webapp/frontend/ (so the playwright import resolves):
 //
-//   bun ../.claude/skills/run-reg-webapp/driver.mjs [command ...]
+//   bun ../dev/driver.mjs [command ...]
 //
 // Commands (default: `smoke`):
 //   smoke               root loads, catalog tree renders, drill into the first
@@ -23,7 +23,8 @@
 // directory that invocation owns, and a direct run gets a fresh one under /tmp;
 // `flows` writes only into its explicit <out-dir>. The servers must already
 // be running on whichever free
-// ports dev.sh picked, with REG_WEBAPP_DEV_URL pointing here — see SKILL.md.
+// ports dev.sh picked, with REG_WEBAPP_DEV_URL pointing here — see
+// reg_webapp/.claude/skills/run-reg-webapp/SKILL.md.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";

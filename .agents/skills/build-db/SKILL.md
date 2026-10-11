@@ -212,15 +212,15 @@ benchmarks.
 ## Real-seed tier guarantees
 
 CI checks only that the committed curation loads (`test_committed_curation_loads`).
-Whether it is right is checked here, by a strict real-seed build, since the test sweeps
-in #1201 and #1213 moved these out of the suite: committed register owners, roles and
-naming slugs (including IoT and LISA SNI renames), and every column-owning split
-resolving to a slug; the committed MFR and LOVA classification-reference lists; FDB's
-two-spelling column ownership; committed SNI and other book metadata and labels; RTB
-edition splits and coding windows; the overlay layout and committed curation counts;
-curated `same_as`/`replaced_by` edges and their component bounds; and that the committed
-`scb.toml` still names the LISA variant the SWECOV column candidates carry. A strict
-build that passes but changes one of these is a content change: read the dbdiff.
+Whether it is right is checked here, by a strict real-seed build: committed register
+owners, roles and naming slugs (including IoT and LISA SNI renames), and every
+column-owning split resolving to a slug; the committed MFR and LOVA
+classification-reference lists; FDB's two-spelling column ownership; committed SNI and
+other book metadata and labels; RTB edition splits and coding windows; the overlay
+layout and committed curation counts; curated `same_as`/`replaced_by` edges and their
+component bounds; and that the committed `scb.toml` still names the LISA variant the
+SWECOV column candidates carry. A strict build that passes but changes one of these is a
+content change: read the dbdiff.
 
 ## Private SWECOV extension
 

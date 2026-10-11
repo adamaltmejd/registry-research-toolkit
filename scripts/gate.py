@@ -8,9 +8,10 @@
     uv run --no-project scripts/gate.py real-seed -- uv run reg-meta-build build-db ...
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust, release, flows and frontend; `crates` is g0's Rust
-part, for CI's `rust` job; `regen` and `g1` run only when named. The CI jobs in
-`.github/workflows/ci.yml` call these steps, so the commands live here once.
+first failure. `all` runs g0, rust, release, flows and frontend; `lint` and `crates`
+are g0's static checks and Rust part, for CI's `lint` and `rust` jobs; `regen` and `g1`
+run only when named. CI calls `lint`, `crates`, `rust`, `release` and `frontend`;
+`flows` runs only locally.
 
 Steps that build or run the Rust workspace hold one of three machine-wide advisory
 slots (`flock` on `$XDG_CACHE_HOME/registry-research-toolkit-heavy-<n>.lock`), so
@@ -88,12 +89,17 @@ def crates() -> None:
     run("cargo machete")
 
 
-def g0(packages: list[str] | None = None) -> None:
+def lint() -> None:
+    # The only home of the ty and panache pins; Rust formatting is in `crates`.
     run("uv run ruff check")
     run("uv run ruff format --check")
     run("uvx --from panache-cli==3.9.0 panache format --check .")
     run("uvx --from panache-cli==3.9.0 panache lint .")
     run("uvx --from ty==0.0.79 ty check")
+
+
+def g0(packages: list[str] | None = None) -> None:
+    lint()
     crates()
     # No paths runs every root `testpaths` entry, conformance included.
     paths = ["conformance", *packages] if packages else []
@@ -117,13 +123,15 @@ def release() -> None:
 
 def flows() -> None:
     out = Path(tempfile.mkdtemp(prefix="gate-flows-"))
-    dev = ROOT / "reg_webapp/.claude/skills/run-reg-webapp/dev.sh"
+    dev = ROOT / "reg_webapp/dev/dev.sh"
     run(["bash", dev, "--fixture-db", "flows", out], stdin=subprocess.DEVNULL)
     # Kept on failure: the screenshots are the evidence.
     shutil.rmtree(out)
 
 
 def frontend() -> None:
+    # On demand, so a fresh worktree needs no setup; a no-op when in sync.
+    run(["bun", "install", "--frozen-lockfile"], cwd=FRONTEND)
     # The SPA's reg-core module: a Rust build, so it takes a heavy slot (the rest of
     # this step does not).
     with heavy_lock():
@@ -179,7 +187,9 @@ def g1() -> None:
     run("uv run python -m conformance.differential")
 
 
-STEPS = {f.__name__: f for f in (g0, crates, rust, release, flows, frontend, regen, g1)}
+STEPS = {
+    f.__name__: f for f in (lint, g0, crates, rust, release, flows, frontend, regen, g1)
+}
 
 
 @contextmanager

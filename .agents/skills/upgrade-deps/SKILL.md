@@ -17,8 +17,8 @@ packages or deploy merely because an upgrade is complete.
 ## Establish the candidate
 
 Inspect dirty work, the current branch and origin/main. Preserve unrelated changes and
-create a task-owned `codex/` branch in an isolated worktree from an agreed base.
-Coordinate final integration so only one writer advances main at a time.
+create a task-owned branch in an isolated worktree from an agreed base. Coordinate final
+integration so only one writer advances main at a time.
 
 Resolve the requested scope before updating. A named dependency stays a named upgrade
 with its necessary dependency closure. For a complete refresh, audit these surfaces
@@ -27,15 +27,14 @@ together, reading actual files rather than a saved version list:
 - Root/member `pyproject.toml`, `uv.lock`, Python floor and `.python-version`.
 - Frontend `package.json`, `bun.lock`, `bunfig.toml`, including peer constraints and npm
   aliases such as the native TypeScript checker.
-- Runtime/tool/image pins in `.github/workflows/`, `.pre-commit-config.yaml`,
-  `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
-  dependencies. Include related version references in agent guidance/skills.
+- Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.py` (the `uvx` checker
+  pins), `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
+  dependencies.
 - `wasm-bindgen`, pinned in four places that move together: the `=` pin in
   `crates/reg-core-wasm/Cargo.toml` (and so `Cargo.lock`), the `wasm-bindgen@` tool in
   `ci.yml`'s frontend job, and the same tool in both edge-deploy jobs of
   `container-build.yml`. The CLI must equal the crate version (a mismatch fails
-  `gen:wasm`); the local install command in CLAUDE.md/AGENTS.md and the run-reg-webapp
-  skill names the version too.
+  `gen:wasm`).
 
 Verify current stable versions and compatibility from package registries and upstream
 release documentation. Distinguish latest stable, latest compatible and a requested LTS
@@ -47,8 +46,8 @@ Read the repository's release-age policy. Its explicit uv `exclude-newer = false
 Bun `minimumReleaseAge = 0` prevent inherited host delays; deleting them is not
 equivalent. Project-less `uvx` can still inherit host configuration: use a task-scoped
 `UV_EXCLUDE_NEWER=false` when applying this policy there. Prefer task-local tooling to
-modifying shared host installations, and verify the tool actually invoked by a hook or
-image rather than relying on the shell's PATH.
+modifying shared host installations, and verify the tool actually invoked by a gate step
+or image rather than relying on the shell's PATH.
 
 ## Update and repair in one worktree
 
@@ -72,8 +71,8 @@ worktree.
 ## Verify and review
 
 Run focused checks during repair. On the resulting candidate, execute the relevant
-existing checks once; read their current commands and checker pins from AGENTS.md, CI,
-and hooks instead of duplicating version pins in this skill:
+existing checks once; read their current commands and checker pins from
+`scripts/gate.py` and CI instead of duplicating version pins in this skill:
 
 - Python and Rust: frozen installation, lint/format/types and the relevant full test
   suite (`scripts/gate.py all` covers both).
@@ -86,10 +85,9 @@ and hooks instead of duplicating version pins in this skill:
   design-review skill. Extend coverage for changed rendered behavior; a source review
   does not establish browser behavior.
 
-Normal commit hooks and CI remain in force. Reuse successful evidence when the tested
-source, dependency lock, environment and inputs are unchanged; rerun checks invalidated
-by a repair or integration change. Do not add repeated full audits merely to repeat a
-passing result.
+CI remains in force. Reuse successful evidence when the tested source, dependency lock,
+environment and inputs are unchanged; rerun checks invalidated by a repair or
+integration change. Do not add repeated full audits merely to repeat a passing result.
 
 Once checks pass, use one independent review of the candidate diff, selected version
 constraints and verification evidence. Repair actionable findings and recheck the

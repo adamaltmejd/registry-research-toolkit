@@ -10,7 +10,7 @@ description: >-
 
 # Code cleanup
 
-CLAUDE.md says the tree stays lean ("Reuse first, build last", "Maturity and
+AGENTS.md says the tree stays lean ("Reuse first, build last", "Maturity and
 compatibility"); this file is the recipe. Run it before a release and whenever the tree
 feels fat. Preconditions: main is green and no other session is landing in the same
 package. The pass reads the whole tree, not a diff.
@@ -61,10 +61,10 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
   Confirm each hit with `rg` across the workspace and the frontend before calling it
   dead.
 - **Trace tables**, kept in the scratchpad: every argparse flag and subcommand, to its
-  README or DESIGN.md line, to a test; every `openapi.json` path, to a conformance or
-  backend case; every curation-TOML key the loader accepts, to a committed use. A gap is
-  a finding: code without a stated behavior is YAGNI, and a stated behavior without a
-  test is either a gap or a line to cut.
+  README or DESIGN.md line, to a test; every `openapi.json` path, to a conformance case;
+  every curation-TOML key the loader accepts, to a committed use. A gap is a finding:
+  code without a stated behavior is YAGNI, and a stated behavior without a test is
+  either a gap or a line to cut.
 - **Deferrals.** `rg -n -i 'TODO|FIXME|XXX|revisit|simplify:'`. A `simplify:` whose
   named upgrade trigger has fired, or that names none, is a finding. So is a root
   tracker past its completion gate.
@@ -85,7 +85,7 @@ config and `scripts/`); `reg_webapp/edge` with the Dockerfile and deploy scripts
 repo-local skills' helper scripts; `scripts/`; and `crates/` (Rust). The test trees are
 the `test-audit` skill's: run its sweep in the same waves and merge its list into step 3.
 
-Each prompt carries the module's paths, an instruction to read CLAUDE.md,
+Each prompt carries the module's paths, an instruction to read AGENTS.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
 1 findings that touch it, and the rest of this section verbatim. The agent hunts what no
 stated behavior asks for, what a library or the platform already does, and what is said
@@ -102,7 +102,7 @@ One line per finding, no hedging:
 - `stdlib:` a hand-rolled thing the standard library ships. Name it.
 - `dep:` a hand-rolled thing an installed dependency (Pydantic, Bits UI) already does.
   Name the feature.
-- `dup:` the same leaf in two modules, the failure mode CLAUDE.md names. Name the home
+- `dup:` the same leaf in two modules, the failure mode AGENTS.md names. Name the home
   it belongs in (`_curation.py`, `db.py`, …).
 - `shrink:` same logic, fewer lines, including a special case that a general fix to the
   mechanism removes. Show the form.
@@ -138,20 +138,15 @@ one of three piles.
 ## 4. Land
 
 Edit directly, in an isolated worktree. One commit per module, the message naming what
-was removed. Before each push: `uv run ruff check`, `uv run ruff format --check`,
-`uvx --from ty==0.0.79 ty check`, and
-`uv run python -m pytest <dir> conformance -n auto -q`; for `crates/`,
-`cargo fmt --all --check`,
-`cargo clippy --workspace --all-targets --locked -- -D warnings` and
-`cargo test --workspace --locked`, as CI runs them; for the frontend,
-`bun run check && bun run lint && bun run test && bun run build`, then
-`bun run gen:types && git diff --exit-code src/lib/api-types-rust.ts`, in
-`reg_webapp/frontend`, as CI runs them; for the edge worker, after
-`bun run gen:types && bun run build` in `reg_webapp/frontend` (the worker binds its
-`dist/`), `bunx wrangler@4.130.0 deploy --dry-run --config <c>` for each of
-`reg_webapp/edge/wrangler.jsonc` and `wrangler.swecov.jsonc` (the pin CI deploys with).
-A change that redesigns a module rather than deleting from it, or needs more than one
-sitting, becomes a GitHub issue instead (search open and closed first).
+was removed. Before each push, run the gate steps CI runs for the touched module
+(`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0 --packages <dir>` for
+a Python package, `crates` for `crates/`, `frontend` for the frontend. For the edge
+worker, after `bun run gen:types && bun run build` in `reg_webapp/frontend` (the worker
+binds its `dist/`), `bunx wrangler@<pin> deploy --dry-run --config <c>` for each of
+`reg_webapp/edge/wrangler.jsonc` and `wrangler.swecov.jsonc`, with the wrangler pin
+`.github/workflows/container-build.yml` deploys with. A change that redesigns a module
+rather than deleting from it, or needs more than one sitting, becomes a GitHub issue
+instead (search open and closed first).
 
 ## 5. Report
 

@@ -1,16 +1,13 @@
-# Markdown formatter + linter (replaces markdownlint-cli2). Run via
-# `uvx --from panache-cli==3.9.0 panache` — pinned because uvx otherwise grabs
-# latest, drifting the local run from CI. A bump must
-# move every home: `rg 'panache-cli=='`.
+# Markdown formatter + linter. Run through `scripts/gate.py lint`, which pins the
+# panache-cli version (uvx otherwise grabs the latest, drifting local runs from CI).
 # gfm flavor uniformly: GitHub-rendered hand-written docs and the generated LISA docs both
 # use standard markdown links (the parser emits [X](X.md), not Obsidian [[wiki-links]]).
 # gfm keeps `smart` off → no quote/dash rewriting of the Swedish register text.
 flavor = "gfm"
 
-# _raw is untracked marker output; CLAUDE.md/AGENTS.md are agent config, not rendered docs.
+# _raw is untracked marker output; AGENTS.md is agent config, not a rendered doc.
 extend-exclude = [
   "reg_meta_build/docs/_raw/",
-  "CLAUDE.md",
   "AGENTS.md",
 ]
 

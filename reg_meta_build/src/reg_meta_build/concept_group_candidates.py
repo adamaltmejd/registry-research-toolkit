@@ -26,7 +26,7 @@ corruption that `same_as` risks), so the gate is lighter than same_as's tiers �
 the one real hazard is OVER-folding a "battery" (a stem shared by unrelated columns,
 e.g. ULF's 2-char `f1/f2/f3` survey items). The generator splits foldable families
 from batteries on label agreement and reports the excluded-battery count so the
-cutoff is never a silent truncation (CLAUDE.md).
+cutoff is never a silent truncation (AGENTS.md).
 
 The candidate schema (`register`/`key`/`label`/`axis` + `[[variable_group.members]]`)
 is exactly `concept_groups.load_worklist_concept_groups`' input schema. The generator
@@ -108,7 +108,7 @@ class ConceptGroupCandidate:
 @dataclass(frozen=True)
 class CandidateResult:
     """The generator's output: the foldable `candidates` (ranked) plus the two
-    drop counts surfaced so a cutoff is never a SILENT truncation (CLAUDE.md):
+    drop counts surfaced so a cutoff is never a SILENT truncation (AGENTS.md):
     `excluded_batteries` — `(register, stem)` families rejected for weak label
     agreement (the ULF/FRIDA over-fold magnet) — and `skipped_existing_key` —
     families whose `(register, stem)` already names an edge/token concept group, so

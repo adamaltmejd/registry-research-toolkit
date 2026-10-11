@@ -559,13 +559,12 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             emit(hit)
             return 0
         result = run_prepare(args, output)
-        if result is None:
-            reason = "prepare-sources failed"
-        elif code_digests(fields["code"]) != fields["code"]:
-            reason = "the prepare code changed during the run"
-        else:
-            reason = None
-        if reason is not None:
+        if result is None or code_digests(fields["code"]) != fields["code"]:
+            reason = (
+                "prepare-sources failed"
+                if result is None
+                else "the prepare code changed during the run"
+            )
             sys.stderr.write(f"real-seed-cache: not stored ({reason})\n")
             emit({"hit": False, "stored": False, "reason": reason})
             return 1
@@ -991,7 +990,8 @@ def verify_build(
         entry.rename(quarantine)
         os.utime(quarantine)
         resolve_home = cache_dir("resolve")
-        for suspect in {record.get("phased_from"), resolve_key} - {None}:
+        suspects = (record.get("phased_from"), resolve_key)
+        for suspect in {s for s in suspects if s is not None}:
             if (resolve_home / suspect).exists():
                 held = resolve_home / f"{STAGING_PREFIX}quarantine-{suspect}"
                 shutil.rmtree(held, ignore_errors=True)

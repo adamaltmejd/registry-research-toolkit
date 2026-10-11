@@ -22,21 +22,12 @@ happens before this skill, under `reg-webapp-frontend-design`.
 
 ## Who runs this
 
-Three consumers, one contract.
-
-- **The implementation worker's in-lane self-check.** A worker whose ticket changes
-  rendered UI runs both parts before declaring its candidate — in a clean subagent whose
-  prompt is the ticket and attempt, the changed routes, the diff and this skill, so the
-  judgment does not inherit the implementing session's rationalizations. The worker then
-  fixes or explicitly dismisses every finding; the subagent reports, it does not
-  rewrite.
-- **The design review seat.** Its inputs are the candidate diff and two context files:
-  this skill and `reg_webapp/frontend/DESIGN.md`. It has no checkout, no browser and no
-  screenshots. It runs **the source review only** — it does not read further files, does
-  not render, never claims rendered verification, and never raises a finding merely
-  because rendered evidence is absent. Its report uses the source-only format below.
-- **The operator.** Renders the surfaces the candidate changes and judges them before
-  approval. Neither a worker self-check nor a source review substitutes for that.
+An implementer self-checks in a clean subagent (prompt: goal, changed routes, diff, this
+skill) that reports and does not rewrite; the implementer fixes or dismisses each
+finding. A source-only reviewer reads only the diff, this skill and
+`frontend/DESIGN.md`, runs the source review, and never claims or demands rendered
+evidence. Neither substitutes for the maintainer rendering the changed surfaces before
+approval.
 
 ## The contract
 
@@ -44,50 +35,29 @@ Three consumers, one contract.
 the token set, its prose says why the values exist and how to apply them. Judge the diff
 against that file, not against the code around it: it outranks the older styling notes
 in the sibling `reg_webapp/DESIGN.md`, and all source — new, reworked and untouched — is
-held to it.
+held to it. A breach of its "Colors", "Typography", "Components" or "Do's and Don'ts"
+rules is a finding; the checks below are where the yield is.
 
 ## Source review
 
 ### Token discipline
 
-Components consume **semantic roles only** — never primitive ramp stops (`--gray-*`, a
-raw status or categorical hue) and never a literal, which can render identically today
-and still break the role contract that makes a dark or per-provider theme a pure remap.
-The `lint:tokens` script already fails a candidate on raw color literals and font stacks
-inside a `<style>` block, so the yield here is what it cannot see: a ramp stop read
-through `var()`, a one-off px spacing/radius/shadow value, and the wrong role chosen for
-the job.
+Components consume semantic roles only (the DESIGN.md front matter, implemented in
+`src/tokens.css`). The `lint:tokens` script already fails a candidate on raw color
+literals and font stacks inside a `<style>` block, so the yield here is what it cannot
+see: a ramp stop read through `var()`, a one-off px spacing/radius/shadow value, and the
+wrong role chosen for the job. The tree carries roles beyond the front matter (the label
+roles `--micro-label-size` and `--micro-label-weight` among them), so an unfamiliar
+`--role` name is not itself a finding; a literal or a ramp stop is.
 
-The roles the source reads, by sub-system. This is representative, not exhaustive — the
-tree carries roles beyond it (the label roles `--micro-label-size` and
-`--micro-label-weight` among them), so an unfamiliar `--role` name is not itself a
-finding; a literal or a ramp stop is:
-
-- Surfaces and ink — `--bg`, `--surface`, `--surface-raised`, `--surface-sunken`,
-  `--surface-hover`, `--text`, `--text-muted`, `--text-faint`, `--border`,
-  `--border-strong`, `--scrim`, `--elevation-raised`, `--focus-ring`.
-- Chrome — `--accent`, `--accent-fg`, `--accent-bg`, `--accent-ink`.
-- Status — `--err`, `--warn`, `--info`, `--ok` and their `-bg` fill tints.
-- Categorical node type — `--cat-reg|var|code|class|group` and their `-ink` label stops.
-- Data encodings — `--facet-axis-0..5` (and `-ink`), `--viz-edge-succession`.
-- Geometry and type — `--space-1..4`, `--radius-sm`, `--radius`, `--font-ui`,
-  `--font-mono`, `--text-display|h1|h2|h3|body|sm|micro`, `--motion-fast`.
-
-The four color sub-systems are disjoint; borrowing across them is a finding.
-
-- The accent is ink and paints interactive chrome only — links, primary buttons,
-  selection, focus ring, active nav. It is never a status or emphasis color, and
-  accent-colored *text* on a tint takes `--accent-ink`, not `--accent`. At most one
-  `primary` button per view.
-- Status meaning always travels with a glyph **and** text; hue alone is never the
-  carrier, and a `-bg` tint is never a text color.
-- Categorical type tags what a node *is*; it never doubles as status or selection.
-- Facet axes and viz edges are data — not chrome, not status.
+The four color sub-systems are disjoint; borrowing across them is a finding. So is
+accent used as status or emphasis, accent-colored *text* on a tint that takes `--accent`
+instead of `--accent-ink`, status carried by hue alone, a `-bg` tint used as text, and
+more than one `primary` button per view.
 
 ### Primitive reuse
 
-Changed views compose the shared primitives — `Panel`, `DataTable`, `Breadcrumbs`,
-`Tag`, `Button`, `KeyValue`, `Skeleton`, `EmptyState`, plus `AppShell`. A hand-rolled
+Changed views compose the shared primitives (DESIGN.md → "Components"). A hand-rolled
 near-duplicate of one — a bespoke table, button, tag, empty state or key-value list,
 visible in the diff as new markup with its own scoped CSS — is at least a `P2`.
 
@@ -100,8 +70,8 @@ usage that ships one-off visual styling instead of roles.
 
 ### ARIA and focus semantics
 
-- Focus is visible via `:focus-visible { box-shadow: var(--focus-ring); }` in the
-  component's **own** scoped CSS; no global stylesheet owns focus.
+- Focus follows DESIGN.md: `:focus-visible` in the component's **own** scoped CSS; no
+  global stylesheet owns focus.
 - Every interactive element is reachable and operable from the keyboard — a click-only
   handler on a non-interactive element is a finding.
 - `DataTable`'s settled decisions are not re-litigated: explicit unconditional ARIA
@@ -113,22 +83,16 @@ usage that ships one-off visual styling instead of roles.
 
 ### Copy and labels
 
-Sentence case at normal tracking for labels, headings and buttons — no tracked-uppercase
-eyebrows, numbered section markers, middle-dot meta strings or trailing arrows. Mono is
-for machine identifiers only (FQIDs, slugs, value-set codes, years, counts, versions),
-never for labels or body copy. Name things by what a researcher recognizes — registers,
-variables, value sets, projects — never by internals, and keep an action's name the same
-through its whole flow ("Add to project", not "Submit"). Errors say what went wrong and
-how to fix it, without apologising.
+Case, mono and naming follow DESIGN.md → "Typography" and "Do's and Don'ts". Check that
+an action keeps its name through the whole flow ("Add to project", not "Submit").
 
 ### Responsive rules
 
-The contract is 375, 768, 1280 and 1920 px, composed from the existing 48 rem
-breakpoint. Source-visible violations: a new breakpoint; a fixed px width that cannot
-fit 375 px; a padded 100 %-width element without `box-sizing: border-box`; an identifier
-column with no wrap or scroll rule; a bespoke media-query stack where `DataTable`'s
-stacked-card behavior exists. Whether a page actually overflows is a rendered question —
-the CSS rule is a source one.
+The widths and breakpoint are in DESIGN.md → "Layout". Source-visible violations: a new
+breakpoint; a fixed px width that cannot fit 375 px; a padded 100 %-width element
+without `box-sizing: border-box`; an identifier column with no wrap or scroll rule; a
+bespoke media-query stack where `DataTable`'s stacked-card behavior exists. Whether a
+page actually overflows is a rendered question — the CSS rule is a source one.
 
 ### Error, empty and loading affordances
 
@@ -139,8 +103,8 @@ renders only the happy path is at least a `P2`.
 
 ## Rendered review
 
-Needs a checkout and a browser — the worker's self-check and the operator. Skip this
-part entirely if you have neither.
+Needs a checkout and a browser — the implementer's self-check and the maintainer. Skip
+this part entirely if you have neither.
 
 ### Render
 
@@ -148,20 +112,19 @@ From the repo root. `dev.sh` picks free ports, runs the Playwright driver agains
 and tears both servers down on exit:
 
 ```sh
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db shot --all <route>
-REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot --all <route>
-bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh --fixture-db smoke
+bash reg_webapp/dev/dev.sh --fixture-db shot --all <route>
+REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot --all <route>
+bash reg_webapp/dev/dev.sh --fixture-db smoke
 ```
 
-`--all` is the four-width contract (375 / 768 / 1280 / 1920) and it applies to every
-rendered change; there is no desktop-only exception. `--fixture-db` builds a
-deterministic synthetic catalog, so no released catalog DB is needed — `dev.sh` still
-needs the provisioned venv, the frontend dependencies and Playwright's Chromium, whose
-exact provisioning path is in the Prerequisites and Setup sections of
-`reg_webapp/.claude/skills/run-reg-webapp/SKILL.md`. Pass `REG_META_DB=<db_dir>` instead
-when the rendered behavior depends on specific catalog content. `smoke` is a
-catalog-browsing flow at the default desktop viewport only — it does not stand in for
-the four widths.
+`--all` captures the four DESIGN.md widths and it applies to every rendered change;
+there is no desktop-only exception. `--fixture-db` builds a deterministic synthetic
+catalog, so no released catalog DB is needed — `dev.sh` installs the venv and the
+frontend dependencies itself; the remaining prerequisites (the wasm toolchain,
+Playwright's Chromium) are in `reg_webapp/.claude/skills/run-reg-webapp/SKILL.md`. Pass
+`REG_META_DB=<db_dir>` instead when the rendered behavior depends on specific catalog
+content. `smoke` is a catalog-browsing flow at the default desktop viewport only — it
+does not stand in for the four widths.
 
 `dev.sh` prints the checkout it resolved, the full HEAD, and the unique output directory
 of that invocation as its first line:
@@ -218,28 +181,28 @@ iteration captures and retained candidate gate evidence are different things: sa
 you are reporting. The flow gates cover only their named scenarios — `project-flows` the
 `/project` error and retry states, `catalog-flows` the one catalog leaf and `/project`
 state of the catalog-authored draft flow — so neither is evidence for a search, a
-different catalog view or a new one. Operator approval needs evidence for the surfaces
-the candidate actually changes.
+different catalog view or a new one. Approval needs evidence for the surfaces the
+candidate actually changes.
 
 ## Severity, findings and fixes
 
 `P1` blocks, `P2` is a meaningful UX or contract defect, `P3` is polish. Report
 findings; do not silently rewrite broad UI. If you are responsible for fixes — the
-implementing worker acting on its subagent's report — make the smallest source change,
-follow the existing primitives and roles, then re-render the affected route and update
-the report.
+implementer acting on its subagent's report — make the smallest source change, follow
+the existing primitives and roles, then re-render the affected route and update the
+report.
 
 Dismiss a finding only with a concrete reason: "existing behavior outside this
 candidate", "intended clipping", "route not touched by this diff".
 
 ## Report format
 
-Source-only — the design seat, or anyone without a checkout:
+Source-only — a source-only reviewer, or anyone without a checkout:
 
 ```markdown
 # Reg webapp design review — source
 
-- Candidate: <ticket, branch, or diff reviewed>
+- Candidate: <change, branch, or diff reviewed>
 - Basis: diff + reg_webapp/frontend/DESIGN.md. Not rendered; no visual claim.
 - Result: <no source findings / findings>
 
@@ -253,14 +216,14 @@ Source-only — the design seat, or anyone without a checkout:
 - Recommendation: <smallest correction>
 ```
 
-Rendered — the worker's self-check, the operator:
+Rendered — the implementer's self-check, the maintainer:
 
 ```markdown
 # Reg webapp design review — rendered
 
-- Candidate: <ticket/attempt, branch, full HEAD>
+- Candidate: <change, branch, full HEAD>
 - Checkout: <path dev.sh resolved>
-- Gate execution: <gate and execution, or n/a>
+- Gate run: <gate.py step and result, or n/a>
 - Command: <exact command>
 - Routes and states inspected: <routes/states actually opened>
 - Viewports inspected: <widths actually opened>

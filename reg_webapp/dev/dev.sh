@@ -50,8 +50,8 @@
 # FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
 # a UNIQUE per-invocation directory under /tmp — printed on startup, and kept
 # after teardown because the pictures are the evidence — unless REG_WEBAPP_SHOTS
-# names a directory of your own. So concurrent lanes, and the operator, never
-# overwrite each other's captures.
+# names a directory of your own. So concurrent runs never overwrite each other's
+# captures.
 set -uo pipefail
 # Job control so each background server runs in its OWN process group — lets
 # cleanup() kill the WHOLE tree (the frontend subshell AND the bun→vite grandchild
@@ -155,22 +155,22 @@ if [ "$mode" = shot ] && [ "$#" -eq 0 ]; then
 	exit 2 # validate before booting servers
 fi
 
-# THIS script's checkout (…/reg_webapp/.claude/skills/run-reg-webapp/dev.sh → repo
-# root), not the caller's cwd: an operator or a sibling lane running a candidate's
-# absolute dev.sh must get the candidate's servers, never whichever checkout they
-# happened to be standing in.
-root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd) || exit 1
+# THIS script's checkout (…/reg_webapp/dev/dev.sh → repo root), not the caller's
+# cwd: running another checkout's absolute dev.sh must serve that checkout, never
+# whichever one the caller happened to be standing in.
+root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd) || exit 1
 cd "$root" || exit 1
 
-# Self-provision so this works standalone (humans, fresh clones) even without the
-# worktree bootstrap hook. No-op once .venv / node_modules exist.
-if [ -x ".claude/hooks/worktree_bootstrap.sh" ]; then
-	.claude/hooks/worktree_bootstrap.sh </dev/null >/dev/null 2>&1 || true
+# This checkout's OWN environment, never main's, installed on demand (near-instant
+# when already in sync). The venv runs freeport, the --fixture-db builder and the
+# default DB resolution; node_modules runs Vite and the driver. `env -u`: an
+# inherited UV_PROJECT_ENVIRONMENT would sync another checkout's venv (#1337).
+if ! env -u UV_PROJECT_ENVIRONMENT uv sync --frozen --quiet; then
+	echo "dev: 'uv sync --frozen' failed — see output above." >&2
+	exit 1
 fi
-
-# The venv runs freeport, the --fixture-db builder and the default DB resolution.
-if [ ! -x ".venv/bin/python" ]; then
-	echo "dev: .venv/bin/python missing — run 'uv sync --frozen' from $root." >&2
+if ! (cd reg_webapp/frontend && bun install --frozen-lockfile --silent); then
+	echo "dev: 'bun install --frozen-lockfile' failed — see output above." >&2
 	exit 1
 fi
 
@@ -206,7 +206,7 @@ fi
 # WHICH commit, and where this run's evidence lands.
 echo "dev: repo $root HEAD $(git -C "$root" rev-parse HEAD 2>/dev/null || echo unknown)${shots_dir:+ shots $shots_dir}" >&2
 
-# .venv/bin/python, not a system `python3`: the lane/gate image ships no system
+# .venv/bin/python, not a system `python3`: the gate image ships no system
 # Python, and this checkout's venv is already required (checked above).
 freeport() { .venv/bin/python -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }
 rust_port=${RUST_PORT:-$(freeport)}
@@ -258,9 +258,9 @@ if [ -n "$fixture_db" ]; then
 	# Match cleanup's empty-array guard for macOS system Bash 3.2 + nounset.
 	if ! (
 		if [ ${#fixture_catalog_args[@]} -gt 0 ]; then
-			.venv/bin/python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py "$fixture_db_dir" "${fixture_catalog_args[@]}" >/dev/null
+			.venv/bin/python reg_webapp/dev/fixture_db.py "$fixture_db_dir" "${fixture_catalog_args[@]}" >/dev/null
 		else
-			.venv/bin/python reg_webapp/.claude/skills/run-reg-webapp/fixture_db.py "$fixture_db_dir" >/dev/null
+			.venv/bin/python reg_webapp/dev/fixture_db.py "$fixture_db_dir" >/dev/null
 		fi
 	); then
 		echo "dev: --fixture-db build failed — see output above." >&2
@@ -318,7 +318,7 @@ smoke)
 	# every server down (no leak). Exit status is the driver's.
 	echo "dev: smoke on $dev_url (auto-teardown on exit)" >&2
 	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
-		bun ../.claude/skills/run-reg-webapp/driver.mjs smoke)
+		bun ../dev/driver.mjs smoke)
 	exit $?
 	;;
 flows)
@@ -326,7 +326,7 @@ flows)
 	# EXIT trap tears every server (and their process groups) down either way.
 	echo "dev: flows ${*:-(all scenarios)} on $dev_url → $out_dir (auto-teardown on exit)" >&2
 	(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" \
-		bun ../.claude/skills/run-reg-webapp/driver.mjs flows "$out_dir" "$@")
+		bun ../dev/driver.mjs flows "$out_dir" "$@")
 	exit $?
 	;;
 shot)
@@ -335,7 +335,7 @@ shot)
 	for vp in "${viewports[@]}"; do
 		for route in "$@"; do
 			(cd reg_webapp/frontend && REG_WEBAPP_DEV_URL="$dev_url" REG_WEBAPP_VIEWPORT="$vp" \
-				bun ../.claude/skills/run-reg-webapp/driver.mjs shot "$route") || rc=$?
+				bun ../dev/driver.mjs shot "$route") || rc=$?
 		done
 	done
 	exit "$rc"

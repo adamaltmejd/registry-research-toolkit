@@ -5,7 +5,7 @@ import { type StagedApplyOutcome, stagedDiffSummary } from "./staged_picker";
 // declined whole and nothing was authored, else the CONFIRMATION of what was
 // committed. One component because all three authoring pages (binding leaf, concept
 // group, register list) say it, and a third copy of the markup + tint is exactly the
-// leaf-duplication CLAUDE.md names.
+// leaf-duplication AGENTS.md names.
 
 let {
   outcome = null,

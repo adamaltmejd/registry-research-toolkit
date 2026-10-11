@@ -4,7 +4,7 @@
     {
       "name": "reg-webapp",
       "runtimeExecutable": "bash",
-      "runtimeArgs": ["reg_webapp/.claude/skills/run-reg-webapp/dev.sh", "preview"],
+      "runtimeArgs": ["reg_webapp/dev/dev.sh", "preview"],
       "port": 5173,
       "autoPort": true
     }

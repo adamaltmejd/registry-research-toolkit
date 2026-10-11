@@ -9,47 +9,35 @@ description: >-
 
 # Test audit
 
-CLAUDE.md → "Testing policy" is the policy. ARCHITECTURE.md → "Testing strategy" names
-the boundaries, their oracles and each package's time budget. This file is what to do
-with them at two moments. The unit is the assertion block: each block is a claim about
-one boundary.
-
-The boundaries: the built artifact (`validate_built_db` plus content snapshot), CLI JSON
-and documented library return models, HTTP responses and the `openapi.json` snapshot,
-order-manifest bytes, `project_data.json` validation
-(`crates/reg-core/tests/project/corpus/`), curation-TOML load or located failure, and
-the FQID and period grammars with interval algebra. In the frontend: rendered DOM, the
-accessibility tree and the codegen'd API types.
+AGENTS.md → "Testing policy" is the policy. ARCHITECTURE.md → "Testing strategy" lists
+the boundaries ("Boundaries and oracles"), their oracles and each package's time budget
+("Tiers"). This file is what to do with them at two moments. The unit is the assertion
+block: each block is a claim about one boundary.
 
 ## At review: the change touches a test
 
-Four answers, from the diff and the PR body. A missing one sends the change back.
+Four answers, from the diff and the PR body, each checked against its policy rule. A
+missing one sends the change back.
 
-1. Which boundary and which stated behavior. A new test needs a new behavior; a bug fix
-   adds a case to the owning corpus.
+1. Which boundary (from the table) and which stated behavior.
 2. Which change to the product makes it fail, named in the test's comment.
 3. Why the boundary's existing cases do not already catch that failure, and whether this
-   is the behavior's hardest case: a second run, reordered input, an interval edge, a
-   refusal beside its allowed twin.
-4. Where each expected value comes from: a golden file, the source fixture, the spec, or
-   agreement between two adapters. Never the code under test or a copy of its logic.
-
-A unit test passes only when it pins behavior a boundary case cannot reach well, such as
-a grammar or a pure fold, and would survive a rewrite of the code behind it.
+   is the behavior's hardest case.
+4. Where each expected value comes from.
 
 Do not run the sabotage by hand. Review the named change as the failure proof.
 
 ## The sweep
 
-Read-only. One subagent per test tree (each package's, plus `conformance/`,
-`scripts/tests/` and `.claude/hooks/tests/`), through the harness's subagent tool (in
-Claude Code, the Agent tool with the `general-purpose` type; Explore locates code and
-does not audit it), told to edit nothing. Launch as many at once as the harness allows
-(Codex runs three children at a time) and the rest in waves. Where the harness lets a
-call choose its model, use the family's mid tier (in Claude, Opus). Each prompt carries
-CLAUDE.md, the "Testing strategy" section, the tree's conftest and helpers, a scratchpad
-file name unique to the tree, and this section verbatim. The frontend gets two agents,
-browser tests and the rest.
+Read-only. One subagent per test tree (each package's, plus `conformance/` and
+`scripts/tests/`), through the harness's subagent tool (in Claude Code, the Agent tool
+with the `general-purpose` type; Explore locates code and does not audit it), told to
+edit nothing. Launch as many at once as the harness allows (Codex runs three children at
+a time) and the rest in waves. Where the harness lets a call choose its model, use the
+family's mid tier (in Claude, Opus). Each prompt carries AGENTS.md, the "Testing
+strategy" section, the tree's conftest and helpers, a scratchpad file name unique to the
+tree, and this section verbatim. The frontend gets two agents, browser tests and the
+rest.
 
 A tree too large to read whole gets file-level triage instead. Per file: `keep` (already
 at a boundary), `delete` (name the boundary case that covers it), or `gap` (no corpus
@@ -76,7 +64,7 @@ One line per block that fails the bar, no hedging:
   seam.
 
 Disposition is `delete`, or `rewrite` (name the corpus) when the block is the only proof
-of a stated behavior. Never `delete` the only proof of a load-bearing guard (CLAUDE.md →
+of a stated behavior. Never `delete` the only proof of a load-bearing guard (AGENTS.md →
 "Reuse first, build last"); mark it `rewrite`. Report the tree's test count and slowest
 files, then end with `<N> blocks, <M> to delete.` or `Lean already.`
 
@@ -90,12 +78,8 @@ first; read through `scripts/gh_issue.py`), never delete it.
 
 Before pushing, always `uv run python -m pytest <tree> conformance -n auto -q`, where
 `<tree>` is the touched Python package or `scripts/tests` (just `conformance` when
-neither is touched), plus the tree's own gate: for the frontend
-`bun run check && bun run lint && bun run test && bun run build`, then
-`bun run gen:types && git diff --exit-code src/lib/api-types-rust.ts`, in
-`reg_webapp/frontend`; for `crates/` `cargo fmt --all --check`,
-`cargo clippy --workspace --all-targets --locked -- -D warnings` and
-`cargo test --workspace --locked`; for `.claude/hooks/tests/` each `bash <file>`. Then
-compare the wall time with the package budget. Report in the PR body, or in the
-code-cleanup report when run inside that pass: each disposition with its boundary, test
-lines removed beside product lines, suite time before and after.
+neither is touched), plus the tree's own gate step
+(`uv run --no-project scripts/gate.py <step>`): `frontend` for the frontend, `crates`
+for `crates/`. Then compare the wall time with the package budget. Report in the PR
+body, or in the code-cleanup report when run inside that pass: each disposition with its
+boundary, test lines removed beside product lines, suite time before and after.

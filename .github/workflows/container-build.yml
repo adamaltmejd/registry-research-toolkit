@@ -433,9 +433,11 @@ jobs:
           # outside the keep window and the prune would delete the manifest
           # prod is actively running (review on #296).
           DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-        run: |
+          FLY_APP: reg-webapp-global
+        # Anchored: deploy-swecov runs the same script with its own FLY_APP.
+        run: &prune-registry |
           set -euo pipefail
-          REPO_URL="https://registry.fly.io/v2/reg-webapp-global"
+          REPO_URL="https://registry.fly.io/v2/$FLY_APP"
           ACCEPT='Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
           KEEP=10
           auth="x:$FLY_API_TOKEN"
@@ -512,42 +514,8 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
           DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-        run: |
-          set -euo pipefail
-          REPO_URL="https://registry.fly.io/v2/reg-webapp-swecov"
-          ACCEPT='Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
-          KEEP=10
-          auth="x:$FLY_API_TOKEN"
-          listing=""
-          for t in $(curl -fsS -u "$auth" "$REPO_URL/tags/list" | jq -r '.tags[]'); do
-            top_digest=$(curl -fsSI -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$t" \
-              | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest" {print $2}')
-            manifest=$(curl -fsS -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$t")
-            if echo "$manifest" | jq -e '.manifests' >/dev/null; then
-              img=$(echo "$manifest" | jq -r '[.manifests[] | select(.platform.architecture != "unknown")][0].digest')
-              cfg=$(curl -fsS -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$img" | jq -r '.config.digest')
-            else
-              cfg=$(echo "$manifest" | jq -r '.config.digest')
-            fi
-            created=$(curl -fsSL -u "$auth" "$REPO_URL/blobs/$cfg" | jq -r '.created')
-            listing+="$created $t $top_digest"$'\n'
-          done
-          kept=$(printf '%s' "$listing" | sort -r | head -n "$KEEP")
-          echo "Keeping $(printf '%s\n' "$kept" | wc -l | tr -d ' ') tags:"
-          printf '%s\n' "$kept"
-          kept_digests=$(printf '%s\n' "$kept" | awk '{print $3}')
-          printf '%s' "$listing" | sort -r | tail -n "+$((KEEP + 1))" \
-            | while read -r _ tag digest; do
-              if [ "$tag" = "$DEPLOYED_TAG" ]; then
-                echo "skip $tag (just deployed)"
-              elif printf '%s\n' "$kept_digests" | grep -qF "$digest"; then
-                echo "skip $tag (digest shared with a kept tag)"
-              else
-                echo "prune $tag"
-                curl -fsS -X DELETE -u "$auth" "$REPO_URL/manifests/$digest" \
-                  || echo "::warning::failed to delete $tag"
-              fi
-            done
+          FLY_APP: reg-webapp-swecov
+        run: *prune-registry
 
   # Edge worker (SPA + /api and /mcp passthrough) for catalog.swecov.se. Runs AFTER the
   # global origin deploy (deploy-skew guard): on a contract-changing push the SPA
@@ -635,12 +603,16 @@ jobs:
       # The SPA mounts only once reg-core's .wasm loads, so the deployed one must
       # answer 200 as application/wasm (WebAssembly.instantiateStreaming refuses
       # any other type).
+      # This probe and the cache probe below are anchored: edge-deploy-swecov runs
+      # them against its own EDGE_HOST.
       - name: Edge .wasm probe
         if: steps.head.outputs.skip != 'true'
         working-directory: reg_webapp/frontend
-        run: |
+        env:
+          EDGE_HOST: catalog.swecov.se
+        run: &edge-wasm-probe |
           wasm=$(cd dist && ls assets/*.wasm)
-          read -r code type < <(curl -so /dev/null -w '%{http_code} %{content_type}\n' "https://catalog.swecov.se/$wasm")
+          read -r code type < <(curl -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
           echo "$wasm: $code $type"
           [ "$code" = 200 ] && [ "$type" = application/wasm ] || { echo "FATAL: the deployed .wasm answered $code $type" >&2; exit 1; }
       # Standing #220 regression probe: the /api/* Cache Rule and the ETag
@@ -654,8 +626,10 @@ jobs:
       # stale-24h window is back.
       - name: Edge cache probe (#220 + #318)
         if: steps.head.outputs.skip != 'true'
-        run: |
-          url="https://catalog.swecov.se/api/search?q=inkomst"
+        env:
+          EDGE_HOST: catalog.swecov.se
+        run: &edge-cache-probe |
+          url="https://$EDGE_HOST/api/search?q=inkomst"
           curl -sfo /dev/null "$url"   # warm the colo
           status=""
           for _ in 1 2 3; do
@@ -808,28 +782,11 @@ jobs:
       - name: SWECOV edge .wasm probe
         if: steps.head.outputs.skip != 'true'
         working-directory: reg_webapp/frontend
-        run: |
-          wasm=$(cd dist && ls assets/*.wasm)
-          read -r code type < <(curl -so /dev/null -w '%{http_code} %{content_type}\n' "https://data.swecov.se/$wasm")
-          echo "$wasm: $code $type"
-          [ "$code" = 200 ] && [ "$type" = application/wasm ] || { echo "FATAL: the deployed .wasm answered $code $type" >&2; exit 1; }
+        env:
+          EDGE_HOST: data.swecov.se
+        run: *edge-wasm-probe
       - name: SWECOV edge cache probe (#220 + #318)
         if: steps.head.outputs.skip != 'true'
-        run: |
-          url="https://data.swecov.se/api/search?q=inkomst"
-          curl -sfo /dev/null "$url"   # warm the colo
-          status=""
-          for _ in 1 2 3; do
-            sleep 2
-            status=$(curl -sfo /dev/null -w '%header{cf-cache-status}' "$url")
-            [ "$status" = "HIT" ] && break
-          done
-          echo "cf-cache-status: $status"
-          [ "$status" = "HIT" ] || { echo "FATAL: /api/* not edge-cached (Cache Rule missing?)" >&2; exit 1; }
-          age=$(curl -sfo /dev/null -w '%header{age}' "$url")
-          echo "age: ${age:-0}s"
-          [ "${age:-0}" -le 600 ] || { echo "FATAL: edge HIT is ${age}s old — pre-deploy cache entry still reachable (#318 DEPLOY_VERSION cache-key versioning broken?)" >&2; exit 1; }
-          etag=$(curl -sfo /dev/null -w '%header{etag}' "$url")
-          code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
-          echo "If-None-Match -> $code"
-          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
+        env:
+          EDGE_HOST: data.swecov.se
+        run: *edge-cache-probe

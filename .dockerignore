@@ -6,15 +6,12 @@
 # enter the image — the bake stage fetches the release DB pair at build time.
 
 # --- #224: maintainer-only provenance debug sibling (never ships) ---
-**/reg_meta.provenance.db
-**/reg_meta.provenance.db-*
 **/reg_meta.provenance.db*
 
 # --- Local DB artifacts (the image bakes its own from the release) ---
 **/*.db
 **/*.db-shm
 **/*.db-wal
-**/*.db.zst
 **/*.zst
 
 # --- Real SCB/SOS seed + build inputs (untracked, large, never in the image) ---
@@ -25,7 +22,6 @@ reg_meta_build/input_data/
 .github/
 .claude/
 .agents/
-.venv/
 **/.venv/
 target/
 **/__pycache__/
@@ -35,8 +31,6 @@ target/
 **/.DS_Store
 
 # --- Docs / specs not needed to build or run ---
-# NOTE: do NOT blanket-exclude **/*.md — several member pyprojects set
-# `readme = "README.md"`, so hatchling's editable build reads them in-image.
 archive/
 ARCHITECTURE.md
 AGENTS.md
