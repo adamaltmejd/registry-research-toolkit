@@ -331,6 +331,18 @@ def test_stdio_session(request, servers):
         )
         for word in shlex.split(template)
     ]
+    # Fails when a client that disconnects before `initialize` makes `reg-meta mcp`
+    # panic (exit 101, #1326) instead of exiting cleanly.
+    closed = subprocess.run(
+        argv,
+        cwd=CASES.parents[1],
+        stdin=subprocess.DEVNULL,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+    assert (closed.returncode, closed.stdout, closed.stderr) == (0, "", "")
     with subprocess.Popen(
         argv,
         cwd=CASES.parents[1],

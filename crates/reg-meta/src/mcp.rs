@@ -17,7 +17,7 @@ use rmcp::model::{
     CallToolRequestParams, CallToolResponse, CallToolResult, Implementation, JsonObject,
     ListToolsResult, PaginatedRequestParams, ServerCapabilities, ServerConfig, Tool,
 };
-use rmcp::service::RequestContext;
+use rmcp::service::{RequestContext, ServerInitializeError};
 use rmcp::transport::streamable_http_server::session::never::NeverSessionManager;
 use rmcp::transport::{StreamableHttpServerConfig, StreamableHttpService};
 use rmcp::{ErrorData, RoleServer, ServerHandler, ServiceExt};
@@ -262,15 +262,15 @@ impl ServerHandler for Tools {
     }
 }
 
-/// Serve the tools over stdio until the client closes it.
+/// Serve the tools over stdio until the client closes it, which may happen before
+/// the handshake completes (#1326).
 pub async fn stdio(server: Arc<Server>) {
-    Tools::new(server)
-        .serve(rmcp::transport::stdio())
-        .await
-        .expect("MCP initialize over stdio")
-        .waiting()
-        .await
-        .expect("MCP session over stdio");
+    let running = match Tools::new(server).serve(rmcp::transport::stdio()).await {
+        Ok(running) => running,
+        Err(ServerInitializeError::ConnectionClosed(_)) => return,
+        Err(err) => panic!("MCP initialize over stdio: {err}"),
+    };
+    running.waiting().await.expect("MCP session over stdio");
 }
 
 /// `/mcp`: streamable HTTP without sessions (each POST stands alone and is answered
