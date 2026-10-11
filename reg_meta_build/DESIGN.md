@@ -1551,8 +1551,11 @@ exactly one error, that error's `expected_diagnostic_sha256`, as TOML lines in i
 detail. A curator writes the entry from the reported issue with placeholder digests,
 builds (a full build, or a slice that also selects the labelled source registers), and
 copies the pins after reviewing the issue. The digests are printed, never applied: an
-entry still acknowledges only what its committed pins match. Register-scoped
-acknowledgements do not print their pins yet.
+entry still acknowledges only what its committed pins match. A stale register-scoped
+acknowledgement names its current pins the same way, from the issues its scope emits:
+the evidence digest when the entry pins one (a placeholder counts), and the issue digest
+when its code, subject, refs, fields and period select exactly one error of its own
+register that no other entry acknowledges. An over-broad entry prints none.
 
 Diagnostic mode resolves exactly the same facts and issues. It scans the complete
 prepared scope set and writes only independently supported output to a separate new
@@ -1655,6 +1658,13 @@ including every skipped entry and deferred reference. Literal crosswalks and der
 from a known prepared occurrence source wholly outside the selection retain their
 evidence and defer endpoint resolution with the same warning; selected or unknown
 sources still report unbound relationships as errors.
+
+A selected register's naming gets the complete build's merged-scope slug check, so a
+collision between its naming sources (native, split, matrix, period-family or errata
+names) is reported as in the complete build. An unselected register's naming is compiled
+from the same sources, period families included, but not checked: its collisions are the
+complete build's to report, and a reference into either colliding name defers, as it
+would if the check had refused the name.
 
 Source-wide support and value-list diagnostics retain their complete raw events and
 physical accounting. Those raw `support_source_issue` and `value_source_issue` events

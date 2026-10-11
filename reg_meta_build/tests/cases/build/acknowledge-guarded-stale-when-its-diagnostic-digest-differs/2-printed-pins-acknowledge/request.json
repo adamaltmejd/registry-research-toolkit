@@ -1,0 +1,5 @@
+{
+  "note": "Step 1's entry with the two pins its stale detail printed, pasted literally as a curator copies them. They acknowledge member 1003's unresolved catalog identity, which makes step 1's printed digests an oracle from outside the printer.",
+  "fails_if": "the pins a stale register-scoped acknowledgement prints are not the ones its matcher accepts (`current_pins` hashes a different issue form than `acknowledged_diagnostic`, or the printed evidence digest is not the guard's `acknowledgement_evidence_sha256` over the entry's originals and coding), so the pasted entry stays stale",
+  "sources": "scb-unnamed-variable"
+}

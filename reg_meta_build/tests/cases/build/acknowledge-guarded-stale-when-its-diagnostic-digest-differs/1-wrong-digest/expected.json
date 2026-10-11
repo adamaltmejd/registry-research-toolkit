@@ -1,0 +1,60 @@
+{
+  "result": {
+    "acknowledged": {
+      "unresolved_catalog_identity": null
+    }
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "unresolved_catalog_identity"
+      },
+      "fields": [
+        "severity",
+        "acknowledged_by"
+      ],
+      "rows": [
+        [
+          "error",
+          null
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/acknowledge/1"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {
+          "contains": [
+            "expected_evidence_sha256 = \"fe8c30f4b5403e87c04d1260ea6b3e459a4fb3961aa6e2fbee651f7eea0c2d69\"",
+            "expected_diagnostic_sha256 = \"ba672860cb39218a223c6b46c63042480e92446bd3b4d933b1058881e63fe9f4\""
+          ]
+        }
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/acknowledge/1"
+        ]
+      ],
+      "note": "The curator's pin source: the stale entry names the current digests as TOML lines, the ones step 2 pastes and shows acknowledge the issue."
+    }
+  ]
+}
