@@ -151,11 +151,9 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
       .toBeVisible();
     // …and the OTHER variant's same-period coding is absent (Fix 3): the list reflects
     // the active narrowing, not the full history.
-    expect(
-      [...document.querySelectorAll(".vs-label")].some(
-        (el) => el.textContent === "Same-period other variant",
-      ),
-    ).toBe(false);
+    expect(document.querySelector(".vs-list")?.textContent).not.toContain(
+      "Same-period other variant",
+    );
   });
 
   it("keeps modifier-resolved single-state detail with a broader period-only scope", async () => {
@@ -190,7 +188,7 @@ describe("BindingLeafView period-scoped value-set history (#744)", () => {
     });
 
     await expect
-      .element(page.getByText("Value-set version", { exact: true }))
+      .element(page.getByText("SCB version name", { exact: true }))
       .toBeVisible();
     expect(document.querySelector(".vs-list")).toBeNull();
   });

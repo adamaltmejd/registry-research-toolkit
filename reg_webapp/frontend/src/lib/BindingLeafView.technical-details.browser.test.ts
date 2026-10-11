@@ -151,7 +151,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     expect(promptText).toContain("Variant");
     expect(promptText).toContain("Valid");
     expect(tech.textContent).not.toContain("Variant");
-    expect(tech.textContent).not.toContain("Value-set version");
+    expect(tech.textContent).not.toContain("SCB version name");
   });
 
   it("shows corrected intervals and evidence only after technical details expands", async () => {
