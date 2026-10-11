@@ -1,0 +1,33 @@
+{
+  "replaces": "test_source_comparison_outcomes.py::test_compact_comparison_retains_witnesses_ids_and_spelling",
+  "fails_if": "compare_availability_records stops comparing a 2010-2024 individual-table declaration only with SCB variant 153 (scb:11, the same spelling on variant 1335, becomes a witness of the agreement), drops a source-only exact spelling on another variant, or matches a workbook column with an SCB spelling that differs from it (Thing_MiDAS as the counterpart of Thing_LISA).",
+  "note": "The old test's records, delivered as a bundle; the aliases are the cvids (scb:<cvid>) and the workbook rows. The workbook's Individ row 600 (AmPolTyp) is narrowed to 2020, the old test's year, and row 601 declares Thing_LISA in 2020. SCB: cvid 10 is AmPolTyp on VarId 31619 in variant 153 (the old named-a), cvid 11 the same spelling on VarId 999 in variant 1335 (named-b), cvid 13 Thing_MiDAS in variant 153 (distinct-suffix); 10 and 13 share the 2020 variant-153 edition, so Thing_LISA's 2020 edition is present but has no counterpart. Every expected value is the old test's assertion.",
+  "input_bundle": {
+    "scb": {
+      "registerinformation": [
+        {"cvid": 10, "var_id": 31619, "colname": "AmPolTyp", "year": "2020", "regver_id": 153, "register": ["LISA", 34, 153]},
+        {"cvid": 11, "var_id": 999, "colname": "AmPolTyp", "year": "2020", "regver_id": 1335, "register": ["LISA", 34, 1335]},
+        {"cvid": 13, "var_id": 1, "colname": "Thing_MiDAS", "year": "2020", "regver_id": 153, "register": ["LISA", 34, 153]}
+      ]
+    },
+    "lisa": {
+      "cells": {
+        "Individ!C600": 2020,
+        "Individ!A601": "Thing_LISA",
+        "Individ!B601": "Column with a source suffix",
+        "Individ!C601": 2020,
+        "Individ!D601": "LISA",
+        "Individ!E601": "Nej"
+      }
+    }
+  },
+  "argv": [
+    "inspect-source-records",
+    "--input-bundle",
+    "{bundle}",
+    "--input-commit",
+    "{bundle_commit}",
+    "--input-manifest-sha256",
+    "{bundle_manifest}"
+  ]
+}
