@@ -29,7 +29,13 @@ import {
   type ValidationResultModel,
   validateProject,
 } from "./api";
-import { periodCoverageUnion } from "./period";
+import {
+  clipPeriod,
+  datedIntervals,
+  isEmptyPeriod,
+  periodCoverageUnion,
+  samePeriod,
+} from "./period";
 import {
   type DraftBinding,
   defaultSourceName,
@@ -879,7 +885,12 @@ export const projectStore = {
       );
     }
 
-    // (b) adds → find-or-create by register_variant ALONE + merge period.
+    // (b) adds → find-or-create by register_variant ALONE. A source is one variant's
+    //     extraction scope and each binding is ordered only for its own years
+    //     (#1462): an add whose period differs from the source's carries it as the
+    //     binding's `period`, and an add reaching beyond the source widens the source
+    //     to the union while every binding that inherited the old period is pinned
+    //     to it. An add at the source's period writes no binding period.
     for (const add of diff.adds ?? []) {
       const idx = sources.findIndex(
         (s) => safeSourceRegisterVariant(s) === add.registerVariant,
@@ -893,36 +904,67 @@ export const projectStore = {
         continue;
       }
       const found = sources[idx];
-      const existing = safeSourceBindings(found);
-      const isDup = existing.some((b) =>
+      const current = found.period as ProjectSourcePeriod;
+      const union = periodCoverageUnion(current, add.period);
+      const widened = !samePeriod(union, current);
+      const period = widened ? union : current;
+      // An undated old period (an imported `_default`) has no years to pin.
+      const pin = widened && datedIntervals(current) !== null;
+      const existing = safeSourceBindings(found).map((b) =>
+        pin && b.period == null ? { ...b, period: current } : b,
+      );
+      const dup = existing.findIndex((b) =>
         bindingMatches(
           b,
           add.binding.variable,
           add.binding.representation ?? null,
         ),
       );
+      const own = isEmptyPeriod(add.period) ? null : add.period;
+      // Only the added (or re-added) binding is rewritten; the rest stay as they
+      // are, bar the pin above.
+      const bindings =
+        dup < 0
+          ? [...existing, withBindingPeriod(binding, own, period)]
+          : existing.map((b, i) =>
+              i === dup && own !== null
+                ? withBindingPeriod(
+                    b,
+                    // A re-add extends that binding's own years by the add's.
+                    periodCoverageUnion(b.period ?? current, own),
+                    period,
+                  )
+                : b,
+            );
       sources = sources.map((s, i) =>
-        i === idx
-          ? {
-              ...s,
-              period: periodCoverageUnion(
-                s.period as ProjectSourcePeriod,
-                add.period,
-              ),
-              bindings: isDup ? existing : [...existing, binding],
-            }
-          : s,
+        i === idx ? { ...s, period, bindings } : s,
       );
     }
 
     // (c) period changes → replace the NAMED source's period wholesale. Keyed on
     //     name AND coordinate: two differently named sources can share one
     //     register_variant, and a period edit moves only the source it names.
+    //     Each binding period is clipped to the new source period (dropped when it
+    //     equals it); one left with no day inside is kept as written, so the
+    //     structural validator reports it (`binding_period_outside_source`) rather
+    //     than the edit silently widening or dropping that column.
     for (const change of diff.periodChange ?? []) {
       sources = sources.map((s) =>
         safeSourceName(s) === change.sourceName &&
         safeSourceRegisterVariant(s) === change.registerVariant
-          ? { ...s, period: change.period }
+          ? {
+              ...s,
+              period: change.period,
+              bindings: safeSourceBindings(s).map((b) =>
+                withBindingPeriod(
+                  b,
+                  b.period == null
+                    ? b.period
+                    : (clipPeriod(b.period, change.period) ?? b.period),
+                  change.period,
+                ),
+              ),
+            }
           : s,
       );
     }
@@ -1020,6 +1062,21 @@ function stagedToBinding(b: StagedBinding): DraftBinding {
     binding.representation = b.representation;
   }
   return binding;
+}
+
+/** `binding` with `own` as its period, or without one when `own` is unset or
+ * requests the same days as its source's `period` (a binding period is written
+ * only where it narrows, so the common case stays byte-identical). */
+function withBindingPeriod(
+  binding: DraftBinding,
+  own: ProjectSourcePeriod | null | undefined,
+  period: ProjectSourcePeriod,
+): DraftBinding {
+  const rest = { ...binding };
+  delete rest.period;
+  return own == null || samePeriod(own, period)
+    ? rest
+    : { ...rest, period: own };
 }
 
 /** Build a new `Source` for `registerVariant` at `period`, with the #312 name

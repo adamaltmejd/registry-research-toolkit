@@ -1,8 +1,10 @@
 <script lang="ts">
 import { catalogHref } from "./catalog";
 import { columnNames, UNASKED } from "./catalog_names.svelte";
+import { periodLabel } from "./period";
 import type { DraftBinding } from "./project_data";
 import { projectStore } from "./project_store.svelte";
+import { sourcePeriodToWire } from "./reg_core";
 import ScopedDataWarnings from "./ScopedDataWarnings.svelte";
 import { Button } from "./ui";
 import { bindingAnchorId } from "./validation";
@@ -12,7 +14,13 @@ import { bindingAnchorId } from "./validation";
 // column" only. Editing a binding — variable, type, display_name, representation —
 // happens by re-picking in the catalog browser (the cart shows the cart, it doesn't
 // edit it). See reg_webapp/DESIGN.md and issue #991.
-const { sourceIndex, bindingIndex, binding, variant, period } = $props<{
+const {
+  sourceIndex,
+  bindingIndex,
+  binding,
+  variant,
+  period: sourcePeriod,
+} = $props<{
   sourceIndex: number;
   bindingIndex: number;
   binding: DraftBinding;
@@ -28,6 +36,13 @@ function strField(field: keyof DraftBinding): string {
   return typeof v === "string" ? v : "";
 }
 const variable = $derived(strField("variable"));
+// A binding period narrows this column to its own years inside the source's
+// (#1462); the row says so, and resolves and warns at those years. Absent, the
+// column inherits the source period and the row says nothing.
+const ownPeriod = $derived(
+  binding.period == null ? null : sourcePeriodToWire(binding.period),
+);
+const period = $derived(ownPeriod ?? sourcePeriod);
 
 // The row LEADS with the delivery column — that is what the researcher ordered and
 // what lands in the extract. Where the FILE names it, the file wins: an explicit
@@ -83,6 +98,11 @@ const columnLabel = $derived(columnName || variable);
          the cart is read-only, so re-picking or checking a column happens there
          (#991). A binding with no variable has no subject page to send anyone to, so
          it stays plain text. -->
+    {#if ownPeriod !== null}
+      <span class="binding-period"
+        >only <span class="years">{periodLabel(binding.period)}</span></span
+      >
+    {/if}
     {#if variable}
       <a class="variable-value" href={catalogHref(variable)}>{variable}</a>
     {:else}
@@ -142,6 +162,15 @@ const columnLabel = $derived(columnName || variable);
   }
   .superseded {
     font-family: var(--font-mono);
+  }
+  /* The column's own years, when narrower than the source's: quiet, like the
+     rename hint — it qualifies the row, it is not another column. */
+  .binding-period {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .years {
+    font-variant-numeric: tabular-nums;
   }
   /* The variable is a machine FQID — mono, like every code/identifier, and small
      because it is where the column came from, not the subject of the row. Its link

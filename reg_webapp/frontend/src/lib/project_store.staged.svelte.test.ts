@@ -70,16 +70,58 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     });
 
     expect(storedProject()?.sources).toHaveLength(1);
+    // The second pick widens the source to both eras, and each binding keeps its
+    // own (#1462): the first, which inherited 1990..2021, is pinned to it rather
+    // than widened to 2022..2023 too. Fails if a widened source re-scopes the
+    // bindings that inherited its old period.
+    expect(storedProject()?.sources[0].period).toEqual({
+      from: 1990,
+      to: 2023,
+    });
     expect(storedProject()?.sources[0].bindings).toEqual([
       {
         variable: "scb/lisa/forvink-ers-aktiv",
         type: "numeric",
         representation: null,
+        period: { from: 1990, to: 2021 },
       },
       {
         variable: "scb/lisa/forvink-ers",
         type: "numeric",
         representation: null,
+        period: { from: 2022, to: 2023 },
+      },
+    ]);
+  });
+
+  it("a narrower add to an existing source orders that column for its own years only (#1462)", () => {
+    // The issue's repro: A for 2014..2020, then B for 2019..2020 on one variant.
+    // Fails if B's period widens into the source's (B ordered for 2014..2018) or
+    // if the source period or A changes (the common case stays byte-identical).
+    projectStore.newProject(SEED);
+    projectStore.applyStagedDiff({
+      adds: [add("scb/lisa/v1", "scb/lisa/kon", { from: 2014, to: 2020 })],
+    });
+    projectStore.applyStagedDiff({
+      adds: [
+        add("scb/lisa/v1", "scb/lisa/alder", { from: 2019, to: 2020 }),
+        add("scb/lisa/v1", "scb/lisa/sun", { from: 2014, to: 2020 }),
+      ],
+    });
+    expect(storedProject()?.sources).toEqual([
+      {
+        name: expect.any(String),
+        register_variant: "scb/lisa/v1",
+        period: { from: 2014, to: 2020 },
+        bindings: [
+          { variable: "scb/lisa/kon", type: "categorical" },
+          {
+            variable: "scb/lisa/alder",
+            type: "categorical",
+            period: { from: 2019, to: 2020 },
+          },
+          { variable: "scb/lisa/sun", type: "categorical" },
+        ],
       },
     ]);
   });
@@ -410,6 +452,58 @@ describe("applySourcePeriodEdit (Y-81 — the cart card's period-only rewrite)",
       replacementGeneration: projectStore.replacementGeneration,
     };
   }
+
+  it("clips each binding period to the edited source period (#1462)", () => {
+    // One edit that cuts one binding period, leaves another with no year inside
+    // and makes a third equal to the source. Fails if a binding period is left
+    // reaching outside the source, if the excluded one is silently dropped
+    // (widening that column to the whole source), or if a redundant one stays.
+    projectStore.newProject(SEED);
+    projectStore.updateField("sources", [
+      {
+        name: "LISA",
+        register_variant: "scb/lisa/individer",
+        period: { from: 2010, to: 2020 },
+        bindings: [
+          { variable: "scb/lisa/kon", type: "categorical" },
+          {
+            variable: "scb/lisa/alder",
+            type: "numeric",
+            period: { from: 2012, to: 2014 },
+          },
+          {
+            variable: "scb/lisa/sun",
+            type: "categorical",
+            period: { from: 2010, to: 2011 },
+          },
+          {
+            variable: "scb/lisa/ssyk",
+            type: "categorical",
+            period: { from: 2013, to: 2020 },
+          },
+        ],
+      },
+    ]);
+    expect(
+      projectStore.applySourcePeriodEdit(
+        edit("LISA", { from: 2013, to: 2018 }),
+      ),
+    ).toBe(true);
+    expect(storedProject()?.sources[0].bindings).toEqual([
+      { variable: "scb/lisa/kon", type: "categorical" },
+      {
+        variable: "scb/lisa/alder",
+        type: "numeric",
+        period: { from: 2013, to: 2014 },
+      },
+      {
+        variable: "scb/lisa/sun",
+        type: "categorical",
+        period: { from: 2010, to: 2011 },
+      },
+      { variable: "scb/lisa/ssyk", type: "categorical" },
+    ]);
+  });
 
   it("refuses an edit from a project that has since been replaced", () => {
     twoSourceDraft();

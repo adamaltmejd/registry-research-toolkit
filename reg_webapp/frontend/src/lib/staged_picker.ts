@@ -105,6 +105,12 @@ function bindingRepresentation(binding: unknown): string | null {
     : null;
 }
 
+function bindingPeriod(binding: unknown): ProjectSourcePeriod | null {
+  return isPlainObject(binding) && binding.period != null
+    ? (binding.period as ProjectSourcePeriod)
+    : null;
+}
+
 function rowWindowBounds(
   row: PickerRepresentation,
 ): { from: string; to: string }[] {
@@ -309,10 +315,12 @@ export function committedPickerRows(
           continue;
         }
         const period = sourcePeriod(source);
+        // An unpinned binding matches the rows of its own years (#1462): its
+        // `period` when set, else the source's.
         const binding = safeSourceBindings(source).find(
           (b) =>
             bindingVariable(b) === band.key &&
-            rowMatchesBinding(b, row, period),
+            rowMatchesBinding(b, row, bindingPeriod(b) ?? period),
         );
         if (!binding) {
           continue;
@@ -485,9 +493,11 @@ export function finalAddPeriodWires(
   const periods = finalSourcePeriodsForStagedAdds(sources, adds);
   const wires: string[] = [];
   for (const add of adds) {
-    const wire = sourcePeriodToWire(
-      periods.get(add.registerVariant) ?? add.period,
-    );
+    // An add resolves at its own period, the binding's years (#1462); a
+    // period-less one inherits its source's period, as the batch leaves it.
+    const wire =
+      sourcePeriodToWire(add.period) ||
+      sourcePeriodToWire(periods.get(add.registerVariant) ?? add.period);
     if (
       wire === "_default" &&
       (add.registerVariant.split("/").length !== 3 ||
