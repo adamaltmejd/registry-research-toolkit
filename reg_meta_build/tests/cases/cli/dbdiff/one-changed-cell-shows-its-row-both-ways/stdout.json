@@ -14,7 +14,7 @@
         {
           "net": 1,
           "row": {
-            "id": 1,
+            "source_id": 100,
             "name": "alpha"
           }
         }
@@ -23,7 +23,7 @@
         {
           "net": -1,
           "row": {
-            "id": 1,
+            "source_id": 100,
             "name": "ALPHA"
           }
         }

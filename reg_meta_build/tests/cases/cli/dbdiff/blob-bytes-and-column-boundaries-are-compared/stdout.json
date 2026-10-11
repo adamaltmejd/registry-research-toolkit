@@ -30,7 +30,7 @@
         {
           "net": 1,
           "row": {
-            "id": 1,
+            "name": "alpha",
             "payload": {
               "blob": "<blob 3B 0x000102>"
             }
@@ -41,7 +41,7 @@
         {
           "net": -1,
           "row": {
-            "id": 1,
+            "name": "alpha",
             "payload": {
               "blob": "<blob 3B 0x000103>"
             }

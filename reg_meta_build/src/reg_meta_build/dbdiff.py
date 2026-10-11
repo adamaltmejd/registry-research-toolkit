@@ -24,7 +24,7 @@ What it does (see the four numbered requirements in the A4.1 brief):
 
 2. **Per-table content compare, order- and BLOB-safe** — for every user
    content table, compare row COUNT and an order-independent *multiset*
-   fingerprint. Each row is canonicalized to a type-tagged byte string
+   fingerprint of its natural-key projection (below). Each row is canonicalized to a type-tagged byte string
    (NULL-aware, BLOB-as-bytes, ints/floats/text given distinct encodings),
    hashed with BLAKE2b-128, and the per-row hashes are summed mod 2**128.
    Summation (not XOR) is deliberate: XOR cancels duplicate rows, so it
@@ -37,8 +37,8 @@ What it does (see the four numbered requirements in the A4.1 brief):
 3. **Ignore list** — only legitimately nondeterministic build metadata is
    excluded, and the default is as small as possible. The reg_meta schema
    has exactly one wall-clock field: `import_manifest`'s `import_date` row
-   (an ISO timestamp). `schema_version` and every content/ID column are
-   compared. `input_dir` (an absolute path) is *not* ignored by default —
+   (an ISO timestamp). `schema_version` and every content column are
+   compared; surrogate ids compare through their natural keys (below). `input_dir` (an absolute path) is *not* ignored by default —
    it is identical for a same-machine rebuild (the A4.1 case); a
    cross-machine comparison can add it explicitly. There is no other
    build/provenance table in the shipped DB (`build_manifest` is scaffolded
@@ -62,6 +62,28 @@ tables are included in the *schema* comparison (structure must match) but
 excluded from the *content* comparison. `sqlite_*` internal tables
 (`sqlite_sequence`, `sqlite_stat*`) are excluded throughout.
 
+**Surrogate ids compare by natural key.** Internal integer ids (`variable_id`,
+`code_id`, `state_id`, ...) are dense and reassigned on every build, so one
+added variable shifts the ids of every later one. Rows are therefore compared
+on a projection, never on raw ids:
+
+- a table's own surrogate id (an ``INTEGER PRIMARY KEY``, or a single-column
+  UNIQUE column some FOREIGN KEY targets) is left out of its rows;
+- a column holding another table's surrogate id (a declared FOREIGN KEY,
+  followed through composite keys to the table that owns the id, plus the few
+  undeclared references in `_UNDECLARED_REFERENCES`) is replaced by that row's
+  natural key as JSON: the key named in `_NATURAL_KEYS` (the register and
+  variant FQIDs, a state's key), else the table's smallest declared UNIQUE key
+  without the id, else all its other columns. A one-column key is its value, a
+  longer one an array, and key columns that are references nest their own
+  natural key. A key that does not hold unique in the data falls back to all
+  other columns.
+
+So two builds that differ only in id assignment compare identical, and a
+sample row shows ``variable_id = [["scb", "lisa"], "kon"]``, not ``4711``. The
+projection is derived per DB from its schema; a table whose projection differs
+between the two DBs is skipped as a difference.
+
 Canonicalization is type-discriminated: SQLite storage class (NULL /
 INTEGER / REAL / TEXT / BLOB) is part of the fingerprint, so an ID that
 turned from an int into a float would be flagged. The reg_meta schema is
@@ -69,7 +91,8 @@ float-free (only INTEGER/TEXT/BLOB columns), so this never produces a
 spurious diff in practice; it just makes the gate strict.
 
 This is a standalone, read-only tool — it opens both DBs with `mode=ro`
-URIs and works on any two reg_meta DB files. It does not import or touch
+URIs (the natural-key maps live in a private temp store) and works on any two
+reg_meta DB files. It does not import or touch
 the build pipeline.
 
 CLI:  ``python -m reg_meta_build.dbdiff <db_a> <db_b> [-n N] [--no-default-ignore] [--json]``
@@ -85,7 +108,7 @@ import math
 import sqlite3
 import struct
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -119,6 +142,29 @@ class TableIgnore:
 # docstring). Only `import_manifest.import_date` is nondeterministic.
 DEFAULT_IGNORE: dict[str, TableIgnore] = {
     "import_manifest": TableIgnore(skip_where="key = 'import_date'"),
+}
+
+# Natural keys the DDL does not declare as one plain UNIQUE key: a register's and
+# a variant's FQID (crates/DESIGN.md → FQID grammar); a classification's slug,
+# named because the table also has a UNIQUE short_name; and a state's key, the
+# union of its two partial UNIQUE indexes, which split on period_scope.
+_NATURAL_KEYS: dict[str, tuple[str, ...]] = {
+    "register": ("provider_id", "slug"),
+    "register_variant": ("register_id", "slug"),
+    "classification": ("slug",),
+    "variable_state": (
+        "variable_id",
+        "register_variant_id",
+        "period_scope",
+        "valid_from",
+        "value_set_version_label",
+    ),
+}
+
+# References the DDL holds without a FOREIGN KEY clause: the derived search table.
+_UNDECLARED_REFERENCES: dict[tuple[str, str], tuple[str, str]] = {
+    ("variable_search_text", "variable_id"): ("variable", "variable_id"),
+    ("variable_search_text", "register_id"): ("register", "register_id"),
 }
 
 
@@ -176,6 +222,8 @@ class TableContentResult:
     fingerprint_a: str  # hex, "" when skipped
     fingerprint_b: str
     columns: tuple[str, ...]  # columns compared; () when skipped
+    # The compared columns that carry a referenced row's natural key (JSON text).
+    reference_columns: tuple[str, ...] = ()
     sample_a_not_b: tuple[SampleRow, ...] = ()
     sample_b_not_a: tuple[SampleRow, ...] = ()
     skipped_reason: str | None = None
@@ -342,6 +390,217 @@ def _content_tables(schema: _Schema) -> list[str]:
 
 
 # --------------------------------------------------------------------------
+# Natural-key projection of surrogate ids
+# --------------------------------------------------------------------------
+
+
+def _quote(name: str) -> str:
+    return '"' + name.replace('"', '""') + '"'
+
+
+@dataclass(frozen=True)
+class _KeyPlan:
+    """How one DB's rows are projected off their surrogate ids (module docstring)."""
+
+    columns: dict[str, tuple[str, ...]]
+    # table -> its surrogate id column.
+    surrogates: dict[str, str]
+    # (table, column) -> the table whose surrogate id the column holds.
+    references: dict[tuple[str, str], str]
+    # referenced table -> the columns of its natural key.
+    natural_keys: dict[str, tuple[str, ...]]
+
+    def projected(self, table: str) -> tuple[str, ...]:
+        """``table``'s compared columns: all but its own surrogate id."""
+        kept = tuple(
+            c
+            for c in self.columns[table]
+            if (table, c) in self.references or self.surrogates.get(table) != c
+        )
+        return kept or self.columns[table]
+
+    def describe(self, table: str) -> str:
+        """A canonical text of ``table``'s projection, natural keys expanded, so
+        two DBs whose projections differ are not fingerprinted against each other."""
+        return ",".join(self._describe_column(table, c) for c in self.projected(table))
+
+    def _describe_column(self, table: str, column: str) -> str:
+        target = self.references.get((table, column))
+        if target is None:
+            return column
+        key = ",".join(
+            self._describe_column(target, c) for c in self.natural_keys[target]
+        )
+        return f"{column}->{target}({key})"
+
+
+def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
+    tables = _content_tables(schema)
+    columns = {t: tuple(c[0] for c in schema.tables[t]) for t in tables}
+    edges = {
+        source: target
+        for source, target in _UNDECLARED_REFERENCES.items()
+        if source[1] in columns.get(source[0], ())
+        and target[1] in columns.get(target[0], ())
+    }
+    uniques: dict[str, list[tuple[str, ...]]] = {}
+    surrogates: dict[str, str] = {}
+    for table in tables:
+        info = schema.tables[table]
+        pk = tuple(c[0] for c in sorted((c for c in info if c[4]), key=lambda c: c[4]))
+        keys = [pk] if pk else []
+        for index in conn.execute(f"PRAGMA index_list({_quote(table)})"):
+            if index["unique"] and not index["partial"]:
+                key = tuple(
+                    r["name"]
+                    for r in conn.execute(f"PRAGMA index_info({_quote(index['name'])})")
+                )
+                # An expression column has no name; such an index is not a column key.
+                if None not in key and key not in keys:
+                    keys.append(key)
+        uniques[table] = keys
+        if (
+            len(pk) == 1
+            and next(c for c in info if c[0] == pk[0])[1].upper() == "INTEGER"
+        ):
+            surrogates[table] = pk[0]
+        for fk in conn.execute(f"PRAGMA foreign_key_list({_quote(table)})"):
+            parent = fk["table"]
+            if parent not in columns:
+                continue
+            to = fk["to"]
+            if to is None:  # REFERENCES parent: the parent's primary key, by position
+                parent_pk = [c for c in schema.tables[parent] if c[4]]
+                to = sorted(parent_pk, key=lambda c: c[4])[fk["seq"]][0]
+            edges[table, fk["from"]] = (parent, to)
+    # A single-column UNIQUE column a foreign key targets is its table's id too
+    # (variable_state.state_id).
+    for parent, to in edges.values():
+        if parent not in surrogates and (to,) in uniques[parent]:
+            surrogates[parent] = to
+
+    def owner(source: tuple[str, str]) -> str | None:
+        """The table whose surrogate id ``source`` holds, following composite
+        foreign keys (alias_window_classification.variable_id → variable_alias_window
+        → variable); None when the chain ends on a natural column."""
+        seen = {source}
+        while True:
+            parent, to = edges[source]
+            if surrogates.get(parent) == to:
+                return parent
+            source = (parent, to)
+            if source not in edges or source in seen:
+                return None
+            seen.add(source)
+
+    references = {s: t for s in sorted(edges) if (t := owner(s)) is not None}
+    natural_keys: dict[str, tuple[str, ...]] = {}
+    pending = sorted(set(references.values()))
+    while pending:
+        table = pending.pop()
+        if table in natural_keys:
+            continue
+        key = _natural_key(
+            conn, table, columns[table], surrogates[table], uniques[table]
+        )
+        natural_keys[table] = key
+        pending.extend(references[table, c] for c in key if (table, c) in references)
+    return _KeyPlan(columns, surrogates, references, natural_keys)
+
+
+def _natural_key(
+    conn: sqlite3.Connection,
+    table: str,
+    columns: tuple[str, ...],
+    surrogate: str,
+    uniques: list[tuple[str, ...]],
+) -> tuple[str, ...]:
+    """The `_NATURAL_KEYS` key, else the smallest declared UNIQUE key without the
+    surrogate id, else all other columns. A key that the data does not hold unique
+    (SQLite UNIQUE admits repeated NULLs) is passed over."""
+    candidates = [
+        k for k in (_NATURAL_KEYS.get(table),) if k and set(k) <= set(columns)
+    ]
+    candidates += sorted(
+        (k for k in uniques if surrogate not in k), key=lambda k: (len(k), k)
+    )
+    for key in candidates:
+        cols = ", ".join(_quote(c) for c in key)
+        (repeated,) = conn.execute(
+            f"SELECT (SELECT COUNT(*) FROM {_quote(table)}) "
+            f"- (SELECT COUNT(*) FROM (SELECT DISTINCT {cols} FROM {_quote(table)}))"
+        ).fetchone()
+        if repeated == 0:
+            return key
+    return tuple(c for c in columns if c != surrogate)
+
+
+def _map_name(prefix: str, table: str) -> str:
+    return _quote(f"_dbdiff_nk_{prefix}_{table}")
+
+
+def _reference_sql(plan: _KeyPlan, prefix: str, table: str, column: str) -> str:
+    """The natural key of the row ``t.column`` references, as JSON text. A
+    dangling id keeps its raw value, tagged, so it never matches a NULL."""
+    target = plan.references[table, column]
+    col = f"t.{_quote(column)}"
+    return (
+        f"CASE WHEN {col} IS NULL THEN NULL ELSE COALESCE("
+        f"(SELECT nk FROM temp.{_map_name(prefix, target)} WHERE id = {col}), "
+        f"json_array('dangling id', {col})) END"
+    )
+
+
+def _projection_sql(plan: _KeyPlan, prefix: str, table: str) -> list[str]:
+    return [
+        _reference_sql(plan, prefix, table, c)
+        if (table, c) in plan.references
+        else f"t.{_quote(c)}"
+        for c in plan.projected(table)
+    ]
+
+
+def _build_key_maps(work: sqlite3.Connection, plan: _KeyPlan, prefix: str) -> None:
+    """Materialize, per referenced table, its id -> natural-key JSON in the temp store."""
+    built: set[str] = set()
+
+    def build(table: str, visiting: frozenset[str]) -> None:
+        if table in built:
+            return
+        if table in visiting:
+            raise ValueError(
+                f"dbdiff: the natural key of {table} refers back to itself"
+            )
+        key = plan.natural_keys[table]
+        parts = []
+        for c in key:
+            if (table, c) in plan.references:
+                build(plan.references[table, c], visiting | {table})
+                parts.append(f"json({_reference_sql(plan, prefix, table, c)})")
+            else:
+                col = f"t.{_quote(c)}"
+                parts.append(
+                    f"json_quote(CASE WHEN typeof({col}) = 'blob' "
+                    f"THEN json_object('blob', hex({col})) ELSE {col} END)"
+                )
+        # A one-column key is its value, not a one-element array, so a nested
+        # key reads [["scb", "lisa"], "kon"] rather than [[["scb"], "lisa"], "kon"].
+        nk = parts[0] if len(parts) == 1 else f"json_array({', '.join(parts)})"
+        name = _map_name(prefix, table)
+        work.execute(
+            f"CREATE TEMP TABLE {name} (id INTEGER PRIMARY KEY, nk TEXT NOT NULL)"
+        )
+        work.execute(
+            f"INSERT INTO temp.{name} SELECT t.{_quote(plan.surrogates[table])}, "
+            f"{nk} FROM {prefix}.{_quote(table)} AS t"
+        )
+        built.add(table)
+
+    for table in sorted(plan.natural_keys):
+        build(table, frozenset())
+
+
+# --------------------------------------------------------------------------
 # Row canonicalization + streaming multiset fingerprint
 # --------------------------------------------------------------------------
 
@@ -376,29 +635,37 @@ def _row_hash(values: Sequence[object]) -> int:
     return int.from_bytes(h.digest(), "big")
 
 
-def _select_sql(table: str, columns: Sequence[str], skip_where: str | None) -> str:
-    cols = ", ".join(f'"{c}"' for c in columns)
-    sql = f'SELECT {cols} FROM "{table}"'
+def _select_sql(
+    plan: _KeyPlan, prefix: str, table: str, skip_where: str | None, tag: str = ""
+) -> str:
+    """``table``'s projected rows in DB ``prefix``, each column aliased by name
+    (``skip_where`` names the stored columns, which ``t`` alone carries)."""
+    cols = ", ".join(
+        f"{expr} AS {_quote(c)}"
+        for expr, c in zip(_projection_sql(plan, prefix, table), plan.projected(table))
+    )
+    sql = f"SELECT {cols}{tag} FROM {prefix}.{_quote(table)} AS t"
     if skip_where:
         sql += f" WHERE NOT ({skip_where})"
     return sql
 
 
 def _fingerprint(
-    conn: sqlite3.Connection,
+    work: sqlite3.Connection,
+    plan: _KeyPlan,
+    prefix: str,
     table: str,
-    columns: Sequence[str],
     skip_where: str | None,
     *,
     batch: int = 20_000,
 ) -> tuple[int, str]:
-    """Stream ``table`` and return (row_count, fingerprint_hex).
+    """Stream ``table``'s projection and return (row_count, fingerprint_hex).
 
     O(1) memory: one cursor fetched in batches, a running count and a running
     sum-of-row-hashes mod 2**128. Order-independent (sum is commutative) and
     multiplicity-sensitive.
     """
-    cur = conn.execute(_select_sql(table, columns, skip_where))
+    cur = work.execute(_select_sql(plan, prefix, table, skip_where))
     total = 0
     count = 0
     while True:
@@ -417,10 +684,10 @@ def _fingerprint(
 
 
 def _diff_samples(
-    db_a: Path,
-    db_b: Path,
+    work: sqlite3.Connection,
+    plan_a: _KeyPlan,
+    plan_b: _KeyPlan,
     table: str,
-    columns: Sequence[str],
     skip_where: str | None,
     limit: int,
 ) -> tuple[tuple[SampleRow, ...], tuple[SampleRow, ...]]:
@@ -434,38 +701,40 @@ def _diff_samples(
     multi-million-row tables. NULLs group together and BLOBs compare by bytes,
     both of which match the fingerprint's NULL-aware/byte semantics.
     """
+    columns = plan_a.projected(table)
+    cols = ", ".join(_quote(c) for c in columns)
+    union = (
+        f"{_select_sql(plan_a, 'a', table, skip_where, ', 1 AS _dbdiff_src')} "
+        f"UNION ALL "
+        f"{_select_sql(plan_b, 'b', table, skip_where, ', -1 AS _dbdiff_src')}"
+    )
+    base = (
+        f"SELECT {cols}, SUM(_dbdiff_src) AS _dbdiff_net "
+        f"FROM ({union}) GROUP BY {cols} "
+        f"HAVING _dbdiff_net {{op}} 0 ORDER BY {cols} LIMIT ?"
+    )
+    ncols = len(columns)
+    a_not_b = tuple(
+        SampleRow(net=row[ncols], values=tuple(row[:ncols]))
+        for row in work.execute(base.format(op=">"), (limit,))
+    )
+    b_not_a = tuple(
+        SampleRow(net=row[ncols], values=tuple(row[:ncols]))
+        for row in work.execute(base.format(op="<"), (limit,))
+    )
+    return a_not_b, b_not_a
+
+
+def _work_connection(db_a: Path, db_b: Path) -> sqlite3.Connection:
+    """A private in-memory connection with both DBs attached read-only, for the
+    natural-key maps and the multiset difference. Its temp store spills to disk
+    (the default is build-dependent and may be MEMORY), so Python and SQLite
+    memory stay flat on multi-million-row tables."""
     conn = sqlite3.connect("file::memory:?cache=private", uri=True)
-    try:
-        conn.row_factory = sqlite3.Row
-        # Force the GROUP BY sorter to spill to disk (default temp_store is
-        # build-dependent and may be MEMORY).
-        conn.execute("PRAGMA temp_store = FILE")
-        conn.execute("ATTACH DATABASE ? AS a", (f"file:{db_a}?mode=ro",))
-        conn.execute("ATTACH DATABASE ? AS b", (f"file:{db_b}?mode=ro",))
-        cols = ", ".join(f'"{c}"' for c in columns)
-        where = f" WHERE NOT ({skip_where})" if skip_where else ""
-        union = (
-            f'SELECT {cols}, 1 AS _dbdiff_src FROM a."{table}"{where} '
-            f"UNION ALL "
-            f'SELECT {cols}, -1 AS _dbdiff_src FROM b."{table}"{where}'
-        )
-        base = (
-            f"SELECT {cols}, SUM(_dbdiff_src) AS _dbdiff_net "
-            f"FROM ({union}) GROUP BY {cols} "
-            f"HAVING _dbdiff_net {{op}} 0 ORDER BY {cols} LIMIT ?"
-        )
-        ncols = len(columns)
-        a_not_b = tuple(
-            SampleRow(net=row[ncols], values=tuple(row[:ncols]))
-            for row in conn.execute(base.format(op=">"), (limit,))
-        )
-        b_not_a = tuple(
-            SampleRow(net=row[ncols], values=tuple(row[:ncols]))
-            for row in conn.execute(base.format(op="<"), (limit,))
-        )
-        return a_not_b, b_not_a
-    finally:
-        conn.close()
+    conn.execute("PRAGMA temp_store = FILE")
+    conn.execute("ATTACH DATABASE ? AS a", (f"file:{db_a}?mode=ro",))
+    conn.execute("ATTACH DATABASE ? AS b", (f"file:{db_b}?mode=ro",))
+    return conn
 
 
 # --------------------------------------------------------------------------
@@ -490,7 +759,8 @@ def diff_db_content(
         sample_rows: max differing rows to capture per direction per table.
 
     Returns a :class:`DiffReport`; never raises on content differences (they
-    are reported in the result). Raises FileNotFoundError if a path is missing.
+    are reported in the result). Raises FileNotFoundError if a path is missing,
+    and ValueError if a natural key refers back to its own table.
     """
     db_a = Path(db_a)
     db_b = Path(db_b)
@@ -501,15 +771,23 @@ def diff_db_content(
     try:
         schema_a = _read_schema(conn_a)
         schema_b = _read_schema(conn_b)
-        report = DiffReport(db_a=db_a, db_b=db_b)
-        _compare_schema(schema_a, schema_b, report)
-        _compare_content(
-            db_a, db_b, conn_a, conn_b, schema_a, schema_b, ignore, sample_rows, report
-        )
-        return report
+        plan_a = _key_plan(conn_a, schema_a)
+        plan_b = _key_plan(conn_b, schema_b)
     finally:
         conn_a.close()
         conn_b.close()
+    report = DiffReport(db_a=db_a, db_b=db_b)
+    _compare_schema(schema_a, schema_b, report)
+    work = _work_connection(db_a, db_b)
+    try:
+        _build_key_maps(work, plan_a, "a")
+        _build_key_maps(work, plan_b, "b")
+        _compare_content(
+            work, schema_a, schema_b, plan_a, plan_b, ignore, sample_rows, report
+        )
+    finally:
+        work.close()
+    return report
 
 
 def _compare_schema(schema_a: _Schema, schema_b: _Schema, report: DiffReport) -> None:
@@ -577,12 +855,11 @@ def _fmt_coldef(coldef: tuple[str, str, int, str | None, int]) -> str:
 
 
 def _compare_content(
-    db_a: Path,
-    db_b: Path,
-    conn_a: sqlite3.Connection,
-    conn_b: sqlite3.Connection,
+    work: sqlite3.Connection,
     schema_a: _Schema,
     schema_b: _Schema,
+    plan_a: _KeyPlan,
+    plan_b: _KeyPlan,
     ignore: dict[str, TableIgnore],
     sample_rows: int,
     report: DiffReport,
@@ -594,11 +871,19 @@ def _compare_content(
         spec = ignore.get(table, TableIgnore())
         cols_a = [c[0] for c in schema_a.tables[table]]
         cols_b = [c[0] for c in schema_b.tables[table]]
-        report.table_columns[table] = tuple(cols_a)
+        columns = plan_a.projected(table)
+        report.table_columns[table] = columns
 
+        skipped = None
         if cols_a != cols_b:
             # Column set/order differs (already in the schema section). A
             # multiset fingerprint over mismatched columns is meaningless.
+            skipped = "columns differ (see schema diff)"
+        elif plan_a.describe(table) != plan_b.describe(table):
+            # The ids project to different natural keys (a changed key, or a key
+            # one DB's data does not hold unique), so the projections don't align.
+            skipped = "natural-key projection differs between the databases"
+        if skipped is not None:
             results.append(
                 TableContentResult(
                     table=table,
@@ -607,13 +892,13 @@ def _compare_content(
                     fingerprint_a="",
                     fingerprint_b="",
                     columns=(),
-                    skipped_reason="columns differ (see schema diff)",
+                    skipped_reason=skipped,
                 )
             )
             continue
 
-        count_a, fp_a = _fingerprint(conn_a, table, cols_a, spec.skip_where)
-        count_b, fp_b = _fingerprint(conn_b, table, cols_a, spec.skip_where)
+        count_a, fp_a = _fingerprint(work, plan_a, "a", table, spec.skip_where)
+        count_b, fp_b = _fingerprint(work, plan_b, "b", table, spec.skip_where)
 
         result = TableContentResult(
             table=table,
@@ -621,11 +906,14 @@ def _compare_content(
             count_b=count_b,
             fingerprint_a=fp_a,
             fingerprint_b=fp_b,
-            columns=tuple(cols_a),
+            columns=columns,
+            reference_columns=tuple(
+                c for c in columns if (table, c) in plan_a.references
+            ),
         )
         if not result.identical:
             a_not_b, b_not_a = _diff_samples(
-                db_a, db_b, table, cols_a, spec.skip_where, sample_rows
+                work, plan_a, plan_b, table, spec.skip_where, sample_rows
             )
             note = None
             if not a_not_b and not b_not_a:
@@ -638,16 +926,8 @@ def _compare_content(
                     "fingerprint differs but value-level diff is empty; "
                     "likely a storage-class/type difference"
                 )
-            result = TableContentResult(
-                table=table,
-                count_a=count_a,
-                count_b=count_b,
-                fingerprint_a=fp_a,
-                fingerprint_b=fp_b,
-                columns=tuple(cols_a),
-                sample_a_not_b=a_not_b,
-                sample_b_not_a=b_not_a,
-                note=note,
+            result = replace(
+                result, sample_a_not_b=a_not_b, sample_b_not_a=b_not_a, note=note
             )
         results.append(result)
     report.table_results = tuple(results)
@@ -780,12 +1060,18 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
     (``_json_cell``)."""
 
     def cells(
-        rows: Iterable[SampleRow], cols: Sequence[str]
+        rows: Iterable[SampleRow], result: TableContentResult
     ) -> list[dict[str, object]]:
+        # A reference cell is its row's natural key, printed as the JSON it is.
         return [
             {
                 "net": row.net,
-                "row": {c: _json_cell(v) for c, v in zip(cols, row.values)},
+                "row": {
+                    c: json.loads(v)
+                    if c in result.reference_columns and isinstance(v, str)
+                    else _json_cell(v)
+                    for c, v in zip(result.columns, row.values)
+                },
             }
             for row in rows
         ]
@@ -824,8 +1110,8 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
                 "fingerprint_b": r.fingerprint_b,
                 "skipped_reason": r.skipped_reason,
                 "note": r.note,
-                "sample_a_not_b": cells(r.sample_a_not_b, r.columns),
-                "sample_b_not_a": cells(r.sample_b_not_a, r.columns),
+                "sample_a_not_b": cells(r.sample_a_not_b, r),
+                "sample_b_not_a": cells(r.sample_b_not_a, r),
             }
             for r in report.table_results
         ],
@@ -875,7 +1161,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         report = diff_db_content(
             args.db_a, args.db_b, ignore=ignore, sample_rows=args.sample_rows
         )
-    except (FileNotFoundError, sqlite3.Error) as exc:
+    except (FileNotFoundError, ValueError, sqlite3.Error) as exc:
         print(f"dbdiff: error: {exc}", file=sys.stderr)
         return 2
     if args.json:
