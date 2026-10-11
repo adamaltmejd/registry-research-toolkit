@@ -430,9 +430,9 @@ def _slice_of(state: ResolvedState, source: ResolvedState) -> bool:
 
 
 # The obligation claim each fact an accepted representation can dispute travels
-# on. The column texts share one claim, `column_text_claim`. A shared state never
-# disputes the definition (that conflict stays variable-level), and a disputed name
-# leaves the variable without the common name its states would need.
+# on. The column texts share one claim, `column_text_claim`. The definition and the
+# name are not listed: a shared state records no definition dispute, and a disputed
+# name leaves the variable without a common name (DESIGN.md, delivery coverage).
 _DISPUTED_FACT_CLAIMS = {
     "data_type": "data_type_claim",
     "data_length": "data_length_claim",
