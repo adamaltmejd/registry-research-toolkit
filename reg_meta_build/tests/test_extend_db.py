@@ -97,34 +97,38 @@ name = "Kunder"
 """
 
 
-def _ids() -> dict[str, int]:
+def _ids(provider: str = _BANK) -> dict[str, int]:
     return {
-        "provider": mint("provider", _BANK),
-        "register": mint("register", _BANK, "transaktioner"),
-        "variant": mint("variant", _BANK, "transaktioner", "_default"),
-        "belopp": mint("variable", _BANK, "transaktioner", "belopp"),
-        "kontonr": mint("variable", _BANK, "transaktioner", "kontonr"),
-        "pooled_register": mint("register", _BANK, "kunder"),
-        "privat": mint("variant", _BANK, "kunder", "privat"),
-        "foretag": mint("variant", _BANK, "kunder", "foretag"),
-        "personnr": mint("variable", _BANK, "kunder", "personnr"),
+        "provider": mint("provider", provider),
+        "register": mint("register", provider, "transaktioner"),
+        "variant": mint("variant", provider, "transaktioner", "_default"),
+        "belopp": mint("variable", provider, "transaktioner", "belopp"),
+        "kontonr": mint("variable", provider, "transaktioner", "kontonr"),
+        "pooled_register": mint("register", provider, "kunder"),
+        "privat": mint("variant", provider, "kunder", "privat"),
+        "foretag": mint("variant", provider, "kunder", "foretag"),
+        "personnr": mint("variable", provider, "kunder", "personnr"),
     }
 
 
 def _providers(
-    tmp_path: Path, text: str = _BASE_TOML, *, name: str = "providers"
+    tmp_path: Path,
+    text: str = _BASE_TOML,
+    *,
+    name: str = "providers",
+    provider: str = _BANK,
 ) -> Path:
     directory = tmp_path / name
     directory.mkdir()
-    (directory / f"{_BANK}.toml").write_text(text, encoding="utf-8")
+    (directory / f"{provider}.toml").write_text(text, encoding="utf-8")
     return directory
 
 
-def _write_slug_dir(path: Path) -> None:
-    ids = _ids()
+def _write_slug_dir(path: Path, provider: str = _BANK) -> None:
+    ids = _ids(provider)
     path.mkdir()
     (path / ".snapshot.json").write_text("{}\n", encoding="utf-8")
-    (path / f"{_BANK}.toml").write_text(
+    (path / f"{provider}.toml").write_text(
         f'[register."{ids["register"]}"]\nslug = "transaktioner"\n'
         f'[register_variant."{ids["register"]}.{ids["variant"]}"]\n'
         'slug = "transaktioner-default"\n'
@@ -162,13 +166,11 @@ def _run(
     base_db: Path,
     text: str = _BASE_TOML,
     *,
-    skip_slugs: bool = False,
+    provider: str = _BANK,
 ) -> tuple[dict, Path]:
-    providers_dir = _providers(tmp_path, text, name="out-providers")
-    slug_dir = None
-    if not skip_slugs:
-        slug_dir = tmp_path / "out-slugs"
-        _write_slug_dir(slug_dir)
+    providers_dir = _providers(tmp_path, text, name="out-providers", provider=provider)
+    slug_dir = tmp_path / "out-slugs"
+    _write_slug_dir(slug_dir, provider)
     out = tmp_path / "out"
     result = extend_db(
         base_db=base_db,
@@ -176,7 +178,6 @@ def _run(
         db_dir=out,
         steward=_STEWARD,
         slug_dir=slug_dir,
-        skip_slugs=skip_slugs,
         diagnostic=True,
     )
     return result, out / "reg_meta.db"
@@ -664,20 +665,12 @@ def test_pooled_variable_metadata_disagreement_is_rejected_through_extend_db(
 
 
 def _seeded_provider_run(tmp_path: Path, base_db: Path, name: str) -> dict:
-    providers = tmp_path / "fk-providers"
-    providers.mkdir()
-    (providers / "fk.toml").write_text(
+    return _run(
+        tmp_path,
+        base_db,
         _BASE_TOML.replace('name = "Swedbank AB"', f'name = "{name}"', 1),
-        encoding="utf-8",
-    )
-    return extend_db(
-        base_db=base_db,
-        providers_dir=providers,
-        db_dir=tmp_path / "out",
-        steward=_STEWARD,
-        skip_slugs=True,
-        diagnostic=True,
-    )
+        provider="fk",
+    )[0]
 
 
 def test_provider_matching_base_name_is_reused_through_extend_db(
@@ -727,7 +720,6 @@ def test_missing_or_empty_provider_directory_is_exit_config_through_extend_db(
                 providers_dir=providers,
                 db_dir=tmp_path / "out",
                 steward=_STEWARD,
-                skip_slugs=True,
                 diagnostic=True,
             )
         assert exc.value.exit_code == EXIT_CONFIG

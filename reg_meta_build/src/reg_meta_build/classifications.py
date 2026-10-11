@@ -266,7 +266,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
     For each residual value set it gathers `n_codes`, the distinct unclassified
     `(variable_id, value_set_id)` states (variable FQID + name), and the candidate
     classifications — per candidate the `containment`, the exact-(kod,label)
-    `label_agree` (the SAME metric step 5 uses for the confident tier), and whether
+    `label_agree`, and whether
     the candidate is STANDALONE (no `supersedes_id` chain neighbour). The SAFE
     subset (`safe=True`) is the curatable tier: EXACTLY ONE candidate is a standalone
     with label_agree >= `_SAFE_LABEL_AGREE` and every other candidate is below it —
@@ -385,8 +385,7 @@ def dump_classification_residue(conn: sqlite3.Connection) -> ResidueResult:
 
         # Unclassified states per residual value set: the distinct (variable_id,
         # value_set_id) state keys without a classification association, joined to the
-        # variable FQID + name. A NULL slug segment (a partial/--skip-slugs build)
-        # renders as an empty segment — the FQID is still informative.
+        # variable FQID + name.
         state_rows = conn.execute(
             """
             SELECT DISTINCT
@@ -569,20 +568,15 @@ def render_residue_toml(result: ResidueResult) -> str:
     / label_agree / standalone so a reviewer sees the full evidence.
 
     A copyable binding is VARIABLE-grain (it reclassifies EVERY value-set state of
-    the variable), so it is held back to comment-only — never uncommented — in two
-    further cases, since copying it verbatim would either mis-tag other states or fail
-    to load:
-
-    - MIXED-STATE (P2): the variable has a safe value set but ALSO a state that a
-      variable-wide link would wrongly reclassify (an ambiguous/non-safe state, or one
-      already classified to a different class). `result.mixed_state_variable_ids` flags
-      these; curate the scoping by hand.
-    - UNSLUGGED (P3): a NULL slug segment (a `--skip-slugs` / partial build) makes the
-      FQID carry an empty segment (e.g. `scb//var`), which the curation loader
-      rejects — so the advertised copyable worklist would not load.
+    the variable), so it is held back to comment-only — never uncommented — when
+    copying it verbatim would mis-tag other states: MIXED-STATE (P2), the variable
+    has a safe value set but ALSO a state that a variable-wide link would wrongly
+    reclassify (an ambiguous/non-safe state, or one already classified to a
+    different class). `result.mixed_state_variable_ids` flags these; curate the
+    scoping by hand.
 
     The AMBIGUOUS residue (no single safe standalone, plus the safe-but-conflicting /
-    mixed-state / unslugged variables) is comment-only — NOTHING uncommented to copy,
+    mixed-state variables) is comment-only — NOTHING uncommented to copy,
     since its true family or scoping needs a human call. NOTHING materializes —
     read-only worklist only."""
     safe = [vs for vs in result.value_sets if vs.safe]
@@ -608,11 +602,6 @@ def render_residue_toml(result: ResidueResult) -> str:
             safe_name_by_fqid.setdefault(st.fqid, st.name)
             var_ids_by_fqid.setdefault(st.fqid, set()).add(st.variable_id)
 
-    def _unslugged(fqid: str) -> bool:
-        # A NULL slug segment renders as an empty piece (e.g. `scb//var`); such an
-        # FQID is rejected by the curation loader, so it can't be copyable.
-        return any(seg == "" for seg in fqid.split("/"))
-
     def _mixed(fqid: str) -> bool:
         # P2: a copyable link is VARIABLE-grain; hold it back if ANY variable behind
         # the FQID has a state a variable-wide link would wrongly reclassify.
@@ -623,27 +612,27 @@ def render_residue_toml(result: ResidueResult) -> str:
         for fqid, targets in safe_targets_by_fqid.items()
         if len(targets) > 1
     }
-    # Copyable: single safe target, not a conflict, provably safe variable-wide (P2),
-    # and fully slugged (P3). The held-back single-target variables (mixed / unslugged)
-    # are flagged comment-only below.
+    # Copyable: single safe target, not a conflict, and provably safe variable-wide
+    # (P2). The held-back single-target (mixed) variables are flagged comment-only
+    # below.
     safe_links = {
         fqid: next(iter(targets))
         for fqid, targets in safe_targets_by_fqid.items()
-        if len(targets) == 1 and not _mixed(fqid) and not _unslugged(fqid)
+        if len(targets) == 1 and not _mixed(fqid)
     }
     held_back = sorted(
         fqid
         for fqid, targets in safe_targets_by_fqid.items()
-        if len(targets) == 1 and (_mixed(fqid) or _unslugged(fqid))
+        if len(targets) == 1 and _mixed(fqid)
     )
 
     lines = [
         "# GENERATED classification-linkage residue worklist — "
         "reg-meta-build classification-residue.",
         "#",
-        "# The #416 code-set-containment detector auto-links the confident tier and",
-        "# vintage-reclaims one-family residue; what remains is MULTI-FAMILY value",
-        "# sets with >= 1 still-unclassified (no classification association) state. These",
+        "# MULTI-FAMILY value sets (>1 candidate classification by #416 code-set",
+        "# containment) with >= 1 still-unclassified (no classification association)",
+        "# state. Containment never binds a classification during a build. These",
         "# are INFERRED candidates, NOT confirmed links. NOTHING here loads into a",
         "# build — review each and copy ONLY confirmed links into",
         "# reg_meta_build/curation/classifications/<short_name>.toml (drop/replace",
@@ -720,27 +709,18 @@ def render_residue_toml(result: ResidueResult) -> str:
             "a human must pick one."
         )
     # Single-target safe variables held back from the copyable set: a variable-wide
-    # link would mis-tag another state (MIXED-STATE, P2) or the FQID is unslugged so
-    # it can't load (UNSLUGGED, P3). Flag the target as a comment so a maintainer can
-    # scope it by hand; never uncommented.
+    # link would mis-tag another state (MIXED-STATE, P2). Flag the target as a
+    # comment so a maintainer can scope it by hand; never uncommented.
     for fqid in held_back:
         name = safe_name_by_fqid.get(fqid)
         suffix = f" ({_toml_comment(name)})" if name else ""
         target = next(iter(safe_targets_by_fqid[fqid]))
-        flag = "UNSLUGGED" if _unslugged(fqid) else "MIXED-STATE"
         lines.append("")
-        if flag == "UNSLUGGED":
-            lines.append(
-                f"# UNSLUGGED: variable {_toml_comment(fqid)}{suffix} has a safe value "
-                f"set (target {_toml_comment(target)}) but a NULL slug segment — a "
-                "partial/--skip-slugs build; rebuild with slugs, then curate manually."
-            )
-        else:
-            lines.append(
-                f"# MIXED-STATE: variable {_toml_comment(fqid)}{suffix} has a safe value "
-                f"set (target {_toml_comment(target)}) but other states need scoping — "
-                "a variable-wide link would mis-tag them; curate manually."
-            )
+        lines.append(
+            f"# MIXED-STATE: variable {_toml_comment(fqid)}{suffix} has a safe value "
+            f"set (target {_toml_comment(target)}) but other states need scoping — "
+            "a variable-wide link would mis-tag them; curate manually."
+        )
     for vs in ambiguous:
         lines.extend(_evidence_comment(vs))
 

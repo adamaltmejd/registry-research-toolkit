@@ -949,8 +949,8 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Emit the code-set-containment (#416) RESIDUE from a BUILT DB: the\n"
             "MULTI-FAMILY value sets (>1 candidate classification by code containment)\n"
-            "that still have >= 1 unclassified state (no state_classification association)\n"
-            "after the detector's confident tier + #494 vintage reclaim.\n"
+            "that still have >= 1 unclassified state (no state_classification\n"
+            "association). Containment never binds a classification during a build.\n"
             "Productizes the #494 throwaway recompute so a maintainer can curate\n"
             "reg_meta_build/curation/classifications/ from it. Reads a built DB; NEVER\n"
             "mutates it and NOTHING is materialized.\n\n"
