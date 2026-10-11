@@ -169,7 +169,7 @@ CREATE INDEX IF NOT EXISTS idx_related_document_register
     ON related_document(register);
 """
 
-# The index holds `fold_search` text (decision 16), so `fold_search` is the only fold
+# The index holds `fold_search` text, so `fold_search` is the only fold
 # and the tokenizer only splits. It reads its display text from `doc` (external
 # content): `snippet()` maps the index's token positions onto the stored body, so
 # snippets keep their case and diacritics. Footgun: FTS5's 'rebuild' re-tokenizes the

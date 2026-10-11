@@ -27,5 +27,6 @@ slug = "else"
 register = "scb/sample"
 key = "pair"
 label = "Pair"
+axes = []
 members = [{ variable = "value" }, { variable = "key" }]
 

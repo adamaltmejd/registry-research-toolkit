@@ -58,6 +58,10 @@ _require_str = functools.partial(
 )
 
 
+_TAG_KEYS = frozenset({"slug", "label", "member"})
+_MEMBER_KEYS = frozenset({"variable", "register", "rank", "starred", "note"})
+
+
 def _optional_str(entry: dict, field: str, context: str) -> str | None:
     value = entry.get(field)
     if value is None:
@@ -72,11 +76,23 @@ def _optional_str(entry: dict, field: str, context: str) -> str | None:
     return value
 
 
+def _require_known_keys(entry: dict, allowed: frozenset[str], context: str) -> None:
+    """A misspelled key (`stared = true`) would otherwise read as its default."""
+    if unknown := sorted(set(entry) - allowed):
+        raise curation_error(
+            "tags_invalid",
+            f"tags {context} has unknown key(s): {unknown}.",
+            f"Use only {', '.join(f'`{k}`' for k in sorted(allowed))} in "
+            "reg_meta_build/curation/tags.toml.",
+        )
+
+
 def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
     """Parse the curated-tag TOML. Empty when no file (synthetic test builds,
     wheel installs).
 
     Load-time validation (all EXIT_CONFIG, actionable): only `[[tag]]` top-level;
+    no unknown keys in a `[[tag]]` or `[[tag.member]]` table;
     `slug`/`label` non-empty strings; tag slugs unique;
     each `[[tag.member]]` sets EXACTLY ONE of `variable` (3-seg FQID) / `register`
     (2-seg FQID), with optional `rank` (int) / `starred` (bool) / `note` (str);
@@ -96,6 +112,7 @@ def load_tags(path: Path | None) -> tuple[CuratedTag, ...]:
     for index, entry in enumerate(entries, start=1):
         where = f"curation/tags.toml [[tag]] entry {index}"
         with located(where):
+            _require_known_keys(entry, _TAG_KEYS, "[[tag]]")
             slug = _require_str(entry, "slug", "[[tag]]")
             label = _require_str(entry, "label", "[[tag]]")
             if slug in seen_slugs:
@@ -140,6 +157,7 @@ def _parse_member(
     """Validate one `[[tag.member]]` table → `TagMember`. Exactly one of
     `variable` (3-seg) / `register` (2-seg); `rank` int (default 0), `starred`
     bool (default False), `note` optional str; no duplicate member within a tag."""
+    _require_known_keys(raw, _MEMBER_KEYS, f"tag {slug!r} member")
     variable_ref = raw.get("variable")
     register_ref = raw.get("register")
     if (variable_ref is None) == (register_ref is None):

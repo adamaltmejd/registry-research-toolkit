@@ -1,5 +1,4 @@
-//! The `project_data.json` types and their two JSON encodings (`RUST_RUNTIME_SPEC.md`
-//! section 5, package 3e.1).
+//! The `project_data.json` types and their two JSON encodings (`crates/reg-core/DESIGN.md`).
 //!
 //! The types are the retired `reg_schema.project_data` models. They keep the raw spelling
 //! of every value (an int year stays an int, `"2018"` stays a string), and serialize

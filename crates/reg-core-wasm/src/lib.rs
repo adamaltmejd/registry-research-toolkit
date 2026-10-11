@@ -1,5 +1,5 @@
 //! `reg-core-wasm`: `reg-core` for the SPA, as a WebAssembly module
-//! (`RUST_RUNTIME_SPEC.md` section 10, packages 5.2 and 5.3).
+//! (`crates/DESIGN.md`, "Crates and run modes").
 //!
 //! Thin glue: JSON text crosses the boundary in both directions, and every export is
 //! total, so no input string can panic (a panic aborts the module). The SPA's only

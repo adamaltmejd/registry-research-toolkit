@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.27@sha256:bde3983e9c939224420ddaf6b784cc30e09b035a4dea01f581230c50809f372e
 
 # reg_webapp deployment image: the Rust server (`reg-meta serve`) alone, with the
-# baked reg_meta DB pair and the steward branding (RUST_RUNTIME_SPEC.md section 8,
-# package 3a.9). It serves the API and `/mcp` only; the edge worker serves the SPA
+# baked reg_meta DB pair and the steward branding (crates/DESIGN.md,
+# "Distribution"). It serves the API and `/mcp` only; the edge worker serves the SPA
 # (reg_webapp/edge/, built by container-build.yml's edge jobs).
 #
 # Build context is the REPO ROOT (not reg_webapp/): the server stage needs the

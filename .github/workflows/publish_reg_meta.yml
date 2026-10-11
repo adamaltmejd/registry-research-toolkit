@@ -1,9 +1,9 @@
 name: Release reg_meta
 
-# A published reg_meta/v* release ships no package (no PyPI, RUST_RUNTIME_SPEC.md
-# stage 4 decision 3): its DB assets are checked by artifact conformance and baked
+# A published reg_meta/v* release ships no package (no PyPI;
+# crates/DESIGN.md, "Distribution"): its DB assets are checked by artifact conformance and baked
 # into the origin images by container-build.yml. The `binaries` job attaches the
-# `reg-meta` binaries (RUST_RUNTIME_SPEC.md package 4.12).
+# `reg-meta` binaries.
 on:
   release:
     types: [published]
@@ -49,7 +49,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run container-build.yml --repo "$GITHUB_REPOSITORY" --ref main
 
-  # `reg-meta` binaries for local `reg-meta mcp` (RUST_RUNTIME_SPEC.md section 8), built
+  # `reg-meta` binaries for local `reg-meta mcp` (crates/DESIGN.md, "Distribution"), built
   # natively on each runner, each with a `shasum -a 256 -c` checksum file. Not gated
   # on `ci`: the tagged commit already passed CI on main, and gating would skip the
   # dispatch build. Linux links the runner's glibc, so it runs on Ubuntu 24.04-era

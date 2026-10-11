@@ -904,6 +904,26 @@ class RegisterGroupEntry(_CurationModel):
 
     _names = field_validator("key", "label")(_require_trimmed)
 
+    @model_validator(mode="after")
+    def _one_axis_shape(self) -> RegisterGroupEntry:
+        # `resolved()` keeps facets only where an axis names them, so an absent or
+        # doubled shape, or a flat coordinate on an axis-less group, would load and
+        # drop curated values. Same contract as the worklist's `_parse_group_axes`.
+        if (self.axis is None) == (self.axes is None):
+            raise ValueError(
+                "set exactly one of `axis` or `axes`; declare an axis-less "
+                "umbrella with `axes = []`"
+            )
+        if self.axes == [] and any(
+            member.value is not None or member.label is not None
+            for member in self.members
+        ):
+            raise ValueError(
+                "an axis-less group (`axes = []`) lists whole members; "
+                "a member cannot set `value` or `label`"
+            )
+        return self
+
     def resolved(self) -> ResolvedVariableGroup:
         """This group as the build writes it. The register loader validates it here
         so a malformed group refuses with its file and entry."""

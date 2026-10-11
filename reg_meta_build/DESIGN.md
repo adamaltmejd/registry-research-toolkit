@@ -12,12 +12,12 @@ reads what it writes. Cross-package constraints live in
 
 The builder also depends on `reg-core-py` (`crates/reg-core-py`), the Python module of
 the Rust `reg-core` crate: the single home of the contracts the build shares with the
-Rust runtime ([../RUST_RUNTIME_SPEC.md](../RUST_RUNTIME_SPEC.md) section 5): the FQID,
-slug and period grammar and the text folds. It is a uv workspace member built by
-maturin, so `uv sync` needs a Rust toolchain on the maintainer machine and in CI; its uv
-`cache-keys` rebuild it after an edit to `crates/reg-core`, `crates/reg-core-py`,
-`Cargo.toml` or `Cargo.lock`. It is not on PyPI, so a published `reg_meta_build` wheel
-cannot resolve it.
+Rust runtime ([../crates/DESIGN.md](../crates/DESIGN.md), "One implementation per
+contract"): the FQID, slug and period grammar and the text folds. It is a uv workspace
+member built by maturin, so `uv sync` needs a Rust toolchain on the maintainer machine
+and in CI; its uv `cache-keys` rebuild it after an edit to `crates/reg-core`,
+`crates/reg-core-py`, `Cargo.toml` or `Cargo.lock`. It is not on PyPI, so a published
+`reg_meta_build` wheel cannot resolve it.
 
 The four-step pipeline below is the only `build-db` implementation. A diagnostic
 database is incomplete and cannot be activated by builder publication. Input declaration
@@ -647,7 +647,9 @@ is already in the register tree as accepted, so accepted families have one recor
 Candidate output is worklist data and is never build curation. A group lists exact
 variables or delivery-column members. One-axis groups may use a flat value/label
 coordinate; multiple axes name their labels and each member's coordinates; axis-less
-groups are explicit umbrellas. They alter presentation, not identity or bindings.
+groups are explicit umbrellas (`axes = []`) with no member coordinates. A group sets
+exactly one of `axis` and `axes`, so a missing axis cannot load as an umbrella and drop
+its coordinates. They alter presentation, not identity or bindings.
 `[[code_label_pair]]` is also register-local: both FQIDs belong to the same register,
 and the pair only folds matching code and label concepts.
 
@@ -1663,6 +1665,71 @@ Publication uses staged output and atomic replacement, with the previous generat
 retained as `.prev`. No source preparation, decision refresh, network fetch or LLM call
 occurs during a build.
 
+## Base and derive
+
+The build has two steps with a stable boundary between them:
+
+- **Base**: the curation-driven build (`build-db`, `extend-db`) writes the core tables.
+  Only curation and source changes touch it, and a full strict build takes about an
+  hour.
+- **Derive** (`reg-meta-build derive`; `build-db` and `extend-db` also run it) reads a
+  built database and writes the derived tables. It is a pure function of the base
+  artifact and deterministic, and its checks are part of `validate_built_db`. A steward
+  artifact interleaves it with the extension: insert the steward core (graph, slugs and
+  warnings), derive the reference tables over base plus overlay, compile holdings, then
+  derive the holdings tables ("Steward extension").
+
+The split lets runtime and derive work proceed against pinned release artifacts and the
+synthetic fixtures without a base build, while curation keeps changing the base; neither
+waits for the other. The pin and the differential gate are in
+[../conformance/README.md](../conformance/README.md), "Verification gates".
+
+**Compile, don't resolve.** The artifact is immutable and rebuilt from scratch on every
+release, so work is sorted three ways:
+
+- a pure function of the artifact becomes a derived table: the resolver's
+  representations (`expanded_state`, `resolver_column`), browse deliveries and their
+  windows, succession chains and terminals, classification chains,
+  `coded_variable_stats`, the materialized `variable_search_text` and the folded search
+  indexes;
+- query-dependent work that a precomputed column or index can serve gets that column or
+  index (`canonical_column`, the folded FTS5 text);
+- genuinely request-dependent work stays in the reader: search arm merge, scoring, folds
+  and cursors, intersecting periods with a request, `diff`, order materialization, the
+  window fallback and warning attribution ([../crates/DESIGN.md](../crates/DESIGN.md),
+  "Compiled states and request-time rules").
+
+Compile only work a request would repeat (the resolver, closures, aggregates); read a
+plain join directly when it measures cheap. Keep a derived relation narrow: it
+references base rows rather than copying them (a content copy of `expanded_state` would
+add about 200 MB), and code owners are not precomputed (up to 3.9M rows). The derived
+tables add about 5% (65 MB) to an artifact, and derive takes about a minute on the full
+catalog including validation. Derive stays set-based or parallel (`derive/states.py`
+runs a process pool); a slow derive table is made set-based before more tables are
+added.
+
+**Derived identity.** Base identity, derivation identity (derive code and schema minor)
+and the admitted schema versions feed the served generation, so changed derivation
+inputs change the generation and no cursor outlives them, and identical inputs give an
+identical generation and identical bytes. A derived generation hashes
+`derived_from_generation_id` (`artifact_identity.py`), which built artifacts lack, so
+their ids are unchanged. Derive reads an immutable base, publishes atomically, leaves
+the base bytes unchanged and rejects a stale derivation. It admits a base of the same
+major and a minor up to the builder's (`open_built_db(older_minor=True)` in `db.py`);
+every other builder input, `extend-db`'s base included, stays exact, so an older base is
+derived before it is extended.
+
+**Invariants `validate_built_db` owns** for the derived tables (one validator, extended,
+never a second one): browse delivery windows disjoint; `resolver_column` equal to the
+resolver's emitted columns; one canonical spelling per (variable, variant, fold); chain
+and terminal tables acyclic and consistent with the `*_replaced_by` edges at the
+manifest year; held tables equal to the holdings facts; aggregates equal to a
+recomputation; a fixed insertion order for byte-identical output.
+
+**The manifest year is the test seam** for succession: tests build an artifact with a
+different `classification_succession_as_of_year` rather than overriding the year in a
+reader, and the build's validator reads the same manifest value.
+
 ## Compiled resolver
 
 The resolver has one home: derive (`derive/states.py`, `derive/browse.py`). It compiles
@@ -1760,6 +1827,42 @@ maintained-input run. Performance evidence includes cold preparation, warm build
 memory, accepted Git storage, raw archives, prepared stores, outputs, caches and
 temporary peak. Tiny fixture measurements cannot establish full-run savings.
 
+## Build performance
+
+The build stays Python; that was checked against measurements. The 0.41.0 full strict
+build took 66 minutes on one core: per-register resolve over 290 registers 41 minutes
+(six SCB registers 23 of them, the largest 320 s), compiling the selected curation 19,
+materialization and dependencies 3, loading inputs 1. A profile of a one-register build
+found two layers of cost:
+
+- **Algorithmic waste**, which dominated: a native-family lookup that decoded the whole
+  register to keep one family, millions of SQLite `execute` calls, `record_ref` called
+  52M times for 7,943 records, and repeated hashing. The family scan, `record_ref` and
+  guarded-claim hashing were fixed in #1181.
+- **Python object overhead**: 3.2 billion function calls, Pydantic `validate_python` run
+  68M times, JSON encoding, and small key helpers called 50–160M times each.
+
+**Why not Polars.** None of the hot spots is column-shaped. They are per-record rule
+logic with source locators, located errors, preserved order and multiplicity, and
+byte-identical output. Polars would add a third data model beside the Pydantic IR and
+SQLite and need `maintain_order` discipline everywhere to stay deterministic. The parts
+that are column-shaped (value binding, coverage, the derived tables) are SQL in the
+SQLite stores the build already uses.
+
+**Why not Rust yet.** Rust would remove the second layer and cut memory, and make the
+stack one language. But the build is the most frequently changed code in the repo (rule
+and curation tickets land weekly), and a rewrite must reproduce byte-identical artifacts
+and the same diagnostic baseline while both move. The first layer is cheap to fix in
+Python.
+
+The order of build work: remove the remaining algorithmic waste (byte-identical,
+verified with `dbdiff`); resolve registers in parallel processes, merged in a fixed
+order; cache per-register resolve results by content; keep Pydantic validation at trust
+boundaries only; then re-profile, and move specific kernels into `reg-core` through
+`reg-core-py` only if object overhead still dominates. The open items are #1423, #1424
+and #1425. Revisit a Rust build only once the curation rules stabilize, and then stage
+by stage behind the same artifact-equality gate, never as one rewrite.
+
 ## Commands
 
 ```text
@@ -1823,17 +1926,15 @@ manifest names the steward, `derive_holdings` adds the `holdings`-scope browse a
 coded-variable rows, which read the compiled holdings. Derive keeps one module per table
 family in the `derive/` package (`states.py`, `browse.py`, `chains.py`, `schema.py`,
 `search_index.py`), each with the `validate_built_db` check that recomputes its tables.
-The derived states, browse and coded-variable tables call the reader in place until
-stage 4 moves it into this package. Derive compiles only work a request would repeat:
-`coded_variable_stats` is an aggregate over every coded state, while `schema`, `diff`
-and `coverage` read one register's `expanded_state`, `variable_state` and
-`browse_delivery` rows directly. The extension refolds the search indexes over base plus
-overlay. Structural, mapping and accounting gates run before atomic publication of one
-steward artifact. Strict steward publication requires accepted provider overlays,
-inventory and policy plus committed steward slug pins; no skip flag bypasses compilation
-or accounting. Provider regeneration and input acceptance remain separate maintainer
-operations. Diagnostic output remains explicitly nonpublishable and cannot replace the
-active artifact.
+Derive compiles only work a request would repeat: `coded_variable_stats` is an aggregate
+over every coded state, while `schema`, `diff` and `coverage` read one register's
+`expanded_state`, `variable_state` and `browse_delivery` rows directly. The extension
+refolds the search indexes over base plus overlay. Structural, mapping and accounting
+gates run before atomic publication of one steward artifact. Strict steward publication
+requires accepted provider overlays, inventory and policy plus committed steward slug
+pins; no skip flag bypasses compilation or accounting. Provider regeneration and input
+acceptance remain separate maintainer operations. Diagnostic output remains explicitly
+nonpublishable and cannot replace the active artifact.
 
 Panel entity keys must not drift with a reslug (#546). On the global build, compile
 enforces this: every variable needs an authored `[[variable]]` pin, and a variable
@@ -2151,21 +2252,21 @@ documents to change catalog facts.
 `doc_db.py` owns the build and FTS creation. Read schema constants and helpers remain in
 `reg_meta`, so querying the document database does not import maintainer tooling.
 
-`doc_fts` holds `fold_search` text (decision 16 of `RUST_RUNTIME_SPEC.md`; doc schema
-1.3.0) under `unicode61 remove_diacritics 0`, so `fold_search` is the only fold, as in
-the catalog's search indexes. It stays an external-content index over `doc`: FTS5's
-`snippet()` reads the stored body and places the index's token positions on it, so
-snippets keep their case and diacritics. A fold that splits a token (NFKD of `½` is
-`1⁄2`) would shift the highlights within that one document. FTS5's `rebuild`
-re-tokenizes the unfolded `doc` columns and so unfolds the index; it is never run on it,
-and `index_docs` refills the index instead. `PRAGMA integrity_check` and FTS5's default
-`integrity-check` are safe; a strict `integrity-check` (rank 1) compares the index with
-the unfolded columns and reports a false "malformed". The build ends with `index_docs`,
-and G1 runs it over a copy of the pinned docs database for its candidate copy.
-`index_docs` also stamps `doc_meta.generation`, a SHA-256 of the schema version and the
-`doc` rows, which `docs_search`'s cursors bind beside the catalog generation, so a
-docs-only rebuild makes them stale. It takes about 0.05 s for the release's 503
-documents (0.76 MB of text), so the docs need no derive step.
+`doc_fts` holds `fold_search` text (doc schema 1.3.0) under
+`unicode61 remove_diacritics 0`, so `fold_search` is the only fold, as in the catalog's
+search indexes. It stays an external-content index over `doc`: FTS5's `snippet()` reads
+the stored body and places the index's token positions on it, so snippets keep their
+case and diacritics. A fold that splits a token (NFKD of `½` is `1⁄2`) would shift the
+highlights within that one document. FTS5's `rebuild` re-tokenizes the unfolded `doc`
+columns and so unfolds the index; it is never run on it, and `index_docs` refills the
+index instead. `PRAGMA integrity_check` and FTS5's default `integrity-check` are safe; a
+strict `integrity-check` (rank 1) compares the index with the unfolded columns and
+reports a false "malformed". The build ends with `index_docs`, and G1 runs it over a
+copy of the pinned docs database for its candidate copy. `index_docs` also stamps
+`doc_meta.generation`, a SHA-256 of the schema version and the `doc` rows, which
+`docs_search`'s cursors bind beside the catalog generation, so a docs-only rebuild makes
+them stale. It takes about 0.05 s for the release's 503 documents (0.76 MB of text), so
+the docs need no derive step.
 
 ### Literal documentary relationships
 

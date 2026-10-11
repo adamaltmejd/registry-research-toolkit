@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "A group that names neither `axis` nor `axes` used to load as axis-less and drop each member's value and label. The hardest form is this one: flat one-axis members whose `axis` line is missing, which reads like a valid one-axis group. Allowed twin: group-member-shapes-load, whose umbrella declares `axes = []` and whose one-axis group names its axis.",
+  "fails_if": "the register loader accepts a [[group]] with neither `axis` nor `axes` (an implicit axis-less group) instead of requiring an explicit `axes = []`",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "set exactly one of `axis` or `axes`"
+    ]
+  }
+}

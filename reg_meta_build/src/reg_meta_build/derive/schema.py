@@ -1,8 +1,8 @@
 """Schema-family aggregates: `get coded-variables` per scope.
 
 Counting a name's distinct codes is an aggregate over every coded state (5.5 s
-on the pinned global artifact), so it is compiled once (RUST_RUNTIME_SPEC.md
-stage 3b-3e decision 2). `schema`, `diff` and `coverage` read `expanded_state`,
+on the pinned global artifact), so it is compiled once (`reg_meta_build/DESIGN.md`,
+"Base and derive"). `schema`, `diff` and `coverage` read `expanded_state`,
 `variable_state` and `browse_delivery` per register instead: a plain join that
 measured at most 250 ms for a whole register's history.
 """
@@ -25,7 +25,7 @@ type CodedRow = tuple[str, str, int, int, int]
 
 
 # The reader's aggregate and its read-scope predicate, moved from
-# `reg_meta.queries` and `reg_meta.holdings` (package 4.2). Derive passes a scope
+# `reg_meta.queries` and `reg_meta.holdings`. Derive passes a scope
 # `browse_scopes` already admitted, so the reader's `resolve_scope` stays behind.
 
 

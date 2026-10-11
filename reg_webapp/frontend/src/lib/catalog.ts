@@ -403,7 +403,7 @@ export function axisNoun(axes: readonly GroupAxisModel[]): string {
 // The catalog/authoring lists render at scale (238 registers, 740 variables) —
 // every list surface needs an in-memory substring filter. One shared matcher so
 // all four surfaces fold identically, and identically to the server's search
-// (`fold_search`, RUST_RUNTIME_SPEC.md section 5): "lon" matches both "Löne…"
+// (`fold_search`, crates/DESIGN.md "Text folds"): "lon" matches both "Löne…"
 // and "lön" (diacritic-blind), "strasse" matches "Straße", and the needle is
 // matched against BOTH display name AND slug/FQID. The fold is reg-core's own
 // (`foldSearch`, through WASM), not a copy.

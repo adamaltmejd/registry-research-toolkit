@@ -143,7 +143,7 @@ MAX_QUERY_CHARS = 200
 
 
 def _fold(text):
-    """The documented search fold (`fold_search`, RUST_RUNTIME_SPEC.md section 5),
+    """The documented search fold (`fold_search`, crates/DESIGN.md "Text folds"),
     restated so the oracle does not share the reader's code: casefold, NFKD, drop
     combining marks, until nothing changes; then one space between words."""
     for _ in range(3):

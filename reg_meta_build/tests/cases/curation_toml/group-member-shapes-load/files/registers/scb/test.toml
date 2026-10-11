@@ -7,6 +7,7 @@ native_id = "1"
 register = "scb/test"
 key = "umbrella"
 label = "Umbrella"
+axes = []
 members = [{ variable = "a" }, { variable = "b" }]
 
 [[group]]

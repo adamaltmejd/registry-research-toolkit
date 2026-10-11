@@ -1,4 +1,4 @@
-//! `reg-catalog`: the reader (`RUST_RUNTIME_SPEC.md` sections 6 and 7). It opens and
+//! `reg-catalog`: the reader (`crates/DESIGN.md`, "Crates and run modes"). It opens and
 //! admits one catalog artifact and defines the operation set ([`ops`]), which the
 //! `reg-meta` binary serves.
 
@@ -26,7 +26,7 @@ pub const CONTRACT_VERSION: &str = "4.0.0";
 pub const SCHEMA: (u32, u32) = (10, 0);
 const DB_FILENAME: &str = "reg_meta.db";
 
-/// The read scope (section 7); every read takes it.
+/// The read scope; every read takes it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, ToSchema)]
 #[serde(rename_all = "lowercase")]
 pub enum Scope {

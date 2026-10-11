@@ -3,8 +3,7 @@
 Cross-cutting design for the Registry Research Toolkit — the topology, dependency graph,
 and repo-wide invariants that no single package owns. Package-local rationale lives in
 each `<package>/DESIGN.md`; remaining (not-yet-built) work lives in
-[`REFACTOR_SPEC.md`](REFACTOR_SPEC.md) and, for the Rust runtime and compiled-catalog
-refactor, [`RUST_RUNTIME_SPEC.md`](RUST_RUNTIME_SPEC.md).
+[`REFACTOR_SPEC.md`](REFACTOR_SPEC.md).
 
 This document is the durable home for what used to be §1–§4, §9.3, §11–§13, and the §16
 overview of the now-dissolved Model A refactor spec. The Model A migration (the
@@ -124,10 +123,10 @@ reg_webapp     → reg-core-wasm (built into the SPA by `bun run gen:wasm`)
 ```
 
 Nothing is published to PyPI. The runtime releases on `reg_meta/v*` tags: the `reg-meta`
-crate version, the DB assets and the `reg-meta` binaries (`RUST_RUNTIME_SPEC.md` package
-4.12). `reg_meta_build` is tagged (`reg_meta_build/v*`) but not published: it depends on
-the workspace-only `reg-core-py` and runs from a maintainer checkout. The webapp ships
-as a container image built from the newest `reg_meta/v*` release's assets.
+crate version, the DB assets and the `reg-meta` binaries for macOS arm64 and Linux
+x86_64. `reg_meta_build` is tagged (`reg_meta_build/v*`) but not published: it depends
+on the workspace-only `reg-core-py` and runs from a maintainer checkout. The webapp
+ships as a container image built from the newest `reg_meta/v*` release's assets.
 
 ### Why this split
 
@@ -138,6 +137,25 @@ as a container image built from the newest `reg_meta/v*` release's assets.
   artifacts** on `reg_meta/v*` tags, fetched with `curl`, SHA-256 verification and
   `zstd`. See [`crates/DESIGN.md`](crates/DESIGN.md) for the runtime and
   [`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md) for the project contract.
+- **Compile, don't resolve.** The artifact is immutable and rebuilt on every release, so
+  anything that is a pure function of it is computed once by the build's derive step
+  instead of on every query. The resolver has one home, in the build; the reader keeps
+  only request-dependent rules. Measured query cost on the old reader was query design,
+  not language, so this is what makes the reader fast and small
+  ([`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md), "Base and derive").
+- **One implementation per contract.** Each contract that crosses a language or package
+  boundary (grammars, folds, the project validator, result types) has one home, reached
+  from the build through `reg-core-py` and from the SPA through `reg-core-wasm`. The
+  table is in [`crates/DESIGN.md`](crates/DESIGN.md), "One implementation per contract".
+- **The runtime is Rust; the build stays Python.** The server, MCP tools and SPA share
+  one validator, one grammar and one set of result types, and local MCP is one binary.
+  The build is the most frequently changed code and stays Python until its curation
+  rules stabilize ([`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md), "Build
+  performance").
+- **Agents and the SPA are the users.** One operation set, exposed over HTTP and MCP
+  (hosted at catalog.swecov.se and local `reg-meta mcp`); there is no query CLI and no
+  human-oriented output. The interface rules are in
+  [`crates/DESIGN.md`](crates/DESIGN.md), "Agent and web interface".
 
 ### Accepted source revisions and catalog generations
 
@@ -233,6 +251,9 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
 
 - **Build / runtime cleanly separated.** The Rust runtime (`crates/`) only reads the
   artifact; `reg_meta_build` is operator-side, stays Python and is the only writer.
+- **Latest tooling.** Newest stable versions of languages, crates, packages and SDKs,
+  and modern methods; no compatibility work for older toolchains. Windows is served by
+  hosted MCP unless a local binary builds without special effort.
 - **Stateless server.** No process-local caches that change behavior across requests;
   the catalog DB is opened read-only.
 - **OpenAPI is the canonical contract.** `crates/reg-meta/openapi.json` is committed and
@@ -353,12 +374,20 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
   | Rust conformance run (`scripts/gate.py rust`) | 30 s  | 3 min  | The whole conformance suite against the Rust server; Shares the `rust` job with `crates/`.                                           |
   | frontend (`bun run test`)                     | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
 
-G0 of `RUST_RUNTIME_SPEC.md` §4 runs conformance, the touched packages and
-`cargo test --workspace`. The runtime-side rows, conformance and `crates/`, sum to 30 s,
-so any change touching the runtime fits G0's 60 s. From slice 3a G0 also runs the Rust
-HTTP run (§10: `scripts/gate.py rust`, the whole suite against the Rust server, out of
-process) within its own 30 s row above. G1 (under 5 min) and G2 run on real artifacts in
-tier 3 and are not package budgets. `reg_meta_build` stays Python and is outside G0.
+Three verification gates cut across the tiers. They are named G0–G2 so they are not
+confused with the tiers; `conformance/README.md` ("Verification gates") has the G1
+procedure and the pin.
+
+  | Gate | What runs                                                                                                                                  | Budget                           | When                    |
+  | ---- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------- | ----------------------- |
+  | G0   | `scripts/gate.py g0` (lint, `cargo test --workspace`, conformance and the touched packages) and `scripts/gate.py rust` (the Rust HTTP run) | under 60 s, plus 30 s for `rust` | every change            |
+  | G1   | `scripts/gate.py g1`: derive on the pinned real artifacts, then the pinned release's server against the checkout's, as raw bytes           | under 5 min warm                 | releases                |
+  | G2   | a full base build, derive, and G1 on the result                                                                                            | about 1 h                        | maintainer, at releases |
+
+The runtime-side rows above, conformance and `crates/`, sum to 30 s, so any change
+touching the runtime fits G0's 60 s; the Rust HTTP run has its own 30 s row. G1 and G2
+run on real artifacts in tier 3 and are not package budgets. A slow gate is a defect to
+fix, not a reason to skip it.
 
 ### Conformance suite
 
@@ -419,6 +448,12 @@ git (the `MIGRATION_PLAN.md` tracker was retired once A5 shipped).
   | §9 webapp                                                                                                               | `reg_webapp/DESIGN.md`              |
   | §7 (bundle), §10-bundle, §16 PII/determinism (archived)                                                                 | `archive/mona-subsystem`            |
   | §6.6 codes, §8 stats+kit, §9 deployment/stewards, §10 mockdata, §14 open decisions, §15 steps 6.5–11, remaining §16     | `REFACTOR_SPEC.md` (remaining work) |
+
+The Rust runtime refactor's tracker dissolved the same way: its design into
+[`crates/DESIGN.md`](crates/DESIGN.md) (runtime, contracts, interface),
+[`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md) (base and derive, build
+performance) and [`conformance/README.md`](conformance/README.md) (verification gates),
+its open build work into issues.
 
 Shared literal source evidence types live in `reg_meta_build` (`source_evidence.py`);
 the Rust reader reads the documentary relationships from the artifact. Documentary

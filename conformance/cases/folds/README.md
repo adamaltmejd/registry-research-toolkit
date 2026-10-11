@@ -1,6 +1,6 @@
 # Fold corpus
 
-The oracle for the text folds of `RUST_RUNTIME_SPEC.md` section 5, read by
+The oracle for the text folds of `crates/DESIGN.md` ("Text folds"), read by
 `crates/reg-core/tests/fold_corpus.rs` (`cargo test --workspace`).
 
 ## Files

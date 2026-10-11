@@ -13,6 +13,176 @@ The operation names, parameters, result shapes and routes are
 `conformance/api/errors.toml`. This file does not repeat them; it says why the model is
 shaped the way it is.
 
+## Why a compiled catalog and a Rust runtime
+
+Measured on the Python reader it replaced (0.41.0 catalog, warm cache): every CLI call
+paid about 250 ms of Python start-up, and search took 650–860 ms, 70–93% of it inside
+SQLite, over about 1,600 `execute` calls and 139k calls into a Python fold UDF. One
+listing took 72 s in a single badly planned statement. Two conclusions shape the
+runtime:
+
+- **Query cost is a query-design problem, not a language one.** A Rust reader runs the
+  same SQLite engine. The fix is to move every pure function of the artifact into the
+  build (`reg_meta_build/DESIGN.md`, "Base and derive"), which also keeps the reader
+  small.
+- **Start-up does not matter**, because the runtime runs as long-lived processes
+  (`serve`, `mcp`). The case for Rust is one implementation of each shared contract
+  across build, server and browser, typed contracts, and memory use.
+
+The HTTP server is Rust rather than a Python server calling Rust through bindings. With
+bindings every result type would exist twice, as a Rust struct and as a Pydantic model
+for OpenAPI, which is the drift this design removes. Most of the old backend was catalog
+logic (node assembly, search ranking, semantic validation) that belongs in the operation
+set, where agents get it too. The deploy image is one static binary plus the baked DBs
+(the 1 GB Fly VM is kept for the page cache), and local MCP needs no Python environment.
+
+## One implementation per contract
+
+Each contract that crosses a language or package boundary has exactly one
+implementation. New code that needs one of these calls its home; it does not add a
+second copy held in step by a parity test.
+
+  | Contract                                | Single home                      | Reached from                                          |
+  | --------------------------------------- | -------------------------------- | ----------------------------------------------------- |
+  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate           |
+  | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                            |
+  | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`      |
+  | Interval algebra over periods           | `reg-core`                       | Reader; SPA via `reg-core-wasm`                       |
+  | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
+  | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only; no Rust consumer recomputes a build hash  |
+  | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export      |
+  | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it |
+
+The SPA never parses period grammar or computes a project period's bounds: it composes
+`reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)); the catalog's
+delivery-window fusing in `catalog.ts` is the one remaining copy (#1426). Its
+type-to-filter fold is `fold_search` through the same module.
+
+**Text folds.** Two named folds, specified rather than inherited from a library:
+
+- `fold_identity`: Unicode lowercase with the Final_Sigma context rule, no normalization
+  (`str::to_lowercase`; Python's `str.lower()` agrees). It is the column identity rule.
+- `fold_search`: full case folding, NFKD, drop characters with a nonzero canonical
+  combining class, repeated until the text stops changing; then split on whitespace and
+  join with single spaces. It is idempotent. Each pass maps characters independently, so
+  two passes change any text at most and a third confirms; reaching the cap is a bug. A
+  single pass is not idempotent: NFKD re-introduces capitals after the case fold (U+1D2C
+  → `A`), and a spacing mark decomposes to a space after the strip (U+00A8).
+- Helper classes follow Python, not Rust's std: whitespace is `White_Space` plus
+  U+001C..U+001F; "alphanumeric" is general category L\* or N\*, not Rust's `Alphabetic`
+  property (which admits marks and symbols Python's `[^\W_]` rejects).
+
+The build fills folded columns through `reg-core-py`, with the code the reader applies
+to the query string. All of `reg-core` uses one Unicode version
+(`tests/unicode_version.rs`). The oracle is `conformance/cases/folds/`.
+
+**Canonical JSON** has no floats. A float in a hashed payload is a build error.
+
+**Messages are structured.** Errors and blocked-order findings carry a code and fields;
+prose is rendered from templates. Goldens assert codes and fields, so no language's
+`repr` quoting appears in a contract.
+
+## Crates and run modes
+
+```text
+reg_meta_build (Python): base build → derive        uses reg-core-py
+                 │
+                 ▼
+reg_meta.db (+ reg_meta_docs.db), immutable
+                 │
+reg-catalog: one operation set
+        ┌────────┴─────────┐
+reg-meta serve        reg-meta mcp
+HTTP API (SPA)        MCP over stdio (local catalog)
++ /mcp (hosted)
+        │
+SPA (Svelte) + reg-core-wasm
+```
+
+- `reg-core`: no IO. FQID and period grammar, folds, interval algebra, project-data
+  types and the structural validator, error codes. Compiles natively, as a Python
+  extension (`reg-core-py`, PyO3 via maturin) and to WASM (`reg-core-wasm`).
+- `reg-catalog`: the reader. Opens and admits an artifact, owns scope as reader state,
+  and defines the operation set: one function per operation, typed parameters and
+  results with JSON Schemas. Search (one ranking), order materialization and project
+  semantic validation live here.
+- `reg-meta`: the binary, with run modes only. `serve` is the HTTP API (axum + utoipa;
+  ETag, body-size limit and rate limit as tower layers) plus the remote MCP endpoint
+  over streamable HTTP. `mcp` is MCP over stdio against a local catalog, for offline use
+  and private steward catalogs. There is no query CLI.
+- `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
+  sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
+  change.
+- `reg-core-wasm`: thin `wasm-bindgen` glue for the SPA. JSON text crosses the boundary
+  (no `serde-wasm-bindgen`), and every export is total: it runs the matching structural
+  check before a `reg-core` function that can panic. It is built with
+  `wasm-bindgen-cli --target web`, the CLI pinned to its `Cargo.lock` version, and the
+  `[profile.wasm]` (`opt-level = "s"`, LTO, one codegen unit); no wasm-pack, wasm-opt or
+  Vite plugin. The gzipped `.wasm` has a 200 KB budget (`WASM_GZ_BUDGET` in
+  `scripts/gate.py`, checked by the `frontend` step); raising it is a maintainer
+  decision.
+
+Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
+decision, not an implementation detail; `toml` stays a dev dependency.
+
+**Distribution.** The server image is one static binary plus the baked DBs, fetched in
+the Dockerfile with `curl`, SHA-256 verification against GitHub's asset digests, and
+`zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for macOS arm64 and Linux
+x86_64 with SHA-256 checksums, used only for local `reg-meta mcp`; the catalog is
+downloaded with `curl` and `zstd`. There is no PyPI package and no `fetch` run mode.
+Windows agents use hosted MCP; a local Windows binary is added only if it builds and
+runs without special effort. The `microdata-tools-se` plugin declares the MCP server:
+the hosted endpoint by default, the local binary as the alternative.
+
+## Agent and web interface
+
+**Users are agents and the SPA.** Agents use MCP; the SPA uses HTTP. Interactive human
+use is out of scope: no feature, flag or output exists for it (no text output, prompts,
+progress or notebook import). Revisit when a concrete human-facing use appears.
+
+**One operation set, two transports.** Each operation in `reg-catalog` has a name, a
+typed parameter object and a typed result. The HTTP routes are generated from those
+definitions, and the MCP tool schemas are built from the same utoipa OpenAPI document,
+so the transports cannot drift. OpenAPI and MCP `tools/list` are the self-description;
+there is no `describe` operation. A former CLI use has a transport: agents call MCP
+tools, the Docker bake and the publish workflow use `curl` and a started `serve`, and an
+order is `POST /api/project/order` or the `order` tool.
+
+Rules:
+
+- **JSON only, `{data, meta}` on every success**, except raw-bytes downloads (document
+  PDFs, the order manifest file), which carry their media type and have a JSON operation
+  for their metadata. `meta` holds the contract version, catalog generation and scope,
+  so an agent always knows which catalog answered.
+- **Deterministic responses.** `meta` carries no timing; the same request on the same
+  catalog returns the same bytes, and goldens compare raw output.
+- **A ref is an FQID or a bare name.** A unique name resolves; an ambiguous one returns
+  the candidates with their FQIDs as `ambiguous_ref`, so the next call can be exact.
+- **`show` plus facet operations.** `show(ref)` returns a summary for any kind; separate
+  operations fetch the heavy parts (states, values, lineage, graph, coverage).
+- **One time filter, `period`**, in `reg-core`'s grammar (`2019`, `2015..2019`,
+  `LA2019`, `2019-03`, `2019-01-01..2019-06-30`). `diff` takes `from` and `to` in the
+  same grammar.
+- **Cursor paging for open-ended lists**: `limit` (default 50) and `cursor`, returning
+  `{"items": [...], "next_cursor": ...}`. A list bounded by the request or the entity is
+  a plain array. Cursors bind to the generation, so a stale cursor fails loudly. No
+  offsets.
+- **One parameter per concept and one result shape per operation**, independent of
+  result count. `scope` is valid on every read.
+- **Errors** are `{error, meta}` with
+  `error = {code, class, message, remediation, fields}`; MCP returns the same document
+  as a tool error.
+- **Order manifests keep their bytes.** `order` returns `{data: manifest, meta}`; the
+  download route serves the exact manifest bytes.
+- **Few, coarse MCP tools**, about ten, because every tool's schema occupies agent
+  context. Fine-grained HTTP routes for the SPA map onto the same operations.
+- **Catalog selection is configuration**: one catalog per process, chosen at start.
+
+**Hosted MCP.** `serve` exposes `/mcp` at catalog.swecov.se, so agents need no install
+and no 1.2 GB download. Its rate limits are sized for tool calls, separately from the
+SPA's. Private steward catalogs are never served there; they stay on local
+`reg-meta mcp`.
+
 ## A provider-neutral substrate
 
 The catalog is the identifier and object-model substrate every downstream artifact
@@ -446,6 +616,8 @@ fold, applied to indexed text by the build and to the query by the reader. It ma
 what `unicode61` alone does not: `straße`/`strasse`, `ﬁlm`/`film`, `ＡＢＣ`/`abc`.
 Display text always comes from the base tables. The docs index uses the same fold and
 query builder.
+
+A call returns one ranked list; the SPA makes one call per typed group it shows.
 
 Each query token becomes a quoted prefix term, which neutralizes FTS5 operators and
 prefix-matches (`ink` finds `inkomst`). `LIKE` patterns escape `%` and `_`. Arms over

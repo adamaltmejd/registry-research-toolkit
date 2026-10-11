@@ -23,7 +23,7 @@ import { router } from "./router.svelte";
 import { Button, Panel } from "./ui";
 
 // The routed search-results panel (#379). Reads `?q=` off the router and renders
-// the Rust server's `search` (decision 17: one ranked list per call): one untyped
+// the Rust server's `search` (one ranked list per call): one untyped
 // page for the top-results strip, then one page per arm, in the fixed order
 // registers / variables / classifications / classification codes / register-local
 // value sets, each continued by its own cursor. Every leaf navigates via a plain
@@ -700,7 +700,7 @@ function closeSearch(): void {
             {/snippet}
 
           {#if section.type == null}
-            <!-- Cross-arm best bets (#393 items 6/7, decision 17): the untyped
+            <!-- Cross-arm best bets (#393 items 6/7): the untyped
                  ranked list. Rows reuse the same typed snippets as the arms below,
                  so this is a ranking layer, not a second row model. -->
             <div class="children table top-results" role="presentation">

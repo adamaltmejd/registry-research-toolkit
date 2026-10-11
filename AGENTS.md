@@ -1,9 +1,8 @@
 # Registry Research Toolkit
 
 Multi-package workspace for Swedish register research: catalog metadata, schema
-validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design,
-`REFACTOR_SPEC.md` for the remaining (post-A5) work, and `RUST_RUNTIME_SPEC.md` for the
-Rust runtime and compiled-catalog refactor.
+validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design
+and `REFACTOR_SPEC.md` for the remaining (post-A5) work.
 
 ## Packages
 
@@ -39,9 +38,8 @@ state.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
 - **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
-  for cross-PR coordination. Current trackers: `REFACTOR_SPEC.md` (the remaining post-A5
-  work; the earlier `MIGRATION_PLAN.md` was retired once A5 shipped) and
-  `RUST_RUNTIME_SPEC.md` (the Rust runtime and compiled-catalog refactor). Each tracker
+  for cross-PR coordination. Current tracker: `REFACTOR_SPEC.md` (the remaining post-A5
+  work; the earlier `MIGRATION_PLAN.md` was retired once A5 shipped). Each tracker
   is **scoped and self-deleting**: it ships with an explicit completion gate (e.g.
   "deleted when stage X ships"), gets deleted at that gate, and never outlives the
   refactor it tracks. Per-package DESIGN.md notes for the same effort are still
@@ -183,8 +181,7 @@ below are what an agent must follow when writing, changing or deleting a test. T
 
 Current state (the Model A refactor through A5 has shipped). See `ARCHITECTURE.md` for
 the cross-package invariants and each `<package>/DESIGN.md` for the detail;
-`REFACTOR_SPEC.md` tracks the remaining work and `RUST_RUNTIME_SPEC.md` the Rust runtime
-refactor.
+`REFACTOR_SPEC.md` tracks the remaining work.
 
 - **Builder** (`reg_meta_build`, Python):
   - Modeling: Pydantic v2 `_IRBase` models for the build-time IR core and
@@ -303,4 +300,4 @@ For per-package design rationale, see `<package>/DESIGN.md` (the catalog object 
 lives in `crates/DESIGN.md`; per-provider source-delivery shapes in
 `reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph,
 repo-wide invariants), see `ARCHITECTURE.md`; for the remaining post-A5 work, see
-`REFACTOR_SPEC.md`; for the Rust runtime refactor, see `RUST_RUNTIME_SPEC.md`.
+`REFACTOR_SPEC.md`.

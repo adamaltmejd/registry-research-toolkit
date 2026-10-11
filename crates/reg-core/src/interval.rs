@@ -1,5 +1,4 @@
-//! The interval algebra over inclusive ISO date intervals (`RUST_RUNTIME_SPEC.md`
-//! package 3e.2): a project period, a state's
+//! The interval algebra over inclusive ISO date intervals: a project period, a state's
 //! window, an availability clip and a co-delivery all expand, intersect, merge and
 //! render through it, so they never disagree about bounds or spelling.
 //!
