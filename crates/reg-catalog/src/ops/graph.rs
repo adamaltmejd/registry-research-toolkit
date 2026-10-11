@@ -2,8 +2,8 @@
 //! classification or a group ref. Nodes are variables (with their whole state
 //! history folded into representation runs) and classification editions; the one
 //! edge kind is succession. A variable unites its concept group's members, a
-//! classification its curated groups; nodes and edges keep their insertion order
-//! and are deduplicated by id.
+//! classification the curated groups of the editions on its chain; nodes and edges
+//! keep their insertion order and are deduplicated by id.
 
 use std::collections::{BTreeSet, HashMap, HashSet};
 
@@ -137,9 +137,12 @@ pub fn graph(server: &Server, scope: Scope, params: &Params) -> Result<Value, Er
         }
         Target::Classification { slug, .. } => {
             let focus = builder.add_classification(&slug, None)?;
-            let fqid = format!("class/{slug}");
+            // The groups of every edition on the focus's chain, not only the
+            // focus's own: an older edition shows the family its successor is in.
+            let mut on_chain: HashSet<String> = builder.index.keys().cloned().collect();
+            on_chain.insert(format!("class/{slug}"));
             for group in show::classification_groups(&conn)? {
-                if group.members.iter().any(|m| m.fqid == fqid) {
+                if group.members.iter().any(|m| on_chain.contains(&m.fqid)) {
                     builder.add_classification_group(
                         &group.key,
                         &group.label,

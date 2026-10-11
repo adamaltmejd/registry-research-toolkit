@@ -735,7 +735,9 @@ renders it as-is and never assembles graph semantics. It composes the existing r
   siblings and one run, or a lone edition with no chain and no group, returns no nodes.
 - **Group ⇄ member.** A member ref roots the graph on its group's members, with
   `focus_id` on the member; a group ref roots on the members with no focus. A member
-  page and its group page therefore show the same union.
+  page and its group page therefore show the same union. A classification edition adds
+  the groups of every edition on its chain, so an older edition shows the family its
+  successor belongs to.
 
 ## Documentation and what is not in the catalog
 
