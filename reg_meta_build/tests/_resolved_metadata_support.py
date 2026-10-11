@@ -22,19 +22,15 @@ from reg_meta_build.resolved_metadata import (
     ResolvedGroupClassification,
     ResolvedGroupFacet,
     ResolvedGroupVariable,
-    ResolvedIdentifierMetadata,
     ResolvedLineageWarning,
     ResolvedMetadata,
     ResolvedRepresentationRef,
     ResolvedRepresentationSuccession,
-    ResolvedSourceColumn,
-    ResolvedSourceJoinKey,
     ResolvedStateLineage,
     ResolvedStateRef,
     ResolvedSuccession,
     ResolvedTag,
     ResolvedTagMember,
-    ResolvedTimeseriesEvent,
     ResolvedVariableGroup,
     ResolvedVariableSameAs,
     ResolvedVariantRef,
@@ -114,15 +110,6 @@ def full_metadata() -> ResolvedMetadata:
             )
             for i, slug in enumerate(("one", "two"), 1)
         ),
-    )
-    event = ResolvedTimeseriesEvent(
-        name="Raw\u00a0name",
-        event="Ersätts av",
-        description="",
-        entity="Variabel",
-        first_token="0001",
-        second_token="",
-        file_token=None,
     )
     return ResolvedMetadata(
         variable_groups=(group,),
@@ -220,29 +207,6 @@ def full_metadata() -> ResolvedMetadata:
                 kind="no_source_state",
                 message="No linked source state",
             ),
-        ),
-        source_columns=(
-            ResolvedSourceColumn(
-                table_name="RawTable",
-                column_name="LöpNr",
-                sql_type="varchar(12)",
-                nullable=False,
-            ),
-        ),
-        source_join_keys=(
-            ResolvedSourceJoinKey(
-                table_name="RawTable", column_name="LöpNr", description="Source key"
-            ),
-        ),
-        identifiers=(
-            ResolvedIdentifierMetadata(
-                native_variable_id=44, name="Native key", definition=None
-            ),
-        ),
-        timeseries_events=(
-            event,
-            event,
-            event.model_copy(update={"first_token": None}),
         ),
     )
 

@@ -7080,13 +7080,6 @@ def compile_curation(
             unmatched.append(f"lineage.toml#/lineage_defaults/{ref}")
         defaults.append((ref, variant))
     inputs = prepared.manifest.inputs
-    identifiers = tuple(
-        e.revision.dataset
-        for e in inputs
-        if e.origin == "snapshot"
-        and e.path == "Identifierare.csv"
-        and e.revision is not None
-    )
     event_targets = {
         _snapshot_key(entry): entry.revision.dataset
         for entry in inputs
@@ -7451,7 +7444,6 @@ def compile_curation(
             "metadata": metadata,
             "code_label_pairs": tuple(pairs),
             "lineage_defaults": tuple(defaults),
-            "identifier_sources": identifiers,
             "event_sources": all_events,
         },
         cases={

@@ -338,39 +338,6 @@ class ResolvedLineageWarning(_ResolvedModel):
     _message = field_validator("message")(_require_trimmed)
 
 
-class ResolvedSourceColumn(_ResolvedModel):
-    table_name: str
-    column_name: str
-    sql_type: str
-    nullable: bool
-
-    _text = field_validator("table_name", "column_name", "sql_type")(_require_trimmed)
-
-
-class ResolvedSourceJoinKey(_ResolvedModel):
-    table_name: str
-    column_name: str
-    description: str | None = None
-
-    _text = field_validator("table_name", "column_name")(_require_trimmed)
-
-
-class ResolvedIdentifierMetadata(_ResolvedModel):
-    native_variable_id: int
-    name: str | None
-    definition: str | None
-
-
-class ResolvedTimeseriesEvent(_ResolvedModel):
-    name: str | None
-    event: str | None
-    description: str | None
-    entity: str | None
-    first_token: str | None
-    second_token: str | None
-    file_token: str | None
-
-
 class ResolvedMetadata(_ResolvedModel):
     variable_groups: tuple[ResolvedVariableGroup, ...] = ()
     classification_groups: tuple[ResolvedClassificationGroup, ...] = ()
@@ -383,10 +350,6 @@ class ResolvedMetadata(_ResolvedModel):
     classification_derivations: tuple[ResolvedClassificationDerivation, ...] = ()
     state_lineage: tuple[ResolvedStateLineage, ...] = ()
     lineage_warnings: tuple[ResolvedLineageWarning, ...] = ()
-    source_columns: tuple[ResolvedSourceColumn, ...] = ()
-    source_join_keys: tuple[ResolvedSourceJoinKey, ...] = ()
-    identifiers: tuple[ResolvedIdentifierMetadata, ...] = ()
-    timeseries_events: tuple[ResolvedTimeseriesEvent, ...] = ()
     documentary_relationships: tuple[
         DocumentaryRelationship | RetainedDocumentaryRelationship, ...
     ] = ()
@@ -488,18 +451,6 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
         raise ValueError(
             f"unused historical predecessor declarations: {sorted(unused)}"
         )
-    _unique(
-        ((c.table_name, c.column_name) for c in metadata.source_columns),
-        "source column",
-    )
-    _unique(
-        ((c.table_name, c.column_name) for c in metadata.source_join_keys),
-        "source join key",
-    )
-    _unique(
-        (i.native_variable_id for i in metadata.identifiers),
-        "native identifier metadata",
-    )
 
 
 def state_reference_key(ref: ResolvedStateRef) -> tuple[str, str, str, str]:

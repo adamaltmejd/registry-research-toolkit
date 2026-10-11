@@ -92,10 +92,6 @@ from reg_meta_build.source_reference_records import (
     SourceEventDeclaration,
     SourceJoinKeyDeclaration,
 )
-from reg_meta_build.source_reference_resolution import (
-    resolve_export_metadata,
-    resolve_identifier_metadata,
-)
 from reg_meta_build.source_scope import (
     declared_dependency_keys,
     declared_register_fqids,
@@ -151,7 +147,6 @@ class CompiledGlobals(_Model):
     classification_successions: tuple[ResolvedClassificationSuccession, ...] = ()
     metadata: ResolvedMetadata = ResolvedMetadata()
     code_label_pairs: tuple[CodeLabelPair, ...] = ()
-    identifier_sources: tuple[str, ...] = ()
     event_sources: tuple[tuple[str, str], ...] = ()
     lineage_defaults: tuple[tuple[str, str], ...] = ()
 
@@ -831,18 +826,6 @@ def _resolve(
         raise ValueError(
             "curation scopes do not cover the complete prepared occurrence-source selection"
         )
-    support_sources = {
-        e.revision.dataset
-        for e in prepared.manifest.inputs
-        if e.record_usage == "field_support" and e.revision is not None
-    }
-    if (
-        len(set(selected.identifier_sources)) != len(selected.identifier_sources)
-        or not set(selected.identifier_sources) <= support_sources
-    ):
-        raise ValueError(
-            "identifier metadata must select distinct prepared support sources"
-        )
     event_sources = _unique_pairs(selected.event_sources, "event source")
     prepared_sources = {
         e.revision.dataset for e in prepared.manifest.inputs if e.revision is not None
@@ -853,18 +836,6 @@ def _resolve(
     ):
         raise ValueError(
             "event bindings must name selected reference and occurrence sources"
-        )
-    if any(
-        getattr(selected.metadata, name)
-        for name in (
-            "identifiers",
-            "source_columns",
-            "source_join_keys",
-            "timeseries_events",
-        )
-    ):
-        raise ValueError(
-            "literal reference metadata must be resolved from prepared sources"
         )
     report_dir.mkdir(parents=True, exist_ok=False)
     counts: Counter[str] = Counter()
@@ -1053,17 +1024,6 @@ def _resolve(
                 ),
                 event_sources,
                 compiled.event_acknowledgements,
-            )
-            exports = resolve_export_metadata(declarations)
-            identifiers = resolve_identifier_metadata(
-                record
-                for source in selected.identifier_sources
-                for record in prepared.records.iter_records(source=source)
-            )
-            for value in (*exports.diagnostics, *identifiers.diagnostics):
-                issue(value)
-            source_metadata = exports.metadata.model_copy(
-                update={"identifiers": identifiers.metadata.identifiers}
             )
             value_sources = {
                 v.manifest.revision.dataset: v for v in prepared.value_sources
@@ -1699,15 +1659,6 @@ def _resolve(
                     issue(value)
                 metadata = selected.metadata.model_copy(
                     update={
-                        **{
-                            name: getattr(source_metadata, name)
-                            for name in (
-                                "identifiers",
-                                "source_columns",
-                                "source_join_keys",
-                                "timeseries_events",
-                            )
-                        },
                         "variable_groups": (
                             *selected.metadata.variable_groups,
                             *edges.groups,

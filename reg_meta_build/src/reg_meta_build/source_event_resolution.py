@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from reg_meta_build.catalog_dependencies import DEFERRED_REFERENCE
@@ -22,7 +23,6 @@ from reg_meta_build.source_curation import (
     settle_acknowledgements,
 )
 from reg_meta_build.source_effects import record_ref
-from reg_meta_build.source_reference_resolution import ReferenceMetadataResolution
 
 from .source_evidence import evidence_sha256
 
@@ -38,6 +38,16 @@ if TYPE_CHECKING:
 
 
 type NativeEventKey = tuple[str, str, str]
+
+
+@dataclass(frozen=True)
+class ReferenceMetadataResolution:
+    metadata: ResolvedMetadata
+    diagnostics: tuple[ResolutionDiagnostic, ...]
+    withheld: tuple[SourceRecordRef, ...]
+    skipped: int = 0
+
+
 _NATIVE_FIELD = {
     "register": "register_id",
     "variant": "register_variant_id",

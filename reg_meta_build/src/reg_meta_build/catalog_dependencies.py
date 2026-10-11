@@ -715,14 +715,10 @@ class CatalogDependencyError(RegMetaError):
         )
 
 
-# Shared inputs: keys of these kinds lie in no register.
-_SHARED_KINDS = frozenset({"classification", "source_column"})
-
-
 def _dependency_register(key: DependencyKey) -> str | None:
-    """The register FQID a key lives in; shared inputs belong to no register."""
+    """The register FQID a key lives in; a classification belongs to no register."""
     kind, fqid = key[0], key[1]
-    if kind in _SHARED_KINDS:
+    if kind == "classification":
         return None
     return fqid if kind in {"register", "variant"} else fqid.rsplit("/", 1)[0]
 
@@ -1146,9 +1142,6 @@ def resolve_metadata_dependencies(
     }
     available.update(("variant", f"{r.provider}/{r.slug}", v.slug) for r, v in variants)
     available.update(("classification", c.slug) for c in classifications)
-    available.update(
-        ("source_column", c.table_name, c.column_name) for c in metadata.source_columns
-    )
     for variable in variables:
         available.update(variable_dependency_keys(variable))
     dependencies = CatalogDependencies(available, withheld, unselected, slice_registers)
@@ -1336,15 +1329,6 @@ def resolve_metadata_dependencies(
                 if not isinstance(e, RetainedDocumentaryRelationship)
                 else [entity(e.register_ref, o)]
             ),
-        ),
-        "source_join_keys": selected(
-            metadata.source_join_keys,
-            "source_join_keys",
-            lambda e, o: [
-                dependencies.require(
-                    ("source_column", e.table_name, e.column_name), output=o
-                )
-            ],
         ),
     }
     dependencies.check()

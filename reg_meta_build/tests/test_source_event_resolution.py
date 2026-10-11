@@ -21,12 +21,30 @@ from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_event_resolution import SourceEventBindings
 from reg_meta_build.source_evidence import (
     DeliveredCell,
+    RecordLocator,
+    SourceRevision,
     canonical_sha256,
     evidence_sha256,
 )
 from reg_meta_build.source_records import NativeCoordinates, value_field
 from reg_meta_build.source_reference_records import SourceEventDeclaration
-from test_source_reference_resolution import LOCATOR, REVISION
+
+REVISION = SourceRevision.create(
+    dataset="schema",
+    publisher="fixture",
+    purpose="test",
+    upstream_revision="1",
+    artifact_path="schema.sql",
+    artifact_size=1,
+    artifact_sha256="a" * 64,
+)
+LOCATOR = RecordLocator(
+    semantic_record_key=("T", "ID"),
+    physical_file="schema.sql",
+    physical_table="T",
+    physical_record="line:2",
+    physical_cells=("line:2",),
+)
 
 
 def _event(

@@ -159,14 +159,6 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
         r"tags\.0\.members\.0\.starred\n.*valid boolean",
         None,
     ),
-    "source-column-nullable-not-a-boolean": (
-        lambda: _with(
-            "source_columns",
-            _first("source_columns").model_copy(update={"nullable": 0}),
-        ),
-        r"source_columns\.0\.nullable\n.*valid boolean",
-        None,
-    ),
     # Both endpoint states cover 2000; the edge runs into 2001.
     "lineage-wider-than-its-endpoint-states": (
         lambda: _with(
