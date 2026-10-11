@@ -227,7 +227,6 @@ def test_point_lookups_return_exact_member_item_and_validity(tmp_path):
             member_target="native_member",
             member_format="integer",
             validity_target="item",
-            missing_validity="unknown",
             rule="Fixture exact integer coordinates",
             provenance=("fixture format",),
         ),

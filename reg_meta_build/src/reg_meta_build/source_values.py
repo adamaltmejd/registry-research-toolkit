@@ -71,7 +71,6 @@ class SourceValueJoin:
     member_target: Literal["native_member", "member_name", "declared_list", "unbound"]
     member_format: Literal["integer", "none"]
     validity_target: Literal["item", "row", "none"]
-    missing_validity: Literal["unknown", "unrestricted"]
     rule: str
     provenance: tuple[str, ...]
 
