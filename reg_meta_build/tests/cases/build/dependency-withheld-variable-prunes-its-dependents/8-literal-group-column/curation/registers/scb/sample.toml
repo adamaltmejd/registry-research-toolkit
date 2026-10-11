@@ -27,4 +27,5 @@ slug = "else"
 register = "scb/sample"
 key = "literal"
 label = "Literal"
+axes = []
 members = [{ variable = "value", delivery_column = "value" }, { variable = "two", delivery_column = "TWO" }]

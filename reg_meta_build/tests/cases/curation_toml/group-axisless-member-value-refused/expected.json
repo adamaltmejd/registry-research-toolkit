@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "An axis-less group has no axis to carry a flat coordinate, so the build drops a member's value and label. Only the second member sets one. Allowed twin: group-member-shapes-load, whose `axes = []` umbrella lists bare variables.",
+  "fails_if": "the register loader accepts a flat `value`/`label` on a member of an `axes = []` group, which the build then drops",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/test.toml [[group]] entry 1",
+    "message_contains": [
+      "an axis-less group (`axes = []`) lists whole members"
+    ]
+  }
+}

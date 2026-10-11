@@ -16,4 +16,5 @@ selector = { register = "scb/innovation-foretag", register_id = 257, variant = "
 register = "scb/innovation-foretag"
 key = "partner"
 label = "Partner"
+axes = []
 members = [{ variable = "answer-sweden" }, { variable = "answer-abroad" }]

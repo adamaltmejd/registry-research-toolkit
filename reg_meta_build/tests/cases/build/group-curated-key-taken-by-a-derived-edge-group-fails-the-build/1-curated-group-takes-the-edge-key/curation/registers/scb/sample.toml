@@ -21,4 +21,5 @@ slug = "other"
 register = "scb/sample"
 key = "efternamn"
 label = "Curated"
+axes = []
 members = [{ variable = "value" }, { variable = "other" }]

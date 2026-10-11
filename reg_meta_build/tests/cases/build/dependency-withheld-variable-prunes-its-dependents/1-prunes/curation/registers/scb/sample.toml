@@ -29,4 +29,5 @@ slug = "else"
 register = "scb/sample"
 key = "family"
 label = "Family"
+axes = []
 members = [{ variable = "value" }, { variable = "two" }, { variable = "key" }]
