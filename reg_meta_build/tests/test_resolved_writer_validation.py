@@ -1,7 +1,8 @@
 """The resolved writer's metadata contract and structural validation.
 
-Metadata that breaks its own structure is refused before the catalog path is touched,
-and a staged catalog that fails `validate_built_db` is never placed. No build reaches
+Metadata that breaks its own structure, or names what the catalog does not write, is
+refused before the catalog path is touched, and a staged catalog that fails
+`validate_built_db` is never placed. No build reaches
 these refusals. Curation loading refuses the curated shapes first (the
 `curation_toml` cases named per row), formation forms lineage only between two
 registers and only over the endpoint states' intersection (`resolve_catalog_lineage`),
@@ -21,8 +22,9 @@ A variable in two curated groups is refused earlier, at curation load
 from __future__ import annotations
 
 import os
+import re
 from contextlib import closing
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import pytest
 from _resolved_catalog_support import resolved_variable
@@ -36,6 +38,7 @@ from reg_meta_build.db import open_built_db
 from reg_meta_build.errors import RegMetaError
 from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_metadata import (
+    ResolvedClassificationDerivation,
     ResolvedHistoricalPredecessor,
     ResolvedMetadata,
     ResolvedRepresentationRef,
@@ -58,8 +61,13 @@ def _with(field: str, entry: object) -> ResolvedMetadata:
     return full_metadata().model_copy(update={field: (entry,)})
 
 
-def _first(field: str) -> object:
+def _first(field: str) -> Any:
     return getattr(full_metadata(), field)[0]
+
+
+def _changed_edge(field: str, end: str, **update: object) -> Any:
+    edge = _first(field)
+    return edge.model_copy(update={end: getattr(edge, end).model_copy(update=update)})
 
 
 def _group_members(*members: object, **update: object) -> ResolvedMetadata:
@@ -74,6 +82,7 @@ def _first_member(**update: object) -> object:
 
 
 _RETIRED = "scb/example/retired"
+_ABSENT = "scb/example/absent"
 
 
 def _historical(
@@ -264,6 +273,91 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
         f"unknown resolved variable: '{_RETIRED}'",
         None,
     ),
+    # Metadata that names what the catalog does not write. A build never hands the
+    # writer such an edge: `resolve_metadata_dependencies` withholds or refuses each
+    # dangling reference first (`catalog_dependency_missing`, pinned by the steps of
+    # the build case `dependency-withheld-variable-prunes-its-dependents`), so these
+    # checks are defense in depth.
+    "group-member-not-written": (
+        lambda: _group_members(
+            _first_member(),
+            full_metadata()
+            .variable_groups[0]
+            .members[1]
+            .model_copy(update={"variable": _ABSENT}),
+        ),
+        f"unknown resolved group variable: '{_ABSENT}'",
+        None,
+    ),
+    "tag-member-not-written": (
+        lambda: _with(
+            "tags",
+            _first("tags").model_copy(
+                update={
+                    "members": (
+                        ResolvedTagMember(target=_ABSENT, rank=0, starred=False),
+                    )
+                }
+            ),
+        ),
+        f"unknown resolved tag variable: '{_ABSENT}'",
+        None,
+    ),
+    "same-as-to-a-variable-not-written": (
+        lambda: _with(
+            "variable_same_as", ResolvedVariableSameAs(a="scb/example/one", b=_ABSENT)
+        ),
+        f"unknown resolved same_as variable: '{_ABSENT}'",
+        None,
+    ),
+    "succession-to-a-variable-not-written": (
+        lambda: _with(
+            "successions",
+            ResolvedSuccession(predecessor="scb/example/one", successor=_ABSENT),
+        ),
+        f"unknown resolved succession successor: '{_ABSENT}'",
+        None,
+    ),
+    "variant-succession-to-a-variant-not-written": (
+        lambda: _with(
+            "variant_successions",
+            _changed_edge("variant_successions", "successor", variant="absent"),
+        ),
+        re.escape("unknown resolved succession variant: ('sos/example', 'absent')"),
+        None,
+    ),
+    "representation-succession-from-a-column-not-delivered": (
+        lambda: _with(
+            "representation_successions",
+            _changed_edge(
+                "representation_successions",
+                "predecessor",
+                delivery_column_name="Missing",
+            ),
+        ),
+        "unknown resolved representation: scb/example/one, Missing, individuals",
+        None,
+    ),
+    "derivation-of-a-book-not-written": (
+        lambda: _with(
+            "classification_derivations",
+            ResolvedClassificationDerivation(derived="absent", source="first-codes"),
+        ),
+        "unknown resolved derived classification: 'absent'",
+        None,
+    ),
+    # The state is found by its variable, variant, start and code version; its
+    # column must then match too.
+    "lineage-from-a-state-under-another-column": (
+        lambda: _with(
+            "state_lineage",
+            _changed_edge(
+                "state_lineage", "source", delivery_column_name="WrongColumn"
+            ),
+        ),
+        "resolved state reference does not match its exact scope/column",
+        None,
+    ),
 }
 
 
@@ -272,9 +366,10 @@ def test_invalid_metadata_is_refused_before_the_previous_catalog_is_touched(
     tmp_path: Path, row: str
 ) -> None:
     # Fails if the writer drops the structure rule the row names (a group, tag,
-    # export-fact, classification, lineage or historical-declaration check), refuses
-    # a located row under another code, or runs the check only after it has replaced
-    # the previous catalog or left staging behind.
+    # export-fact, classification, lineage or historical-declaration check, or a
+    # reference to something it does not write), refuses a located row under another
+    # code, or runs the check only after it has replaced the previous catalog or left
+    # staging behind.
     make, message, code = INVALID_METADATA[row]
     output = tmp_path / "reg_meta.db"
     output.write_bytes(b"previous catalog")
