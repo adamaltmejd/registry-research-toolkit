@@ -22,15 +22,8 @@
 
 import type { components as RustComponents } from "./api-types-rust";
 import { catalogHref, registerPrefixOf } from "./catalog";
+import { periodLabel, periodWindowRelation, yearWindowLabel } from "./period";
 import {
-  periodLabel,
-  periodWindowRelation,
-  periodYearIntervals,
-  yearWindowLabel,
-} from "./period";
-import {
-  type ProjectPeriodSegment,
-  type ProjectSourcePeriod,
   type ProjectStudyWindow,
   type SafeSource,
   safeSourceBindings,
@@ -38,6 +31,7 @@ import {
   safeSourcePeriod,
   safeSourceRegisterVariant,
 } from "./project_data";
+import { sourcePeriodYears } from "./reg_core";
 
 export type ValidationIssue = RustComponents["schemas"]["ValidationIssue"];
 export type ValidationResult = RustComponents["schemas"]["Validation"];
@@ -328,44 +322,6 @@ export interface WindowCoverageHint {
   catalogLabel?: string;
 }
 
-function comparablePeriodSegment(
-  segment: unknown,
-): ProjectPeriodSegment | null {
-  if (typeof segment === "number" || typeof segment === "string") {
-    return segment;
-  }
-  if (
-    segment != null &&
-    typeof segment === "object" &&
-    "from" in segment &&
-    "to" in segment
-  ) {
-    const { from, to } = segment as { from?: unknown; to?: unknown };
-    if (
-      (typeof from === "number" || typeof from === "string") &&
-      (typeof to === "number" || typeof to === "string")
-    ) {
-      return { from, to };
-    }
-  }
-  return null;
-}
-
-function comparablePeriod(period: unknown): ProjectSourcePeriod | null {
-  if (Array.isArray(period)) {
-    const segments: ProjectPeriodSegment[] = [];
-    for (const segment of period) {
-      const comparable = comparablePeriodSegment(segment);
-      if (comparable == null) {
-        return null;
-      }
-      segments.push(comparable);
-    }
-    return segments;
-  }
-  return comparablePeriodSegment(period);
-}
-
 function windowCoverageMessage(
   label: string,
   gaps: readonly ProjectStudyWindow[],
@@ -384,23 +340,26 @@ function formatYearRange(window: ProjectStudyWindow): string {
     : `${window.from}..${window.to}`;
 }
 
-function uncoveredStudyWindowIntervals(
-  intervals: readonly ProjectStudyWindow[],
+/** The window's years that none of `spans` (reg-core's merged year spans,
+ * ascending) covers. Year-integer arithmetic: the hint is year grain by design,
+ * so reg-core exports no day-grain gaps for it. */
+function uncoveredStudyWindowYears(
+  spans: readonly [number, number][],
   window: ProjectStudyWindow,
 ): ProjectStudyWindow[] {
   let cursor = window.from;
   const gaps: ProjectStudyWindow[] = [];
-  for (const interval of intervals) {
-    if (interval.to < cursor) {
+  for (const [from, to] of spans) {
+    if (to < cursor) {
       continue;
     }
-    if (interval.from > window.to) {
+    if (from > window.to) {
       break;
     }
-    if (interval.from > cursor) {
-      gaps.push({ from: cursor, to: Math.min(interval.from - 1, window.to) });
+    if (from > cursor) {
+      gaps.push({ from: cursor, to: Math.min(from - 1, window.to) });
     }
-    cursor = Math.max(cursor, interval.to + 1);
+    cursor = Math.max(cursor, to + 1);
     if (cursor > window.to) {
       break;
     }
@@ -413,8 +372,9 @@ function uncoveredStudyWindowIntervals(
 
 /** Client-side project-window hint for the read-only cart (#994). This is NOT a
  * synthetic ValidationIssue: it compares two values already in the draft and
- * gently points the user back to the register page to stage an extension. Token
- * periods are skipped because mixed-grain coverage is not safely comparable. */
+ * gently points the user back to the register page to stage an extension. Year
+ * grain: a period with any non-year endpoint (reg-core's year spans are null) is
+ * skipped, because mixed-grain coverage is not safely comparable. */
 export function windowCoverageHints(
   window: ProjectStudyWindow | null,
   sources: readonly SafeSource[],
@@ -424,17 +384,14 @@ export function windowCoverageHints(
   }
   const hints: WindowCoverageHint[] = [];
   for (const [index, source] of sources.entries()) {
-    const period = comparablePeriod(safeSourcePeriod(source));
-    if (period == null) {
-      continue;
-    }
+    const period = safeSourcePeriod(source);
     // A source with NO years in the window is not a coverage gap but a blocked
     // order, and `windowDisjointFindings` says so at error level — said once.
     if (periodWindowRelation(period, window) === "disjoint") {
       continue;
     }
-    const intervals = periodYearIntervals(period);
-    if (intervals == null) {
+    const spans = sourcePeriodYears(period);
+    if (spans == null) {
       continue;
     }
     const rawName = safeSourceName(source);
@@ -442,7 +399,7 @@ export function windowCoverageHints(
       rawName.length > 0 ? `Source '${rawName}'` : `Source ${index + 1}`;
     const rv = safeSourceRegisterVariant(source);
     const registerPrefix = rv.length > 0 ? registerPrefixOf(rv) : "";
-    const gaps = uncoveredStudyWindowIntervals(intervals, window);
+    const gaps = uncoveredStudyWindowYears(spans, window);
     const message = windowCoverageMessage(label, gaps, window);
     if (message == null) {
       continue;
@@ -489,7 +446,7 @@ export function windowDisjointFindings(
     if (periodWindowRelation(period, window) !== "disjoint") {
       continue;
     }
-    const years = periodLabel(period as ProjectSourcePeriod) ?? "";
+    const years = periodLabel(period) ?? "";
     findings.push({
       message: `Its period ${years} has no years inside the study window ${yearWindowLabel(window)}. Change the period to overlap the window, or remove the source.`,
       location: findingLocation(jsonPointer(["sources", index]), sources),

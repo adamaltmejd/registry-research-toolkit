@@ -2176,10 +2176,10 @@ The rule: the SPA never parses period grammar or computes a date bound.
   shared by the server and WASM; jsdom tests run the project corpus, `period.jsonl` and
   a new `source_period.jsonl` through WASM. `validation.test.ts`'s presentation check
   stays.
-- **Budgets (D2, provisional).** The `.wasm` stays at or under 150 KB gzipped (a
-  constant in `gate.py frontend`); frontend CI stays at or under 6 minutes. 5.2 records
-  cold and warm build time, raw/gzip/brotli size, the bundle delta and Chromium
-  start-up.
+- **Budgets (D2, provisional; raised by D3).** The `.wasm` stays at or under 200 KB
+  gzipped (a constant in `gate.py frontend`); frontend CI stays at or under 6 minutes.
+  5.2 records cold and warm build time, raw/gzip/brotli size, the bundle delta and
+  Chromium start-up.
 
 #### Packages
 
@@ -2296,10 +2296,12 @@ differences; growth of the `reg-core` API.
 
 1. **D1: approved.** 5.0 changes the oracles: the synthesized 02-29 cases go and each
    function gets one refusal case.
-2. **D2: provisional budgets.** The `.wasm` at or under 150 KB gzipped; frontend CI at
-   or under 6 minutes.
+2. **D2: provisional budgets.** The `.wasm` at or under 150 KB gzipped, raised to 200 KB
+   by D3; frontend CI at or under 6 minutes.
 3. **D3: `foldText`.** Move the fold to WASM if it costs at most 60 KB gzipped;
-   otherwise it goes back to the maintainer.
+   otherwise it goes back to the maintainer. 5.3 measured 65 KB (the whole `.wasm` about
+   150 KB gzipped); the maintainer moved it anyway (2026-10-11): `foldText` is
+   reg-core's `fold_search` through WASM, and the `.wasm` budget is 200 KB gzipped.
 4. **D4: decision 10** (who the runtime is designed for) is re-evaluated at the fourth
    checkpoint (5.4).
 5. **D5: any JSON object loads.** A version mismatch shows as the single

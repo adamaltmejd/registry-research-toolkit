@@ -91,8 +91,11 @@ pub fn render(intervals: &[Interval]) -> String {
             if !token.contains("..") {
                 return token;
             }
-            let start = if lo.ends_with("-01-01") { &lo[..4] } else { lo };
-            let end = if hi.ends_with("-12-31") { &hi[..4] } else { hi };
+            // The year is what precedes the suffix: four digits for an ISO date, and
+            // no byte slicing, so any string renders without a panic (the SPA calls
+            // this through `reg-core-wasm`).
+            let start = lo.strip_suffix("-01-01").unwrap_or(lo);
+            let end = hi.strip_suffix("-12-31").unwrap_or(hi);
             format!("{start}..{end}")
         })
         .collect::<Vec<_>>()

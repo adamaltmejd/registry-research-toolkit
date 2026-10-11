@@ -56,7 +56,8 @@ SLOTS = 3
 HEAVY = {"g0", "crates", "rust", "release", "flows", "regen", "g1"}
 # The SPA's reg-core .wasm, gzipped (RUST_RUNTIME_SPEC.md "Stage 5 decisions", D2:
 # provisional). Over it, the frontend step fails: the budget is a maintainer call.
-WASM_GZ_BUDGET = 150_000
+# D3: the search fold moved into WASM (about 150 KB gz measured), so 200 KB.
+WASM_GZ_BUDGET = 200_000
 
 
 def run(command, cwd=ROOT, env=None, **kwargs):
