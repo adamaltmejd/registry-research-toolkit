@@ -196,7 +196,9 @@ here, so a reviewer reads it beside the arguments.
 
 Strings in `argv` take two placeholders: `{db}` is the artifact's `--db` directory and
 `{work}` the working directory, resolved, so it matches a path a command prints. A case
-with an `input_bundle` also takes `{bundle}`, `{bundle_commit}` and `{bundle_manifest}`.
+with an `artifact_curation` overlay also takes `{base_db}`, the `--db` directory of the
+artifact built without it, so a `dbdiff` case can compare the two builds. A case with an
+`input_bundle` also takes `{bundle}`, `{bundle_commit}` and `{bundle_manifest}`.
 
 ## `expected.json`
 
