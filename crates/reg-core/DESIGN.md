@@ -28,6 +28,15 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   adjacency math for no safety gain. Sorted and disjoint keeps the wire form canonical
   and per-segment resolution deterministic. Bare `"_default"` is a separate
   year-independent selection at a concrete variant, never a list or range member.
+- **`Binding.period`** (optional) narrows one column to its own years inside its
+  source's period, in the same shape and grammar as `Source.period`. Absent, the binding
+  inherits the source period. A steward delivers one table per variant per year, so the
+  source period is the extraction scope and each column is ordered only for its
+  binding's years: adding a 2019–2020 column to a 2014–2020 source must not order it for
+  2014–2018 (#1462). The alternative, several sources per variant, would duplicate panel
+  keys and table reads for one delivery. A binding period is never `"_default"`
+  (inheritance is spelled by omission), and its days must lie within the source
+  period's, so a `"_default"` source takes no binding periods.
 - **Composite keys.** `entity_key` and `time_key` arrays are in the schema from the
   start; the validator enforces their ordering and homogeneity.
 - **The structural validator**: every rule checkable from the document alone.
@@ -144,6 +153,7 @@ codes are additive.
   | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `value_set` is not `class/<slug>`, or a `register_variant` is not `<provider>/<register>/<variant>`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                                                          |
   | `fqid_register_variant_mismatch`       | A binding's provider and register differ from its source's `register_variant`. The variant lives once, on the source.                                                                                                                                                                                                                            |
   | `invalid_period`                       | A `Source.period` is not an int year in 1900–2099, a period token, bare `"_default"` at a usable concrete variant, a range with valid finite endpoints, or a valid list (empty, a non-segment member, an inverted member, unsorted or overlapping members; member paths `/period/<i>`). A calendar-impossible day (`2019-02-29`) is invalid too. |
+  | `binding_period_outside_source`        | A `Binding.period` reaches days outside its source's period, or is set on a `"_default"` source. Path `/sources/<i>/bindings/<j>/period`. A binding period that is itself malformed or `"_default"` is an `invalid_period` at that path.                                                                                                         |
   | `invalid_window`                       | The study window's `to` is before its `from`.                                                                                                                                                                                                                                                                                                    |
   | `subtype_on_wrong_type`                | A subtype or format field is set on a binding whose `type` does not own it.                                                                                                                                                                                                                                                                      |
   | `empty_bindings`                       | A source has no bindings.                                                                                                                                                                                                                                                                                                                        |

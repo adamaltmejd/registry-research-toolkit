@@ -80,11 +80,50 @@ function sameIntervals(a: readonly Interval[], b: readonly Interval[]) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
+/** Whether two periods request the same days (`2018`, `"2018"` and
+ * `{from: 2018, to: 2018}` do); periods without placeable days compare as
+ * written. */
+export function samePeriod(
+  a: ProjectSourcePeriod,
+  b: ProjectSourcePeriod,
+): boolean {
+  const da = datedIntervals(a);
+  const db = datedIntervals(b);
+  return da !== null && db !== null
+    ? sameIntervals(da, db)
+    : JSON.stringify(a) === JSON.stringify(b);
+}
+
+/** `period` cut to the days `scope` requests (#1462: a binding period stays
+ * inside its source's): `period` itself, as written, when already inside; null
+ * when the two share no day, either has no days the SPA can place, or the cut
+ * renders past the grammar's edge (`LA2099` cut from `2099-Q4` would end on
+ * `2100-06-30`, which reg-core refuses), as `periodCoverageUnion` guards. */
+export function clipPeriod(
+  period: ProjectSourcePeriod,
+  scope: ProjectSourcePeriod,
+): ProjectSourcePeriod | null {
+  const days = datedIntervals(period);
+  const within = datedIntervals(scope);
+  if (days === null || within === null) {
+    return null;
+  }
+  const kept = overlapIntervals(days, within);
+  if (kept.length === 0) {
+    return null;
+  }
+  if (sameIntervals(kept, days)) {
+    return period;
+  }
+  const clipped = coveragePeriod(kept);
+  return datedIntervals(clipped) === null ? null : clipped;
+}
+
 /** Whether a period is the UNSET/empty value — the fresh-source no-period marker
  * (`""`, what `sourcePeriodFromWire(null)` yields) or an empty segment list
  * (`[]`). Blank `{from,to}` endpoints ride the string/number arms, so this only
  * tests the two true "no period" shapes. */
-function isEmptyPeriod(period: ProjectSourcePeriod): boolean {
+export function isEmptyPeriod(period: ProjectSourcePeriod): boolean {
   if (Array.isArray(period)) {
     return period.length === 0;
   }

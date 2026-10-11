@@ -145,6 +145,10 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
     hint: "error",
   },
   invalid_period: { label: "Invalid period", hint: "error" },
+  binding_period_outside_source: {
+    label: "Column's years reach outside its source's period",
+    hint: "error",
+  },
   invalid_window: {
     label: "Study window ends before it starts",
     hint: "error",

@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "binding_period_outside_source",
+      "path": "/sources/0/bindings/1/period",
+      "message": "binding period 2013..2018 reaches 2013 outside the source period 2014..2020"
+    }
+  ]
+}

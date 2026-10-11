@@ -116,6 +116,67 @@ describe("committedPickerRows", () => {
     );
   });
 
+  it("matches an unpinned binding only to the rows of its own period (#1462)", () => {
+    // A rename across one source's years: the binding is ordered for 2019..2020
+    // only, so only the column delivered then is in the project. Fails if the
+    // match reads the source's 2014..2020 (both rows marked committed).
+    const older = row({
+      key: "ind::Old",
+      column: "Old",
+      from: "2014-01-01",
+      to: "2018-12-31",
+      windows: [{ from: "2014-01-01", to: "2018-12-31" }],
+      renamedColumns: [],
+    });
+    const newer = row({
+      key: "ind::New",
+      column: "New",
+      from: "2019-01-01",
+      to: "2020-12-31",
+      windows: [{ from: "2019-01-01", to: "2020-12-31" }],
+      renamedColumns: [],
+    });
+    const b = band([older, newer]);
+    const draft: RawDraft = {
+      schema_version: "3.0.0",
+      reg_meta_version: "reg_meta/v1.0.0",
+      steward: "global",
+      name: "",
+      sources: [
+        {
+          name: "LISA",
+          register_variant: "scb/lisa/ind",
+          period: { from: 2014, to: 2020 },
+          bindings: [
+            { variable: "scb/lisa/kon", type: "categorical" },
+            {
+              variable: "scb/lisa/dinf",
+              type: "numeric",
+              period: { from: 2019, to: 2020 },
+            },
+          ],
+        },
+      ],
+    };
+
+    const committed = committedPickerRows(draft, [b]);
+    expect([...committed.keys()]).toEqual([pickerRowKey(b, newer)]);
+    // The row carries the binding's own period, which the catalog page checks a
+    // delivery name's eras against. Fails if it carries the source's 2014..2020
+    // (a retired name from 2014..2018 would read "In project").
+    expect(committed.get(pickerRowKey(b, newer))?.period).toEqual({
+      from: 2019,
+      to: 2020,
+    });
+    // The study-window marker reads the source's period: blocking is
+    // source-level, so a binding narrower than the window is not marked
+    // outside it. Fails if the marker is fed the binding's period.
+    expect(committed.get(pickerRowKey(b, newer))?.sourcePeriod).toEqual({
+      from: 2014,
+      to: 2020,
+    });
+  });
+
   it("keys family rows by variant family and removes every concrete source", () => {
     const r = row({
       key: "individer-15plus::Kon",
@@ -502,6 +563,35 @@ describe("finalAddPeriodWires", () => {
         [{ registerVariant: "scb/lisa/ind", period: "" }],
       ),
     ).toEqual(["2018"]);
+  });
+
+  it("resolves a dated add at its own period, not the variant's union (#1462)", () => {
+    // The add becomes a binding ordered for 2020 alone, so its fields resolve
+    // there. Fails if it resolves at the source's widened 2018..2020.
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/ind", period: 2018 }],
+        [{ registerVariant: "scb/lisa/ind", period: 2020 }],
+      ),
+    ).toEqual(["2020"]);
+  });
+
+  it("refuses an add whose final source period reg-core rejects, beside its allowed twin (#1462)", () => {
+    // `2099` and `LA2099` union to overlapping list members, which the commit
+    // would author into a valid draft. Fails if only the add's own (valid)
+    // period is checked. `2098` and `LA2099` union cleanly and are allowed.
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/ind", period: 2099 }],
+        [{ registerVariant: "scb/lisa/ind", period: "LA2099" }],
+      ),
+    ).toBeNull();
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/ind", period: 2098 }],
+        [{ registerVariant: "scb/lisa/ind", period: "LA2099" }],
+      ),
+    ).toEqual(["LA2099"]);
   });
 });
 

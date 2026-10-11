@@ -29,7 +29,13 @@ import {
   type ValidationResultModel,
   validateProject,
 } from "./api";
-import { periodCoverageUnion } from "./period";
+import {
+  clipPeriod,
+  datedIntervals,
+  isEmptyPeriod,
+  periodCoverageUnion,
+  samePeriod,
+} from "./period";
 import {
   type DraftBinding,
   defaultSourceName,
@@ -53,7 +59,7 @@ import {
   uniqueSourceName,
   updateField,
 } from "./project_data";
-import { checkProject } from "./reg_core";
+import { checkProject, sourcePeriodIntervals } from "./reg_core";
 import { windowDisjointFindings } from "./validation";
 import { windowStore } from "./window.svelte";
 
@@ -839,10 +845,12 @@ export const projectStore = {
    *                  name/period/metadata instead of minting a fresh source.
    * The next draft + rebuilt id mirror are computed BEFORE assigning either, so the
    * replacement is atomic (like open/new) and `dirty`/autosave recompute once.
+   * Returns false WITHOUT mutating on a null draft, or when a re-add's merged
+   * binding period is one reg-core rejects (#1462).
    */
-  applyStagedDiff(diff: StagedDiff): void {
+  applyStagedDiff(diff: StagedDiff): boolean {
     if (draft == null) {
-      return;
+      return false;
     }
     // The slots as stored. Each spread below is on a slot an accessor matched by a
     // non-empty `register_variant` or `name`, which only an object has.
@@ -879,7 +887,18 @@ export const projectStore = {
       );
     }
 
-    // (b) adds → find-or-create by register_variant ALONE + merge period.
+    // (b) adds → find-or-create by register_variant ALONE. A source is one variant's
+    //     extraction scope and each binding is ordered only for its own years
+    //     (#1462): an add whose period differs from the source's carries it as the
+    //     binding's `period`, and an add reaching beyond the source widens the source
+    //     to the union while every binding that inherited the old period is pinned
+    //     to it. An add at the source's period writes no binding period. A
+    //     period-less add made in this batch is never pinned: it inherits the
+    //     source period the batch ends with, whatever the add order.
+    const inheriting = new Set<unknown>();
+    // A re-add's merged binding period that reg-core rejects (`2099` plus
+    // `LA2099` union to overlapping members) refuses the whole batch.
+    let refused = false;
     for (const add of diff.adds ?? []) {
       const idx = sources.findIndex(
         (s) => safeSourceRegisterVariant(s) === add.registerVariant,
@@ -890,41 +909,113 @@ export const projectStore = {
           ...sources,
           newSource(add.registerVariant, add.period, sources, [binding]),
         ];
+        if (isEmptyPeriod(add.period)) {
+          inheriting.add(binding);
+        }
         continue;
       }
       const found = sources[idx];
-      const existing = safeSourceBindings(found);
-      const isDup = existing.some((b) =>
+      const current = found.period as ProjectSourcePeriod;
+      const union = periodCoverageUnion(current, add.period);
+      const widened = !samePeriod(union, current);
+      const period = widened ? union : current;
+      // An undated old period (an imported `_default`) has no years to pin.
+      const pin = widened && datedIntervals(current) !== null;
+      const existing = safeSourceBindings(found).map((b) =>
+        pin && isPlainObject(b) && b.period == null && !inheriting.has(b)
+          ? { ...b, period: current }
+          : b,
+      );
+      const dup = existing.findIndex((b) =>
         bindingMatches(
           b,
           add.binding.variable,
           add.binding.representation ?? null,
         ),
       );
+      const own = isEmptyPeriod(add.period) ? null : add.period;
+      // Only the added (or re-added) binding is rewritten; the rest stay as they
+      // are, bar the pin above.
+      const mergedOwn = (
+        have: ProjectSourcePeriod,
+        more: ProjectSourcePeriod,
+      ): ProjectSourcePeriod => {
+        const merged = periodCoverageUnion(have, more);
+        // Refused only when reg-core rejects it: a year-independent `_default`
+        // merge is valid though it has no dated days.
+        if ("error" in sourcePeriodIntervals(merged)) {
+          refused = true;
+        }
+        return merged;
+      };
+      // The binding that survives this add, tracked in `inheriting` when it
+      // takes the source period: a period-less add (or re-add) makes it inherit,
+      // and a dated re-add keeps an inheriting binding inheriting.
+      const survive = (
+        b: DraftBinding,
+        own: ProjectSourcePeriod | null,
+      ): DraftBinding => {
+        const inherits = own === null || inheriting.has(b);
+        const kept = withBindingPeriod(b, inherits ? null : own, period);
+        if (inherits) {
+          inheriting.add(kept);
+        }
+        return kept;
+      };
+      const bindings =
+        dup < 0
+          ? [...existing, survive(binding, own)]
+          : existing.map((b, i) =>
+              i === dup
+                ? survive(
+                    b,
+                    // A re-add extends that binding's own years by the add's.
+                    own === null ? null : mergedOwn(b.period ?? current, own),
+                  )
+                : b,
+            );
       sources = sources.map((s, i) =>
-        i === idx
-          ? {
-              ...s,
-              period: periodCoverageUnion(
-                s.period as ProjectSourcePeriod,
-                add.period,
-              ),
-              bindings: isDup ? existing : [...existing, binding],
-            }
-          : s,
+        i === idx ? { ...s, period, bindings } : s,
       );
     }
 
     // (c) period changes → replace the NAMED source's period wholesale. Keyed on
     //     name AND coordinate: two differently named sources can share one
     //     register_variant, and a period edit moves only the source it names.
+    //     Each binding period is clipped to the new source period (dropped when it
+    //     equals it); one left with no day inside is kept as written, so the
+    //     structural validator reports it (`binding_period_outside_source`) rather
+    //     than the edit silently widening or dropping that column.
     for (const change of diff.periodChange ?? []) {
       sources = sources.map((s) =>
         safeSourceName(s) === change.sourceName &&
         safeSourceRegisterVariant(s) === change.registerVariant
-          ? { ...s, period: change.period }
+          ? {
+              ...s,
+              period: change.period,
+              // Only a well-formed binding carrying a period is rewritten; a
+              // malformed slot (or `bindings` itself) stays verbatim.
+              bindings: Array.isArray(s.bindings)
+                ? s.bindings.map((b) =>
+                    isPlainObject(b) && b.period != null
+                      ? withBindingPeriod(
+                          b as DraftBinding,
+                          clipPeriod(
+                            b.period as ProjectSourcePeriod,
+                            change.period,
+                          ) ?? (b.period as ProjectSourcePeriod),
+                          change.period,
+                        )
+                      : b,
+                  )
+                : s.bindings,
+            }
           : s,
       );
+    }
+
+    if (refused) {
+      return false;
     }
 
     // (d) prune → drop a source ONLY when this batch removed a binding from it AND it
@@ -955,6 +1046,7 @@ export const projectStore = {
     if (ids !== null) {
       sourceIds = ids;
     }
+    return true;
   },
 
   /**
@@ -1020,6 +1112,21 @@ function stagedToBinding(b: StagedBinding): DraftBinding {
     binding.representation = b.representation;
   }
   return binding;
+}
+
+/** `binding` with `own` as its period, or without one when `own` is unset or
+ * requests the same days as its source's `period` (a binding period is written
+ * only where it narrows, so the common case stays byte-identical). */
+function withBindingPeriod(
+  binding: DraftBinding,
+  own: ProjectSourcePeriod | null | undefined,
+  period: ProjectSourcePeriod,
+): DraftBinding {
+  const rest = { ...binding };
+  delete rest.period;
+  return own == null || samePeriod(own, period)
+    ? rest
+    : { ...rest, period: own };
 }
 
 /** Build a new `Source` for `registerVariant` at `period`, with the #312 name

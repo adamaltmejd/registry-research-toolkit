@@ -786,7 +786,7 @@ const committedColumns = $derived.by((): Map<string, CommittedMarker> => {
             match !== undefined &&
             windowsOverlapPeriod(
               column.windowsByVariant.get(row.variant) ?? [],
-              match.sourcePeriod,
+              match.period,
             )
           );
         })
