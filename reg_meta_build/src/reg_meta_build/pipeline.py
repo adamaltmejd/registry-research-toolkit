@@ -699,7 +699,7 @@ def _resolve(
             CompiledScope(source=source, register_key=register)
             for source, register in sorted(outside_keys, key=repr)
         )
-        outside_naming, outside_ambiguities = compile_deferred_naming(
+        outside_naming, outside_ambiguities, outside_refused = compile_deferred_naming(
             tree, prepared, outside, storage_columns
         )
         unselected_scopes = {
@@ -708,6 +708,7 @@ def _resolve(
                 register_key=key[1],
                 naming=outside_naming.get(key, ()),
                 naming_ambiguities=outside_ambiguities.get(key, ()),
+                refused_naming=outside_refused.get(key, ()),
             )
             for key in sorted(outside_keys, key=repr)
         }
@@ -1620,9 +1621,12 @@ def _resolve(
                                 names[register].add(coordinate.name)
                     for key in sorted(unvisited, key=repr):
                         scope = unselected_scopes[key]
+                        # A name a slug collision refused still declares the FQID
+                        # the complete build withholds: defer it, never missing.
                         declared = (
                             declared_dependency_keys(
-                                scope.naming, scope.naming_ambiguities
+                                (*scope.naming, *scope.refused_naming),
+                                scope.naming_ambiguities,
                             )
                             - slice_keys
                         )

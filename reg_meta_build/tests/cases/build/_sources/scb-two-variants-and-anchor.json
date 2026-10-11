@@ -1,0 +1,28 @@
+{
+  "description": "Register 1 (TEST) delivers VALUE (var_id 101) in variant 10 (CVID 1001) and in variant 11 (CVID 1101); register 9 (ANCHOR) delivers VALUE (var_id 901) in variant 90.",
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "VALUE",
+        "cvid": 1001,
+        "var_id": 101,
+        "regver_id": 1010,
+        "register": ["TEST", 1, 10]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 1101,
+        "var_id": 101,
+        "regver_id": 1110,
+        "register": ["TEST", 1, 11]
+      },
+      {
+        "colname": "VALUE",
+        "cvid": 9001,
+        "var_id": 901,
+        "regver_id": 9090,
+        "register": ["ANCHOR", 9, 90]
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "note": "Step 1's tree and source, built for register 9 alone. Register 1 is unselected, so its slug collisions are not this build's to report and its names are not formed. The refused names are still declared by register 1's curation, and the complete build withholds them (step 1), so the slice defers both edges as `deferred_out_of_slice_reference`, as it defers a naming-ambiguity name. Before the fix the slice dropped the refused names from the unselected scope's naming and aborted with `catalog_dependency_missing`.",
+  "fails_if": "`compile_deferred_naming` (curation_compile.py) stops returning the names its native or partition conversion refused, or the scoped build stops counting an unselected scope's `refused_naming` as declared (pipeline.py), so an edge into a refused name is reported `catalog_dependency_missing` and the slice aborts",
+  "sources": "scb-refused-names-and-anchor",
+  "registers": ["9"]
+}

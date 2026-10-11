@@ -1,0 +1,6 @@
+[[edge]]
+type = "replaced_by"
+from = "scb/sample"
+to = "scb/anchor"
+from_variant = "people"
+to_variant = "base"
