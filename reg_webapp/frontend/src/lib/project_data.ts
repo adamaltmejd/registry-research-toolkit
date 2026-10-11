@@ -195,13 +195,18 @@ function sourcesArray(draft: RawDraft): unknown[] {
 // advisory: it only ever replaces an empty name — never a user-entered name; the
 // catalog add's create path (`newSource` in the store) is its single caller.
 
-/** Default source name for a register_variant coordinate: the register slug
- * (segment 2 of `provider/register/variant`) uppercased — `scb/lisa/v1` →
- * `"LISA"` (Swedish register stubs are mostly acronyms). `""` when the
+/** Default source name for a register_variant coordinate: the register and variant
+ * slugs uppercased and joined by `_`, kebab hyphens as `_` too — `scb/rtb/doda` →
+ * `"RTB_DODA"` (#1466), so several variants of one register get telling names
+ * rather than `RTB`, `RTB_2`, `RTB_3` (Swedish register stubs are mostly
+ * acronyms). The `_default` variant names no population (#673), so it, like a
+ * coordinate with no variant segment yet, yields the register alone. `""` when the
  * coordinate has no register segment yet. */
 export function defaultSourceName(registerVariant: string): string {
-  const slug = registerVariant.split("/")[1] ?? "";
-  return slug.toUpperCase();
+  const [, register = "", variant = ""] = registerVariant.split("/");
+  const parts =
+    variant === "" || variant === "_default" ? [register] : [register, variant];
+  return parts.join("_").replaceAll("-", "_").toUpperCase();
 }
 
 /** `base` if no OTHER source (case-sensitive, as the schema compares) already

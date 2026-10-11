@@ -40,8 +40,8 @@ describe("applyStagedDiff (#992 — one atomic commit path)", () => {
     expect(storedProject()?.sources[0].bindings.map((b) => b.variable)).toEqual(
       ["scb/lisa/kon", "scb/lisa/alder"],
     );
-    // The #312 name prefill fired on the created source.
-    expect(storedProject()?.sources[0].name).toBe("LISA");
+    // The #312 name prefill fired on the created source (register + variant, #1466).
+    expect(storedProject()?.sources[0].name).toBe("LISA_V1");
   });
 
   it("commits two disjoint-era picks of ONE physical column with nothing to collide (Y-76)", () => {
