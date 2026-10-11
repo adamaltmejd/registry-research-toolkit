@@ -306,7 +306,10 @@ const LEVEL_LABEL: Record<Level, string> = {
   {/if}
 
   {#if windowHints.length > 0}
-    <div class="group warning">
+    <!-- Neutral, not a warning: a source narrower than the study window is usually
+         deliberate. The catalog link appears only when the catalog delivers the
+         missing years (#1463). -->
+    <div class="group">
       <h4 class="micro-label">
         Study window coverage ({windowHints.length})
       </h4>

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  newProjectData,
   type ProjectStudyWindow,
   type RawDraft,
   serializeProjectData,
@@ -73,6 +74,17 @@ describe("windowStore — active draft (project hydrate + write-back)", () => {
     expect(projectStore.draft?.window).toBeUndefined();
     // The draft is authoritative while it exists: its absent window wins over the
     // localStorage fallback.
+    expect(windowStore.value).toBeNull();
+  });
+
+  it("a draft with a malformed window reads null, not the raw value (#1428)", () => {
+    // An opened spec is held verbatim, so `window` can be any JSON. Fails if the
+    // store reads `draft.window` through a cast instead of `safeStudyWindow`: the
+    // string years would reach every window consumer typed as a valid window.
+    projectStore.loadProject({
+      ...newProjectData(SEED),
+      window: { from: "2000", to: "2010" },
+    });
     expect(windowStore.value).toBeNull();
   });
 

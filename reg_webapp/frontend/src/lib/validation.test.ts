@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { VariableChild } from "./api";
 import {
   codeLabel,
   issuesUnderPointer,
@@ -162,34 +163,137 @@ describe("windowCoverageHints", () => {
       },
     ]);
 
+    // No register read has landed, so no source is offered an extension.
     expect(hints).toEqual([
       {
         label: "Source 'ends_early'",
         message:
-          "Source 'ends_early' does not cover 2019..2020 within your study window 2000..2020.",
-        catalogHref: "/catalog/scb/lisa",
-        catalogLabel: "scb/lisa",
+          "Source 'ends_early' covers 2000..2018 of your study window 2000..2020.",
       },
       {
         label: "Source 'starts_late'",
         message:
-          "Source 'starts_late' does not cover 2000..2004 within your study window 2000..2020.",
-        catalogHref: "/catalog/scb/rams",
-        catalogLabel: "scb/rams",
+          "Source 'starts_late' covers 2005..2020 of your study window 2000..2020.",
       },
       {
         label: "Source 'inside'",
         message:
-          "Source 'inside' does not cover 2000..2004, 2019..2020 within your study window 2000..2020.",
-        catalogHref: "/catalog/scb/lev",
-        catalogLabel: "scb/lev",
+          "Source 'inside' covers 2005..2018 of your study window 2000..2020.",
       },
       {
         label: "Source 'interrupted'",
         message:
-          "Source 'interrupted' does not cover 2006..2014 within your study window 2000..2020.",
-        catalogHref: "/catalog/scb/inc",
-        catalogLabel: "scb/inc",
+          "Source 'interrupted' covers 2000..2005, 2015..2020 of your study window 2000..2020.",
+      },
+    ]);
+  });
+
+  it("offers Extend only where the catalog delivers the source's columns in an uncovered year (#1463)", () => {
+    // Fails if Extend is offered for every narrower source again (the `narrow`
+    // source's column is delivered only inside its own period), or if a delivery
+    // in the gap stops reaching the hint (`extendable`), or if an era with an
+    // unknown start counts as data in the gap years (`unknown_start`).
+    const children = new Map([
+      [
+        "scb/nvr",
+        [
+          {
+            fqid: "scb/nvr/dos",
+            name: "Dos",
+            coverage: null,
+            deliveries: [
+              {
+                variant: "v1",
+                column: "DOS",
+                period_scope: "intervals",
+                coverage: null,
+                windows: [{ valid_from: "2021-01-01", valid_to: "2022-12-31" }],
+              },
+            ],
+          },
+        ],
+      ],
+      [
+        "scb/lisa",
+        [
+          {
+            fqid: "scb/lisa/kon",
+            name: "Kön",
+            coverage: null,
+            deliveries: [
+              {
+                variant: "v1",
+                column: "Kon",
+                period_scope: "intervals",
+                coverage: null,
+                windows: [{ valid_from: "1990-01-01", valid_to: "9999-12-31" }],
+              },
+            ],
+          },
+        ],
+      ],
+      [
+        "scb/rams",
+        [
+          {
+            fqid: "scb/rams/syss",
+            name: "Syss",
+            coverage: null,
+            deliveries: [
+              {
+                variant: "v1",
+                column: "Syss",
+                period_scope: "intervals",
+                coverage: null,
+                windows: [{ valid_from: "0001-01-01", valid_to: "9999-12-31" }],
+              },
+            ],
+          },
+        ],
+      ],
+    ]) as unknown as Map<string, VariableChild[]>;
+    const hints = windowCoverageHints(
+      { from: 2014, to: 2022 },
+      [
+        {
+          name: "narrow",
+          register_variant: "scb/nvr/v1",
+          period: { from: 2021, to: 2022 },
+          bindings: [{ variable: "scb/nvr/dos", type: "categorical" }],
+        },
+        {
+          name: "extendable",
+          register_variant: "scb/lisa/v1",
+          period: { from: 2018, to: 2022 },
+          bindings: [{ variable: "scb/lisa/kon", type: "categorical" }],
+        },
+        {
+          name: "unknown_start",
+          register_variant: "scb/rams/v1",
+          period: 2022,
+          bindings: [{ variable: "scb/rams/syss", type: "categorical" }],
+        },
+      ],
+      (register) => children.get(register) ?? null,
+    );
+
+    expect(hints).toEqual([
+      {
+        label: "Source 'narrow'",
+        message:
+          "Source 'narrow' covers 2021..2022 of your study window 2014..2022.",
+      },
+      {
+        label: "Source 'extendable'",
+        message:
+          "Source 'extendable' covers 2018..2022 of your study window 2014..2022. The catalog has deliveries for some of the other years.",
+        catalogHref: "/catalog/scb/lisa",
+        catalogLabel: "scb/lisa",
+      },
+      {
+        label: "Source 'unknown_start'",
+        message:
+          "Source 'unknown_start' covers 2022 of your study window 2014..2022.",
       },
     ]);
   });

@@ -14,7 +14,9 @@
  * issues each request ONCE — never again on a re-render — and every source on one
  * provider shares the single read that names its registers. The root read is the
  * one the shell's rail facets already make, so the cart's provider word costs no
- * extra request.
+ * extra request. The register read that names a source's variant also carries its
+ * columns' deliveries, which the cart's study-window coverage hint reads
+ * (`registerChildren`) without a request of its own.
  *
  * A read that has not landed, or that failed, reads as `null`/`[]`: the caller
  * shows the coordinate it already holds. Failure is deliberately NOT an error
@@ -23,7 +25,13 @@
  * invented name would not be.
  */
 
-import { getShow, getStates, type RootChild } from "./api";
+import {
+  getShow,
+  getStates,
+  type RegisterShow,
+  type RootChild,
+  type VariableChild,
+} from "./api";
 import {
   deliveryColumnNamesFromStates,
   fqidSegments,
@@ -126,6 +134,25 @@ function providersOf(root: Read<RootChild[]>): RootChild[] {
   return (root.value ?? []).filter((child) => child.kind === "provider");
 }
 
+/** One register's node — its variants (for a source card's name) and its binding
+ * children with their deliveries (for the cart's coverage hint) — read once per
+ * register and shared by every source on it. Null when the ref is not a register. */
+function registerRead(registerFqid: string): Read<RegisterShow | null> {
+  return read(`register:${registerFqid}`, async () => {
+    const node = await getShow(registerFqid);
+    return node.kind === "register" ? node : null;
+  });
+}
+
+/** A register's binding children with their delivery windows, STARTING the shared
+ * register read on first ask — null while it is in flight, or for good when it
+ * failed. */
+export function registerChildren(
+  registerFqid: string,
+): readonly VariableChild[] | null {
+  return registerRead(registerFqid).value?.children ?? null;
+}
+
 /** The display names of one source's `register_variant` coordinate — all null until
  * EVERY read behind them has landed with an answer, and null for good when any of
  * them cannot be answered. All-or-nothing on purpose: the caller shows the
@@ -158,11 +185,9 @@ export function sourceNames(registerVariant: string): SourceNames {
   });
   // The variants ride the register's own node, which carries its variables too:
   // one read per register, shared by every source on it.
-  const variantsRead = read(`variants:${registerFqid}`, async () => {
-    const node = await getShow(registerFqid);
-    return node.kind === "register" ? node.variants : [];
-  });
-  const loading = root.loading || registersRead.loading || variantsRead.loading;
+  const registerNodeRead = registerRead(registerFqid);
+  const loading =
+    root.loading || registersRead.loading || registerNodeRead.loading;
   // Trimmed to null, so "no name" is ONE condition: the heading falls back to the
   // coordinate on a blank register name, and the gate below has to agree with it
   // or the card shows a coordinate heading with a variant line beside it.
@@ -170,7 +195,10 @@ export function sourceNames(registerVariant: string): SourceNames {
     (registersRead.value ?? [])
       .find((r) => r.fqid === registerFqid)
       ?.name?.trim() || null;
-  const variantName = variantCardName(variantsRead.value ?? [], variant);
+  const variantName = variantCardName(
+    registerNodeRead.value?.variants ?? [],
+    variant,
+  );
   const providers = providersOf(root);
   const providerName =
     providers.find((child) => child.fqid === provider)?.name ?? null;

@@ -12,8 +12,11 @@ issues. The API contract is `conformance/api/operations.toml` with its snapshot
 **Compiled holdings.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog or steward artifact and delegates
 scope-sensitive reads to the shared SQL reader. Steward configuration supplies branding;
-it does not supply holdings. The optional SPA scope switch is deferred. HTTP browse
-clients can request reference or holdings scope explicitly.
+it does not supply holdings. The optional SPA scope switch is deferred. Serving the
+global catalog, Home and `/project` say its scope and link the SWECOV catalog
+(`CatalogScope.svelte`, #1461); the address is a constant in the SPA, since
+`/api/context` carries no related-catalog link. HTTP browse clients can request
+reference or holdings scope explicitly.
 
 ## Why no auth — cost protection instead
 
@@ -162,8 +165,9 @@ page re-runs on every query change) and a `router.replace()` method (mirrors the
 the URL drives the view). `api.ts` has `search(q, {limit?, type?, cursor?})` typed off
 the generated `api-types-rust.ts`. Off `/search`, typing in the omnibox stays local
 until Enter/form submit and shows an Enter hint while focused; on `/search`, typing
-live-refines with replaceState. `SearchView` renders an "All · Registers · Variables ·
-Classifications · Codes" scope toggle backed by `?type=` (URL state, like
+live-refines with replaceState; leaving `/search` clears the box, so a past query does
+not read as a filter on the next page. `SearchView` renders an "All · Registers ·
+Variables · Classifications · Codes" scope toggle backed by `?type=` (URL state, like
 `?q=`/`?period`; `all` is omitted from the canonical URL; `value` is the SPA's name for
 both code arms), a Close control that `replace()`s back to the route that entered search
 (or `/catalog` for a cold deep-link), and variable rows whose heading carries
@@ -1554,11 +1558,11 @@ rune store holding one draft per session.
   needs the catalog. A new draft takes `project_schema_version()`. Periods go through
   the same module: the period grammar and project periods (a source period's days, a
   study window's days) are reg-core's, never parsed or bounded in the SPA (`period.ts`
-  composes reg-core's answers; the catalog's delivery-window day arithmetic in
-  `catalog.ts` is a separate, older matter, #1426). The study-window coverage hint stays
-  at year grain (a period with a non-year endpoint gets none); the disjointness finding
-  compares days. The type-to-filter fold is the server search's `fold_search` through
-  the same module, not a TS copy.
+  composes reg-core's answers, and `catalog.ts` fuses delivery windows and value-set
+  spans with reg-core's interval merge). The study-window coverage hint stays at year
+  grain (a period with a non-year endpoint gets none); the disjointness finding compares
+  days. The type-to-filter fold is the server search's `fold_search` through the same
+  module, not a TS copy.
 - **Project-file versions.** Any JSON object opens (the shape is the only ingress
   check): the server reads exactly reg-core's `SCHEMA_VERSION` and answers any other as
   the single `unsupported_schema_version` issue, which the browser now shows on open. No
@@ -1699,6 +1703,12 @@ never schema inheritance: each `Source` keeps its own explicit `period` in
   source's years differ from the window, or that it is outside it (`committedMarker`,
   shared by the subject-page picker and the register list); the subject page's own
   `?period` deviation keeps the period picker's existing hint.
+- **A narrower source is a fact, not a warning (#1463).** The validation panel's
+  study-window coverage hint says which years of the window a source covers, at neutral
+  tone: a narrower period is usually deliberate. It offers "Extend in catalog" only when
+  the source's register read (shared with the card's name read) shows its columns
+  delivered at its variant in an uncovered year (an era with an unknown start is no such
+  evidence); while that read is out or failed, the hint stays without the offer.
 - **"Apply window overlap" is the one rewrite.** It reads each dated source's register
   (the register list's `VariableDelivery.windows`), plans each source's overlap from its
   own columns at its own variant (`planWindowOverlap`), and asks before writing: the

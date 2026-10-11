@@ -1,5 +1,7 @@
 <script lang="ts">
 import { onDestroy } from "svelte";
+import CatalogScope from "./CatalogScope.svelte";
+import { registerChildren } from "./catalog_names.svelte";
 import {
   regMetaReleaseTag,
   safeSourceSlots,
@@ -169,6 +171,7 @@ onDestroy(() => {
       Start a new <code>project_data.json</code> or open an existing one. Projects
       live in your browser; download the file to keep the durable copy.
     </p>
+    <CatalogScope {steward} />
     <div class="toolbar">
       <!-- The single accent CTA for this view (the one brand-filled control). -->
       <Button variant="primary" onclick={onNew}>New project</Button>
@@ -187,7 +190,11 @@ onDestroy(() => {
          hints, and each card's own deviation marker) rather than re-coerced by
          either. -->
     {@const studyWindow = safeStudyWindow(draft.window)}
-    {@const coverageHints = windowCoverageHints(studyWindow, sources)}
+    {@const coverageHints = windowCoverageHints(
+      studyWindow,
+      sources,
+      registerChildren,
+    )}
     {@const windowFindings = windowDisjointFindings(studyWindow, sources)}
     <header class="editor-head">
       <h2>
@@ -230,6 +237,7 @@ onDestroy(() => {
       <code>project_data.json</code> is the editable project draft;
       <code>order.json</code> is the order manifest generated from it.
     </p>
+    <CatalogScope {steward} />
 
     <!-- `name` is the one editable top-level field on this page — the label a
          researcher always sets. The read-only deployment-seed identifiers are in

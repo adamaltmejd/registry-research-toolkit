@@ -341,7 +341,7 @@ describe("SourceEditor cart card", () => {
     await expect
       .element(dialog)
       .toMatchTextContent(
-        /Remove the source LISA \(LISA, Individer 15\+\) and its 2 columns\?/,
+        /Remove the source LISA_V1 \(LISA, Individer 15\+\) and its 2 columns\?/,
       );
     // Nothing has gone yet — the question is the whole effect of the first click.
     expect(storedProject()?.sources).toHaveLength(2);

@@ -1023,7 +1023,7 @@ function stagedToBinding(b: StagedBinding): DraftBinding {
 }
 
 /** Build a new `Source` for `registerVariant` at `period`, with the #312 name
- * prefill (the register slug uppercased, uniqueness-suffixed against `siblings`).
+ * prefill (`defaultSourceName`, uniqueness-suffixed against `siblings`).
  * `siblings` is the current source list the new name must be unique among. */
 function newSource(
   registerVariant: string,

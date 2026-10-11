@@ -77,12 +77,45 @@ export function overlapRegisters(
   return [...registers].sort();
 }
 
+/** The dated delivery windows of a source's columns at its own variant, from its
+ * register's binding children (the register read). A binding pinned to a delivery
+ * column (`representation`) contributes that column's eras only. `unknown` when any
+ * one of its columns has no dated delivery at that variant in the read. */
+export function sourceDeliveryEras(
+  source: SafeSource,
+  children: readonly VariableChild[],
+): { eras: { from: string; to: string }[]; unknown: boolean } {
+  const variant = fqidSegments(safeSourceRegisterVariant(source))[2];
+  const eras: { from: string; to: string }[] = [];
+  let unknown = false;
+  for (const binding of safeSourceBindings(source)) {
+    const before = eras.length;
+    const child = children.find((c) => c.fqid === binding.variable);
+    const pinned =
+      typeof binding.representation === "string"
+        ? binding.representation
+        : null;
+    for (const delivery of child?.deliveries ?? []) {
+      if (
+        delivery.variant === variant &&
+        delivery.period_scope !== "year_independent" &&
+        (pinned === null || delivery.column === pinned)
+      ) {
+        for (const w of delivery.windows) {
+          eras.push({ from: w.valid_from, to: w.valid_to });
+        }
+      }
+    }
+    unknown ||= eras.length === before;
+  }
+  return { eras, unknown };
+}
+
 /** Plan the rewrite. `childrenByRegister` holds each `overlapRegisters` register's
  * binding children (the register read). A source is CHANGED when its columns'
  * delivery windows at its own variant reach the study window and the overlap
  * differs from its period; MISSED when they reach none of it, or when any one of
- * its columns has no delivery at that variant in the read. A binding pinned to a
- * delivery column (`representation`) contributes that column's eras only. */
+ * its columns has no delivery at that variant in the read (`sourceDeliveryEras`). */
 export function planWindowOverlap(
   sources: readonly SafeSource[],
   window: ProjectStudyWindow,
@@ -101,30 +134,10 @@ export function planWindowOverlap(
     ) {
       continue;
     }
-    const children =
-      childrenByRegister.get(registerPrefixOf(registerVariant)) ?? [];
-    const eras: { from: string; to: string }[] = [];
-    let unknown = false;
-    for (const binding of safeSourceBindings(source)) {
-      const before = eras.length;
-      const child = children.find((c) => c.fqid === binding.variable);
-      const pinned =
-        typeof binding.representation === "string"
-          ? binding.representation
-          : null;
-      for (const delivery of child?.deliveries ?? []) {
-        if (
-          delivery.variant === variant &&
-          delivery.period_scope !== "year_independent" &&
-          (pinned === null || delivery.column === pinned)
-        ) {
-          for (const w of delivery.windows) {
-            eras.push({ from: w.valid_from, to: w.valid_to });
-          }
-        }
-      }
-      unknown ||= eras.length === before;
-    }
+    const { eras, unknown } = sourceDeliveryEras(
+      source,
+      childrenByRegister.get(registerPrefixOf(registerVariant)) ?? [],
+    );
     const sourceName = safeSourceName(source);
     if (unknown || eras.length === 0) {
       plan.misses.push({ sourceName, period, reason: "unknown-column" });

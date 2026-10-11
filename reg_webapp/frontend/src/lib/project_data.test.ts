@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  defaultSourceName,
   newProjectData,
   type ProjectSource,
   regMetaReleaseTag,
@@ -54,5 +55,13 @@ describe("source-name prefill helpers (#312)", () => {
     );
     // Case differs → no collision (the schema compares case-sensitively).
     expect(uniqueSourceName([src("lisa")], "LISA", 1)).toBe("LISA");
+  });
+
+  it("defaultSourceName names register plus variant, and `_default` by the register alone (#1466)", () => {
+    // Fails if the prefill drops back to the register alone (three RTB variants
+    // named RTB, RTB_2, RTB_3), or names the population-less `_default` variant.
+    expect(defaultSourceName("scb/rtb/doda")).toBe("RTB_DODA");
+    expect(defaultSourceName("scb/iot/dispink-2019")).toBe("IOT_DISPINK_2019");
+    expect(defaultSourceName("scb/rtb/_default")).toBe("RTB");
   });
 });

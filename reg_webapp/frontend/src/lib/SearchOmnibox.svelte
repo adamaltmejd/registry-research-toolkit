@@ -129,6 +129,18 @@ $effect(() => {
 // `untrack`. The box→URL effect remains the sole writer driven by typing; this one
 // is the sole writer driven by navigation. That one-way-each split is what makes
 // the bidirectional sync converge instead of ping-pong.
+// Leaving `/search` clears the box (#1465): the omnibox stays mounted in the shell,
+// and a past query left in it reads like a filter on the page you moved to. Only a
+// search → elsewhere move clears; text typed on another route stays until Enter.
+let wasOnSearch = router.route.name === "search";
+$effect(() => {
+  const onSearch = router.route.name === "search";
+  if (wasOnSearch && !onSearch) {
+    query = "";
+  }
+  wasOnSearch = onSearch;
+});
+
 $effect(() => {
   if (router.route.name !== "search") {
     return;
