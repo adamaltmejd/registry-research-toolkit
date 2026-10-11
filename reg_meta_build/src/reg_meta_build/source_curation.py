@@ -1190,19 +1190,21 @@ class CodingDecision(_ColumnDecision):
 
 
 class ClassificationDecision(_ColumnDecision):
-    """Bind an exact existing codebook, without copying its codes into the source."""
+    """Certify scoped noncanonical sentinel members of an exact existing codebook.
+
+    Its only producer is a `[[coding.sentinel]]` entry; other bindings (source
+    declarations, label rules, overrides) never become cases.
+    """
 
     kind: Literal["classification"] = "classification"
     classification: str = Field(min_length=1)
     expected_classification: str = Field(pattern=r"^[0-9a-f]{64}$")
-    sentinel_members: tuple[tuple[str, str], ...] = ()
-    expected_source_codings: tuple[str, ...] = ()
+    sentinel_members: tuple[tuple[str, str], ...] = Field(min_length=1)
+    expected_source_codings: tuple[str, ...] = Field(min_length=1)
 
     @model_validator(mode="after")
     def _scoped_sentinels(self) -> Self:
-        if bool(self.sentinel_members) != bool(self.expected_source_codings):
-            raise ValueError("scoped sentinels require complete source coding guards")
-        if self.sentinel_members and not self.expected_codings:
+        if not self.expected_codings:
             raise ValueError("scoped sentinels require guarded inline coding")
         if any(not code or not label for code, label in self.sentinel_members):
             raise ValueError("scoped sentinel codes and labels must be nonempty")

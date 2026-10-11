@@ -66,7 +66,9 @@ _DATABASE = "files/values.sqlite"
 _ASSOCIATIONS = "files/associations.bin"
 _POSTINGS = "files/member-positions.bin"
 _MEMBERS = (_DATABASE, _ASSOCIATIONS, _POSTINGS)
-_VERSION = 5
+# Value joins no longer carry missing_validity (only "unrestricted" was ever
+# reachable); schema-5 artifacts must be re-prepared.
+_VERSION = 6
 _UINT32_MAX = 2**32 - 1
 _ROW = struct.Struct("<IIII")
 _POSITION = struct.Struct("<I")
@@ -137,7 +139,7 @@ class _ManifestDocument(_Model):
     format: Literal["reg-meta-prepared-source-values"] = (
         "reg-meta-prepared-source-values"
     )
-    schema_version: Literal[5] = _VERSION
+    schema_version: Literal[6] = _VERSION
     revision: SourceRevision
     join: SourceValueJoin | None = None
     validity_revision: SourceRevision | None
@@ -183,7 +185,6 @@ class _ManifestDocument(_Model):
             self.join is not None
             and self.join.validity_target == "item"
             and self.validity_revision is None
-            and self.join.missing_validity != "unknown"
         ):
             raise ValueError(
                 "absent item-validity source cannot imply unrestricted membership"
@@ -223,7 +224,7 @@ def _checked[T](value: T, adapter: TypeAdapter[T]) -> T:
 
 
 _DDL = """
-PRAGMA user_version=5;
+PRAGMA user_version=6;
 CREATE TABLE payload (
     id INTEGER PRIMARY KEY,
     kind TEXT NOT NULL,
