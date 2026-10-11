@@ -889,15 +889,18 @@ never expanded into per-edition claims. The legacy undated `all_versions` form k
 unknown scope until the curation rewrites those entries with their ranges.
 
 Copied coding takes the donor's coding records at the declared occurrence scope. It
-carries no fingerprint of its own: compile and apply bind the same donor record from the
-same prepared value sources in one build, so a pin could only compare the build with
-itself. In a coding fingerprint, unknown and pooled scopes retain their original
-validity constraints without acquiring dates. Scope fingerprints hash semantic content
-only — the (kind, label, intervals, pooled_start, pooled_end) tuple, with the pooled
-bounds kept when set — never the model dump, so a new optional scope field left as None
-leaves every existing fingerprint unchanged. A fingerprint is captured from prepared
-evidence in memory during each build. Checked value-list field corrections bind using
-the effective declaration while retaining the original source record as evidence.
+carries no fingerprint of its own, because a pin could only compare the build with
+itself. A CIS matrix answer added over a blank donor is compiled against that donor's
+one bound coding list, and apply binds the same donor record from the same prepared
+value sources in one build. A thin-register addition is its own donor: compile opens no
+value bindings, and apply binds the authored record once. In a coding fingerprint,
+unknown and pooled scopes retain their original validity constraints without acquiring
+dates. Scope fingerprints hash semantic content only — the (kind, label, intervals,
+pooled_start, pooled_end) tuple, with the pooled bounds kept when set — never the model
+dump, so a new optional scope field left as None leaves every existing fingerprint
+unchanged. A fingerprint is captured from prepared evidence in memory during each build.
+Checked value-list field corrections bind using the effective declaration while
+retaining the original source record as evidence.
 
 An explicitly open upper bound differs from an unknown period. Resolution can retain a
 known start and explicit open end; the writer uses `9999-12-31` as the storage sentinel.

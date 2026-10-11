@@ -20,6 +20,7 @@ from reg_meta_build.cis2016_matrix import load_matrix
 from reg_meta_build.concept_groups import load_worklist_concept_groups
 from reg_meta_build.doc_db import load_doc_sources, load_related_documents
 from reg_meta_build.scb_errata import resolve_scb_errata
+from reg_meta_build.source_classifications import resolve_canonical_codes
 from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.sources.code_lists import read_code_list
 
@@ -140,7 +141,10 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     )
     assert errata.delivered and errata.columns and errata.versions
 
-    # Every declared book reads through the build's own CSV reader, with members.
+    # Every declared book reads through the build's own CSV reader, with members,
+    # and passes the build's canonical-code rule: one label per code and no blank
+    # code. A book that fails it is withheld by the build with
+    # conflicting_classification_labels or unknown_classification_member.
     books = REPO_ROOT / "input_data" / "classifications"
     for entry in tree.classifications:
         path = books / entry.classification.codes_file
@@ -154,9 +158,12 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
             artifact_size=len(payload),
             artifact_sha256=hashlib.sha256(payload).hexdigest(),
         )
-        assert read_code_list(path, revision, name=path.stem).associations, (
-            entry.classification.short_name
-        )
+        book = read_code_list(path, revision, name=path.stem)
+        assert book.associations, entry.classification.short_name
+        issues = resolve_canonical_codes(
+            book.values.values(), source=path.name, subject=entry.classification.slug
+        ).diagnostics
+        assert not issues, [(issue.code, issue.detail) for issue in issues]
 
     label_rules = {
         label: entry.classification.short_name
