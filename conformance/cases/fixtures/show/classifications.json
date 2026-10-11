@@ -18,6 +18,12 @@
     "codes": [{"code": "A1", "label": "Primary"}]
   },
   {
+    "slug": "sunx-a0",
+    "short_name": "SUNX-A0",
+    "name": "Education, level, older edition",
+    "codes": [{"code": "1", "label": "Level 1"}]
+  },
+  {
     "slug": "sunx-a",
     "short_name": "SUNX-A",
     "name": "Education, level",
