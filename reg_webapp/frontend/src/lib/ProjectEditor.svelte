@@ -1,5 +1,6 @@
 <script lang="ts">
 import { onDestroy } from "svelte";
+import { registerChildren } from "./catalog_names.svelte";
 import {
   regMetaReleaseTag,
   safeSourceSlots,
@@ -187,7 +188,11 @@ onDestroy(() => {
          hints, and each card's own deviation marker) rather than re-coerced by
          either. -->
     {@const studyWindow = safeStudyWindow(draft.window)}
-    {@const coverageHints = windowCoverageHints(studyWindow, sources)}
+    {@const coverageHints = windowCoverageHints(
+      studyWindow,
+      sources,
+      registerChildren,
+    )}
     {@const windowFindings = windowDisjointFindings(studyWindow, sources)}
     <header class="editor-head">
       <h2>

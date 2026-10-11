@@ -2,12 +2,19 @@ import type { ComponentProps } from "svelte";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
+import { resetCatalogNames } from "./catalog_names.svelte";
+import {
+  delivery,
+  registerShow,
+  variableChild,
+} from "./catalog-node-view-test-helpers";
 import ProjectEditor from "./ProjectEditor.svelte";
 import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
 import type { RawDraft } from "./project_data";
 import { projectStore, setPersistence } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
 import { projectSchemaVersion } from "./reg_core";
+import { variant } from "./variants-test-helpers";
 
 vi.mock("./api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./api")>()),
@@ -262,7 +269,30 @@ describe("ProjectEditor stable keys (middle-remove keeps the right survivors)", 
 });
 
 describe("ProjectEditor renders the ValidationPanel", () => {
-  it("passes project-window coverage hints into the panel", async () => {
+  it("offers to extend a narrower source once the register read shows the missing years (#1463)", async () => {
+    // Fails if the hint stops reading the register's deliveries (no link ever
+    // appears) or offers Extend without them (the twin with no deliveries in the
+    // gap is in validation.test.ts).
+    resetCatalogNames();
+    const register = registerShow({
+      fqid: "scb/lisa",
+      variants: [variant("v1")],
+      children: [
+        variableChild("scb/lisa/var", "Var", [
+          delivery("v1", "VAR", ["1990-01-01", "2010-12-31"]),
+        ]),
+      ],
+    });
+    vi.mocked(fetch).mockImplementation(async (url) => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: String(url).endsWith("/catalog/scb/lisa")
+          ? register
+          : { ok: true, issues: [] },
+        meta: {},
+      }),
+    }) as Response);
     seedSources(["scb/lisa/v1"]);
     // A window the 2000 source overlaps but does not fill (one wholly outside it
     // is a blocking finding instead — study_window.browser.test.ts).
@@ -270,7 +300,9 @@ describe("ProjectEditor renders the ValidationPanel", () => {
     await renderEditor();
 
     await expect
-      .element(page.getByText(/does not cover .* within your study window/))
+      .element(
+        page.getByText(/covers 2000 of your study window 1995\.\.2005\./),
+      )
       .toBeVisible();
     await expect
       .element(page.getByRole("link", { name: /Extend in catalog/ }))

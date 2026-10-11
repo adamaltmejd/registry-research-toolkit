@@ -20,8 +20,9 @@
  *    code + level).
  */
 
+import type { VariableChild } from "./api";
 import type { components as RustComponents } from "./api-types-rust";
-import { catalogHref, registerPrefixOf } from "./catalog";
+import { catalogHref, deliveryWindows, registerPrefixOf } from "./catalog";
 import { periodLabel, periodWindowRelation, yearWindowLabel } from "./period";
 import {
   type ProjectStudyWindow,
@@ -31,7 +32,13 @@ import {
   safeSourcePeriod,
   safeSourceRegisterVariant,
 } from "./project_data";
-import { sourcePeriodYears } from "./reg_core";
+import {
+  type Interval,
+  overlapIntervals,
+  sourcePeriodYears,
+  studyWindowInterval,
+} from "./reg_core";
+import { sourceDeliveryEras } from "./study_window";
 
 export type ValidationIssue = RustComponents["schemas"]["ValidationIssue"];
 export type ValidationResult = RustComponents["schemas"]["Validation"];
@@ -322,16 +329,22 @@ export interface WindowCoverageHint {
   catalogLabel?: string;
 }
 
+/** The source's own years inside the window, said as a fact rather than a
+ * shortfall: a period narrower than the study window is usually deliberate. */
 function windowCoverageMessage(
   label: string,
-  gaps: readonly ProjectStudyWindow[],
+  spans: readonly [number, number][],
   window: ProjectStudyWindow,
-): string | null {
-  if (gaps.length === 0) {
-    return null;
-  }
-  const missing = gaps.map(formatYearRange).join(", ");
-  return `${label} does not cover ${missing} within your study window ${window.from}..${window.to}.`;
+): string {
+  const covered = spans
+    .map(([from, to]) => ({
+      from: Math.max(from, window.from),
+      to: Math.min(to, window.to),
+    }))
+    .filter((w) => w.from <= w.to)
+    .map(formatYearRange)
+    .join(", ");
+  return `${label} covers ${covered} of your study window ${window.from}..${window.to}.`;
 }
 
 function formatYearRange(window: ProjectStudyWindow): string {
@@ -371,13 +384,21 @@ function uncoveredStudyWindowYears(
 }
 
 /** Client-side project-window hint for the read-only cart (#994). This is NOT a
- * synthetic ValidationIssue: it compares two values already in the draft and
- * gently points the user back to the register page to stage an extension. Year
- * grain: a period with any non-year endpoint (reg-core's year spans are null) is
- * skipped, because mixed-grain coverage is not safely comparable. */
+ * synthetic ValidationIssue: it compares two values already in the draft and says
+ * which years of the window a source covers. Year grain: a period with any
+ * non-year endpoint (reg-core's year spans are null) is skipped, because
+ * mixed-grain coverage is not safely comparable.
+ *
+ * The hint offers the register page to extend the source only when the catalog
+ * delivers its columns, at its variant, in some uncovered year (#1463).
+ * `deliveriesOf` answers a register's binding children (the register read), or
+ * null while that read is in flight or failed — the hint then stays without the
+ * offer rather than promising data nobody has seen. */
 export function windowCoverageHints(
   window: ProjectStudyWindow | null,
   sources: readonly SafeSource[],
+  deliveriesOf: (register: string) => readonly VariableChild[] | null = () =>
+    null,
 ): WindowCoverageHint[] {
   if (window === null) {
     return [];
@@ -394,30 +415,47 @@ export function windowCoverageHints(
     if (spans == null) {
       continue;
     }
+    const gaps = uncoveredStudyWindowYears(spans, window);
+    if (gaps.length === 0) {
+      continue;
+    }
     const rawName = safeSourceName(source);
     const label =
       rawName.length > 0 ? `Source '${rawName}'` : `Source ${index + 1}`;
     const rv = safeSourceRegisterVariant(source);
     const registerPrefix = rv.length > 0 ? registerPrefixOf(rv) : "";
-    const gaps = uncoveredStudyWindowYears(spans, window);
-    const message = windowCoverageMessage(label, gaps, window);
-    if (message == null) {
+    const message = windowCoverageMessage(label, spans, window);
+    const children =
+      registerPrefix.length > 0 ? deliveriesOf(registerPrefix) : null;
+    if (children === null || !deliveredInGaps(source, children, gaps)) {
+      hints.push({ label, message });
       continue;
     }
-    const catalog =
-      registerPrefix.length > 0
-        ? {
-            catalogHref: catalogHref(registerPrefix),
-            catalogLabel: registerPrefix,
-          }
-        : {};
     hints.push({
       label,
-      message,
-      ...catalog,
+      message: `${message} The catalog has deliveries for some of the other years.`,
+      catalogHref: catalogHref(registerPrefix),
+      catalogLabel: registerPrefix,
     });
   }
   return hints;
+}
+
+/** Whether the source's columns are delivered at its variant in any day of the
+ * uncovered years. Columns the read does not list contribute nothing; the others'
+ * eras still count, since extending the source gains their years. */
+function deliveredInGaps(
+  source: SafeSource,
+  children: readonly VariableChild[],
+  gaps: readonly ProjectStudyWindow[],
+): boolean {
+  const delivered: Interval[] = deliveryWindows(
+    sourceDeliveryEras(source, children).eras,
+  ).map((w) => [w.from, w.to]);
+  const missing = gaps
+    .map(studyWindowInterval)
+    .filter((i): i is Interval => i !== null);
+  return overlapIntervals(missing, delivered).length > 0;
 }
 
 /** One source whose period has NO years inside the study window: the project's
