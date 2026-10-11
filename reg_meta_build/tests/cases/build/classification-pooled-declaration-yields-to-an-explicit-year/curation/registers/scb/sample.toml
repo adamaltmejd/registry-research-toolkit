@@ -1,0 +1,40 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+[[variable]]
+native_id = "1.DECL"
+slug = "decl"
+
+[[errata.column]]
+variant = "people"
+column = "DECL"
+name = "Declared"
+definition = "Documented"
+data_type = "integer"
+classification = "A"
+is_identifier = false
+is_sensitive = false
+versions = ["2016 - 2018", "2017"]
+source = "scb-docs"
+evidence = "held"
+noted = "2026-10-11"
+
+[[coding.documented]]
+variable = "1.DECL"
+variant = "people"
+column = "DECL"
+periods = [["2016-01-01", "2018-12-31"]]
+members = [["1", "One"], ["9", "Nine"]]
+version_label = "Documented list"
+document_url = "https://example.org/official.pdf"
+document_sha256 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+document_pages = [12]
+reason = "Reviewed coding"
+source = "fixture"
