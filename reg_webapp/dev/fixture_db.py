@@ -9,7 +9,7 @@ and the browser flows, which assert on its content (``scb/lisa``, ``scb/rams``).
 It needs the repo checkout: the catalog builder rides on ``reg_meta_build``'s
 ``_slugged_db`` test helper.
 
-simplify: seeded Python rows, not readable source; port the content to a conformance
+simplify: seeded Python rows, not readable source (#1460); port the content to a conformance
 case that ``conformance/fixture_cache.py`` builds when this file next needs a change.
 No existing reader case covers it (``reader/fixture`` has only ``scb/example`` and
 ``sos``; ``fixtures/compiled`` only ``scb/lisa/kon``), so the port is a new source
