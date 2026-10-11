@@ -1612,14 +1612,17 @@ evidence and defer endpoint resolution with the same warning; selected or unknow
 sources still report unbound relationships as errors.
 
 Source-wide support and value-list diagnostics retain their complete raw events and
-physical accounting. A scoped build routes an issue only through declared source joins
-and positively observed, unambiguous register coordinates. Selected-register issues
-remain errors and use the existing exact acknowledgment mechanism; proven unselected
-register issues become explicit out-of-slice warnings. Unknown or ambiguous contexts
-remain errors, and complete builds never use this slice deferral. Unbound list subjects
-include the source revision, complete descriptor digest, literal lookup tokens and
-physical association count, so an empty target reference cannot become a general future
-acknowledgment. Support and member-list subjects carry content identity only: the
+physical accounting. Those raw `support_source_issue` and `value_source_issue` events
+are evidence, not verdicts: a support event's `severity` is the diagnostic's own, taken
+before scoping and acknowledgment. Only `issue` events and the counts in `summary.json`
+are the build's verdict. A scoped build routes an issue only through declared source
+joins and positively observed, unambiguous register coordinates. Selected-register
+issues remain errors and use the existing exact acknowledgment mechanism; proven
+unselected register issues become explicit out-of-slice warnings. Unknown or ambiguous
+contexts remain errors, and complete builds never use this slice deferral. Unbound list
+subjects include the source revision, complete descriptor digest, literal lookup tokens
+and physical association count, so an empty target reference cannot become a general
+future acknowledgment. Support and member-list subjects carry content identity only: the
 support row's literal key with its observed register context, or the occurrence's native
 column. Those issues always name their exact source records as refs, and an
 acknowledgment's evidence pin hashes the records' content without delivery positions. A
