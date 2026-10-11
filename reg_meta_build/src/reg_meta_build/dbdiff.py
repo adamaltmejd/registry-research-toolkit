@@ -73,23 +73,34 @@ on a projection, never on raw ids:
   FOREIGN KEY is never an id of its own (it is compared by what it references);
 - a column holding another table's surrogate id (a declared FOREIGN KEY,
   followed through composite keys to the table that owns the id, plus the few
-  undeclared references in `_UNDECLARED_REFERENCES`) is replaced by that row's
-  natural key as JSON: the key named in `_NATURAL_KEYS` (the register and
-  variant FQIDs, a state's key), else the table's smallest declared UNIQUE key
-  without the id, else all its other columns. A one-column key is its value, a
-  longer one an array, and key columns that are references nest their own
-  natural key. The first of these the data holds unique is used. When none is
-  (two rows equal but for their id), the table keeps its id and references to
-  it stay raw ids, so a child moved between the two rows is still reported; the
-  report names those tables (`raw_id_tables`), whose differences may be id
-  noise. A table also keeps its raw ids when another table has an INTEGER
-  column of the same name declared as no reference, since that column may hold
-  its ids. A false difference is acceptable, a hidden one is not.
+  undeclared references in `_UNDECLARED_REFERENCES`) is a reference, never
+  dropped, and compares as a tagged JSON array: ``["k", key]`` with the row's
+  natural key, ``["r", id]`` when the table keeps raw ids (below) and
+  ``["d", id]`` for an id no row holds. A NULL reference stays NULL. The natural
+  key is a JSON array of the key's columns: the key named in `_NATURAL_KEYS`
+  (the register and variant FQIDs, a state's key), else the table's smallest
+  declared UNIQUE key without the id, else all its other columns, the first of
+  these the data holds unique. A data value in a key is a JSON scalar (a BLOB a
+  ``{"blob": hex}`` object) and a reference column in it nests its own tagged
+  array, so a reference never equals data or another kind of reference;
+- when no key is unique (two rows equal but for their id), the table keeps its
+  id and references to it compare raw ids, so a child moved between the two rows
+  is still reported; the report names those tables (`raw_id_tables`), whose
+  differences may be id noise. A false difference is acceptable, a hidden one is
+  not;
+- a shape dbdiff cannot classify with confidence (a cycle of foreign keys or of
+  natural keys, a foreign key to a missing column, a NULL or non-integer value
+  in a referenced id column, an INTEGER column named like a table's id but
+  declared as no reference) fails with exit 2 and names it, rather than being
+  guessed. A foreign key to a table outside the content tables (virtual or
+  absent) compares its raw value: there is no row it resolves to and no id to
+  shift.
 
-So two builds that differ only in id assignment compare identical, and a
-sample row shows ``variable_id = [["scb", "lisa"], "kon"]``, not ``4711``. The
-projection is derived per DB from its schema; a table whose projection differs
-between the two DBs is skipped as a difference.
+So two builds that differ only in id assignment compare identical. The
+comparison uses the stored JSON text; reports decode it for display only
+(`_display`), so a sample row shows ``variable_id = [["scb", "lisa"], "kon"]``,
+not ``4711``. The projection is derived per DB from its schema; a table whose
+projection differs between the two DBs is skipped as a difference.
 
 Canonicalization is type-discriminated: SQLite storage class (NULL /
 INTEGER / REAL / TEXT / BLOB) is part of the fingerprint, so an ID that
@@ -229,8 +240,8 @@ class TableContentResult:
     fingerprint_a: str  # hex, "" when skipped
     fingerprint_b: str
     columns: tuple[str, ...]  # columns compared; () when skipped
-    # The compared columns that carry a referenced row's natural key (JSON text).
-    reference_columns: tuple[str, ...] = ()
+    # The compared columns that hold a tagged reference (JSON text, `_link_sql`).
+    link_columns: tuple[str, ...] = ()
     sample_a_not_b: tuple[SampleRow, ...] = ()
     sample_b_not_a: tuple[SampleRow, ...] = ()
     skipped_reason: str | None = None
@@ -416,14 +427,13 @@ class _KeyPlan:
     # table -> its surrogate id column. Never a foreign-key column: a column that
     # references a row is compared by what it references, never dropped.
     surrogates: dict[str, str]
-    # (table, column) -> the table whose surrogate id the column holds, for the
-    # references compared by that table's natural key. A reference to a raw-id
-    # table is absent here and compares its raw value.
-    references: dict[tuple[str, str], str]
-    # referenced table -> the columns of its natural key.
+    # (table, column) -> the table whose surrogate id the column holds: every
+    # reference, compared tagged (`_link_sql`) and never dropped.
+    links: dict[tuple[str, str], str]
+    # referenced table -> the columns of its natural key (raw-id tables have none).
     natural_keys: dict[str, tuple[str, ...]]
     # Referenced tables no key identifies (rows equal but for their id): they keep
-    # their id, and references to them stay raw ids, so a moved child shows.
+    # their id, and references to them compare raw ids, so a moved child shows.
     raw_ids: frozenset[str]
 
     def projected(self, table: str) -> tuple[str, ...]:
@@ -439,12 +449,17 @@ class _KeyPlan:
     def describe(self, table: str) -> str:
         """A canonical text of ``table``'s projection, natural keys expanded, so
         two DBs whose projections differ are not fingerprinted against each other."""
-        return ",".join(self._describe_column(table, c) for c in self.projected(table))
+        own = "raw-id:" if table in self.raw_ids else ""
+        return own + ",".join(
+            self._describe_column(table, c) for c in self.projected(table)
+        )
 
     def _describe_column(self, table: str, column: str) -> str:
-        target = self.references.get((table, column))
+        target = self.links.get((table, column))
         if target is None:
             return column
+        if target in self.raw_ids:
+            return f"{column}->{target}(raw)"
         key = ",".join(
             self._describe_column(target, c) for c in self.natural_keys[target]
         )
@@ -452,6 +467,8 @@ class _KeyPlan:
 
 
 def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
+    """Classify ``schema``'s ids and references. A shape it cannot classify with
+    confidence raises ValueError naming it (exit 2), never a guess."""
     tables = _content_tables(schema)
     columns = {t: tuple(c[0] for c in schema.tables[t]) for t in tables}
     edges = {
@@ -486,11 +503,25 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
         for fk in conn.execute(f"PRAGMA foreign_key_list({_quote(table)})"):
             parent = fk["table"]
             if parent not in columns:
+                # No content rows to point at (a virtual or absent table): the
+                # value has no id to shift and compares as it is.
                 continue
             to = fk["to"]
             if to is None:  # REFERENCES parent: the parent's primary key, by position
-                parent_pk = [c for c in schema.tables[parent] if c[4]]
-                to = sorted(parent_pk, key=lambda c: c[4])[fk["seq"]][0]
+                parent_pk = sorted(
+                    (c for c in schema.tables[parent] if c[4]), key=lambda c: c[4]
+                )
+                if fk["seq"] >= len(parent_pk):
+                    raise ValueError(
+                        f"{table}.{fk['from']} references {parent}, which "
+                        "declares no primary key column for it"
+                    )
+                to = parent_pk[fk["seq"]][0]
+            if to not in columns[parent]:
+                raise ValueError(
+                    f"{table}.{fk['from']} references {parent}.{to}, "
+                    "which does not exist"
+                )
             edges[table, fk["from"]] = (parent, to)
     # A table's id: its single-column INTEGER PRIMARY KEY, else a single-column
     # UNIQUE INTEGER column a foreign key targets (variable_state.state_id). A
@@ -513,6 +544,17 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
             and (parent, to) not in edges
         ):
             surrogates[parent] = to
+            # A rowid alias holds only integers; this column is merely declared so.
+            # A NULL id would get a minted id in the key map, which a dangling
+            # reference could then resolve to.
+            if conn.execute(
+                f"SELECT 1 FROM {_quote(parent)} "
+                f"WHERE typeof({_quote(to)}) != 'integer' LIMIT 1"
+            ).fetchone():
+                raise ValueError(
+                    f"{parent}.{to} is a referenced INTEGER id but holds "
+                    "NULL or non-integer values"
+                )
 
     def owner(source: tuple[str, str]) -> str | None:
         """The table whose surrogate id ``source`` holds, following composite
@@ -524,27 +566,32 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
             if surrogates.get(parent) == to:
                 return parent
             source = (parent, to)
-            if source not in edges or source in seen:
+            if source not in edges:
                 return None
+            if source in seen:
+                raise ValueError(f"foreign keys through {source} form a cycle")
             seen.add(source)
 
-    references = {s: t for s in sorted(edges) if (t := owner(s)) is not None}
+    links = {s: t for s in sorted(edges) if (t := owner(s)) is not None}
     # An INTEGER column named like another table's id but declared as no reference
-    # may still hold that id; dropping the id would then hide a changed link, so
-    # that table keeps its raw ids (a false difference, never a hidden one).
-    # Declare the reference (or list it in _UNDECLARED_REFERENCES) to normalize it.
-    raw_ids: set[str] = {
-        owner_table
-        for owner_table, id_column in surrogates.items()
-        for table in tables
-        if table != owner_table
-        and id_column in columns[table]
-        and (table, id_column) not in edges
-        and surrogates.get(table) != id_column
-        and is_integer(table, id_column)
-    }
+    # may still hold that id, and dropping the id would then hide a changed link.
+    for owner_table, id_column in sorted(surrogates.items()):
+        for table in tables:
+            if (
+                table != owner_table
+                and id_column in columns[table]
+                and (table, id_column) not in edges
+                and surrogates.get(table) != id_column
+                and is_integer(table, id_column)
+            ):
+                raise ValueError(
+                    f"{table}.{id_column} is named like {owner_table}'s id "
+                    "but declares no FOREIGN KEY; declare it, or list it in "
+                    "_UNDECLARED_REFERENCES"
+                )
     natural_keys: dict[str, tuple[str, ...]] = {}
-    pending = sorted(set(references.values()))
+    raw_ids: set[str] = set()
+    pending = sorted(set(links.values()))
     while pending:
         table = pending.pop()
         if table in natural_keys or table in raw_ids:
@@ -556,9 +603,8 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
             raw_ids.add(table)
             continue
         natural_keys[table] = key
-        pending.extend(references[table, c] for c in key if (table, c) in references)
-    references = {s: t for s, t in references.items() if t not in raw_ids}
-    return _KeyPlan(columns, surrogates, references, natural_keys, frozenset(raw_ids))
+        pending.extend(links[table, c] for c in key if (table, c) in links)
+    return _KeyPlan(columns, surrogates, links, natural_keys, frozenset(raw_ids))
 
 
 def _natural_key(
@@ -594,60 +640,79 @@ def _map_name(prefix: str, table: str) -> str:
     return _quote(f"_dbdiff_nk_{prefix}_{table}")
 
 
-def _reference_sql(plan: _KeyPlan, prefix: str, table: str, column: str) -> str:
-    """The natural key of the row ``t.column`` references, as JSON text. A
-    dangling id keeps its raw value, tagged, so it never matches a NULL."""
-    target = plan.references[table, column]
+# The tags of a compared reference. A reference is a JSON array whose first
+# element is one of these, and a data value never is an array, so a reference
+# cannot equal data or another kind of reference: ["k", key] resolved to the
+# row's natural key, ["r", id] a raw id of a raw-id table, ["d", id] an id no row
+# holds (dangling). A NULL reference stays NULL.
+_RESOLVED, _RAW, _DANGLING = "k", "r", "d"
+
+
+def _link_sql(plan: _KeyPlan, prefix: str, table: str, column: str) -> str:
+    """The tagged reference ``t.column`` holds, as JSON text (NULL for NULL)."""
+    target = plan.links[table, column]
     col = f"t.{_quote(column)}"
-    return (
-        f"CASE WHEN {col} IS NULL THEN NULL ELSE COALESCE("
-        f"(SELECT nk FROM temp.{_map_name(prefix, target)} WHERE id = {col}), "
-        f"json_array('dangling id', {col})) END"
-    )
+    if target in plan.raw_ids:
+        exists = (
+            f"EXISTS (SELECT 1 FROM {prefix}.{_quote(target)} "
+            f"WHERE {_quote(plan.surrogates[target])} = {col})"
+        )
+        value = (
+            f"CASE WHEN {exists} THEN json_array('{_RAW}', {col}) "
+            f"ELSE json_array('{_DANGLING}', {col}) END"
+        )
+    else:
+        value = (
+            f"COALESCE((SELECT nk "
+            f"FROM temp.{_map_name(prefix, target)} WHERE id = {col}), "
+            f"json_array('{_DANGLING}', {col}))"
+        )
+    return f"CASE WHEN {col} IS NULL THEN NULL ELSE {value} END"
 
 
 def _projection_sql(plan: _KeyPlan, prefix: str, table: str) -> list[str]:
     return [
-        _reference_sql(plan, prefix, table, c)
-        if (table, c) in plan.references
+        _link_sql(plan, prefix, table, c)
+        if (table, c) in plan.links
         else f"t.{_quote(c)}"
         for c in plan.projected(table)
     ]
 
 
 def _build_key_maps(work: sqlite3.Connection, plan: _KeyPlan, prefix: str) -> None:
-    """Materialize, per referenced table, its id -> natural-key JSON in the temp store."""
+    """Materialize, per referenced table with a natural key, its id -> tagged
+    reference ``["k", key]`` in the temp store, so a lookup is the compared text
+    as it is. Every key is an array, so a NULL key column is JSON null; a data
+    value is a JSON scalar (a BLOB a {"blob": hex} object) and a reference a
+    tagged array."""
     built: set[str] = set()
 
     def build(table: str, visiting: frozenset[str]) -> None:
         if table in built:
             return
         if table in visiting:
-            raise ValueError(
-                f"dbdiff: the natural key of {table} refers back to itself"
-            )
-        key = plan.natural_keys[table]
+            raise ValueError(f"the natural key of {table} refers back to itself")
         parts = []
-        for c in key:
-            if (table, c) in plan.references:
-                build(plan.references[table, c], visiting | {table})
-                parts.append(f"json({_reference_sql(plan, prefix, table, c)})")
+        for c in plan.natural_keys[table]:
+            if (table, c) in plan.links:
+                target = plan.links[table, c]
+                if target not in plan.raw_ids:
+                    build(target, visiting | {table})
+                parts.append(f"json({_link_sql(plan, prefix, table, c)})")
             else:
                 col = f"t.{_quote(c)}"
                 parts.append(
-                    f"json_quote(CASE WHEN typeof({col}) = 'blob' "
-                    f"THEN json_object('blob', hex({col})) ELSE {col} END)"
+                    f"CASE WHEN typeof({col}) = 'blob' "
+                    f"THEN json_object('blob', hex({col})) ELSE {col} END"
                 )
-        # A one-column key is its value, not a one-element array, so a nested
-        # key reads [["scb", "lisa"], "kon"] rather than [[["scb"], "lisa"], "kon"].
-        nk = parts[0] if len(parts) == 1 else f"json_array({', '.join(parts)})"
         name = _map_name(prefix, table)
         work.execute(
             f"CREATE TEMP TABLE {name} (id INTEGER PRIMARY KEY, nk TEXT NOT NULL)"
         )
         work.execute(
             f"INSERT INTO temp.{name} SELECT t.{_quote(plan.surrogates[table])}, "
-            f"{nk} FROM {prefix}.{_quote(table)} AS t"
+            f"json_array('{_RESOLVED}', json_array({', '.join(parts)})) "
+            f"FROM {prefix}.{_quote(table)} AS t"
         )
         built.add(table)
 
@@ -966,9 +1031,7 @@ def _compare_content(
             fingerprint_a=fp_a,
             fingerprint_b=fp_b,
             columns=columns,
-            reference_columns=tuple(
-                c for c in columns if (table, c) in plan_a.references
-            ),
+            link_columns=tuple(c for c in columns if (table, c) in plan_a.links),
         )
         if not result.identical:
             a_not_b, b_not_a = _diff_samples(
@@ -1011,12 +1074,13 @@ def _fmt_cell(value: object, width: int = 80) -> str:
     return text
 
 
-def _fmt_sample(rows: Iterable[SampleRow], columns: Sequence[str]) -> list[str]:
+def _fmt_sample(rows: Iterable[SampleRow], result: TableContentResult) -> list[str]:
     lines: list[str] = []
     for row in rows:
         sign = f"+{row.net}" if row.net > 0 else str(row.net)
         cells = ", ".join(
-            f"{col}={_fmt_cell(val)}" for col, val in zip(columns, row.values)
+            f"{col}={_fmt_cell(_text(_display(val, link=col in result.link_columns)))}"
+            for col, val in zip(result.columns, row.values)
         )
         lines.append(f"      ({sign}) {cells}")
     return lines
@@ -1093,47 +1157,75 @@ def format_report(report: DiffReport) -> str:
                 out.append(f"    note: {r.note}")
             if r.sample_a_not_b:
                 out.append(f"    rows in A not B (first {len(r.sample_a_not_b)}):")
-                out.extend(_fmt_sample(r.sample_a_not_b, r.columns))
+                out.extend(_fmt_sample(r.sample_a_not_b, r))
             if r.sample_b_not_a:
                 out.append(f"    rows in B not A (first {len(r.sample_b_not_a)}):")
-                out.extend(_fmt_sample(r.sample_b_not_a, r.columns))
+                out.extend(_fmt_sample(r.sample_b_not_a, r))
 
     matched = sum(1 for r in report.table_results if r.identical)
     out.append(f"\n{matched}/{len(report.table_results)} content table(s) matched.")
     return "\n".join(out)
 
 
-def _json_cell(value: object) -> object:
-    """A sample cell as JSON that keeps its SQLite storage class: NULL is null,
-    INTEGER and REAL stay numbers, TEXT is a string (long text truncated) and a
-    BLOB is a ``{"blob": preview}`` object. Integer 1, text '1', blob b'1' and NULL
-    are different rows to the diff, so they must not print alike. A non-finite
-    REAL has no JSON number, so it is a ``{"real": "inf" | "-inf" | "nan"}``
-    object rather than the invalid ``Infinity``/``NaN`` or the string 'inf'."""
+def _display(value: object, *, link: bool = False) -> object:
+    """A reported sample value as JSON: the one path every reported value takes,
+    in the JSON and the text report. The diff compares the stored values; this is
+    for display only.
+
+    A data value keeps its SQLite storage class: NULL is null, INTEGER and REAL
+    stay numbers, TEXT is a string (long text truncated) and a BLOB is a
+    ``{"blob": preview}`` object. Integer 1, text '1', blob b'1' and NULL are
+    different rows to the diff, so they must not print alike. A non-finite REAL
+    has no JSON number, so it is a ``{"real": "inf" | "-inf" | "nan"}`` object
+    rather than the invalid ``Infinity``/``NaN`` or the string 'inf'.
+
+    A reference (``link``) is decoded from its tagged JSON: a resolved one prints
+    its natural key (a one-column key as its value), a raw id ``{"raw_id": id}``
+    and a dangling id ``{"dangling_id": id}``. Its values go through this same
+    path, so a REAL infinity inside a key prints as ``{"real": "inf"}`` too."""
+    if link and isinstance(value, str):
+        return _untag(json.loads(value))
     if isinstance(value, (bytes, bytearray, memoryview)):
         return {"blob": _fmt_cell(value)}
     if isinstance(value, float) and not math.isfinite(value):
         return {"real": str(value)}
     if isinstance(value, str):
         return _fmt_cell(value, width=200)
+    if isinstance(value, dict):  # a BLOB inside a key: {"blob": hex}
+        return {k: _display(v) for k, v in value.items()}
+    return value
+
+
+def _untag(reference: list) -> object:
+    tag, payload = reference
+    if tag == _RAW:
+        return {"raw_id": payload}
+    if tag == _DANGLING:
+        return {"dangling_id": payload}
+    # In a key, a data value is a JSON scalar or object and a reference an array.
+    parts = [_untag(p) if isinstance(p, list) else _display(p) for p in payload]
+    return parts[0] if len(parts) == 1 else parts
+
+
+def _text(value: object) -> object:
+    """A displayed value for the text report: a scalar as it is, a structure as
+    compact JSON."""
+    if isinstance(value, (list, dict)):
+        return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
     return value
 
 
 def _report_to_dict(report: DiffReport) -> dict[str, object]:
-    """JSON-serializable view; sample cells keep their storage class
-    (``_json_cell``)."""
+    """JSON-serializable view; every sample value goes through ``_display``."""
 
     def cells(
         rows: Iterable[SampleRow], result: TableContentResult
     ) -> list[dict[str, object]]:
-        # A reference cell is its row's natural key, printed as the JSON it is.
         return [
             {
                 "net": row.net,
                 "row": {
-                    c: json.loads(v)
-                    if c in result.reference_columns and isinstance(v, str)
-                    else _json_cell(v)
+                    c: _display(v, link=c in result.link_columns)
                     for c, v in zip(result.columns, row.values)
                 },
             }

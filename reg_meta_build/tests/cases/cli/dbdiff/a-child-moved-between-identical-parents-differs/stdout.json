@@ -9,7 +9,7 @@
         {
           "net": 1,
           "row": {
-            "version_id": 1,
+            "version_id": {"raw_id": 1},
             "name": "persons"
           }
         }
@@ -18,7 +18,7 @@
         {
           "net": -1,
           "row": {
-            "version_id": 2,
+            "version_id": {"raw_id": 2},
             "name": "persons"
           }
         }
@@ -43,7 +43,7 @@
         {
           "net": 1,
           "row": {
-            "version_id": 1,
+            "version_id": {"raw_id": 1},
             "note": "x"
           }
         }
@@ -52,7 +52,7 @@
         {
           "net": -1,
           "row": {
-            "version_id": 2,
+            "version_id": {"raw_id": 2},
             "note": "x"
           }
         }
