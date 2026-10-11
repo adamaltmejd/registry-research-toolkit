@@ -683,8 +683,8 @@ def classification_slug_stem(slug: str | None) -> str | None:
     its `sun-niva`/`-inriktning`/`-grupp` dimension stems, so it stays its own
     single-member family and the 1→many split to 2000 is curated, not auto).
 
-    NULL-safe so it can be a SQLite UDF over `classification.slug` (NULL under
-    `--skip-slugs`, where the reclaim is inert anyway): a NULL slug → NULL stem.
+    NULL-safe so it can be a SQLite UDF over `classification.slug`: a NULL slug →
+    NULL stem.
     """
     if slug is None:
         return None

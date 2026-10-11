@@ -1,0 +1,30 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.5"
+slug = "a"
+[[variable]]
+native_id = "1.5.b"
+slug = "b"
+[[identity.partition]]
+variable = "1.5"
+columns = { A = "1.5", B = "1.5" }
+columns_ref = "fixture"
+[[identity.column_owner]]
+variable = "1.5"
+variant = "1.2"
+column = "B"
+owner = "1.5.b"
+ref = "fixture"
+source_editions = ["2020"]
+
+[[enrichment.description]]
+register = "scb/sample"
+variable = "a"
+description = "Accepted prose"
+provenance = "delivery list"

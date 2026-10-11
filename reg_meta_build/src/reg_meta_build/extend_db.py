@@ -208,12 +208,8 @@ def _assert_steward_rows_slugged(conn: sqlite3.Connection) -> None:
         )
 
 
-def resolve_steward_slug_dir(
-    slug_dir: Path | None, steward: str, *, skip_slugs: bool
-) -> Path | None:
-    """Resolve the steward slug dir, or ``None`` when slugging is skipped."""
-    if skip_slugs:
-        return None
+def resolve_steward_slug_dir(slug_dir: Path | None, steward: str) -> Path:
+    """Resolve the steward slug dir."""
     if slug_dir is not None:
         resolved = slug_dir.expanduser().resolve()
     else:
@@ -254,7 +250,6 @@ def extend_db(
     *,
     steward: str,
     slug_dir: Path | None = None,
-    skip_slugs: bool = False,
     holdings_input: Path | None = None,
     input_commit: str | None = None,
     input_manifest_sha256: str | None = None,
@@ -266,8 +261,7 @@ def extend_db(
         _unlink_wal_sidecars,
         publish_db,
     )
-    from .derive import DERIVED_TABLES, derive, derive_holdings
-    from .derive.search_index import derive_search_indexes
+    from .derive import derive, derive_holdings
     from .fqid_slugs import populate_slugs, populate_variable_slugs
     from .source_files import _progress
 
@@ -317,7 +311,7 @@ def extend_db(
             holdings_input = holdings_input.expanduser().resolve()
             if not input_commit or not input_manifest_sha256:
                 raise ValueError("Private holdings require both exact input pins")
-            if slug_dir is not None or skip_slugs:
+            if slug_dir is not None:
                 raise ValueError(
                     "Publishable extension requires committed steward naming without diagnostic overrides"
                 )
@@ -369,7 +363,7 @@ def extend_db(
             resolved_providers_dir, steward, classification_short_names
         )
         steward_slug_dir = pinned_slug_dir or resolve_steward_slug_dir(
-            slug_dir, steward, skip_slugs=skip_slugs
+            slug_dir, steward
         )
 
         accounting = None
@@ -424,25 +418,16 @@ def extend_db(
                 provider_ids=_provider_id_by_slug(conn),
             )
 
-            if not skip_slugs:
-                assert steward_slug_dir is not None
-                populate_slugs(conn, steward_slug_dir, strict=False)
-                populate_variable_slugs(
-                    conn, steward_slug_dir, incremental=True, persist_auto=diagnostic
-                )
-                _assert_steward_rows_slugged(conn)
+            populate_slugs(conn, steward_slug_dir, strict=False)
+            populate_variable_slugs(
+                conn, steward_slug_dir, incremental=True, persist_auto=diagnostic
+            )
+            _assert_steward_rows_slugged(conn)
 
             # Holdings must see the steward's own metadata, so derive runs over
-            # base plus overlay. An unslugged diagnostic never compiles holdings;
-            # it clears the inherited derived tables instead of deriving stale
-            # ones, and still indexes the overlay for search.
-            if skip_slugs:
-                for table in reversed(DERIVED_TABLES):
-                    conn.execute(f"DELETE FROM {table}")
-                derive_search_indexes(conn)
-            else:
-                conn.commit()
-                derive(conn)
+            # base plus overlay.
+            conn.commit()
+            derive(conn)
             manifest = get_manifest(conn)
             # Derivation provenance belongs to the base; base_generation_id
             # already covers it, so an extension does not inherit the key.

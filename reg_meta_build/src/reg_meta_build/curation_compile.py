@@ -6679,30 +6679,9 @@ def compile_enrichment(
                 variable_key = target.target.source_key
                 by_split = partition_members.get(scope_key, {})
                 if "accepted-partition" in variable_key:
-                    base_key = variable_key[: variable_key.index("accepted-partition")]
-                    siblings = {
-                        key: pairs
-                        for key, pairs in by_split.items()
-                        if key[: len(base_key)] == base_key
-                    }
-                    selected_pairs = siblings.get(variable_key, frozenset())
-                    if any(
-                        pair in other_pairs
-                        for pair in selected_pairs
-                        for key, other_pairs in siblings.items()
-                        if key != variable_key
-                    ):
-                        statuses["over_broad"].append(case_id)
-                        diagnostics.append(
-                            _family_diagnostic(
-                                case_id,
-                                subject,
-                                "one literal source member belongs to multiple split variables",
-                                overbroad=True,
-                                refs=register_anchor(name),
-                            )
-                        )
-                        continue
+                    # One owner per literal pair: a family has one partition map
+                    # (load refuses a second) and its case keys effects by pair.
+                    selected_pairs = by_split.get(variable_key, frozenset())
                     chosen = tuple(
                         record
                         for record in all_records
@@ -7080,13 +7059,6 @@ def compile_curation(
             unmatched.append(f"lineage.toml#/lineage_defaults/{ref}")
         defaults.append((ref, variant))
     inputs = prepared.manifest.inputs
-    identifiers = tuple(
-        e.revision.dataset
-        for e in inputs
-        if e.origin == "snapshot"
-        and e.path == "Identifierare.csv"
-        and e.revision is not None
-    )
     event_targets = {
         _snapshot_key(entry): entry.revision.dataset
         for entry in inputs
@@ -7451,7 +7423,6 @@ def compile_curation(
             "metadata": metadata,
             "code_label_pairs": tuple(pairs),
             "lineage_defaults": tuple(defaults),
-            "identifier_sources": identifiers,
             "event_sources": all_events,
         },
         cases={

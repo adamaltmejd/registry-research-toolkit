@@ -652,6 +652,9 @@ _COLUMN_STATE_CONFLICTS = {
     "overlapping_codeless_codebearing_states": lambda a, b: (
         (a.value_set is None) != (b.value_set is None)
     ),
+    # Reached when case-folded spellings carry different code-list version labels:
+    # the pooled span is not cut around the other spelling's explicit year (build
+    # case occurrence-pooled-and-explicit-folded-spellings-withhold-their-variable).
     "overlapping_pooled_explicit_states": lambda a, b: a.pooled != b.pooled,
 }
 
@@ -895,9 +898,9 @@ def _prepare_classification_succession(
                 "between editions of one family from their names.",
             )
         seen[pair] = edge.note
-        for slug in pair:
-            if slug not in by_slug and slug not in withheld:
-                raise ValueError(f"unknown classification succession endpoint: {slug}")
+        # Compile refuses a curated edge to an uncompiled book (relations_invalid);
+        # derived edges come from the books themselves.
+        assert all(s in by_slug or s in withheld for s in pair), pair
         graph.add(edge.successor, edge.predecessor)
         if (
             edge.effective_year is None
