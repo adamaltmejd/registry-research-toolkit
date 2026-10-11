@@ -269,9 +269,20 @@ def test_bundle_preparation_keeps_source_conflicts_for_common_resolution(
     verify_input_bundle(selection)
 
 
-@pytest.mark.parametrize("name", ("../outside", "/outside", "dir\\outside"))
-def test_bundle_preparation_rejects_escaping_canonical_code_list(
-    tmp_path: Path, name: str
+@pytest.mark.parametrize(
+    ("name", "message"),
+    (
+        ("../outside", "local filename"),
+        ("/outside", "local filename"),
+        ("dir\\outside", "local filename"),
+        # Fails if capture records a declared but undelivered list as an absent
+        # optional file (as it does SCB's fixed paths) and commits a bundle that
+        # silently lacks the list the canonical register binds.
+        ("undelivered", "referenced catalog input files are missing"),
+    ),
+)
+def test_bundle_preparation_rejects_a_canonical_code_list_it_cannot_capture(
+    tmp_path: Path, name: str, message: str
 ) -> None:
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
@@ -283,7 +294,7 @@ def test_bundle_preparation_rejects_escaping_canonical_code_list(
         f"value_set = {json.dumps(name)}\n",
         encoding="utf-8",
     )
-    with pytest.raises(SnapshotError, match="local filename"):
+    with pytest.raises(SnapshotError, match=message):
         write_input_bundle(tmp_path / "accepted", input_dir)
 
 
