@@ -42,6 +42,9 @@ const HORIZON: usize = DEPTH + 1;
 /// match by identity (today's `_MAX_IDENTITY_PROMOTION_MATCHES`).
 const MAX_PROMOTED: usize = 50;
 const EXACT: i64 = 1000;
+/// A variable admitted with its register's text ranks after every variable whose own
+/// text matches the whole query: its bm25 plus this.
+const CONTEXT_RANK: f64 = 1_000_000.0;
 /// `Page<SearchHit>`.
 #[derive(Serialize, ToSchema)]
 pub struct SearchPage {
@@ -545,7 +548,12 @@ fn variable_arm(
             },
         )
     };
+    let held_alias = (scope == Scope::Holdings).then(|| alias_held("ea"));
+    let admission = admission(request.q, fts, held_alias.as_deref());
+    let (own_cte, context_rank) = (&admission.cte, &admission.rank);
     let mut args: Vec<Sql> = vec![fts.to_owned().into(), folded.into()];
+    args.extend(admission.cte_args);
+    args.push(admission.candidates.into());
     let mut filters = String::new();
     if let Some(register) = request.register {
         filters += " AND vf.register_id = ?";
@@ -556,27 +564,8 @@ fn variable_arm(
         filters += &year_filter("variable_state vs", "vs.variable_id = vf.rowid");
         args.extend([i64::from(hi).into(), i64::from(lo).into()]);
     }
-    if scope == Scope::Holdings {
-        // Each term must match the variable's public text or a held alias.
-        for term in fts_terms(request.q) {
-            write!(
-                filters,
-                " AND (vf.rowid IN (SELECT rowid FROM variable_fts WHERE variable_fts MATCH ?) \
-                 OR EXISTS (SELECT 1 FROM variable_alias ea WHERE ea.variable_id = v.variable_id \
-                 AND fts_term(ea.delivery_column_name, ?) AND {}))",
-                alias_held("ea")
-            )
-            .expect("write to String");
-            args.push(
-                format!(
-                    "{{name definition description operational_definition}}: \"{}\"*",
-                    term.replace('"', "\"\"")
-                )
-                .into(),
-            );
-            args.push(term.into());
-        }
-    }
+    filters += &admission.filters;
+    args.extend(admission.filter_args);
     // Exact-name admission (#1180): variables whose name or held delivery column
     // folds to the query are ordered ahead of the bound; ties break on the FQID.
     let sql = format!(
@@ -585,15 +574,15 @@ fn variable_arm(
          JOIN provider p ON p.provider_id = r.provider_id WHERE variable_fts MATCH ?1 \
          AND (fold_search(v.name) = ?2 OR EXISTS (SELECT 1 FROM variable_alias va \
          WHERE va.variable_id = v.variable_id AND fold_search(va.delivery_column_name) = ?2 \
-         AND {exact_held})) ORDER BY p.slug, r.slug, v.slug LIMIT {HORIZON}) \
+         AND {exact_held})) ORDER BY p.slug, r.slug, v.slug LIMIT {HORIZON}){own_cte} \
          SELECT vf.register_id, vf.rowid, vt.name, vt.definition, vt.description, \
-         vt.operational_definition, bm25(variable_fts, 0.2, 0.2, 6.0, 4.0, 2.0, 1.0, 0.4), \
+         vt.operational_definition, bm25(variable_fts, 0.2, 0.2, 6.0, 4.0, 2.0, 1.0, 0.4){context_rank}, \
          r.name, p.slug, r.slug, v.slug \
          FROM variable_fts vf JOIN register r ON vf.register_id = r.register_id \
          JOIN provider p ON p.provider_id = r.provider_id \
          JOIN variable v ON v.variable_id = vf.rowid \
          JOIN variable_search_text vt ON vt.variable_id = vf.rowid \
-         WHERE variable_fts MATCH ?1 AND {held}{filters} \
+         WHERE variable_fts MATCH ? AND {held}{filters} \
          ORDER BY vf.rowid NOT IN (SELECT variable_id FROM exact), 7, p.slug, r.slug, v.slug \
          LIMIT {HORIZON}",
         exact_held = alias_held("va"),
@@ -632,6 +621,108 @@ fn variable_arm(
     fold(conn, scope, request, "variable", hits, |g| {
         members(conn, scope, g.id)
     })
+}
+
+/// How the variable arm admits and orders rows by the query's terms: `cte` (a leading
+/// comma, binding `cte_args`) and `rank` (added to bm25) in the statement, the
+/// `candidates` full-text query, and `filters` binding `filter_args`.
+struct Admission {
+    cte: String,
+    cte_args: Vec<Sql>,
+    rank: String,
+    candidates: String,
+    filters: String,
+    filter_args: Vec<Sql>,
+}
+
+/// A query of two or more tokens also admits a variable when its register's name or
+/// purpose supplies some tokens and its own text the rest (`covid provtagning` finds
+/// `Provtagningsdatum` in a register whose purpose names covid). Those context rows
+/// rank after every row whose own text matches all tokens, which keep their order and
+/// bm25; a single token admits exactly as before. `held_alias` is the holdings test
+/// that alias `ea` is held (`None` in reference).
+fn admission(q: &str, fts: &str, held_alias: Option<&str>) -> Admission {
+    // Each term's own-text test in holdings: the variable's public text or a held
+    // alias (in reference, the full-text match already is the own-text test).
+    let own: Vec<(String, [Sql; 2])> = held_alias.map_or_else(Vec::new, |held| {
+        fts_terms(q)
+            .into_iter()
+            .map(|term| {
+                let sql = format!(
+                    "(vf.rowid IN (SELECT rowid FROM variable_fts WHERE variable_fts MATCH ?) \
+                     OR EXISTS (SELECT 1 FROM variable_alias ea WHERE ea.variable_id = v.variable_id \
+                     AND fts_term(ea.delivery_column_name, ?) AND {held}))"
+                );
+                let column_match = format!(
+                    "{{name definition description operational_definition}}: \"{}\"*",
+                    term.replace('"', "\"\"")
+                );
+                (sql, [column_match.into(), term.into()])
+            })
+            .collect()
+    });
+    let own = own.as_slice();
+    let tokens: Vec<String> = fold_search(q)
+        .split(' ')
+        .filter_map(fts_match_query)
+        .collect();
+    let mut out = Admission {
+        cte: String::new(),
+        cte_args: Vec::new(),
+        rank: String::new(),
+        candidates: fts.to_owned(),
+        filters: String::new(),
+        filter_args: Vec::new(),
+    };
+    if tokens.len() < 2 {
+        for (sql, sql_args) in own {
+            write!(out.filters, " AND {sql}").expect("write to String");
+            out.filter_args.extend(sql_args.iter().cloned());
+        }
+        return out;
+    }
+    // The own-text rows: every token in the variable's own text, as before.
+    out.cte = String::from(
+        ", own(variable_id) AS (SELECT vf.rowid FROM variable_fts vf \
+         JOIN variable v ON v.variable_id = vf.rowid WHERE variable_fts MATCH ?1",
+    );
+    for (sql, sql_args) in own {
+        write!(out.cte, " AND {sql}").expect("write to String");
+        out.cte_args.extend(sql_args.iter().cloned());
+    }
+    out.cte += ")";
+    out.rank = format!(
+        " + CASE WHEN vf.rowid IN (SELECT variable_id FROM own) THEN 0 ELSE {CONTEXT_RANK} END"
+    );
+    out.candidates = tokens.join(" OR ");
+    let register_match =
+        "vf.register_id IN (SELECT register_id FROM register_fts WHERE register_fts MATCH ?)";
+    if own.is_empty() {
+        // Each token matches the variable's text or its register's.
+        for token in tokens {
+            write!(
+                out.filters,
+                " AND (vf.rowid IN (SELECT rowid FROM variable_fts WHERE variable_fts MATCH ?) \
+                 OR {register_match})"
+            )
+            .expect("write to String");
+            out.filter_args.extend([token.clone().into(), token.into()]);
+        }
+        return out;
+    }
+    // Some term matches the variable's own text, and each that or its register's.
+    let any: Vec<&str> = own.iter().map(|(sql, _)| sql.as_str()).collect();
+    write!(out.filters, " AND ({})", any.join(" OR ")).expect("write to String");
+    for (_, sql_args) in own {
+        out.filter_args.extend(sql_args.iter().cloned());
+    }
+    for (term, (sql, sql_args)) in fts_terms(q).into_iter().zip(own) {
+        write!(out.filters, " AND ({sql} OR {register_match})").expect("write to String");
+        out.filter_args.extend(sql_args.iter().cloned());
+        let term = fts_match_query(&term).expect("a term is alphanumeric");
+        out.filter_args.push(term.into());
+    }
+    out
 }
 
 /// Concept groups of `kind` whose label (folded by `fold_identity`) or key contains
@@ -1057,7 +1148,7 @@ fn authority(hit: &Hit) -> i64 {
 /// The webapp's `_best_bet_score`: a type prior (register 40, variable and variable
 /// group 30, classification and classification group 25, code 10), plus 1000 when an
 /// identity text folds to the query or else 100 when one starts with it (a code's
-/// prefix reads its code only), plus the group authority bonus.
+/// identity is its code alone), plus the group authority bonus.
 fn best_bet(folded: &str, hit: &Hit, terms: &[String]) -> i64 {
     let mut texts: Vec<String> = Vec::new();
     let mut push = |text: Option<&str>| texts.extend(text.map(str::to_owned));
@@ -1111,10 +1202,10 @@ fn best_bet(folded: &str, hit: &Hit, terms: &[String]) -> i64 {
             }
             25
         }
+        // A code's identity is its code: a label naming the query is an incidental
+        // value, not the thing searched for (#1464).
         Hit::Code(c) => {
             push(Some(&c.code));
-            push(Some(&c.label));
-            push(c.code_system.as_deref());
             10
         }
     };
@@ -1123,10 +1214,7 @@ fn best_bet(folded: &str, hit: &Hit, terms: &[String]) -> i64 {
         return prior;
     }
     let exact = texts.iter().any(|t| t == folded);
-    let prefix = match hit {
-        Hit::Code(c) => fold_search(&c.code).starts_with(folded),
-        _ => texts.iter().any(|t| t.starts_with(folded)),
-    };
+    let prefix = texts.iter().any(|t| t.starts_with(folded));
     prior
         + if exact {
             EXACT

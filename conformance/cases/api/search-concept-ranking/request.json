@@ -1,0 +1,31 @@
+{
+  "note": "#1464. (1) `provtagning`: register Lab has a register-local code `PRV01` labelled exactly `Provtagning`; variable `Provtagningsdatum` only starts with the query. Fails if a code's label counts as its identity (the code then leads on an exact match). (2) `covid provtagning`: `covid` is only in register Smitta's purpose, `provtagning` in its variable's name; `Analyser` carries both terms in its own long description and keeps its place ahead. Fails if multi-term matching stays per row (Provtagningsdatum is missing), if a register term alone lists the register's variables (Diagnosdatum appears), or if register-context rows mix into the own-text order by bm25 (Provtagningsdatum leads). (3) `PRV01`: the code's own value still folds to the query, ahead of variable `Provkod` whose column `PRV010` only starts with it. Fails if a code's identity loses its code.",
+  "kind": "catalog",
+  "fixture": "search-concept",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "provtagning",
+        "limit": 5
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "covid provtagning",
+        "limit": 5
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "PRV01",
+        "limit": 5
+      }
+    }
+  ]
+}

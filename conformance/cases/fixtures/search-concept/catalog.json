@@ -1,0 +1,170 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "smitta",
+      "name": "Smitta",
+      "purpose": "Smittregister for covid fall"
+    },
+    "slug": "provtagningsdatum",
+    "provider_key": "1",
+    "name": "Provtagningsdatum",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Provdat",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "smitta",
+      "name": "Smitta",
+      "purpose": "Smittregister for covid fall"
+    },
+    "slug": "diagnosdatum",
+    "provider_key": "2",
+    "name": "Diagnosdatum",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Diadat",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lab",
+      "name": "Lab",
+      "purpose": "Laboratorieregister"
+    },
+    "slug": "analyser",
+    "provider_key": "3",
+    "name": "Analyser",
+    "definition": null,
+    "description": "Antal analyser per laboratorium och manad, varav en del avser covid och en del avser annan provtagning, redovisade per region och kvartal ord0 ord1 ord2 ord3 ord4 ord5 ord6 ord7 ord8 ord9 ord10 ord11 ord12 ord13 ord14 ord15 ord16 ord17 ord18 ord19 ord20 ord21 ord22 ord23 ord24 ord25 ord26 ord27 ord28 ord29 ord30 ord31 ord32 ord33 ord34 ord35 ord36 ord37 ord38 ord39 ord40 ord41 ord42 ord43 ord44 ord45 ord46 ord47 ord48 ord49 ord50 ord51 ord52 ord53 ord54 ord55 ord56 ord57 ord58 ord59 ord60 ord61 ord62 ord63 ord64 ord65 ord66 ord67 ord68 ord69 ord70 ord71 ord72 ord73 ord74 ord75 ord76 ord77 ord78 ord79",
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Analyser",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lab",
+      "name": "Lab",
+      "purpose": "Laboratorieregister"
+    },
+    "slug": "provsvar",
+    "provider_key": "4",
+    "name": "Provsvar",
+    "definition": null,
+    "description": "Svar for covid",
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "Svar",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "PRV01",
+              "Provtagning"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lab",
+      "name": "Lab",
+      "purpose": "Laboratorieregister"
+    },
+    "slug": "provkod",
+    "provider_key": "5",
+    "name": "Provkod",
+    "definition": null,
+    "description": "Kod for covid",
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2020-12-31",
+        "delivery_column_name": "PRV010",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  }
+]
