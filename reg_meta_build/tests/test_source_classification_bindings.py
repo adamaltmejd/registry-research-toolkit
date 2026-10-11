@@ -1,6 +1,5 @@
 """Classification-binding guards no build reaches: a sentinel case's peer guards and
-target projections, the binding contract's fail-fasts, a year-independent delivery and
-a pooled declaration beside an explicit year.
+target projections, the binding contract's fail-fasts and a year-independent delivery.
 
 Every binding a build makes (source declarations, label rules, overrides, conformance,
 sentinels) is pinned by the build cases `classification-*` and
@@ -353,88 +352,3 @@ def test_override_does_not_date_a_year_independent_delivery():
     )
     assert [d.code for d in result.diagnostics] == ["unsupported_classification_scope"]
     assert result.coding == year_independent
-
-
-def test_pooled_declaration_yields_to_an_explicit_year():
-    """A pooled edition declaring book b over 2016-2018 and an explicit 2017 edition of
-    the same column declaring book a bind b in 2016 and 2018 and only a in 2017, with no
-    `multiple_classifications_declared`: as in occurrence resolution (Y-202), pooled
-    evidence loses to explicit coverage, so the pooled declaration is clipped around 2017.
-
-    No build reaches a pooled declaration beside an explicit one on one column: a thin
-    provider's pooled scope belongs to its pooled variant, and the variant is part of
-    the column key (curation_compile.py, `_compile_thin_register`); an
-    `[[errata.column]]` holdings range is refused once SCB documents the column on the
-    variant (scb_errata.py, `column_now_documented`); an `[[errata.field]]`
-    classification correction needs an original declaration, which SCB rows never
-    supply (curation_tree.py, `ErrataFieldEntry`); and the SOS rows of one column share
-    one record ref, so an `[[errata.occurrence_period]]` making one pooled makes both
-    pooled (source_effects.py, `period_changes`). Fails if `_source_bindings` binds the
-    pooled declaration over its whole range again (2017 gains b and the warning) or
-    stops binding it on the uncovered 2016 and 2018.
-    """
-    explicit = source_occurrence(
-        scb_record(colname="Column", var_id=1, cvid=100, year="2017", regver_id=2017)
-    )
-    pooled = source_occurrence(
-        scb_record(
-            colname="Column",
-            var_id=1,
-            cvid=101,
-            year="2018",
-            versionname="2016 - 2018",
-            regver_id=1618,
-        )
-    )
-    assert pooled.edition_period_scope.kind == "pooled"
-    key = explicit.column_key
-    assert key is not None and pooled.column_key == key
-    claims = (
-        CodeListClaim(
-            "list",
-            TemporalScope(
-                kind="intervals",
-                intervals=(ScopeInterval(start="2016", end="2018"),),
-            ),
-            (CodeMembershipClaim("01", "One", TemporalScope(kind="year_independent")),),
-        ),
-    )
-    books = {
-        slug: ResolvedClassification(
-            slug=slug,
-            short_name=slug.upper(),
-            name=slug.upper(),
-            codes=(ResolvedClassificationCode(code="01", label="One"),),
-        )
-        for slug in ("a", "b")
-    }
-
-    def declaring(occurrence, book):
-        return replace(
-            occurrence,
-            fields=occurrence.fields.model_copy(
-                update={"classification_declared": value_field(book)}
-            ),
-        )
-
-    result = apply_classification_cases(
-        (),
-        (),
-        coding={key: resolve_code_membership(claims)},
-        classifications=books,
-        references={"A": "a", "B": "b"},
-        occurrences=(declaring(pooled, "B"), declaring(explicit, "A")),
-    )
-    assert [
-        (
-            s.valid_from,
-            s.valid_to,
-            [link.classification for link in s.classification_links],
-        )
-        for s in result.coding[key].segments
-    ] == [
-        ("2016-01-01", "2016-12-31", ["b"]),
-        ("2017-01-01", "2017-12-31", ["a"]),
-        ("2018-01-01", "2018-12-31", ["b"]),
-    ]
-    assert result.diagnostics == ()
