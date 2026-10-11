@@ -1138,9 +1138,12 @@ it. A literal source-reference dictionary or checked declaration establishes a v
 binding. Code overlap percentages, URL guesses and name similarity cannot.
 
 The label binding is a rule. A state whose value-set version label exactly matches an
-entry on a classification's label list binds to that classification. The binding is
-re-derived on every build with no codebook-hash pin, so no codebook or builder change
-requires regenerating curation; a classification's overrides are curation.
+entry on a classification's label list binds to that classification, whether the label
+comes from a source list or a `[[coding.documented]]` entry. A matching segment that no
+catalog occurrence evidences reports `unsupported_classification_scope` rather than
+dropping the binding silently. The binding is re-derived on every build with no
+codebook-hash pin, so no codebook or builder change requires regenerating curation; a
+classification's overrides are curation.
 
 Conformance compares exact code strings. Noncanonical members preserve the original list
 and the known source-declared classification link. They emit a warning and are recorded

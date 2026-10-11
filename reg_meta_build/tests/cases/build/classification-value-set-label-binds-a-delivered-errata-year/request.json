@@ -1,0 +1,23 @@
+{
+  "note": "The LISA 2022 Sektor 2000 shape (#1437): SCB has no VALUE row in 2022, `[[errata.delivered]]` adds the 2022 occurrence and a `[[coding.documented]]` entry states its list under version label 'Book', which book a lists. The documented label is the only 'Book' in the build, so it alone keeps the label rule from going stale.",
+  "fails_if": "`_label_rule_bindings` (source_classification_bindings.py) reads a segment's labels only from the column's source claims: a documented segment cites a synthesized claim that is not among them, so the 2022 state binds no book; or `apply_classification_cases` stops adding segment labels to `matched_labels`, so `classifications/A.toml#/binding/value_set_labels/1` is reported `stale_curation_entry` although it bound",
+  "sources": {
+    "description": "SCB VALUE is documented in 2021 and 2023 under the value-set version 'Report' (codes 1/2) and has no row in 2022, when only ANCHOR is documented.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE", "varname": "VALUE", "year": "2021", "regver_id": 2021},
+        {"cvid": 1002, "var_id": 102, "colname": "ANCHOR", "varname": "ANCHOR", "year": "2022", "regver_id": 2022},
+        {"cvid": 1003, "var_id": 101, "colname": "VALUE", "varname": "VALUE", "year": "2023", "regver_id": 2023}
+      ],
+      "vardemangder": [
+        "Report|1|1|One|1001|10011",
+        "Report|1|2|Two|1001|10012",
+        "Report|1|1|One|1003|10031",
+        "Report|1|2|Two|1003|10032"
+      ]
+    },
+    "files": {
+      "classifications/a.csv": ["code,label", "1,One", "2,Two"]
+    }
+  }
+}

@@ -287,10 +287,11 @@ def _label_rule_bindings(
     coding: Mapping[NativeKey, CodingResolution],
     occurrences: Iterable[EffectiveOccurrence],
     labels: Mapping[str, str],
-) -> dict[NativeKey, list[_Binding]]:
-    """Bind every listed claim label on each included post-choice segment."""
+) -> tuple[dict[NativeKey, list[_Binding]], list[ResolutionDiagnostic]]:
+    """Bind every listed segment label on each included post-choice segment."""
     by_column = _column_evidence(occurrences)
     selected: dict[NativeKey, list[_Binding]] = defaultdict(list)
+    diagnostics = []
     for key, resolution in coding.items():
         claims = {claim.claim_id: claim for claim in resolution.claims}
         for segment in resolution.segments:
@@ -299,6 +300,21 @@ def _label_rule_bindings(
             if segment.period_scope == "year_independent":
                 continue
             assert segment.valid_from is not None and segment.valid_to is not None
+            # A [[coding.documented]] segment cites a synthesized claim that is not
+            # among the column's source claims; its label lives on the segment.
+            # The segment's own label is "" when its claims' labels conflict, so
+            # the claim labels stay a source too (each listed one binds).
+            segment_labels = {normalize_text(segment.version_label)} - {""}
+            for claim_id in segment.claim_ids:
+                claim = claims.get(claim_id)
+                if claim is not None and claim.version_label is not None:
+                    segment_labels.add(normalize_text(claim.version_label))
+            slug_labels = {}
+            for label in sorted(segment_labels):
+                if label in labels:
+                    slug_labels.setdefault(labels[label], label)
+            if not slug_labels:
+                continue
             start = date.fromisoformat(segment.valid_from).toordinal()
             end = date.fromisoformat(segment.valid_to).toordinal()
             refs = tuple(
@@ -313,16 +329,21 @@ def _label_rule_bindings(
                 )
             )
             if not refs:
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="unsupported_classification_scope",
+                        severity="error",
+                        subject=repr(key),
+                        detail=f"Label rule {sorted(slug_labels.values())!r} matches "
+                        "this coding segment, but no catalog occurrence of the "
+                        "column evidences its window; no book is bound.",
+                        fields=("classification",),
+                        valid_from=segment.valid_from,
+                        valid_to=segment.valid_to,
+                        withheld_output=("state.classification",),
+                    )
+                )
                 continue
-            segment_labels = set()
-            for claim_id in segment.claim_ids:
-                claim = claims.get(claim_id)
-                if claim is not None and claim.version_label is not None:
-                    segment_labels.add(normalize_text(claim.version_label))
-            slug_labels = {}
-            for label in sorted(segment_labels):
-                if label in labels:
-                    slug_labels.setdefault(labels[label], label)
             for slug, label in sorted(slug_labels.items()):
                 selected[key].append(
                     _Binding(
@@ -334,7 +355,7 @@ def _label_rule_bindings(
                         rule=True,
                     )
                 )
-    return selected
+    return selected, diagnostics
 
 
 def apply_classification_cases(
@@ -398,7 +419,10 @@ def apply_classification_cases(
         classifications,
         withheld_classifications.keys(),
     )
-    rule_bindings = _label_rule_bindings(coding, occurrences, label_rules)
+    rule_bindings, rule_diagnostics = _label_rule_bindings(
+        coding, occurrences, label_rules
+    )
+    diagnostics.extend(rule_diagnostics)
     for key, bindings in rule_bindings.items():
         for binding in bindings:
             assert binding.classification is not None
@@ -415,12 +439,15 @@ def apply_classification_cases(
                 )
             )
     if matched_labels is not None:
+        # Segment labels too: a documented segment's label is on no source claim.
         matched_labels.update(
-            normalize_text(claim.version_label)
+            label
             for resolution in coding.values()
-            for claim in resolution.claims
-            if claim.version_label is not None
-            and normalize_text(claim.version_label) in label_rules
+            for label in (
+                *(normalize_text(c.version_label or "") for c in resolution.claims),
+                *(normalize_text(s.version_label) for s in resolution.segments),
+            )
+            if label in label_rules
         )
     override_bindings: dict[NativeKey, list[_Binding]] = defaultdict(list)
     if override is not None:
