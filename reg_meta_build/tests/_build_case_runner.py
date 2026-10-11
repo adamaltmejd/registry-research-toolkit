@@ -100,7 +100,10 @@ def case_steps(case: Path) -> list[Path]:
     """A case is one step (its own `request.json`) or ordered step subdirectories."""
     if (case / "request.json").is_file():
         return [case]
-    return sorted(path for path in case.iterdir() if path.is_dir())
+    return sorted(
+        (path for path in case.iterdir() if path.is_dir()),
+        key=lambda path: int(path.name.split("-", 1)[0]),
+    )
 
 
 # -- Sources -------------------------------------------------------------------
