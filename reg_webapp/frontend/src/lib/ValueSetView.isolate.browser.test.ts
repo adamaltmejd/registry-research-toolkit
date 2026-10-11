@@ -67,7 +67,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // its heading reads "Kommun historisk" and there is no LKF classification link.
     await expect.element(page.getByText("Used by")).toBeVisible();
     expect(
-      document.querySelector(".vs-detail .vs-heading")?.textContent,
+      document.querySelector(".vs-detail .vs-source-name")?.textContent,
     ).toContain("Kommun historisk");
     expect(
       document.querySelector('a[href="/catalog/class/lkf2007"]'),
@@ -106,7 +106,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       focusColumn: "COL",
     });
     expect(
-      document.querySelector(".vs-detail .vs-heading")?.textContent,
+      document.querySelector(".vs-detail .vs-source-name")?.textContent,
     ).toContain("First coding");
 
     // Navigate to a sibling: a NEW states set where COL delivers a different coding.
@@ -135,7 +135,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     });
     // The isolation re-seeded onto the NEW value set; the stale one is gone.
     const heading = document.querySelector(
-      ".vs-detail .vs-heading",
+      ".vs-detail .vs-source-name",
     )?.textContent;
     expect(heading).toContain("Second coding");
     expect(heading).not.toContain("First coding");
@@ -179,7 +179,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     // the way.
     await expect.element(page.getByText("Used by")).toBeVisible();
     expect(
-      document.querySelector(".vs-detail .vs-heading")?.textContent,
+      document.querySelector(".vs-detail .vs-source-name")?.textContent,
     ).toContain("Out-of-period coding");
     // The period-collapse disclosure does not gate the focused detail.
     expect(document.querySelector(".out-of-period")).toBeNull();

@@ -395,7 +395,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     // "SUN" heading show, and the union list is hidden.
     await expect.element(page.getByText("Used by")).toBeVisible();
     expect(
-      document.querySelector(".vs-detail .vs-heading")?.textContent,
+      document.querySelector(".vs-detail .vs-source-name")?.textContent,
     ).toContain("SUN");
     expect(document.querySelector(".vs-list > li")).toBeNull();
   });
@@ -437,7 +437,7 @@ describe("BindingLeafView representation picker (#678)", () => {
     // Isolated on variant "a"'s coding ("Coding A"), NOT "b"'s latest-era "Coding B".
     await expect.element(page.getByText("Used by")).toBeVisible();
     const heading = document.querySelector(
-      ".vs-detail .vs-heading",
+      ".vs-detail .vs-source-name",
     )?.textContent;
     expect(heading).toContain("Coding A");
     expect(heading).not.toContain("Coding B");

@@ -407,9 +407,15 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     ).toHaveLength(2);
   });
 
-  it("disambiguates non-classification rows that share a version label by span", async () => {
-    // Two plain value sets both labelled "Kommun historisk" (kommun's ×22 case):
-    // the bare label can't tell them apart, so each row appends its overall span.
+  it("titles a plain value set by its coverage and shows the provider's version name only as a secondary line (#1301)", async () => {
+    // Two plain value sets both labelled "Kommun historisk" (kommun's ×22 case). The
+    // provider's version name is low-trust (LISA civilstand's "Civilstånd 1998-"
+    // titled a coding delivered from 1990), so the title is the coverage and the
+    // name stays verbatim, attributed to the provider, beside it. The second
+    // coding skips 1972 (delivered 1971 in one variant, 1973 in another): its
+    // title lists the delivered windows, never the min–max envelope that would
+    // claim 1972. Fails if the version name becomes the title again, stops
+    // rendering, or the title hides a delivery gap.
     const a = state({
       state_id: "1",
       value_set_id: "10",
@@ -418,21 +424,36 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
       valid_from: "1968-01-01",
       valid_to: "1970-12-31",
     });
-    const b = state({
+    const b1971 = state({
       state_id: "2",
       value_set_id: "11",
       value_set_version_label: "Kommun historisk",
       variant: "a",
       valid_from: "1971-01-01",
+      valid_to: "1971-12-31",
+    });
+    const b1973 = state({
+      state_id: "3",
+      value_set_id: "11",
+      value_set_version_label: "Kommun historisk",
+      variant: "b",
+      valid_from: "1973-01-01",
       valid_to: "1973-12-31",
     });
-    await render(ValueSetView, { fqid: FQID, states: [a, b], narrowed: false });
-    const labels = [...document.querySelectorAll(".vs-label")].map(
-      (el) => el.textContent,
-    );
-    expect(labels).toEqual([
-      "Kommun historisk · 1968 – 1970",
-      "Kommun historisk · 1971 – 1973",
+    await render(ValueSetView, {
+      fqid: FQID,
+      states: [a, b1971, b1973],
+      narrowed: false,
+    });
+    const text = (selector: string) =>
+      [...document.querySelectorAll(selector)].map((el) => el.textContent);
+    expect(text(".vs-label")).toEqual([
+      "Value set · 1968 – 1970",
+      "Value set · 1971, 1973",
+    ]);
+    expect(text(".vs-source-name")).toEqual([
+      "SCB version name: Kommun historisk",
+      "SCB version name: Kommun historisk",
     ]);
   });
 
@@ -485,7 +506,7 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     });
     await expect.element(page.getByText("Variant")).not.toBeInTheDocument();
     await expect
-      .element(page.getByText("Value-set version"))
+      .element(page.getByText("SCB version name"))
       .not.toBeInTheDocument();
     await expect.element(page.getByText("Valid")).not.toBeInTheDocument();
     await expect.element(page.getByText(/since 0001/)).not.toBeInTheDocument();

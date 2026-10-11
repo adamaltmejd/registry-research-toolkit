@@ -58,11 +58,15 @@ describe("ValueSetView — value-set-centric multi-state view (#668/#905)", () =
     const disclosure = page.getByText("1 value set outside this period");
     await expect.element(disclosure).toBeVisible();
     await expect
-      .element(page.getByText("Kommun historisk", { exact: true }))
+      .element(
+        page.getByText("SCB version name: Kommun historisk", { exact: true }),
+      )
       .not.toBeVisible();
     await disclosure.click();
     await expect
-      .element(page.getByText("Kommun historisk", { exact: true }))
+      .element(
+        page.getByText("SCB version name: Kommun historisk", { exact: true }),
+      )
       .toBeVisible();
   });
 

@@ -10,7 +10,8 @@ let {
   framed = true,
 }: {
   warnings: DataWarningModel[];
-  title?: string;
+  /** Null renders the bare list, for a caller that supplies its own label. */
+  title?: string | null;
   framed?: boolean;
 } = $props();
 const headingId = $props.id();
@@ -63,7 +64,9 @@ function unavailableLabel(field: string): string {
 {/snippet}
 
 {#if warnings.length > 0}
-  {#if framed}
+  {#if title === null}
+    {@render content()}
+  {:else if framed}
     <Panel {title}>{@render content()}</Panel>
   {:else}
     <section class="inline-warnings" aria-labelledby={headingId}>

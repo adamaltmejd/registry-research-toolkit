@@ -773,7 +773,7 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
 {#snippet picker()}
   <div class="data-warnings">
     <ScopedDataWarnings fqid={node.fqid} />
-    <ScopedDataWarnings fqid={registerPrefixOf(node.fqid)} registerOnly />
+    <ScopedDataWarnings fqid={registerPrefixOf(node.fqid)} registerOnly collapsed />
   </div>
   <!-- #615: the period picker seeds from the global project window (windowStore)
        and shows the subject's coverage track. PRECEDENCE `?period` > window >

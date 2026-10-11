@@ -2418,9 +2418,9 @@ export interface ValueSetVariantUsage {
  * `valueSet`, `dataType`/`dataLength` come from the representative (first-seen)
  * state. `usages` lists which variants/spans use it (the UNION across a collapsed
  * classification's ids); `variants` is the flat distinct variant list (the
- * active-variant scope test). `overallSpan` is the entry's outer
- * min(valid_from)…max(valid_to) — the view's disambiguator when several
- * non-classification rows share a `versionLabel`. */
+ * active-variant scope test). `coverage` is the entry's delivered windows
+ * across ALL its states and variants, time-adjacent ones merged: what titles a
+ * plain value set (#1301), a gap year staying a gap. */
 export interface DistinctValueSet {
   key: string;
   classificationSlugs: string[];
@@ -2439,7 +2439,7 @@ export interface DistinctValueSet {
   dataLength: string | null;
   usages: ValueSetVariantUsage[];
   variants: string[];
-  overallSpan: ValueSetSpan;
+  coverage: ValueSetSpan[];
 }
 
 type ClassificationConformanceModel = NonNullable<
@@ -2704,28 +2704,6 @@ export function distinctValueSets(
         ),
       }),
     );
-    // The entry's outer window across ALL its states — the view's disambiguator
-    // when several non-classification rows share a version label.
-    const dated = group.filter(isDatedState);
-    const overallSpan: ValueSetSpan =
-      dated.length === 0
-        ? {
-            from: null,
-            to: null,
-            period_scope: "year_independent",
-            pooled: false,
-          }
-        : {
-            from: dated.reduce(
-              (m, s) => (s.valid_from < m ? s.valid_from : m),
-              dated[0].valid_from,
-            ),
-            to: dated.reduce(
-              (m, s) => (s.valid_to > m ? s.valid_to : m),
-              dated[0].valid_to,
-            ),
-            pooled: dated.every((s) => s.pooled),
-          };
     return {
       key,
       classificationSlugs: [
@@ -2739,7 +2717,7 @@ export function distinctValueSets(
       dataLength: rep.data_length,
       usages,
       variants: usages.map((u) => u.variant),
-      overallSpan,
+      coverage: collapseSpans(group),
     };
   });
 }

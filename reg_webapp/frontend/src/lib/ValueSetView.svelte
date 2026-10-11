@@ -124,21 +124,13 @@ function visibleConformances(vs: DistinctValueSet): StateConformance[] {
   );
 }
 
-// A version label shared by ≥2 NON-classification rows can't tell them apart on
-// its own (kommun's "Kommun historisk" ×22) — those rows get their overall span
-// appended to disambiguate. A label unique among the plain rows stays bare.
-const ambiguousLabels = $derived.by(() => {
-  const counts = new Map<string, number>();
-  for (const vs of valueSets) {
-    if (vs.classificationSlugs.length === 0 && vs.versionLabel) {
-      const label = vs.versionLabel;
-      counts.set(label, (counts.get(label) ?? 0) + 1);
-    }
-  }
-  return new Set(
-    [...counts.entries()].filter(([, n]) => n > 1).map(([label]) => label),
-  );
-});
+// The provider's own name for a coding (`value_set_version_label`, e.g. SCB's
+// "Civilstånd 1998-") is low-trust: it is a per-delivery label, often wrong about
+// the coding's actual coverage (#1301). It never titles a value set; it renders
+// verbatim as a muted secondary line attributed to the provider.
+const sourceVersionName = $derived(
+  `${(fqid.split("/")[0] ?? "").toUpperCase() || "Source"} version name`,
+);
 
 // Local filter + isolate: LOCAL view state (NOT a URL write). Isolation is keyed
 // by the value set's STABLE `key` (not a list index, which the filter's slice
@@ -181,7 +173,9 @@ const isolated = $derived(
 // shows the single isolated set and ignores the filter.
 const shownValueSets = $derived(
   valueSets
-    .filter((vs) => matchesFilter(filter, valueSetLabel(vs), ...vs.variants))
+    .filter((vs) =>
+      matchesFilter(filter, valueSetLabel(vs), vs.versionLabel, ...vs.variants),
+    )
     .filter((vs) => inPeriod(vs)),
 );
 const collapsedValueSets = $derived(
@@ -189,7 +183,12 @@ const collapsedValueSets = $derived(
     ? []
     : valueSets
         .filter((vs) =>
-          matchesFilter(filter, valueSetLabel(vs), ...vs.variants),
+          matchesFilter(
+            filter,
+            valueSetLabel(vs),
+            vs.versionLabel,
+            ...vs.variants,
+          ),
         )
         .filter((vs) => !inPeriod(vs)),
 );
@@ -227,23 +226,18 @@ function inPeriod(vs: DistinctValueSet): boolean {
   return scopeValueSetKeys === null ? true : scopeValueSetKeys.has(vs.key);
 }
 
-// The label for a distinct value set: a classification value set reads
-// "LKF ⟨vintage⟩" (humanized slug); otherwise its version label, with the
-// overall span appended when that label is shared by another plain row
-// ("Kommun historisk · 1968–1970"). Empty/default labels do not render the old
-// empty-version placeholder; they fall back to the span, or a neutral label when
-// the span is wholly unknown.
+// The title for a distinct value set, from trustworthy data only: a
+// classification value set reads "LKF ⟨vintage⟩" (humanized slug); a plain one
+// reads its delivered windows ("Value set · 1990 – 2023", a gap year kept:
+// "2000, 2002"), or a neutral label when they are wholly unknown. The provider's version name is shown beside it, never as it.
 function valueSetLabel(vs: DistinctValueSet): string {
   if (vs.classificationSlugs.length > 0) {
     return vs.classificationSlugs.map(humanizeClassificationSlug).join(", ");
   }
-  const span = formatWindow(vs.overallSpan.from, vs.overallSpan.to);
-  if (!vs.versionLabel) {
-    return span ? `Value set · ${span}` : "Value set";
-  }
-  return ambiguousLabels.has(vs.versionLabel) && span
-    ? `${vs.versionLabel} · ${span}`
-    : vs.versionLabel;
+  const span = usageWindowLabels(vs.coverage)
+    .map((w) => w.label)
+    .join(", ");
+  return span ? `Value set · ${span}` : "Value set";
 }
 
 function usageChanges(
@@ -552,6 +546,12 @@ function trackDisclosure(key: string, event: Event): void {
   {/if}
 {/snippet}
 
+{#snippet sourceName(vs: DistinctValueSet)}
+  {#if vs.classificationSlugs.length === 0 && vs.versionLabel}
+    <p class="muted vs-source-name">{sourceVersionName}: {vs.versionLabel}</p>
+  {/if}
+{/snippet}
+
 {#snippet valueSetRow(vs: DistinctValueSet)}
   <li>
     <div class="vs-row">
@@ -578,6 +578,7 @@ function trackDisclosure(key: string, event: Event): void {
         Isolate
       </button>
     </div>
+    {@render sourceName(vs)}
     {@render usage(vs)}
     {#each visibleConformances(vs) as c (`${c.stateId}:${c.aliasWindowFrom ?? ""}:${c.column ?? ""}:${c.verdict.declared_classification_slug}`)}
       {@render conformanceNotice(c, {
@@ -646,7 +647,7 @@ function trackDisclosure(key: string, event: Event): void {
         </dd>
       {/if}
       {#if s.value_set_version_label}
-        <dt class="micro-label">Value-set version</dt>
+        <dt class="micro-label">{sourceVersionName}</dt>
         <dd>{s.value_set_version_label}</dd>
       {/if}
       {#each stateTextFacts(s) as fact}
@@ -743,6 +744,7 @@ function trackDisclosure(key: string, event: Event): void {
           {/if}
         {/if}
       </h4>
+      {@render sourceName(vs)}
       {@render valueSetBody(vs)}
       <h5 class="vs-usage-heading micro-label">Used by</h5>
       {@render usage(vs)}
@@ -843,6 +845,11 @@ function trackDisclosure(key: string, event: Event): void {
   }
   .vs-label {
     font-weight: 600;
+  }
+  .vs-source-name {
+    margin: 0;
+    font-size: var(--text-sm);
+    overflow-wrap: anywhere;
   }
   .vs-count {
     font-size: 0.85em;
