@@ -37,5 +37,6 @@
 {"period": [2018, ""], "wire": null, "error": "invalid_period"}
 {"period": [{"from": "", "to": 2020}], "wire": null, "error": "invalid_period"}
 {"period": ["2018,2019"], "wire": null, "error": "invalid_period", "note": "A list member's wire may not hold a comma."}
-{"period": {"from": 2018}, "wire": null, "error": "invalid_period", "note": "Not a source period's shape: no wire."}
+{"period": [[2018, 2019]], "wire": null, "error": "invalid_period", "note": "A nested list is not a segment, though serde would read it as a range by position."}
+{"period": {"from": 2018},"wire": null, "error": "invalid_period", "note": "Not a source period's shape: no wire."}
 {"period": null, "wire": null, "error": "invalid_period"}

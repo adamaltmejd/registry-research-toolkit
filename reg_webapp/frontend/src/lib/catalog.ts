@@ -25,7 +25,12 @@ import {
   VALUE_SET_VERSION_NONE,
 } from "./period";
 import type { DraftBinding, ProjectBinding } from "./project_data";
-import { foldSearch, renderIntervals, sourcePeriodFromWire } from "./reg_core";
+import {
+  foldSearch,
+  renderIntervals,
+  sourcePeriodFromWire,
+  studyWindowInterval,
+} from "./reg_core";
 import type { Route } from "./router.svelte";
 import type { BreadcrumbItem } from "./ui/types";
 
@@ -1118,12 +1123,18 @@ export function addWindowBounds(
   period: string | null | undefined,
   window: [number, number] | null,
 ): { from: string; to: string } | null {
-  const days =
-    (period ? datedIntervals(sourcePeriodFromWire(period)) : null) ??
-    (window ? datedIntervals({ from: window[0], to: window[1] }) : null);
-  const first = days?.[0];
-  const last = days?.at(-1);
-  return first && last ? { from: first[0], to: last[1] } : null;
+  const periodDays = period
+    ? datedIntervals(sourcePeriodFromWire(period))
+    : null;
+  const first = periodDays?.[0];
+  const last = periodDays?.at(-1);
+  if (first && last) {
+    return { from: first[0], to: last[1] };
+  }
+  const windowDays = window
+    ? studyWindowInterval({ from: window[0], to: window[1] })
+    : null;
+  return windowDays ? { from: windowDays[0], to: windowDays[1] } : null;
 }
 
 /** The wire period to COMMIT for a selected picker row, given the active period

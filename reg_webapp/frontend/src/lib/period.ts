@@ -5,7 +5,7 @@
  * reg_webapp/DESIGN.md → Catalog router structure); these helpers shape the wire
  * period for UI/project behavior and build the query string the router navigates to.
  *
- * The SPA never parses period grammar or computes a date bound: every period
+ * The SPA never parses period grammar or bounds a project period: every period
  * answer here comes from reg-core through `reg_core.ts` (WASM) — token bounds,
  * wire shaping, the days a source period requests, merging and rendering. What
  * stays here is view state and year-integer arithmetic over reg-core's answers.
@@ -26,6 +26,7 @@ import {
   sourcePeriodIntervals,
   sourcePeriodToWire,
   sourcePeriodYears,
+  studyWindowInterval,
 } from "./reg_core";
 
 /** The narrowing modifiers carried in the URL query alongside `?period`. */
@@ -170,12 +171,34 @@ export function periodCoverageUnion(
       days: datedIntervals(segment),
     })),
   );
-  const segments = merged.map(
-    (interval) =>
-      written.find(
-        ({ days }) => days !== null && sameIntervals(days, [interval]),
-      )?.segment ?? coveragePeriod([interval]),
-  ) as ProjectPeriodSegment[];
+  const segments = merged.flatMap((interval) => {
+    const kept = written.find(
+      ({ days }) => days !== null && sameIntervals(days, [interval]),
+    );
+    if (kept) {
+      return [kept.segment];
+    }
+    const rendered = coveragePeriod([interval]);
+    if (datedIntervals(rendered) !== null) {
+      return [rendered];
+    }
+    // At the grammar's edge the rendering can leave it (`VT2099` and `LA2099`
+    // render as `2099..2100-06-30`): keep the segments the interval joined, as
+    // written, in order.
+    const [lo, hi] = interval;
+    return written
+      .filter(
+        ({ days }) => days !== null && lo <= days[0][0] && days[0][1] <= hi,
+      )
+      .sort((a, b) =>
+        (a.days?.[0][0] ?? "").localeCompare(b.days?.[0][0] ?? ""),
+      )
+      .filter(
+        ({ days }, i, all) =>
+          i === 0 || !sameIntervals(days ?? [], all[i - 1].days ?? []),
+      )
+      .map(({ segment }) => segment);
+  }) as ProjectPeriodSegment[];
   return segments.length === 1 ? segments[0] : segments;
 }
 
@@ -496,12 +519,12 @@ export function periodWindowRelation(
     return null;
   }
   const days = datedIntervals(period);
-  // The window is a `{from, to}` of years: a period reg-core places as well.
-  const windowDays = datedIntervals({ from: window.from, to: window.to });
+  // The window's days are reg-core's too, not held to the period grammar's years.
+  const windowDays = studyWindowInterval(window);
   if (days === null || windowDays === null) {
     return null;
   }
-  if (overlapIntervals(days, windowDays).length === 0) {
+  if (overlapIntervals(days, [windowDays]).length === 0) {
     return "disjoint";
   }
   const years = sourcePeriodYears(period);

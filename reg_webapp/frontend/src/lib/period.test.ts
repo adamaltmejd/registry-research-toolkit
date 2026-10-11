@@ -7,6 +7,7 @@ import {
   normalizePeriodRows,
   notDeliveredGaps,
   periodCoverageUnion,
+  periodWindowRelation,
   resolveYearEntry,
   yearSegmentsFromWire,
   yearWindowFromWire,
@@ -174,6 +175,15 @@ describe("periodCoverageUnion (#992 find-or-create period extension)", () => {
     expect(periodCoverageUnion("2020-H1", 2022)).toEqual(["2020-H1", 2022]);
   });
 
+  // Fails if a union at the grammar's edge is rendered past it: VT2099 and LA2099
+  // join as 2099..2100-06-30, which the grammar refuses.
+  it("keeps the joined segments when the union's rendering leaves the grammar", () => {
+    expect(periodCoverageUnion("VT2099", "LA2099")).toEqual([
+      "VT2099",
+      "LA2099",
+    ]);
+  });
+
   it("an UNSET side yields the other; an undated side lets the incoming win (Fix 2)", () => {
     expect(periodCoverageUnion(2020, "")).toBe(2020);
     expect(periodCoverageUnion([], 2020)).toBe(2020);
@@ -182,6 +192,16 @@ describe("periodCoverageUnion (#992 find-or-create period extension)", () => {
       to: 2015,
     });
     expect(periodCoverageUnion(2018, "_default")).toBe("_default");
+  });
+});
+
+describe("periodWindowRelation", () => {
+  // Fails if the window's days are held to the period grammar's 1900-2099: the
+  // window check accepts any int years, so a window before 1900 still places.
+  it("places a study window outside the period grammar's years", () => {
+    expect(periodWindowRelation(1950, { from: 1890, to: 1899 })).toBe(
+      "disjoint",
+    );
   });
 });
 

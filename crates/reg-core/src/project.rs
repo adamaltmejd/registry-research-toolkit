@@ -19,9 +19,10 @@ use serde::{Deserialize, Serialize, Serializer};
 use serde_json::Value;
 use sha2::{Digest, Sha256};
 
+use crate::structural::validate_source_period;
 use crate::{
     Interval, IssueLevel, Period, PeriodToken, ValidationIssue, ValidationResult, merge, quote,
-    validate_source_period, validate_structural,
+    validate_structural,
 };
 
 /// The `project_data.json` contract this runtime reads, exactly. The SPA seeds a new
@@ -299,7 +300,7 @@ pub enum SourcePeriod {
 
 impl SourcePeriod {
     /// The period in `value`, or the issues that refuse it
-    /// ([`validate_source_period`]). An accepted period's [`Self::intervals`] and
+    /// (the project check's period rule, on its own). An accepted period's [`Self::intervals`] and
     /// [`Self::year_spans`] never panic.
     ///
     /// # Errors
@@ -333,6 +334,28 @@ impl SourcePeriod {
             return Self::Segment(PeriodSegment::Value(PeriodValue::Token(value.to_owned())));
         }
         Self::Segment(segment_from_wire(value))
+    }
+
+    /// The period in `value` when it has a source period's shape, whatever its
+    /// grammar: an int or a string, a `{"from", "to"}` object of those, or a list of
+    /// those segments. `None` for any other shape, a nested list above all, which
+    /// serde would read as a `{from, to}` range by position (`[[2018, 2019]]`).
+    #[must_use]
+    pub fn from_shape(value: &Value) -> Option<Self> {
+        let endpoint = |v: &Value| v.is_i64() || v.is_string();
+        let segment = |v: &Value| {
+            endpoint(v)
+                || v.as_object().is_some_and(|map| {
+                    map.len() == 2
+                        && map.get("from").is_some_and(endpoint)
+                        && map.get("to").is_some_and(endpoint)
+                })
+        };
+        let shaped = match value {
+            Value::Array(list) => list.iter().all(segment),
+            other => segment(other),
+        };
+        shaped.then(|| Self::deserialize(value).ok()).flatten()
     }
 
     /// The `?period` wire of the period ([`Display`](fmt::Display)), or `None` when
@@ -619,6 +642,26 @@ pub struct TimeRange {
 pub struct StudyWindow {
     pub r#from: i64,
     pub to: i64,
+}
+
+impl StudyWindow {
+    /// The days the window covers, January 1 of `from` through December 31 of `to`.
+    /// Not held to the period grammar's 1900..=2099 (the window check accepts any
+    /// int years); `None` when `to` is before `from` or a year has no four-digit ISO
+    /// spelling (outside 0..=9999).
+    #[must_use]
+    pub fn interval(&self) -> Option<Interval> {
+        let four_digit = 0..=9999;
+        (four_digit.contains(&self.r#from)
+            && four_digit.contains(&self.to)
+            && self.r#from <= self.to)
+            .then(|| {
+                (
+                    format!("{:04}-01-01", self.r#from),
+                    format!("{:04}-12-31", self.to),
+                )
+            })
+    }
 }
 
 /// `value` as a JSON tree with every object's keys sorted by code point, as Python's

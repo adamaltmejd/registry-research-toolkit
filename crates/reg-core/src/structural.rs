@@ -291,7 +291,7 @@ fn segment(v: &Value) -> Option<(Date, Date)> {
 /// `/sources/<i>/period`, less `"_default"`'s need for a concrete `register_variant`,
 /// which is the source's rule. [`crate::project::SourcePeriod::from_value`] runs it.
 #[must_use]
-pub fn validate_source_period(period: &Value) -> ValidationResult {
+pub(crate) fn validate_source_period(period: &Value) -> ValidationResult {
     let mut issues = Issues::default();
     check_period(period, String::new(), &mut issues);
     ValidationResult { issues: issues.0 }

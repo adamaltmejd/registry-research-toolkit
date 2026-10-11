@@ -25,6 +25,7 @@ import init, {
   source_period_intervals,
   source_period_to_wire,
   source_period_years,
+  study_window_interval,
 } from "./reg-core-wasm/reg_core_wasm";
 
 let ready = false;
@@ -78,7 +79,7 @@ export function foldSearch(text: string): string {
 }
 
 // ── Periods ──────────────────────────────────────────────────────────────────
-// The SPA never parses period grammar or computes a date bound: every answer
+// The SPA never parses period grammar or bounds a project period: every answer
 // below is reg-core's (`crates/reg-core/src/grammar.rs`, `interval.rs`,
 // `project.rs`). The oracles are conformance/cases/grammar/period.jsonl and
 // source_period.jsonl, which reg_core.test.ts runs through this module.
@@ -161,6 +162,19 @@ export function sourcePeriodYears(period: unknown): [number, number][] | null {
   return JSON.parse(source_period_years(JSON.stringify(period ?? null))) as
     | [number, number][]
     | null;
+}
+
+/** The days a study window (`{from, to}` int years) covers, January 1 through
+ * December 31, not held to the period grammar's years (the window check accepts
+ * any int years); null for an inverted window or a year past four digits. */
+export function studyWindowInterval(window: {
+  from: number;
+  to: number;
+}): Interval | null {
+  requireReady();
+  return JSON.parse(
+    study_window_interval(JSON.stringify({ from: window.from, to: window.to })),
+  ) as Interval | null;
 }
 
 /** `intervals` sorted and coalesced: overlapping and day-adjacent intervals join. */

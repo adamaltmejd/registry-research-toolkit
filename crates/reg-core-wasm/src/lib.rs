@@ -5,7 +5,7 @@
 //! total, so no input string can panic (a panic aborts the module). The SPA's only
 //! importer is `reg_webapp/frontend/src/lib/reg_core.ts`.
 
-use reg_core::project::{SCHEMA_VERSION, SourcePeriod, check};
+use reg_core::project::{SCHEMA_VERSION, SourcePeriod, StudyWindow, check};
 use reg_core::{Interval, IssueLevel, Period, PeriodToken, ValidationIssue, ValidationResult};
 use serde_json::{Value, json};
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -107,8 +107,9 @@ pub fn source_period_from_wire(wire: &str) -> String {
 #[wasm_bindgen]
 #[must_use]
 pub fn source_period_to_wire(json: &str) -> String {
-    let wire = serde_json::from_str::<SourcePeriod>(json)
+    let wire = serde_json::from_str::<Value>(json)
         .ok()
+        .and_then(|value| SourcePeriod::from_shape(&value))
         .and_then(|period| period.to_wire());
     json!(wire).to_string()
 }
@@ -138,6 +139,18 @@ pub fn source_period_intervals(json: &str) -> String {
 #[must_use]
 pub fn source_period_years(json: &str) -> String {
     json!(checked_period(json).ok().and_then(|p| p.year_spans())).to_string()
+}
+
+/// The days a study window JSON value (`{from, to}` int years) covers, as
+/// `[lo, hi]` (`StudyWindow::interval`, not held to the period grammar's years), or
+/// `null` for any other value, an inverted window or a year past four digits.
+#[wasm_bindgen]
+#[must_use]
+pub fn study_window_interval(json: &str) -> String {
+    let interval = serde_json::from_str::<StudyWindow>(json)
+        .ok()
+        .and_then(|window| window.interval());
+    json!(interval).to_string()
 }
 
 /// `reg_core::merge` over a JSON list of `[lo, hi]` ISO intervals; `null` for text

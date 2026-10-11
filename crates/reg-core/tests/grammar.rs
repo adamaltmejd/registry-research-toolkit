@@ -322,9 +322,7 @@ fn source_period_matches_corpus() {
                 let shaped = SourcePeriod::from_wire(wire.as_str().expect("a wire string"));
                 got.insert("from_wire".into(), json!(shaped));
             }
-            let wire = serde_json::from_value::<SourcePeriod>(period.clone())
-                .ok()
-                .and_then(|p| p.to_wire());
+            let wire = SourcePeriod::from_shape(period).and_then(|p| p.to_wire());
             got.insert("wire".into(), json!(wire));
             match SourcePeriod::from_value(period).map(|p| (p.intervals(), p.year_spans())) {
                 Ok((Ok(intervals), years)) => {
