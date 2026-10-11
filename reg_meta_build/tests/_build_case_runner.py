@@ -97,13 +97,17 @@ def case_dirs() -> list[Path]:
 
 
 def case_steps(case: Path) -> list[Path]:
-    """A case is one step (its own `request.json`) or ordered step subdirectories."""
+    """A case is one step (its own `request.json`) or step subdirectories, run in the
+    numeric order of their prefixes (`9-`, `10-`; `3b-` after `3-`)."""
     if (case / "request.json").is_file():
         return [case]
-    return sorted(
-        (path for path in case.iterdir() if path.is_dir()),
-        key=lambda path: int(path.name.split("-", 1)[0]),
-    )
+
+    def order(path: Path) -> tuple[int, str]:
+        prefix = re.match(r"\d+", path.name)
+        assert prefix, f"{case.name}: step {path.name} has no numeric prefix"
+        return int(prefix.group()), path.name
+
+    return sorted((path for path in case.iterdir() if path.is_dir()), key=order)
 
 
 # -- Sources -------------------------------------------------------------------
