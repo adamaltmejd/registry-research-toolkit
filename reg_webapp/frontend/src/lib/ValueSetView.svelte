@@ -228,13 +228,15 @@ function inPeriod(vs: DistinctValueSet): boolean {
 
 // The title for a distinct value set, from trustworthy data only: a
 // classification value set reads "LKF ⟨vintage⟩" (humanized slug); a plain one
-// reads its coverage ("Value set · 1990 – 2023"), or a neutral label when the span
-// is wholly unknown. The provider's version name is shown beside it, never as it.
+// reads its delivered windows ("Value set · 1990 – 2023", a gap year kept:
+// "2000, 2002"), or a neutral label when they are wholly unknown. The provider's version name is shown beside it, never as it.
 function valueSetLabel(vs: DistinctValueSet): string {
   if (vs.classificationSlugs.length > 0) {
     return vs.classificationSlugs.map(humanizeClassificationSlug).join(", ");
   }
-  const span = formatWindow(vs.overallSpan.from, vs.overallSpan.to);
+  const span = usageWindowLabels(vs.coverage)
+    .map((w) => w.label)
+    .join(", ");
   return span ? `Value set · ${span}` : "Value set";
 }
 
