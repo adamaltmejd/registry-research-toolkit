@@ -1837,13 +1837,17 @@ def settle_acknowledgements(
             # The curator's pin source: both digests as the build computes them
             # now, so a reviewed entry is pinned (or re-pinned) by copying them.
             # The issue digest is named only when the entry's identity, digest
-            # aside, selects exactly one error.
-            named = [
-                issue
-                for issue in result
-                if issue.severity == "error"
-                and _acknowledged_identity(issue) == _acknowledged_identity(decision)
-            ]
+            # aside, selects exactly one distinct error (identical copies count
+            # once, as the matcher counts them).
+            named = list(
+                dict.fromkeys(
+                    issue
+                    for issue in result
+                    if issue.severity == "error"
+                    and _acknowledged_identity(issue)
+                    == _acknowledged_identity(decision)
+                )
+            )
             pins = []
             if current_evidence is not None:
                 pins.append(f'expected_evidence_sha256 = "{current_evidence}"')
