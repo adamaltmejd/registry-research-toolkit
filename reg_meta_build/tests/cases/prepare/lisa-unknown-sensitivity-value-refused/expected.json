@@ -1,0 +1,11 @@
+{
+  "reader": "lisa_workbook",
+  "fails_if": "the LISA reader reads a Känslig1 value it does not know as non-sensitive (or as unknown) instead of refusing at its cell, so a variable SCB may mark sensitive reaches the catalog without its sensitivity",
+  "note": "Disclosure control: the sensitivity rule of `lisa_value_unsupported`, beside the availability-period rule `lisa-unparseable-availability-period-refused` pins. The workbook's legend (Individ row 816) names the values Ja, Nej and I vissa fall.",
+  "error": {
+    "code": "lisa_value_unsupported",
+    "type": "LisaWorkbookError",
+    "locator": "Individ!E600",
+    "message_contains": ["unsupported LISA sensitivity value", "'Kanske'"]
+  }
+}
