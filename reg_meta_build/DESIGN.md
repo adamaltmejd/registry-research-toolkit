@@ -1279,6 +1279,9 @@ contributors. Formation requires complete coverage of the owner's effective cont
 before suppressing a disagreement in a permitted field. Each state and column window
 retains its literal text; a common value is written only when it agrees. Unknown names
 still withhold the quantity unless complete checked positive state names are available.
+Compilation checks the owner without the runtime rebinds (edition splits, matrix
+donors); a declared column that a rebind leaves with no catalog occurrence under its
+variant makes the decision a stale curation entry at runtime.
 
 Ordinary delivery-metadata windows remain finite. An explicitly authored `source_scope`
 may retain an open supplied delivery scope only when it exactly matches every effective

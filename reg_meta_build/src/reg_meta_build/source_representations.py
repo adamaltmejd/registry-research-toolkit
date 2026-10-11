@@ -63,6 +63,10 @@ def resolve_representation_cases(
     ordered = tuple(sorted(cases, key=lambda c: c.case_id))
     if len({c.case_id for c in ordered}) != len(ordered):
         raise ValueError("representation case IDs must be unique")
+    # A declared column with no catalog occurrence under its variant has no coding.
+    # Compilation checks the columns before runtime rebinds (edition splits, matrix
+    # blank donors) move records off them, so this is staleness, not a bug.
+    unbound: dict[str, list[str]] = defaultdict(list)
     for case in ordered:
         if not isinstance(
             case.decision, (RepresentationDecision, DeliveryMetadataDecision)
@@ -87,9 +91,7 @@ def resolve_representation_cases(
                 )
                 not in coding
             ):
-                raise ValueError(
-                    "representation has an unconverted column coding binding"
-                )
+                unbound[case.case_id].append(column.column)
         guarded = {ref for guard in case.peer_guards for ref in guard.expected_members}
         for target in (*case.targets, *case.support):
             _require_checked(
@@ -127,7 +129,23 @@ def resolve_representation_cases(
         decision = case.decision
         assert isinstance(decision, (RepresentationDecision, DeliveryMetadataDecision))
         coding_changed = []
-        if (
+        if case.case_id in unbound:
+            diagnostics.append(
+                ResolutionDiagnostic(
+                    code="stale_curation_entry",
+                    severity="error",
+                    case_id=case.case_id,
+                    subject=repr(decision.variable_key),
+                    detail=(
+                        f"{case.case_id}: declared columns have no catalog "
+                        f"occurrence under their variant: {unbound[case.case_id]!r}."
+                    ),
+                    refs=tuple(t.ref for t in (*case.targets, *case.support)),
+                    fields=("representations",),
+                    withheld_output=("representations",),
+                )
+            )
+        elif (
             isinstance(decision, DeliveryMetadataDecision)
             or decision.coding_metadata == "per_column"
         ):
@@ -173,7 +191,11 @@ def resolve_representation_cases(
                     withheld_output=("representations",),
                 )
             )
-        if evaluation.status == "applicable" and not coding_changed:
+        if (
+            evaluation.status == "applicable"
+            and not coding_changed
+            and case.case_id not in unbound
+        ):
             applicable.append(case)
         for issue in evaluation.issues:
             diagnostics.append(

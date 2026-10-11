@@ -1,0 +1,16 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator", "detail"],
+      "note": "The entry is stale at its own locator and names the column the split moved.",
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/representation.delivery_metadata/1",
+          "curation/registers/scb/sample.toml#/representation.delivery_metadata/1: declared columns have no catalog occurrence under their variant: ['SHARED']."
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "note": "The delivery-metadata entry pins variable 5's two columns at the native variant 1.2, as compilation sees them: compile_delivery_metadata checks the owner and its windows without the edition splits, which only rebind at runtime. The edition split then moves edition 2007, SHARED's only delivery, to 1.2.marriage, so SHARED has no catalog occurrence (and no coding) under 1.2. The entry goes stale at its locator and the build completes. Any other runtime rebind that takes every record of a declared column (a matrix blank donor) meets the same check; it is not probed separately. The issue was reported in #1376 and probed in #1440.",
+  "fails_if": "`resolve_representation_cases` (source_representations.py) raises a bare ValueError ('unconverted column coding binding') instead of reporting a located stale_curation_entry when a declared column has no catalog occurrence under its variant after a runtime rebind, so the build aborts with pipeline_build_failed",
+  "sources": {
+    "description": "Register 1 variant 2 delivers variable 5 as SHARED in edition 2007 (CVID 20) and as OTHER in edition 2008 (CVID 21).",
+    "scb": {
+      "registerinformation": [
+        {"colname": "SHARED", "cvid": 20, "var_id": 5, "varname": "Shared", "year": "2007", "versionname": "2007", "regver_id": 1, "register": ["TESTREG", 1, 2]},
+        {"colname": "OTHER", "cvid": 21, "var_id": 5, "varname": "Shared", "year": "2008", "versionname": "2008", "regver_id": 2, "register": ["TESTREG", 1, 2]}
+      ]
+    }
+  }
+}
