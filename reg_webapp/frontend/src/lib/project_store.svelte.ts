@@ -931,20 +931,31 @@ export const projectStore = {
       const own = isEmptyPeriod(add.period) ? null : add.period;
       // Only the added (or re-added) binding is rewritten; the rest stay as they
       // are, bar the pin above.
-      const added = withBindingPeriod(binding, own, period);
-      if (own === null) {
-        inheriting.add(added);
-      }
+      // The binding that survives this add, tracked in `inheriting` when it
+      // takes the source period: a period-less add (or re-add) makes it inherit,
+      // and a dated re-add keeps an inheriting binding inheriting.
+      const survive = (
+        b: DraftBinding,
+        own: ProjectSourcePeriod | null,
+      ): DraftBinding => {
+        const inherits = own === null || inheriting.has(b);
+        const kept = withBindingPeriod(b, inherits ? null : own, period);
+        if (inherits) {
+          inheriting.add(kept);
+        }
+        return kept;
+      };
       const bindings =
         dup < 0
-          ? [...existing, added]
+          ? [...existing, survive(binding, own)]
           : existing.map((b, i) =>
-              i === dup && own !== null
-                ? withBindingPeriod(
+              i === dup
+                ? survive(
                     b,
                     // A re-add extends that binding's own years by the add's.
-                    periodCoverageUnion(b.period ?? current, own),
-                    period,
+                    own === null
+                      ? null
+                      : periodCoverageUnion(b.period ?? current, own),
                   )
                 : b,
             );

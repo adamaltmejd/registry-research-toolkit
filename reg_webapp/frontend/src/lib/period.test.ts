@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   clampYearWindow,
+  clipPeriod,
   coverageBandEdges,
   intersectCoverageWindow,
   nextResolutionQuery,
@@ -182,6 +183,13 @@ describe("periodCoverageUnion (#992 find-or-create period extension)", () => {
       "VT2099",
       "LA2099",
     ]);
+  });
+
+  // Fails if a binding-period clip at the grammar's edge is rendered past it:
+  // LA2099 cut to 2099-Q4..LA2099 would end on 2100-06-30, which the grammar
+  // refuses; the clip declines instead (the caller keeps the period as written).
+  it("clipPeriod declines a cut whose rendering leaves the grammar (#1462)", () => {
+    expect(clipPeriod("LA2099", { from: "2099-Q4", to: "LA2099" })).toBeNull();
   });
 
   it("an UNSET side yields the other; an undated side lets the incoming win (Fix 2)", () => {

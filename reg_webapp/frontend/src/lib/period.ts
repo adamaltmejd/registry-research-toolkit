@@ -96,7 +96,9 @@ export function samePeriod(
 
 /** `period` cut to the days `scope` requests (#1462: a binding period stays
  * inside its source's): `period` itself, as written, when already inside; null
- * when the two share no day or either has no days the SPA can place. */
+ * when the two share no day, either has no days the SPA can place, or the cut
+ * renders past the grammar's edge (`LA2099` cut from `2099-Q4` would end on
+ * `2100-06-30`, which reg-core refuses), as `periodCoverageUnion` guards. */
 export function clipPeriod(
   period: ProjectSourcePeriod,
   scope: ProjectSourcePeriod,
@@ -110,7 +112,11 @@ export function clipPeriod(
   if (kept.length === 0) {
     return null;
   }
-  return sameIntervals(kept, days) ? period : coveragePeriod(kept);
+  if (sameIntervals(kept, days)) {
+    return period;
+  }
+  const clipped = coveragePeriod(kept);
+  return datedIntervals(clipped) === null ? null : clipped;
 }
 
 /** Whether a period is the UNSET/empty value — the fresh-source no-period marker
