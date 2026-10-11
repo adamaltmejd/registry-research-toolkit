@@ -5878,7 +5878,7 @@ source_authority = { revision = { revision_id = "scb-registerinformation@sha256:
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 34)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 34)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"semantic_record_key\":[\"summary\",\"5cc5080adc2a7c10b1f4e93cbdba7a796a47711a5218ee07d3f153a3f7fcd4f3\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"dcb7d6594ca4fdaa589d7d51f05b70c0c1f55970b8f2871aa1ed1859090c7933\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"f9ea03f7b92632a84a8bac23b1019ada06f11eb9363158806ce5dfbb5f3c5da4\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"730562881c9d9e7c71eb932bfb0c2f32db54caa7faa44f5f84e9df72fb125fc4\"],\"source\":\"scb-unikaregisterochvariabler\"}"]
 reason = "User-approved bounded source limitation,2026-10-01: Retain these exact blank-column summary source records without attaching their flags to guessed physical columns or deleting originals."

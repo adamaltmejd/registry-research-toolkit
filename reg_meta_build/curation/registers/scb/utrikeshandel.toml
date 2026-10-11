@@ -158,7 +158,7 @@ source = "codeless_overlap.toml#/resolve/48"  # v18 accepted-codeless:48:*, 2 ca
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 188)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 188)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"23817f7b4ef70bce574caab4a0d203bbbfd9c092e66c40293c90f35c4b2a9ed2\"]}"]
 expected_evidence_sha256 = "e8459a3f627be6d51aa4caf894df6f0513363c81ee63b82a0549ccc850894dbe"

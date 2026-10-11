@@ -98,7 +98,7 @@ slug = "anstallningstyp"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 186)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 186)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"02e2d0e7b7f41e6705d787a75d83d450cf9e7e840d0561c0a9c96da34f3d19a1\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"40739762cbb67eac8dca7814e33d29ef8ca90332be04e33851685b268ebef64e\"]}"]
 expected_evidence_sha256 = "d4bc238a04795ccf4e156917a230ecb93e9b9a6165f57a8da0b37ad9cca79a65"

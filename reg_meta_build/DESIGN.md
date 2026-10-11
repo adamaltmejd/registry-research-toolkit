@@ -1601,11 +1601,16 @@ register issues become explicit out-of-slice warnings. Unknown or ambiguous cont
 remain errors, and complete builds never use this slice deferral. Unbound list subjects
 include the source revision, complete descriptor digest, literal lookup tokens and
 physical association count, so an empty target reference cannot become a general future
-acknowledgment. Explicit source-diagnostic acknowledgments require equality with the
-positively observed delivery register. An ordinary issue is acknowledgeable only when it
-names source refs that are all present among its scope's originals, so a stale case
-naming an absent record stays an error. No support flags, coding domains or missing
-variable targets are inferred.
+acknowledgment. Support and member-list subjects carry content identity only: the
+support row's literal key with its observed register context, or the occurrence's native
+column. Those issues always name their exact source records as refs, and an
+acknowledgment's evidence pin hashes the records' content without delivery positions. A
+new delivery of unchanged rows therefore keeps its acknowledgment, while a changed key
+changes the ref and a changed pinned field stales the entry. Explicit source-diagnostic
+acknowledgments require equality with the positively observed delivery register. An
+ordinary issue is acknowledgeable only when it names source refs that are all present
+among its scope's originals, so a stale case naming an absent record stays an error. No
+support flags, coding domains or missing variable targets are inferred.
 
 The scoped output is create-only and marked incomplete and nonpublishable in both modes.
 The summary records the register list, `publication_ready` false and `corpus_validation`

@@ -1,0 +1,28 @@
+{
+  "status": "diagnostic_complete",
+  "result": {
+    "acknowledged": {"unknown_support_key": 1}
+  },
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "unknown_support_key"},
+      "fields": ["severity", "acknowledged_by"],
+      "rows": [
+        ["warning", "curation/registers/scb/sample.toml#/acknowledge/1"],
+        ["error", null]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
+      "fields": ["case_id"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable"],
+      "rows": []
+    }
+  ]
+}

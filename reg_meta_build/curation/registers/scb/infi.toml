@@ -47,7 +47,7 @@ slug = "naringsgren-for-statistiken"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 227)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 227)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"a018f07005db07fe85bfc3f33e324821b1aee4fad4eb665702cc2668b55dd484\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"09d25d5fb484d164f1aaac51b69d00b14777588dc29678ca899e4bdca88e80dc\"]}"]
 expected_evidence_sha256 = "bf962679dc0b91136ecc39f31113198cbc88e60803b2eb20f90f9b5679ed2741"

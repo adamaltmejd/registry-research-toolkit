@@ -46,7 +46,7 @@ slug = "foretagets-namn"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 166)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 166)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"939c2366d3026d0355be09ff983fb31c1f6b0618d1dc8ea82d7e4779acc4d141\"]}"]
 expected_evidence_sha256 = "632cf05253518d51629816ba35f555781ecd8f398ae9b0f3bf4e991fab3c6b6c"

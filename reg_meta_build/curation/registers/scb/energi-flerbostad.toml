@@ -24,7 +24,7 @@ slug = "byggnadsar"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 75)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 75)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2eea6877e513e57e30e2de9413cc7dfd8d2e1b2f00e054c448dedcae7d50a684\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"05e68da697400d909fe7a58289b4f3b36c3c25d0d59523c90e942d0be4b109f4\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"4111ccbcf2ac593912d4f82339c815792f9e15219f6f85c6fef4b2edeb4bb80c\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"c15382b85ee9cfb25e9cd6f57876297134946bfa0afd3f9e9698975fcdee5f56\"]}"]
 expected_evidence_sha256 = "e20f8922037ccaff4a9d1721634b6c655a4cce7b2c28f5b67b3b3ce1b24428d2"

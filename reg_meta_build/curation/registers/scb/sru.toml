@@ -1687,7 +1687,7 @@ slug = "ovriga-kostnader-3"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 264)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 264)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"29d5b8ff2f6a84801ffba0ca218dc63d275aeda59c4de77d2edcc11b6bb66078\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"9e8b0f61af2490552fe589a9711501a2cdda3eaad7bab72664b4d13a33140d6b\"]}"]
 expected_evidence_sha256 = "6011020b1977f43ebabb91b0f274f7ca04b36e2544497fe8f3fec0d7d0045636"

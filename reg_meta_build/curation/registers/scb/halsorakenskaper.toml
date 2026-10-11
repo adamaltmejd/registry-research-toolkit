@@ -26,7 +26,7 @@ slug = "andel-andamal-offentlig-sektor"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 311)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 311)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"363ef03613ba92dfde0c5a423ef765247cbea4420dcda44491c605761349ac7a\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"1f72bd1124d56b510c7ce69cbac27f3fb2dd2d5dd54af932e016e8ceb4947e0c\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"fa5fadeb13016515de16e09c8202aa26f6dd1a9fc07b7a48b0277b3104a3b638\"]}"]
 expected_evidence_sha256 = "5066d1de45bc702fb4cd184d048a7268c47ad9fdc413420e1508bf817c0fcebd"

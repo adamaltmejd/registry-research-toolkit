@@ -505,7 +505,7 @@ slug = "overtid-med-ersattning-2"
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 123)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 123)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"0bd23d1f28e04c8a55e4c670808570af7fe91fa4e180d97f6b2dadcf75931065\"]}"]
 expected_evidence_sha256 = "accbdaa38b28b86d152f65ea5dfe764402ca5e32661a3069b794c522c889d91f"

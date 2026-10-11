@@ -330,7 +330,7 @@ provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx; native8152 HelAntDaga
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 195)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 195)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"518ca5bf190a2d843f9258bcbf852717103347867b879acd0a22603e5eccbfda\"]}"]
 expected_evidence_sha256 = "184cf2eeaa8921563ea6a578a372edded1c24ce77e02bb1a7abd2a88f34fd313"

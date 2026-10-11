@@ -1469,7 +1469,7 @@ over = ["Universitet/högskolor, forskarutb"]
 
 [[acknowledge]]
 code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 47)), ('scb-unikaregisterochvariabler@sha256:a6f95e2a6f3be7e4317e3c3ee498dce6cf4539862bbdf7dcfdf06dffccf33567',))"
+subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 47)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
 refs = ["{\"semantic_record_key\":[\"summary\",\"3e7048188c14f7d012a0d35bb156394c88d559c275454b609b6ecf9d94ed111f\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"c4856fe2be951b8f2180b0d5e828bcda63b5531b15ccf7aeebaec858800bd5bf\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"a11004526b4db0e1c0c89a0d4db6c378507763d075f14fe4ffb23dad8279a902\"],\"source\":\"scb-unikaregisterochvariabler\"}", "{\"semantic_record_key\":[\"summary\",\"6b010aa23cd94242b368fc95eb8d40856db32a98ca3b87a1748bd50a63d17733\"],\"source\":\"scb-unikaregisterochvariabler\"}"]
 reason = "User-approved bounded source limitation,2026-10-01: Retain these exact blank-column summary source records without attaching their flags to guessed physical columns or deleting originals."
