@@ -162,7 +162,8 @@ page re-runs on every query change) and a `router.replace()` method (mirrors the
 the URL drives the view). `api.ts` has `search(q, {limit?, type?, cursor?})` typed off
 the generated `api-types-rust.ts`. Off `/search`, typing in the omnibox stays local
 until Enter/form submit and shows an Enter hint while focused; on `/search`, typing
-live-refines with replaceState. `SearchView` renders an "All · Registers · Variables ·
+live-refines with replaceState; leaving `/search` clears the box, so a past query
+does not read as a filter on the next page. `SearchView` renders an "All · Registers · Variables ·
 Classifications · Codes" scope toggle backed by `?type=` (URL state, like
 `?q=`/`?period`; `all` is omitted from the canonical URL; `value` is the SPA's name for
 both code arms), a Close control that `replace()`s back to the route that entered search

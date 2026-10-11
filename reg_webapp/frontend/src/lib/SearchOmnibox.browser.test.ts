@@ -146,6 +146,18 @@ describe("SearchOmnibox — URL↔box sync (#379)", () => {
     // And it stays put — the URL→box effect doesn't fight the box→URL effect.
     await expect.poll(() => router.getQueryParam("q")).toBe("second");
   });
+
+  it("clears the box when the route leaves /search (#1465)", async () => {
+    // Fails if the past query stays in the box after navigating away, where it
+    // reads like an active filter on the new page.
+    setUrl("/search?q=Provtagningsdatum");
+    await render(SearchOmnibox);
+    await expect.element(box()).toHaveValue("Provtagningsdatum");
+
+    router.navigate("/project");
+
+    await expect.element(box()).toHaveValue("");
+  });
 });
 
 describe("⌘K shortcut (#803)", () => {
