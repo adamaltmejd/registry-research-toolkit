@@ -1,168 +1,248 @@
-"""Property cases for `dbdiff`'s natural-key projection, asserted on its CLI (exit
-code and `--json`): ids reassigned without a content change compare identical,
-and moving any one reference to another existing row is a difference.
+"""Property cases for `dbdiff`'s catalog id projection, asserted on its CLI (exit
+code and `--json`): a catalog whose ids are renumbered without a content change
+compares identical, and moving any one reference to another existing row is a
+difference.
 
 The regression these pin is a false "identical": a changed relationship that the
-id projection hides. Small parent/child databases mix the shapes that have hidden
-one or broken the report: NULL and dangling references, parents equal but for
-their id, a primary key that is a foreign key, a nullable one-column key, text
-equal to the reference tags, and infinite REALs inside a key.
+id projection hides. The databases carry the real catalog DDL (`db.DDL`, less the
+build-only tables) with a few small tables filled: nested natural keys (variable
+→ register → provider), a primary key that is a reference
+(variable_search_text.variable_id), NULL and dangling references, and keys made
+of text equal to the reference tags. Renumbering and moves follow the schema's
+own FOREIGN KEY declarations (plus variable_search_text's two undeclared
+references), not dbdiff's id map, so the two must agree.
 """
 
 from __future__ import annotations
 
+import functools
 import io
 import json
-import math
+import shutil
 import sqlite3
 import tempfile
 from contextlib import redirect_stdout
 from pathlib import Path
 
-from hypothesis import assume, example, given, settings, strategies as st
+from hypothesis import assume, given, settings, strategies as st
+from reg_meta_build.db import DDL
 from reg_meta_build.dbdiff import main
 
-_SCHEMA = """
-CREATE TABLE parent (id INTEGER PRIMARY KEY, a TEXT, b INTEGER);
-CREATE TABLE measure (id INTEGER PRIMARY KEY, w REAL);
--- A nullable one-column natural key that is itself a reference.
-CREATE TABLE child2 (id INTEGER PRIMARY KEY, p INTEGER UNIQUE REFERENCES parent(id));
--- A primary key that is a foreign key.
-CREATE TABLE child (id INTEGER PRIMARY KEY REFERENCES parent(id), note TEXT);
-CREATE TABLE grand (
-  child2_id INTEGER REFERENCES child2(id),
-  measure_id INTEGER REFERENCES measure(id),
-  parent_id INTEGER REFERENCES parent(id),
-  label TEXT
-);
-"""
-
-# Where each reference points: (table, column) -> referenced table.
-_LINKS = {
-    ("child2", "p"): "parent",
-    ("child", "id"): "parent",
-    ("grand", "child2_id"): "child2",
-    ("grand", "measure_id"): "measure",
-    ("grand", "parent_id"): "parent",
+# The tables filled, each with its own id column.
+_IDS = {
+    "provider": "provider_id",
+    "register": "register_id",
+    "register_variant": "register_variant_id",
+    "variable": "variable_id",
+    "value_code": "code_id",
 }
-# Columns whose values must stay unique, so a move needs a free target.
-_UNIQUE = {("child2", "p"), ("child", "id")}
-_COLUMNS = {
-    "parent": ("id", "a", "b"),
-    "measure": ("id", "w"),
-    "child2": ("id", "p"),
-    "child": ("id", "note"),
-    "grand": ("child2_id", "measure_id", "parent_id", "label"),
+_TABLES = (*_IDS, "code_variable_map", "variable_alias", "variable_search_text")
+# Declared without a FOREIGN KEY clause (db.py's search table).
+_UNDECLARED = {
+    ("variable_search_text", "variable_id"): "variable",
+    ("variable_search_text", "register_id"): "register",
 }
-
-# Text equal to the reference tags, and to the dangling marker dbdiff once used.
-_TEXT = st.one_of(
-    st.sampled_from(["k", "r", "d", "dangling id", '["k",1]', "", "x"]),
-    st.text(max_size=3),
-)
-_REAL = st.sampled_from([1.0, 2.5, math.inf, -math.inf])
+# Text equal to the reference tags and to numeric spellings of an id.
+_TEXT = ("k", "d", "dangling id", '["k",1]', "1", "01", "", "scb")
 
 
-@st.composite
-def _catalogs(draw: st.DrawFn) -> dict:
-    n_parent = draw(st.integers(1, 4))
-    parent_ids = list(range(1, n_parent + 1))
-    # Ids no row holds: a reference to one is dangling.
-    dangling = [n_parent + 1, n_parent + 2]
-    parent = [
-        (i, draw(st.none() | _TEXT), draw(st.none() | st.integers(0, 7)))
-        for i in parent_ids
-    ]
-    measure_ids = list(range(1, draw(st.integers(1, 3)) + 1))
-    measure = [(i, draw(st.none() | _REAL)) for i in measure_ids]
-    # Distinct parents, then at most one NULL: two NULLs leave no unique key.
-    p_values: list[int | None] = draw(
-        st.lists(st.sampled_from(parent_ids), unique=True, max_size=3)
-    )
-    if draw(st.booleans()):
-        p_values.append(None)
-    p_values = draw(st.permutations(p_values))
-    child2 = [(i + 1, p) for i, p in enumerate(p_values)]
-    child2_ids = [row[0] for row in child2]
-    child_ids = draw(st.lists(st.sampled_from(parent_ids), unique=True, max_size=3))
-    child = [(i, draw(_TEXT)) for i in child_ids]
-
-    def ref(ids: list[int]) -> st.SearchStrategy:
-        return st.none() | st.sampled_from(ids + dangling)
-
-    grand = [
-        (
-            draw(ref(child2_ids)),
-            draw(ref(measure_ids)),
-            draw(ref(parent_ids)),
-            draw(_TEXT),
-        )
-        for _ in range(draw(st.integers(1, 4)))
-    ]
-    tables = {
-        "parent": parent,
-        "measure": measure,
-        "child2": child2,
-        "child": child,
-        "grand": grand,
-    }
-    ids = {"parent": parent_ids, "measure": measure_ids, "child2": child2_ids}
-    renumber = {name: draw(st.permutations(ids[name])) for name in ids}
-    # One reference cell and another existing row it could point to instead.
-    moves = []
-    for (table, column), target in _LINKS.items():
-        position = _COLUMNS[table].index(column)
-        taken = {row[position] for row in tables[table]}
-        for index, row in enumerate(tables[table]):
-            for new in ids[target]:
-                free = (table, column) not in _UNIQUE or new not in taken
-                if new != row[position] and free:
-                    moves.append((table, index, column, new))
-    move = draw(st.sampled_from(moves)) if moves else None
-    return {"tables": tables, "renumber": renumber, "move": move}
-
-
-def _write(path: Path, tables: dict) -> None:
+@functools.cache
+def _empty_catalog() -> Path:
+    """A catalog with the shipped schema and no rows, made once per process."""
+    path = Path(tempfile.mkdtemp(prefix="dbdiff-property-")) / "empty.db"
     conn = sqlite3.connect(path)
     try:
-        conn.executescript(_SCHEMA)
-        for name, rows in tables.items():
-            marks = ", ".join("?" * len(_COLUMNS[name]))
-            conn.executemany(f"INSERT INTO {name} VALUES ({marks})", rows)
+        conn.executescript(DDL)
+        for table in (
+            "variable_alias_build",
+            "variable_instance",
+            "classification_candidate",
+            "unika_summary",
+        ):
+            conn.execute(f"DROP TABLE {table}")
         conn.commit()
+    finally:
+        conn.close()
+    return path
+
+
+@functools.cache
+def _references() -> dict[tuple[str, str], str]:
+    """(table, column) -> referenced table, for the filled tables, read from the
+    schema's FOREIGN KEY declarations."""
+    conn = sqlite3.connect(_empty_catalog())
+    try:
+        refs = dict(_UNDECLARED)
+        for table in _TABLES:
+            for fk in conn.execute(f"PRAGMA foreign_key_list({table})"):
+                assert fk[4] == _IDS[fk[2]], fk  # each points at the parent's id
+                refs[table, fk[3]] = fk[2]
+        return refs
     finally:
         conn.close()
 
 
-def _renumbered(tables: dict, renumber: dict) -> dict:
-    """``tables`` with each id table's ids permuted and every reference to them
+@st.composite
+def _catalogs(draw: st.DrawFn) -> dict:
+    # Slugs unique across the catalog keep every natural key unique, so no move
+    # can turn a difference into a refusal; one may be NULL.
+    slugs = iter(
+        draw(
+            st.lists(
+                st.sampled_from(_TEXT) | st.text(max_size=3),
+                unique=True,
+                min_size=12,
+                max_size=12,
+            )
+        )
+    )
+    ids = {table: list(range(1, draw(st.integers(1, 3)) + 1)) for table in _IDS}
+
+    def ref(table: str, dangling: bool = False) -> st.SearchStrategy:
+        choices = st.sampled_from(ids[table])
+        return choices | st.just(max(ids[table]) + 1) if dangling else choices
+
+    rows: dict[str, list[dict]] = {
+        "provider": [
+            {"provider_id": i, "slug": next(slugs), "name": "p"}
+            for i in ids["provider"]
+        ],
+        "register": [
+            {
+                "register_id": i,
+                "provider_id": draw(ref("provider")),
+                "name": "r",
+                "slug": next(slugs),
+            }
+            for i in ids["register"]
+        ],
+        "register_variant": [
+            {
+                "register_variant_id": i,
+                "register_id": draw(ref("register")),
+                "slug": None if i == 1 and draw(st.booleans()) else next(slugs),
+            }
+            for i in ids["register_variant"]
+        ],
+        "variable": [
+            {
+                "variable_id": i,
+                "register_id": draw(ref("register")),
+                "provider_key": "v",
+                "slug": next(slugs),
+                "source_register_id": draw(st.none() | ref("register", True)),
+            }
+            for i in ids["variable"]
+        ],
+        "value_code": [
+            {"code_id": i, "code": code, "label": label}
+            for i, (code, label) in zip(
+                ids["value_code"],
+                draw(
+                    st.lists(
+                        st.tuples(st.sampled_from(_TEXT), st.sampled_from(_TEXT)),
+                        unique=True,
+                        min_size=len(ids["value_code"]),
+                        max_size=len(ids["value_code"]),
+                    )
+                ),
+                strict=True,
+            )
+        ],
+        "code_variable_map": [
+            {"code_id": c, "variable_id": v}
+            for c, v in draw(
+                st.lists(
+                    st.tuples(ref("value_code"), ref("variable")),
+                    unique=True,
+                    max_size=4,
+                )
+            )
+        ],
+        "variable_alias": [
+            {"variable_id": v, "register_variant_id": rv, "delivery_column_name": n}
+            for v, rv, n in draw(
+                st.lists(
+                    st.tuples(
+                        ref("variable"),
+                        ref("register_variant"),
+                        st.sampled_from(_TEXT),
+                    ),
+                    unique=True,
+                    max_size=4,
+                )
+            )
+        ],
+        "variable_search_text": [
+            {
+                "variable_id": v,
+                "register_id": draw(ref("register", True)),
+                "provider_key": "v",
+                "delivery_column_names": "[]",
+            }
+            for v in draw(st.lists(ref("variable"), unique=True, max_size=3))
+        ],
+    }
+    renumber = {table: draw(st.permutations(ids[table])) for table in _IDS}
+    moves = [
+        (table, index, column, new)
+        for (table, column), parent in sorted(_references().items())
+        for index, row in enumerate(rows[table])
+        for new in ids[parent]
+        if new != row[column]
+    ]
+    move = draw(st.sampled_from(moves)) if moves else None
+    return {"rows": rows, "renumber": renumber, "move": move}
+
+
+def _write(path: Path, rows: dict[str, list[dict]]) -> None:
+    """``rows`` into a copy of the empty catalog; False when a unique constraint
+    refuses them (a move onto a row's twin), which the example then discards."""
+    shutil.copyfile(_empty_catalog(), path)
+    conn = sqlite3.connect(path)
+    try:
+        for table in _TABLES:
+            for row in rows[table]:
+                cols = ", ".join(row)
+                marks = ", ".join("?" * len(row))
+                conn.execute(
+                    f"INSERT INTO {table} ({cols}) VALUES ({marks})",
+                    tuple(row.values()),
+                )
+        conn.commit()
+    except sqlite3.IntegrityError:
+        assume(False)
+    finally:
+        conn.close()
+
+
+def _renumbered(rows: dict[str, list[dict]], renumber: dict) -> dict:
+    """``rows`` with each id table's ids permuted, and every declared reference
     following; a dangling id is no row's and stays as it is."""
     maps = {
-        name: dict(zip(sorted(order), order, strict=True))
-        for name, order in renumber.items()
+        table: dict(zip(sorted(order), order, strict=True))
+        for table, order in renumber.items()
     }
+    owners = {(table, column): table for table, column in _IDS.items()}
+    owners |= _references()
     out = {}
-    for table, rows in tables.items():
-        new_rows = []
-        for row in rows:
-            values = list(row)
-            for position, column in enumerate(_COLUMNS[table]):
-                target = _LINKS.get((table, column))
-                if target is None and column == "id" and table in maps:
-                    target = table
-                if target is not None and values[position] in maps[target]:
-                    values[position] = maps[target][values[position]]
-            new_rows.append(tuple(values))
-        out[table] = new_rows
+    for table, table_rows in rows.items():
+        out[table] = [
+            {
+                column: maps[owners[table, column]].get(value, value)
+                if (table, column) in owners and value is not None
+                else value
+                for column, value in row.items()
+            }
+            for row in table_rows
+        ]
     return out
 
 
-def _moved(tables: dict, move: tuple) -> dict:
+def _moved(rows: dict[str, list[dict]], move: tuple) -> dict:
     table, index, column, new = move
-    out = {name: list(rows) for name, rows in tables.items()}
-    row = list(out[table][index])
-    row[_COLUMNS[table].index(column)] = new
-    out[table][index] = tuple(row)
+    out = {name: [dict(row) for row in table_rows] for name, table_rows in rows.items()}
+    out[table][index][column] = new
     return out
 
 
@@ -178,62 +258,18 @@ def _dbdiff(a: Path, b: Path) -> tuple[int, dict]:
     return code, json.loads(out.getvalue(), parse_constant=_refuse_constant)
 
 
-_DANGLING_LOOKALIKE = {
-    "tables": {
-        "parent": [(1, "dangling id", 3)],
-        "measure": [(1, 1.0)],
-        "child2": [],
-        "child": [],
-        "grand": [(None, None, 3, "x")],
-    },
-    "renumber": {"parent": [1], "measure": [1], "child2": []},
-    "move": ("grand", 0, "parent_id", 1),
-}
-_NULL_ONE_COLUMN_KEY = {
-    "tables": {
-        "parent": [(1, "x", 0)],
-        "measure": [(1, 1.0)],
-        "child2": [(1, None)],
-        "child": [],
-        "grand": [(1, None, None, "x")],
-    },
-    "renumber": {"parent": [1], "measure": [1], "child2": [1]},
-    "move": ("grand", 0, "parent_id", 1),
-}
-_INFINITE_KEY = {
-    "tables": {
-        "parent": [(1, "x", 0)],
-        "measure": [(1, math.inf)],
-        "child2": [],
-        "child": [],
-        "grand": [(None, 1, None, "x")],
-    },
-    "renumber": {"parent": [1], "measure": [1], "child2": []},
-    "move": ("grand", 0, "parent_id", 1),
-}
-
-
 @settings(deadline=None)
-# A dangling reference to id 3 must not equal a parent whose key is
-# ('dangling id', 3): moving the reference onto that parent read identical.
-@example(_DANGLING_LOOKALIKE)
-# A one-column key whose only column is a NULL reference: the key was SQL NULL,
-# not JSON null, and identical databases exited 2.
-@example(_NULL_ONE_COLUMN_KEY)
-# An infinite REAL inside a reported key crashed `--json`.
-@example(_INFINITE_KEY)
 @given(_catalogs())
 def test_renumbering_is_identical_and_any_moved_reference_differs(spec: dict) -> None:
     assume(spec["move"] is not None)
     with tempfile.TemporaryDirectory() as tmp:
         base, renumbered, moved = (Path(tmp) / f"{n}.db" for n in "abc")
-        _write(base, spec["tables"])
-        _write(renumbered, _renumbered(spec["tables"], spec["renumber"]))
-        _write(moved, _moved(spec["tables"], spec["move"]))
+        _write(base, spec["rows"])
+        _write(renumbered, _renumbered(spec["rows"], spec["renumber"]))
+        _write(moved, _moved(spec["rows"], spec["move"]))
 
         code, report = _dbdiff(base, renumbered)
-        # Raw-id tables compare their ids, so renumbering them may differ.
-        if not report["raw_id_tables"]:
-            assert code == 0, report
+        assert report["natural_keys"], report
+        assert code == 0, report
         code, report = _dbdiff(base, moved)
         assert code == 1, (spec["move"], report)

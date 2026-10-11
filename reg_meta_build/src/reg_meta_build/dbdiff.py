@@ -62,45 +62,34 @@ tables are included in the *schema* comparison (structure must match) but
 excluded from the *content* comparison. `sqlite_*` internal tables
 (`sqlite_sequence`, `sqlite_stat*`) are excluded throughout.
 
-**Surrogate ids compare by natural key.** Internal integer ids (`variable_id`,
-`code_id`, `state_id`, ...) are dense and reassigned on every build, so one
-added variable shifts the ids of every later one. Rows are therefore compared
-on a projection, never on raw ids:
+**Catalog ids compare by natural key.** The catalog's internal integer ids
+(`variable_id`, `code_id`, `state_id`, ...) are dense and reassigned on every
+build, so one added variable shifts the ids of every later one. When both DBs
+are catalogs (they hold every table in `_IDS`), rows are compared on a
+projection, never on raw ids, driven by an explicit map of the catalog's ids:
 
-- a table's own surrogate id (an ``INTEGER PRIMARY KEY``, or a single-column
-  UNIQUE INTEGER column some FOREIGN KEY targets) is left out of its rows; a
-  TEXT key is natural and compared as it is, and a column that is itself a
-  FOREIGN KEY is never an id of its own (it is compared by what it references);
-- a column holding another table's surrogate id (a declared FOREIGN KEY,
-  followed through composite keys to the table that owns the id, plus the few
-  undeclared references in `_UNDECLARED_REFERENCES`) is a reference, never
-  dropped, and compares as a tagged JSON array: ``["k", key]`` with the row's
-  natural key, ``["r", id]`` when the table keeps raw ids (below) and
-  ``["d", id]`` for an id no row holds. A NULL reference stays NULL. The natural
-  key is a JSON array of the key's columns: the key named in `_NATURAL_KEYS`
-  (the register and variant FQIDs, a state's key), else the table's smallest
-  declared UNIQUE key without the id, else all its other columns, the first of
-  these the data holds unique. A data value in a key is a JSON scalar (a BLOB a
-  ``{"blob": hex}`` object) and a reference column in it nests its own tagged
-  array, so a reference never equals data or another kind of reference;
-- when no key is unique (two rows equal but for their id), the table keeps its
-  id and references to it compare raw ids, so a child moved between the two rows
-  is still reported; the report names those tables (`raw_id_tables`), whose
-  differences may be id noise. A false difference is acceptable, a hidden one is
-  not;
-- a shape dbdiff cannot classify with confidence (a cycle of foreign keys or of
-  natural keys, a foreign key to a missing column, a NULL or non-integer value
-  in a referenced id column, an INTEGER column named like a table's id but
-  declared as no reference) fails with exit 2 and names it, rather than being
-  guessed. A foreign key to a table outside the content tables (virtual or
-  absent) compares its raw value: there is no row it resolves to and no id to
-  shift.
+- `_IDS` names each table's own id column, left out of its rows, and the
+  natural key that identifies its rows (the FQIDs, a code's ``(code, label)``,
+  a state's key, ...);
+- `_REFERENCES` names every column that holds one of those ids and the table
+  that owns it. It compares as a tagged JSON array: ``["k", key]`` with the
+  row's natural key, ``["d", id]`` for an id no row holds. A NULL stays NULL.
+  A key is a JSON array of its columns (a NULL column is JSON null); a data
+  value in it is a JSON scalar (a BLOB a ``{"blob": hex}`` object) and a
+  reference in it nests its own tagged array, so a reference never equals
+  data or another kind of reference.
 
-So two builds that differ only in id assignment compare identical. The
+Before the diff, each catalog is checked against the map (`_check_catalog`),
+and any failure exits 2 with a named reason rather than a guess: a mapped
+column missing; an INTEGER primary key or INTEGER foreign key the map does not
+cover (so an id column added to the DDL without updating this map fails
+closed); a NULL or non-integer id; a natural key the data does not hold unique.
+
+So two catalog builds that differ only in id assignment compare identical. The
 comparison uses the stored JSON text; reports decode it for display only
 (`_display`), so a sample row shows ``variable_id = [["scb", "lisa"], "kon"]``,
-not ``4711``. The projection is derived per DB from its schema; a table whose
-projection differs between the two DBs is skipped as a difference.
+not ``4711``. Any other pair of DBs (a docs DB, a test fixture) compares raw
+rows, ids included.
 
 Canonicalization is type-discriminated: SQLite storage class (NULL /
 INTEGER / REAL / TEXT / BLOB) is part of the fingerprint, so an ID that
@@ -162,28 +151,132 @@ DEFAULT_IGNORE: dict[str, TableIgnore] = {
     "import_manifest": TableIgnore(skip_where="key = 'import_date'"),
 }
 
-# Natural keys the DDL does not declare as one plain UNIQUE key: a register's and
-# a variant's FQID (crates/DESIGN.md → FQID grammar); a classification's slug,
-# named because the table also has a UNIQUE short_name; and a state's key, the
-# union of its two partial UNIQUE indexes, which split on period_scope.
-_NATURAL_KEYS: dict[str, tuple[str, ...]] = {
-    "register": ("provider_id", "slug"),
-    "register_variant": ("register_id", "slug"),
-    "classification": ("slug",),
+# The catalog's surrogate ids (db.py DDL), dense and reassigned on every build.
+# table -> (its id column, the natural key that identifies its rows). A key column
+# that is itself a reference nests that row's key. None: nothing references the
+# table, so its id is only left out of its rows. Each key is checked unique on the
+# data before a diff (`_check_catalog`).
+_IDS: dict[str, tuple[str, tuple[str, ...] | None]] = {
+    "provider": ("provider_id", ("slug",)),
+    # The FQIDs (crates/DESIGN.md → FQID grammar).
+    "register": ("register_id", ("provider_id", "slug")),
+    "register_variant": ("register_variant_id", ("register_id", "slug")),
+    "variable": ("variable_id", ("register_id", "slug")),
+    # SCB's register-version grain within a variant.
+    "register_version": ("regver_id", ("register_variant_id", "registerversionnamn")),
+    "classification": ("id", ("slug",)),
+    "value_code": ("code_id", ("code", "label")),
+    "value_set": ("value_set_id", ("member_hash",)),
+    # The union of its two partial UNIQUE indexes, which split on period_scope.
     "variable_state": (
-        "variable_id",
-        "register_variant_id",
-        "period_scope",
-        "valid_from",
-        "value_set_version_label",
+        "state_id",
+        (
+            "variable_id",
+            "register_variant_id",
+            "period_scope",
+            "valid_from",
+            "value_set_version_label",
+        ),
     ),
+    "browse_delivery": (
+        "browse_delivery_id",
+        ("scope", "variable_id", "register_variant_id", "delivery_column_name"),
+    ),
+    # Their UNIQUE indexes, which COALESCE the nullable column.
+    "concept_group": ("group_id", ("kind", "register_id", "group_key")),
+    "concept_group_variable": (
+        "member_id",
+        ("group_id", "variable_id", "delivery_column_name"),
+    ),
+    "data_warning_text": ("text_id", ("text",)),
+    "holding_table": ("table_id", ("physical_id",)),
+    "holding_column": ("column_id", ("table_id", "name")),
+    "tag": ("tag_id", ("slug",)),
+    "expanded_state": ("expanded_state_id", None),
+    "source_relationship": ("relationship_id", None),
 }
 
-# References the DDL holds without a FOREIGN KEY clause: the derived search table.
-_UNDECLARED_REFERENCES: dict[tuple[str, str], tuple[str, str]] = {
-    ("variable_search_text", "variable_id"): ("variable", "variable_id"),
-    ("variable_search_text", "register_id"): ("register", "register_id"),
+# Every column that holds one of those ids -> the table that owns it. A composite
+# foreign key's id columns name the owner at the end of the chain
+# (alias_window_classification.variable_id → variable_alias_window → variable);
+# its TEXT columns are natural values and compare as they are. A primary key that
+# is a reference (variable_search_text.variable_id) is compared by what it
+# references, never left out.
+_REFERENCES: dict[tuple[str, str], str] = {
+    ("alias_window_classification", "classification_id"): "classification",
+    ("alias_window_classification", "register_variant_id"): "register_variant",
+    ("alias_window_classification", "variable_id"): "variable",
+    ("browse_delivery", "register_variant_id"): "register_variant",
+    ("browse_delivery", "variable_id"): "variable",
+    ("classification", "supersedes_id"): "classification",
+    ("classification_code", "classification_id"): "classification",
+    ("classification_code", "code_id"): "value_code",
+    ("classification_conformance", "declared_classification_id"): "classification",
+    ("classification_conformance", "state_id"): "variable_state",
+    ("classification_conformance_code", "code_id"): "value_code",
+    ("classification_conformance_code", "declared_classification_id"): (
+        "classification"
+    ),
+    ("classification_conformance_code", "state_id"): "variable_state",
+    ("code_variable_map", "code_id"): "value_code",
+    ("code_variable_map", "variable_id"): "variable",
+    ("concept_group", "register_id"): "register",
+    ("concept_group_axis", "group_id"): "concept_group",
+    ("concept_group_classification", "classification_id"): "classification",
+    ("concept_group_classification", "group_id"): "concept_group",
+    ("concept_group_variable", "group_id"): "concept_group",
+    ("concept_group_variable", "variable_id"): "variable",
+    ("concept_group_variable_facet", "member_id"): "concept_group_variable",
+    ("data_warning", "detail_id"): "data_warning_text",
+    ("data_warning", "register_id"): "register",
+    ("data_warning", "register_variant_id"): "register_variant",
+    ("data_warning", "summary_id"): "data_warning_text",
+    ("data_warning", "variable_id"): "variable",
+    ("delivery_window", "browse_delivery_id"): "browse_delivery",
+    ("expanded_state", "register_variant_id"): "register_variant",
+    ("expanded_state", "state_id"): "variable_state",
+    ("expanded_state", "variable_id"): "variable",
+    ("holding_column", "table_id"): "holding_table",
+    ("holding_mapping", "column_id"): "holding_column",
+    ("holding_mapping", "variable_id"): "variable",
+    ("holding_mapping", "variant_id"): "register_variant",
+    ("holding_period", "table_id"): "holding_table",
+    ("object_type", "regver_id"): "register_version",
+    ("population", "regver_id"): "register_version",
+    ("register", "provider_id"): "provider",
+    ("register_variant", "register_id"): "register",
+    ("register_version", "register_variant_id"): "register_variant",
+    ("resolver_column", "register_variant_id"): "register_variant",
+    ("resolver_column", "variable_id"): "variable",
+    ("source_relationship", "owner_variable_id"): "variable",
+    ("state_classification", "classification_id"): "classification",
+    ("state_classification", "state_id"): "variable_state",
+    ("tag_member", "register_id"): "register",
+    ("tag_member", "tag_id"): "tag",
+    ("tag_member", "variable_id"): "variable",
+    ("value_set_member", "code_id"): "value_code",
+    ("value_set_member", "value_set_id"): "value_set",
+    ("variable", "register_id"): "register",
+    ("variable", "source_register_id"): "register",
+    ("variable_alias", "register_variant_id"): "register_variant",
+    ("variable_alias", "variable_id"): "variable",
+    ("variable_alias_window", "register_variant_id"): "register_variant",
+    ("variable_alias_window", "value_set_id"): "value_set",
+    ("variable_alias_window", "variable_id"): "variable",
+    # Declared without a FOREIGN KEY clause: the derived search table.
+    ("variable_search_text", "register_id"): "register",
+    ("variable_search_text", "variable_id"): "variable",
+    ("variable_state", "register_variant_id"): "register_variant",
+    ("variable_state", "value_set_id"): "value_set",
+    ("variable_state", "variable_id"): "variable",
+    ("variable_state_lineage", "consumer_state_id"): "variable_state",
+    ("variable_state_lineage", "source_state_id"): "variable_state",
+    ("variable_state_lineage_warning", "consumer_state_id"): "variable_state",
 }
+
+# INTEGER primary keys and foreign keys that are not ids and compare as they are.
+# Empty today: every one the catalog declares is an id above.
+_COMPARE_RAW: frozenset[tuple[str, str]] = frozenset()
 
 
 @dataclass(frozen=True)
@@ -279,9 +372,9 @@ class DiffReport:
     table_results: tuple[TableContentResult, ...] = ()
     # column name lists for shared tables, for rendering SampleRow values.
     table_columns: dict[str, tuple[str, ...]] = field(default_factory=dict)
-    # Referenced tables no natural key identifies, in either DB: their ids and the
-    # references to them compare raw, so a difference there may be id noise.
-    raw_id_tables: tuple[str, ...] = ()
+    # Whether the two DBs are catalogs whose ids compare by natural key (module
+    # docstring); otherwise rows compare raw, ids included.
+    natural_keys: bool = False
 
     @property
     def schema_differs(self) -> bool:
@@ -419,221 +512,75 @@ def _quote(name: str) -> str:
     return '"' + name.replace('"', '""') + '"'
 
 
-@dataclass(frozen=True)
-class _KeyPlan:
-    """How one DB's rows are projected off their surrogate ids (module docstring)."""
-
-    columns: dict[str, tuple[str, ...]]
-    # table -> its surrogate id column. Never a foreign-key column: a column that
-    # references a row is compared by what it references, never dropped.
-    surrogates: dict[str, str]
-    # (table, column) -> the table whose surrogate id the column holds: every
-    # reference, compared tagged (`_link_sql`) and never dropped.
-    links: dict[tuple[str, str], str]
-    # referenced table -> the columns of its natural key (raw-id tables have none).
-    natural_keys: dict[str, tuple[str, ...]]
-    # Referenced tables no key identifies (rows equal but for their id): they keep
-    # their id, and references to them compare raw ids, so a moved child shows.
-    raw_ids: frozenset[str]
-
-    def projected(self, table: str) -> tuple[str, ...]:
-        """``table``'s compared columns: all but its own surrogate id, unless the
-        table keeps its raw ids."""
-        kept = tuple(
-            c
-            for c in self.columns[table]
-            if table in self.raw_ids or self.surrogates.get(table) != c
-        )
-        return kept or self.columns[table]
-
-    def describe(self, table: str) -> str:
-        """A canonical text of ``table``'s projection, natural keys expanded, so
-        two DBs whose projections differ are not fingerprinted against each other."""
-        own = "raw-id:" if table in self.raw_ids else ""
-        return own + ",".join(
-            self._describe_column(table, c) for c in self.projected(table)
-        )
-
-    def _describe_column(self, table: str, column: str) -> str:
-        target = self.links.get((table, column))
-        if target is None:
-            return column
-        if target in self.raw_ids:
-            return f"{column}->{target}(raw)"
-        key = ",".join(
-            self._describe_column(target, c) for c in self.natural_keys[target]
-        )
-        return f"{column}->{target}({key})"
+def _is_catalog(schema_a: _Schema, schema_b: _Schema) -> bool:
+    """Whether both DBs are catalogs, so ids compare by the explicit map.
+    Any other DB (a docs DB, a test fixture) compares raw rows."""
+    return all(set(_IDS) <= set(s.tables) for s in (schema_a, schema_b))
 
 
-def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
-    """Classify ``schema``'s ids and references. A shape it cannot classify with
-    confidence raises ValueError naming it (exit 2), never a guess."""
-    tables = _content_tables(schema)
-    columns = {t: tuple(c[0] for c in schema.tables[t]) for t in tables}
-    edges = {
-        source: target
-        for source, target in _UNDECLARED_REFERENCES.items()
-        if source[1] in columns.get(source[0], ())
-        and target[1] in columns.get(target[0], ())
-    }
-    uniques: dict[str, list[tuple[str, ...]]] = {}
-    surrogates: dict[str, str] = {}
+def _check_catalog(conn: sqlite3.Connection, schema: _Schema) -> None:
+    """Refuse a catalog the map does not describe, or whose ids the data breaks,
+    with a ValueError naming it (exit 2). Never a guess, never a raw-id fallback."""
+    tables = set(_content_tables(schema))
 
-    def is_integer(table: str, column: str) -> bool:
-        # A surrogate id is an INTEGER column; a TEXT key ('scb') is natural and is
-        # compared as it is.
+    def has(table: str, column: str) -> bool:
+        return table in tables and any(c[0] == column for c in schema.tables[table])
+
+    for table, (id_column, key) in _IDS.items():
+        for column in (id_column, *(key or ())):
+            if not has(table, column):
+                raise ValueError(f"the id map names {table}.{column}, which is missing")
+    for (table, column), target in _REFERENCES.items():
+        if not has(table, column):
+            raise ValueError(f"the id map names {table}.{column}, which is missing")
+        if _IDS[target][1] is None:
+            raise ValueError(f"{table}.{column} references {target}, which has no key")
+    # Every INTEGER PRIMARY KEY and INTEGER foreign key is an id the map covers.
+    for table in sorted(tables):
         info = schema.tables[table]
-        return next(c for c in info if c[0] == column)[1].upper() == "INTEGER"
-
-    for table in tables:
-        info = schema.tables[table]
-        pk = tuple(c[0] for c in sorted((c for c in info if c[4]), key=lambda c: c[4]))
-        keys = [pk] if pk else []
-        for index in conn.execute(f"PRAGMA index_list({_quote(table)})"):
-            if index["unique"] and not index["partial"]:
-                key = tuple(
-                    r["name"]
-                    for r in conn.execute(f"PRAGMA index_info({_quote(index['name'])})")
-                )
-                # An expression column has no name; such an index is not a column key.
-                if None not in key and key not in keys:
-                    keys.append(key)
-        uniques[table] = keys
-        for fk in conn.execute(f"PRAGMA foreign_key_list({_quote(table)})"):
-            parent = fk["table"]
-            if parent not in columns:
-                # No content rows to point at (a virtual or absent table): the
-                # value has no id to shift and compares as it is.
-                continue
-            to = fk["to"]
-            if to is None:  # REFERENCES parent: the parent's primary key, by position
-                parent_pk = sorted(
-                    (c for c in schema.tables[parent] if c[4]), key=lambda c: c[4]
-                )
-                if fk["seq"] >= len(parent_pk):
-                    raise ValueError(
-                        f"{table}.{fk['from']} references {parent}, which "
-                        "declares no primary key column for it"
-                    )
-                to = parent_pk[fk["seq"]][0]
-            if to not in columns[parent]:
+        pk = [c[0] for c in info if c[4]]
+        candidates = set(pk if len(pk) == 1 else ())
+        candidates |= {
+            fk["from"]
+            for fk in conn.execute(f"PRAGMA foreign_key_list({_quote(table)})")
+        }
+        for column in sorted(candidates):
+            declared = next(c[1] for c in info if c[0] == column).upper()
+            covered = (
+                _IDS.get(table, ("",))[0] == column
+                or (table, column) in _REFERENCES
+                or (table, column) in _COMPARE_RAW
+            )
+            if declared == "INTEGER" and not covered:
                 raise ValueError(
-                    f"{table}.{fk['from']} references {parent}.{to}, "
-                    "which does not exist"
+                    f"{table}.{column} is an INTEGER id column the id map does not "
+                    "cover; add it to _IDS, _REFERENCES or _COMPARE_RAW"
                 )
-            edges[table, fk["from"]] = (parent, to)
-    # A table's id: its single-column INTEGER PRIMARY KEY, else a single-column
-    # UNIQUE INTEGER column a foreign key targets (variable_state.state_id). A
-    # column that is itself a foreign key is not an id of its own: it names the
-    # row it references (concept_group_classification.classification_id), so it is
-    # compared as that reference and the chain is followed past it.
-    for table in tables:
-        pk = [c for c in schema.tables[table] if c[4]]
-        if (
-            len(pk) == 1
-            and is_integer(table, pk[0][0])
-            and (table, pk[0][0]) not in edges
-        ):
-            surrogates[table] = pk[0][0]
-    for parent, to in sorted(edges.values()):
-        if (
-            parent not in surrogates
-            and (to,) in uniques[parent]
-            and is_integer(parent, to)
-            and (parent, to) not in edges
-        ):
-            surrogates[parent] = to
-            # A rowid alias holds only integers; this column is merely declared so.
-            # A NULL id would get a minted id in the key map, which a dangling
-            # reference could then resolve to.
-            if conn.execute(
-                f"SELECT 1 FROM {_quote(parent)} "
-                f"WHERE typeof({_quote(to)}) != 'integer' LIMIT 1"
-            ).fetchone():
-                raise ValueError(
-                    f"{parent}.{to} is a referenced INTEGER id but holds "
-                    "NULL or non-integer values"
-                )
-
-    def owner(source: tuple[str, str]) -> str | None:
-        """The table whose surrogate id ``source`` holds, following composite
-        foreign keys (alias_window_classification.variable_id → variable_alias_window
-        → variable); None when the chain ends on a natural column."""
-        seen = {source}
-        while True:
-            parent, to = edges[source]
-            if surrogates.get(parent) == to:
-                return parent
-            source = (parent, to)
-            if source not in edges:
-                return None
-            if source in seen:
-                raise ValueError(f"foreign keys through {source} form a cycle")
-            seen.add(source)
-
-    links = {s: t for s in sorted(edges) if (t := owner(s)) is not None}
-    # An INTEGER column named like another table's id but declared as no reference
-    # may still hold that id, and dropping the id would then hide a changed link.
-    for owner_table, id_column in sorted(surrogates.items()):
-        for table in tables:
-            if (
-                table != owner_table
-                and id_column in columns[table]
-                and (table, id_column) not in edges
-                and surrogates.get(table) != id_column
-                and is_integer(table, id_column)
-            ):
-                raise ValueError(
-                    f"{table}.{id_column} is named like {owner_table}'s id "
-                    "but declares no FOREIGN KEY; declare it, or list it in "
-                    "_UNDECLARED_REFERENCES"
-                )
-    natural_keys: dict[str, tuple[str, ...]] = {}
-    raw_ids: set[str] = set()
-    pending = sorted(set(links.values()))
-    while pending:
-        table = pending.pop()
-        if table in natural_keys or table in raw_ids:
-            continue
-        key = _natural_key(
-            conn, table, columns[table], surrogates[table], uniques[table]
-        )
+    for table, (id_column, key) in _IDS.items():
+        if conn.execute(
+            f"SELECT 1 FROM {_quote(table)} "
+            f"WHERE typeof({_quote(id_column)}) != 'integer' LIMIT 1"
+        ).fetchone():
+            raise ValueError(f"{table}.{id_column} holds NULL or non-integer ids")
         if key is None:
-            raw_ids.add(table)
             continue
-        natural_keys[table] = key
-        pending.extend(links[table, c] for c in key if (table, c) in links)
-    return _KeyPlan(columns, surrogates, links, natural_keys, frozenset(raw_ids))
-
-
-def _natural_key(
-    conn: sqlite3.Connection,
-    table: str,
-    columns: tuple[str, ...],
-    surrogate: str,
-    uniques: list[tuple[str, ...]],
-) -> tuple[str, ...] | None:
-    """The `_NATURAL_KEYS` key, else the smallest declared UNIQUE key without the
-    surrogate id, else all other columns; the first the data holds unique (SQLite
-    UNIQUE admits repeated NULLs). None when none is: two rows equal but for their
-    id would share a key, and a child moved between them would compare equal."""
-    candidates = [
-        k for k in (_NATURAL_KEYS.get(table),) if k and set(k) <= set(columns)
-    ]
-    candidates += sorted(
-        (k for k in uniques if surrogate not in k), key=lambda k: (len(k), k)
-    )
-    candidates.append(tuple(c for c in columns if c != surrogate))
-    for key in filter(None, candidates):
         cols = ", ".join(_quote(c) for c in key)
         (repeated,) = conn.execute(
             f"SELECT (SELECT COUNT(*) FROM {_quote(table)}) "
             f"- (SELECT COUNT(*) FROM (SELECT DISTINCT {cols} FROM {_quote(table)}))"
         ).fetchone()
-        if repeated == 0:
-            return key
-    return None
+        if repeated:
+            raise ValueError(
+                f"{table}'s natural key ({', '.join(key)}) is not unique: "
+                f"{repeated} row(s) repeat a key"
+            )
+
+
+def _projected(table: str, columns: Sequence[str], catalog: bool) -> tuple[str, ...]:
+    """``table``'s compared columns: in a catalog, all but its own id."""
+    if not catalog or table not in _IDS:
+        return tuple(columns)
+    return tuple(c for c in columns if c != _IDS[table][0])
 
 
 def _map_name(prefix: str, table: str) -> str:
@@ -641,64 +588,51 @@ def _map_name(prefix: str, table: str) -> str:
 
 
 # The tags of a compared reference. A reference is a JSON array whose first
-# element is one of these, and a data value never is an array, so a reference
+# element is one of these, and a data value is never an array, so a reference
 # cannot equal data or another kind of reference: ["k", key] resolved to the
-# row's natural key, ["r", id] a raw id of a raw-id table, ["d", id] an id no row
-# holds (dangling). A NULL reference stays NULL.
-_RESOLVED, _RAW, _DANGLING = "k", "r", "d"
+# row's natural key, ["d", id] an id no row holds (dangling). NULL stays NULL.
+_RESOLVED, _DANGLING = "k", "d"
 
 
-def _link_sql(plan: _KeyPlan, prefix: str, table: str, column: str) -> str:
+def _link_sql(prefix: str, table: str, column: str) -> str:
     """The tagged reference ``t.column`` holds, as JSON text (NULL for NULL)."""
-    target = plan.links[table, column]
+    target = _REFERENCES[table, column]
     col = f"t.{_quote(column)}"
-    if target in plan.raw_ids:
-        exists = (
-            f"EXISTS (SELECT 1 FROM {prefix}.{_quote(target)} "
-            f"WHERE {_quote(plan.surrogates[target])} = {col})"
-        )
-        value = (
-            f"CASE WHEN {exists} THEN json_array('{_RAW}', {col}) "
-            f"ELSE json_array('{_DANGLING}', {col}) END"
-        )
-    else:
-        value = (
-            f"COALESCE((SELECT nk "
-            f"FROM temp.{_map_name(prefix, target)} WHERE id = {col}), "
-            f"json_array('{_DANGLING}', {col}))"
-        )
-    return f"CASE WHEN {col} IS NULL THEN NULL ELSE {value} END"
+    return (
+        f"CASE WHEN {col} IS NULL THEN NULL ELSE COALESCE("
+        f"(SELECT nk FROM temp.{_map_name(prefix, target)} WHERE id = {col}), "
+        f"json_array('{_DANGLING}', {col})) END"
+    )
 
 
-def _projection_sql(plan: _KeyPlan, prefix: str, table: str) -> list[str]:
+def _projection_sql(
+    prefix: str, table: str, columns: Sequence[str], catalog: bool
+) -> list[str]:
     return [
-        _link_sql(plan, prefix, table, c)
-        if (table, c) in plan.links
+        _link_sql(prefix, table, c)
+        if catalog and (table, c) in _REFERENCES
         else f"t.{_quote(c)}"
-        for c in plan.projected(table)
+        for c in _projected(table, columns, catalog)
     ]
 
 
-def _build_key_maps(work: sqlite3.Connection, plan: _KeyPlan, prefix: str) -> None:
-    """Materialize, per referenced table with a natural key, its id -> tagged
-    reference ``["k", key]`` in the temp store, so a lookup is the compared text
-    as it is. Every key is an array, so a NULL key column is JSON null; a data
-    value is a JSON scalar (a BLOB a {"blob": hex} object) and a reference a
-    tagged array."""
+def _build_key_maps(work: sqlite3.Connection, prefix: str) -> None:
+    """Materialize, per keyed `_IDS` table, its id -> tagged reference
+    ``["k", key]`` in the temp store, so a lookup is the compared text as it is.
+    A key is always a JSON array, so a NULL key column is JSON null; a data value
+    in it is a JSON scalar (a BLOB a {"blob": hex} object) and a reference a
+    tagged array. The map is acyclic, so the recursion ends."""
     built: set[str] = set()
 
-    def build(table: str, visiting: frozenset[str]) -> None:
+    def build(table: str) -> None:
         if table in built:
             return
-        if table in visiting:
-            raise ValueError(f"the natural key of {table} refers back to itself")
+        id_column, key = _IDS[table]
         parts = []
-        for c in plan.natural_keys[table]:
-            if (table, c) in plan.links:
-                target = plan.links[table, c]
-                if target not in plan.raw_ids:
-                    build(target, visiting | {table})
-                parts.append(f"json({_link_sql(plan, prefix, table, c)})")
+        for c in key or ():
+            if (table, c) in _REFERENCES:
+                build(_REFERENCES[table, c])
+                parts.append(f"json({_link_sql(prefix, table, c)})")
             else:
                 col = f"t.{_quote(c)}"
                 parts.append(
@@ -710,14 +644,14 @@ def _build_key_maps(work: sqlite3.Connection, plan: _KeyPlan, prefix: str) -> No
             f"CREATE TEMP TABLE {name} (id INTEGER PRIMARY KEY, nk TEXT NOT NULL)"
         )
         work.execute(
-            f"INSERT INTO temp.{name} SELECT t.{_quote(plan.surrogates[table])}, "
+            f"INSERT INTO temp.{name} SELECT t.{_quote(id_column)}, "
             f"json_array('{_RESOLVED}', json_array({', '.join(parts)})) "
             f"FROM {prefix}.{_quote(table)} AS t"
         )
         built.add(table)
 
-    for table in sorted(plan.natural_keys):
-        build(table, frozenset())
+    for table in sorted(set(_REFERENCES.values())):
+        build(table)
 
 
 # --------------------------------------------------------------------------
@@ -756,13 +690,21 @@ def _row_hash(values: Sequence[object]) -> int:
 
 
 def _select_sql(
-    plan: _KeyPlan, prefix: str, table: str, skip_where: str | None, tag: str = ""
+    prefix: str,
+    table: str,
+    columns: Sequence[str],
+    catalog: bool,
+    skip_where: str | None,
+    tag: str = "",
 ) -> str:
     """``table``'s projected rows in DB ``prefix``, each column aliased by name
     (``skip_where`` names the stored columns, which ``t`` alone carries)."""
     cols = ", ".join(
         f"{expr} AS {_quote(c)}"
-        for expr, c in zip(_projection_sql(plan, prefix, table), plan.projected(table))
+        for expr, c in zip(
+            _projection_sql(prefix, table, columns, catalog),
+            _projected(table, columns, catalog),
+        )
     )
     sql = f"SELECT {cols}{tag} FROM {prefix}.{_quote(table)} AS t"
     if skip_where:
@@ -772,9 +714,10 @@ def _select_sql(
 
 def _fingerprint(
     work: sqlite3.Connection,
-    plan: _KeyPlan,
     prefix: str,
     table: str,
+    columns: Sequence[str],
+    catalog: bool,
     skip_where: str | None,
     *,
     batch: int = 20_000,
@@ -785,7 +728,7 @@ def _fingerprint(
     sum-of-row-hashes mod 2**128. Order-independent (sum is commutative) and
     multiplicity-sensitive.
     """
-    cur = work.execute(_select_sql(plan, prefix, table, skip_where))
+    cur = work.execute(_select_sql(prefix, table, columns, catalog, skip_where))
     total = 0
     count = 0
     while True:
@@ -805,9 +748,9 @@ def _fingerprint(
 
 def _diff_samples(
     work: sqlite3.Connection,
-    plan_a: _KeyPlan,
-    plan_b: _KeyPlan,
     table: str,
+    stored: Sequence[str],
+    catalog: bool,
     skip_where: str | None,
     limit: int,
 ) -> tuple[tuple[SampleRow, ...], tuple[SampleRow, ...]]:
@@ -821,13 +764,11 @@ def _diff_samples(
     multi-million-row tables. NULLs group together and BLOBs compare by bytes,
     both of which match the fingerprint's NULL-aware/byte semantics.
     """
-    columns = plan_a.projected(table)
+    columns = _projected(table, stored, catalog)
     cols = ", ".join(_quote(c) for c in columns)
-    union = (
-        f"{_select_sql(plan_a, 'a', table, skip_where, ', 1 AS _dbdiff_src')} "
-        f"UNION ALL "
-        f"{_select_sql(plan_b, 'b', table, skip_where, ', -1 AS _dbdiff_src')}"
-    )
+    a_rows = _select_sql("a", table, stored, catalog, skip_where, ", 1 AS _dbdiff_src")
+    b_rows = _select_sql("b", table, stored, catalog, skip_where, ", -1 AS _dbdiff_src")
+    union = f"{a_rows} UNION ALL {b_rows}"
     base = (
         f"SELECT {cols}, SUM(_dbdiff_src) AS _dbdiff_net "
         f"FROM ({union}) GROUP BY {cols} "
@@ -880,7 +821,7 @@ def diff_db_content(
 
     Returns a :class:`DiffReport`; never raises on content differences (they
     are reported in the result). Raises FileNotFoundError if a path is missing,
-    and ValueError if a natural key refers back to its own table.
+    and ValueError naming the reason if a catalog fails `_check_catalog`.
     """
     db_a = Path(db_a)
     db_b = Path(db_b)
@@ -891,24 +832,21 @@ def diff_db_content(
     try:
         schema_a = _read_schema(conn_a)
         schema_b = _read_schema(conn_b)
-        plan_a = _key_plan(conn_a, schema_a)
-        plan_b = _key_plan(conn_b, schema_b)
+        catalog = _is_catalog(schema_a, schema_b)
+        if catalog:
+            _check_catalog(conn_a, schema_a)
+            _check_catalog(conn_b, schema_b)
     finally:
         conn_a.close()
         conn_b.close()
-    report = DiffReport(
-        db_a=db_a,
-        db_b=db_b,
-        raw_id_tables=tuple(sorted(plan_a.raw_ids | plan_b.raw_ids)),
-    )
+    report = DiffReport(db_a=db_a, db_b=db_b, natural_keys=catalog)
     _compare_schema(schema_a, schema_b, report)
     work = _work_connection(db_a, db_b)
     try:
-        _build_key_maps(work, plan_a, "a")
-        _build_key_maps(work, plan_b, "b")
-        _compare_content(
-            work, schema_a, schema_b, plan_a, plan_b, ignore, sample_rows, report
-        )
+        if catalog:
+            _build_key_maps(work, "a")
+            _build_key_maps(work, "b")
+        _compare_content(work, schema_a, schema_b, catalog, ignore, sample_rows, report)
     finally:
         work.close()
     return report
@@ -982,8 +920,7 @@ def _compare_content(
     work: sqlite3.Connection,
     schema_a: _Schema,
     schema_b: _Schema,
-    plan_a: _KeyPlan,
-    plan_b: _KeyPlan,
+    catalog: bool,
     ignore: dict[str, TableIgnore],
     sample_rows: int,
     report: DiffReport,
@@ -995,19 +932,12 @@ def _compare_content(
         spec = ignore.get(table, TableIgnore())
         cols_a = [c[0] for c in schema_a.tables[table]]
         cols_b = [c[0] for c in schema_b.tables[table]]
-        columns = plan_a.projected(table)
+        columns = _projected(table, cols_a, catalog)
         report.table_columns[table] = columns
 
-        skipped = None
         if cols_a != cols_b:
             # Column set/order differs (already in the schema section). A
             # multiset fingerprint over mismatched columns is meaningless.
-            skipped = "columns differ (see schema diff)"
-        elif plan_a.describe(table) != plan_b.describe(table):
-            # The ids project to different natural keys (a changed key, or a key
-            # one DB's data does not hold unique), so the projections don't align.
-            skipped = "natural-key projection differs between the databases"
-        if skipped is not None:
             results.append(
                 TableContentResult(
                     table=table,
@@ -1016,13 +946,13 @@ def _compare_content(
                     fingerprint_a="",
                     fingerprint_b="",
                     columns=(),
-                    skipped_reason=skipped,
+                    skipped_reason="columns differ (see schema diff)",
                 )
             )
             continue
 
-        count_a, fp_a = _fingerprint(work, plan_a, "a", table, spec.skip_where)
-        count_b, fp_b = _fingerprint(work, plan_b, "b", table, spec.skip_where)
+        count_a, fp_a = _fingerprint(work, "a", table, cols_a, catalog, spec.skip_where)
+        count_b, fp_b = _fingerprint(work, "b", table, cols_a, catalog, spec.skip_where)
 
         result = TableContentResult(
             table=table,
@@ -1031,11 +961,13 @@ def _compare_content(
             fingerprint_a=fp_a,
             fingerprint_b=fp_b,
             columns=columns,
-            link_columns=tuple(c for c in columns if (table, c) in plan_a.links),
+            link_columns=tuple(
+                c for c in columns if catalog and (table, c) in _REFERENCES
+            ),
         )
         if not result.identical:
             a_not_b, b_not_a = _diff_samples(
-                work, plan_a, plan_b, table, spec.skip_where, sample_rows
+                work, table, cols_a, catalog, spec.skip_where, sample_rows
             )
             note = None
             if not a_not_b and not b_not_a:
@@ -1091,11 +1023,8 @@ def format_report(report: DiffReport) -> str:
     differences are itemized table-by-table with sample rows."""
     out: list[str] = []
     out.append(f"Comparing content:\n  A: {report.db_a}\n  B: {report.db_b}")
-    if report.raw_id_tables:
-        out.append(
-            "  raw ids (no natural key identifies their rows; a difference in them "
-            f"or a reference to them may be id noise): {', '.join(report.raw_id_tables)}"
-        )
+    if report.natural_keys:
+        out.append("  catalog ids compare by natural key")
 
     if report.identical:
         n = len(report.table_results)
@@ -1180,8 +1109,8 @@ def _display(value: object, *, link: bool = False) -> object:
     rather than the invalid ``Infinity``/``NaN`` or the string 'inf'.
 
     A reference (``link``) is decoded from its tagged JSON: a resolved one prints
-    its natural key (a one-column key as its value), a raw id ``{"raw_id": id}``
-    and a dangling id ``{"dangling_id": id}``. Its values go through this same
+    its natural key (a one-column key as its value), and a dangling id
+    ``{"dangling_id": id}``. Its values go through this same
     path, so a REAL infinity inside a key prints as ``{"real": "inf"}`` too."""
     if link and isinstance(value, str):
         return _untag(json.loads(value))
@@ -1198,8 +1127,6 @@ def _display(value: object, *, link: bool = False) -> object:
 
 def _untag(reference: list) -> object:
     tag, payload = reference
-    if tag == _RAW:
-        return {"raw_id": payload}
     if tag == _DANGLING:
         return {"dangling_id": payload}
     # In a key, a data value is a JSON scalar or object and a reference an array.
@@ -1236,7 +1163,7 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
         "db_a": str(report.db_a),
         "db_b": str(report.db_b),
         "identical": report.identical,
-        "raw_id_tables": list(report.raw_id_tables),
+        "natural_keys": report.natural_keys,
         "schema": {
             "tables_only_in_a": list(report.tables_only_in_a),
             "tables_only_in_b": list(report.tables_only_in_b),

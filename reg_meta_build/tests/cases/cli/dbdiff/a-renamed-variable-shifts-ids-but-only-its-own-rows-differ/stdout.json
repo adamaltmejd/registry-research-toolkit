@@ -1,5 +1,6 @@
 {
   "identical": false,
+  "natural_keys": true,
   "tables": {
     "$contains": [
       {
@@ -97,6 +98,30 @@
             "row": {
               "code_id": ["2503", "Kommun 3"],
               "variable_id": [["scb", "par"], "aregion"]
+            }
+          }
+        ]
+      },
+      {
+        "table": "variable_search_text",
+        "identical": false,
+        "sample_a_not_b": [
+          {
+            "net": 1,
+            "row": {
+              "variable_id": [["scb", "par"], "region"],
+              "register_id": ["scb", "par"],
+              "provider_key": "1205"
+            }
+          }
+        ],
+        "sample_b_not_a": [
+          {
+            "net": -1,
+            "row": {
+              "variable_id": [["scb", "par"], "aregion"],
+              "register_id": ["scb", "par"],
+              "provider_key": "1205"
             }
           }
         ]
