@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "linked"
+native_id = "6"
+[[variant]]
+native_id = "6.60"
+slug = "people"
+[[variant]]
+native_id = "6.61"
+slug = "other"
+[[variant]]
+native_id = "6.62"
+slug = "duplicate"
+[[variable]]
+native_id = "6.601"
+slug = "linked"
+[[variable]]
+native_id = "6.602"
+slug = "filler"
+[[variable]]
+native_id = "6.603"
+slug = "new-source"
