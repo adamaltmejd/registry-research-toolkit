@@ -194,6 +194,6 @@ which it never parses or bounds itself: one period through the grammar, a `?peri
 shaped into a `Source.period` and back (`SourcePeriod::from_wire`, `from_shape`,
 `to_wire`), the days a source period requests behind its own structural check
 (`SourcePeriod::from_value`), their year spans, a study window's days
-(`StudyWindow::interval`), and the interval merge, overlap and render. (The catalog's
-delivery-window day arithmetic in `catalog.ts` is outside this, #1426.) Every export is
+(`StudyWindow::interval`), and the interval merge, overlap and render; the merge also
+fuses the catalog's delivery windows and value-set spans. Every export is
 total: it runs the matching check before a function that can panic.

@@ -1554,8 +1554,8 @@ rune store holding one draft per session.
   needs the catalog. A new draft takes `project_schema_version()`. Periods go through
   the same module: the period grammar and project periods (a source period's days, a
   study window's days) are reg-core's, never parsed or bounded in the SPA (`period.ts`
-  composes reg-core's answers; the catalog's delivery-window day arithmetic in
-  `catalog.ts` is a separate, older matter, #1426). The study-window coverage hint stays
+  composes reg-core's answers, and `catalog.ts` fuses delivery windows and value-set
+  spans with reg-core's interval merge). The study-window coverage hint stays
   at year grain (a period with a non-year endpoint gets none); the disjointness finding
   compares days. The type-to-filter fold is the server search's `fold_search` through
   the same module, not a TS copy.

@@ -27,6 +27,8 @@ import {
 import type { DraftBinding, ProjectBinding } from "./project_data";
 import {
   foldSearch,
+  type Interval,
+  mergeIntervals,
   renderIntervals,
   sourcePeriodFromWire,
   studyWindowInterval,
@@ -1074,13 +1076,12 @@ function rowWirePeriod(
   return segments.join(",");
 }
 
-/** Merge a column's states into DISJOINT inclusive ISO windows (#678 finding): order
- * by start, then fuse a state into the open window when it is contiguous/overlapping
- * with it (its start is at or before the day after the running end), else start a
- * NEW window (a real delivery gap). Open-ended windows (the `9999-12-31` ceiling)
- * swallow everything after them — like `collapseSpans`, but column-scoped and
- * returning only the spans (no technical-change notes). A continuously-delivered
- * column yields ONE window; an interrupted one yields a window per era.
+/** Merge a column's states into DISJOINT inclusive ISO windows (#678 finding):
+ * reg-core's interval merge, so overlapping and day-adjacent windows fuse and a
+ * real delivery gap splits. An open-ended window (the `9999-12-31` ceiling)
+ * swallows everything after it, since reg-core gives that day no successor. A
+ * continuously-delivered column yields ONE window; an interrupted one yields a
+ * window per era.
  *
  * The catalog applies the same rule per delivery, so the
  * register list's `VariableDelivery.windows` arrive already fused; this merges ACROSS
@@ -1089,28 +1090,9 @@ function rowWirePeriod(
 export function deliveryWindows(
   bounds: readonly { from: string; to: string }[],
 ): { from: string; to: string }[] {
-  const ordered = [...bounds].sort(
-    (a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to),
+  return mergeIntervals(bounds.map((b): Interval => [b.from, b.to])).map(
+    ([from, to]) => ({ from, to }),
   );
-  const windows: { from: string; to: string }[] = [];
-  for (const b of ordered) {
-    const open = windows.at(-1);
-    if (!open) {
-      windows.push({ from: b.from, to: b.to });
-      continue;
-    }
-    // An open-ended window already reaches "still delivered"; everything later is
-    // contiguous with it (and `dayAfter("9999-12-31")` would overflow — see
-    // `collapseSpans`). Contiguous/overlapping otherwise → extend; a real gap → split.
-    if (open.to === OPEN_ENDED_VALID_TO || b.from <= dayAfter(open.to)) {
-      if (b.to > open.to) {
-        open.to = b.to;
-      }
-    } else {
-      windows.push({ from: b.from, to: b.to });
-    }
-  }
-  return windows;
 }
 
 /** The inclusive ISO bounds to clamp a picker row's span to on Add, given the active
@@ -2515,18 +2497,16 @@ function appendTechnicalChanges(
 }
 
 /** Collapse a variant's states (already filtered to one value set) into
- * adjacent-year spans (#668 / M20): order by `valid_from`, then merge a state into
- * the open span when it is contiguous with it — its `valid_from` is at or before
- * the day after the running `valid_to` (so back-to-back annual states `…-12-31`
- * → `…-01-01`, and any overlap, fuse; a real gap year starts a new span). ISO
- * `YYYY-MM-DD` strings compare chronologically. The caller groups by (value set,
- * variant) — NOT by delivery column (a merged monthly-family value set fuses
- * across its 12 month columns by design) — so this tests ONLY time-adjacency; the
- * #743 technical-field transitions are attached as notes instead of splitting the
- * value-set row. Pooled-edition states NEVER fuse with annual states (Y-202):
- * the merge (and the open-ended swallow below) requires the same `pooled` flag,
- * so each span is uniformly pooled or annual and the view can badge exactly
- * the pooled windows. */
+ * adjacent-year spans (#668 / M20): reg-core's interval merge, so back-to-back
+ * annual states (`…-12-31` → `…-01-01`) and any overlap fuse, and a real gap year
+ * starts a new span. The caller groups by (value set, variant) — NOT by delivery
+ * column (a merged monthly-family value set fuses across its 12 month columns by
+ * design) — so this tests ONLY time-adjacency; the #743 technical-field
+ * transitions are attached as notes instead of splitting the value-set row.
+ * Pooled-edition states NEVER fuse with annual states (Y-202): states are taken in
+ * start order and merged per RUN of one `pooled` flag, so each span is uniformly
+ * pooled or annual and the view can badge exactly the pooled windows; an annual
+ * run interrupted by a pooled state resumes in a span of its own. */
 function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
   const ordered = states
     .filter(isDatedState)
@@ -2541,53 +2521,13 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
         a.valid_to.localeCompare(b.valid_to),
     );
   const spans: ValueSetSpan[] = [];
-  let previous: VariableStateModel | null = null;
-  let previousAmbiguous = false;
-  for (const [index, s] of ordered.entries()) {
-    const open = spans.at(-1);
-    // A shared start is one successor boundary with several representations,
-    // not a series of replacements whose order is decided by state_id.
-    const successorBoundaryAmbiguous =
-      ordered[index - 1]?.valid_from === s.valid_from ||
-      ordered[index + 1]?.valid_from === s.valid_from;
-    // An already-open OPEN-ENDED span swallows everything after it: its ceiling
-    // is the `9999-12-31` sentinel ("still delivered"), so any later state of the
-    // same (value set, variant) is contiguous with it by definition. Handled
-    // explicitly because `dayAfter("9999-12-31")` would overflow into year 10000
-    // (`Date.toISOString()`'s `±YYYYYY` expanded form sorts BELOW real dates),
-    // which would wrongly split a second still-delivered state into its own span.
-    if (open && open.to === OPEN_ENDED_VALID_TO && s.pooled === open.pooled) {
-      if (previous && !previousAmbiguous && !successorBoundaryAmbiguous) {
-        appendTechnicalChanges(open, previous, s);
-      }
+  let runStart = 0;
+  for (let i = 1; i <= ordered.length; i++) {
+    if (i < ordered.length && ordered[i].pooled === ordered[runStart].pooled) {
       continue;
     }
-    // Contiguous (or overlapping) with the open span → extend it. The day-after
-    // test fuses back-to-back annual windows (`2019-12-31` then `2020-01-01`)
-    // without merging across a skipped year (`2019-12-31` then `2021-01-01`).
-    if (
-      open &&
-      open.to !== null &&
-      s.pooled === open.pooled &&
-      s.valid_from <= dayAfter(open.to)
-    ) {
-      if (previous && !previousAmbiguous && !successorBoundaryAmbiguous) {
-        appendTechnicalChanges(open, previous, s);
-      }
-      if (s.valid_to > open.to) {
-        open.to = s.valid_to;
-        previous = s;
-        previousAmbiguous = false;
-      } else if (s.valid_to === open.to && s.valid_from <= open.to) {
-        // Two co-delivered alternatives reach the same span end; a later
-        // successor has no single predecessor for a technical-change hint.
-        previousAmbiguous = true;
-      }
-    } else {
-      spans.push({ from: s.valid_from, to: s.valid_to, pooled: s.pooled });
-      previous = s;
-      previousAmbiguous = false;
-    }
+    spans.push(...collapseRun(ordered, runStart, i));
+    runStart = i;
   }
   if (states.some((s) => s.period_scope === "year_independent")) {
     spans.push({
@@ -2600,20 +2540,60 @@ function collapseSpans(states: VariableStateModel[]): ValueSetSpan[] {
   return spans;
 }
 
-/** The ISO day after an `YYYY-MM-DD` date — the adjacency boundary for
- * `collapseSpans` (two annual states are adjacent iff the later starts on or
- * before this). Uses a UTC `Date` so month/year rollovers are correct. The
- * open-ended `9999-12-31` ceiling is NOT passed here (`collapseSpans` short-
- * circuits an open span before calling), so the +1-day year-10000 overflow it
- * would produce never reaches the adjacency test. A non-parseable bound returns
- * the input unchanged (defensive on a malformed/edge wire — it then only fuses
- * exact-equal bounds). */
-function dayAfter(iso: string): string {
-  const ms = Date.parse(`${iso}T00:00:00Z`);
-  if (Number.isNaN(ms)) {
-    return iso;
+/** The spans of `ordered[lo..hi)`, one run of a single `pooled` flag in start
+ * order: reg-core merges the bounds, then a walk over the run attaches each
+ * technical-schema transition to the span both states fused into. The walk keeps
+ * the span's RUNNING end, not its merged end: a transition is told from the state
+ * that last extended the span, and two states reaching the same end leave the next
+ * one without a single predecessor. */
+function collapseRun(
+  ordered: readonly DatedState[],
+  lo: number,
+  hi: number,
+): ValueSetSpan[] {
+  const run = ordered.slice(lo, hi);
+  const spans: ValueSetSpan[] = mergeIntervals(
+    run.map((s): Interval => [s.valid_from, s.valid_to]),
+  ).map(([from, to]) => ({ from, to, pooled: run[0].pooled }));
+  let k = -1;
+  let runningTo = "";
+  let previous: DatedState | null = null;
+  let previousAmbiguous = false;
+  for (const [j, s] of run.entries()) {
+    // Every state lies inside its own merged span, so a start past the current
+    // span's merged end opens the next one.
+    if (k < 0 || s.valid_from > (spans[k].to ?? "")) {
+      k += 1;
+      runningTo = s.valid_to;
+      previous = s;
+      previousAmbiguous = false;
+      continue;
+    }
+    const span = spans[k];
+    // A shared start is one successor boundary with several representations,
+    // not a series of replacements whose order is decided by state_id.
+    const index = lo + j;
+    const successorBoundaryAmbiguous =
+      ordered[index - 1]?.valid_from === s.valid_from ||
+      ordered[index + 1]?.valid_from === s.valid_from;
+    if (previous && !previousAmbiguous && !successorBoundaryAmbiguous) {
+      appendTechnicalChanges(span, previous, s);
+    }
+    // An open-ended span ("still delivered") has no later end to reach.
+    if (runningTo === OPEN_ENDED_VALID_TO) {
+      continue;
+    }
+    if (s.valid_to > runningTo) {
+      runningTo = s.valid_to;
+      previous = s;
+      previousAmbiguous = false;
+    } else if (s.valid_to === runningTo && s.valid_from <= runningTo) {
+      // Two co-delivered alternatives reach the same span end; a later
+      // successor has no single predecessor for a technical-change hint.
+      previousAmbiguous = true;
+    }
   }
-  return new Date(ms + 86_400_000).toISOString().slice(0, 10);
+  return spans;
 }
 
 /** Source coding identity; a declared classification does not replace it. */
@@ -2988,9 +2968,10 @@ export function windowTitle(
  * client-side from already-embedded data (no backend field): the leaf node
  * never carries the per-register `RegisterCoverageModel`, and the spec is
  * explicit that leaf coverage is derived from the states. */
-function isDatedState(
-  s: VariableStateModel,
-): s is VariableStateModel & { valid_from: string; valid_to: string } {
+/** A state with both window bounds known. */
+type DatedState = VariableStateModel & { valid_from: string; valid_to: string };
+
+function isDatedState(s: VariableStateModel): s is DatedState {
   return (
     s.period_scope !== "year_independent" &&
     s.valid_from !== null &&
