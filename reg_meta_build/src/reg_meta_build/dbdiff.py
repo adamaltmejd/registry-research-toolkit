@@ -404,15 +404,11 @@ class DiffReport:
 # --------------------------------------------------------------------------
 
 
-def _connect_ro(path: Path) -> sqlite3.Connection:
-    """Open ``path`` read-only. Raises FileNotFoundError if it is missing
-    (a `mode=ro` URI to a nonexistent file would otherwise raise an opaque
-    OperationalError)."""
-    if not path.exists():
-        raise FileNotFoundError(f"DB not found: {path}")
-    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
-    return conn
+def _rows(conn: sqlite3.Connection, sql: str) -> list[sqlite3.Row]:
+    """``sql``'s rows, readable by column name."""
+    cur = conn.cursor()
+    cur.row_factory = sqlite3.Row
+    return cur.execute(sql).fetchall()
 
 
 @dataclass(frozen=True)
@@ -434,11 +430,13 @@ class _Schema:
     shadow_tables: frozenset[str]
 
 
-def _read_schema(conn: sqlite3.Connection) -> _Schema:
-    master = conn.execute(
-        "SELECT type, name, sql FROM sqlite_master "
-        "WHERE type IN ('table', 'index', 'view')"
-    ).fetchall()
+def _read_schema(conn: sqlite3.Connection, prefix: str) -> _Schema:
+    """The schema of the DB attached as ``prefix``."""
+    master = _rows(
+        conn,
+        f"SELECT type, name, sql FROM {prefix}.sqlite_master "
+        "WHERE type IN ('table', 'index', 'view')",
+    )
     table_names = [
         r["name"]
         for r in master
@@ -456,7 +454,7 @@ def _read_schema(conn: sqlite3.Connection) -> _Schema:
         for name in table_names
         if any(name == f"{vt}_{suf}" for vt in virtual for suf in _FTS_SHADOW_SUFFIXES)
     )
-    tables = {name: _table_info(conn, name) for name in table_names}
+    tables = {name: _table_info(conn, prefix, name) for name in table_names}
     table_sql = {
         r["name"]: _normalize_sql(r["sql"])
         for r in master
@@ -485,11 +483,11 @@ def _normalize_sql(sql: str | None) -> str:
 
 
 def _table_info(
-    conn: sqlite3.Connection, table: str
+    conn: sqlite3.Connection, prefix: str, table: str
 ) -> tuple[tuple[str, str, int, str | None, int], ...]:
     return tuple(
         (r["name"], r["type"], r["notnull"], r["dflt_value"], r["pk"])
-        for r in conn.execute(f'PRAGMA table_info("{table}")')
+        for r in _rows(conn, f"PRAGMA {prefix}.table_info({_quote(table)})")
     )
 
 
@@ -518,9 +516,10 @@ def _is_catalog(schema_a: _Schema, schema_b: _Schema) -> bool:
     return all(set(_IDS) <= set(s.tables) for s in (schema_a, schema_b))
 
 
-def _check_catalog(conn: sqlite3.Connection, schema: _Schema) -> None:
-    """Refuse a catalog the map does not describe, or whose ids the data breaks,
-    with a ValueError naming it (exit 2). Never a guess, never a raw-id fallback."""
+def _check_catalog(conn: sqlite3.Connection, prefix: str, schema: _Schema) -> None:
+    """Refuse the catalog attached as ``prefix`` when the map does not describe
+    it, or its ids the data breaks, with a ValueError naming it (exit 2). Never a
+    guess, never a raw-id fallback."""
     tables = set(_content_tables(schema))
 
     def has(table: str, column: str) -> bool:
@@ -542,7 +541,7 @@ def _check_catalog(conn: sqlite3.Connection, schema: _Schema) -> None:
         candidates = set(pk if len(pk) == 1 else ())
         candidates |= {
             fk["from"]
-            for fk in conn.execute(f"PRAGMA foreign_key_list({_quote(table)})")
+            for fk in _rows(conn, f"PRAGMA {prefix}.foreign_key_list({_quote(table)})")
         }
         for column in sorted(candidates):
             declared = next(c[1] for c in info if c[0] == column).upper()
@@ -557,8 +556,9 @@ def _check_catalog(conn: sqlite3.Connection, schema: _Schema) -> None:
                     "cover; add it to _IDS, _REFERENCES or _COMPARE_RAW"
                 )
     for table, (id_column, key) in _IDS.items():
+        source = f"{prefix}.{_quote(table)}"
         if conn.execute(
-            f"SELECT 1 FROM {_quote(table)} "
+            f"SELECT 1 FROM {source} "
             f"WHERE typeof({_quote(id_column)}) != 'integer' LIMIT 1"
         ).fetchone():
             raise ValueError(f"{table}.{id_column} holds NULL or non-integer ids")
@@ -566,14 +566,27 @@ def _check_catalog(conn: sqlite3.Connection, schema: _Schema) -> None:
             continue
         cols = ", ".join(_quote(c) for c in key)
         (repeated,) = conn.execute(
-            f"SELECT (SELECT COUNT(*) FROM {_quote(table)}) "
-            f"- (SELECT COUNT(*) FROM (SELECT DISTINCT {cols} FROM {_quote(table)}))"
+            f"SELECT (SELECT COUNT(*) FROM {source}) "
+            f"- (SELECT COUNT(*) FROM (SELECT DISTINCT {cols} FROM {source}))"
         ).fetchone()
         if repeated:
             raise ValueError(
                 f"{table}'s natural key ({', '.join(key)}) is not unique: "
                 f"{repeated} row(s) repeat a key"
             )
+    # A reference holds an id or nothing; anything else (text, a REAL) is no id.
+    by_table: dict[str, list[str]] = {}
+    for table, column in _REFERENCES:
+        by_table.setdefault(table, []).append(column)
+    for table, columns in sorted(by_table.items()):
+        for (column,) in conn.execute(
+            " UNION ALL ".join(
+                f"SELECT {c!r} FROM (SELECT 1 FROM {prefix}.{_quote(table)} "
+                f"WHERE typeof({_quote(c)}) NOT IN ('integer', 'null') LIMIT 1)"
+                for c in sorted(columns)
+            )
+        ):
+            raise ValueError(f"{table}.{column} holds non-integer references")
 
 
 def _projected(table: str, columns: Sequence[str], catalog: bool) -> tuple[str, ...]:
@@ -787,14 +800,31 @@ def _diff_samples(
 
 
 def _work_connection(db_a: Path, db_b: Path) -> sqlite3.Connection:
-    """A private in-memory connection with both DBs attached read-only, for the
-    natural-key maps and the multiset difference. Its temp store spills to disk
-    (the default is build-dependent and may be MEMORY), so Python and SQLite
-    memory stay flat on multi-million-row tables."""
-    conn = sqlite3.connect("file::memory:?cache=private", uri=True)
-    conn.execute("PRAGMA temp_store = FILE")
-    conn.execute("ATTACH DATABASE ? AS a", (f"file:{db_a}?mode=ro",))
-    conn.execute("ATTACH DATABASE ? AS b", (f"file:{db_b}?mode=ro",))
+    """A private in-memory connection with both DBs attached read-only: the one
+    handle the whole run reads through (schema, catalog check, natural-key maps,
+    fingerprints, multiset difference), inside one read transaction, so a DB
+    replaced or written mid-run cannot pair one version's schema with another's
+    content. Its temp store spills to disk (the default is build-dependent and
+    may be MEMORY), so Python and SQLite memory stay flat on multi-million-row
+    tables. Raises FileNotFoundError for a missing path (a `mode=ro` URI to one
+    would otherwise raise an opaque OperationalError)."""
+    for path in (db_a, db_b):
+        if not path.exists():
+            raise FileNotFoundError(f"DB not found: {path}")
+    conn = sqlite3.connect(
+        "file::memory:?cache=private", uri=True, isolation_level=None
+    )
+    try:
+        conn.execute("PRAGMA temp_store = FILE")
+        conn.execute("ATTACH DATABASE ? AS a", (f"file:{db_a}?mode=ro",))
+        conn.execute("ATTACH DATABASE ? AS b", (f"file:{db_b}?mode=ro",))
+        conn.execute("BEGIN")
+        # Read both now, so the transaction holds each DB's snapshot from here on.
+        conn.execute("SELECT count(*) FROM a.sqlite_master").fetchone()
+        conn.execute("SELECT count(*) FROM b.sqlite_master").fetchone()
+    except BaseException:
+        conn.close()
+        raise
     return conn
 
 
@@ -827,22 +857,16 @@ def diff_db_content(
     db_b = Path(db_b)
     ignore = DEFAULT_IGNORE if ignore is None else ignore
 
-    conn_a = _connect_ro(db_a)
-    conn_b = _connect_ro(db_b)
-    try:
-        schema_a = _read_schema(conn_a)
-        schema_b = _read_schema(conn_b)
-        catalog = _is_catalog(schema_a, schema_b)
-        if catalog:
-            _check_catalog(conn_a, schema_a)
-            _check_catalog(conn_b, schema_b)
-    finally:
-        conn_a.close()
-        conn_b.close()
-    report = DiffReport(db_a=db_a, db_b=db_b, natural_keys=catalog)
-    _compare_schema(schema_a, schema_b, report)
     work = _work_connection(db_a, db_b)
     try:
+        schema_a = _read_schema(work, "a")
+        schema_b = _read_schema(work, "b")
+        catalog = _is_catalog(schema_a, schema_b)
+        if catalog:
+            _check_catalog(work, "a", schema_a)
+            _check_catalog(work, "b", schema_b)
+        report = DiffReport(db_a=db_a, db_b=db_b, natural_keys=catalog)
+        _compare_schema(schema_a, schema_b, report)
         if catalog:
             _build_key_maps(work, "a")
             _build_key_maps(work, "b")
@@ -1128,7 +1152,7 @@ def _display(value: object, *, link: bool = False) -> object:
 def _untag(reference: list) -> object:
     tag, payload = reference
     if tag == _DANGLING:
-        return {"dangling_id": payload}
+        return {"dangling_id": _display(payload)}
     # In a key, a data value is a JSON scalar or object and a reference an array.
     parts = [_untag(p) if isinstance(p, list) else _display(p) for p in payload]
     return parts[0] if len(parts) == 1 else parts

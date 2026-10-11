@@ -4,13 +4,11 @@ compares identical, and moving any one reference to another existing row is a
 difference.
 
 The regression these pin is a false "identical": a changed relationship that the
-id projection hides. The databases carry the real catalog DDL (`db.DDL`, less the
-build-only tables) with a few small tables filled: nested natural keys (variable
-→ register → provider), a primary key that is a reference
-(variable_search_text.variable_id), NULL and dangling references, and keys made
-of text equal to the reference tags. Renumbering and moves follow the schema's
-own FOREIGN KEY declarations (plus variable_search_text's two undeclared
-references), not dbdiff's id map, so the two must agree.
+id projection hides. The catalog is the `_classified` CLI artifact, built from its
+readable source (`cases/cli/_classified/`); Hypothesis permutes its ids and moves
+its references on copies. Both follow the artifact's own FOREIGN KEY declarations
+(plus variable_search_text's two undeclared references), not dbdiff's id map, so
+the two must agree.
 """
 
 from __future__ import annotations
@@ -21,255 +19,208 @@ import json
 import shutil
 import sqlite3
 import tempfile
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from hypothesis import assume, given, settings, strategies as st
-from reg_meta_build.db import DDL
+import pytest
+from hypothesis import HealthCheck, assume, given, settings, strategies as st
 from reg_meta_build.dbdiff import main
+from test_cli_cases import CASES, Artifacts
 
-# The tables filled, each with its own id column.
-_IDS = {
-    "provider": "provider_id",
-    "register": "register_id",
-    "register_variant": "register_variant_id",
-    "variable": "variable_id",
-    "value_code": "code_id",
-}
-_TABLES = (*_IDS, "code_variable_map", "variable_alias", "variable_search_text")
+if TYPE_CHECKING:
+    from _build_case_runner import PreparedCache
+
 # Declared without a FOREIGN KEY clause (db.py's search table).
 _UNDECLARED = {
-    ("variable_search_text", "variable_id"): "variable",
-    ("variable_search_text", "register_id"): "register",
+    ("variable_search_text", "variable_id"): ("variable", "variable_id"),
+    ("variable_search_text", "register_id"): ("register", "register_id"),
 }
-# Text equal to the reference tags and to numeric spellings of an id.
-_TEXT = ("k", "d", "dangling id", '["k",1]', "1", "01", "", "scb")
+# Added to every id while a permutation is applied, so no step collides.
+_OFFSET = 1 << 40
+
+
+@pytest.fixture(scope="session")
+def classified(prepared_cache: PreparedCache) -> Path:
+    """The `_classified` artifact's catalog, built once per session."""
+    artifact = Artifacts(prepared_cache).get(CASES / "_classified", None)
+    return artifact.db_dir / "reg_meta.db"
 
 
 @functools.cache
-def _empty_catalog() -> Path:
-    """A catalog with the shipped schema and no rows, made once per process."""
-    path = Path(tempfile.mkdtemp(prefix="dbdiff-property-")) / "empty.db"
-    conn = sqlite3.connect(path)
+def _ids(db: Path) -> dict[tuple[str, str], tuple[tuple[str, str], ...]]:
+    """Each id column of ``db`` -> every column holding its ids, the id column
+    first, read from the schema: a single-column INTEGER primary key that is no
+    foreign key, or an INTEGER column a foreign key targets, and the foreign keys
+    (followed through composite ones) that reach it."""
+    conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
     try:
-        conn.executescript(DDL)
-        for table in (
-            "variable_alias_build",
-            "variable_instance",
-            "classification_candidate",
-            "unika_summary",
-        ):
-            conn.execute(f"DROP TABLE {table}")
-        conn.commit()
+        tables = [
+            name
+            for (name,) in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table' "
+                "AND name NOT LIKE 'sqlite_%' AND name NOT LIKE '%_fts_%' "
+                "AND sql NOT LIKE 'CREATE VIRTUAL%'"
+            )
+        ]
+        types = {
+            (table, c[1]): c[2]
+            for table in tables
+            for c in conn.execute(f'PRAGMA table_info("{table}")')
+        }
+        edges = dict(_UNDECLARED)
+        for table in tables:
+            for fk in conn.execute(f'PRAGMA foreign_key_list("{table}")'):
+                assert fk[4] is not None, fk  # the catalog names its targets
+                edges[table, fk[3]] = (fk[2], fk[4])
+        owners: set[tuple[str, str]] = set()
+        for table in tables:
+            pk = [c for c in conn.execute(f'PRAGMA table_info("{table}")') if c[5]]
+            if (
+                len(pk) == 1
+                and pk[0][2] == "INTEGER"
+                and (table, pk[0][1]) not in edges
+            ):
+                owners.add((table, pk[0][1]))
+        owners |= {
+            target
+            for target in edges.values()
+            if target not in edges and types[target] == "INTEGER"
+        }
+        holders = {owner: [owner] for owner in owners}
+        for columns in holders.values():
+            grown = True
+            while grown:
+                grown = False
+                for source, target in sorted(edges.items()):
+                    if target in columns and source not in columns:
+                        columns.append(source)
+                        grown = True
+        return {owner: tuple(columns) for owner, columns in holders.items()}
     finally:
         conn.close()
-    return path
 
 
 @functools.cache
-def _references() -> dict[tuple[str, str], str]:
-    """(table, column) -> referenced table, for the filled tables, read from the
-    schema's FOREIGN KEY declarations."""
-    conn = sqlite3.connect(_empty_catalog())
+def _facts(db: Path) -> tuple[dict, list]:
+    """``db``'s id values per id column, and every reference cell a move may
+    change: (table, row key columns, row key, column, current value, id column)."""
+    conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
     try:
-        refs = dict(_UNDECLARED)
-        for table in _TABLES:
-            for fk in conn.execute(f"PRAGMA foreign_key_list({table})"):
-                assert fk[4] == _IDS[fk[2]], fk  # each points at the parent's id
-                refs[table, fk[3]] = fk[2]
-        return refs
+        values = {
+            owner: sorted(
+                v for (v,) in conn.execute(f'SELECT "{owner[1]}" FROM "{owner[0]}"')
+            )
+            for owner in _ids(db)
+        }
+        cells = []
+        for owner, columns in sorted(_ids(db).items()):
+            for table, column in columns[1:]:
+                try:  # a WITHOUT ROWID table has none; its primary key names a row
+                    conn.execute(f'SELECT rowid FROM "{table}" LIMIT 0')
+                    key: tuple[str, ...] = ("rowid",)
+                except sqlite3.OperationalError:
+                    key = tuple(
+                        c[1]
+                        for c in sorted(
+                            conn.execute(f'PRAGMA table_info("{table}")'),
+                            key=lambda c: c[5],
+                        )
+                        if c[5]
+                    )
+                select = ", ".join(f'"{k}"' for k in key)
+                for *row_key, value in conn.execute(
+                    f'SELECT {select}, "{column}" FROM "{table}"'
+                ):
+                    cells.append((table, key, tuple(row_key), column, value, owner))
+        return values, cells
     finally:
         conn.close()
 
 
 @st.composite
-def _catalogs(draw: st.DrawFn) -> dict:
-    # Slugs unique across the catalog keep every natural key unique, so no move
-    # can turn a difference into a refusal; one may be NULL.
-    slugs = iter(
-        draw(
-            st.lists(
-                st.sampled_from(_TEXT) | st.text(max_size=3),
-                unique=True,
-                min_size=12,
-                max_size=12,
-            )
-        )
-    )
-    ids = {table: list(range(1, draw(st.integers(1, 3)) + 1)) for table in _IDS}
-
-    def ref(table: str, dangling: bool = False) -> st.SearchStrategy:
-        choices = st.sampled_from(ids[table])
-        return choices | st.just(max(ids[table]) + 1) if dangling else choices
-
-    rows: dict[str, list[dict]] = {
-        "provider": [
-            {"provider_id": i, "slug": next(slugs), "name": "p"}
-            for i in ids["provider"]
-        ],
-        "register": [
-            {
-                "register_id": i,
-                "provider_id": draw(ref("provider")),
-                "name": "r",
-                "slug": next(slugs),
-            }
-            for i in ids["register"]
-        ],
-        "register_variant": [
-            {
-                "register_variant_id": i,
-                "register_id": draw(ref("register")),
-                "slug": None if i == 1 and draw(st.booleans()) else next(slugs),
-            }
-            for i in ids["register_variant"]
-        ],
-        "variable": [
-            {
-                "variable_id": i,
-                "register_id": draw(ref("register")),
-                "provider_key": "v",
-                "slug": next(slugs),
-                "source_register_id": draw(st.none() | ref("register", True)),
-            }
-            for i in ids["variable"]
-        ],
-        "value_code": [
-            {"code_id": i, "code": code, "label": label}
-            for i, (code, label) in zip(
-                ids["value_code"],
-                draw(
-                    st.lists(
-                        st.tuples(st.sampled_from(_TEXT), st.sampled_from(_TEXT)),
-                        unique=True,
-                        min_size=len(ids["value_code"]),
-                        max_size=len(ids["value_code"]),
-                    )
-                ),
-                strict=True,
-            )
-        ],
-        "code_variable_map": [
-            {"code_id": c, "variable_id": v}
-            for c, v in draw(
-                st.lists(
-                    st.tuples(ref("value_code"), ref("variable")),
-                    unique=True,
-                    max_size=4,
-                )
-            )
-        ],
-        "variable_alias": [
-            {"variable_id": v, "register_variant_id": rv, "delivery_column_name": n}
-            for v, rv, n in draw(
-                st.lists(
-                    st.tuples(
-                        ref("variable"),
-                        ref("register_variant"),
-                        st.sampled_from(_TEXT),
-                    ),
-                    unique=True,
-                    max_size=4,
-                )
-            )
-        ],
-        "variable_search_text": [
-            {
-                "variable_id": v,
-                "register_id": draw(ref("register", True)),
-                "provider_key": "v",
-                "delivery_column_names": "[]",
-            }
-            for v in draw(st.lists(ref("variable"), unique=True, max_size=3))
-        ],
-    }
-    renumber = {table: draw(st.permutations(ids[table])) for table in _IDS}
-    moves = [
-        (table, index, column, new)
-        for (table, column), parent in sorted(_references().items())
-        for index, row in enumerate(rows[table])
-        for new in ids[parent]
-        if new != row[column]
-    ]
-    move = draw(st.sampled_from(moves)) if moves else None
-    return {"rows": rows, "renumber": renumber, "move": move}
+def _changes(draw: st.DrawFn, db: Path) -> dict:
+    values, cells = _facts(db)
+    renumber = {owner: draw(st.permutations(ids)) for owner, ids in values.items()}
+    table, key, row_key, column, current, owner = draw(st.sampled_from(cells))
+    new = draw(st.sampled_from(values[owner]).filter(lambda v: v != current))
+    return {"renumber": renumber, "move": (table, key, row_key, column, new)}
 
 
-def _write(path: Path, rows: dict[str, list[dict]]) -> None:
-    """``rows`` into a copy of the empty catalog; False when a unique constraint
-    refuses them (a move onto a row's twin), which the example then discards."""
-    shutil.copyfile(_empty_catalog(), path)
-    conn = sqlite3.connect(path)
+def _renumber(db: Path, renumber: dict) -> None:
+    """Permute each id column's values in ``db``, every column holding them
+    following; a value no row holds stays as it is."""
+    conn = sqlite3.connect(db)
     try:
-        for table in _TABLES:
-            for row in rows[table]:
-                cols = ", ".join(row)
-                marks = ", ".join("?" * len(row))
+        for owner, order in renumber.items():
+            conn.execute("CREATE TEMP TABLE m (old INTEGER PRIMARY KEY, new INTEGER)")
+            conn.executemany(
+                "INSERT INTO m VALUES (?, ?)", zip(sorted(order), order, strict=True)
+            )
+            for table, column in _ids(db)[owner]:
                 conn.execute(
-                    f"INSERT INTO {table} ({cols}) VALUES ({marks})",
-                    tuple(row.values()),
+                    f'UPDATE "{table}" SET "{column}" = "{column}" + {_OFFSET}'
                 )
+            for table, column in _ids(db)[owner]:
+                conn.execute(
+                    f'UPDATE "{table}" SET "{column}" = COALESCE('
+                    f'(SELECT new FROM m WHERE old = "{column}" - {_OFFSET}), '
+                    f'"{column}" - {_OFFSET})'
+                )
+            conn.execute("DROP TABLE m")
         conn.commit()
-    except sqlite3.IntegrityError:
-        assume(False)
     finally:
         conn.close()
 
 
-def _renumbered(rows: dict[str, list[dict]], renumber: dict) -> dict:
-    """``rows`` with each id table's ids permuted, and every declared reference
-    following; a dangling id is no row's and stays as it is."""
-    maps = {
-        table: dict(zip(sorted(order), order, strict=True))
-        for table, order in renumber.items()
-    }
-    owners = {(table, column): table for table, column in _IDS.items()}
-    owners |= _references()
-    out = {}
-    for table, table_rows in rows.items():
-        out[table] = [
-            {
-                column: maps[owners[table, column]].get(value, value)
-                if (table, column) in owners and value is not None
-                else value
-                for column, value in row.items()
-            }
-            for row in table_rows
-        ]
-    return out
-
-
-def _moved(rows: dict[str, list[dict]], move: tuple) -> dict:
-    table, index, column, new = move
-    out = {name: [dict(row) for row in table_rows] for name, table_rows in rows.items()}
-    out[table][index][column] = new
-    return out
+def _move(db: Path, move: tuple) -> None:
+    table, key, row_key, column, new = move
+    where = " AND ".join(f'"{k}" = ?' for k in key)
+    conn = sqlite3.connect(db)
+    try:
+        conn.execute(
+            f'UPDATE "{table}" SET "{column}" = ? WHERE {where}', (new, *row_key)
+        )
+        conn.commit()
+    except sqlite3.IntegrityError:
+        assume(False)  # a unique or CHECK constraint refuses the move
+    finally:
+        conn.close()
 
 
 def _refuse_constant(name: str) -> object:
     raise ValueError(f"--json printed {name}, which is not JSON")
 
 
-def _dbdiff(a: Path, b: Path) -> tuple[int, dict]:
-    out = io.StringIO()
-    with redirect_stdout(out):
+def _dbdiff(a: Path, b: Path) -> tuple[int, dict | None, str]:
+    out, err = io.StringIO(), io.StringIO()
+    with redirect_stdout(out), redirect_stderr(err):
         code = main(["--json", str(a), str(b)])
-    assert code in (0, 1), (code, out.getvalue())
-    return code, json.loads(out.getvalue(), parse_constant=_refuse_constant)
+    if code == 2:
+        return code, None, err.getvalue()
+    assert code in (0, 1), (code, err.getvalue())
+    return code, json.loads(out.getvalue(), parse_constant=_refuse_constant), ""
 
 
-@settings(deadline=None)
-@given(_catalogs())
-def test_renumbering_is_identical_and_any_moved_reference_differs(spec: dict) -> None:
-    assume(spec["move"] is not None)
-    with tempfile.TemporaryDirectory() as tmp:
-        base, renumbered, moved = (Path(tmp) / f"{n}.db" for n in "abc")
-        _write(base, spec["rows"])
-        _write(renumbered, _renumbered(spec["rows"], spec["renumber"]))
-        _write(moved, _moved(spec["rows"], spec["move"]))
+def test_renumbering_is_identical_and_any_moved_reference_differs(
+    classified: Path,
+) -> None:
+    @settings(deadline=None, suppress_health_check=[HealthCheck.too_slow])
+    @given(_changes(classified))
+    def check(change: dict) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            renumbered, moved = Path(tmp) / "renumbered.db", Path(tmp) / "moved.db"
+            shutil.copyfile(classified, renumbered)
+            shutil.copyfile(classified, moved)
+            _renumber(renumbered, change["renumber"])
+            _move(moved, change["move"])
 
-        code, report = _dbdiff(base, renumbered)
-        assert report["natural_keys"], report
-        assert code == 0, report
-        code, report = _dbdiff(base, moved)
-        assert code == 1, (spec["move"], report)
+            code, report, error = _dbdiff(classified, renumbered)
+            assert code == 0 and report is not None, (code, error, report)
+            assert report["natural_keys"], report
+            code, report, error = _dbdiff(classified, moved)
+            # A move that breaks a natural key is refused (exit 2), never hidden.
+            assume(not (code == 2 and "is not unique" in error))
+            assert code == 1, (change["move"], code, error, report)
+
+    check()
