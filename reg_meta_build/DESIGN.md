@@ -945,10 +945,10 @@ span never overlaps an explicit span on the same (variable, variant, column). A 
 scope that carries no range stays unresolvable (an unsupported occurrence, as before).
 Coding membership on a pooled edition is bound over the whole pooled range (Y-207), and
 so is a classification book named for it by a source declaration, a `value_set_labels`
-rule or a `[[binding.variable]]` override (`occurrence_bounds`). A rule or override
-cites the pooled edition as evidence only where no explicit occurrence of the column
-covers the span, so an explicit span keeps its own evidence. The marker persists as
-`variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0) through
+rule or a `[[binding.variable]]` override (`occurrence_bounds`). A declaration, rule or
+override binds or cites the pooled edition only where no explicit occurrence of the
+column covers the span, so an explicit span keeps its own books and evidence. The marker
+persists as `variable_state.pooled` (INTEGER NOT NULL DEFAULT 0, schema 6.10.0) through
 `ResolvedState`/`IRVariableState` into the DB, and `validate_built_db` fails a build
 whose pooled-marked window overlaps an unmarked window on one column.
 
