@@ -220,15 +220,25 @@ def _ordered_union[T](first: tuple[T, ...], second: tuple[T, ...]) -> tuple[T, .
 
 def _pooled_merge_key(
     segment: SourceSegment,
-) -> tuple[tuple[SourceField | None, ...], frozenset]:
-    """Identity for the Y-209 merge: reconciled state-grain facts and
-    value-set/coding evidence."""
+) -> tuple[tuple[SourceField | None, ...], frozenset, frozenset[str]]:
+    """Identity for the Y-209 merge: reconciled state-grain facts,
+    value-set/coding evidence, and the correction provenance the state carries.
+
+    Provenance is compared as the text formation writes onto the state
+    (`_state_from_segment`), so a cut an errata or field correction reached
+    never merges with one it did not: the merged state would attribute the
+    correction to the whole hull."""
     return (
         tuple(getattr(segment.fields, name) for name in _POOLED_MERGE_FIELDS),
         frozenset(
             (record.source, record.locators[0].semantic_record_key)
             for occurrence in segment.effective_occurrences
             for record in occurrence.coding_records
+        ),
+        frozenset(
+            correction.provenance
+            for occurrence in segment.effective_occurrences
+            for correction in occurrence.corrections
         ),
     )
 
@@ -237,8 +247,9 @@ def _merge_adjacent_pooled(segments: list[SourceSegment]) -> list[SourceSegment]
     """Re-join adjacent pooled cuts with identical facts (Y-209).
 
     Overlapping pooled editions fragment at their boundaries into adjacent
-    pooled cuts; where the reconciled facts and coding evidence agree, the
-    cuts document one continuous pooled coverage and merge into a single
+    pooled cuts; where the reconciled facts, coding evidence and correction
+    provenance agree, the cuts document one continuous pooled coverage and
+    merge into a single
     segment over the run's hull, with the union of occurrences and evidence.
     Adjacent means the next segment starts the day after the previous ends.
     An explicit segment never merges — neither with a pooled
@@ -494,9 +505,9 @@ def resolve_occurrence_intervals(
     occurrence covers; where an explicit occurrence covers the span, pooled
     evidence is filtered out before field reconciliation so the explicit facts
     win outright); pooled scopes without a range, and unknown scopes, stay
-    unplaced. Adjacent pooled cuts whose reconciled facts and coding evidence
-    agree re-join into one pooled segment over their combined
-    window (Y-209). Unplaced occurrences stay in the result and block
+    unplaced. Adjacent pooled cuts whose reconciled facts, coding evidence and
+    correction provenance agree re-join into one pooled segment over their
+    combined window (Y-209). Unplaced occurrences stay in the result and block
     strict publication. An occurrence whose column claim is negative (a delivered
     blank column: the member has no physical column) is omitted on purpose and
     reported as an `omitted_columnless_occurrence` warning; formation aggregates

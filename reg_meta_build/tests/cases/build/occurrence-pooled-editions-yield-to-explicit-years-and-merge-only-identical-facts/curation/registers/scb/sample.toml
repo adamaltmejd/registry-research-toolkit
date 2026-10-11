@@ -44,3 +44,19 @@ slug = "unit-diff"
 [[variable]]
 native_id = "1.413"
 slug = "unit-same"
+[[variable]]
+native_id = "1.414"
+slug = "corrected"
+[[errata.field]]
+variable = "1.414"
+variant = "1.10"
+column = "CORRECTED"
+edition = "1820"
+expected_fields = {{expected_fields key=member:4142 fields=prose}}
+expected_period_text = {{period_text key=member:4142}}
+expected_scope = {{edition_scope key=member:4142}}
+expected_period = {{period_scope key=member:4142}}
+evidence = "The 2016 - 2018 edition spells the reviewed name."
+noted = "2026-10-11"
+field = "name"
+value = "Pooled label"
