@@ -2,21 +2,30 @@
   "replaces": [
     "test_build_catalog_classification_boundary.py::test_value_set_label_binds_only_the_versions_its_book_lists"
   ],
-  "note": "A grouped reporting version whose codes all sit in the detailed book stays unbound, without an issue: a label rule binds by the source's version label, never by code coincidence.",
-  "fails_if": "`_label_rule_bindings` (source_classification_bindings.py) binds a book to a segment whose value-set version label is not in its `value_set_labels` (for example by code containment), so GROUPED ('Grouped report') is also bound to a",
+  "note": "A grouped reporting version whose codes all sit in the detailed book stays unbound, without an issue: a label rule binds by the source's version label, never by code coincidence. A pooled edition's listed label binds too, over its whole pooled range like pooled coding (Y-207): POOLED. Pooled evidence loses to explicit coverage as in occurrence resolution (Y-202): MIXED's explicit 2017 binds with its own evidence only.",
+  "fails_if": "`_label_rule_bindings` (source_classification_bindings.py) binds a book to a segment whose value-set version label is not in its `value_set_labels` (for example by code containment), so GROUPED ('Grouped report') is also bound to a; or it reads an occurrence's window with `scope_bounds`, which leaves a pooled scope unbounded, instead of `occurrence_bounds`, so POOLED and MIXED's pooled 2016 and 2018 bind nothing (the defect that left all 4,582 pooled real-seed states unbound); or `_column_evidence` stops clipping a pooled window to the spans no explicit occurrence covers, so MIXED's explicit 2017 issue also cites the pooled edition 1618",
   "sources": {
-    "description": "SCB DETAILED and GROUPED each carry codes 1/2 under the value-set versions 'Detailed book' and 'Grouped report'; book a.",
+    "description": "SCB DETAILED and GROUPED each carry codes 1/2 under the value-set versions 'Detailed book' and 'Grouped report'; book a. POOLED carries codes 1/2 under 'Detailed book' in the pooled edition '2016 - 2018' only. MIXED carries codes 1/3 under 'Detailed book' in the same pooled edition and in the explicit 2017.",
     "scb": {
       "registerinformation": [
         {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
         {"cvid": 1002, "var_id": 102, "colname": "DETAILED", "varname": "DETAILED"},
-        {"cvid": 1003, "var_id": 103, "colname": "GROUPED", "varname": "GROUPED"}
+        {"cvid": 1003, "var_id": 103, "colname": "GROUPED", "varname": "GROUPED"},
+        {"cvid": 1004, "var_id": 104, "colname": "POOLED", "varname": "POOLED", "year": "2018", "versionname": "2016 - 2018", "regver_id": 1618},
+        {"cvid": 1005, "var_id": 105, "colname": "MIXED", "varname": "MIXED", "year": "2018", "versionname": "2016 - 2018", "regver_id": 1618},
+        {"cvid": 1006, "var_id": 105, "colname": "MIXED", "varname": "MIXED", "year": "2017", "regver_id": 2017}
       ],
       "vardemangder": [
         "Detailed book|1|1|One|1002|10021",
         "Detailed book|1|2|Two|1002|10022",
         "Grouped report|1|1|One|1003|10031",
-        "Grouped report|1|2|Two|1003|10032"
+        "Grouped report|1|2|Two|1003|10032",
+        "Detailed book|1|1|One|1004|10041",
+        "Detailed book|1|2|Two|1004|10042",
+        "Detailed book|1|1|One|1005|10051",
+        "Detailed book|1|3|Three|1005|10053",
+        "Detailed book|1|1|One|1006|10061",
+        "Detailed book|1|3|Three|1006|10063"
       ]
     },
     "files": {

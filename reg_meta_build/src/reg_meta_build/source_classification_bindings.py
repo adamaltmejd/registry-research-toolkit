@@ -26,7 +26,7 @@ from reg_meta_build.source_curation import (
     evaluate_cases,
 )
 from reg_meta_build.source_effects import _require_checked, record_ref
-from reg_meta_build.source_intervals import scope_bounds
+from reg_meta_build.source_intervals import occurrence_bounds, occurrence_pooled
 from reg_meta_build.source_records import SourceFields
 
 if TYPE_CHECKING:
@@ -89,10 +89,7 @@ def _source_bindings(
         if not refs:
             raise ValueError("source classification requires original evidence")
         key = occurrence.column_key
-        scope = occurrence.edition_period_scope
-        if scope.kind == "not_applicable":
-            scope = occurrence.edition_scope
-        bounds = scope_bounds(scope)
+        bounds = occurrence_bounds(occurrence)
         code = None
         slug = None
         unspecified = (
@@ -214,23 +211,53 @@ def _sentinel_map(classification: ResolvedClassification) -> dict[str, str]:
     }
 
 
+def _column_evidence(
+    occurrences: Iterable[EffectiveOccurrence],
+) -> dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]]:
+    """Each catalog occurrence's known windows and evidence, per column.
+
+    A range-carrying pooled occurrence counts over its whole pooled range
+    (Y-207), but as in occurrence resolution (Y-202) it loses to explicit
+    coverage: its window is clipped to the spans no explicit occurrence of the
+    same column covers, so a pooled edition never joins the evidence of an
+    explicit span's binding.
+    """
+    explicit: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
+        defaultdict(list)
+    )
+    pooled: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
+        defaultdict(list)
+    )
+    for occurrence in occurrences:
+        key = occurrence.column_key
+        if occurrence.use != "catalog" or key is None:
+            continue
+        refs = tuple(sorted({record_ref(r) for r in occurrence.evidence}, key=repr))
+        target = pooled if occurrence_pooled(occurrence) else explicit
+        for lo, hi in occurrence_bounds(occurrence) or ():
+            target[key].append((lo, hi, refs))
+    for key, windows in pooled.items():
+        covered = sorted((lo, hi) for lo, hi, _ in explicit.get(key, ()))
+        for lo, hi, refs in windows:
+            start = lo
+            for covered_lo, covered_hi in covered:
+                if covered_hi < start or covered_lo > hi:
+                    continue
+                if covered_lo > start:
+                    explicit[key].append((start, covered_lo - 1, refs))
+                start = max(start, covered_hi + 1)
+            if start <= hi:
+                explicit[key].append((start, hi, refs))
+    return explicit
+
+
 def _label_rule_bindings(
     coding: Mapping[NativeKey, CodingResolution],
     occurrences: Iterable[EffectiveOccurrence],
     labels: Mapping[str, str],
 ) -> dict[NativeKey, list[_Binding]]:
     """Bind every listed claim label on each included post-choice segment."""
-    by_column: dict[NativeKey, list[tuple[int, int, tuple[SourceRecordRef, ...]]]] = (
-        defaultdict(list)
-    )
-    for occurrence in occurrences:
-        if occurrence.use == "catalog" and occurrence.column_key is not None:
-            scope = occurrence.edition_period_scope
-            if scope.kind == "not_applicable":
-                scope = occurrence.edition_scope
-            refs = tuple(sorted({record_ref(r) for r in occurrence.evidence}, key=repr))
-            for lo, hi in scope_bounds(scope) or ():
-                by_column[occurrence.column_key].append((lo, hi, refs))
+    by_column = _column_evidence(occurrences)
     selected: dict[NativeKey, list[_Binding]] = defaultdict(list)
     for key, resolution in coding.items():
         claims = {claim.claim_id: claim for claim in resolution.claims}
@@ -366,21 +393,15 @@ def apply_classification_cases(
     override_bindings: dict[NativeKey, list[_Binding]] = defaultdict(list)
     if override is not None:
         slug, ref = override
-        for occurrence in occurrences:
-            key = occurrence.column_key
-            if occurrence.use != "catalog" or key is None or key not in coding:
+        for key, windows in _column_evidence(occurrences).items():
+            if key not in coding:
                 continue
-            scope = occurrence.edition_period_scope
-            if scope.kind == "not_applicable":
-                scope = occurrence.edition_scope
-            for lo, hi in scope_bounds(scope) or ():
+            for lo, hi, refs in windows:
                 binding = _Binding(
                     date.fromordinal(lo).isoformat(),
                     date.fromordinal(hi).isoformat(),
                     slug,
-                    tuple(
-                        sorted({record_ref(r) for r in occurrence.evidence}, key=repr)
-                    ),
+                    refs,
                     (f"{ref}: override -> {slug}",),
                     inline_only=True,
                     override=True,

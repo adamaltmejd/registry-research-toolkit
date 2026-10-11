@@ -14,3 +14,9 @@ slug = "detailed"
 [[variable]]
 native_id = "1.103"
 slug = "grouped"
+[[variable]]
+native_id = "1.104"
+slug = "pooled"
+[[variable]]
+native_id = "1.105"
+slug = "mixed"
