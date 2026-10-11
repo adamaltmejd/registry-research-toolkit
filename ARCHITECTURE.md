@@ -96,6 +96,7 @@ registry-research-toolkit/
     reg-catalog/    # catalog reader and its operations
     reg-meta/       # binary: `serve` (HTTP API + /mcp) and `mcp` (stdio)
     reg-core-py/    # PyO3 bindings of reg-core for the builder
+    reg-core-wasm/  # WebAssembly bindings of reg-core for the SPA
   conformance/      # cross-adapter contract corpus, run against the Rust server
   plugins/          # the microdata-tools-se agent plugin (hosted MCP)
   reg_webapp/
@@ -116,8 +117,10 @@ Dependency graph (acyclic):
 ```text
 reg-meta       → reg-catalog → reg-core
 reg-core-py    → reg-core
+reg-core-wasm  → reg-core
 reg_meta_build → reg-core-py
 reg_webapp     → reg-meta (HTTP, through the codegen'd OpenAPI types)
+reg_webapp     → reg-core-wasm (built into the SPA by `bun run gen:wasm`)
 ```
 
 Nothing is published to PyPI. The runtime releases on `reg_meta/v*` tags: the `reg-meta`
@@ -307,14 +310,16 @@ after a byte-identical relocation.
    Each package stays inside its budget below.
 2. **Push / CI.** `ci.yml` runs the Python suites as a `test` matrix, one leg per root
    `testpaths` entry, each with `timeout-minutes` at its CI budget below. The `rust`
-   job's 3-minute timeout is the `crates/` budget, and it also covers the gate's `rust`
-   and `release` steps (`scripts/gate.py`: the workspace build, the whole conformance
-   suite against the Rust server, release admission on the synthetic steward artifact).
-   The `hook-tests` job runs the Claude Code hook tests (`.claude/hooks/tests`, plain
-   bash) with a 2-minute timeout. The `reg-webapp-frontend` job has a 6-minute timeout
-   and includes the codegen drift check; the OpenAPI snapshot is a `crates/reg-meta`
-   test. A job that exceeds its budget fails. The Playwright drivers (`dev.sh smoke`,
-   the gate's `flows` step) are local checks, not CI jobs.
+   job's 4-minute timeout is the 3-minute `crates/` budget plus room for a cold
+   rust-cache after a `Cargo.lock` change and its save, and it also covers the gate's
+   `rust` and `release` steps (`scripts/gate.py`: the workspace build, the whole
+   conformance suite against the Rust server, release admission on the synthetic steward
+   artifact). The `hook-tests` job runs the Claude Code hook tests
+   (`.claude/hooks/tests`, plain bash) with a 2-minute timeout. The
+   `reg-webapp-frontend` job has a 6-minute timeout and includes the codegen drift
+   check; the OpenAPI snapshot is a `crates/reg-meta` test. A job that exceeds its
+   budget fails. The Playwright drivers (`dev.sh smoke`, the gate's `flows` step) are
+   local checks, not CI jobs.
 3. **Artifact (maintainer or release gate).** Run
    `pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
    after `cargo build --workspace` (the search traversal runs against the Rust server;

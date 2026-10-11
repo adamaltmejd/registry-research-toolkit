@@ -593,11 +593,20 @@ jobs:
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.4.2"
+      # reg-core-wasm (`bun run gen:wasm`): the same toolchain and pinned
+      # wasm-bindgen CLI as ci.yml's frontend job — bump all three together.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2.9.2
+      - uses: taiki-e/install-action@v2.87.26
+        with:
+          tool: wasm-bindgen@0.2.129
       - run: bun install --frozen-lockfile
         working-directory: reg_webapp/frontend
-      # Regenerate types from the committed contracts (no-op on a clean tree;
-      # ci.yml gates drift), then build.
-      - run: bun run gen:types && bun run build
+      # Build the reg-core module, regenerate types from the committed contracts
+      # (no-op on a clean tree; ci.yml gates drift), then build.
+      - run: bun run gen:wasm && bun run gen:types && bun run build
         working-directory: reg_webapp/frontend
       # Same stale-deploy guard as the origin job (see comment there).
       - name: Skip unless HEAD of main
@@ -623,6 +632,17 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
+      # The SPA mounts only once reg-core's .wasm loads, so the deployed one must
+      # answer 200 as application/wasm (WebAssembly.instantiateStreaming refuses
+      # any other type).
+      - name: Edge .wasm probe
+        if: steps.head.outputs.skip != 'true'
+        working-directory: reg_webapp/frontend
+        run: |
+          wasm=$(cd dist && ls assets/*.wasm)
+          read -r code type < <(curl -so /dev/null -w '%{http_code} %{content_type}\n' "https://catalog.swecov.se/$wasm")
+          echo "$wasm: $code $type"
+          [ "$code" = 200 ] && [ "$type" = application/wasm ] || { echo "FATAL: the deployed .wasm answered $code $type" >&2; exit 1; }
       # Standing #220 regression probe: the /api/* Cache Rule and the ETag
       # contract are zone-dashboard state (click-ops, no IaC) — assert after
       # every edge deploy that a search read still caches (MISS/HIT family,
@@ -757,9 +777,16 @@ jobs:
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.4.2"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2.9.2
+      - uses: taiki-e/install-action@v2.87.26
+        with:
+          tool: wasm-bindgen@0.2.129
       - run: bun install --frozen-lockfile
         working-directory: reg_webapp/frontend
-      - run: bun run gen:types && bun run build
+      - run: bun run gen:wasm && bun run gen:types && bun run build
         working-directory: reg_webapp/frontend
       - name: Skip unless HEAD of main
         id: head
@@ -778,6 +805,14 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
+      - name: SWECOV edge .wasm probe
+        if: steps.head.outputs.skip != 'true'
+        working-directory: reg_webapp/frontend
+        run: |
+          wasm=$(cd dist && ls assets/*.wasm)
+          read -r code type < <(curl -so /dev/null -w '%{http_code} %{content_type}\n' "https://data.swecov.se/$wasm")
+          echo "$wasm: $code $type"
+          [ "$code" = 200 ] && [ "$type" = application/wasm ] || { echo "FATAL: the deployed .wasm answered $code $type" >&2; exit 1; }
       - name: SWECOV edge cache probe (#220 + #318)
         if: steps.head.outputs.skip != 'true'
         run: |

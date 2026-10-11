@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import fcntl
+import gzip
 import json
 import os
 import shlex
@@ -53,6 +54,9 @@ ALL = ("g0", "rust", "release", "flows", "frontend")
 # other session's gate, while the cap still keeps parallel sessions off load 30.
 SLOTS = 3
 HEAVY = {"g0", "crates", "rust", "release", "flows", "regen", "g1"}
+# The SPA's reg-core .wasm, gzipped (RUST_RUNTIME_SPEC.md "Stage 5 decisions", D2:
+# provisional). Over it, the frontend step fails: the budget is a maintainer call.
+WASM_GZ_BUDGET = 150_000
 
 
 def run(command, cwd=ROOT, env=None, **kwargs):
@@ -119,10 +123,21 @@ def flows() -> None:
 
 
 def frontend() -> None:
+    # The SPA's reg-core module: a Rust build, so it takes a heavy slot (the rest of
+    # this step does not).
+    with heavy_lock():
+        run(["bun", "run", "gen:wasm"], cwd=FRONTEND)
+    wasm = FRONTEND / "src/lib/reg-core-wasm/reg_core_wasm_bg.wasm"
+    size = len(gzip.compress(wasm.read_bytes(), compresslevel=9))
+    print(f"gate: {wasm.name} {size} bytes gzipped (budget {WASM_GZ_BUDGET})")
+    if size > WASM_GZ_BUDGET:
+        sys.exit(f"gate: {wasm.name} is over its gzipped budget; see WASM_GZ_BUDGET")
     for script in ("check", "lint", "test", "build", "gen:types"):
         run(["bun", "run", script], cwd=FRONTEND)
     # A diff means the SPA's types drifted from the committed API contract.
     run("git diff --exit-code -- src/lib/api-types-rust.ts", cwd=FRONTEND)
+    # The built app's bootstrap: mounts, serves the .wasm, alerts without it.
+    run(["bun", "scripts/smoke_build.ts"], cwd=FRONTEND)
 
 
 def regen() -> None:

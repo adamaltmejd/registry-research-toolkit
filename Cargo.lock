@@ -764,6 +764,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "reg-core-wasm"
+version = "0.0.0"
+dependencies = [
+ "reg-core",
+ "serde_json",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "reg-meta"
 version = "0.46.0"
 dependencies = [

@@ -86,6 +86,11 @@ document, not a version claim, and gets the structural layer's `missing_required
 or `invalid_field_type`. Whether `reg_meta_version` matches the loaded catalog is a
 semantic concern.
 
+`project::check` runs the two in that order and is the single entry point: the server's
+validate and order operations call it, and so does the SPA through `reg-core-wasm`'s
+`check_project`, so the browser rejects a draft by exactly the server's rules before
+posting it.
+
 ## Two layers: types and validator
 
 The crate splits a shape layer from a rule layer:

@@ -50,8 +50,11 @@ jobs:
     # workspace and runs the gate's `rust` and `release` steps. Measured on #1249
     # (2026-10-08): 1 min 23 s warm. A Cargo.lock change adds about 1 min of
     # dependency compiles (#1231: 71 s warm, 2 min 10 s after one), so expect
-    # about 2 min 40 s of the 3 min then. A fully cold cache is unmeasured.
-    timeout-minutes: 3
+    # about 2 min 40 s then. A new workspace crate changes the rust-cache key: on
+    # #1410 the build was cold, the gate step took 2 min 23 s and the job was
+    # cancelled at 3 min during the cache's post-save, so the cap is 4 min to
+    # cover a cold cache after a Cargo.lock change plus the cache save.
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: dtolnay/rust-toolchain@stable
@@ -141,11 +144,18 @@ jobs:
               - 'reg_webapp/frontend/**'
               - 'crates/reg-meta/openapi.json'
               # Oracles the frontend unit tests read: the fold corpus
-              # (catalog.fold.test.ts) and reg-core's project schema version and
-              # structural corpus (project_data.test.ts, validation.test.ts).
+              # (catalog.fold.test.ts) and the server's unsupported-version case
+              # (reg_core.test.ts); reg-core's structural corpus is under
+              # crates/reg-core below. The grammar corpus pins the periods the
+              # module parses.
               - 'conformance/cases/folds/**'
-              - 'crates/reg-core/src/project.rs'
-              - 'crates/reg-core/tests/project/corpus/**'
+              - 'conformance/cases/api/validate-unsupported-schema-version/**'
+              - 'conformance/cases/grammar/**'
+              # The SPA's reg-core module (`bun run gen:wasm`).
+              - 'Cargo.toml'
+              - 'Cargo.lock'
+              - 'crates/reg-core/**'
+              - 'crates/reg-core-wasm/**'
               - '.github/workflows/ci.yml'
               - 'scripts/gate.py'
 
@@ -171,6 +181,17 @@ jobs:
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.4.2"
+      # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
+      # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
+      # both together with container-build.yml's edge jobs; a mismatch fails the
+      # bindgen run).
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2.9.2
+      - uses: taiki-e/install-action@v2.87.26
+        with:
+          tool: wasm-bindgen@0.2.129
       - run: bun install --frozen-lockfile
       # The `browser` Vitest project (vitest-browser-svelte) renders `.svelte`
       # components in a real headless Chromium via Playwright. Cache the browser
@@ -189,10 +210,11 @@ jobs:
       - run: bunx playwright install-deps chromium
         if: steps.playwright-cache.outputs.cache-hit == 'true'
       # The gate script runs from the repository root on a uv-managed Python; it
-      # needs no workspace sync. `frontend`: check, lint, test (`vitest run`: the
-      # jsdom `unit` and Chromium `browser` projects), build, and the codegen drift
-      # check: TS types are codegen'd from the committed Rust `openapi.json`
-      # snapshot, so regenerating must leave them unchanged.
+      # needs no workspace sync. `frontend`: gen:wasm and its size budget, check,
+      # lint, test (`vitest run`: the jsdom `unit` and Chromium `browser`
+      # projects), build, the codegen drift check (TS types are codegen'd from the
+      # committed Rust `openapi.json` snapshot, so regenerating must leave them
+      # unchanged) and the built app's bootstrap smoke.
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"

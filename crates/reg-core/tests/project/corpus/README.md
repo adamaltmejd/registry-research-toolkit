@@ -72,9 +72,10 @@ issues are compared in emission order.
 1. **`reg-core`** — `tests/project.rs` runs `validate_structural` on every case
    (`structural_corpus`) and hashes every accepted project (`project_hashes`, keyed in
    `../hashes.json`).
-2. **SPA TypeScript tests** — `reg_webapp/frontend/src/lib/validation.test.ts` reads
-   every case's `expected_ValidationResult.json` to check that the SPA can locate each
-   issue's path and names each code.
+2. **SPA TypeScript tests** — `reg_webapp/frontend/src/lib/reg_core.test.ts` runs every
+   case through `reg-core-wasm`'s `check_project` (the browser's copy of the server's
+   structural door), and `validation.test.ts` checks that the SPA can locate each
+   expected issue's path and names each code.
 
 ## Adding a case
 

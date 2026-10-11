@@ -20,7 +20,10 @@ not walked. Every command below starts at the **repo root**.
 ## Prerequisites
 
 - `uv`, `bun` and `cargo` (repo-standard toolchain — see root CLAUDE.md). `dev.sh` runs
-  `cargo build --workspace` before it starts the servers.
+  `cargo build --workspace` before it starts the servers, then `bun run gen:wasm` (the
+  SPA's reg-core module), which needs `rustup target add wasm32-unknown-unknown` and
+  `cargo install wasm-bindgen-cli --version 0.2.129 --locked` (the version
+  `crates/reg-core-wasm/Cargo.toml` pins).
 - Playwright's Chromium. The frontend's vitest-browser setup already installs it; if
   missing: `(cd reg_webapp/frontend && bunx playwright install chromium)`.
 - A catalog to serve. `--fixture-db` builds a synthetic one and needs nothing installed

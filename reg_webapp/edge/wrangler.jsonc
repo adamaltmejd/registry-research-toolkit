@@ -6,7 +6,7 @@
 // "Deployment" for the topology and DESIGN.md → "SPA routing + production
 // fallback" for why the edge owns the deep-link → index.html rewrite.
 //
-// Deploy (after building the SPA: `bun run gen:types && bun run build` in
+// Deploy (after building the SPA: `bun run gen:wasm && bun run gen:types && bun run build` in
 // reg_webapp/frontend/):
 //
 //   bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc \

@@ -7,3 +7,6 @@ __screenshots__/
 
 # svelte-check --tsgo emission cache (transient).
 .svelte-check/
+
+# reg-core-wasm bindings (`bun run gen:wasm`), generated from crates/reg-core-wasm.
+src/lib/reg-core-wasm/

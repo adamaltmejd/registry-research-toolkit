@@ -7,6 +7,7 @@ import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelt
 import type { RawDraft } from "./project_data";
 import { projectStore, setPersistence } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { projectSchemaVersion } from "./reg_core";
 
 vi.mock("./api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./api")>()),
@@ -24,11 +25,10 @@ const SEED = {
   steward: "global" as const,
 };
 
-// A Model-A-versioned but structurally malformed spec (non-array `sources`). The
-// version gate accepts it by schema_version 2.x, so it loads — and the editor must
-// render rather than crash (the backend diagnoses the structure).
+// A structurally malformed spec (non-array `sources`). Any JSON object loads — and
+// the editor must render rather than crash (reg-core diagnoses the structure).
 const MALFORMED = JSON.stringify({
-  schema_version: "2.0.0",
+  schema_version: projectSchemaVersion(),
   steward: "global",
   reg_meta_version: "reg_meta/v1.0.0",
   name: "Malformed",
@@ -40,7 +40,7 @@ const MALFORMED = JSON.stringify({
 // but one element is malformed — the render boundary must degrade that slot, keep
 // the valid sibling, and NOT drop the slot (so `/sources/{i}` addressing lines up).
 const NULL_SLOT = JSON.stringify({
-  schema_version: "2.0.0",
+  schema_version: projectSchemaVersion(),
   steward: "global",
   reg_meta_version: "reg_meta/v1.0.0",
   name: "NullSlot",
@@ -88,7 +88,11 @@ function seedSources(registerVariants: string[]): void {
     adds: registerVariants.map((rv, i) => ({
       registerVariant: rv,
       period: 2000 + i,
-      binding: { variable: `${rv}/var`, type: "categorical" },
+      // The variable sits on the source's register (`provider/register/var`).
+      binding: {
+        variable: `${rv.split("/").slice(0, 2).join("/")}/var`,
+        type: "categorical",
+      },
     })),
   });
 }
@@ -183,7 +187,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
       .toBeVisible();
 
     // The malformed value is preserved verbatim on the draft (serialize/validate
-    // still see it — the SPA is not the structural validator).
+    // still see it — the load is verbatim).
     expect(storedProject()?.sources as unknown).toBe("not-an-array");
   });
 
@@ -214,7 +218,7 @@ describe("ProjectEditor cart — read-only, no add affordances", () => {
       .toBeVisible();
 
     // The null slot is preserved verbatim on the draft (serialize/validate still
-    // see it — the SPA is not the structural validator, and the load is verbatim).
+    // see it — the load is verbatim).
     expect((storedProject()?.sources as unknown[])?.[0]).toBeNull();
   });
 });
@@ -316,21 +320,15 @@ describe("ProjectEditor renders the ValidationPanel", () => {
 
 /** A valid Model A project file, named apart from the seeded draft. */
 const OPENABLE = JSON.stringify({
-  schema_version: "2.0.0",
+  schema_version: projectSchemaVersion(),
   steward: "global",
   reg_meta_version: "reg_meta/v1.0.0",
   name: "Opened project",
   sources: [],
 });
 
-/** A pre-Model-A file: the version gate hard-rejects it at the ingress. */
-const PRE_MODEL_A = JSON.stringify({
-  schema_version: "1.4.0",
-  steward: "global",
-  reg_meta_version: "reg_meta/v1.0.0",
-  name: "Old project",
-  sources: [],
-});
+/** JSON that is not an object: the ingress rejects it (any JSON OBJECT opens). */
+const NOT_AN_OBJECT = JSON.stringify(["Old project"]);
 
 /** An edited draft — one picked column and a name — i.e. work worth losing. */
 function seedDirtyDraft(): void {
@@ -466,7 +464,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
   });
 
   it("a file the ingress rejects raises the open-error banner and never the question", async () => {
-    // Parse and version are both decided BEFORE anything is replaced, so an
+    // Parse and shape are both decided BEFORE anything is replaced, so an
     // unopenable file leaves the current draft — and its recovery copy — standing.
     seedDirtyDraft();
     const { container } = await renderEditor();
@@ -476,8 +474,8 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
     expect(replaceDialog().query()).toBeNull();
     expect(projectStore.draft?.name).toBe("In progress");
 
-    pickFile(container, PRE_MODEL_A);
-    await expect.element(page.getByText(/predates Model A/)).toBeVisible();
+    pickFile(container, NOT_AN_OBJECT);
+    await expect.element(page.getByText(/must be a JSON object/)).toBeVisible();
     expect(replaceDialog().query()).toBeNull();
     expect(projectStore.draft?.name).toBe("In progress");
   });
@@ -524,7 +522,7 @@ describe("ProjectEditor — replacing a dirty draft is deliberate", () => {
   it("a rejected file raises no banner once its read is superseded", async () => {
     seedDirtyDraft();
     const { container } = await renderEditor();
-    const release = pickHeldFile(container, PRE_MODEL_A);
+    const release = pickHeldFile(container, NOT_AN_OBJECT);
     await page.getByRole("button", { name: "New", exact: true }).click();
     await expect.element(replaceDialog()).toBeVisible();
 
@@ -668,5 +666,67 @@ describe("ProjectEditor — what a reload recovers after a replacement decision"
     // anyway would have armed its timer first, so it would land here as an extra
     // "In progress" entry ahead of this one, and the count would not hold.
     expect(saved.length).toBe(writes + 1);
+  });
+});
+
+describe("ProjectEditor — reg-core checks every draft before the server does", () => {
+  // Fails when a draft reg-core rejects is still POSTed, when its issues wait on
+  // the debounce or an in-flight request, or when the green answer for the earlier
+  // draft lands on the broken one and reopens the order download.
+  it("shows a broken edit's issues at once, discards the earlier draft's green, and validates the repair", async () => {
+    const validates: Array<(answer: Response) => void> = [];
+    vi.mocked(fetch).mockImplementation((url) =>
+      String(url).includes("/project/validate")
+        ? new Promise<Response>((resolve) => validates.push(resolve))
+        : Promise.reject(new Error(`unexpected request ${String(url)}`)),
+    );
+    const green = {
+      ok: true,
+      status: 200,
+      json: async () => ({ data: { ok: true, issues: [] }, meta: {} }),
+    } as Response;
+    const order = page.getByRole("button", { name: "Download order.json" });
+    const verdict = (text: string) =>
+      page.getByRole("status").filter({ hasText: text });
+
+    await render(ProjectEditorLifecycleHarness, {
+      regMetaVersion: "1.0.0",
+      steward: "global",
+    });
+    seedSources(["scb/lisa/v1"]);
+    // The accepted draft's validation is in flight…
+    await vi.waitFor(() => expect(validates).toHaveLength(1), {
+      timeout: 3000,
+    });
+
+    // …when an edit breaks it: the issue shows at once, with no request.
+    projectStore.applyStagedDiff({
+      adds: [
+        {
+          registerVariant: "scb/lisa/v1",
+          period: 2000,
+          binding: { variable: "not-an-fqid", type: "categorical" },
+        },
+      ],
+    });
+    await expect.element(verdict("Draft not valid")).toBeVisible();
+    await expect.element(page.getByText("Malformed FQID")).toBeVisible();
+    await expect.element(order).toBeDisabled();
+
+    // The earlier draft's green answer arrives and is discarded.
+    validates[0](green);
+    await flush();
+    await expect.element(verdict("Draft not valid")).toBeVisible();
+    await expect.element(order).toBeDisabled();
+
+    // The repair is accepted, so it is POSTed (debounced) and its answer counts.
+    projectStore.removeBinding(0, 1);
+    await vi.waitFor(() => expect(validates).toHaveLength(2), {
+      timeout: 3000,
+    });
+    validates[1](green);
+    await expect.element(verdict("Draft valid")).toBeVisible();
+    await expect.element(order).toBeEnabled();
+    expect(validates).toHaveLength(2);
   });
 });

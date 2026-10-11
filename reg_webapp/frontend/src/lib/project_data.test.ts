@@ -1,13 +1,11 @@
 import { describe, expect, it } from "vitest";
-// The server validates exactly reg-core's project SCHEMA_VERSION, so a new draft must
-// carry that version — read from the crate, not re-typed here.
-import regCoreProject from "../../../../crates/reg-core/src/project.rs?raw";
 import {
   newProjectData,
   type ProjectSource,
   regMetaReleaseTag,
   uniqueSourceName,
 } from "./project_data";
+import { checkProject } from "./reg_core";
 
 const SEED = { reg_meta_version: "reg_meta/v1.0.0", steward: "global" };
 
@@ -18,18 +16,20 @@ function source(over: Partial<ProjectSource> = {}): ProjectSource {
 }
 
 describe("newProjectData", () => {
-  it("seeds the skeleton at the server's project schema version", () => {
-    const schemaVersion = /^pub const SCHEMA_VERSION: &str = "([^"]+)";$/m.exec(
-      regCoreProject,
-    )?.[1];
-    expect(schemaVersion).toBeDefined();
-    expect(newProjectData(SEED)).toEqual({
-      schema_version: schemaVersion,
+  // Fails when a new draft is seeded at a version the server's version decision
+  // rejects (a hard-coded version left behind by a schema bump).
+  it("seeds a skeleton the server's version decision accepts", () => {
+    const draft = newProjectData(SEED);
+    expect(draft).toEqual({
+      schema_version: expect.any(String),
       steward: "global",
       reg_meta_version: "reg_meta/v1.0.0",
       name: "",
       sources: [],
     });
+    expect(
+      checkProject(JSON.stringify(draft)).issues.map((i) => i.code),
+    ).not.toContain("unsupported_schema_version");
   });
 });
 
