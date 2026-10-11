@@ -375,7 +375,7 @@ variable pages to add one column each.
   the one confirmation/refusal row. The binding leaf, the concept group and the register
   list are hosts: they own their own selection and scope and nothing else. It was two
   copies of the same forty lines before this ticket — the leaf-helper duplication
-  CLAUDE.md names.
+  AGENTS.md names.
 - **The study window IS the period here.** The list carries no Period control (that
   belongs to a subject page), so an add is clipped to the rail's window, and without one
   an open-ended column has no finite period to commit — the batch is refused whole

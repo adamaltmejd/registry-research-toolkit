@@ -13,17 +13,17 @@ loads the SPA, drills through the catalog, exercises the period slider, and scre
 each step. `dev.sh` picks a FREE port for each server on every run, so nothing here is
 pinned to a port. The proxy lives in `reg_webapp/frontend/vite.config.ts`.
 
-This skill is a helper you invoke by its explicit repo path, not a skill the root loader
-discovers: it lives under `reg_webapp/.claude/skills/`, which is nested and therefore
-not walked. Every command below starts at the **repo root**.
+This skill lives under `reg_webapp/.claude/skills/`: Claude Code loads it when working
+under `reg_webapp/`; elsewhere, open it by its repo path. Every command below starts at
+the **repo root**.
 
 ## Prerequisites
 
-- `uv`, `bun` and `cargo` (repo-standard toolchain — see root CLAUDE.md). `dev.sh` runs
+- `uv`, `bun` and `cargo` (repo-standard toolchain — see root AGENTS.md). `dev.sh` runs
   `cargo build --workspace` before it starts the servers, then `bun run gen:wasm` (the
   SPA's reg-core module), which needs `rustup target add wasm32-unknown-unknown` and
-  `cargo install wasm-bindgen-cli --version 0.2.129 --locked` (the version
-  `crates/reg-core-wasm/Cargo.toml` pins).
+  `cargo install wasm-bindgen-cli --version <v> --locked`, with `<v>` the `=` pin in
+  `crates/reg-core-wasm/Cargo.toml`.
 - Playwright's Chromium. The frontend's vitest-browser setup already installs it; if
   missing: `(cd reg_webapp/frontend && bunx playwright install chromium)`.
 - A catalog to serve. `--fixture-db` builds a synthetic one and needs nothing installed
@@ -41,6 +41,10 @@ not walked. Every command below starts at the **repo root**.
 uv sync --frozen
 (cd reg_webapp/frontend && bun install --frozen-lockfile)
 ```
+
+Run both in every checkout, a fresh git worktree included: `dev.sh` launches from the
+checkout's OWN `.venv` and `node_modules` (so a worktree serves ITS code, not main's),
+does not install them, and exits naming the missing command.
 
 No SPA build needed for dev — Vite serves source. After a contract change,
 `uv run --no-project scripts/gate.py regen` refreshes the Rust server's OpenAPI snapshot
@@ -170,19 +174,17 @@ reg-meta-build --db "$db_dir" build-db --prepared <accepted-prepared> \
 REG_META_DB="$db_dir" bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh shot <route>
 ```
 
-(Verified: a non-default `REG_META_DB` directory renders correctly through `dev.sh`.)
-
 **Interactive (humans).** `dev.sh` with no mode starts the same auto-free-port servers
 and stays up until Ctrl-C (which tears them all down). It prints the URLs — open the
 frontend in a browser; the Rust server's OpenAPI document is at `<rust>/openapi.json`.
-Ports are automatic, so parallel worktrees / lanes never collide; pin with
+Ports are automatic, so parallel worktrees never collide; pin with
 `RUST_PORT=… FRONTEND_PORT=…` if you need to know them up front.
 
 ```sh
 bash reg_webapp/.claude/skills/run-reg-webapp/dev.sh
 ```
 
-## Parallel instances (concurrent worktrees / lanes)
+## Parallel instances (concurrent worktrees)
 
 Both runners are collision-free across parallel sessions — pick by need:
 
@@ -192,10 +194,8 @@ Both runners are collision-free across parallel sessions — pick by need:
   keeps the configured 5173) and `dev.sh preview` binds exactly that, then starts the
   Rust server on its own private free port and points the Vite `/api` proxy at it via
   `REG_META_SERVER_URL`. So two sessions each get distinct ports and a correctly-wired
-  proxy — no collision, no cross-talk. (This replaced the old two-config
-  `autoPort: false` setup, which collided because a static launch config can't inject
-  the server's chosen port into the frontend.) `preview_start` starts both servers under
-  one `serverId`; the browser attaches to the frontend, and the Rust server is reached
+  proxy — no collision, no cross-talk. `preview_start` starts both servers under one
+  `serverId`; the browser attaches to the frontend, and the Rust server is reached
   through the `/api` proxy.
 - **`dev.sh smoke` / `dev.sh shot` (visual verification / screenshots).** Free ports, a
   per-invocation screenshot directory, guaranteed teardown, `shot --all` for the four
@@ -204,8 +204,7 @@ Both runners are collision-free across parallel sessions — pick by need:
 In a worktree both run from the checkout's own `.venv` and cargo `target/` (the
 `preview` entry routes through `dev.sh`, which resolves the repo root from its own path
 and launches `target/debug/reg-meta`, built there first), so a worktree serves ITS code,
-not main's — the historical "`preview_start` serves main" footgun is gone now that the
-entry point is `dev.sh`.
+not main's.
 
 ## Direct invocation (server-only changes)
 
@@ -242,17 +241,9 @@ includes the Playwright browser project).
   another port.
 - **Every route the SPA calls comes from the Rust server**, the project operations
   included. Their bodies are `{data, meta}` (a refusal `{error, meta}`).
-- **Git worktrees are auto-provisioned.** A `SessionStart` hook
-  (`.claude/hooks/worktree_bootstrap.sh`) gives the checkout its OWN `.venv` (editable
-  installs resolve to the worktree, not main) and `node_modules` — it runs `uv sync` +
-  `bun install` in the **background** (SessionStart gates the session, so it never
-  blocks) when the env is missing or its dependency fingerprint is stale (lockfile
-  changed). `dev.sh` also self-provisions synchronously and launches from the checkout's
-  own `.venv`, so a worktree serves ITS code. (Deliberately NOT a `WorktreeCreate` hook:
-  that event *replaces* git's worktree creation — a provisioner there would abort it.)
-  The historical footgun — a `uv run` / `preview_start` started with the **main**
-  checkout as cwd served main's source (bit an agent 2026-06-11) — is closed by the
-  `dev.sh preview` entry point (see Parallel instances above).
+- **A new git worktree has no environment.** Run the Setup commands in it first; with
+  either missing, `dev.sh` exits naming the command. After a lockfile change, rerun
+  them.
 
 ## Troubleshooting
 
@@ -263,7 +254,8 @@ includes the Playwright browser project).
 - The Rust server exits at boot complaining about the DB/schema → no `REG_META_DB`, or
   one with a schema the server does not admit. Use `--fixture-db`, or point
   `REG_META_DB` at a current release asset per Prerequisites.
-- Chromium fails to launch → if every rung of the launch ladder (above) failed, the
-  driver reports each rung's own error, unabridged — read the FIRST one, it is the
+- Chromium fails to launch → the driver tries a ladder of launches (sandboxed, then
+  no-sandbox, then single-process; `LAUNCH_LADDER` in `driver.mjs`) and, when every rung
+  fails, reports each rung's own error, unabridged — read the FIRST one, it is the
   failure of the sandboxed launch. In a sandboxed shell prefer `dev.sh smoke` / `shot`
   over `preview_start`, which has no ladder.

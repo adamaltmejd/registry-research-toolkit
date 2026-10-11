@@ -24,19 +24,18 @@ happens before this skill, under `reg-webapp-frontend-design`.
 
 Three consumers, one contract.
 
-- **The implementation worker's in-lane self-check.** A worker whose ticket changes
-  rendered UI runs both parts before declaring its candidate — in a clean subagent whose
-  prompt is the ticket and attempt, the changed routes, the diff and this skill, so the
-  judgment does not inherit the implementing session's rationalizations. The worker then
-  fixes or explicitly dismisses every finding; the subagent reports, it does not
-  rewrite.
-- **The design review seat.** Its inputs are the candidate diff and two context files:
+- **The implementer's self-check.** An implementer whose change touches rendered UI runs
+  both parts before declaring it done — in a clean subagent whose prompt is the change's
+  goal, the changed routes, the diff and this skill, so the judgment does not inherit
+  the implementing session's rationalizations. The implementer then fixes or explicitly
+  dismisses every finding; the subagent reports, it does not rewrite.
+- **A source-only reviewer.** Its inputs are the candidate diff and two context files:
   this skill and `reg_webapp/frontend/DESIGN.md`. It has no checkout, no browser and no
   screenshots. It runs **the source review only** — it does not read further files, does
   not render, never claims rendered verification, and never raises a finding merely
   because rendered evidence is absent. Its report uses the source-only format below.
-- **The operator.** Renders the surfaces the candidate changes and judges them before
-  approval. Neither a worker self-check nor a source review substitutes for that.
+- **The maintainer.** Renders the surfaces the candidate changes and judges them before
+  approval. Neither a self-check nor a source review substitutes for that.
 
 ## The contract
 
@@ -139,8 +138,8 @@ renders only the happy path is at least a `P2`.
 
 ## Rendered review
 
-Needs a checkout and a browser — the worker's self-check and the operator. Skip this
-part entirely if you have neither.
+Needs a checkout and a browser — the implementer's self-check and the maintainer. Skip
+this part entirely if you have neither.
 
 ### Render
 
@@ -218,28 +217,28 @@ iteration captures and retained candidate gate evidence are different things: sa
 you are reporting. The flow gates cover only their named scenarios — `project-flows` the
 `/project` error and retry states, `catalog-flows` the one catalog leaf and `/project`
 state of the catalog-authored draft flow — so neither is evidence for a search, a
-different catalog view or a new one. Operator approval needs evidence for the surfaces
-the candidate actually changes.
+different catalog view or a new one. Approval needs evidence for the surfaces the
+candidate actually changes.
 
 ## Severity, findings and fixes
 
 `P1` blocks, `P2` is a meaningful UX or contract defect, `P3` is polish. Report
 findings; do not silently rewrite broad UI. If you are responsible for fixes — the
-implementing worker acting on its subagent's report — make the smallest source change,
-follow the existing primitives and roles, then re-render the affected route and update
-the report.
+implementer acting on its subagent's report — make the smallest source change, follow
+the existing primitives and roles, then re-render the affected route and update the
+report.
 
 Dismiss a finding only with a concrete reason: "existing behavior outside this
 candidate", "intended clipping", "route not touched by this diff".
 
 ## Report format
 
-Source-only — the design seat, or anyone without a checkout:
+Source-only — a source-only reviewer, or anyone without a checkout:
 
 ```markdown
 # Reg webapp design review — source
 
-- Candidate: <ticket, branch, or diff reviewed>
+- Candidate: <change, branch, or diff reviewed>
 - Basis: diff + reg_webapp/frontend/DESIGN.md. Not rendered; no visual claim.
 - Result: <no source findings / findings>
 
@@ -253,14 +252,14 @@ Source-only — the design seat, or anyone without a checkout:
 - Recommendation: <smallest correction>
 ```
 
-Rendered — the worker's self-check, the operator:
+Rendered — the implementer's self-check, the maintainer:
 
 ```markdown
 # Reg webapp design review — rendered
 
-- Candidate: <ticket/attempt, branch, full HEAD>
+- Candidate: <change, branch, full HEAD>
 - Checkout: <path dev.sh resolved>
-- Gate execution: <gate and execution, or n/a>
+- Gate run: <gate.py step and result, or n/a>
 - Command: <exact command>
 - Routes and states inspected: <routes/states actually opened>
 - Viewports inspected: <widths actually opened>

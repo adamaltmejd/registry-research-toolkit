@@ -25,15 +25,14 @@ an entry to `OPTIONAL_MARKERS` in `conftest.py` and decorate tests with
 `@pytest.mark.<name>`. Today the only one is `--run-release`: the conformance checks on
 a real artifact (see `conformance/README.md`).
 
-There is no pre-push test hook: CI (`ci.yml`) runs the full suite on every PR to main,
-and merges require it green. Run the relevant tests locally before pushing; the commit
-hook only runs the fast checks (ruff, ty, panache, cargo fmt).
+There are no git hooks: CI (`ci.yml`) runs the gate on every PR to main, and merges
+require it green. Run the relevant steps locally before pushing.
 
 ## Linting
 
 ```bash
-uv run ruff check      # lint (config in pyproject.toml covers every package)
-uv run ruff format     # format
+uv run --no-project scripts/gate.py lint   # ruff, panache and ty, at the pinned versions
+uv run ruff format                         # fix Python formatting
 ```
 
 ## Releasing

@@ -11,7 +11,7 @@ comments and the read-only run are pinned at the CLI boundary
 representation-edge gate, the one-candidate-per-variable pair grouping and the
 day/year adjacency edges stay here until a case carries them.
 
-Fully synthetic (CLAUDE.md): builds its own in-memory DB via the `_slugged_db`
+Fully synthetic (AGENTS.md): builds its own in-memory DB via the `_slugged_db`
 helpers; never reads a real built DB.
 """
 

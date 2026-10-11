@@ -330,8 +330,7 @@ results stay readable as data.
    rust-cache after a `Cargo.lock` change and its save, and it also covers the gate's
    `rust` and `release` steps (`scripts/gate.py`: the workspace build, the whole
    conformance suite against the Rust server, release admission on the synthetic steward
-   artifact). The `hook-tests` job runs the Claude Code hook tests
-   (`.claude/hooks/tests`, plain bash) with a 2-minute timeout. The
+   artifact). The `lint` job runs `gate.py lint` (ruff, panache, ty). The
    `reg-webapp-frontend` job has a 6-minute timeout and includes the codegen drift
    check; the OpenAPI snapshot is a `crates/reg-meta` test. A job that exceeds its
    budget fails. The Playwright drivers (`dev.sh smoke`, the gate's `flows` step) are
@@ -364,7 +363,6 @@ from the suite's current size. Local is wall time with `pytest <tree> -n auto -q
   | `reg_meta_build/tests`                        | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
   | `conformance`                                 | 20 s  | 4 min  | Session-built catalog and steward artifacts once, then data-driven CLI, HTTP, order and validate cases.                              |
   | `scripts/tests`                               | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints, the opt-in marker gate); a few nested pytest runs dominate.                    |
-  | `.claude/hooks/tests`                         | 5 s   | 2 min  | Exit-code and message contracts of the Claude Code hooks (deny payloads, bootstrap idempotence); plain bash with stubbed `uv`/`bun`. |
   | `crates/` (`cargo test --workspace`)          | 10 s  | 3 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
   | Rust conformance run (`scripts/gate.py rust`) | 30 s  | 3 min  | The whole conformance suite against the Rust server; Shares the `rust` job with `crates/`.                                           |
   | frontend (`bun run test`)                     | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |
@@ -429,14 +427,8 @@ imports/internal patches and oversized test modules are gated by repo lints with
 exemptions or file allowlists; the per-package test sweep (plans 06a–06c, #1169) emptied
 the last ones. The Rust reader runs against these oracles.
 
-### Discipline against ballooning
-
-Pre-v1 agentic development produced a suite that churns faster than the code it covers
-and reaches into private names in over a hundred places. The policy stops new growth of
-that kind. The per-package sweep (#1169) deleted every test that pinned an internal
-whose behavior a boundary case already covered and rewrote the rest against the
-artifact. Coverage is measured as boundaries with a corpus, not as line percentage; a
-boundary without a corpus is the gap.
+Coverage is measured as boundaries with a corpus, not as line percentage; a boundary
+without a corpus is the gap.
 
 ## Maturity and compatibility policy
 

@@ -70,7 +70,7 @@ class InferenceResult:
     the count of pairs the fanout cap removed from the final output (generated
     from a hub signal, no name agreement, and not otherwise admitted by a
     non-hub signal). Surfaced so the cap is never a SILENT truncation
-    (CLAUDE.md)."""
+    (AGENTS.md)."""
 
     candidates: list[Candidate]
     hub_suppressed: int

@@ -186,7 +186,7 @@ Svelte traps that have bitten this codebase before:
 
 ## Output: the design brief
 
-Before coding, write a short brief in the working message or the ticket notes:
+Before coding, write a short brief in the working message or the PR description:
 
 ```md
 Design brief:

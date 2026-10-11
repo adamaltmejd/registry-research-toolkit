@@ -21,26 +21,12 @@ jobs:
       - uses: astral-sh/setup-uv@v10.0.1
         with:
           version: "0.12.11"
-      # `uv sync` builds the reg-core-py extension (maturin) from crates/;
-      # pre-commit's `cargo fmt` hook needs rustfmt.
+      # `uv sync` builds the reg-core-py extension (maturin) from crates/.
       - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt
       - uses: Swatinem/rust-cache@v2.9.2
       - run: uv sync --frozen
-      - run: uv run ruff check
-      - run: uv run ruff format --check
-      # Backstop: run the pre-commit-stage hooks that an agent could have
-      # bypassed locally with `--no-verify`. Covers panache + ty + ruff. There
-      # is no local pytest hook; the per-suite `test` matrix below is the test
-      # gate.
-      - run: uvx --from pre-commit==4.6.2 pre-commit run --all-files
-      # Type check via ty (Astral, beta). Pinned via uvx so CI, pre-commit,
-      # and cached Codex environments resolve the same checker without making
-      # ty a workspace dev dependency. ty moves quickly, so bump this pin
-      # deliberately/frequently. Baseline triage landed (tests and scripts
-      # excluded in pyproject.toml); the check is now blocking.
-      - run: uvx --from ty==0.0.79 ty check
+      # ruff, panache and ty; commands and tool pins: scripts/gate.py.
+      - run: uv run --no-project scripts/gate.py lint
 
   # The Rust workspace (root Cargo.toml, crates/). Latest stable toolchain, no pin:
   # the workspace has no minimum-version policy.
@@ -74,26 +60,6 @@ jobs:
       # process. `release`: the release-admission
       # run on the synthetic steward artifact. Commands: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py crates rust release
-
-  # Exit-code and message tests for the repo's Claude Code hooks
-  # (.claude/hooks/tests). Plain bash, python3 and git, all preinstalled on the
-  # runner; the bootstrap test stubs uv and bun, so no `uv sync`. Budget:
-  # ARCHITECTURE.md "Tiers".
-  hook-tests:
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    steps:
-      - uses: actions/checkout@v7.0.1
-      # Run every script so one failure does not hide another, then fail if any did.
-      - name: Run hook tests
-        run: |
-          status=0
-          for t in .claude/hooks/tests/test_*.sh; do
-            echo "::group::$t"
-            bash "$t" || status=1
-            echo "::endgroup::"
-          done
-          exit "$status"
 
   # One leg per root `testpaths` entry (pyproject.toml); keep the two lists in
   # step. `budget` is the suite's CI-job budget in ARCHITECTURE.md "Tiers",

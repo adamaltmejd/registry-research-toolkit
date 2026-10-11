@@ -50,8 +50,8 @@
 # FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
 # a UNIQUE per-invocation directory under /tmp — printed on startup, and kept
 # after teardown because the pictures are the evidence — unless REG_WEBAPP_SHOTS
-# names a directory of your own. So concurrent lanes, and the operator, never
-# overwrite each other's captures.
+# names a directory of your own. So concurrent runs never overwrite each other's
+# captures.
 set -uo pipefail
 # Job control so each background server runs in its OWN process group — lets
 # cleanup() kill the WHOLE tree (the frontend subshell AND the bun→vite grandchild
@@ -156,21 +156,20 @@ if [ "$mode" = shot ] && [ "$#" -eq 0 ]; then
 fi
 
 # THIS script's checkout (…/reg_webapp/.claude/skills/run-reg-webapp/dev.sh → repo
-# root), not the caller's cwd: an operator or a sibling lane running a candidate's
-# absolute dev.sh must get the candidate's servers, never whichever checkout they
-# happened to be standing in.
+# root), not the caller's cwd: running another checkout's absolute dev.sh must serve
+# that checkout, never whichever one the caller happened to be standing in.
 root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd) || exit 1
 cd "$root" || exit 1
 
-# Self-provision so this works standalone (humans, fresh clones) even without the
-# worktree bootstrap hook. No-op once .venv / node_modules exist.
-if [ -x ".claude/hooks/worktree_bootstrap.sh" ]; then
-	.claude/hooks/worktree_bootstrap.sh </dev/null >/dev/null 2>&1 || true
-fi
-
-# The venv runs freeport, the --fixture-db builder and the default DB resolution.
+# This checkout's OWN environment, never main's: a fresh worktree has neither until
+# it is installed by hand. The venv runs freeport, the --fixture-db builder and the
+# default DB resolution; node_modules runs Vite and the driver.
 if [ ! -x ".venv/bin/python" ]; then
 	echo "dev: .venv/bin/python missing — run 'uv sync --frozen' from $root." >&2
+	exit 1
+fi
+if [ ! -d "reg_webapp/frontend/node_modules" ]; then
+	echo "dev: reg_webapp/frontend/node_modules missing — run 'bun install --frozen-lockfile' in $root/reg_webapp/frontend." >&2
 	exit 1
 fi
 
@@ -206,7 +205,7 @@ fi
 # WHICH commit, and where this run's evidence lands.
 echo "dev: repo $root HEAD $(git -C "$root" rev-parse HEAD 2>/dev/null || echo unknown)${shots_dir:+ shots $shots_dir}" >&2
 
-# .venv/bin/python, not a system `python3`: the lane/gate image ships no system
+# .venv/bin/python, not a system `python3`: the gate image ships no system
 # Python, and this checkout's venv is already required (checked above).
 freeport() { .venv/bin/python -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()'; }
 rust_port=${RUST_PORT:-$(freeport)}

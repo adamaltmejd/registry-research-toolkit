@@ -8,7 +8,7 @@ the round trip: a rendered pin, loaded back into a fresh DB, makes
 `populate_variable_slugs` lock the entity-key variable's slug. That function runs
 only inside extend-db, so these blocks move to the extend-db boundary with it.
 
-Fully synthetic (CLAUDE.md): builds its own in-memory DBs and a flat steward-style
+Fully synthetic (AGENTS.md): builds its own in-memory DBs and a flat steward-style
 slug dir under tmp_path; never reads the shipped fqid_slugs TOMLs."""
 
 from __future__ import annotations

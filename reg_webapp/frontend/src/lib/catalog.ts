@@ -1336,7 +1336,7 @@ export function pickerRepresentations(
     // representations that stay their OWN rows. Every other column is, relative to its
     // siblings, a sequential RENAME and folds into ONE row (when ≥2 of them). Reuses
     // the shared `coexistingColumns` leaf so the picker and the editor's chooser can't
-    // drift on the distinction (CLAUDE.md: reuse the leaf, don't re-derive it).
+    // drift on the distinction (AGENTS.md: reuse the leaf, don't re-derive it).
     const familyStates: PickerStateInput[] = [];
     for (const g of cols.values()) {
       familyStates.push(...g);

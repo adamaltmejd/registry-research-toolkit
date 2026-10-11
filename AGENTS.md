@@ -1,8 +1,10 @@
 # Registry Research Toolkit
 
 Multi-package workspace for Swedish register research: catalog metadata, schema
-validation, and project authoring. See `ARCHITECTURE.md` for the cross-package design;
-remaining work lives in GitHub issues.
+validation, and project authoring. `ARCHITECTURE.md` has the cross-package design
+(topology, dependency graph, repo-wide invariants, testing strategy); each
+`<package>/DESIGN.md` has the package rationale (the catalog object model is in
+`crates/DESIGN.md`). Remaining work lives in GitHub issues.
 
 ## Packages
 
@@ -61,9 +63,8 @@ state.
 
 ## Reuse first, build last
 
-Apply the global-CLAUDE.md/AGENTS.md ladder (no change → existing capability →
-stdlib/platform → installed dep → minimal new code → new dep; optimize for risk and
-maintenance, not line count) on every change. Two repo-specific notes:
+Prefer, in order: no change → existing capability → stdlib/platform → installed dep →
+minimal new code → new dep. Two repo-specific notes:
 
 - **The failure mode here is leaf-helper duplication, not new-module inflation.** A new
   adapter/route legitimately needs a new module, but a small format-agnostic leaf inside
@@ -116,8 +117,7 @@ below are what an agent must follow when writing, changing or deleting a test. T
   contracts (`ARCHITECTURE.md` → "Testing strategy"). No private-name imports
   (`from x import _helper`) and no patching of internal modules; mock only process
   boundaries: network, clock, filesystem, subprocess. Repository tooling under
-  `scripts/tests` and `.claude/hooks/tests` asserts that tool's own contract (skill
-  discovery, a lint's verdict, a hook's exit code and message).
+  `scripts/tests` asserts that tool's own contract (skill discovery, a lint's verdict).
 - **Oracles are data.** Expected behavior lives in golden corpora and snapshot files
   (`input → expected`) readable without Python. Changing an expected file is a content
   decision reviewed in the diff, with the reason in the commit. Never weaken, regenerate
@@ -156,58 +156,30 @@ below are what an agent must follow when writing, changing or deleting a test. T
 
 # Python conventions
 
-- Runtime deps live in each package's `pyproject.toml`; dev deps live only in the
-  workspace-root `pyproject.toml`.
-- Add with `uv add` (runtime) / `uv add --dev` (dev) — don't hand-edit `pyproject.toml`
-  for new deps; uv writes to the right PEP 735 group. Hand-editing is fine for bumping
-  an existing constraint (then `uv lock`).
-- One-off tools (not project deps): `uvx --from <package> <tool>` — e.g.
-  `uvx --from pre-commit==4.6.2 pre-commit run --all-files`.
-- Refresh lockfile with `uv lock --upgrade`; CI uses `uv sync --frozen`.
+- Runtime deps live in each package's `pyproject.toml`; dev deps only in the root
+  `pyproject.toml`. Add with `uv add` / `uv add --dev`; hand-edit only to bump an
+  existing constraint (then `uv lock`). CI uses `uv sync --frozen`.
 - No minimum release age: `exclude-newer = false` in the root `pyproject.toml`
-  `[tool.uv]`, `minimumReleaseAge = 0` in `reg_webapp/frontend/bunfig.toml`. Keep both
-  written out — deleting a key inherits the checkout's global uv/bun waiting period
-  instead; the comment at each key says what that breaks.
-- The workspace floor is uniformly `>=3.14` (ruff `target-version = py314` to match),
-  after a coordinated bump (#682, 2026-06-22).
-- A repo-root `.python-version` pins the interpreter to `3.14` so that **project-less
-  `uv run --no-project` tooling** (for example, `scripts/gh_issue.py`) resolves the
-  `>=3.14` floor instead of the ambient Python. `--no-project` skips workspace
-  discovery, so without this pin the `requires-python` floor is bypassed for those runs
-  and the 3.14-only PEP 758 syntax in `scripts/` would `SyntaxError` on a < 3.14
-  interpreter.
+  `[tool.uv]` and `minimumReleaseAge = 0` in `reg_webapp/frontend/bunfig.toml`. Keep
+  both written out: deleting a key inherits the checkout's global waiting period.
+- Python floor `>=3.14` everywhere. The root `.python-version` makes
+  `uv run --no-project` tooling in `scripts/` resolve 3.14 too.
 
 ## Stack
 
-See `ARCHITECTURE.md` for the cross-package invariants and each `<package>/DESIGN.md`
-for the detail; remaining work lives in GitHub issues.
-
-- **Builder** (`reg_meta_build`, Python):
-  - Modeling: Pydantic v2 `_IRBase` models for the build-time IR core and
-    `@dataclass(frozen=True)` for local value types in feature modules.
-  - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION`
-    constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB
-    is read-mostly, single-backend; an ORM would add overhead with no benefit.
-  - CLI: argparse. No click/typer.
-- **Runtime** (`crates/`, Rust): the reader, the `project_data.json` validator, the
-  order materializer and the MCP tools. See `crates/DESIGN.md` and
-  `crates/reg-core/DESIGN.md`.
-- **Web server**: the Rust `reg-meta serve` (`crates/reg-meta/`) answers every `/api`
-  route and `/mcp`; there is no Python web backend. The synthetic fixture DB is built
-  through `conformance/fixture_cache.py`; the search eval is
-  `scripts/run_search_eval.py`.
-- **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed.
-  TS types codegen'd from the Rust server's `crates/reg-meta/openapi.json`.
-- **Tests**: pytest + pytest-xdist for the builder and the conformance suite;
-  `cargo test` for the crates; `@pytest.mark.release` opts into real-artifact tests.
-  Build/parse coverage is fully synthetic (no gitignored real SCB/SOS data) and runs the
-  full structural validator (`validate_built_db(corpus=False)`); strict builds require
-  `corpus=True`. Hypothesis (dev-only) covers invariant-heavy grammars. Rules for what a
-  test may assert on: "Testing policy" above and `ARCHITECTURE.md` → "Testing strategy".
-- **Type checking**: `uvx --from ty==0.0.79 ty check` (Astral, beta). Blocking in CI;
-  pinned via `uvx` so CI, pre-commit, and cached Codex environments use the same
-  checker. `ty` moves quickly, so bump this pin deliberately/frequently. Not a dev dep —
-  keep `pyproject.toml` clean.
+- **Builder** (`reg_meta_build`, Python): Pydantic v2 `_IRBase` models for the IR core,
+  frozen dataclasses for local value types; stdlib `sqlite3` with raw SQL (DDL in
+  `db.py`, `SCHEMA_VERSION` gates compatibility, regenerate-not-migrate, no ORM);
+  argparse CLI.
+- **Runtime** (`crates/`, Rust): reader, `project_data.json` validator, order
+  materializer, HTTP API and MCP tools. There is no Python web backend.
+- **Web frontend** (`reg_webapp/frontend/`): Svelte 5 + Vite + TypeScript, bun-managed;
+  TS types codegen'd from `crates/reg-meta/openapi.json`.
+- **Tests**: pytest + pytest-xdist (builder, conformance), `cargo test` (crates),
+  `@pytest.mark.release` for real-artifact tests, Hypothesis for grammars. Build/parse
+  coverage is fully synthetic.
+- **Type checking**: `ty` (Astral, beta), blocking in CI, pinned in `scripts/gate.py`
+  and run with `uvx` (not a dev dep).
 
 # Run (dev servers)
 
@@ -223,44 +195,30 @@ for the detail; remaining work lives in GitHub issues.
 
 # Lint and test
 
-- `uv run --no-project scripts/gate.py all` — the full gate before a PR: steps `g0`,
-  `rust`, `release`, `flows`, `frontend` (each runnable by name; CI calls them)
-- `uv run --no-project scripts/gate.py g0 rust --packages <pkg>...` — G0 on touched
-  packages (the `rust` step is G0's Rust HTTP run)
-- `cargo machete` (in `crates` and `g0`) is a local prerequisite:
-  `cargo install cargo-machete --locked`
-- `bun run gen:wasm` (in `gate.py frontend` and the run-reg-webapp `dev.sh`) needs two
-  local prerequisites: `rustup target add wasm32-unknown-unknown` and
-  `cargo install wasm-bindgen-cli --version 0.2.129 --locked` (the version
-  `crates/reg-core-wasm/Cargo.toml` pins)
+`scripts/gate.py` owns every check command and tool pin; CI calls its steps. There are
+no git hooks: CI is the gate, so run the relevant step before pushing.
+
+- `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
+  `release`, `flows`, `frontend`).
+- `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown) and ty only.
+- `uv run --no-project scripts/gate.py g0 rust --packages <pkg>...` — lint, crates and
+  the touched packages' tests, plus the conformance run against the Rust server.
 - `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
-  files; after a rebase, commit the diff separately
-- `uv run --no-project scripts/gate.py g1` — G1, under the heavy-job lock the Rust steps
-  hold
-- `uv run --no-project scripts/gate.py heavy -- <cmd>` — run any other heavy command (a
-  parallel pytest, cargo, a derive) under the same lock, so parallel sessions don't
-  overload the machine (never wrap a gate step: it already holds the lock)
-- `uv run --no-project scripts/gate.py real-seed -- <cmd>` — a real-seed
-  `reg-meta-build` run (prepare, build, extend, check-curation): one at a time
-  machine-wide, plus a heavy slot
-- `uv run ruff check` — python lint
-- `uv run ruff format --check` — python format check
-- `uvx --from panache-cli==3.9.0 panache format --check .` — markdown format check
-  (config in `.panache.toml`; drop `--check` to fix)
-- `uvx --from panache-cli==3.9.0 panache lint .` — markdown lint
-- `uv run python -m pytest conformance -q` — source-built conformance corpus and
-  session-built catalog/steward artifact checks
-- `cargo build --workspace`, then
-  `uv run python -m pytest conformance --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q`
-  — conformance checks on an admitted real artifact; all three flags required (search
-  runs against the Rust server, and a missing `--server-cmd` fails), bad artifacts fail
-  admission (fixture-bound goldens still use synthetic sources)
-- `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject
-  `testpaths`)
-- `uv run python -m pytest reg_meta_build/` — narrow to a single package
-- `cargo test --workspace` — the crates' tests
+  files; after a rebase, commit the diff separately.
+- `uv run --no-project scripts/gate.py g1` — G1.
+- `uv run --no-project scripts/gate.py heavy -- <cmd>` / `real-seed -- <cmd>` — run
+  another heavy command, or a real-seed `reg-meta-build` run, under the machine-wide
+  lock the gate steps hold (never wrap a gate step).
+- Narrow runs: `uv run python -m pytest <path>`, `cargo test -p <crate>`.
+- Real-artifact conformance: the `release` step in `scripts/gate.py` shows the flags
+  (`--run-release --artifact-dir=… --server-cmd=…`).
+- Local prerequisites: `cargo install cargo-machete --locked`;
+  `rustup target add wasm32-unknown-unknown` and `wasm-bindgen-cli` at the version
+  `crates/reg-core-wasm/Cargo.toml` pins.
+- A new worktree needs its own environment: `uv sync --frozen` and, for the frontend,
+  `bun install --frozen-lockfile` in `reg_webapp/frontend`.
 - `reg_meta_build/docs/lisa/*.md` are build artifacts — fix
-  `scripts/parse_lisa_docs.py`, not the output
+  `scripts/parse_lisa_docs.py`, not the output.
 
 # Issue tracker
 
@@ -272,7 +230,8 @@ match: extend or comment on it rather than opening a duplicate.
 (e.g. `feat(reg_meta_build): …`, `fix(reg_webapp): …`).
 
 **Labels** — exactly **one area label** — a package (`reg_meta` for the Rust runtime,
-`reg_meta_build`, `reg_webapp`) or `cross-package` — plus a **type**: `enhancement`, `bug`, or `documentation`.
+`reg_meta_build`, `reg_webapp`) or `cross-package` — plus a **type**: `enhancement`,
+`bug`, or `documentation`.
 
 **Ingestion trust gate** — this repo is public, so automation reads issue/PR content
 **only** through `scripts/gh_issue.py`, a fail-closed maintainer-author trust gate:
@@ -283,18 +242,9 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 
 # Git
 
-- Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a
-  pre-commit hook fails, fix the underlying issue rather than bypassing.
 - Develop on an isolated branch or worktree. A PR needs green CI and an independent
   review (a fresh agent that did not write the change counts) before it merges.
   Coordinate concurrent work and keep main to a single write path.
 - Dependency maintenance uses [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md),
   releases use [release](.agents/skills/release/SKILL.md), and real-seed verification
   uses [build-db](.agents/skills/build-db/SKILL.md).
-
-# Layout
-
-For per-package design rationale, see `<package>/DESIGN.md` (the catalog object model
-lives in `crates/DESIGN.md`; per-provider source-delivery shapes in
-`reg_meta_build/DESIGN.md`). For the cross-package design (topology, dependency graph,
-repo-wide invariants), see `ARCHITECTURE.md`.
