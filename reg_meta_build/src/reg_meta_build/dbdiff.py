@@ -69,7 +69,8 @@ on a projection, never on raw ids:
 
 - a table's own surrogate id (an ``INTEGER PRIMARY KEY``, or a single-column
   UNIQUE INTEGER column some FOREIGN KEY targets) is left out of its rows; a
-  TEXT key is natural and compared as it is;
+  TEXT key is natural and compared as it is, and a column that is itself a
+  FOREIGN KEY is never an id of its own (it is compared by what it references);
 - a column holding another table's surrogate id (a declared FOREIGN KEY,
   followed through composite keys to the table that owns the id, plus the few
   undeclared references in `_UNDECLARED_REFERENCES`) is replaced by that row's
@@ -81,7 +82,9 @@ on a projection, never on raw ids:
   (two rows equal but for their id), the table keeps its id and references to
   it stay raw ids, so a child moved between the two rows is still reported; the
   report names those tables (`raw_id_tables`), whose differences may be id
-  noise. A false difference is acceptable, a hidden one is not.
+  noise. A table also keeps its raw ids when another table has an INTEGER
+  column of the same name declared as no reference, since that column may hold
+  its ids. A false difference is acceptable, a hidden one is not.
 
 So two builds that differ only in id assignment compare identical, and a
 sample row shows ``variable_id = [["scb", "lisa"], "kon"]``, not ``4711``. The
@@ -410,9 +413,12 @@ class _KeyPlan:
     """How one DB's rows are projected off their surrogate ids (module docstring)."""
 
     columns: dict[str, tuple[str, ...]]
-    # table -> its surrogate id column.
+    # table -> its surrogate id column. Never a foreign-key column: a column that
+    # references a row is compared by what it references, never dropped.
     surrogates: dict[str, str]
-    # (table, column) -> the table whose surrogate id the column holds.
+    # (table, column) -> the table whose surrogate id the column holds, for the
+    # references compared by that table's natural key. A reference to a raw-id
+    # table is absent here and compares its raw value.
     references: dict[tuple[str, str], str]
     # referenced table -> the columns of its natural key.
     natural_keys: dict[str, tuple[str, ...]]
@@ -426,9 +432,7 @@ class _KeyPlan:
         kept = tuple(
             c
             for c in self.columns[table]
-            if (table, c) in self.references
-            or table in self.raw_ids
-            or self.surrogates.get(table) != c
+            if table in self.raw_ids or self.surrogates.get(table) != c
         )
         return kept or self.columns[table]
 
@@ -479,8 +483,6 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
                 if None not in key and key not in keys:
                     keys.append(key)
         uniques[table] = keys
-        if len(pk) == 1 and is_integer(table, pk[0]):
-            surrogates[table] = pk[0]
         for fk in conn.execute(f"PRAGMA foreign_key_list({_quote(table)})"):
             parent = fk["table"]
             if parent not in columns:
@@ -490,13 +492,25 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
                 parent_pk = [c for c in schema.tables[parent] if c[4]]
                 to = sorted(parent_pk, key=lambda c: c[4])[fk["seq"]][0]
             edges[table, fk["from"]] = (parent, to)
-    # A single-column UNIQUE INTEGER column a foreign key targets is its table's id
-    # too (variable_state.state_id).
-    for parent, to in edges.values():
+    # A table's id: its single-column INTEGER PRIMARY KEY, else a single-column
+    # UNIQUE INTEGER column a foreign key targets (variable_state.state_id). A
+    # column that is itself a foreign key is not an id of its own: it names the
+    # row it references (concept_group_classification.classification_id), so it is
+    # compared as that reference and the chain is followed past it.
+    for table in tables:
+        pk = [c for c in schema.tables[table] if c[4]]
+        if (
+            len(pk) == 1
+            and is_integer(table, pk[0][0])
+            and (table, pk[0][0]) not in edges
+        ):
+            surrogates[table] = pk[0][0]
+    for parent, to in sorted(edges.values()):
         if (
             parent not in surrogates
             and (to,) in uniques[parent]
             and is_integer(parent, to)
+            and (parent, to) not in edges
         ):
             surrogates[parent] = to
 
@@ -515,8 +529,21 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
             seen.add(source)
 
     references = {s: t for s in sorted(edges) if (t := owner(s)) is not None}
+    # An INTEGER column named like another table's id but declared as no reference
+    # may still hold that id; dropping the id would then hide a changed link, so
+    # that table keeps its raw ids (a false difference, never a hidden one).
+    # Declare the reference (or list it in _UNDECLARED_REFERENCES) to normalize it.
+    raw_ids: set[str] = {
+        owner_table
+        for owner_table, id_column in surrogates.items()
+        for table in tables
+        if table != owner_table
+        and id_column in columns[table]
+        and (table, id_column) not in edges
+        and surrogates.get(table) != id_column
+        and is_integer(table, id_column)
+    }
     natural_keys: dict[str, tuple[str, ...]] = {}
-    raw_ids: set[str] = set()
     pending = sorted(set(references.values()))
     while pending:
         table = pending.pop()

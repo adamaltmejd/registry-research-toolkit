@@ -35,6 +35,28 @@
     {
       "table": "version",
       "identical": true
+    },
+    {
+      "table": "version_note",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "version_id": 1,
+            "note": "x"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "version_id": 2,
+            "note": "x"
+          }
+        }
+      ]
     }
   ]
 }

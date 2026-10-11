@@ -1,5 +1,5 @@
--- a.sql with the register's id shifted (1 -> 7) and the population moved from
--- version 1 to version 2.
+-- a.sql with the register's id shifted (1 -> 7), and the population and the
+-- version note moved from version 1 to version 2.
 CREATE TABLE provider (slug TEXT PRIMARY KEY, name TEXT NOT NULL);
 INSERT INTO provider VALUES ('scb', 'SCB');
 CREATE TABLE register (
@@ -20,3 +20,8 @@ CREATE TABLE population (
   name TEXT NOT NULL
 );
 INSERT INTO population VALUES (2, 'persons');
+CREATE TABLE version_note (
+  version_id INTEGER PRIMARY KEY REFERENCES version(version_id),
+  note TEXT NOT NULL
+);
+INSERT INTO version_note VALUES (2, 'x');

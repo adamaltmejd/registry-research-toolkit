@@ -20,3 +20,9 @@ CREATE TABLE population (
   name TEXT NOT NULL
 );
 INSERT INTO population VALUES (1, 'persons');
+-- A child whose primary key is its reference: compared by what it references.
+CREATE TABLE version_note (
+  version_id INTEGER PRIMARY KEY REFERENCES version(version_id),
+  note TEXT NOT NULL
+);
+INSERT INTO version_note VALUES (1, 'x');
