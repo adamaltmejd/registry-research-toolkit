@@ -148,16 +148,15 @@ as text.
 ## Input bundles
 
 A command that reads an accepted catalog-input bundle (`inspect-source-records`,
-`prepare-sources`) reads
-one of its own, written from readable source before the first run: `input_bundle` is a
-source spec in the format of `cases/build/README.md` → "Source spec" (only its `scb`
-key; the bundle captures nothing else) and an optional `lisa` key that selects the
-synthetic LISA workbook (`_lisa_fixtures.write_lisa_workbook`, revision `2024-2025`):
-`true` as written, or `{"cells": {"Företag!A9": "X", "Företag!C9": 2020}}` with each
-`Sheet!A1` cell set first (`null` clears one). Without `lisa` the bundle selects no
-workbook. The runner commits the bundle in a repository outside `{work}`, since the
-command refuses to write into its input repository, and fills three placeholders that
-pin it: `{bundle}`, `{bundle_commit}` and `{bundle_manifest}`.
+`prepare-sources`) reads one of its own, written from readable source before the first
+run: `input_bundle` is a source spec in the format of `cases/build/README.md` → "Source
+spec" (only its `scb` key; the bundle captures nothing else) and an optional `lisa` key
+that selects the synthetic LISA workbook (`_lisa_fixtures.write_lisa_workbook`, revision
+`2024-2025`): `true` as written, or `{"cells": {"Företag!A9": "X", "Företag!C9": 2020}}`
+with each `Sheet!A1` cell set first (`null` clears one). Without `lisa` the bundle
+selects no workbook. The runner commits the bundle in a repository outside `{work}`,
+since the command refuses to write into its input repository, and fills three
+placeholders that pin it: `{bundle}`, `{bundle_commit}` and `{bundle_manifest}`.
 
 A case with `input_bundle` and none of `artifact`, `artifact_curation` or
 `curation_dirs` reads no catalog artifact: the runner builds none, copies no curation

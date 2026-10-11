@@ -429,7 +429,9 @@ def check_error(exc: Exception, error: dict[str, Any]) -> str | None:
         return f"unlocated refusal {type(exc).__name__}: {exc}"
     message = exc.message
     if exc.code != error["code"]:
-        return f"code {exc.code!r} != {error['code']!r}: {type(exc).__name__}: {message}"
+        return (
+            f"code {exc.code!r} != {error['code']!r}: {type(exc).__name__}: {message}"
+        )
     if exc.exit_code != error.get("exit_code", EXIT_CONFIG):
         return f"exit code {exc.exit_code} != {error.get('exit_code', EXIT_CONFIG)}"
     if type(exc).__name__ != error["type"]:
