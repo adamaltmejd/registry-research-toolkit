@@ -38,6 +38,7 @@ from reg_meta_build.source_curation import (
     SourceWarningDecision,
     acknowledged_diagnostic,
     acknowledgement_evidence_sha256,
+    current_pins,
     evaluate_cases,
 )
 from reg_meta_build.source_effects import (
@@ -271,7 +272,22 @@ def resolve_source_scope(
                 "Keep one [[acknowledge]] entry for each issue.",
             )
         held[issue_key] = case, decision, []
+    held_identities = {key[:-1] for key in held}
     guarded_diagnostics = {key[:-1] for key in held if key[-1] is not None}
+    # Errors an entry's identity selects, digest aside, that it did not take: a
+    # stale entry names the current digest of the one it would have taken.
+    unheld: dict[tuple, list[tuple[ResolutionDiagnostic, NativeKey | None]]] = (
+        defaultdict(list)
+    )
+
+    def scope_owns(
+        issue: ResolutionDiagnostic,
+        source_register: NativeKey | None,
+        decision: AcknowledgeDecision,
+    ) -> bool:
+        if source_register is not None:
+            return source_register == decision.register_key
+        return bool(issue.refs) and original_refs.issuperset(issue.refs)
 
     def record(issue: ResolutionDiagnostic) -> None:
         counts[issue.severity] += 1
@@ -298,13 +314,11 @@ def resolve_source_scope(
                 else None
             )
             match = held.get((*key, digest)) or held.get((*key, None))
-            if match is not None and (
-                source_register == match[1].register_key
-                if source_register is not None
-                else bool(issue.refs) and original_refs.issuperset(issue.refs)
-            ):
+            if match is not None and scope_owns(issue, source_register, match[1]):
                 match[2].append(issue)
                 return
+            if key in held_identities:
+                unheld[key].append((issue, source_register))
         record(issue)
 
     observed_registers = (
@@ -982,14 +996,15 @@ def resolve_source_scope(
     acknowledged: dict[ResolutionDiagnostic, ResolutionDiagnostic] = {}
     for case, decision, matched in held.values():
         distinct = tuple(dict.fromkeys(matched))
-        evidence_matches = (
-            decision.expected_evidence_sha256 is None
-            or decision.expected_evidence_sha256
-            == acknowledgement_evidence_sha256(
+        current_evidence = (
+            None
+            if decision.expected_evidence_sha256 is None
+            else acknowledgement_evidence_sha256(
                 (record for ref in decision.refs for record in guarded_originals[ref]),
                 (token for ref in decision.refs for token in guarded_coding[ref]),
             )
         )
+        evidence_matches = current_evidence == decision.expected_evidence_sha256
         if len(distinct) == 1 and evidence_matches:
             issue = distinct[0]
             warning = acknowledged_diagnostic(issue, decision, case.case_id)
@@ -1000,10 +1015,19 @@ def resolve_source_scope(
             continue
         for issue in matched:
             record(issue)
+        overbroad = len(distinct) > 1 and evidence_matches
+        identity = (
+            decision.code,
+            decision.subject,
+            decision.refs,
+            decision.fields,
+            decision.valid_from,
+            decision.valid_to,
+        )
         record(
             ResolutionDiagnostic(
                 code="overbroad_curation_entry"
-                if len(distinct) > 1 and evidence_matches
+                if overbroad
                 else "stale_curation_entry",
                 severity="error",
                 case_id=case.case_id,
@@ -1012,6 +1036,21 @@ def resolve_source_scope(
                     f"The acknowledgement of {decision.code!r} has changed original or coding evidence."
                     if not evidence_matches
                     else f"The acknowledgement of {decision.code!r} matches {len(distinct)} distinct issues; it must name exactly one."
+                )
+                + (
+                    ""
+                    if overbroad
+                    else current_pins(
+                        current_evidence,
+                        (
+                            *matched,
+                            *(
+                                issue
+                                for issue, source_register in unheld[identity]
+                                if scope_owns(issue, source_register, decision)
+                            ),
+                        ),
+                    )
                 ),
                 refs=decision.refs,
                 fields=decision.fields,
