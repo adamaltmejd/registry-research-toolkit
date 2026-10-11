@@ -1,0 +1,15 @@
+[register]
+provider = "scb"
+slug = "test"
+native_id = "1"
+
+[[group]]
+register = "scb/test"
+key = "umbrella"
+label = "Umbrella"
+axes = []
+[[group.members]]
+variable = "a"
+[[group.members]]
+variable = "b"
+delivery_column = "B"

@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "fails_if": "the register loader accepts an [[errata.occurrence_period]] edition_scope bound that is not a real ISO date, which the compile then reads as unresolved and reports as a stale entry",
+  "note": "The first interval's bare years are the allowed twin (errata-occurrence-period-source-coordinates-load); only 2019-02-30 is impossible.",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.occurrence_period]] entry 1",
+    "message_contains": [
+      "edition_scope bounds must be an ISO date"
+    ]
+  }
+}

@@ -25,7 +25,6 @@ from reg_meta_build.source_coding import (
     copied_coding_fingerprints,
     resolve_code_membership,
 )
-from reg_meta_build.source_coding_choices import coding_expectations
 from reg_meta_build.source_curation import (
     ClassificationDecision,
     CurationCase,
@@ -118,7 +117,6 @@ def _setup(*, code="01"):
             column_key=occurrence.column_key,
             valid_from="2020-01-01",
             valid_to="2020-12-31",
-            expected_codings=coding_expectations(claims, "2020-01-01", "2020-12-31"),
             expected_source_codings=copied_coding_fingerprints(claims),
             classification="fixture",
             expected_classification=canonical_sha256(

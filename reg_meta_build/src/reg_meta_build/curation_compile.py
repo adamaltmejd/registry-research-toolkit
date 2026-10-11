@@ -5262,9 +5262,6 @@ def compile_coding_register(
                                 column_key=column,
                                 valid_from=start,
                                 valid_to=end,
-                                expected_codings=coding_expectations(
-                                    claims, start, end
-                                ),
                                 data_warning=entry.data_warning,
                                 fields=tuple(entry.fields),
                                 reason=entry.reason,
@@ -5285,9 +5282,6 @@ def compile_coding_register(
                                 column_key=column,
                                 valid_from=start,
                                 valid_to=end,
-                                expected_codings=coding_expectations(
-                                    claims, start, end
-                                ),
                                 expected_source_codings=copied_coding_fingerprints(
                                     claims
                                 ),

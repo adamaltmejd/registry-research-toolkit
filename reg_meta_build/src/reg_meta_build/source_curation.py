@@ -1127,7 +1127,7 @@ class SupportedCodingAssociation(_CurationModel):
         return self
 
 
-class _ColumnDecision(CodingWindow):
+class _ColumnDecision(FiniteCurationWindow):
     reviewed: Literal[True]
     column_key: NativeKey
     reason: str = Field(min_length=1)
@@ -1150,7 +1150,7 @@ class SourceWarningDecision(_ColumnDecision):
     fields: tuple[Literal["data_type", "coding"], ...] = Field(min_length=1)
 
 
-class CodingDecision(_ColumnDecision):
+class CodingDecision(_ColumnDecision, CodingWindow):
     """Assign coding, explicit uncoded meaning, or omission to one exact window."""
 
     kind: Literal["coding"] = "coding"
@@ -1204,8 +1204,6 @@ class ClassificationDecision(_ColumnDecision):
 
     @model_validator(mode="after")
     def _scoped_sentinels(self) -> Self:
-        if not self.expected_codings:
-            raise ValueError("scoped sentinels require guarded inline coding")
         if any(not code or not label for code, label in self.sentinel_members):
             raise ValueError("scoped sentinel codes and labels must be nonempty")
         if len({code for code, _ in self.sentinel_members}) != len(

@@ -522,7 +522,7 @@ def apply_classification_cases(
     diagnostics.extend(dict.fromkeys(withheld_bindings))
     canonical = {}
     sentinel_maps = {}
-    # Compile pins each sentinel case's codings, source fingerprints, book digest and
+    # Compile pins each sentinel case's source fingerprints, book digest and
     # window from this same resolve_source_scope call (compile_coding_register), and
     # refuses noncanonical-overlap or uncovered windows there; no case is persisted.
     # So application re-checks none of them.

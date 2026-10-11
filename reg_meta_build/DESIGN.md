@@ -648,11 +648,12 @@ is already in the register tree as accepted, so accepted families have one recor
 Candidate output is worklist data and is never build curation. A group lists exact
 variables or delivery-column members. One-axis groups may use a flat value/label
 coordinate; multiple axes name their labels and each member's coordinates; axis-less
-groups are explicit umbrellas (`axes = []`) with no member coordinates. A group sets
-exactly one of `axis` and `axes`, so a missing axis cannot load as an umbrella and drop
-its coordinates. They alter presentation, not identity or bindings.
-`[[code_label_pair]]` is also register-local: both FQIDs belong to the same register,
-and the pair only folds matching code and label concepts.
+groups are explicit umbrellas (`axes = []`) of whole variables, with no member
+coordinates or delivery columns. A group sets exactly one of `axis` and `axes`, so a
+missing axis cannot load as an umbrella and drop its coordinates. They alter
+presentation, not identity or bindings. `[[code_label_pair]]` is also register-local:
+both FQIDs belong to the same register, and the pair only folds matching code and label
+concepts.
 
 Delivery descriptions are enrichment, not source facts: they fill an empty description
 only when an exact delivery-column match grounds the text. The worklist generator drops
