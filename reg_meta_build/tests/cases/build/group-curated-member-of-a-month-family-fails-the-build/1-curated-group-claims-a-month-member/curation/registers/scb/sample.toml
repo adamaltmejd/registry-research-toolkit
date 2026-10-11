@@ -24,4 +24,5 @@ slug = "other"
 register = "scb/sample"
 key = "pay"
 label = "Pay"
+axes = []
 members = [{ variable = "lonjan" }, { variable = "value" }]
