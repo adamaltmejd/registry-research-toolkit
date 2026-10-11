@@ -3,13 +3,16 @@
     {
       "table": "issues",
       "fields": ["code", "subject", "valid_from", "valid_to"],
-      "note": "Every issue of the build. MIXED and PARTIAL withhold exactly their conflicting overlap; MISSING's 2022 lacks Second, which the omission (its own period, 2022-2024) took away; the untyped column is the only unknown type; SIBLING's 2022 is the one disputed shared slice, once per disputed text (the fields below). No unexplained_delivery_* issue: every withheld or sibling-assigned window is explained, the old allowed check_delivery_coverage calls, and a text fact the shared state nulls is explained by its conflicting_representation_fact, not reported again as a delivery fact change.",
+      "note": "Every issue of the build. MIXED and PARTIAL withhold exactly their conflicting overlap; MISSING's 2022 lacks Second, which the omission (its own period, 2022-2024) took away; the untyped column is the only unknown type; SIBLING's 2022 is a disputed shared slice, once per disputed text (the fields below), ONETEXT's once for its one disputed text and DESCRIBED's once for its description, whose permitted literal descriptions stay on the states (delivery_text_projected). No unexplained_delivery_* issue: every withheld or sibling-assigned window is explained, the old allowed check_delivery_coverage calls, and a text fact the shared state nulls is explained by its conflicting_representation_fact, not reported again as a delivery fact change.",
       "rows": [
         ["conflicting_representation_decisions", "scb/mixed/income", "2022-01-01", "2022-12-31"],
         ["conflicting_representation_decisions", "scb/partial/income", "2022-07-01", "2022-12-31"],
         ["conflicting_representation_fact", "scb/sibling/income", "2022-01-01", "2022-12-31"],
         ["conflicting_representation_fact", "scb/sibling/income", "2022-01-01", "2022-12-31"],
+        ["conflicting_representation_fact", "scb/onetext/income", "2022-01-01", "2022-12-31"],
+        ["conflicting_representation_fact", "scb/described/income", "2022-01-01", "2022-12-31"],
         ["conflicting_variable_fact", "scb/sibling/income", null, null],
+        ["delivery_text_projected", "scb/described/income", null, null],
         ["curated_state_omission", "scb/missing/income", "2022-01-01", "2024-12-31"],
         ["missing_representation_metadata", "scb/missing/income", "2022-01-01", "2022-12-31"],
         ["unknown_data_type", "scb/storeuntyped/income", "2020-01-01", "2020-12-31"]
@@ -37,7 +40,13 @@
         ["sibling", "First", "2020-01-01", "2021-12-31"],
         ["sibling", "First", "2022-01-01", "2022-12-31"],
         ["sibling", "Second", "2023-01-01", "2024-12-31"],
-        ["missing", "First", "2020-01-01", "2021-12-31"]
+        ["missing", "First", "2020-01-01", "2021-12-31"],
+        ["onetext", "First", "2020-01-01", "2021-12-31"],
+        ["onetext", "First", "2022-01-01", "2022-12-31"],
+        ["onetext", "Second", "2023-01-01", "2024-12-31"],
+        ["described", "First", "2020-01-01", "2021-12-31"],
+        ["described", "First", "2022-01-01", "2022-12-31"],
+        ["described", "Second", "2023-01-01", "2024-12-31"]
       ]
     },
     {
@@ -62,7 +71,11 @@
         ["partial", "First", "2022-01-01", "2022-06-30", "shared", null, null, null],
         ["partial", "Second", "2022-01-01", "2022-06-30", "shared", null, null, null],
         ["sibling", "First", "2022-01-01", "2022-12-31", "shared", null, null, null],
-        ["sibling", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null]
+        ["sibling", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["onetext", "First", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["onetext", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["described", "First", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["described", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null]
       ]
     },
     {
@@ -103,8 +116,37 @@
     {
       "table": "variables",
       "where": {"register": "sibling"},
-      "fields": ["column", "definition"],
-      "rows": [["First", null], ["Second", null]]
+      "fields": ["column", "definition", "operational_definition", "source_register_text"],
+      "note": "The variable's own texts reconcile every occurrence, not the shared slice: the two definitions conflict, but First's blank operational definition and source attribution are unobserved, not contradicting, so the variable carries Second's texts. The shared 2022 state compares the two columns' literal texts instead, where a blank against a text is a dispute (above).",
+      "rows": [
+        ["First", null, "Different interpretation", "Second questionnaire"],
+        ["Second", null, "Different interpretation", "Second questionnaire"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": ["scb/onetext/income", "scb/described/income"]},
+      "fields": ["subject", "code", "fields", "valid_from", "valid_to"],
+      "note": "ONETEXT disputes only the operational definition (Second's against First's blank); both carry the same source attribution, so no dispute names it. DESCRIBED disputes only the description, which its delivery-metadata entry permits to vary.",
+      "rows": [
+        ["scb/onetext/income", "conflicting_representation_fact", ["operational_definition"], "2022-01-01", "2022-12-31"],
+        ["scb/described/income", "conflicting_representation_fact", ["description"], "2022-01-01", "2022-12-31"],
+        ["scb/described/income", "delivery_text_projected", ["description"], null, null]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": ["onetext", "described"]},
+      "fields": ["register", "valid_from", "description", "operational_definition", "source_register_text"],
+      "note": "The shared 2022 state nulls only the disputed fact: ONETEXT keeps the agreed source attribution beside its nulled operational definition, and DESCRIBED nulls only its description. Outside 2022 each original keeps its own texts.",
+      "rows": [
+        ["onetext", "2020-01-01", null, null, "Shared questionnaire"],
+        ["onetext", "2022-01-01", null, null, "Shared questionnaire"],
+        ["onetext", "2023-01-01", null, "Different interpretation", "Shared questionnaire"],
+        ["described", "2020-01-01", "First description", null, null],
+        ["described", "2022-01-01", null, null, null],
+        ["described", "2023-01-01", "Second description", null, null]
+      ]
     },
     {
       "table": "state_codes",

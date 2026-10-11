@@ -81,15 +81,19 @@
       "fields": [
         "fields"
       ],
-      "match": "set",
       "rows": [
+        [
+          [
+            "name"
+          ]
+        ],
         [
           [
             "name"
           ]
         ]
       ],
-      "note": "The two name entries of condconf conflict on the name field."
+      "note": "The two name entries of condconf conflict on the name field: one issue per competing entry, not one per physical alternative of the shared record (three here)."
     },
     {
       "table": "issue_refs",
@@ -99,8 +103,16 @@
       "fields": [
         "key"
       ],
-      "match": "set",
       "rows": [
+        [
+          [
+            "register:13",
+            "variant:10",
+            "edition:2020",
+            "variable:5",
+            "member:83"
+          ]
+        ],
         [
           [
             "register:13",
@@ -111,7 +123,7 @@
           ]
         ]
       ],
-      "note": "No other register's entries conflict."
+      "note": "No other register's entries conflict, and each of the two issues cites the shared record once."
     },
     {
       "table": "issues",

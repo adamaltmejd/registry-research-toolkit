@@ -430,12 +430,15 @@ def _slice_of(state: ResolvedState, source: ResolvedState) -> bool:
 
 
 # The obligation claim each fact an accepted representation can dispute travels
-# on. The column texts share one claim, `column_text_claim`.
+# on. The column texts share one claim, `column_text_claim`. A shared state never
+# disputes the definition (that conflict stays variable-level), and a disputed name
+# leaves the variable without the common name its states would need.
 _DISPUTED_FACT_CLAIMS = {
     "data_type": "data_type_claim",
     "data_length": "data_length_claim",
     "measurement_unit": "measurement_unit_claim",
     "coding": "coding_claim",
+    "description": "description_claim",
 }
 _DISPUTED_COLUMN_TEXTS = ("operational_definition", "source_register_text")
 
@@ -446,8 +449,9 @@ def _null_conflicting_facts(
 ) -> tuple[CoverageObligation, ...]:
     """Keep the window but drop the exact fact an accepted representation disputes.
 
-    Type, length, literal unit, coding and the column texts (operational
-    definition, source attribution) travel on the obligation. Partial overlaps
+    Type, length, literal unit, coding, a permitted delivery description and the
+    column texts (operational definition, source attribution) travel on the
+    obligation. Partial overlaps
     split the obligation so the safe slice stays fully checked, the same period
     rule waived delivery already uses. A nulled fact claim is simply None, which
     the boundary guard never compares. A disputed column text nulls only its own

@@ -1338,18 +1338,23 @@ claim the written state must equal, a negative claim the written state must leav
 absent, or no claim, which is never compared. When an alias window delivers an
 obligation's window, the shared states behind the alias must cover that overlap; a slice
 with no written state behind it is refused. A conflicting representation fact clears the
-claim to none. Genuine source gaps, unknown scopes, and pooled scopes without a carried
-range claim no delivery in the first place. A range-carrying pooled scope claims its
-whole range as one obligation, discharged by its one marked state. A variable — or one
-of its variants — that the dependency ledger withholds outright, with source evidence,
-answers for its own claim through that entry, whichever stage recorded it, and for
-nothing past that exact coordinate: an exact source-linked blocker stays a curation
-blocker without covering a sibling. Anything else missing is an engineering defect, not
-a curation question: the build names the source records and the exact missing window. A
-strict build stops before any output is placed; a diagnostic build records the miss as
-an error diagnostic and still completes with a nonpublishable database. A missing
-optional field or an unrelated diagnostic is no permission to drop the state it belongs
-to.
+claim to none, for exactly the disputed fact: type, length, unit, coding, a permitted
+delivery description, or one of the two column texts while the other stays checked. The
+definition needs no waiver: a shared state never disputes it, and a definition conflict
+stays the variable-level `conflicting_variable_fact`. Nor does the name: siblings that
+disagree on it leave the variable without a common name, so it forms no variable unless
+a name permission keeps a positive name on every state, which a nameless shared state
+cannot. Genuine source gaps, unknown scopes, and pooled scopes without a carried range
+claim no delivery in the first place. A range-carrying pooled scope claims its whole
+range as one obligation, discharged by its one marked state. A variable — or one of its
+variants — that the dependency ledger withholds outright, with source evidence, answers
+for its own claim through that entry, whichever stage recorded it, and for nothing past
+that exact coordinate: an exact source-linked blocker stays a curation blocker without
+covering a sibling. Anything else missing is an engineering defect, not a curation
+question: the build names the source records and the exact missing window. A strict
+build stops before any output is placed; a diagnostic build records the miss as an error
+diagnostic and still completes with a nonpublishable database. A missing optional field
+or an unrelated diagnostic is no permission to drop the state it belongs to.
 
 ### Groups, relations and dependent output
 
