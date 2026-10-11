@@ -559,6 +559,15 @@ release workflow. If the private candidate is unavailable when a fresh build is
 required, stop publication at step 8c; a runtime drift flag cannot make an old asset
 safe.
 
+### 12. Re-pin G1 to the new tag
+
+Open a PR that moves the pin in `conformance/differential/config.toml` to
+`reg_meta/vX.Y.Z` (the tag and each asset's digest from
+`gh release view reg_meta/vX.Y.Z --json assets`), then run
+`uv run --no-project scripts/gate.py g1` on the committed tree. Main at the release
+commit must show no difference beyond the standing exceptions; report any other
+difference instead of adding an exception (`conformance/README.md`, "The pin").
+
 ## Error recovery
 
 - If the commit was pushed but `gh release create` fails: the commit is on main — just
