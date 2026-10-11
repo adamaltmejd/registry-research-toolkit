@@ -1,0 +1,16 @@
+{
+  "replaces": [
+    "PR #1432 review: an unchecked fallback key and a TEXT key taken for a surrogate id"
+  ],
+  "fails_if": "dbdiff keys `version` by its non-id columns although its two rows share them, so the population moved from version 1 to version 2 compares equal and the run reads identical; or it takes provider's TEXT primary key for a surrogate id and fails on putting 'scb' into an integer id map (exit 2)",
+  "note": "No natural key identifies `version`, so it keeps its ids, the population's reference stays a raw id, and the report names `version` under raw_id_tables. register's shifted id (1 in A, 7 in B) still compares by its natural key, which holds the TEXT provider key 'scb' as it is, so register and version are identical.",
+  "argv": [
+    "--json",
+    "{work}/a.db",
+    "{work}/b.db"
+  ],
+  "databases": {
+    "a.db": "a.sql",
+    "b.db": "b.sql"
+  }
+}

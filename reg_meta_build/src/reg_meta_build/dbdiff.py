@@ -68,7 +68,8 @@ added variable shifts the ids of every later one. Rows are therefore compared
 on a projection, never on raw ids:
 
 - a table's own surrogate id (an ``INTEGER PRIMARY KEY``, or a single-column
-  UNIQUE column some FOREIGN KEY targets) is left out of its rows;
+  UNIQUE INTEGER column some FOREIGN KEY targets) is left out of its rows; a
+  TEXT key is natural and compared as it is;
 - a column holding another table's surrogate id (a declared FOREIGN KEY,
   followed through composite keys to the table that owns the id, plus the few
   undeclared references in `_UNDECLARED_REFERENCES`) is replaced by that row's
@@ -76,8 +77,11 @@ on a projection, never on raw ids:
   variant FQIDs, a state's key), else the table's smallest declared UNIQUE key
   without the id, else all its other columns. A one-column key is its value, a
   longer one an array, and key columns that are references nest their own
-  natural key. A key that does not hold unique in the data falls back to all
-  other columns.
+  natural key. The first of these the data holds unique is used. When none is
+  (two rows equal but for their id), the table keeps its id and references to
+  it stay raw ids, so a child moved between the two rows is still reported; the
+  report names those tables (`raw_id_tables`), whose differences may be id
+  noise. A false difference is acceptable, a hidden one is not.
 
 So two builds that differ only in id assignment compare identical, and a
 sample row shows ``variable_id = [["scb", "lisa"], "kon"]``, not ``4711``. The
@@ -261,6 +265,9 @@ class DiffReport:
     table_results: tuple[TableContentResult, ...] = ()
     # column name lists for shared tables, for rendering SampleRow values.
     table_columns: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    # Referenced tables no natural key identifies, in either DB: their ids and the
+    # references to them compare raw, so a difference there may be id noise.
+    raw_id_tables: tuple[str, ...] = ()
 
     @property
     def schema_differs(self) -> bool:
@@ -409,13 +416,19 @@ class _KeyPlan:
     references: dict[tuple[str, str], str]
     # referenced table -> the columns of its natural key.
     natural_keys: dict[str, tuple[str, ...]]
+    # Referenced tables no key identifies (rows equal but for their id): they keep
+    # their id, and references to them stay raw ids, so a moved child shows.
+    raw_ids: frozenset[str]
 
     def projected(self, table: str) -> tuple[str, ...]:
-        """``table``'s compared columns: all but its own surrogate id."""
+        """``table``'s compared columns: all but its own surrogate id, unless the
+        table keeps its raw ids."""
         kept = tuple(
             c
             for c in self.columns[table]
-            if (table, c) in self.references or self.surrogates.get(table) != c
+            if (table, c) in self.references
+            or table in self.raw_ids
+            or self.surrogates.get(table) != c
         )
         return kept or self.columns[table]
 
@@ -445,6 +458,13 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
     }
     uniques: dict[str, list[tuple[str, ...]]] = {}
     surrogates: dict[str, str] = {}
+
+    def is_integer(table: str, column: str) -> bool:
+        # A surrogate id is an INTEGER column; a TEXT key ('scb') is natural and is
+        # compared as it is.
+        info = schema.tables[table]
+        return next(c for c in info if c[0] == column)[1].upper() == "INTEGER"
+
     for table in tables:
         info = schema.tables[table]
         pk = tuple(c[0] for c in sorted((c for c in info if c[4]), key=lambda c: c[4]))
@@ -459,10 +479,7 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
                 if None not in key and key not in keys:
                     keys.append(key)
         uniques[table] = keys
-        if (
-            len(pk) == 1
-            and next(c for c in info if c[0] == pk[0])[1].upper() == "INTEGER"
-        ):
+        if len(pk) == 1 and is_integer(table, pk[0]):
             surrogates[table] = pk[0]
         for fk in conn.execute(f"PRAGMA foreign_key_list({_quote(table)})"):
             parent = fk["table"]
@@ -473,10 +490,14 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
                 parent_pk = [c for c in schema.tables[parent] if c[4]]
                 to = sorted(parent_pk, key=lambda c: c[4])[fk["seq"]][0]
             edges[table, fk["from"]] = (parent, to)
-    # A single-column UNIQUE column a foreign key targets is its table's id too
-    # (variable_state.state_id).
+    # A single-column UNIQUE INTEGER column a foreign key targets is its table's id
+    # too (variable_state.state_id).
     for parent, to in edges.values():
-        if parent not in surrogates and (to,) in uniques[parent]:
+        if (
+            parent not in surrogates
+            and (to,) in uniques[parent]
+            and is_integer(parent, to)
+        ):
             surrogates[parent] = to
 
     def owner(source: tuple[str, str]) -> str | None:
@@ -495,17 +516,22 @@ def _key_plan(conn: sqlite3.Connection, schema: _Schema) -> _KeyPlan:
 
     references = {s: t for s in sorted(edges) if (t := owner(s)) is not None}
     natural_keys: dict[str, tuple[str, ...]] = {}
+    raw_ids: set[str] = set()
     pending = sorted(set(references.values()))
     while pending:
         table = pending.pop()
-        if table in natural_keys:
+        if table in natural_keys or table in raw_ids:
             continue
         key = _natural_key(
             conn, table, columns[table], surrogates[table], uniques[table]
         )
+        if key is None:
+            raw_ids.add(table)
+            continue
         natural_keys[table] = key
         pending.extend(references[table, c] for c in key if (table, c) in references)
-    return _KeyPlan(columns, surrogates, references, natural_keys)
+    references = {s: t for s, t in references.items() if t not in raw_ids}
+    return _KeyPlan(columns, surrogates, references, natural_keys, frozenset(raw_ids))
 
 
 def _natural_key(
@@ -514,17 +540,19 @@ def _natural_key(
     columns: tuple[str, ...],
     surrogate: str,
     uniques: list[tuple[str, ...]],
-) -> tuple[str, ...]:
+) -> tuple[str, ...] | None:
     """The `_NATURAL_KEYS` key, else the smallest declared UNIQUE key without the
-    surrogate id, else all other columns. A key that the data does not hold unique
-    (SQLite UNIQUE admits repeated NULLs) is passed over."""
+    surrogate id, else all other columns; the first the data holds unique (SQLite
+    UNIQUE admits repeated NULLs). None when none is: two rows equal but for their
+    id would share a key, and a child moved between them would compare equal."""
     candidates = [
         k for k in (_NATURAL_KEYS.get(table),) if k and set(k) <= set(columns)
     ]
     candidates += sorted(
         (k for k in uniques if surrogate not in k), key=lambda k: (len(k), k)
     )
-    for key in candidates:
+    candidates.append(tuple(c for c in columns if c != surrogate))
+    for key in filter(None, candidates):
         cols = ", ".join(_quote(c) for c in key)
         (repeated,) = conn.execute(
             f"SELECT (SELECT COUNT(*) FROM {_quote(table)}) "
@@ -532,7 +560,7 @@ def _natural_key(
         ).fetchone()
         if repeated == 0:
             return key
-    return tuple(c for c in columns if c != surrogate)
+    return None
 
 
 def _map_name(prefix: str, table: str) -> str:
@@ -776,7 +804,11 @@ def diff_db_content(
     finally:
         conn_a.close()
         conn_b.close()
-    report = DiffReport(db_a=db_a, db_b=db_b)
+    report = DiffReport(
+        db_a=db_a,
+        db_b=db_b,
+        raw_id_tables=tuple(sorted(plan_a.raw_ids | plan_b.raw_ids)),
+    )
     _compare_schema(schema_a, schema_b, report)
     work = _work_connection(db_a, db_b)
     try:
@@ -968,6 +1000,11 @@ def format_report(report: DiffReport) -> str:
     differences are itemized table-by-table with sample rows."""
     out: list[str] = []
     out.append(f"Comparing content:\n  A: {report.db_a}\n  B: {report.db_b}")
+    if report.raw_id_tables:
+        out.append(
+            "  raw ids (no natural key identifies their rows; a difference in them "
+            f"or a reference to them may be id noise): {', '.join(report.raw_id_tables)}"
+        )
 
     if report.identical:
         n = len(report.table_results)
@@ -1080,6 +1117,7 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
         "db_a": str(report.db_a),
         "db_b": str(report.db_b),
         "identical": report.identical,
+        "raw_id_tables": list(report.raw_id_tables),
         "schema": {
             "tables_only_in_a": list(report.tables_only_in_a),
             "tables_only_in_b": list(report.tables_only_in_b),

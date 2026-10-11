@@ -1,0 +1,40 @@
+{
+  "identical": false,
+  "raw_id_tables": ["version"],
+  "tables": [
+    {
+      "table": "population",
+      "identical": false,
+      "sample_a_not_b": [
+        {
+          "net": 1,
+          "row": {
+            "version_id": 1,
+            "name": "persons"
+          }
+        }
+      ],
+      "sample_b_not_a": [
+        {
+          "net": -1,
+          "row": {
+            "version_id": 2,
+            "name": "persons"
+          }
+        }
+      ]
+    },
+    {
+      "table": "provider",
+      "identical": true
+    },
+    {
+      "table": "register",
+      "identical": true
+    },
+    {
+      "table": "version",
+      "identical": true
+    }
+  ]
+}
