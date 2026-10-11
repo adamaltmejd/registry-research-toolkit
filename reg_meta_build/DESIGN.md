@@ -1140,10 +1140,12 @@ Where one literal code has substantive meanings in other source lists, finite
 `coding.sentinel` entries name exact source code-label pairs at one accepted owner,
 variant and column. They compile through the existing coding compiler into checked
 classification decisions. Complete original fields, scopes, coding, effective peers,
-effective delivery and the selected codebook are guarded. Changed evidence withholds the
-scoped decision. Only matching pairs inside the reviewed windows become local sentinels;
-source lists and global codebooks remain unchanged. Missing memberships, competing lists
-remain errors; other noncanonical codes are retained as source extensions.
+effective delivery and the selected codebook are guarded when the entry compiles, from
+the same build it is applied to; application re-evaluates only the case's targets and
+peer guards. Changed evidence withholds the scoped decision. Only matching pairs inside
+the reviewed windows become local sentinels; source lists and global codebooks remain
+unchanged. Missing memberships, competing lists remain errors; other noncanonical codes
+are retained as source extensions.
 
 The resolver carries each accepted local exception to the writer as a checked
 certificate: literal column, finite state window, exact code-label pairs, selected
