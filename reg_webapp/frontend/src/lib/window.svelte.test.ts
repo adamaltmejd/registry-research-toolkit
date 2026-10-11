@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  newProjectData,
   type ProjectStudyWindow,
   type RawDraft,
   serializeProjectData,
@@ -80,8 +81,10 @@ describe("windowStore — active draft (project hydrate + write-back)", () => {
     // An opened spec is held verbatim, so `window` can be any JSON. Fails if the
     // store reads `draft.window` through a cast instead of `safeStudyWindow`: the
     // string years would reach every window consumer typed as a valid window.
-    projectStore.newProject(SEED);
-    projectStore.updateField("window", { from: "2000", to: "2010" });
+    projectStore.loadProject({
+      ...newProjectData(SEED),
+      window: { from: "2000", to: "2010" },
+    });
     expect(windowStore.value).toBeNull();
   });
 
