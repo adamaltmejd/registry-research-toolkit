@@ -185,7 +185,6 @@ def _member_scope(
     section_window: SourceValueWindow | None,
     alternatives: tuple[SourceValueWindow | None, ...],
     *,
-    missing_validity: str,
     invalid_item: bool,
 ) -> tuple[TemporalScope | None, str | None]:
     # Source lists repeat the same periods across thousands of codes. Cache only
@@ -193,7 +192,7 @@ def _member_scope(
     constraints = tuple(
         window for window in (supplied_window, section_window) if window is not None
     )
-    if invalid_item or (not alternatives and missing_validity == "unknown"):
+    if invalid_item:
         return _unknown("source item validity is unknown"), "unknown_code_validity"
     if any(
         window is None or window.status == "unknown" for window in alternatives
@@ -518,7 +517,6 @@ class ValueBindingSession:
                     association.supplied_window,
                     association.section_window,
                     validity_windows,
-                    missing_validity=join.missing_validity,
                     invalid_item=invalid_item,
                 )
                 if (
@@ -537,7 +535,6 @@ class ValueBindingSession:
                         and association.section_window.status == "known"
                         else None,
                         (),
-                        missing_validity="unrestricted",
                         invalid_item=False,
                     )
                     if bound_issue is None:
@@ -573,7 +570,6 @@ class ValueBindingSession:
                         association.supplied_window,
                         association.section_window,
                         (),
-                        missing_validity="unrestricted",
                         invalid_item=False,
                     )
                     if (

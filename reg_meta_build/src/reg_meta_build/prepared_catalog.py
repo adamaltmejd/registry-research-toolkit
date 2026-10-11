@@ -640,9 +640,9 @@ def prepare_catalog_sources(
                         tables(result.tables, count)
                     elif entry.role == "scb_values":
                         result = clean_scb_values(bundle.snapshot)
-                        validity_entry = entries[
+                        validity_revision = entries[
                             ("snapshot", "VardemangderValidDates.csv")
-                        ]
+                        ].revision
                         record_revision = entries[
                             ("snapshot", "Registerinformation.csv")
                         ].revision
@@ -650,26 +650,27 @@ def prepare_catalog_sources(
                             raise PreparedCatalogError(
                                 "value source requires its declared member source"
                             )
+                        # The snapshot already refuses Vardemangder.csv without
+                        # VardemangderValidDates.csv (input_snapshot.py).
+                        if validity_revision is None:
+                            raise PreparedCatalogError(
+                                "value source requires its item validity source"
+                            )
                         values(
                             revision,
                             result,
                             count,
                             validity=result.validity,
-                            validity_revision=validity_entry.revision,
+                            validity_revision=validity_revision,
                             join=SourceValueJoin(
                                 record_sources=(record_revision.dataset,),
                                 member_target="native_member",
                                 member_format="integer",
                                 validity_target="item",
-                                missing_validity="unrestricted"
-                                if validity_entry.present
-                                else "unknown",
-                                rule="Integer member identifiers join source member IDs; item IDs join the complete validity table. Listed blank bounds are open; an unlisted item has no additional restriction only when that table is present.",
+                                rule="Integer member identifiers join source member IDs; item IDs join the complete validity table. Listed blank bounds are open; an unlisted item has no additional restriction.",
                                 provenance=(
                                     revision.artifact_path,
-                                    validity_entry.revision.artifact_path
-                                    if validity_entry.revision
-                                    else "validity-source:declared-absent",
+                                    validity_revision.artifact_path,
                                 ),
                             ),
                         )
@@ -728,7 +729,6 @@ def prepare_catalog_sources(
                                     member_target="member_name",
                                     member_format="none",
                                     validity_target="row",
-                                    missing_validity="unrestricted",
                                     rule="Explicit source variable references and inline record IDs bind only within this workbook; sheet-name suffixes are hints. Row validity and supplied or section periods constrain code membership.",
                                     provenance=(revision.artifact_path,),
                                 ),
@@ -776,7 +776,6 @@ def prepare_catalog_sources(
                                     else "unbound",
                                     member_format="none",
                                     validity_target="row",
-                                    missing_validity="unrestricted",
                                     rule="An exact declared list name binds only in its selected provider source namespace. Classification lists remain unbound until common curation explicitly assigns them.",
                                     provenance=(revision.artifact_path,),
                                 ),

@@ -1,0 +1,39 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject", "case_id"],
+      "rows": [
+        ["naming_slug_collision", "error", "people", "curation/registers/scb/sample.toml#register_variant/1.10"],
+        ["naming_slug_collision", "error", "people", "curation/registers/scb/sample.toml#register_variant/1.11"],
+        ["unnamed_delivered_variant", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 1)", null],
+        ["unnamed_delivered_variant", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 1)", null],
+        ["withheld_catalog_dependency", "error", "variant_successions:0", null],
+        ["withheld_catalog_dependency", "error", "variant_successions:0", null],
+        ["withheld_register_dependency", "error", "('scb-registerinformation', 'scb', 'register', 'native-int', 1, 'variable', 'native-int', 101)", null]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "withheld_catalog_dependency"},
+      "fields": ["ref"],
+      "match": "set",
+      "rows": {
+        "refs_of": {"table": "issue_refs", "where": {"code": "unnamed_delivered_variant"}}
+      }
+    },
+    {
+      "table": "successions",
+      "fields": ["grain", "predecessor", "successor", "predecessor_variant", "successor_variant"],
+      "rows": []
+    },
+    {
+      "table": "registers",
+      "fields": ["register"],
+      "rows": [
+        ["anchor"]
+      ]
+    }
+  ]
+}

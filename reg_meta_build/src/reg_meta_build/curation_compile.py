@@ -3000,8 +3000,12 @@ def compile_deferred_partitions(
     dict[Any, tuple[NamingAmbiguity, ...]],
     dict[Any, set[NativeKey]],
     dict[Any, dict[NativeKey, frozenset[tuple[SourceRecordRef, str]]]],
+    dict[Any, tuple[NamingDeclaration, ...]],
 ]:
-    """Compile partition names and errata ownership for outside-slice references."""
+    """Compile partition names and errata ownership for outside-slice references.
+
+    The last mapping holds the split names a slug collision refused, by scope.
+    """
     states = load_freeze_states(tree.root)
     registers = {}
     entries_by_register = {}
@@ -3341,6 +3345,7 @@ def compile_deferred_partitions(
                     )
 
     naming = {}
+    refused = {}
     for scope in scopes:
         scope_key = scope.source, scope.register_key
         entries = tuple(bound_entries[scope_key])
@@ -3365,6 +3370,7 @@ def compile_deferred_partitions(
                 key=lambda item: (item.target.kind, repr(item.target.source_key)),
             )
         )
+        refused[scope_key] = conversion.refused
     return (
         naming,
         {key: tuple(value) for key, value in ambiguities.items()},
@@ -3373,6 +3379,7 @@ def compile_deferred_partitions(
             scope_key: {key: frozenset(rows) for key, rows in by_key.items()}
             for scope_key, by_key in members.items()
         },
+        refused,
     )
 
 
@@ -6950,11 +6957,18 @@ def compile_deferred_naming(
 ) -> tuple[
     dict[Any, tuple[Any, ...]],
     dict[Any, tuple[NamingAmbiguity, ...]],
+    dict[Any, tuple[NamingDeclaration, ...]],
 ]:
-    """Compile only declarations used to classify out-of-slice references."""
+    """Compile only declarations used to classify out-of-slice references.
+
+    A name one conversion refused for a slug collision is returned apart, by scope.
+    It still declares the FQID the complete build withholds, so a slice defers a
+    reference to it instead of reporting it missing. A collision between naming
+    sources is not checked here: both names stay declared, which defers the same.
+    """
     from .pipeline import CompiledScope
 
-    naming, *_ = compile_native_naming(tree, prepared, scopes, subset=True)
+    naming, *_, refused = compile_native_naming(tree, prepared, scopes, subset=True)
     scopes = tuple(
         CompiledScope.model_validate(
             {
@@ -6964,10 +6978,14 @@ def compile_deferred_naming(
         )
         for scope in scopes
     )
-    partition_naming, ambiguities, split_bases, partition_members = (
+    partition_naming, ambiguities, split_bases, partition_members, split_refused = (
         compile_deferred_partitions(tree, prepared, scopes)
     )
     naming = _partitioned_naming(naming, partition_naming, split_bases)
+    refused = {
+        key: (*refused.get(key, ()), *split_refused.get(key, ()))
+        for key in refused.keys() | split_refused.keys()
+    }
     _, matrix_naming, _, _ = compile_matrix_repr(tree, prepared, scopes, naming)
     naming = {
         key: (*values, *matrix_naming.get(key, ())) for key, values in naming.items()
@@ -6982,7 +7000,7 @@ def compile_deferred_naming(
     )
     for key, extra in errata_naming.items():
         naming[key] = (*naming.get(key, ()), *extra)
-    return naming, ambiguities
+    return naming, ambiguities, refused
 
 
 _GLOBAL_ACK_GUARDS = "acknowledge_global_guards_missing"

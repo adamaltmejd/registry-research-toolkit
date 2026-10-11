@@ -1,8 +1,8 @@
-"""Prepared value sources refuse an item join that reads an absent validity file as unrestricted."""
+"""Prepared value sources refuse an item join whose validity source is absent."""
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 
 import pytest
 from reg_meta_build.prepared_values import prepare_source_values
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-def _prepare(path: Path, missing: Literal["unknown", "unrestricted"]):
+def _prepare(path: Path):
     revision = SourceRevision.create(
         dataset="values",
         publisher="Fixture",
@@ -44,32 +44,27 @@ def _prepare(path: Path, missing: Literal["unknown", "unrestricted"]):
             member_target="native_member",
             member_format="integer",
             validity_target="item",
-            missing_validity=missing,
             rule="Fixture explicit structural relation",
             provenance=("fixture format",),
         ),
     )
 
 
-def test_absent_item_validity_is_refused_unless_read_as_unknown(
-    tmp_path: Path,
-) -> None:
+def test_absent_item_validity_is_refused(tmp_path: Path) -> None:
     """Input: an item-validity join whose validity source is absent (no revision).
 
-    Expected: preparing it with `missing_validity="unrestricted"` raises and
-    publishes nothing; the same source with `"unknown"` prepares, so its members
-    later bind as unknown validity.
+    Expected: preparing it raises and publishes nothing. An item join reads an
+    unlisted item as unrestricted, so an absent table would make every member
+    valid in every year.
 
     No build reaches this: the SCB snapshot refuses Vardemangder.csv without
     VardemangderValidDates.csv (test_scb_snapshot_selection.py), and
-    `prepared_catalog` declares an absent table `"unknown"` itself. This validator
-    is the prepared manifest's own contract behind both.
+    `prepared_catalog` refuses a value source without its validity revision. This
+    validator is the prepared manifest's own contract behind both.
 
     Fails if `PreparedValueManifest`'s join check (prepared_values.py) stops
-    refusing an absent item-validity source declared unrestricted, which would
-    let every member of such a list read as valid in every year.
+    refusing an item-validity join without a validity source revision.
     """
     with pytest.raises(ValueError, match="absent item-validity"):
-        _prepare(tmp_path / "unrestricted", "unrestricted")
-    assert not (tmp_path / "unrestricted").exists()
-    assert _prepare(tmp_path / "unknown", "unknown").association_count == 1
+        _prepare(tmp_path / "values")
+    assert not (tmp_path / "values").exists()
