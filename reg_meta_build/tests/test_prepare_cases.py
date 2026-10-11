@@ -293,49 +293,21 @@ def _scb_events(delivery: Delivery, args: dict[str, Any]) -> Any:
     return read_scb_events(delivery.snapshot, revision)
 
 
-# `reg_meta_build.errors.EXIT_INTERNAL`, the top-level handler's exit code; no case
-# claims it, so it is spelled here rather than imported.
-_EXIT_INTERNAL = 30
-
-
-def _prepare_refusal(exc: Exception) -> tuple[str, int]:
-    """The code and exit code `prepare-sources` reports (`cli._cmd_prepare_sources`):
-    a located refusal keeps its own, a `ValueError` or `OSError` is wrapped, and any
-    other exception reaches the CLI's top-level `internal_error`."""
-    if isinstance(exc, RegMetaError):
-        return exc.code, exc.exit_code
-    if isinstance(exc, (ValueError, OSError)):
-        return "source_preparation_failed", EXIT_CONFIG
-    return "internal_error", _EXIT_INTERNAL
-
-
-def _parse_sos_refusal(exc: Exception) -> tuple[str, int]:
-    """The code and exit code `parse-sos` reports (`cli._cmd_parse_sos`): a located
-    refusal, `SosParseError` included, keeps its own; nothing is wrapped."""
-    if isinstance(exc, RegMetaError):
-        return exc.code, exc.exit_code
-    return "internal_error", _EXIT_INTERNAL
-
-
-@dataclass(frozen=True)
-class Reader:
-    read: Callable[[Delivery, dict[str, Any]], Any]
-    refusal: Callable[[Exception], tuple[str, int]] = _prepare_refusal
-
+type Reader = Callable[[Delivery, dict[str, Any]], Any]
 
 # Each prepare input role's reader, as `prepared_catalog.prepare_catalog_sources`
 # dispatches it, plus the `parse-sos` inspection command.
 READERS: dict[str, Reader] = {
-    "sos_workbook": Reader(_sos_workbook),
-    "sos_parsed": Reader(_sos_parsed, _parse_sos_refusal),
-    "lisa_workbook": Reader(_lisa_workbook),
-    "code_list": Reader(_code_list),
-    "scb_column_types": Reader(_bundle_reader(read_scb_column_types)),
-    "scb_join_keys": Reader(_bundle_reader(read_scb_join_keys)),
-    "scb_records": Reader(_scb_records),
-    "scb_auxiliary": Reader(_scb_auxiliary),
-    "scb_events": Reader(_scb_events),
-    "scb_values": Reader(_scb_values),
+    "sos_workbook": _sos_workbook,
+    "sos_parsed": _sos_parsed,
+    "lisa_workbook": _lisa_workbook,
+    "code_list": _code_list,
+    "scb_column_types": _bundle_reader(read_scb_column_types),
+    "scb_join_keys": _bundle_reader(read_scb_join_keys),
+    "scb_records": _scb_records,
+    "scb_auxiliary": _scb_auxiliary,
+    "scb_events": _scb_events,
+    "scb_values": _scb_values,
 }
 
 
@@ -452,13 +424,14 @@ def read_case(case: Path) -> dict[str, Any]:
     return expected
 
 
-def check_error(exc: Exception, reader: Reader, error: dict[str, Any]) -> str | None:
-    code, exit_code = reader.refusal(exc)
-    message = exc.message if isinstance(exc, RegMetaError) else str(exc)
-    if code != error["code"]:
-        return f"code {code!r} != {error['code']!r}: {type(exc).__name__}: {message}"
-    if exit_code != error.get("exit_code", EXIT_CONFIG):
-        return f"exit code {exit_code} != {error.get('exit_code', EXIT_CONFIG)}"
+def check_error(exc: Exception, error: dict[str, Any]) -> str | None:
+    if not isinstance(exc, RegMetaError):
+        return f"unlocated refusal {type(exc).__name__}: {exc}"
+    message = exc.message
+    if exc.code != error["code"]:
+        return f"code {exc.code!r} != {error['code']!r}: {type(exc).__name__}: {message}"
+    if exc.exit_code != error.get("exit_code", EXIT_CONFIG):
+        return f"exit code {exc.exit_code} != {error.get('exit_code', EXIT_CONFIG)}"
     if type(exc).__name__ != error["type"]:
         return f"type {type(exc).__name__} != {error['type']}: {message}"
     for part in (error["locator"], *error.get("message_contains", ())):
@@ -476,12 +449,11 @@ def run_case(case: Path, work: Path) -> str | None:
     delivery = write_delivery(spec, work / "base")
     error = expected.get("error")
     try:
-        data = result_json(reader.read(delivery, args))
-    except Exception as exc:  # noqa: BLE001 - every refusal is mapped as the CLI maps it
+        data = result_json(reader(delivery, args))
+    except Exception as exc:  # noqa: BLE001 - every refusal is a departure or the oracle
         if error is None:
-            code, _ = reader.refusal(exc)
-            return f"refused {code}: {type(exc).__name__}: {exc}"
-        return check_error(exc, reader, error)
+            return f"refused: {type(exc).__name__}: {exc}"
+        return check_error(exc, error)
     if error is not None:
         return f"read, expected {error['code']}"
     for projection in expected["projections"]:
@@ -490,7 +462,7 @@ def run_case(case: Path, work: Path) -> str | None:
     for name, layer in spec.get("variants", {}).items():
         variant = write_delivery(spec, work / name, layer=layer)
         try:
-            other = result_json(reader.read(variant, args))
+            other = result_json(reader(variant, args))
         except Exception as exc:  # noqa: BLE001 - a refused variant is a departure
             return f"variant {name!r} refused: {type(exc).__name__}: {exc}"
         for path in expected["agree"]:

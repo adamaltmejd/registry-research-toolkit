@@ -7,7 +7,7 @@ returns for a provider delivery. The claim is stated as data:
   snapshot),
 - the reader the prepare step dispatches that input role to,
 - the expected result: projections of the prepared records and evidence, or the located
-  refusal the prepare command reports.
+  refusal the reader raises.
 
 `test_prepare_cases.py` runs every case and implements this format. A case fails when
 its reader stops matching its `expected.json`.
@@ -200,20 +200,17 @@ content must not.
 
   | Key                | Meaning                                                                                 |
   | ------------------ | --------------------------------------------------------------------------------------- |
-  | `code`             | Required. The error code the command reports (below).                                   |
-  | `exit_code`        | The exit code. Defaults to 10 (`EXIT_CONFIG`).                                          |
+  | `code`             | Required. The located error's code (below).                                             |
+  | `exit_code`        | The located error's exit code. Defaults to 10 (`EXIT_CONFIG`).                          |
   | `type`             | Required. The exception class the reader raises.                                        |
   | `locator`          | Required. Text in the message that names where the refusal points: a cell range, a row. |
   | `message_contains` | Further texts that must appear in the message.                                          |
 
-The prepare readers' refusals are reported as `prepare-sources` reports them: a located
-`RegMetaError` keeps its own code, a `ValueError` or `OSError` becomes
-`source_preparation_failed` (exit 10), and anything else reaches the command's top level
-as `internal_error` (exit 30). A reader's format refusal is a `SourceFormatError` (the
-reader's own error classes derive from it), so it keeps the code of the rule it breaks.
-`sos_parsed` reports as `parse-sos` does: a located refusal keeps its own code and
-nothing is wrapped. No case claims `internal_error`: a refusal that reaches it is a
-defect.
+A refusal is a located `RegMetaError`: a reader's format refusal is a
+`SourceFormatError` (the reader's own error classes derive from it), carrying the code
+of the rule it breaks. Any other exception is a departure. How a command reports these
+codes is claimed at the command, in `cases/cli/prepare-sources/` and
+`cases/cli/parse-sos/`.
 
 ## Readers
 

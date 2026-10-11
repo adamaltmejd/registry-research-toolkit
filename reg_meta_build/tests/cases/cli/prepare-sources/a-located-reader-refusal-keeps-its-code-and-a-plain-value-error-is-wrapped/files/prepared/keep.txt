@@ -1,0 +1,1 @@
+An earlier candidate the command must not overwrite.
