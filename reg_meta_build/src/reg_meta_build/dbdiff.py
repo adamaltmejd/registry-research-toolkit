@@ -24,7 +24,7 @@ What it does (see the four numbered requirements in the A4.1 brief):
 
 2. **Per-table content compare, order- and BLOB-safe** — for every user
    content table, compare row COUNT and an order-independent *multiset*
-   fingerprint. Each row is canonicalized to a type-tagged byte string
+   fingerprint of its natural-key projection (below). Each row is canonicalized to a type-tagged byte string
    (NULL-aware, BLOB-as-bytes, ints/floats/text given distinct encodings),
    hashed with BLAKE2b-128, and the per-row hashes are summed mod 2**128.
    Summation (not XOR) is deliberate: XOR cancels duplicate rows, so it
@@ -37,8 +37,8 @@ What it does (see the four numbered requirements in the A4.1 brief):
 3. **Ignore list** — only legitimately nondeterministic build metadata is
    excluded, and the default is as small as possible. The reg_meta schema
    has exactly one wall-clock field: `import_manifest`'s `import_date` row
-   (an ISO timestamp). `schema_version` and every content/ID column are
-   compared. `input_dir` (an absolute path) is *not* ignored by default —
+   (an ISO timestamp). `schema_version` and every content column are
+   compared; surrogate ids compare through their natural keys (below). `input_dir` (an absolute path) is *not* ignored by default —
    it is identical for a same-machine rebuild (the A4.1 case); a
    cross-machine comparison can add it explicitly. There is no other
    build/provenance table in the shipped DB (`build_manifest` is scaffolded
@@ -62,6 +62,35 @@ tables are included in the *schema* comparison (structure must match) but
 excluded from the *content* comparison. `sqlite_*` internal tables
 (`sqlite_sequence`, `sqlite_stat*`) are excluded throughout.
 
+**Catalog ids compare by natural key.** The catalog's internal integer ids
+(`variable_id`, `code_id`, `state_id`, ...) are dense and reassigned on every
+build, so one added variable shifts the ids of every later one. When both DBs
+are catalogs (they hold every table in `_IDS`), rows are compared on a
+projection, never on raw ids, driven by an explicit map of the catalog's ids:
+
+- `_IDS` names each table's own id column, left out of its rows, and the
+  natural key that identifies its rows (the FQIDs, a code's ``(code, label)``,
+  a state's key, ...);
+- `_REFERENCES` names every column that holds one of those ids and the table
+  that owns it. It compares as a tagged JSON array: ``["k", key]`` with the
+  row's natural key, ``["d", id]`` for an id no row holds. A NULL stays NULL.
+  A key is a JSON array of its columns (a NULL column is JSON null); a data
+  value in it is a JSON scalar (a BLOB a ``{"blob": hex}`` object) and a
+  reference in it nests its own tagged array, so a reference never equals
+  data or another kind of reference.
+
+Before the diff, each catalog is checked against the map (`_check_catalog`),
+and any failure exits 2 with a named reason rather than a guess: a mapped
+column missing; an INTEGER primary key or INTEGER foreign key the map does not
+cover (so an id column added to the DDL without updating this map fails
+closed); a NULL or non-integer id; a natural key the data does not hold unique.
+
+So two catalog builds that differ only in id assignment compare identical. The
+comparison uses the stored JSON text; reports decode it for display only
+(`_display`), so a sample row shows ``variable_id = [["scb", "lisa"], "kon"]``,
+not ``4711``. Any other pair of DBs (a docs DB, a test fixture) compares raw
+rows, ids included.
+
 Canonicalization is type-discriminated: SQLite storage class (NULL /
 INTEGER / REAL / TEXT / BLOB) is part of the fingerprint, so an ID that
 turned from an int into a float would be flagged. The reg_meta schema is
@@ -69,7 +98,8 @@ float-free (only INTEGER/TEXT/BLOB columns), so this never produces a
 spurious diff in practice; it just makes the gate strict.
 
 This is a standalone, read-only tool — it opens both DBs with `mode=ro`
-URIs and works on any two reg_meta DB files. It does not import or touch
+URIs (the natural-key maps live in a private temp store) and works on any two
+reg_meta DB files. It does not import or touch
 the build pipeline.
 
 CLI:  ``python -m reg_meta_build.dbdiff <db_a> <db_b> [-n N] [--no-default-ignore] [--json]``
@@ -85,7 +115,7 @@ import math
 import sqlite3
 import struct
 import sys
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -120,6 +150,133 @@ class TableIgnore:
 DEFAULT_IGNORE: dict[str, TableIgnore] = {
     "import_manifest": TableIgnore(skip_where="key = 'import_date'"),
 }
+
+# The catalog's surrogate ids (db.py DDL), dense and reassigned on every build.
+# table -> (its id column, the natural key that identifies its rows). A key column
+# that is itself a reference nests that row's key. None: nothing references the
+# table, so its id is only left out of its rows. Each key is checked unique on the
+# data before a diff (`_check_catalog`).
+_IDS: dict[str, tuple[str, tuple[str, ...] | None]] = {
+    "provider": ("provider_id", ("slug",)),
+    # The FQIDs (crates/DESIGN.md → FQID grammar).
+    "register": ("register_id", ("provider_id", "slug")),
+    "register_variant": ("register_variant_id", ("register_id", "slug")),
+    "variable": ("variable_id", ("register_id", "slug")),
+    # SCB's register-version grain within a variant.
+    "register_version": ("regver_id", ("register_variant_id", "registerversionnamn")),
+    "classification": ("id", ("slug",)),
+    "value_code": ("code_id", ("code", "label")),
+    "value_set": ("value_set_id", ("member_hash",)),
+    # The union of its two partial UNIQUE indexes, which split on period_scope.
+    "variable_state": (
+        "state_id",
+        (
+            "variable_id",
+            "register_variant_id",
+            "period_scope",
+            "valid_from",
+            "value_set_version_label",
+        ),
+    ),
+    "browse_delivery": (
+        "browse_delivery_id",
+        ("scope", "variable_id", "register_variant_id", "delivery_column_name"),
+    ),
+    # Their UNIQUE indexes, which COALESCE the nullable column.
+    "concept_group": ("group_id", ("kind", "register_id", "group_key")),
+    "concept_group_variable": (
+        "member_id",
+        ("group_id", "variable_id", "delivery_column_name"),
+    ),
+    "data_warning_text": ("text_id", ("text",)),
+    "holding_table": ("table_id", ("physical_id",)),
+    "holding_column": ("column_id", ("table_id", "name")),
+    "tag": ("tag_id", ("slug",)),
+    "expanded_state": ("expanded_state_id", None),
+    "source_relationship": ("relationship_id", None),
+}
+
+# Every column that holds one of those ids -> the table that owns it. A composite
+# foreign key's id columns name the owner at the end of the chain
+# (alias_window_classification.variable_id → variable_alias_window → variable);
+# its TEXT columns are natural values and compare as they are. A primary key that
+# is a reference (variable_search_text.variable_id) is compared by what it
+# references, never left out.
+_REFERENCES: dict[tuple[str, str], str] = {
+    ("alias_window_classification", "classification_id"): "classification",
+    ("alias_window_classification", "register_variant_id"): "register_variant",
+    ("alias_window_classification", "variable_id"): "variable",
+    ("browse_delivery", "register_variant_id"): "register_variant",
+    ("browse_delivery", "variable_id"): "variable",
+    ("classification", "supersedes_id"): "classification",
+    ("classification_code", "classification_id"): "classification",
+    ("classification_code", "code_id"): "value_code",
+    ("classification_conformance", "declared_classification_id"): "classification",
+    ("classification_conformance", "state_id"): "variable_state",
+    ("classification_conformance_code", "code_id"): "value_code",
+    ("classification_conformance_code", "declared_classification_id"): (
+        "classification"
+    ),
+    ("classification_conformance_code", "state_id"): "variable_state",
+    ("code_variable_map", "code_id"): "value_code",
+    ("code_variable_map", "variable_id"): "variable",
+    ("concept_group", "register_id"): "register",
+    ("concept_group_axis", "group_id"): "concept_group",
+    ("concept_group_classification", "classification_id"): "classification",
+    ("concept_group_classification", "group_id"): "concept_group",
+    ("concept_group_variable", "group_id"): "concept_group",
+    ("concept_group_variable", "variable_id"): "variable",
+    ("concept_group_variable_facet", "member_id"): "concept_group_variable",
+    ("data_warning", "detail_id"): "data_warning_text",
+    ("data_warning", "register_id"): "register",
+    ("data_warning", "register_variant_id"): "register_variant",
+    ("data_warning", "summary_id"): "data_warning_text",
+    ("data_warning", "variable_id"): "variable",
+    ("delivery_window", "browse_delivery_id"): "browse_delivery",
+    ("expanded_state", "register_variant_id"): "register_variant",
+    ("expanded_state", "state_id"): "variable_state",
+    ("expanded_state", "variable_id"): "variable",
+    ("holding_column", "table_id"): "holding_table",
+    ("holding_mapping", "column_id"): "holding_column",
+    ("holding_mapping", "variable_id"): "variable",
+    ("holding_mapping", "variant_id"): "register_variant",
+    ("holding_period", "table_id"): "holding_table",
+    ("object_type", "regver_id"): "register_version",
+    ("population", "regver_id"): "register_version",
+    ("register", "provider_id"): "provider",
+    ("register_variant", "register_id"): "register",
+    ("register_version", "register_variant_id"): "register_variant",
+    ("resolver_column", "register_variant_id"): "register_variant",
+    ("resolver_column", "variable_id"): "variable",
+    ("source_relationship", "owner_variable_id"): "variable",
+    ("state_classification", "classification_id"): "classification",
+    ("state_classification", "state_id"): "variable_state",
+    ("tag_member", "register_id"): "register",
+    ("tag_member", "tag_id"): "tag",
+    ("tag_member", "variable_id"): "variable",
+    ("value_set_member", "code_id"): "value_code",
+    ("value_set_member", "value_set_id"): "value_set",
+    ("variable", "register_id"): "register",
+    ("variable", "source_register_id"): "register",
+    ("variable_alias", "register_variant_id"): "register_variant",
+    ("variable_alias", "variable_id"): "variable",
+    ("variable_alias_window", "register_variant_id"): "register_variant",
+    ("variable_alias_window", "value_set_id"): "value_set",
+    ("variable_alias_window", "variable_id"): "variable",
+    # Declared without a FOREIGN KEY clause: the derived search table.
+    ("variable_search_text", "register_id"): "register",
+    ("variable_search_text", "variable_id"): "variable",
+    ("variable_state", "register_variant_id"): "register_variant",
+    ("variable_state", "value_set_id"): "value_set",
+    ("variable_state", "variable_id"): "variable",
+    ("variable_state_lineage", "consumer_state_id"): "variable_state",
+    ("variable_state_lineage", "source_state_id"): "variable_state",
+    ("variable_state_lineage_warning", "consumer_state_id"): "variable_state",
+}
+
+# INTEGER primary keys and foreign keys that are not ids and compare as they are.
+# Empty today: every one the catalog declares is an id above.
+_COMPARE_RAW: frozenset[tuple[str, str]] = frozenset()
 
 
 @dataclass(frozen=True)
@@ -176,6 +333,8 @@ class TableContentResult:
     fingerprint_a: str  # hex, "" when skipped
     fingerprint_b: str
     columns: tuple[str, ...]  # columns compared; () when skipped
+    # The compared columns that hold a tagged reference (JSON text, `_link_sql`).
+    link_columns: tuple[str, ...] = ()
     sample_a_not_b: tuple[SampleRow, ...] = ()
     sample_b_not_a: tuple[SampleRow, ...] = ()
     skipped_reason: str | None = None
@@ -213,6 +372,9 @@ class DiffReport:
     table_results: tuple[TableContentResult, ...] = ()
     # column name lists for shared tables, for rendering SampleRow values.
     table_columns: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    # Whether the two DBs are catalogs whose ids compare by natural key (module
+    # docstring); otherwise rows compare raw, ids included.
+    natural_keys: bool = False
 
     @property
     def schema_differs(self) -> bool:
@@ -242,15 +404,11 @@ class DiffReport:
 # --------------------------------------------------------------------------
 
 
-def _connect_ro(path: Path) -> sqlite3.Connection:
-    """Open ``path`` read-only. Raises FileNotFoundError if it is missing
-    (a `mode=ro` URI to a nonexistent file would otherwise raise an opaque
-    OperationalError)."""
-    if not path.exists():
-        raise FileNotFoundError(f"DB not found: {path}")
-    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
-    return conn
+def _rows(conn: sqlite3.Connection, sql: str) -> list[sqlite3.Row]:
+    """``sql``'s rows, readable by column name."""
+    cur = conn.cursor()
+    cur.row_factory = sqlite3.Row
+    return cur.execute(sql).fetchall()
 
 
 @dataclass(frozen=True)
@@ -272,11 +430,13 @@ class _Schema:
     shadow_tables: frozenset[str]
 
 
-def _read_schema(conn: sqlite3.Connection) -> _Schema:
-    master = conn.execute(
-        "SELECT type, name, sql FROM sqlite_master "
-        "WHERE type IN ('table', 'index', 'view')"
-    ).fetchall()
+def _read_schema(conn: sqlite3.Connection, prefix: str) -> _Schema:
+    """The schema of the DB attached as ``prefix``."""
+    master = _rows(
+        conn,
+        f"SELECT type, name, sql FROM {prefix}.sqlite_master "
+        "WHERE type IN ('table', 'index', 'view')",
+    )
     table_names = [
         r["name"]
         for r in master
@@ -294,7 +454,7 @@ def _read_schema(conn: sqlite3.Connection) -> _Schema:
         for name in table_names
         if any(name == f"{vt}_{suf}" for vt in virtual for suf in _FTS_SHADOW_SUFFIXES)
     )
-    tables = {name: _table_info(conn, name) for name in table_names}
+    tables = {name: _table_info(conn, prefix, name) for name in table_names}
     table_sql = {
         r["name"]: _normalize_sql(r["sql"])
         for r in master
@@ -323,11 +483,11 @@ def _normalize_sql(sql: str | None) -> str:
 
 
 def _table_info(
-    conn: sqlite3.Connection, table: str
+    conn: sqlite3.Connection, prefix: str, table: str
 ) -> tuple[tuple[str, str, int, str | None, int], ...]:
     return tuple(
         (r["name"], r["type"], r["notnull"], r["dflt_value"], r["pk"])
-        for r in conn.execute(f'PRAGMA table_info("{table}")')
+        for r in _rows(conn, f"PRAGMA {prefix}.table_info({_quote(table)})")
     )
 
 
@@ -339,6 +499,172 @@ def _content_tables(schema: _Schema) -> list[str]:
         for name in schema.tables
         if name not in schema.virtual_tables and name not in schema.shadow_tables
     )
+
+
+# --------------------------------------------------------------------------
+# Natural-key projection of surrogate ids
+# --------------------------------------------------------------------------
+
+
+def _quote(name: str) -> str:
+    return '"' + name.replace('"', '""') + '"'
+
+
+def _is_catalog(schema_a: _Schema, schema_b: _Schema) -> bool:
+    """Whether both DBs are catalogs, so ids compare by the explicit map.
+    Any other DB (a docs DB, a test fixture) compares raw rows."""
+    return all(set(_IDS) <= set(s.tables) for s in (schema_a, schema_b))
+
+
+def _check_catalog(conn: sqlite3.Connection, prefix: str, schema: _Schema) -> None:
+    """Refuse the catalog attached as ``prefix`` when the map does not describe
+    it, or its ids the data breaks, with a ValueError naming it (exit 2). Never a
+    guess, never a raw-id fallback."""
+    tables = set(_content_tables(schema))
+
+    def has(table: str, column: str) -> bool:
+        return table in tables and any(c[0] == column for c in schema.tables[table])
+
+    for table, (id_column, key) in _IDS.items():
+        for column in (id_column, *(key or ())):
+            if not has(table, column):
+                raise ValueError(f"the id map names {table}.{column}, which is missing")
+    for (table, column), target in _REFERENCES.items():
+        if not has(table, column):
+            raise ValueError(f"the id map names {table}.{column}, which is missing")
+        if _IDS[target][1] is None:
+            raise ValueError(f"{table}.{column} references {target}, which has no key")
+    # Every INTEGER PRIMARY KEY and INTEGER foreign key is an id the map covers.
+    for table in sorted(tables):
+        info = schema.tables[table]
+        pk = [c[0] for c in info if c[4]]
+        candidates = set(pk if len(pk) == 1 else ())
+        candidates |= {
+            fk["from"]
+            for fk in _rows(conn, f"PRAGMA {prefix}.foreign_key_list({_quote(table)})")
+        }
+        for column in sorted(candidates):
+            declared = next(c[1] for c in info if c[0] == column).upper()
+            covered = (
+                _IDS.get(table, ("",))[0] == column
+                or (table, column) in _REFERENCES
+                or (table, column) in _COMPARE_RAW
+            )
+            if declared == "INTEGER" and not covered:
+                raise ValueError(
+                    f"{table}.{column} is an INTEGER id column the id map does not "
+                    "cover; add it to _IDS, _REFERENCES or _COMPARE_RAW"
+                )
+    for table, (id_column, key) in _IDS.items():
+        source = f"{prefix}.{_quote(table)}"
+        if conn.execute(
+            f"SELECT 1 FROM {source} "
+            f"WHERE typeof({_quote(id_column)}) != 'integer' LIMIT 1"
+        ).fetchone():
+            raise ValueError(f"{table}.{id_column} holds NULL or non-integer ids")
+        if key is None:
+            continue
+        cols = ", ".join(_quote(c) for c in key)
+        (repeated,) = conn.execute(
+            f"SELECT (SELECT COUNT(*) FROM {source}) "
+            f"- (SELECT COUNT(*) FROM (SELECT DISTINCT {cols} FROM {source}))"
+        ).fetchone()
+        if repeated:
+            raise ValueError(
+                f"{table}'s natural key ({', '.join(key)}) is not unique: "
+                f"{repeated} row(s) repeat a key"
+            )
+    # A reference holds an id or nothing; anything else (text, a REAL) is no id.
+    by_table: dict[str, list[str]] = {}
+    for table, column in _REFERENCES:
+        by_table.setdefault(table, []).append(column)
+    for table, columns in sorted(by_table.items()):
+        for (column,) in conn.execute(
+            " UNION ALL ".join(
+                f"SELECT {c!r} FROM (SELECT 1 FROM {prefix}.{_quote(table)} "
+                f"WHERE typeof({_quote(c)}) NOT IN ('integer', 'null') LIMIT 1)"
+                for c in sorted(columns)
+            )
+        ):
+            raise ValueError(f"{table}.{column} holds non-integer references")
+
+
+def _projected(table: str, columns: Sequence[str], catalog: bool) -> tuple[str, ...]:
+    """``table``'s compared columns: in a catalog, all but its own id."""
+    if not catalog or table not in _IDS:
+        return tuple(columns)
+    return tuple(c for c in columns if c != _IDS[table][0])
+
+
+def _map_name(prefix: str, table: str) -> str:
+    return _quote(f"_dbdiff_nk_{prefix}_{table}")
+
+
+# The tags of a compared reference. A reference is a JSON array whose first
+# element is one of these, and a data value is never an array, so a reference
+# cannot equal data or another kind of reference: ["k", key] resolved to the
+# row's natural key, ["d", id] an id no row holds (dangling). NULL stays NULL.
+_RESOLVED, _DANGLING = "k", "d"
+
+
+def _link_sql(prefix: str, table: str, column: str) -> str:
+    """The tagged reference ``t.column`` holds, as JSON text (NULL for NULL)."""
+    target = _REFERENCES[table, column]
+    col = f"t.{_quote(column)}"
+    return (
+        f"CASE WHEN {col} IS NULL THEN NULL ELSE COALESCE("
+        f"(SELECT nk FROM temp.{_map_name(prefix, target)} WHERE id = {col}), "
+        f"json_array('{_DANGLING}', {col})) END"
+    )
+
+
+def _projection_sql(
+    prefix: str, table: str, columns: Sequence[str], catalog: bool
+) -> list[str]:
+    return [
+        _link_sql(prefix, table, c)
+        if catalog and (table, c) in _REFERENCES
+        else f"t.{_quote(c)}"
+        for c in _projected(table, columns, catalog)
+    ]
+
+
+def _build_key_maps(work: sqlite3.Connection, prefix: str) -> None:
+    """Materialize, per keyed `_IDS` table, its id -> tagged reference
+    ``["k", key]`` in the temp store, so a lookup is the compared text as it is.
+    A key is always a JSON array, so a NULL key column is JSON null; a data value
+    in it is a JSON scalar (a BLOB a {"blob": hex} object) and a reference a
+    tagged array. The map is acyclic, so the recursion ends."""
+    built: set[str] = set()
+
+    def build(table: str) -> None:
+        if table in built:
+            return
+        id_column, key = _IDS[table]
+        parts = []
+        for c in key or ():
+            if (table, c) in _REFERENCES:
+                build(_REFERENCES[table, c])
+                parts.append(f"json({_link_sql(prefix, table, c)})")
+            else:
+                col = f"t.{_quote(c)}"
+                parts.append(
+                    f"CASE WHEN typeof({col}) = 'blob' "
+                    f"THEN json_object('blob', hex({col})) ELSE {col} END"
+                )
+        name = _map_name(prefix, table)
+        work.execute(
+            f"CREATE TEMP TABLE {name} (id INTEGER PRIMARY KEY, nk TEXT NOT NULL)"
+        )
+        work.execute(
+            f"INSERT INTO temp.{name} SELECT t.{_quote(id_column)}, "
+            f"json_array('{_RESOLVED}', json_array({', '.join(parts)})) "
+            f"FROM {prefix}.{_quote(table)} AS t"
+        )
+        built.add(table)
+
+    for table in sorted(set(_REFERENCES.values())):
+        build(table)
 
 
 # --------------------------------------------------------------------------
@@ -376,29 +702,46 @@ def _row_hash(values: Sequence[object]) -> int:
     return int.from_bytes(h.digest(), "big")
 
 
-def _select_sql(table: str, columns: Sequence[str], skip_where: str | None) -> str:
-    cols = ", ".join(f'"{c}"' for c in columns)
-    sql = f'SELECT {cols} FROM "{table}"'
+def _select_sql(
+    prefix: str,
+    table: str,
+    columns: Sequence[str],
+    catalog: bool,
+    skip_where: str | None,
+    tag: str = "",
+) -> str:
+    """``table``'s projected rows in DB ``prefix``, each column aliased by name
+    (``skip_where`` names the stored columns, which ``t`` alone carries)."""
+    cols = ", ".join(
+        f"{expr} AS {_quote(c)}"
+        for expr, c in zip(
+            _projection_sql(prefix, table, columns, catalog),
+            _projected(table, columns, catalog),
+        )
+    )
+    sql = f"SELECT {cols}{tag} FROM {prefix}.{_quote(table)} AS t"
     if skip_where:
         sql += f" WHERE NOT ({skip_where})"
     return sql
 
 
 def _fingerprint(
-    conn: sqlite3.Connection,
+    work: sqlite3.Connection,
+    prefix: str,
     table: str,
     columns: Sequence[str],
+    catalog: bool,
     skip_where: str | None,
     *,
     batch: int = 20_000,
 ) -> tuple[int, str]:
-    """Stream ``table`` and return (row_count, fingerprint_hex).
+    """Stream ``table``'s projection and return (row_count, fingerprint_hex).
 
     O(1) memory: one cursor fetched in batches, a running count and a running
     sum-of-row-hashes mod 2**128. Order-independent (sum is commutative) and
     multiplicity-sensitive.
     """
-    cur = conn.execute(_select_sql(table, columns, skip_where))
+    cur = work.execute(_select_sql(prefix, table, columns, catalog, skip_where))
     total = 0
     count = 0
     while True:
@@ -417,10 +760,10 @@ def _fingerprint(
 
 
 def _diff_samples(
-    db_a: Path,
-    db_b: Path,
+    work: sqlite3.Connection,
     table: str,
-    columns: Sequence[str],
+    stored: Sequence[str],
+    catalog: bool,
     skip_where: str | None,
     limit: int,
 ) -> tuple[tuple[SampleRow, ...], tuple[SampleRow, ...]]:
@@ -434,38 +777,55 @@ def _diff_samples(
     multi-million-row tables. NULLs group together and BLOBs compare by bytes,
     both of which match the fingerprint's NULL-aware/byte semantics.
     """
-    conn = sqlite3.connect("file::memory:?cache=private", uri=True)
+    columns = _projected(table, stored, catalog)
+    cols = ", ".join(_quote(c) for c in columns)
+    a_rows = _select_sql("a", table, stored, catalog, skip_where, ", 1 AS _dbdiff_src")
+    b_rows = _select_sql("b", table, stored, catalog, skip_where, ", -1 AS _dbdiff_src")
+    union = f"{a_rows} UNION ALL {b_rows}"
+    base = (
+        f"SELECT {cols}, SUM(_dbdiff_src) AS _dbdiff_net "
+        f"FROM ({union}) GROUP BY {cols} "
+        f"HAVING _dbdiff_net {{op}} 0 ORDER BY {cols} LIMIT ?"
+    )
+    ncols = len(columns)
+    a_not_b = tuple(
+        SampleRow(net=row[ncols], values=tuple(row[:ncols]))
+        for row in work.execute(base.format(op=">"), (limit,))
+    )
+    b_not_a = tuple(
+        SampleRow(net=row[ncols], values=tuple(row[:ncols]))
+        for row in work.execute(base.format(op="<"), (limit,))
+    )
+    return a_not_b, b_not_a
+
+
+def _work_connection(db_a: Path, db_b: Path) -> sqlite3.Connection:
+    """A private in-memory connection with both DBs attached read-only: the one
+    handle the whole run reads through (schema, catalog check, natural-key maps,
+    fingerprints, multiset difference), inside one read transaction, so a DB
+    replaced or written mid-run cannot pair one version's schema with another's
+    content. Its temp store spills to disk (the default is build-dependent and
+    may be MEMORY), so Python and SQLite memory stay flat on multi-million-row
+    tables. Raises FileNotFoundError for a missing path (a `mode=ro` URI to one
+    would otherwise raise an opaque OperationalError)."""
+    for path in (db_a, db_b):
+        if not path.exists():
+            raise FileNotFoundError(f"DB not found: {path}")
+    conn = sqlite3.connect(
+        "file::memory:?cache=private", uri=True, isolation_level=None
+    )
     try:
-        conn.row_factory = sqlite3.Row
-        # Force the GROUP BY sorter to spill to disk (default temp_store is
-        # build-dependent and may be MEMORY).
         conn.execute("PRAGMA temp_store = FILE")
         conn.execute("ATTACH DATABASE ? AS a", (f"file:{db_a}?mode=ro",))
         conn.execute("ATTACH DATABASE ? AS b", (f"file:{db_b}?mode=ro",))
-        cols = ", ".join(f'"{c}"' for c in columns)
-        where = f" WHERE NOT ({skip_where})" if skip_where else ""
-        union = (
-            f'SELECT {cols}, 1 AS _dbdiff_src FROM a."{table}"{where} '
-            f"UNION ALL "
-            f'SELECT {cols}, -1 AS _dbdiff_src FROM b."{table}"{where}'
-        )
-        base = (
-            f"SELECT {cols}, SUM(_dbdiff_src) AS _dbdiff_net "
-            f"FROM ({union}) GROUP BY {cols} "
-            f"HAVING _dbdiff_net {{op}} 0 ORDER BY {cols} LIMIT ?"
-        )
-        ncols = len(columns)
-        a_not_b = tuple(
-            SampleRow(net=row[ncols], values=tuple(row[:ncols]))
-            for row in conn.execute(base.format(op=">"), (limit,))
-        )
-        b_not_a = tuple(
-            SampleRow(net=row[ncols], values=tuple(row[:ncols]))
-            for row in conn.execute(base.format(op="<"), (limit,))
-        )
-        return a_not_b, b_not_a
-    finally:
+        conn.execute("BEGIN")
+        # Read both now, so the transaction holds each DB's snapshot from here on.
+        conn.execute("SELECT count(*) FROM a.sqlite_master").fetchone()
+        conn.execute("SELECT count(*) FROM b.sqlite_master").fetchone()
+    except BaseException:
         conn.close()
+        raise
+    return conn
 
 
 # --------------------------------------------------------------------------
@@ -490,26 +850,30 @@ def diff_db_content(
         sample_rows: max differing rows to capture per direction per table.
 
     Returns a :class:`DiffReport`; never raises on content differences (they
-    are reported in the result). Raises FileNotFoundError if a path is missing.
+    are reported in the result). Raises FileNotFoundError if a path is missing,
+    and ValueError naming the reason if a catalog fails `_check_catalog`.
     """
     db_a = Path(db_a)
     db_b = Path(db_b)
     ignore = DEFAULT_IGNORE if ignore is None else ignore
 
-    conn_a = _connect_ro(db_a)
-    conn_b = _connect_ro(db_b)
+    work = _work_connection(db_a, db_b)
     try:
-        schema_a = _read_schema(conn_a)
-        schema_b = _read_schema(conn_b)
-        report = DiffReport(db_a=db_a, db_b=db_b)
+        schema_a = _read_schema(work, "a")
+        schema_b = _read_schema(work, "b")
+        catalog = _is_catalog(schema_a, schema_b)
+        if catalog:
+            _check_catalog(work, "a", schema_a)
+            _check_catalog(work, "b", schema_b)
+        report = DiffReport(db_a=db_a, db_b=db_b, natural_keys=catalog)
         _compare_schema(schema_a, schema_b, report)
-        _compare_content(
-            db_a, db_b, conn_a, conn_b, schema_a, schema_b, ignore, sample_rows, report
-        )
-        return report
+        if catalog:
+            _build_key_maps(work, "a")
+            _build_key_maps(work, "b")
+        _compare_content(work, schema_a, schema_b, catalog, ignore, sample_rows, report)
     finally:
-        conn_a.close()
-        conn_b.close()
+        work.close()
+    return report
 
 
 def _compare_schema(schema_a: _Schema, schema_b: _Schema, report: DiffReport) -> None:
@@ -577,12 +941,10 @@ def _fmt_coldef(coldef: tuple[str, str, int, str | None, int]) -> str:
 
 
 def _compare_content(
-    db_a: Path,
-    db_b: Path,
-    conn_a: sqlite3.Connection,
-    conn_b: sqlite3.Connection,
+    work: sqlite3.Connection,
     schema_a: _Schema,
     schema_b: _Schema,
+    catalog: bool,
     ignore: dict[str, TableIgnore],
     sample_rows: int,
     report: DiffReport,
@@ -594,7 +956,8 @@ def _compare_content(
         spec = ignore.get(table, TableIgnore())
         cols_a = [c[0] for c in schema_a.tables[table]]
         cols_b = [c[0] for c in schema_b.tables[table]]
-        report.table_columns[table] = tuple(cols_a)
+        columns = _projected(table, cols_a, catalog)
+        report.table_columns[table] = columns
 
         if cols_a != cols_b:
             # Column set/order differs (already in the schema section). A
@@ -612,8 +975,8 @@ def _compare_content(
             )
             continue
 
-        count_a, fp_a = _fingerprint(conn_a, table, cols_a, spec.skip_where)
-        count_b, fp_b = _fingerprint(conn_b, table, cols_a, spec.skip_where)
+        count_a, fp_a = _fingerprint(work, "a", table, cols_a, catalog, spec.skip_where)
+        count_b, fp_b = _fingerprint(work, "b", table, cols_a, catalog, spec.skip_where)
 
         result = TableContentResult(
             table=table,
@@ -621,11 +984,14 @@ def _compare_content(
             count_b=count_b,
             fingerprint_a=fp_a,
             fingerprint_b=fp_b,
-            columns=tuple(cols_a),
+            columns=columns,
+            link_columns=tuple(
+                c for c in columns if catalog and (table, c) in _REFERENCES
+            ),
         )
         if not result.identical:
             a_not_b, b_not_a = _diff_samples(
-                db_a, db_b, table, cols_a, spec.skip_where, sample_rows
+                work, table, cols_a, catalog, spec.skip_where, sample_rows
             )
             note = None
             if not a_not_b and not b_not_a:
@@ -638,16 +1004,8 @@ def _compare_content(
                     "fingerprint differs but value-level diff is empty; "
                     "likely a storage-class/type difference"
                 )
-            result = TableContentResult(
-                table=table,
-                count_a=count_a,
-                count_b=count_b,
-                fingerprint_a=fp_a,
-                fingerprint_b=fp_b,
-                columns=tuple(cols_a),
-                sample_a_not_b=a_not_b,
-                sample_b_not_a=b_not_a,
-                note=note,
+            result = replace(
+                result, sample_a_not_b=a_not_b, sample_b_not_a=b_not_a, note=note
             )
         results.append(result)
     report.table_results = tuple(results)
@@ -672,12 +1030,13 @@ def _fmt_cell(value: object, width: int = 80) -> str:
     return text
 
 
-def _fmt_sample(rows: Iterable[SampleRow], columns: Sequence[str]) -> list[str]:
+def _fmt_sample(rows: Iterable[SampleRow], result: TableContentResult) -> list[str]:
     lines: list[str] = []
     for row in rows:
         sign = f"+{row.net}" if row.net > 0 else str(row.net)
         cells = ", ".join(
-            f"{col}={_fmt_cell(val)}" for col, val in zip(columns, row.values)
+            f"{col}={_fmt_cell(_text(_display(val, link=col in result.link_columns)))}"
+            for col, val in zip(result.columns, row.values)
         )
         lines.append(f"      ({sign}) {cells}")
     return lines
@@ -688,6 +1047,8 @@ def format_report(report: DiffReport) -> str:
     differences are itemized table-by-table with sample rows."""
     out: list[str] = []
     out.append(f"Comparing content:\n  A: {report.db_a}\n  B: {report.db_b}")
+    if report.natural_keys:
+        out.append("  catalog ids compare by natural key")
 
     if report.identical:
         n = len(report.table_results)
@@ -749,43 +1110,75 @@ def format_report(report: DiffReport) -> str:
                 out.append(f"    note: {r.note}")
             if r.sample_a_not_b:
                 out.append(f"    rows in A not B (first {len(r.sample_a_not_b)}):")
-                out.extend(_fmt_sample(r.sample_a_not_b, r.columns))
+                out.extend(_fmt_sample(r.sample_a_not_b, r))
             if r.sample_b_not_a:
                 out.append(f"    rows in B not A (first {len(r.sample_b_not_a)}):")
-                out.extend(_fmt_sample(r.sample_b_not_a, r.columns))
+                out.extend(_fmt_sample(r.sample_b_not_a, r))
 
     matched = sum(1 for r in report.table_results if r.identical)
     out.append(f"\n{matched}/{len(report.table_results)} content table(s) matched.")
     return "\n".join(out)
 
 
-def _json_cell(value: object) -> object:
-    """A sample cell as JSON that keeps its SQLite storage class: NULL is null,
-    INTEGER and REAL stay numbers, TEXT is a string (long text truncated) and a
-    BLOB is a ``{"blob": preview}`` object. Integer 1, text '1', blob b'1' and NULL
-    are different rows to the diff, so they must not print alike. A non-finite
-    REAL has no JSON number, so it is a ``{"real": "inf" | "-inf" | "nan"}``
-    object rather than the invalid ``Infinity``/``NaN`` or the string 'inf'."""
+def _display(value: object, *, link: bool = False) -> object:
+    """A reported sample value as JSON: the one path every reported value takes,
+    in the JSON and the text report. The diff compares the stored values; this is
+    for display only.
+
+    A data value keeps its SQLite storage class: NULL is null, INTEGER and REAL
+    stay numbers, TEXT is a string (long text truncated) and a BLOB is a
+    ``{"blob": preview}`` object. Integer 1, text '1', blob b'1' and NULL are
+    different rows to the diff, so they must not print alike. A non-finite REAL
+    has no JSON number, so it is a ``{"real": "inf" | "-inf" | "nan"}`` object
+    rather than the invalid ``Infinity``/``NaN`` or the string 'inf'.
+
+    A reference (``link``) is decoded from its tagged JSON: a resolved one prints
+    its natural key (a one-column key as its value), and a dangling id
+    ``{"dangling_id": id}``. Its values go through this same
+    path, so a REAL infinity inside a key prints as ``{"real": "inf"}`` too."""
+    if link and isinstance(value, str):
+        return _untag(json.loads(value))
     if isinstance(value, (bytes, bytearray, memoryview)):
         return {"blob": _fmt_cell(value)}
     if isinstance(value, float) and not math.isfinite(value):
         return {"real": str(value)}
     if isinstance(value, str):
         return _fmt_cell(value, width=200)
+    if isinstance(value, dict):  # a BLOB inside a key: {"blob": hex}
+        return {k: _display(v) for k, v in value.items()}
+    return value
+
+
+def _untag(reference: list) -> object:
+    tag, payload = reference
+    if tag == _DANGLING:
+        return {"dangling_id": _display(payload)}
+    # In a key, a data value is a JSON scalar or object and a reference an array.
+    parts = [_untag(p) if isinstance(p, list) else _display(p) for p in payload]
+    return parts[0] if len(parts) == 1 else parts
+
+
+def _text(value: object) -> object:
+    """A displayed value for the text report: a scalar as it is, a structure as
+    compact JSON."""
+    if isinstance(value, (list, dict)):
+        return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
     return value
 
 
 def _report_to_dict(report: DiffReport) -> dict[str, object]:
-    """JSON-serializable view; sample cells keep their storage class
-    (``_json_cell``)."""
+    """JSON-serializable view; every sample value goes through ``_display``."""
 
     def cells(
-        rows: Iterable[SampleRow], cols: Sequence[str]
+        rows: Iterable[SampleRow], result: TableContentResult
     ) -> list[dict[str, object]]:
         return [
             {
                 "net": row.net,
-                "row": {c: _json_cell(v) for c, v in zip(cols, row.values)},
+                "row": {
+                    c: _display(v, link=c in result.link_columns)
+                    for c, v in zip(result.columns, row.values)
+                },
             }
             for row in rows
         ]
@@ -794,6 +1187,7 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
         "db_a": str(report.db_a),
         "db_b": str(report.db_b),
         "identical": report.identical,
+        "natural_keys": report.natural_keys,
         "schema": {
             "tables_only_in_a": list(report.tables_only_in_a),
             "tables_only_in_b": list(report.tables_only_in_b),
@@ -824,8 +1218,8 @@ def _report_to_dict(report: DiffReport) -> dict[str, object]:
                 "fingerprint_b": r.fingerprint_b,
                 "skipped_reason": r.skipped_reason,
                 "note": r.note,
-                "sample_a_not_b": cells(r.sample_a_not_b, r.columns),
-                "sample_b_not_a": cells(r.sample_b_not_a, r.columns),
+                "sample_a_not_b": cells(r.sample_a_not_b, r),
+                "sample_b_not_a": cells(r.sample_b_not_a, r),
             }
             for r in report.table_results
         ],
@@ -875,7 +1269,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         report = diff_db_content(
             args.db_a, args.db_b, ignore=ignore, sample_rows=args.sample_rows
         )
-    except (FileNotFoundError, sqlite3.Error) as exc:
+    except (FileNotFoundError, ValueError, sqlite3.Error) as exc:
         print(f"dbdiff: error: {exc}", file=sys.stderr)
         return 2
     if args.json:

@@ -574,12 +574,15 @@ def test_cli_case(
     _check_keys(case, request, expected)
     runs = request.get("runs", [request])
     cli_artifact = None
+    base_artifact = None
     if _reads_artifact(request):
         overlay = request.get("artifact_curation")
+        base = CASES / request.get("artifact", ARTIFACT.name)
         cli_artifact = cli_artifacts.get(
-            CASES / request.get("artifact", ARTIFACT.name),
-            None if overlay is None else case / overlay,
+            base, None if overlay is None else case / overlay
         )
+        if overlay is not None:
+            base_artifact = cli_artifacts.get(base, None)
 
     # Resolved, so `{work}` matches the resolved paths a command prints.
     work = tmp_path.resolve() / "work"
@@ -602,6 +605,9 @@ def test_cli_case(
     places = {"work": str(work)}
     if cli_artifact is not None:
         places["db"] = str(cli_artifact.db_dir)
+    if base_artifact is not None:
+        # The artifact the overlay was laid over, built from its own curation.
+        places["base_db"] = str(base_artifact.db_dir)
     if "input_bundle" in request:
         # Outside `{work}`: commands refuse to write into their input repository.
         places |= _write_input_bundle(request["input_bundle"], tmp_path / "input")

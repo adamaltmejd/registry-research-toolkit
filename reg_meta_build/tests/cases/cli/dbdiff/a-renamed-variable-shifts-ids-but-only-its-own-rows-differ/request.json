@@ -1,0 +1,14 @@
+{
+  "replaces": [
+    "issue #1431: dbdiff compared dense surrogate ids raw"
+  ],
+  "fails_if": "dbdiff compares a surrogate id by its raw value: renaming scb/par/region to aregion moves it ahead of ha, hb, pciv and pdiag in the dense (provider, register, slug) variable order, so their variable_ids shift by one and their unchanged rows in variable, variable_state, variable_alias and code_variable_map read as differences; or a reference prints its id instead of the referenced row's natural key; or variable_search_text's primary key, a reference to variable, is left out as an id of its own, so its renamed row reads identical; or the catalog's DDL gains an id column dbdiff's id map does not cover, so the run exits 2 (this case is that map's pin on a real build)",
+  "note": "Two builds of the classified artifact (`{base_db}`), the second with one curated slug renamed (artifact_curation, `{db}`). No curation reassigns ids without changing content, so the rename is the hardest pair a build gives: a real content change (exit 1) that shifts four unchanged variables' ids. Only the renamed variable's rows differ, each reference keyed by [[provider, register], variable slug] and `variable` without its own id; `value_set_member`, which the rename does not reach, is identical.",
+  "artifact": "_classified",
+  "artifact_curation": "artifact_curation",
+  "argv": [
+    "--json",
+    "{base_db}/reg_meta.db",
+    "{db}/reg_meta.db"
+  ]
+}

@@ -202,6 +202,12 @@ differences. Inspect the report before accepting a claimed bounded change. Row c
 alone are insufficient. For a broad pipeline refactor, use its agreed comparison scope
 rather than inventing an exhaustive discrepancy-by-discrepancy curation gate.
 
+Dense ids (`variable_id`, `code_id`, `state_id` and the other surrogate keys) are
+reassigned on every build, so one added or renamed variable shifts every later id.
+Compare builds through dbdiff, which leaves a table's own id out and keys each reference
+by the referenced row's natural identity (an FQID, a code's `(code, label)`, a state's
+key); its sample rows show those keys. Never compare or join two builds by raw id.
+
 For deterministic replay, run the same pinned inputs and curation in a second fresh
 process and compare database bytes and decompressed event-ledger bytes. Keep timing
 conditions explicit: overlapping builds or audits are not isolated performance
