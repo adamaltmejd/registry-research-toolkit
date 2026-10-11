@@ -22,7 +22,7 @@
  * is pristine).
  */
 
-import type { ProjectStudyWindow } from "./project_data";
+import { type ProjectStudyWindow, safeStudyWindow } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 
 /** The localStorage key for the no-draft fallback window. Namespaced so it
@@ -74,13 +74,14 @@ class WindowStore {
    * this together). */
   #fallback = $state<ProjectStudyWindow | null>(readStored());
 
-  /** The active window: the draft's `window` when a draft exists (its absence
-   * reads as `null`), else the localStorage fallback. A `$derived` so consumers
+  /** The active window: the draft's `window` when a draft exists (its absence,
+   * or a malformed value from an opened spec, reads as `null`), else the
+   * localStorage fallback. A `$derived` so consumers
    * that read `windowStore.value` re-run when EITHER the draft changes
    * (projectStore.draft is reactive) or the fallback is written. */
   readonly value = $derived<ProjectStudyWindow | null>(
     projectStore.draft != null
-      ? ((projectStore.draft.window as ProjectStudyWindow | undefined) ?? null)
+      ? safeStudyWindow(projectStore.draft.window)
       : this.#fallback,
   );
 

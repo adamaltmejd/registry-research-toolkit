@@ -76,6 +76,15 @@ describe("windowStore — active draft (project hydrate + write-back)", () => {
     expect(windowStore.value).toBeNull();
   });
 
+  it("a draft with a malformed window reads null, not the raw value (#1428)", () => {
+    // An opened spec is held verbatim, so `window` can be any JSON. Fails if the
+    // store reads `draft.window` through a cast instead of `safeStudyWindow`: the
+    // string years would reach every window consumer typed as a valid window.
+    projectStore.newProject(SEED);
+    projectStore.updateField("window", { from: "2000", to: "2010" });
+    expect(windowStore.value).toBeNull();
+  });
+
   it("set() does NOT mirror into localStorage while a draft is active", () => {
     projectStore.newProject(SEED);
     windowStore.set({ from: 2012, to: 2018 });
