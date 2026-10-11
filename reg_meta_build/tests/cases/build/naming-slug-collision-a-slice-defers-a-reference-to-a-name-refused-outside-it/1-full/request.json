@@ -1,0 +1,5 @@
+{
+  "note": "Register 1 pins two native names (1.102, 1.103) `two` and two split names (1.5.kon, 1.7.kon) `kon`. The native conversion refuses the first pair and the partition conversion the second. Register 9's `value` is curated `same_as` both refused FQIDs. The complete build withholds both edges, one `withheld_catalog_dependency` per refused identity, each carrying that identity's source refs. Step 2 is the same tree built for register 9 alone.",
+  "fails_if": "a refused name's identity stops being withheld under the FQID its slug would have taken (`resolve_source_scope`, source_scope.py), so the complete build reports the edges `catalog_dependency_missing` and aborts",
+  "sources": "scb-refused-names-and-anchor"
+}

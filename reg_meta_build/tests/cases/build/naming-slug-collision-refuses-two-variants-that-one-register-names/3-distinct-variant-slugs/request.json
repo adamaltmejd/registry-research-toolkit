@@ -1,0 +1,5 @@
+{
+  "note": "Allowed twin of step 1: variant 1.11 is pinned `movers`, so both variants are named, the register forms and the variant edge from `people` is written.",
+  "fails_if": "the slug-collision check refuses two variants of one register whose slugs differ, or groups variant slug holders by register instead of by slug, so `scb/sample` is withheld and the edge is not written",
+  "sources": "scb-two-variants-and-anchor"
+}

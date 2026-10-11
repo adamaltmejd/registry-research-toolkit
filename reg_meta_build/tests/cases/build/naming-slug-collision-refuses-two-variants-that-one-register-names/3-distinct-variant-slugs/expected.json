@@ -1,0 +1,25 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "severity", "subject", "case_id"],
+      "rows": []
+    },
+    {
+      "table": "successions",
+      "fields": ["grain", "predecessor", "successor", "predecessor_variant", "successor_variant"],
+      "rows": [
+        ["variant", "scb/sample", "scb/anchor", "people", "base"]
+      ]
+    },
+    {
+      "table": "registers",
+      "fields": ["register"],
+      "rows": [
+        ["anchor"],
+        ["sample"]
+      ]
+    }
+  ]
+}

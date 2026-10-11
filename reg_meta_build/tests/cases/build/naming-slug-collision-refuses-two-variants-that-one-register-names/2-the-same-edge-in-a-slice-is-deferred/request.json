@@ -1,0 +1,6 @@
+{
+  "note": "Step 1's tree and source, built for register 9 alone. The unselected register 1 still declares variant `people`, refused, so the slice defers the variant edge as `deferred_out_of_slice_reference`; step 1 shows the complete build withholds it. Before the fix the slice dropped the refused variant names and aborted with `catalog_dependency_missing`.",
+  "fails_if": "`compile_deferred_naming` (curation_compile.py) stops returning the variant names its native conversion refused, or the scoped build stops counting an unselected scope's `refused_naming` as declared (pipeline.py), so the variant edge is reported `catalog_dependency_missing` and the slice aborts",
+  "sources": "scb-two-variants-and-anchor",
+  "registers": ["9"]
+}

@@ -1,0 +1,22 @@
+{
+  "description": "Register 1 (TEST, variant 10) delivers VALUE (var_id 101), ONE (102) and OTHER (103) in 2020, and variables 5 and 7 each as Kon in 2020 and KON in 2021 (CVIDs 20/21 and 30/31). Register 9 (ANCHOR, variant 90) delivers VALUE (var_id 901) in 2020.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE", "varname": "ValueVar", "regver_id": 2020},
+      {"cvid": 1002, "var_id": 102, "colname": "ONE", "varname": "OneVar", "regver_id": 2020},
+      {"cvid": 1003, "var_id": 103, "colname": "OTHER", "varname": "OtherVar", "regver_id": 2020},
+      {"cvid": 20, "varname": "FiveVar", "var_id": 5, "colname": "Kon", "year": "2020", "regver_id": 2020},
+      {"cvid": 21, "varname": "FiveVar", "var_id": 5, "colname": "KON", "year": "2021", "regver_id": 2021},
+      {"cvid": 30, "varname": "SevenVar", "var_id": 7, "colname": "Kon", "year": "2020", "regver_id": 2020},
+      {"cvid": 31, "varname": "SevenVar", "var_id": 7, "colname": "KON", "year": "2021", "regver_id": 2021},
+      {
+        "cvid": 9001,
+        "var_id": 901,
+        "colname": "VALUE",
+        "varname": "AnchorVar",
+        "regver_id": 9020,
+        "register": ["ANCHOR", 9, 90]
+      }
+    ]
+  }
+}

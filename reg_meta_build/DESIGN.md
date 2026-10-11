@@ -837,6 +837,16 @@ edition needs a split or `native_variable_id`, never a fold into one owner. Rela
 different variables remain connected through groups; a shared stem or suffix is not
 evidence that they are one variable.
 
+Two native identities that take one slug in one FQID scope are both refused with
+`naming_slug_collision`, whichever naming sources assign it (native names, split
+partitions, matrix answers, period families, errata columns). Each refusal is located at
+the curation entry that gave the slug. A refused name forms nothing. A refused variable
+is withheld as `unresolved_catalog_identity` under the FQID its slug would have taken. A
+refused variant leaves its delivered variant unnamed, which withholds its register.
+Curation that references either is withheld with `withheld_catalog_dependency`, never
+reported missing. Register slugs cannot collide, because each register file's path is
+its slug.
+
 Variant-scoped column owners may select exact source edition labels when the source
 documents a change of measurement basis within one column. Every selected label must
 exist; competing owners or a stale selector withhold the whole ownership decision.
@@ -1567,12 +1577,13 @@ there would silently drop a real edge. It defers a reference only when the other
 provably exists but was not selected, known without forming it: the unselected scope
 files' naming declares those registers, variants and variables (a naming-ambiguity name
 is a declared variable whose ownership is unresolved, which the complete build withholds
-with a cause), and the prepared store holds their observed register names and native
-IDs. Only a register, variant or variable reference is deferred: compile keeps a group
-member in its group's register and a representation succession within one register, so
-an entry naming a representation outside the slice is skipped whole. Such a reference (a
-`same_as` or succession edge, a group or tag member, a code/label pair, a source event
-or a source label) is withheld as one warning code, `deferred_out_of_slice_reference`;
+with a cause; so is a variant or variable name a slug collision refused), and the
+prepared store holds their observed register names and native IDs. Only a register,
+variant or variable reference is deferred: compile keeps a group member in its group's
+register and a representation succession within one register, so an entry naming a
+representation outside the slice is skipped whole. Such a reference (a `same_as` or
+succession edge, a group or tag member, a code/label pair, a source event or a source
+label) is withheld as one warning code, `deferred_out_of_slice_reference`;
 `deferred_references` counts distinct references. A target no scope declares, including
 an undeclared variable in an existing unselected register, stays the complete build's
 error, and a source label matching no known register stays a literal label. Source
