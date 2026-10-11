@@ -495,9 +495,15 @@ export function finalAddPeriodWires(
   for (const add of adds) {
     // An add resolves at its own period, the binding's years (#1462); a
     // period-less one inherits its source's period, as the batch leaves it.
-    const wire =
-      sourcePeriodToWire(add.period) ||
-      sourcePeriodToWire(periods.get(add.registerVariant) ?? add.period);
+    // That final source period must be one reg-core accepts too (`2099` and
+    // `LA2099` union to overlapping members), or the commit would author it.
+    const scope = sourcePeriodToWire(
+      periods.get(add.registerVariant) ?? add.period,
+    );
+    if (scope === null || !periodWireValid(scope)) {
+      return null;
+    }
+    const wire = sourcePeriodToWire(add.period) || scope;
     if (
       wire === "_default" &&
       (add.registerVariant.split("/").length !== 3 ||

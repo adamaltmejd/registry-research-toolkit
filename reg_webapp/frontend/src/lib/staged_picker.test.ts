@@ -568,6 +568,24 @@ describe("finalAddPeriodWires", () => {
       ),
     ).toEqual(["2020"]);
   });
+
+  it("refuses an add whose final source period reg-core rejects, beside its allowed twin (#1462)", () => {
+    // `2099` and `LA2099` union to overlapping list members, which the commit
+    // would author into a valid draft. Fails if only the add's own (valid)
+    // period is checked. `2098` and `LA2099` union cleanly and are allowed.
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/ind", period: 2099 }],
+        [{ registerVariant: "scb/lisa/ind", period: "LA2099" }],
+      ),
+    ).toBeNull();
+    expect(
+      finalAddPeriodWires(
+        [{ registerVariant: "scb/lisa/ind", period: 2098 }],
+        [{ registerVariant: "scb/lisa/ind", period: "LA2099" }],
+      ),
+    ).toEqual(["LA2099"]);
+  });
 });
 
 describe("rowAddSegments (#376 per-concrete-segment fan-out)", () => {
