@@ -1,0 +1,16 @@
+{
+  "comparison_outcomes": {
+    "$once": [
+      {
+        "status": "agreement",
+        "workbook_record_ids": ["Individ!row:600"],
+        "variable_ids": [31619],
+        "scb_record_ids": ["scb:10"],
+        "assumption_ids": ["lisa-individual-2010-2024-to-scb-variant-153"]
+      },
+      {"status": "source_only_observation", "variable_ids": [999], "scb_record_ids": ["scb:11"]},
+      {"status": "unobserved_counterpart", "workbook_record_ids": ["Individ!row:601"], "scb_record_ids": []}
+    ],
+    "$lacks": [{"assumption_ids": []}]
+  }
+}
