@@ -33,6 +33,32 @@ function valuesFor(fqid: string, items: ClassificationCodeModel[]): void {
   });
 }
 
+// Runs the real `getValues` and stubs only `fetch`, so a test asserts the HTTP
+// requests the panel sends. `answer` gives the items for one request URL.
+async function serveValues(
+  answer: (url: URL) => ClassificationCodeModel[],
+): Promise<URL[]> {
+  const actual = await vi.importActual<typeof import("./api")>("./api");
+  vi.mocked(getValues).mockImplementation(actual.getValues);
+  const requests: URL[] = [];
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input: string) => {
+      const url = new URL(input, window.location.origin);
+      requests.push(url);
+      const items = answer(url);
+      return new Response(
+        JSON.stringify({
+          data: { items, next_cursor: null, total: items.length },
+          meta: {},
+        }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      );
+    }),
+  );
+  return requests;
+}
+
 const node: ClassificationShow = {
   kind: "classification",
   fqid: "class/sun2020",
@@ -57,10 +83,13 @@ describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
   // (the codes used to arrive embedded on the node), or if a book without a code
   // tree (`child_count` null) is read by level or rendered as disclosures.
   it("renders the edition's codes from the values facet", async () => {
-    valuesFor("class/sun2020", [
+    const items = [
       code({ code: "1", label: "Förgymnasial" }),
       code({ code: "3", label: "Eftergymnasial" }),
-    ]);
+    ];
+    const requests = await serveValues((url) =>
+      url.pathname === "/api/values/class/sun2020" ? items : [],
+    );
 
     await render(ClassificationCodesPanel, { node });
 
@@ -70,8 +99,9 @@ describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
     await expect.element(page.getByText("Förgymnasial")).toBeVisible();
     await expect.element(page.getByText("Eftergymnasial")).toBeVisible();
     expect(document.querySelector("details")).toBeNull();
-    for (const [, params] of vi.mocked(getValues).mock.calls) {
-      expect(params?.parent).toBeUndefined();
+    expect(requests.length).toBeGreaterThan(0);
+    for (const url of requests) {
+      expect(url.searchParams.has("parent")).toBe(false);
     }
   });
 
@@ -82,34 +112,18 @@ describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
   // The real `getValues` runs and only `fetch` is stubbed, so the assertion is on
   // the HTTP requests the panel sends: an empty `parent` must reach the wire.
   it("opens a node by reading its children once", async () => {
-    const actual = await vi.importActual<typeof import("./api")>("./api");
-    vi.mocked(getValues).mockImplementation(actual.getValues);
     const levels: Record<string, ClassificationCodeModel[]> = {
       "": [code({ code: "A", label: "Jordbruk", level: null, child_count: 1 })],
       A: [code({ code: "01", label: "Odling", level: 2, child_count: 0 })],
     };
-    const requests: URL[] = [];
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async (input: string) => {
-        const url = new URL(input, window.location.origin);
-        requests.push(url);
-        const parent = url.searchParams.get("parent");
-        const items =
-          url.pathname !== "/api/values/class/sun2020"
-            ? []
-            : parent === null
-              ? [...levels[""], ...levels.A]
-              : (levels[parent] ?? []);
-        return new Response(
-          JSON.stringify({
-            data: { items, next_cursor: null, total: items.length },
-            meta: {},
-          }),
-          { status: 200, headers: { "Content-Type": "application/json" } },
-        );
-      }),
-    );
+    const requests = await serveValues((url) => {
+      const parent = url.searchParams.get("parent");
+      return url.pathname !== "/api/values/class/sun2020"
+        ? []
+        : parent === null
+          ? [...levels[""], ...levels.A]
+          : (levels[parent] ?? []);
+    });
 
     await render(ClassificationCodesPanel, { node });
 
