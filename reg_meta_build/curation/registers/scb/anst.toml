@@ -407,3 +407,22 @@ slug = "indman6"
 [[variable]]
 native_id = "408.47454.anstallningar"
 slug = "anstallningar"
+
+# #1302 F6: SuS case key, same concept and slug as scb/ksju lopnummer-sjukfall.
+
+[[errata.column]]
+variant = "sus"
+column = "Id"
+name = "Löpnummer för sjukfall"
+definition = "Unikt löpnummer för varje sjukfall. Levereras i kolumnen P1105_LopNr_Id."
+data_type = "integer"
+is_identifier = true
+is_sensitive = false
+holdings_period = "2024-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds P1105_LopNr_Id in SuS_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it with source SUS for 2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F6, maintainer round 5)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "408.Id"
+slug = "lopnummer-sjukfall"

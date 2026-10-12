@@ -356,3 +356,19 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "2d2fe42fd2a484623109f80503248ebb9b7921eb86122631ca249040e04e7fc6"
 expected_diagnostic_sha256 = "9bc0ea28a446835b1cff22b3ebf90fd0c79b16bf592e2a3efc2c07a646e32762"
+
+# #1302: SPIN2002 product code held by SWECOV on the intrastat variant.
+
+[[errata.column]]
+variant = "varu-landfordelat-intrastat"
+column = "SPIN2002"
+name = "Produktgrupp enligt SPIN 2002"
+definition = "Produktgrupp enligt SPIN 2002."
+holdings_period = "1997-2011"
+source = "steward-holdings"
+evidence = "SWECOV holds SPIN2002 in UHV_1997..UHV_2011; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (UHV sheet) lists it for 1997-2011; SCB's Registerinformation export carries no row for it on this variant (the catalog has SPIN2007/SPIN2015 only) (#1302)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "188.SPIN2002"
+slug = "spin2002"

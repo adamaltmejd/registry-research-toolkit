@@ -12578,3 +12578,173 @@ selector = { register = "scb/innovation-foretag", register_id = 257, variant = "
 source_mode = "named"
 evidence_file = "registers/scb/innovation-foretag/cis2016-matrix-meaning-evidence.json"
 selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2014 - 2016", regver_id = 11529, var_id = 15662, cvid = 469456 }
+
+# #1302: CIS 2008/2014 eco-innovation and employment columns held by SWECOV; undocumented, so name = column (register precedent).
+
+[[errata.column]]
+variant = "_default"
+column = "ECOENU"
+name = "ECOENU"
+definition = "ECOENU"
+holdings_period = "2008-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOENU in CIS2008 (as EcoEnu) and CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOMAT"
+name = "ECOMAT"
+definition = "ECOMAT"
+holdings_period = "2008-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOMAT in CIS2008 (as EcoMat) and CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOPOL"
+name = "ECOPOL"
+definition = "ECOPOL"
+holdings_period = "2008-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOPOL in CIS2008 (as EcoPol) and CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOPOS"
+name = "ECOPOS"
+definition = "ECOPOS"
+holdings_period = "2008-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOPOS in CIS2008 (as EcoPos) and CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOREA"
+name = "ECOREA"
+definition = "ECOREA"
+holdings_period = "2008-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOREA in CIS2008 (as EcoRea) and CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOREC"
+name = "ECOREC"
+definition = "ECOREC"
+holdings_period = "2008-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOREC in CIS2008 (as EcoRec) and CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOSUB"
+name = "ECOSUB"
+definition = "ECOSUB"
+holdings_period = "2008-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOSUB in CIS2008 (as EcoSub) and CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOENO"
+name = "ECOENO"
+definition = "ECOENO"
+holdings_period = "2014-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOENO in CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOEXT"
+name = "ECOEXT"
+definition = "ECOEXT"
+holdings_period = "2014-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOEXT in CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "ECOREP"
+name = "ECOREP"
+definition = "ECOREP"
+holdings_period = "2014-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds ECOREP in CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. CIS2008 also holds the FEco* columns, which map separately, so these are not FEco* aliases. Whether the 2008/2014 questions equal the 2018-2020 ECO_* variables is not established. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "Emp2014"
+name = "Emp2014"
+definition = "Emp2014"
+holdings_period = "2014-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds Emp2014 in CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "_default"
+column = "emp2012"
+name = "emp2012"
+definition = "emp2012"
+holdings_period = "2014-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds emp2012 in CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. (#1302)"
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "257.ECOENU"
+slug = "ecoenu"
+
+[[variable]]
+native_id = "257.ECOMAT"
+slug = "ecomat"
+
+[[variable]]
+native_id = "257.ECOPOL"
+slug = "ecopol"
+
+[[variable]]
+native_id = "257.ECOPOS"
+slug = "ecopos"
+
+[[variable]]
+native_id = "257.ECOREA"
+slug = "ecorea"
+
+[[variable]]
+native_id = "257.ECOREC"
+slug = "ecorec"
+
+[[variable]]
+native_id = "257.ECOSUB"
+slug = "ecosub"
+
+[[variable]]
+native_id = "257.ECOENO"
+slug = "ecoeno"
+
+[[variable]]
+native_id = "257.ECOEXT"
+slug = "ecoext"
+
+[[variable]]
+native_id = "257.ECOREP"
+slug = "ecorep"
+
+[[variable]]
+native_id = "257.Emp2014"
+slug = "emp2014"
+
+[[variable]]
+native_id = "257.emp2012"
+slug = "emp2012"

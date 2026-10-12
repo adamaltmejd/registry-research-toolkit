@@ -10068,3 +10068,50 @@ valid_from = "1995-01-01"
 valid_to = "1995-12-31"
 reason = "User-approved bounded source limitation,2026-10-01: No exact historical parish codebook is established for this1993–1995 window. Retain geography source facts without projecting a later geographic regime."
 evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+# #1302: _INKLGP disposable-income columns held by SWECOV (IoT2015..IoT2019); undocumented, so name = column.
+
+[[errata.column]]
+variant = "individer-och-dodsbon"
+column = "CDISP04_INKLGP"
+name = "CDISP04_INKLGP"
+definition = "CDISP04_INKLGP"
+data_type = "integer"
+holdings_period = "2015-2019"
+source = "steward-holdings"
+evidence = "SWECOV holds CDISP04_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "individer-och-dodsbon"
+column = "CDISP04H_INKLGP"
+name = "CDISP04H_INKLGP"
+definition = "CDISP04H_INKLGP"
+data_type = "integer"
+holdings_period = "2015-2019"
+source = "steward-holdings"
+evidence = "SWECOV holds CDISP04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "individer-och-dodsbon"
+column = "CDISPKE04H_INKLGP"
+name = "CDISPKE04H_INKLGP"
+definition = "CDISPKE04H_INKLGP"
+data_type = "integer"
+holdings_period = "2015-2019"
+source = "steward-holdings"
+evidence = "SWECOV holds CDISPKE04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "25.CDISP04_INKLGP"
+slug = "cdisp04-inklgp"
+
+[[variable]]
+native_id = "25.CDISP04H_INKLGP"
+slug = "cdisp04h-inklgp"
+
+[[variable]]
+native_id = "25.CDISPKE04H_INKLGP"
+slug = "cdispke04h-inklgp"

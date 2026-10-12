@@ -12013,3 +12013,47 @@ fields = ["identity"]
 refs = ["{\"semantic_record_key\":[\"register:258\",\"variant:557\",\"edition:1715\",\"variable:6845\",\"member:120724\"],\"source\":\"scb-registerinformation\"}"]
 reason = "User-approved bounded source limitation,2026-10-01: Retain the exact ambiguous native identity as unavailable while preserving every separately grounded physical owner and output. No identity inferred from column spelling."
 evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+# #1302: survey-design columns of IT-användning i företag held by SWECOV; undocumented, so name = column.
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "lillan"
+name = "lillan"
+definition = "lillan"
+holdings_period = "2008-2018"
+source = "steward-holdings"
+evidence = "SWECOV holds lillan in ITftg_2008..ITftg_2011, ITftg_Stora_2013..2018, ITftg_Mikro_2015..2018; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (ITFtg sheet) lists it for 2008-2018; SCB's Registerinformation export carries no row for it on this variant. The same name on befolkningens-it-anvandning is a person-survey design variable, not this one. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "storaN"
+name = "storaN"
+definition = "storaN"
+holdings_period = "2008-2018"
+source = "steward-holdings"
+evidence = "SWECOV holds storaN in ITftg_2008..ITftg_2011, ITftg_Stora_2013..2018, ITftg_Mikro_2015..2018; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (ITFtg sheet) lists it for 2008-2018; SCB's Registerinformation export carries no row for it on this variant. The same name on befolkningens-it-anvandning is a person-survey design variable, not this one. (#1302)"
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "LAN"
+name = "LAN"
+definition = "LAN"
+holdings_period = "2008-2010"
+source = "steward-holdings"
+evidence = "SWECOV holds LAN in ITftg_2008..ITftg_2010; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (ITFtg sheet) lists it for 2008-2010; SCB's Registerinformation export carries no row for it on this variant. ITftg_2010 holds both LAN and Lansate, so LAN is not a Lansate alias. (#1302)"
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "258.lillan"
+slug = "lillan-foretag"
+
+[[variable]]
+native_id = "258.storaN"
+slug = "storan-foretag"
+
+[[variable]]
+native_id = "258.LAN"
+slug = "lan-foretag"

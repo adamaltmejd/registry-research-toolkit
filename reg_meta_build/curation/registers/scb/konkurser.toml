@@ -58,3 +58,22 @@ native_id = "167.21549"
 slug = "objekttyp"
 
 # register 168
+
+# #1302 F1: the person half of the opnr debtor key, its own identifier variable.
+
+[[errata.column]]
+variant = "konkurser-offentliga-ackord"
+column = "PersonNr_opnr"
+name = "Personnummer för gäldenär som är enskild firma eller privatperson"
+definition = "Gäldenärens personnummer när gäldenären är en enskild firma eller en privatperson (från och med 1996). Levereras som löpnummer i kolumnen P1105_LopNr_PersonNr_opnr."
+data_type = "text"
+is_identifier = true
+is_sensitive = false
+holdings_period = "2015-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds P1105_LopNr_PersonNr_opnr in Konkurs_2015..Konkurs_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it with source Konk.OffAck and view Konkurs_ÅÅÅÅ; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F1, maintainer round 5)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "167.PersonNr_opnr"
+slug = "lopnr-personnr-opnr"
