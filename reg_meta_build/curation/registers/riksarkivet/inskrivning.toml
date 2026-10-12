@@ -439,3 +439,54 @@ native_id = "7217173874749089767.YRK2"
 slug = "yrkesutbildning-2"
 
 # === END #760 non-SCB concept-slug curation ===
+
+# #1512 errata (#1302): delivered RA_Insark fields documented in
+# "Insarkvariabler-fullst.pdf"; slugs derived from the variable names.
+
+[[variable]]
+native_id = "7217173874749089767.RPG1"
+slug = "rapoang-inskrivningsprov-delprov-1"
+
+[[variable]]
+native_id = "7217173874749089767.RPG2"
+slug = "rapoang-inskrivningsprov-delprov-2"
+
+[[variable]]
+native_id = "7217173874749089767.RPG3"
+slug = "rapoang-inskrivningsprov-delprov-3"
+
+[[variable]]
+native_id = "7217173874749089767.RPG4"
+slug = "rapoang-inskrivningsprov-delprov-4"
+
+[[variable]]
+native_id = "7217173874749089767.STP1"
+slug = "standardpoang-inskrivningsprov-delprov-1"
+
+[[variable]]
+native_id = "7217173874749089767.STP2"
+slug = "standardpoang-inskrivningsprov-delprov-2"
+
+[[variable]]
+native_id = "7217173874749089767.STP3"
+slug = "standardpoang-inskrivningsprov-delprov-3"
+
+[[variable]]
+native_id = "7217173874749089767.STP4"
+slug = "standardpoang-inskrivningsprov-delprov-4"
+
+[[variable]]
+native_id = "7217173874749089767.BEFL"
+slug = "befalslamplighet"
+
+[[variable]]
+native_id = "7217173874749089767.PGRP"
+slug = "provgrupp"
+
+[[variable]]
+native_id = "7217173874749089767.PF"
+slug = "psykisk-funktionsformaga"
+
+[[variable]]
+native_id = "7217173874749089767.OMGG"
+slug = "provningsomgang"
