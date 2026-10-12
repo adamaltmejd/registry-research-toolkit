@@ -1,0 +1,40 @@
+[
+  {
+    "register_fqid": "scb/lisa",
+    "variable_fqid": null,
+    "variant": null,
+    "delivery_column_name": null,
+    "valid_from": null,
+    "valid_to": null,
+    "code": "unassigned_original_columns",
+    "severity": "warning",
+    "summary": "Some source records have no delivery column.",
+    "detail": "Unbound source records are retained; their identifier and sensitivity flags are not assigned to delivered variables.",
+    "fields": [],
+    "refs": [],
+    "withheld_output": [],
+    "acknowledged_by": null,
+    "case_id": null,
+    "diagnostic_detail_sha256": "0dfdf9a56be2a571204759fcad1ce5b3edccfd2c42ba03c335a15f5379c2a36b",
+    "warning_id": "c1723b157248e9669fffa8eba219bb9b42b4a07e1de42d4268050cc085ccadeb"
+  },
+  {
+    "register_fqid": "scb/lisa",
+    "variable_fqid": "scb/lisa/forsamling",
+    "variant": "individer-15plus",
+    "delivery_column_name": "Forsamling",
+    "valid_from": "2006-01-01",
+    "valid_to": "2019-12-31",
+    "code": "nonconforming_classification_codes",
+    "severity": "warning",
+    "summary": "The delivered domain includes nonstandard classification codes.",
+    "detail": "Source codes and labels are retained alongside the claimed classification.",
+    "fields": [],
+    "refs": [],
+    "withheld_output": [],
+    "acknowledged_by": null,
+    "case_id": null,
+    "diagnostic_detail_sha256": "5d9a26e2fed266c3af26cabc7c1a09985b02c67d51b2428adee3e289fbc4ab99",
+    "warning_id": "d8f64eedca1291fac1d0a875c44455e4d3e2573ef9eef4e13750e019efb27dc4"
+  }
+]

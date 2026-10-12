@@ -10,9 +10,8 @@ description: Run, screenshot, and drive the reg_webapp dev setup (Rust server + 
 The tooling lives in `reg_webapp/dev/`: `dev.sh` starts the Rust server
 (`reg-meta serve`) and Vite (whose `/api` proxy, in
 `reg_webapp/frontend/vite.config.ts`, sends every route to the Rust server) on FREE
-ports, `driver.mjs` is the Playwright driver, and `fixture_db.py` builds the synthetic
-catalog. Every command starts at the **repo root**; `dev.sh` serves the checkout it
-lives in, whatever your cwd.
+ports, and `driver.mjs` is the Playwright driver. Every command starts at the **repo
+root**; `dev.sh` serves the checkout it lives in, whatever your cwd.
 
 ## Prerequisites
 
@@ -71,14 +70,15 @@ dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots
 
 `REG_WEBAPP_SHOTS=<dir>` collects a run elsewhere (relative to the repo root).
 
-**`--fixture-db`** builds a deterministic synthetic catalog + docs DB pair into a temp
-dir, serves it as `REG_META_DB` and deletes it on exit; byte-identical run to run, so a
-screenshot diff means a code change. It covers every route the design reviewer walks
-(`/`, `/catalog`, `fk/midas`, `scb/lisa`, `scb/rams`, `/catalog/scb/lisa/kon`,
-`/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`, `/search?q=kon`, `/project`,
-`/doc/Kon.md`) but has a handful of rows — use a real DB for density questions. With
-`REG_WEBAPP_STEWARD` set, the catalog is the conformance suite's synthetic steward
-artifact (`conformance/fixture_cache.py`) instead.
+**`--fixture-db`** serves a deterministic synthetic catalog + docs DB pair as
+`REG_META_DB`: the real builder's output for `conformance/cases/fixtures/webapp-dev`,
+from the shared fixture cache (`conformance/fixture_cache.py`, built on a miss). It is
+byte-identical run to run, so a screenshot diff means a code change. It covers every
+route the design reviewer walks (`/`, `/catalog`, `fk/midas`, `scb/lisa`, `scb/rams`,
+`/catalog/scb/lisa/kon`, `/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`,
+`/search?q=kon`, `/project`, `/doc/Kon.md`) but has a handful of rows — use a real DB
+for density questions. With `REG_WEBAPP_STEWARD` set, the catalog is the conformance
+suite's synthetic steward artifact (`conformance/fixture_cache.py`) instead.
 
 **A scratch DB** verifies content not yet released (a `build-db` / curation change):
 

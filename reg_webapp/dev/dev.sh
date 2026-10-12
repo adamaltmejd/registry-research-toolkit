@@ -38,11 +38,12 @@
 #
 # Leading flag (before the mode), works with every mode:
 #   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog instead of the
-#                          resolved reg_meta DB: build the fixture DB pair
-#                          (fixture_db.py, beside this script) into a temp dir, export
-#                          it as REG_META_DB, and delete it on exit. With
-#                          REG_WEBAPP_STEWARD set, the catalog is a link to the
-#                          synthetic steward artifact (conformance/fixture_cache.py).
+#                          resolved reg_meta DB: the catalog + docs pair the real
+#                          builder makes from conformance/cases/fixtures/webapp-dev,
+#                          looked up in the shared fixture cache
+#                          (conformance/fixture_cache.py, built on a miss) and exported
+#                          as REG_META_DB. With REG_WEBAPP_STEWARD set, the catalog is
+#                          the synthetic steward artifact (`reader steward`) instead.
 #                          For a container / checkout where no released DB is
 #                          reachable.
 #
@@ -59,10 +60,7 @@ set -uo pipefail
 set -m
 
 # Leading global flag, consumed before the mode word so every mode accepts it.
-# `fixture_db_dir` is the built temp dir (empty when the flag is absent); cleanup()
-# removes it, so it must be defined before the trap is installed.
 fixture_db=""
-fixture_db_dir=""
 if [ "${1:-}" = "--fixture-db" ]; then
 	fixture_db=1
 	shift
@@ -230,43 +228,27 @@ cleanup() {
 	if [ ${#pids[@]} -gt 0 ]; then
 		for p in "${pids[@]}"; do kill -- -"$p" 2>/dev/null; done
 	fi
-	# The --fixture-db scratch DB pair is per-run and rebuildable — never leave it
-	# behind (it's ~0.6 MB of temp per invocation).
-	if [ -n "$fixture_db_dir" ]; then rm -rf "$fixture_db_dir"; fi
 }
 # Tear every server down on ANY exit — including the one-shot smoke/shot paths, so
 # they never leak a dev server (the failure mode that motivated this mode).
 trap cleanup INT TERM EXIT
 
 # --fixture-db: point EVERY server at a deterministic synthetic catalog via
-# REG_META_DB, so it wins over whatever the environment resolves. The global catalog
-# (catalog + docs pair) is built into a temp dir AFTER the trap, so a failure
-# mid-build still gets the dir removed. A steward's catalog is the conformance
-# suite's synthetic steward artifact, looked up in the shared fixture cache (built
-# on a miss) and symlinked into the temp dir beside the same docs DB; cleanup
-# removes only the link.
+# REG_META_DB, so it wins over whatever the environment resolves. The artifact is
+# the conformance fixture cache's (read-only, shared across checkouts, built on a
+# miss), so there is nothing to clean up. The steward artifact carries the same docs
+# DB, so it is its own cache entry beside the gate's docs-less `reader steward`.
 if [ -n "$fixture_db" ]; then
-	fixture_catalog_args=()
+	fixture=(fixtures/webapp-dev catalog --docs fixtures/webapp-dev/docs)
 	if [ "${REG_WEBAPP_STEWARD:-global}" != "global" ]; then
-		if ! fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py reader steward); then
-			echo "dev: --fixture-db steward lookup failed — see output above." >&2
-			exit 1
-		fi
-		fixture_catalog_args=(--catalog "$fixture_catalog")
+		fixture=(reader steward --docs fixtures/webapp-dev/docs)
 	fi
-	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture-db.XXXXXX") || exit 1
-	# Match cleanup's empty-array guard for macOS system Bash 3.2 + nounset.
-	if ! (
-		if [ ${#fixture_catalog_args[@]} -gt 0 ]; then
-			.venv/bin/python reg_webapp/dev/fixture_db.py "$fixture_db_dir" "${fixture_catalog_args[@]}" >/dev/null
-		else
-			.venv/bin/python reg_webapp/dev/fixture_db.py "$fixture_db_dir" >/dev/null
-		fi
-	); then
+	if ! fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py "${fixture[@]}"); then
 		echo "dev: --fixture-db build failed — see output above." >&2
 		exit 1
 	fi
-	export REG_META_DB="$fixture_db_dir"
+	REG_META_DB=$(dirname "$fixture_catalog")
+	export REG_META_DB
 	echo "dev: --fixture-db serving a synthetic catalog from $REG_META_DB" >&2
 fi
 

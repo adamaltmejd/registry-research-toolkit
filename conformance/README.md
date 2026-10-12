@@ -111,13 +111,16 @@ inputs in generations of the same cache, under the same rule
 (`reg_meta_build/tests/cases/build/README.md`). CI sets no `REG_FIXTURE_CACHE`, so a
 fresh runner starts both caches cold in its temp directory.
 `uv run python conformance/fixture_cache.py reader catalog` builds one entry and prints
-its path for consumers outside pytest.
+its path for consumers outside pytest; `--docs <source>` builds the docs DB beside it.
 
-Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`; other named
-sources live under `reg_meta_build/tests/cases/holdings`. HTTP fixture names resolve
-under `cases/fixtures` unless they name a reader source. The shared builder is
-`conformance/reader_artifacts.py`; package tests and the dev server's steward catalog
-(`dev.sh --fixture-db` with `REG_WEBAPP_STEWARD`) use it too.
+Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`, and ones
+named `fixtures/<name>` under `cases/fixtures`; other named sources live under
+`reg_meta_build/tests/cases/holdings`. HTTP fixture names resolve under `cases/fixtures`
+unless they name a reader source. The shared builder is
+`conformance/reader_artifacts.py`; package tests and the dev server use it too.
+`dev.sh --fixture-db` serves `fixtures/webapp-dev` (catalog + docs), the source the
+browser flows (`gate.py flows`) assert on, or the `reader` steward artifact with
+`REG_WEBAPP_STEWARD`.
 
 A reader source whose `request.json` names a `filler` binding and a `copies` count is
 built with that binding replicated (`replicate_filler`), so a case can rank past a full

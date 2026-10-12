@@ -32,8 +32,8 @@ private data.
 ```text
 reg_webapp/
   .claude/skills/run-reg-webapp/  # the skill: how to use dev/
-  dev/                    # dev.sh, the browser flows (driver.mjs), fixture_db.py (the
-                          # synthetic catalog + docs DB pair, dev.sh --fixture-db)
+  dev/                    # dev.sh and the browser flows (driver.mjs); dev.sh
+                          # --fixture-db serves conformance/cases/fixtures/webapp-dev
   frontend/               # Svelte 5 + Vite + TS SPA (bun-managed)
     src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
   stewards/               # per-steward branding, read by `reg-meta serve --stewards`
