@@ -1475,3 +1475,249 @@ refs = ["{\"semantic_record_key\":[\"summary\",\"3e7048188c14f7d012a0d35bb156394
 expected_evidence_sha256 = "a0620b2beb80b3d1f9dd52d32b9ee2229baa7108f8244e9b1b3307ffc241b2f2"
 reason = "User-approved bounded source limitation,2026-10-01: Retain these exact blank-column summary source records without attaching their flags to guessed physical columns or deleting originals."
 evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
+
+# ── #1302 SWECOV-held columns SCB's export omits (2026-10-12) ──
+# Each column is placed in the table's own view by SWECOV's P1105 delivery list.
+# Names and definitions are written from the column name and the catalog's sibling
+# wording, not copied from the delivery list.
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "SUN2000Inr3_amnegrupp"
+name = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)"
+definition = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2000Inr3_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "SUN2000Inr3_lprog"
+name = "Programmets suninriktning på 3-siffernivå (SUN2000)"
+definition = "Programmets suninriktning på 3-siffernivå (SUN2000)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2000Inr3_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "SUN2000Niva_lprog"
+name = "Programmets sunnivå (SUN2000)"
+definition = "Programmets sunnivå (SUN2000)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2000Niva_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "SUN2020Inr3_amnegrupp"
+name = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)"
+definition = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2020Inr3_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "SUN2020Inr3_lprog"
+name = "Programmets suninriktning på 3-siffernivå (SUN2020)"
+definition = "Programmets suninriktning på 3-siffernivå (SUN2020)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2020Inr3_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "SUN2020Niva_lprog"
+name = "Programmets sunnivå (SUN2020)"
+definition = "Programmets sunnivå (SUN2020)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2020Niva_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "omr_amnegrupp"
+name = "Ämnesgruppens utbildningsområde"
+definition = "Ämnesgruppens utbildningsområde"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds omr_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-1993"
+column = "omr_yprog"
+name = "Yrkesexamensprogrammets utbildningsområde"
+definition = "Yrkesexamensprogrammets utbildningsområde"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds omr_yprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-poang"
+column = "SUN2000Inr3_amnegrupp"
+name = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)"
+definition = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2000Inr3_amnegrupp in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-poang"
+column = "SUN2000Inr3_lprog"
+name = "Programmets suninriktning på 3-siffernivå (SUN2000)"
+definition = "Programmets suninriktning på 3-siffernivå (SUN2000)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2000Inr3_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-poang"
+column = "SUN2000Niva_lprog"
+name = "Programmets sunnivå (SUN2000)"
+definition = "Programmets sunnivå (SUN2000)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2000Niva_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-poang"
+column = "SUN2020Inr3_amnegrupp"
+name = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)"
+definition = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2020Inr3_amnegrupp in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-poang"
+column = "SUN2020Inr3_lprog"
+name = "Programmets suninriktning på 3-siffernivå (SUN2020)"
+definition = "Programmets suninriktning på 3-siffernivå (SUN2020)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2020Inr3_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-poang"
+column = "SUN2020Niva_lprog"
+name = "Programmets sunnivå (SUN2020)"
+definition = "Programmets sunnivå (SUN2020)"
+holdings_period = "1993-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2020Niva_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "sokande-grund-avancerad"
+column = "SUN2000Inr3_amnegrupp"
+name = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)"
+definition = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)"
+holdings_period = "2015-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2000Inr3_amnegrupp in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "sokande-grund-avancerad"
+column = "SUN2000Niva_lprog"
+name = "Programmets sunnivå (SUN2000)"
+definition = "Programmets sunnivå (SUN2000)"
+holdings_period = "2015-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2000Niva_lprog in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "sokande-grund-avancerad"
+column = "SUN2020Inr3_amnegrupp"
+name = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)"
+definition = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)"
+holdings_period = "2015-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2020Inr3_amnegrupp in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "sokande-grund-avancerad"
+column = "SUN2020Inr3_lprog"
+name = "Programmets suninriktning på 3-siffernivå (SUN2020)"
+definition = "Programmets suninriktning på 3-siffernivå (SUN2020)"
+holdings_period = "2015-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds SUN2020Inr3_lprog in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "Termin"
+name = "Termin för examen"
+definition = "Termin för examen"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds Termin in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024 (1990-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-examina. holdings_period is the SWECOV holdings range (#1302). The other Hreg Termin variables are registration, credit or application terms, not the degree term."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "grundutbildning-examina"
+column = "tmgrp"
+name = "tmgrp"
+definition = "Kodkolumn i examensleveransen; innebörden är inte dokumenterad."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds tmgrp in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024; SCB's P1105 Leveransrapport 2023-2024 (Postbeskrivning) lists it for Hreg_Examina_1990_2022. It is in no variable list and SCB's Registerinformation export carries no row for it on grundutbildning-examina. LOVA's TMGRP name match is not used as evidence. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+data_warning = "Delivery is documented; the column's meaning and codes are not."
+
+[[variable]]
+native_id = "47.SUN2000Inr3_amnegrupp"
+slug = "sun2000inr3-amnegrupp"
+
+[[variable]]
+native_id = "47.SUN2000Inr3_lprog"
+slug = "sun2000inr3-lprog"
+
+[[variable]]
+native_id = "47.SUN2000Niva_lprog"
+slug = "sun2000niva-lprog"
+
+[[variable]]
+native_id = "47.SUN2020Inr3_amnegrupp"
+slug = "sun2020inr3-amnegrupp"
+
+[[variable]]
+native_id = "47.SUN2020Inr3_lprog"
+slug = "sun2020inr3-lprog"
+
+[[variable]]
+native_id = "47.SUN2020Niva_lprog"
+slug = "sun2020niva-lprog"
+
+[[variable]]
+native_id = "47.omr_amnegrupp"
+slug = "omr-amnegrupp"
+
+[[variable]]
+native_id = "47.omr_yprog"
+slug = "omr-yprog"
+
+[[variable]]
+native_id = "47.Termin"
+slug = "termin-examen"
+
+[[variable]]
+native_id = "47.tmgrp"
+slug = "tmgrp"

@@ -13220,3 +13220,38 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "2a97630372d85a481b679b242c6a640ace5d24186dfd897a00c83e30730fa4e9"
 expected_diagnostic_sha256 = "814793b67b0e4fc8f5616d84fe061dffc2d6f821ccf98234e64099870125df74"
+
+# ── #1302 SWECOV-held columns SCB's export omits (2026-10-12) ──
+# Each column is placed in the table's own view by SWECOV's P1105 delivery list.
+# Names and definitions are written from the column name and the catalog's sibling
+# wording, not copied from the delivery list.
+
+[[errata.column]]
+variant = "tjansteregistret"
+column = "REKTOR"
+name = "REKTOR"
+definition = "Uppgift om rektor i tjänsteregistret; innebörden är inte dokumenterad."
+holdings_period = "1989-1998"
+source = "steward-holdings"
+evidence = "SWECOV holds REKTOR in LReg_1989 through LReg_1998 (1989-1998); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on tjansteregistret. holdings_period is the SWECOV holdings range (#1302). The forskola REKTOR name match is not used as evidence."
+noted = "2026-10-12"
+data_warning = "Delivery is documented; the column's meaning and codes are not."
+
+[[errata.column]]
+variant = "tjansteregistret"
+column = "RoKod"
+name = "Rektorsområde"
+definition = "Kod för rektorsområde, levererad som löpnummer. Innebörden är en tolkning av kolumnnamnet; den är inte dokumenterad."
+holdings_period = "1989-2012"
+source = "steward-holdings"
+evidence = "SWECOV holds P1105_LopNr_RoKod (the löpnummer of RoKod) in LReg_1989 through LReg_2012. No P1105 list names a source or view for it, and SCB's Registerinformation export carries no row for the column on tjansteregistret. The rektorsområde reading rests on the column name only (maintainer-accepted best guess, #1302)."
+noted = "2026-10-12"
+data_warning = "The meaning (rektorsområde) is read from the column name; it is not documented."
+
+[[variable]]
+native_id = "232.REKTOR"
+slug = "rektor"
+
+[[variable]]
+native_id = "232.RoKod"
+slug = "rektorsomrade"

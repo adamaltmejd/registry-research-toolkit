@@ -1018,3 +1018,36 @@ slug = "utlbakgr"
 [[variable]]
 native_id = "102.67.utlbakgr2"
 slug = "utlbakgr2"
+
+# ── #1302 SWECOV-held columns SCB's export omits (2026-10-12) ──
+# Each column is placed in the table's own view by SWECOV's P1105 delivery list.
+# Names and definitions are written from the column name and the catalog's sibling
+# wording, not copied from the delivery list.
+
+[[errata.column]]
+variant = "slutbetyg"
+column = "utbildning"
+name = "Utbildning"
+definition = "Den utbildning avgångsbetyget avser."
+holdings_period = "1997-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds utbildning in GymnasieskolaAvg_Individ_1997 through GymnasieskolaAvg_Individ_2024 (1997-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on slutbetyg. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "kursbetyg"
+column = "Kurskod_omkodad"
+name = "Kurs, omkodad kurskod"
+definition = "Kurskod där vissa kurser har omkodats före leverans. Omkodad värdemängd, därför inte variabeln kurs."
+holdings_period = "1997-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds Kurskod_omkodad in GymnasieskolaAvg_Kurs_1997 through GymnasieskolaAvg_Kurs_2024 (1997-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on kursbetyg. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "102.utbildning"
+slug = "utbildning"
+
+[[variable]]
+native_id = "102.Kurskod_omkodad"
+slug = "kurskod-omkodad"
