@@ -480,15 +480,29 @@ def _certificate_key(
     )
 
 
-def _link_facts(link: ResolvedClassificationLink) -> object:
+def _link_facts(
+    link: ResolvedClassificationLink, valid_from: str | None, valid_to: str | None
+) -> object:
     """A link with its sentinel certificates reduced to what they certify.
 
     A certificate's window, fingerprints and provenance are its decision's
     evidence, not a state fact: two adjacent decisions certifying the same
-    members over the same book and column leave one state (#1442).
+    members over the same book and column leave one state (#1442). Only
+    certificates that each cover the whole state window reduce; otherwise the
+    link stays whole, its certificate windows keep adjacent states apart, and
+    the catalog validator refuses the uncovered certificate per state.
     """
     conformance = link.conformance
-    if conformance is None or not conformance.scoped_sentinels:
+    if (
+        conformance is None
+        or not conformance.scoped_sentinels
+        or valid_from is None
+        or valid_to is None
+        or not all(
+            c.valid_from <= valid_from and valid_to <= c.valid_to
+            for c in conformance.scoped_sentinels
+        )
+    ):
         return link
     return (
         link.model_copy(
@@ -502,7 +516,10 @@ def _link_facts(link: ResolvedClassificationLink) -> object:
 
 def _state_facts(state: ResolvedState) -> tuple[object, ...]:
     return tuple(
-        tuple(map(_link_facts, state.classification_links))
+        tuple(
+            _link_facts(link, state.valid_from, state.valid_to)
+            for link in state.classification_links
+        )
         if name == "classification_links"
         else getattr(state, name)
         for name in type(state).model_fields
@@ -513,8 +530,9 @@ def _state_facts(state: ResolvedState) -> tuple[object, ...]:
 def _merged_links(run: list[ResolvedState]) -> tuple[ResolvedClassificationLink, ...]:
     """A merged run's links, with one certificate per certified key.
 
-    Each certificate of a state covers that state, so the union of a key's
-    certificates over a run of day-adjacent states covers its hull without a gap.
+    A run merges only when each certificate of a state covers that state
+    (`_link_facts`), so the union of a key's certificates over a run of
+    day-adjacent states covers its hull without a gap.
     """
     links = []
     for index, link in enumerate(run[0].classification_links):
@@ -569,10 +587,13 @@ def merge_adjacent_states(
     variant and delivery column, each starting the day after the previous one
     ends, is one state over the run's hull: same value set and version label,
     classification links, data type and length, text fields, provenance and
-    pooled flag. A sentinel certificate is compared by the members, book and
+    pooled flag. When every sentinel certificate on a link covers its own
+    state's whole window, a certificate is compared by the members, book and
     column it certifies, and the merged state keeps one certificate per such key
     over the union of its windows, fingerprints and provenance: its decision's
     window and case id are evidence the certificate carries, not a state fact.
+    A link with a certificate that does not cover its state is compared whole,
+    so the states stay apart and the catalog validator refuses that certificate.
     Population is a variant fact (LISA carries one per variant,
     every other reader none), so one variant never mixes two. A gap, or any
     differing fact, keeps states apart; windows and coverage are unchanged.
@@ -603,15 +624,17 @@ def merge_adjacent_states(
             state = states[index]
             current = merged[head] if head is not None else None
             if (
-                current is not None
+                head is not None
+                and current is not None
                 and current.valid_to is not None
                 and state.valid_from is not None
                 and state.valid_to != _VALID_TO_SENTINEL
                 and date.fromisoformat(current.valid_to).toordinal() + 1
                 == date.fromisoformat(state.valid_from).toordinal()
-                and _state_facts(current) == _state_facts(state)
+                # The previous member, not `current`: the hull so far outgrows
+                # the head's certificates, which cover only the head's window.
+                and _state_facts(runs[head][-1]) == _state_facts(state)
             ):
-                assert head is not None
                 merged[head] = current.model_copy(update={"valid_to": state.valid_to})
                 merged[index] = None
                 runs[head].append(state)
