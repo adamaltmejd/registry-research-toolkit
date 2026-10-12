@@ -5075,12 +5075,3 @@ a = "scb/slk/utbildningens-niva-och-inriktning"
 b = "scb/slr/sun"
 note = "curated:#737 utbildningens nivå och inriktning (sun)"
 # Result: 61 components, 232 edges, 179 variables (max component 7 FQIDs, well under the _SAME_AS_MAX_COMPONENT cap).
-
-# Reciprocal ULF event rows agree on the widened frame: "Urvalsramen utökades med
-# äldre personer 75-84 år." 1975-1977 års registerversioner är avidentifierade.
-[[edge]]
-type = "replaced_by"
-from = "scb/ulf"
-from_variant = "individer-16-74-ar-ulf"
-to = "scb/ulf"
-to_variant = "individer-16-84-ar-ulf"
