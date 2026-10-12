@@ -1,6 +1,6 @@
 {
-  "schema_version": "10.0.0",
+  "schema_version": "10.1.0",
   "catalog_artifact_kind": "catalog",
   "builder_commit": "0000000000000000000000000000000000000000",
-  "generation_id": "38eb23cedfab1bcd8c7960bc6b8480c953c2c0b39207cc2dc2b1187789961158"
+  "generation_id": "eba456b5d912c3c2d3afffef535aed6e9c0b90226ae60139ca25ded9ed4217e9"
 }

@@ -1,0 +1,5 @@
+[classification]
+short_name = "BROKEN"
+slug = "broken"
+name = "Broken"
+codes_file = "broken.csv"

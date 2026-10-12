@@ -32,7 +32,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 from .source_evidence import SourceRecordRef  # noqa: TC001
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "10.0.0"
+SCHEMA_VERSION = "10.1.0"
 
 if TYPE_CHECKING:
     from .ir import (
@@ -617,15 +617,22 @@ CREATE VIRTUAL TABLE classification_fts USING fts5(
 -- idx_value_code_code_nocase (exact/prefix), since ~55% of codes are purely numeric.
 -- Stoplisted and ownerless labels are left out, so this index has fewer rows than
 -- value_code; the leaf tables keep every row (search-only hiding).
+-- Contentless (#1296): the reader matches it, ranks with bm25 and joins rowid to
+-- value_code for the code and label, so the folded text is not stored twice and
+-- `label` reads back NULL. Insert-only: derive drops and refills it, never UPDATEs
+-- or DELETEs a row, so no `contentless_delete`. Keep columnsize (bm25 needs the
+-- per-row sizes) and the column set (MATCH column filters name `label`).
 CREATE VIRTUAL TABLE value_code_fts USING fts5(
     label,
+    content='',
     tokenize='unicode61 remove_diacritics 0'
 );
 """
 
-# Curated search pins (`curation/search_pins.toml`), written by a complete build only.
-# Base content, never derived: `derive` creates it empty on an older-minor base.
-SEARCH_PIN_DDL = """\
+# Curated search pins (`curation/search_pins.toml`) and synonyms
+# (`curation/search_synonyms.toml`), written by a complete build only. Base content,
+# never derived: `derive` creates them empty on an older-minor base.
+SEARCH_CURATION_DDL = """\
 CREATE TABLE IF NOT EXISTS search_pin (
     -- fold_search(query): the reader looks a pin up by fold_search(q).
     key TEXT NOT NULL CHECK (length(key) > 0),
@@ -636,6 +643,14 @@ CREATE TABLE IF NOT EXISTS search_pin (
     entity TEXT NOT NULL,
     PRIMARY KEY (key, type, position),
     UNIQUE (key, type, entity)
+) WITHOUT ROWID;
+
+-- #1490: a query term `key` also matches each `expansion` (directed; a two-way
+-- pair is two rows). Both are one `fts_terms` term of the reader's query split.
+CREATE TABLE IF NOT EXISTS search_synonym (
+    key TEXT NOT NULL CHECK (length(key) > 0),
+    expansion TEXT NOT NULL CHECK (length(expansion) > 0 AND expansion != key),
+    PRIMARY KEY (key, expansion)
 ) WITHOUT ROWID;
 """
 
@@ -1093,14 +1108,27 @@ CREATE TABLE classification (
 -- Fresh builds do not emit unknown-validity classification_code rows;
 -- nonconforming observed value-set codes live on
 -- `classification_conformance_code`, keyed by variable_state.
+-- parent_code_id: the code's parent in the same book, from the codebook CSV's
+-- `parent_code` column (#1297). NULL for a top-level code and for every code of
+-- a book without a source tree (no column, or `hierarchy = "flat"`). The
+-- composite key keeps the parent inside the same classification; it is deferred
+-- because a book's rows are written in code order, not parent-first.
 CREATE TABLE classification_code (
     classification_id INTEGER NOT NULL REFERENCES classification(id),
     code_id           INTEGER NOT NULL REFERENCES value_code(code_id),
     level             INTEGER,
     is_valid          INTEGER,
-    PRIMARY KEY (classification_id, code_id)
+    parent_code_id    INTEGER,
+    PRIMARY KEY (classification_id, code_id),
+    FOREIGN KEY (classification_id, parent_code_id)
+        REFERENCES classification_code(classification_id, code_id)
+        DEFERRABLE INITIALLY DEFERRED
 ) WITHOUT ROWID;
 CREATE INDEX idx_classification_code_code ON classification_code(code_id);
+-- Serves the deferred same-book key's check (without it, writing a child before
+-- its parent scans the book: quadratic on ICD-11-SE) and children-of-code reads.
+CREATE INDEX idx_classification_code_parent
+    ON classification_code(classification_id, parent_code_id);
 
 -- Per-state value-set/classification conformance (#656). A row exists only for
 -- a state whose value set declared a CSV-backed classification. `declared_*`
@@ -1770,7 +1798,7 @@ CREATE INDEX idx_holding_mapping_variable_variant
 """
     + DERIVED_DDL
     + SEARCH_INDEX_DDL
-    + SEARCH_PIN_DDL
+    + SEARCH_CURATION_DDL
     + """
 CREATE TABLE import_manifest (
     key TEXT PRIMARY KEY,

@@ -1,0 +1,13 @@
+{
+  "note": "A synonym term the reader splits into two query terms (`covid-test` is `covid` and `test` under fts_terms) can never match one term of a query, so it fails even a diagnostic build before anything is resolved. The first entry, `Kön` -> `sex`, is the allowed twin.",
+  "fails_if": "`load_search_synonyms` checks only that the term folds non-blank, or splits it at whitespace instead of at the reader's fts_terms boundary, so `covid-test` loads as a key no query term can equal",
+  "sources": {
+    "description": "Register 1 delivers Kod (var_id 100); no Unika file.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1000, "var_id": 100, "colname": "Kod", "varname": "Kod"}
+      ],
+      "unika": null
+    }
+  }
+}

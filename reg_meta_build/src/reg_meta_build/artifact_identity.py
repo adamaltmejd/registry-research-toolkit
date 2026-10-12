@@ -19,6 +19,7 @@ GENERATION_KEYS = (
     "prepared_manifest_sha256",
     "curation_tree_sha256",
     "search_pins_sha256",
+    "search_synonyms_sha256",
 )
 STEWARD_GENERATION_KEYS = (
     "steward",
@@ -30,12 +31,13 @@ STEWARD_GENERATION_KEYS = (
 )
 
 
-def search_pins_sha256(rows: Iterable[tuple[str, str, int, str]]) -> str:
-    """Hash of the `search_pin` rows `(key, type, position, entity)` in key order.
+def search_rows_sha256(rows: Iterable[tuple[str | int, ...]]) -> str:
+    """Hash of a curated search table's rows in key order: `search_pin`
+    `(key, type, position, entity)` or `search_synonym` `(key, expansion)`.
 
-    It hashes what the artifact stores, so a pin file's comments and notes leave
-    this key unchanged (`curation_tree_sha256` still hashes the file's bytes); no
-    pins hash as `[]`.
+    It hashes what the artifact stores, so a curation file's comments and notes
+    leave this key unchanged (`curation_tree_sha256` still hashes the file's
+    bytes); no rows hash as `[]`.
     """
     return canonical_sha256(sorted(rows))
 

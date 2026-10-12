@@ -462,6 +462,14 @@ The target layout:
   `search_pins_sha256` hashes the stored rows and joins the generation; derive gives an
   older-minor base an empty table and the empty-pins hash. Pins are build input, not
   ranking: the reader applies them.
+- `curation/search_synonyms.toml` (#1490) lists directed term → expansions entries for
+  concepts that register text names in another word or language. The term and each
+  expansion must be one reader query term (`fts_terms`), an expansion may not fold like
+  its term, and terms that fold alike share one entry; a two-way pair is two entries. It
+  loads and stores like the pins: as folded `search_synonym` `(key, expansion)` rows in
+  a complete build only, hashed by `search_synonyms_sha256` into the generation, and an
+  older-minor base gains an empty table and the empty-rows hash. It ships empty until
+  the maintainer curates it; the reader is to expand each query term into an OR group.
 - `worklists/concept_groups.auto.toml` is generated from a built DB for the worklist
   tool, not curation. Enrichment is register-scoped curation in each register file. The
   concept-group generator treats a matching literal register `[[group]]` as an already
@@ -1152,6 +1160,20 @@ succession edges. The book keeps its place in a derived edition chain, so no edg
 it. A literal source-reference dictionary or checked declaration establishes a variable
 binding. Code overlap percentages, URL guesses and name similarity cannot.
 
+A book's code tree comes from its codebook's delivered `parent_code` cells (#1297), or
+from a curated prefix declaration. A parent that names no agreed code of the same book
+is a located `unresolved_classification_parent` error, never dropped silently; a cycle
+or a parent no shallower than its child refuses the book. The tree is never inferred
+from undeclared code shape or from another book. A source whose parent cells name
+something outside the book declares `hierarchy = "flat"` in its classification file,
+which is visible curation rather than a heuristic: KS87-P's cells are KS87 chapter
+numbers, and its sheet has no chapter rows. A book whose codes nest by prefix (LKF, SUN)
+declares `hierarchy = "code_prefix"` with explicit `prefix_widths`; a code's parent is
+its prefix at the longest declared shorter width that is a book code. The widths are
+curation, not detection: a code of an undeclared width or without a declared prefix in
+the book is a located error. `validate_built_db` re-checks the stored tree: same book,
+shallower level, acyclic.
+
 The label binding is a rule. A state whose value-set version label exactly matches an
 entry on a classification's label list binds to that classification, whether the label
 comes from a source list or a `[[coding.documented]]` entry. A matching segment that no
@@ -1827,7 +1849,13 @@ curated stoplist of junk labels (`NULL`, `Ja`/`Nej`, `Uppgift saknas`, the `Okä
 `Okänd*` and `Felaktig*` sentinel families) and ownerless codes: no owning variable and
 no classification, orphans of year projection with nothing to annotate. The exclusions
 hide rows from search only; `value_code` and `value_set` keep every row, and the
-reader's direct code match applies the same owner predicate.
+reader's direct code match applies the same owner predicate. `value_code_fts` is
+contentless (#1296): the reader reads label text from `value_code`, so the folded copy
+is not stored (about 36 MB of the 0.47.0 artifact). Derive drops and refills it, never
+updating or deleting a row, so it needs no `contentless_delete`. `validate_built_db`
+cannot read its text back: it checks the rowid set both ways and probes source rows, the
+first by code_id and the first with a non-ASCII label, for a phrase match of their
+folded label at their rowid.
 
 **Slug reservations.** The slug grammar (with `class` reserved) is `reg-core`'s, reached
 through `reg-core-py`; `slug_grammar.validate_slug` adds the build's slot policy:
@@ -1959,7 +1987,7 @@ produce review material; they do not approve or apply new curation during a buil
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
-global database built under the current `SCHEMA_VERSION` (10.0.0), adds steward-private
+global database built under the current `SCHEMA_VERSION` (10.1.0), adds steward-private
 providers and their registers, variables and states, then compiles accepted physical
 holdings into the same SQLite artifact. A base built under an older schema is rebuilt,
 never migrated. Rebuild the public base once per schema and reuse it for steward

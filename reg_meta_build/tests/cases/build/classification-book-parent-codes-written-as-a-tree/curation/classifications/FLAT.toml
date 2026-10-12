@@ -1,0 +1,6 @@
+[classification]
+short_name = "FLAT"
+slug = "flat"
+name = "Flat"
+codes_file = "flat.csv"
+hierarchy = "flat"

@@ -178,6 +178,8 @@ class CompiledCodebook:
     source: str
     descriptor: str
     metadata: dict[str, str | int | list[dict[str, str]] | None]
+    hierarchy: Literal["parent_code", "flat", "code_prefix"] = "parent_code"
+    prefix_widths: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -7026,6 +7028,8 @@ def compile_curation(
                         "family_aliases",
                         "codes_file",
                         "sentinel_codes",
+                        "hierarchy",
+                        "prefix_widths",
                     },
                 ),
                 "sentinel_codes": [
@@ -7039,6 +7043,8 @@ def compile_curation(
                     )
                 ],
             },
+            hierarchy=entry.classification.hierarchy,
+            prefix_widths=entry.classification.prefix_widths,
         )
         for entry in tree.classifications
     )

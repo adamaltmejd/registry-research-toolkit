@@ -17,12 +17,12 @@ from typing import TYPE_CHECKING
 from reg_meta_build.artifact_identity import (
     builder_commit,
     generation_id,
-    search_pins_sha256,
+    search_rows_sha256,
 )
 from reg_meta_build.db import (
     DERIVED_DDL,
     SCHEMA_VERSION,
-    SEARCH_PIN_DDL,
+    SEARCH_CURATION_DDL,
     _unlink_wal_sidecars,
     get_manifest,
     open_built_db,
@@ -76,7 +76,8 @@ def derive_artifact(base: Path, out: Path) -> None:
     generation as `derived_from_generation_id`, keeps every other identity key and
     recomputes `generation_id`. A steward copy derives over its full global-plus-
     overlay graph; its physical holdings are left as compiled. An older base gains
-    an empty `search_pin` table and the empty-pins hash. The copy must pass
+    empty `search_pin` and `search_synonym` tables and their empty-rows hashes, and
+    a base older than 10.1 gains an all-NULL `classification_code.parent_code_id`. The copy must pass
     `validate_built_db` before it replaces `out` atomically.
     """
     from reg_meta_build.validate import validate_built_db
@@ -108,9 +109,27 @@ def derive_artifact(base: Path, out: Path) -> None:
                 "generation_id"
             )
         with closing(sqlite3.connect(tmp)) as conn:
-            conn.executescript(DERIVED_DDL + SEARCH_PIN_DDL)
+            conn.executescript(DERIVED_DDL + SEARCH_CURATION_DDL)
+            # A pre-10.1 base has no code trees (#1297): its copy gains an all-NULL
+            # parent_code_id and its analyzed index, as a fresh build has. ADD
+            # COLUMN cannot carry the composite same-book key; with every value
+            # NULL it constrains nothing, and validate_built_db checks same-book
+            # parents by query, not by the declared key.
+            columns = {
+                row[1] for row in conn.execute("PRAGMA table_info(classification_code)")
+            }
+            if "parent_code_id" not in columns:
+                conn.execute(
+                    "ALTER TABLE classification_code ADD COLUMN parent_code_id INTEGER"
+                )
+                conn.execute(
+                    "CREATE INDEX idx_classification_code_parent "
+                    "ON classification_code(classification_id, parent_code_id)"
+                )
+                conn.execute("ANALYZE idx_classification_code_parent")
             derive(conn)
-            manifest.setdefault("search_pins_sha256", search_pins_sha256(()))
+            manifest.setdefault("search_pins_sha256", search_rows_sha256(()))
+            manifest.setdefault("search_synonyms_sha256", search_rows_sha256(()))
             manifest.update(
                 schema_version=SCHEMA_VERSION,
                 builder_commit=revision,
@@ -130,6 +149,10 @@ def derive_artifact(base: Path, out: Path) -> None:
             ):
                 conn.execute(f"ANALYZE {table}")
             conn.commit()
+            # Dropping the base's derived tables and search indexes frees pages the
+            # recomputed ones need not refill (validate refuses a freelist >= 1%),
+            # as a fresh build's VACUUM reclaims them.
+            conn.execute("VACUUM")
         validation = validate_built_db(tmp, flavored=kind == "steward")
         if not validation.passed:
             raise ValueError(

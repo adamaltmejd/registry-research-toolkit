@@ -27,7 +27,7 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-from reg_core_py import fold_search
+from reg_core_py import fold_search, fts_terms
 
 from reg_meta_build._resolved_common import _require_trimmed
 
@@ -638,3 +638,83 @@ def load_search_pins(path: Path | None) -> tuple[SearchPin, ...]:
             )
         pins.append(pin)
     return tuple(pins)
+
+
+SEARCH_SYNONYMS_FILE = "search_synonyms.toml"
+
+
+def _one_search_term(value: str, field: str) -> str:
+    """`value`'s one reader query term (`fts_terms`), or a refusal naming `field`."""
+    terms = fts_terms(value)
+    if len(terms) != 1:
+        raise ValueError(
+            f"`{field}` {value!r} must be one search term, not {len(terms)}: {terms!r}"
+        )
+    return terms[0]
+
+
+class SearchSynonym(BaseModel):
+    """One curated synonym: a query `term` also matches each of `expansions` (#1490).
+
+    Directed: `kön -> sex` does not imply `sex -> kön`; a two-way pair is two
+    entries. `term` and each expansion are one reader query term (`fts_terms`,
+    the split the reader applies to `q`), stored folded.
+    """
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    term: str
+    expansions: tuple[str, ...] = Field(min_length=1)
+    note: str | None = None
+
+    @model_validator(mode="after")
+    def _one_term_each(self) -> SearchSynonym:
+        key = _one_search_term(self.term, "term")
+        folded = [_one_search_term(e, "expansions") for e in self.expansions]
+        if key in folded:
+            raise ValueError(f"an expansion folds like the term {key!r}")
+        if len(set(folded)) != len(folded):
+            raise ValueError("duplicate `expansions` after folding")
+        return self
+
+    @property
+    def key(self) -> str:
+        return fts_terms(self.term)[0]
+
+    @property
+    def rows(self) -> tuple[tuple[str, str], ...]:
+        """The `search_synonym` rows `(key, expansion)`, both folded."""
+        return tuple((self.key, fts_terms(e)[0]) for e in self.expansions)
+
+
+def load_search_synonyms(path: Path | None) -> tuple[SearchSynonym, ...]:
+    """Load `search_synonyms.toml` in file order; an absent file has no synonyms."""
+    entries = load_curation_entries(
+        path,
+        entry_key="synonym",
+        label="search synonyms",
+        prefix=SEARCH_SYNONYMS_FILE,
+        code_base="search_synonyms",
+        file_name=f"curation/{SEARCH_SYNONYMS_FILE}",
+        entry_fields="`term` and `expansions`",
+    )
+    synonyms: list[SearchSynonym] = []
+    for index, entry in enumerate(entries, start=1):
+        context = f"{SEARCH_SYNONYMS_FILE} [[synonym]] entry {index}"
+        try:
+            synonym = SearchSynonym.model_validate(entry)
+        except ValidationError as exc:
+            raise curation_error(
+                "search_synonyms_invalid",
+                f"{context}: {exc.errors(include_url=False)[0]['msg']}.",
+                "Each synonym needs one search `term` and distinct one-term "
+                "`expansions` that differ from it.",
+            ) from exc
+        if any(seen.key == synonym.key for seen in synonyms):
+            raise curation_error(
+                "search_synonyms_invalid",
+                f"{context}: duplicate synonym for term key {synonym.key!r}.",
+                "Merge the entries: terms that fold alike share one entry.",
+            )
+        synonyms.append(synonym)
+    return tuple(synonyms)

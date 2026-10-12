@@ -1,0 +1,45 @@
+{
+  "description": "Register 1 (TESTREG, variant 10) delivers VALUE (member 1001, variable 101) in 2020. Three codebooks in the SOS fetch layout (code,label,label_en,parent_code,valid_from,valid_to) and two in the plain code,label layout: tree.csv, a tree under two roots whose child rows come before their parents, plus one parentless code; flat.csv, whose parent_code cells name chapter 01, which is no code of the book (KS87-P's shape); broken.csv, whose code 12 names parent 9, which is no code of the book; prefix.csv, an LKF-shaped book nesting by code prefix (län 01, kommun 0114, församlingar 011401 and 018001, whose kommun 0180 is no code of the book); badprefix.csv, a prefix book with a code 011 of an undeclared width and a code 0201 whose prefix 02 is no code of the book.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "files": {
+    "classifications/tree.csv": [
+      "code,label,label_en,parent_code,valid_from,valid_to",
+      "01,Jordbruk,,A,,",
+      "011,Odling av ettåriga växter,,01,,",
+      "0111,Odling av spannmål,,011,,",
+      "05,Kolutvinning,,B,,",
+      "A,\"Jordbruk, skogsbruk och fiske\",,,,",
+      "B,Utvinning av mineral,,,,",
+      "U,Okänd verksamhet,,,,"
+    ],
+    "classifications/flat.csv": [
+      "code,label,label_en,parent_code,valid_from,valid_to",
+      "008-,Tarminfektion,,01,,",
+      "011-,Tuberkulos,,01,,"
+    ],
+    "classifications/broken.csv": [
+      "code,label,label_en,parent_code,valid_from,valid_to",
+      "1,Ett,,,,",
+      "11,Elva,,1,,",
+      "12,Tolv,,9,,"
+    ],
+    "classifications/prefix.csv": [
+      "code,label",
+      "01,Stockholms län",
+      "0114,Upplands Väsby",
+      "011401,Upplands Väsby församling",
+      "018001,Stockholms domkyrkoförsamling"
+    ],
+    "classifications/badprefix.csv": [
+      "code,label",
+      "01,Ett",
+      "0101,Ett-ett",
+      "011,Ett-elva",
+      "0201,Två-ett"
+    ]
+  }
+}

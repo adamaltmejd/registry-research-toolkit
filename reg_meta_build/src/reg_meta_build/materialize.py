@@ -23,6 +23,7 @@ from reg_core_py import parse_fqid
 from reg_meta_build._curation import (
     SEARCH_PINS_FILE,
     SearchPin,
+    SearchSynonym,
     curation_error,
     resolve_register_id,
 )
@@ -36,7 +37,7 @@ from reg_meta_build._resolved_common import (
 from reg_meta_build.artifact_identity import (
     builder_commit,
     generation_id,
-    search_pins_sha256,
+    search_rows_sha256,
 )
 from reg_meta_build.data_warnings import DataWarning  # noqa: TC001
 from reg_meta_build.db import (
@@ -545,11 +546,21 @@ def _write_classifications(
                 classification.slug,
             ),
         )
+        # ResolvedClassification guarantees a parent names exactly one book code.
+        by_code = {
+            code.code: code_ids[code.code, code.label] for code in classification.codes
+        }
         conn.executemany(
-            "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
-            "VALUES (?, ?, ?, 1)",
+            "INSERT INTO classification_code "
+            "(classification_id, code_id, level, is_valid, parent_code_id) "
+            "VALUES (?, ?, ?, 1, ?)",
             (
-                (classification_id, code_ids[code.code, code.label], code.level)
+                (
+                    classification_id,
+                    code_ids[code.code, code.label],
+                    code.level,
+                    None if code.parent_code is None else by_code[code.parent_code],
+                )
                 for code in sorted(
                     classification.codes, key=lambda c: (c.code, c.label)
                 )
@@ -663,6 +674,7 @@ def write_resolved_catalog(
     metadata: ResolvedMetadata | None = None,
     data_warnings: tuple[DataWarning, ...] = (),
     search_pins: tuple[SearchPin, ...] = (),
+    search_synonyms: tuple[SearchSynonym, ...] = (),
 ) -> Path:
     """Validate and atomically place a strict catalog or create-only diagnostic.
 
@@ -675,8 +687,8 @@ def write_resolved_catalog(
     even when their variable states are withheld. Shared definitions must agree.
     The complete pipeline additionally requires corpus safeguards before strict
     publication; partial writer fixtures leave those volume expectations disabled.
-    Only a complete catalog stores `search_pins`, each of which must resolve; a
-    partial one stores none.
+    Only a complete catalog stores `search_pins`, each of which must resolve,
+    and `search_synonyms`; a partial one stores neither.
     """
     diagnostic = TypeAdapter(bool).validate_python(diagnostic, strict=True)
     partial = diagnostic or TypeAdapter(bool).validate_python(scoped, strict=True)
@@ -744,6 +756,13 @@ def write_resolved_catalog(
         for pin in search_pins
         for position, fqid in enumerate(pin.fqids)
     ]
+    synonym_rows = [
+        row
+        for synonym in TypeAdapter(tuple[SearchSynonym, ...]).validate_python(
+            () if partial else search_synonyms
+        )
+        for row in synonym.rows
+    ]
     import_metadata = TypeAdapter(dict[str, str]).validate_python(manifest, strict=True)
     for key in (CURATION_TREE_SHA256_KEY,):
         if (value := import_metadata.get(key)) is not None and (
@@ -758,7 +777,8 @@ def write_resolved_catalog(
         CLASSIFICATION_SUCCESSION_AS_OF_YEAR_KEY: str(
             CLASSIFICATION_SUCCESSION_AS_OF_YEAR
         ),
-        "search_pins_sha256": search_pins_sha256(pin_rows),
+        "search_pins_sha256": search_rows_sha256(pin_rows),
+        "search_synonyms_sha256": search_rows_sha256(synonym_rows),
     }.items():
         if key in import_metadata and import_metadata[key] != value:
             raise ValueError(
@@ -1034,6 +1054,10 @@ def write_resolved_catalog(
                                 ),
                             )
             _write_search_pins(conn, search_pins, pin_rows)
+            conn.executemany(
+                "INSERT INTO search_synonym (key, expansion) VALUES (?, ?)",
+                synonym_rows,
+            )
             write_data_warnings(conn, data_warnings)
             write_resolved_metadata(conn, metadata_rows)
             conn.execute(
@@ -1248,6 +1272,7 @@ def materialize_build(
                     metadata=resolved.metadata,
                     data_warnings=resolved.data_warnings,
                     search_pins=resolved.search_pins,
+                    search_synonyms=resolved.search_synonyms,
                 )
                 build_result.update(
                     status="diagnostic_complete" if resolved.diagnostic else "complete",

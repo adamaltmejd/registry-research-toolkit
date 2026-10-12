@@ -211,6 +211,7 @@ _REFERENCES: dict[tuple[str, str], str] = {
     ("classification", "supersedes_id"): "classification",
     ("classification_code", "classification_id"): "classification",
     ("classification_code", "code_id"): "value_code",
+    ("classification_code", "parent_code_id"): "value_code",
     ("classification_conformance", "declared_classification_id"): "classification",
     ("classification_conformance", "state_id"): "variable_state",
     ("classification_conformance_code", "code_id"): "value_code",

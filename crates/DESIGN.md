@@ -620,8 +620,10 @@ text under `unicode61 remove_diacritics 0`, so the tokenizer only splits and
 `fold_search` (`reg-core`: full case folding, NFKD, combining marks dropped) is the one
 fold, applied to indexed text by the build and to the query by the reader. It matches
 what `unicode61` alone does not: `straße`/`strasse`, `ﬁlm`/`film`, `ＡＢＣ`/`abc`.
-Display text always comes from the base tables. The docs index uses the same fold and
-query builder.
+Display text always comes from the base tables. `value_code_fts` is contentless
+(`content=''`): its `label` reads back NULL, so a value hit joins its rowid to
+`value_code` for the code and label, and ranks with `bm25`, which needs the per-row
+sizes the index keeps. The docs index uses the same fold and query builder.
 
 A call returns one ranked list; the SPA makes one call per typed group it shows.
 

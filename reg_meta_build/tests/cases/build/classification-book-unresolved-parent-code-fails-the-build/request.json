@@ -1,0 +1,7 @@
+{
+  "note": "Book broken's code 12 names parent 9, which is no code of the book; 11's parent 1 resolves. Prefix book badprefix (prefix_widths = [2, 4]) has a code 011 of undeclared width 3 and a code 0201 whose only declared shorter prefix, 02, is no code of the book; 0101 hangs under 01. The allowed twins are books tree and prefix in classification-book-parent-codes-written-as-a-tree. Built strict over register 1 (a register list keeps a strict build from needing a publishable, clean checkout): the located error blocks the build and nothing is placed.",
+  "fails_if": "`resolve_canonical_codes` (source_classifications.py) drops an unresolved parent silently (the build places a catalog), or reports it at warning severity, under another code, or without the codebook row it comes from; or a prefix book accepts a code of undeclared width or one without a declared prefix in the book (badprefix's two rows go missing)",
+  "sources": "scb-classification-trees",
+  "registers": ["1"],
+  "diagnostic": false
+}

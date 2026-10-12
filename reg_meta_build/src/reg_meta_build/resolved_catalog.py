@@ -138,6 +138,9 @@ class ResolvedClassificationCode(_ResolvedModel):
     code: str
     label: str
     level: int | None = None
+    # The parent code in the same book, as the codebook's `parent_code` cell
+    # delivers it; None for a top-level code or a book without a source tree.
+    parent_code: str | None = None
 
 
 class ResolvedClassification(_ResolvedModel):
@@ -187,7 +190,42 @@ class ResolvedClassification(_ResolvedModel):
                 f"classification {self.slug!r} lists curated sentinel codes "
                 f"also in the canonical code set: {overlap!r}."
             )
+        _check_code_tree(self.slug, self.codes)
         return self
+
+
+def _check_code_tree(slug: str, codes: tuple[ResolvedClassificationCode, ...]) -> None:
+    """Require each parent to be one code of the same book, acyclic and shallower."""
+    by_code: dict[str, list[ResolvedClassificationCode]] = defaultdict(list)
+    for code in codes:
+        by_code[code.code].append(code)
+    graph: dict[str, tuple[str, ...]] = {}
+    for code in codes:
+        if code.parent_code is None:
+            continue
+        parents = by_code.get(code.parent_code, [])
+        if len(parents) != 1:
+            raise ValueError(
+                f"classification {slug!r} code {code.code!r} names parent "
+                f"{code.parent_code!r}, which is not exactly one code of the book"
+            )
+        parent = parents[0]
+        if (
+            code.level is not None
+            and parent.level is not None
+            and parent.level >= code.level
+        ):
+            raise ValueError(
+                f"classification {slug!r} code {code.code!r} (level {code.level}) "
+                f"names parent {parent.code!r} at level {parent.level}"
+            )
+        graph[code.code] = (code.parent_code,)
+    try:
+        TopologicalSorter(graph).prepare()
+    except CycleError as exc:
+        raise ValueError(
+            f"classification {slug!r} parent codes form a cycle: {exc.args[1]!r}"
+        ) from None
 
 
 class ResolvedScopedSentinels(_ResolvedWindow):

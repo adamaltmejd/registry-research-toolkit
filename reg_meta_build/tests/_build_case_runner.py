@@ -1231,10 +1231,11 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
         "effective_year, note FROM classification_replaced_by"
     ),
     "classification_codes": lambda o: o._sql(
-        "SELECT c.slug, v.code, v.label, cc.level, cc.is_valid "
+        "SELECT c.slug, v.code, v.label, cc.level, cc.is_valid, p.code AS parent "
         "FROM classification_code cc "
         "JOIN classification c ON c.id = cc.classification_id "
-        "JOIN value_code v ON v.code_id = cc.code_id"
+        "JOIN value_code v ON v.code_id = cc.code_id "
+        "LEFT JOIN value_code p ON p.code_id = cc.parent_code_id"
     ),
     "relationships": lambda o: o._sql(
         "SELECT kind, binding_status, source_dataset, v.slug AS owner "
@@ -1315,7 +1316,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "classifications": "slug short_name name name_en publisher valid_from "
         "valid_to description url code_count valid_code_count supersedes",
         "classification_successions": "predecessor successor effective_year note",
-        "classification_codes": "slug code label level is_valid",
+        "classification_codes": "slug code label level is_valid parent",
         "relationships": "kind binding_status source_dataset owner",
         "evidence": "kind disposition",
         "source_issues": "kind severity descriptor_key physical_associations refs",

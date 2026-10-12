@@ -1,0 +1,10 @@
+{
+  "error": {
+    "code": "search_synonyms_invalid",
+    "exit_code": 10,
+    "message_contains": [
+      "search_synonyms.toml [[synonym]] entry 2: ",
+      "`term` 'covid-test' must be one search term, not 2: ['covid', 'test']"
+    ]
+  }
+}

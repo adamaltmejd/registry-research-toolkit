@@ -55,7 +55,7 @@ from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
-from reg_core_py import fold_search
+from reg_core_py import fold_search, fts_terms
 
 from reg_meta_build._resolved_common import (
     _PROVIDER_SEED,
@@ -64,7 +64,7 @@ from reg_meta_build._resolved_common import (
     PROVIDER_ID_SOS,
     remaining_windows,
 )
-from reg_meta_build.artifact_identity import search_pins_sha256
+from reg_meta_build.artifact_identity import search_rows_sha256
 from reg_meta_build.data_warnings import BUILD_ONLY_CODES
 from reg_meta_build.db import stored_data_warnings
 from reg_meta_build.derive.browse import check_browse
@@ -263,6 +263,7 @@ def validate_built_db(
         _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_classification_replaced_by(conn, result, tables, corpus=corpus)
         _check_classification_derived_from(conn, result, tables, corpus=corpus)
+        _check_classification_code_tree(conn, result)
         _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=corpus)
         _check_representation_replaced_by(conn, result, tables, corpus=corpus)
         check_states(conn, result, tables)
@@ -270,6 +271,7 @@ def validate_built_db(
         check_chains(conn, result, tables)
         check_coded(conn, result, tables)
         _check_search_pins(conn, result, tables)
+        _check_search_synonyms(conn, result, tables)
         _check_data_warnings(conn, result, tables)
         result.section("[compiled holdings]")
         from .holdings_validation import validate_compiled_holdings
@@ -328,6 +330,7 @@ def _check_schema_shape(
         *CHAIN_TABLES,
         "coded_variable_stats",
         "search_pin",
+        "search_synonym",
         "data_warning",
         "data_warning_text",
     ):
@@ -393,6 +396,15 @@ def _check_schema_shape(
             result.ok("value_code.mapping_count present")
         else:
             result.fail("value_code.mapping_count missing")
+
+    # #1297: classification code tree — classification_code.parent_code_id.
+    cc_cols = {
+        r["name"] for r in conn.execute("PRAGMA table_info(classification_code)")
+    }
+    if "parent_code_id" in cc_cols:
+        result.ok("classification_code.parent_code_id present")
+    else:
+        result.fail("classification_code.parent_code_id missing")
 
     # #311: curated thematic tag layer — tag + tag_member tables.
     for required in ("tag", "tag_member"):
@@ -1520,7 +1532,8 @@ def _check_search_indexes(
 
     The stored row (rowid, verbatim keys, folded text) must equal the derive
     source's, both ways, so a missing, stray, misaligned or unfolded row fails.
-    Corpus only: a real build indexes some value-code labels; a tiny synthetic
+    The contentless `value_code_fts` reads back no text: it is checked by rowid
+    and a phrase probe instead (`_check_contentless_value_code_fts`). Corpus only: a real build indexes some value-code labels; a tiny synthetic
     fixture may stoplist its whole label set."""
     result.section("[search indexes]")
     register_fold_search(conn)
@@ -1552,6 +1565,9 @@ def _check_search_indexes(
         if table not in tables:
             result.fail(f"{table} missing")
             continue
+        if table == "value_code_fts":
+            _check_contentless_value_code_fts(conn, result, source)
+            continue
         unmatched, stray = differ(source, f"SELECT rowid, * FROM {table}")
         if unmatched:
             result.fail(
@@ -1579,6 +1595,74 @@ def _check_search_indexes(
             result.ok(f"value_code_fts populated ({n_idx:,} labels)")
         else:
             result.fail("value_code_fts is EMPTY on a corpus build")
+
+
+# Source rows the contentless value-code index is probed for, per cut.
+_VALUE_CODE_FTS_PROBES = 200
+
+
+def _check_contentless_value_code_fts(
+    conn: sqlite3.Connection, result: ValidationResult, source: str
+) -> None:
+    """`value_code_fts` is contentless (#1296): its columns read back NULL. Its
+    rowids must be exactly the source's code_ids, both ways, and each probed
+    source row must match its own folded label as a phrase at its rowid. The
+    probe takes the first rows by code_id and the first whose label is not
+    ASCII, where an unfolded index (diacritics kept) stops matching."""
+    rowids = f"SELECT code_id FROM ({source})"
+    missing = [
+        rowid
+        for (rowid,) in conn.execute(
+            f"{rowids} EXCEPT SELECT rowid FROM value_code_fts ORDER BY 1"
+        )
+    ]
+    stray = [
+        rowid
+        for (rowid,) in conn.execute(
+            f"SELECT rowid FROM value_code_fts EXCEPT {rowids} ORDER BY 1"
+        )
+    ]
+    if missing:
+        result.fail(
+            f"{len(missing):,} source row(s) not indexed in value_code_fts: "
+            f"rowids {missing[:10]}"
+        )
+    if stray:
+        result.fail(
+            f"{len(stray):,} value_code_fts row(s) index no source row: "
+            f"rowids {stray[:10]}"
+        )
+    probes = dict(
+        conn.execute(
+            f"SELECT * FROM ({source}) ORDER BY 1 LIMIT {_VALUE_CODE_FTS_PROBES}"
+        ).fetchall()
+        + conn.execute(
+            f"SELECT * FROM ({source}) WHERE code_id IN (SELECT code_id FROM "
+            "value_code WHERE label GLOB '*[^ -~]*') "
+            f"ORDER BY 1 LIMIT {_VALUE_CODE_FTS_PROBES}"
+        ).fetchall()
+    )
+    unmatched = [
+        rowid
+        for rowid, text in sorted(probes.items())
+        if fts_terms(text)
+        and conn.execute(
+            "SELECT 1 FROM value_code_fts WHERE value_code_fts MATCH ? AND rowid = ?",
+            ('"' + text.replace('"', '""') + '"', rowid),
+        ).fetchone()
+        is None
+    ]
+    if unmatched:
+        result.fail(
+            f"{len(unmatched):,} probed value_code_fts row(s) do not match their "
+            f"folded label: rowids {unmatched[:10]}"
+        )
+    if not (missing or stray or unmatched):
+        (n_rows,) = conn.execute("SELECT COUNT(*) FROM value_code_fts").fetchone()
+        result.ok(
+            f"value_code_fts indexes all {n_rows:,} source rows; "
+            f"{len(probes):,} probed rows match their folded label"
+        )
 
 
 def _check_planner_statistics(
@@ -1638,10 +1722,33 @@ def _check_search_pins(
     stored = conn.execute(
         "SELECT value FROM import_manifest WHERE key = 'search_pins_sha256'"
     ).fetchone()
-    if stored is None or stored[0] != search_pins_sha256(rows):
+    if stored is None or stored[0] != search_rows_sha256(rows):
         result.fail("manifest search_pins_sha256 does not hash the search_pin rows")
     if len(result.failures) == failures:
         result.ok(f"search_pin consistent ({len(rows):,} rows)")
+
+
+def _check_search_synonyms(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Each ``search_synonym`` key and expansion is one reader query term
+    (``fts_terms``); the manifest's ``search_synonyms_sha256`` hashes the rows."""
+    result.section("[search_synonym]")
+    if "search_synonym" not in tables:
+        return  # _check_schema_shape already failed.
+    rows = conn.execute("SELECT key, expansion FROM search_synonym").fetchall()
+    failures = len(result.failures)
+    if any(fts_terms(text) != [text] for row in rows for text in row):
+        result.fail("search_synonym keys and expansions must be one folded query term")
+    stored = conn.execute(
+        "SELECT value FROM import_manifest WHERE key = 'search_synonyms_sha256'"
+    ).fetchone()
+    if stored is None or stored[0] != search_rows_sha256(rows):
+        result.fail(
+            "manifest search_synonyms_sha256 does not hash the search_synonym rows"
+        )
+    if len(result.failures) == failures:
+        result.ok(f"search_synonym consistent ({len(rows):,} rows)")
 
 
 def _check_data_warnings(
@@ -2499,6 +2606,54 @@ def _check_concept_groups(
             "— the #571 vintage groups should have become succession edges "
             "(curated umbrella classification groups are permitted)"
         )
+
+
+# A code tree deeper than this is refused as cyclic or malformed; the deepest
+# delivered book (ICD-11-SE) is eight levels deep.
+_MAX_CODE_TREE_DEPTH = 32
+
+
+def _check_classification_code_tree(
+    conn: sqlite3.Connection, result: ValidationResult
+) -> None:
+    """#1297 code tree: a parent is a code of the same book, shallower, acyclic."""
+    result.section("[classification code tree]")
+    columns = {r[1] for r in conn.execute("PRAGMA table_info(classification_code)")}
+    if "parent_code_id" not in columns:
+        return  # _check_schema_shape already failed.
+    outside = conn.execute(
+        "SELECT COUNT(*) FROM classification_code c WHERE c.parent_code_id IS NOT NULL "
+        "AND NOT EXISTS (SELECT 1 FROM classification_code p "
+        "WHERE p.classification_id = c.classification_id AND p.code_id = c.parent_code_id)"
+    ).fetchone()[0]
+    deeper = conn.execute(
+        "SELECT COUNT(*) FROM classification_code c JOIN classification_code p "
+        "ON p.classification_id = c.classification_id AND p.code_id = c.parent_code_id "
+        "WHERE c.level IS NOT NULL AND p.level IS NOT NULL AND p.level >= c.level"
+    ).fetchone()[0]
+    # Walk every code's ancestors; a walk that returns to its start is a cycle,
+    # and one that is still going at the depth bound is refused with it.
+    cyclic = conn.execute(
+        "WITH RECURSIVE walk(book, start, node, depth) AS ("
+        " SELECT classification_id, code_id, parent_code_id, 1 FROM classification_code"
+        " WHERE parent_code_id IS NOT NULL"
+        " UNION ALL"
+        " SELECT w.book, w.start, c.parent_code_id, w.depth + 1 FROM walk w"
+        " JOIN classification_code c ON c.classification_id = w.book AND c.code_id = w.node"
+        " WHERE c.parent_code_id IS NOT NULL AND w.node != w.start AND w.depth < ?)"
+        " SELECT COUNT(DISTINCT book || ':' || start) FROM walk"
+        " WHERE node = start OR depth = ?",
+        (_MAX_CODE_TREE_DEPTH, _MAX_CODE_TREE_DEPTH),
+    ).fetchone()[0]
+    for count, invariant in (
+        (outside, "name a parent outside their own classification"),
+        (deeper, "name a parent at the same or a deeper level"),
+        (cyclic, f"reach a parent cycle or lie deeper than {_MAX_CODE_TREE_DEPTH}"),
+    ):
+        if count:
+            result.fail(f"{count:,} classification code(s) {invariant}")
+    if not (outside or deeper or cyclic):
+        result.ok("classification code parents are same-book, shallower and acyclic")
 
 
 def _check_classification_replaced_by(

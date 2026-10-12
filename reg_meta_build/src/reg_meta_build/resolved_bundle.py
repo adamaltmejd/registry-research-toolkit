@@ -53,7 +53,7 @@ from .errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from reg_meta_build._curation import SearchPin
+    from reg_meta_build._curation import SearchPin, SearchSynonym
     from reg_meta_build.data_warnings import DataWarning
     from reg_meta_build.resolved_catalog import (
         ResolvedClassification,
@@ -104,6 +104,7 @@ class ResolvedBuild:
     # Only the catalog's: `BUILD_ONLY_CODES` stay in the ledger.
     data_warnings: tuple[DataWarning, ...]
     search_pins: tuple[SearchPin, ...]
+    search_synonyms: tuple[SearchSynonym, ...]
     # Without `builder_commit`, which materialization rechecks and adds.
     manifest: dict[str, str]
 
