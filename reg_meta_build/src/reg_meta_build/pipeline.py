@@ -118,6 +118,11 @@ if TYPE_CHECKING:
     )
 
 
+# The reader's search `q` cap: MAX_QUERY_CHARS in crates/reg-catalog/src/ops/mod.rs
+# (conformance/api/operations.toml). Change both together.
+SEARCH_QUERY_MAX_CHARS = 200
+
+
 class _Model(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
 
@@ -1767,6 +1772,26 @@ def _resolve(
                     diagnostic=diagnostic,
                 ):
                     issue(value)
+                # Report only, never a refusal (#1261): the server cannot find a
+                # name longer than its search query cap by exact name.
+                for variable in lineage.variables:
+                    if (
+                        variable.name is not None
+                        and len(variable.name) > SEARCH_QUERY_MAX_CHARS
+                    ):
+                        register = variable.register_ref
+                        issue(
+                            ResolutionDiagnostic(
+                                code="variable_name_over_search_cap",
+                                severity="warning",
+                                subject=f"{register.provider}/{register.slug}/{variable.slug}",
+                                detail=f"The variable name has {len(variable.name)} characters; "
+                                f"search queries are capped at {SEARCH_QUERY_MAX_CHARS}, so the "
+                                "server cannot find it by exact name. Curate a shorter name "
+                                "and move the rest to the description.",
+                                fields=("name",),
+                            )
+                        )
                 _emit_timing("pipeline: catalog dependencies", phase_started)
                 build_result.update(
                     {

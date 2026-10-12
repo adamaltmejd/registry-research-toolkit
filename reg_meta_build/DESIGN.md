@@ -1049,8 +1049,8 @@ establish membership. Its document URL, SHA256 and page references are tracked
 provenance; the build never fetches that document. An alternative authority is the exact
 prepared workbook rows themselves, when their prose supplies the meanings of already
 supplied finite code tokens. This form pins the complete original fields, scopes and
-parent facts of each semantic member and all coding fingerprints. Changed,
-missing or new rows and changed incomplete lists invalidate compilation and application.
+parent facts of each semantic member and all coding fingerprints. Changed, missing or
+new rows and changed incomplete lists invalidate compilation and application.
 
 The same finite authority can certify an already complete own source domain when code
 labels establish a reviewed role. Exact raw and copied fingerprints, complete original
@@ -1481,6 +1481,11 @@ forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CO
 curator identity rationale; maintainer decision, #1296) never reach `data_warning`, and
 `validate_built_db` refuses an artifact that holds one or whose row does not hash to its
 `warning_id`.
+
+A written variable whose name is longer than the reader's 200-character search query cap
+is a `variable_name_over_search_cap` warning issue in the report ledger, never a refusal
+and never a catalog `data_warning` (#1261): the server cannot find it by exact name
+until its name is curated shorter.
 
 ## Strict and diagnostic builds
 
