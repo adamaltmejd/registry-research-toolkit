@@ -5735,15 +5735,15 @@ column = "P1105_LopNr_PersonNr"
 reason = "Person join key of an auxiliary birth-information holding; scb/rtb/personnr on scb/rtb/folkbokforda-personer is orderable from the RTB tables. Withheld to keep one physical cell per ordered coordinate; the three birth-information fields stay mapped (#1170)."
 
 # evidence: [År] x [Tillfälle], 1977..2025; Tillfälle 1 = spring (VT), 2 =
-# autumn (HT): 2020 has occasion 2 only (the spring 2020 test was cancelled)
-# and 2025 occasion 1 only
+# autumn (HT): 2020 has occasion 2 only (the spring 2020 test was cancelled,
+# so VT2020 is not held) and 2025 occasion 1 only
 [[assign]]
 table = "UMU_HogskoleprovRes"
 register_variant = "umu/hogskoleprovet/_default"
 
 [[edition]]
 table = "UMU_HogskoleprovRes"
-edition = { from = "VT1977", to = "VT2025" }
+edition = [{ from = "VT1977", to = "HT2019" }, { from = "HT2020", to = "VT2025" }]
 
 # evidence: 1,860 persons born 2000..2024; first diagnosis year in
 # NDR_incidence 2007..2024 (14 persons not in NDR_incidence)
