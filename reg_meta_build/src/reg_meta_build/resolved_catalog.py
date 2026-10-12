@@ -470,12 +470,92 @@ class ResolvedAlias(_ResolvedModel):
 _STATE_WINDOW = frozenset({"valid_from", "valid_to"})
 
 
+def _certificate_key(
+    certificate: ResolvedScopedSentinels,
+) -> tuple[str, str, tuple[tuple[str, str], ...]]:
+    return (
+        certificate.delivery_column_name,
+        certificate.classification_sha256,
+        certificate.members,
+    )
+
+
+def _link_facts(link: ResolvedClassificationLink) -> object:
+    """A link with its sentinel certificates reduced to what they certify.
+
+    A certificate's window, fingerprints and provenance are its decision's
+    evidence, not a state fact: two adjacent decisions certifying the same
+    members over the same book and column leave one state (#1442).
+    """
+    conformance = link.conformance
+    if conformance is None or not conformance.scoped_sentinels:
+        return link
+    return (
+        link.model_copy(
+            update={
+                "conformance": conformance.model_copy(update={"scoped_sentinels": ()})
+            }
+        ),
+        frozenset(map(_certificate_key, conformance.scoped_sentinels)),
+    )
+
+
 def _state_facts(state: ResolvedState) -> tuple[object, ...]:
     return tuple(
-        getattr(state, name)
+        tuple(map(_link_facts, state.classification_links))
+        if name == "classification_links"
+        else getattr(state, name)
         for name in type(state).model_fields
         if name not in _STATE_WINDOW
     )
+
+
+def _merged_links(run: list[ResolvedState]) -> tuple[ResolvedClassificationLink, ...]:
+    """A merged run's links, with one certificate per certified key.
+
+    Each certificate of a state covers that state, so the union of a key's
+    certificates over a run of day-adjacent states covers its hull without a gap.
+    """
+    links = []
+    for index, link in enumerate(run[0].classification_links):
+        if link.conformance is None:
+            links.append(link)
+            continue
+        # One decision's certificate repeats on every state it covers.
+        unique: dict[ResolvedScopedSentinels, None] = {}
+        for state in run:
+            conformance = state.classification_links[index].conformance
+            assert conformance is not None
+            unique.update(dict.fromkeys(conformance.scoped_sentinels))
+        groups: dict[object, list[ResolvedScopedSentinels]] = defaultdict(list)
+        for certificate in unique:
+            groups[_certificate_key(certificate)].append(certificate)
+        certificates = []
+        for group in groups.values():
+            group.sort(key=lambda c: (c.valid_from, c.valid_to))
+            certificates.append(
+                group[0].model_copy(
+                    update={
+                        "valid_to": max(c.valid_to for c in group),
+                        "source_fingerprints": tuple(
+                            dict.fromkeys(
+                                f for c in group for f in c.source_fingerprints
+                            )
+                        ),
+                        "provenance": "\n".join(c.provenance for c in group),
+                    }
+                )
+            )
+        links.append(
+            link.model_copy(
+                update={
+                    "conformance": link.conformance.model_copy(
+                        update={"scoped_sentinels": tuple(certificates)}
+                    )
+                }
+            )
+        )
+    return tuple(links)
 
 
 def merge_adjacent_states(
@@ -489,7 +569,11 @@ def merge_adjacent_states(
     variant and delivery column, each starting the day after the previous one
     ends, is one state over the run's hull: same value set and version label,
     classification links, data type and length, text fields, provenance and
-    pooled flag. Population is a variant fact (LISA carries one per variant,
+    pooled flag. A sentinel certificate is compared by the members, book and
+    column it certifies, and the merged state keeps one certificate per such key
+    over the union of its windows, fingerprints and provenance: its decision's
+    window and case id are evidence the certificate carries, not a state fact.
+    Population is a variant fact (LISA carries one per variant,
     every other reader none), so one variant never mixes two. A gap, or any
     differing fact, keeps states apart; windows and coverage are unchanged.
     An open-ended state never merges with a closed run: readers count an
@@ -512,6 +596,7 @@ def merge_adjacent_states(
                 state.delivery_column_name,
                 state.value_set_version_label,
             ].append(index)
+    runs: dict[int, list[ResolvedState]] = {}
     for indices in lanes.values():
         head: int | None = None
         for index in sorted(indices, key=lambda i: states[i].valid_from or ""):
@@ -529,8 +614,17 @@ def merge_adjacent_states(
                 assert head is not None
                 merged[head] = current.model_copy(update={"valid_to": state.valid_to})
                 merged[index] = None
+                runs[head].append(state)
             else:
                 head = index
+                runs[head] = [state]
+    for head, run in runs.items():
+        if len(run) > 1:
+            current = merged[head]
+            assert current is not None
+            merged[head] = current.model_copy(
+                update={"classification_links": _merged_links(run)}
+            )
     return tuple(state for state in merged if state is not None)
 
 

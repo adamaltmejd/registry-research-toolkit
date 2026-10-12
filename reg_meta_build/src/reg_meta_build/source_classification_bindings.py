@@ -673,6 +673,11 @@ def apply_classification_cases(
                     )
                 )
             links = []
+            # A certificate carries its decision's provenance with the decision's
+            # window, so the state and link attributions leave it out: otherwise
+            # two adjacent decisions' case ids would keep identical states apart
+            # (#1442).
+            certified: set[str] = set()
             for slug in sorted(classes):
                 book_bindings = [
                     binding for binding in active if binding.classification == slug
@@ -710,6 +715,7 @@ def apply_classification_cases(
                                         update={"members": members}
                                     )
                                 )
+                                certified.add(binding.sentinel_certificate.provenance)
                     checked = resolve_classification_conformance(
                         segment.code_set,
                         classification=slug,
@@ -734,8 +740,10 @@ def apply_classification_cases(
                                     for binding in book_bindings
                                     for p in binding.provenance
                                 }
+                                - certified
                             )
-                        ),
+                        )
+                        or None,
                     )
                 )
             if segment.code_set is None and not prior and base.claims:
@@ -749,7 +757,11 @@ def apply_classification_cases(
                 )
             attribution = tuple(
                 sorted(
-                    set(segment.provenance) | {p for d in active for p in d.provenance}
+                    (
+                        set(segment.provenance)
+                        | {p for d in active for p in d.provenance}
+                    )
+                    - certified
                 )
             )
             segments.append(
