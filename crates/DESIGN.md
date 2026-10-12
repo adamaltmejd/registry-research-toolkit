@@ -118,9 +118,13 @@ SPA (Svelte) + reg-core-wasm
   check before a `reg-core` function that can panic. It is built with
   `wasm-bindgen-cli --target web`, the CLI pinned to its `Cargo.lock` version, and the
   `[profile.wasm]` (`opt-level = "s"`, LTO, one codegen unit); no wasm-pack, wasm-opt or
-  Vite plugin. The gzipped `.wasm` has a 200 KB budget (`WASM_GZ_BUDGET` in
-  `scripts/gate.py`, checked by the `frontend` step); raising it is a maintainer
-  decision.
+  Vite plugin. The CLI drops the name and producers sections (about 5% gzipped; a trap's
+  stack trace then reads `wasm-function[N]`). Measured and declined in #1427:
+  `opt-level = "z"` (2% smaller gzipped once names are dropped, a third slower on the
+  fold), `panic = "abort"` (wasm32 already aborts) and `wasm-opt -Oz` (6% gzipped, too
+  little for another pinned tool). The gzipped `.wasm` has a 200 KB budget
+  (`WASM_GZ_BUDGET` in `scripts/gate.py`, checked by the `frontend` step); raising it is
+  a maintainer decision.
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
 decision, not an implementation detail; `toml` stays a dev dependency.
