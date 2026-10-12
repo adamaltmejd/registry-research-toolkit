@@ -101,21 +101,21 @@ to_variant = "individer-15plus"
 #    grupp variables are still delivered through 2021.
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/utbildningsniva-3-positioner"
+from = "scb/lisa/sun2000niva"
 to = "scb/lisa/sun2020niva"
 effective_year = 2019
 note = "Utbildningsnivå moved from SUN 2000 to SUN 2020"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/utbildningsinriktning-4-positioner"
-to = "scb/lisa/utbildningsinriktning-4-positioner-2"
+from = "scb/lisa/sun2000inr"
+to = "scb/lisa/sun2020inr"
 effective_year = 2019
 note = "Utbildningsinriktning moved from SUN 2000 to SUN 2020"
 
 [[edge]]
 type = "replaced_by"
-from = "scb/lisa/utbildningsgrupp-enl-sun-2000"
+from = "scb/lisa/sun2000grp"
 to = "scb/lisa/sun2020grp"
 effective_year = 2019
 note = "Utbildningsgrupp moved from SUN 2000 to SUN 2020"
@@ -3617,7 +3617,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/allmanna-val-nominerade/utbildningsniva-3-positioner"
-b = "scb/lisa/utbildningsniva-3-positioner"
+b = "scb/lisa/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3662,7 +3662,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/ep-val-nominerade/utbildningsniva-3-positioner"
-b = "scb/lisa/utbildningsniva-3-positioner"
+b = "scb/lisa/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3702,7 +3702,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/fortroendevalda/utbildningsniva-3-positioner"
-b = "scb/lisa/utbildningsniva-3-positioner"
+b = "scb/lisa/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3737,7 +3737,7 @@ note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
 a = "scb/hek/utbildningsniva-3-positioner"
-b = "scb/lisa/utbildningsniva-3-positioner"
+b = "scb/lisa/sun2000niva"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
@@ -3771,32 +3771,32 @@ b = "scb/yrkesreg/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-3-positioner"
+a = "scb/lisa/sun2000niva"
 b = "scb/personalutbildningsstatistik/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-3-positioner"
+a = "scb/lisa/sun2000niva"
 b = "scb/rams/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-3-positioner"
+a = "scb/lisa/sun2000niva"
 b = "scb/slh/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-3-positioner"
+a = "scb/lisa/sun2000niva"
 b = "scb/sls/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-3-positioner"
+a = "scb/lisa/sun2000niva"
 b = "scb/stativ/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-3-positioner"
+a = "scb/lisa/sun2000niva"
 b = "scb/yrkesreg/utbildningsniva-3-positioner"
 note = "curated:#508 tier-1 SUN cross-register identity"
 [[edge]]
