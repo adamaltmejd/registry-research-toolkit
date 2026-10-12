@@ -146,8 +146,10 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     # and passes the build's canonical-code rule: one label per code and no blank
     # code. A book that fails it is withheld by the build with
     # conflicting_classification_labels or unknown_classification_member, and a
-    # parent_code naming no code of the book (unless the book is declared flat)
-    # is an unresolved_classification_parent error. Its tree and curated
+    # parent_code naming no code of the book (unless the book is declared flat),
+    # or a prefix-book code without a declared prefix in the book, is an
+    # unresolved_classification_parent error, and a prefix-book code of an
+    # undeclared width is undeclared_classification_code_width. Its tree and curated
     # sentinels then pass the build's book model, which refuses a parent cycle, a
     # parent no shallower than its child, and a sentinel also in the canonical
     # code set (classification_entry_invalid at build).
@@ -171,6 +173,7 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
             source=path.name,
             subject=entry.classification.slug,
             hierarchy=entry.classification.hierarchy,
+            prefix_widths=entry.classification.prefix_widths,
         )
         issues = resolved.diagnostics
         assert not issues, [(issue.code, issue.detail) for issue in issues]

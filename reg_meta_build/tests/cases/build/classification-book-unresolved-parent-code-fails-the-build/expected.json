@@ -7,21 +7,31 @@
       "where": {"severity": "error"},
       "fields": ["code", "subject", "fields", "withheld_output"],
       "rows": [
+        ["undeclared_classification_code_width", "badprefix", ["code"], ["classification.code.parent"]],
+        ["unresolved_classification_parent", "badprefix", ["code"], ["classification.code.parent"]],
         ["unresolved_classification_parent", "broken", ["code", "parent_code"], ["classification.code.parent"]]
       ],
-      "note": "The only error, located at book broken."
+      "note": "The only errors, located at books broken and badprefix. A prefix book's parent comes from the code itself, so its issues name only the code field."
     },
     {
       "table": "issue_refs",
-      "where": {"code": "unresolved_classification_parent"},
+      "where": {"code": ["undeclared_classification_code_width", "unresolved_classification_parent"]},
       "fields": ["source", "key"],
       "rows": [
+        [
+          "classifications/badprefix.csv",
+          ["code-list:badprefix", "value:1cc4fc42dd7110b98aaff173b02e5d2d6e51d0e6abf7a7b83f5c1881d3e0da1f"]
+        ],
+        [
+          "classifications/badprefix.csv",
+          ["code-list:badprefix", "value:7e2b115c141a69f63693e385d492cbbc4198c8c9606899cea078a5aa172da00b"]
+        ],
         [
           "classifications/broken.csv",
           ["code-list:broken", "value:eb22bdd550bffd43a743179929a943565f8c66f1b9a4820789e7391a66b1d3a9"]
         ]
       ],
-      "note": "The error cites code 12's codebook row and no other: the value key is the canonical SHA-256 of that row's cells [\"12\", \"Tolv\", \"\", \"9\", \"\", \"\"]."
+      "note": "Each error cites one codebook row and no other; a value key is the canonical SHA-256 of that row's cells: broken's code 12 [\"12\", \"Tolv\", \"\", \"9\", \"\", \"\"], badprefix's undeclared-width code 011 [\"011\", \"Ett-elva\"] and its orphan 0201 [\"0201\", \"Två-ett\"]."
     }
   ]
 }

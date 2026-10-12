@@ -18,6 +18,7 @@ import json
 import tomllib
 from dataclasses import dataclass
 from datetime import date
+from itertools import pairwise
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Annotated, Any, Literal
 
@@ -26,6 +27,7 @@ from pydantic import (
     ConfigDict,
     Field,
     PrivateAttr,
+    StrictInt,
     ValidationError,
     ValidationInfo,
     field_validator,
@@ -129,8 +131,11 @@ class ClassificationMetadata(_CurationModel):
     # `parent_code` column, where every named parent must be a code of the book
     # (a book without the column has no tree). "flat": the book has no tree and
     # its `parent_code` cells are not read, for a source whose cells name codes
-    # outside the book (KS87-P's KAPITEL chapter numbers).
-    hierarchy: Literal["parent_code", "flat"] = "parent_code"
+    # outside the book (KS87-P's KAPITEL chapter numbers). "code_prefix": codes
+    # nest by prefix at the declared `prefix_widths` (SCB books such as LKF and
+    # SUN), and the `parent_code` cells are not read.
+    hierarchy: Literal["parent_code", "flat", "code_prefix"] = "parent_code"
+    prefix_widths: Annotated[tuple[StrictInt, ...], Field(strict=False)] = ()
 
     _names = field_validator("short_name", "name")(_require_trimmed)
 
@@ -164,6 +169,18 @@ class ClassificationMetadata(_CurationModel):
             and self.valid_from > self.valid_to
         ):
             raise ValueError("classification validity bounds are reversed")
+        if self.hierarchy != "code_prefix":
+            if self.prefix_widths:
+                raise ValueError('prefix_widths require hierarchy = "code_prefix"')
+        elif (
+            not self.prefix_widths
+            or self.prefix_widths[0] < 1
+            or any(a >= b for a, b in pairwise(self.prefix_widths))
+        ):
+            raise ValueError(
+                'hierarchy = "code_prefix" requires prefix_widths: positive '
+                "code lengths in strictly increasing order"
+            )
         return self
 
     @field_validator("slug")

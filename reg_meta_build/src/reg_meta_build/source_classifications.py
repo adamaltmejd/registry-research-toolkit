@@ -157,7 +157,8 @@ def resolve_canonical_codes(
     source: str,
     subject: str,
     book_refs: tuple[SourceRecordRef, ...] = (),
-    hierarchy: Literal["parent_code", "flat"] = "parent_code",
+    hierarchy: Literal["parent_code", "flat", "code_prefix"] = "parent_code",
+    prefix_widths: tuple[int, ...] = (),
 ) -> CanonicalCodeResolution:
     """Retain agreed codes; withhold only incomplete or contradictory members.
 
@@ -171,6 +172,12 @@ def resolve_canonical_codes(
     `parent_code` cell names. A parent that is not an agreed code of this book,
     or members of one code that disagree on it, is a located error and the code
     keeps no parent; a `"flat"` book reads no parent cell.
+
+    Under `hierarchy = "code_prefix"` no parent cell is read either: a code's
+    parent is its prefix at the longest declared width shorter than the code that
+    is an agreed code of this book, and a code at the shortest width has none. A
+    code whose length is not a declared width, or a longer code without such a
+    prefix, is a located error and the code keeps no parent.
     """
     payloads = {}
     by_code: dict[str | None, list[SourceValue]] = defaultdict(list)
@@ -221,7 +228,38 @@ def resolve_canonical_codes(
                 {_parent_cell(value) for value in members},
                 _member_refs(source, members),
             )
+        elif hierarchy == "code_prefix":
+            parents[code] = (set(), _member_refs(source, members))
     agreed = {code.code for code in codes}
+    if hierarchy == "code_prefix":
+        for code, (named, refs) in parents.items():
+            if len(code) not in prefix_widths:
+                diagnostics.append(
+                    ResolutionDiagnostic(
+                        code="undeclared_classification_code_width",
+                        severity="error",
+                        subject=subject,
+                        detail=f"Canonical code {code!r} has length {len(code)}, "
+                        f"not one of the declared prefix_widths {list(prefix_widths)!r}; "
+                        "the code keeps no parent.",
+                        refs=refs,
+                        fields=("code",),
+                        withheld_output=("classification.code.parent",),
+                    )
+                )
+                parents[code] = ({None}, refs)
+                continue
+            shorter = [w for w in prefix_widths if w < len(code)]
+            # A code at the shortest width is a root; a longer one names the
+            # longest declared prefix the book has, or names one that is missing.
+            named.add(
+                next(
+                    (code[:w] for w in reversed(shorter) if code[:w] in agreed),
+                    code[: shorter[-1]],
+                )
+                if shorter
+                else None
+            )
     for index, resolved in enumerate(codes):
         if resolved.code not in parents:
             continue
@@ -240,7 +278,10 @@ def resolve_canonical_codes(
                 f"{sorted(named, key=repr)!r}, not exactly one agreed code of this "
                 "book; the code keeps no parent.",
                 refs=refs,
-                fields=("code", "parent_code"),
+                # A prefix book's parent comes from the code itself.
+                fields=("code", "parent_code")
+                if hierarchy == "parent_code"
+                else ("code",),
                 withheld_output=("classification.code.parent",),
             )
         )
