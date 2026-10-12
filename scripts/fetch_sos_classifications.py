@@ -452,6 +452,31 @@ def _strip_icd11_tabulation_prefix(title: str) -> str:
     return text
 
 
+def _icd11_records(text: str) -> list[str]:
+    """The tabulation's records, one line each.
+
+    A multi-paragraph CodingNote carries unquoted line breaks (CRLF or LF),
+    which split its record across lines. The header's last column is a version
+    stamp that records leave out, so a record is complete once it holds one
+    tab fewer than the header; until then each line continues it, its breaks
+    becoming spaces.
+    """
+    lines = text.splitlines()
+    if not lines:
+        return []
+    complete = lines[0].count("\t") - 1
+    records = [lines[0]]
+    pending = ""
+    for line in lines[1:]:
+        pending = f"{pending} {line}" if pending else line
+        if pending.count("\t") >= complete:
+            records.append(pending)
+            pending = ""
+    if pending.strip():
+        raise SystemExit(f"ICD-11: truncated record {pending[:80]!r}")
+    return records
+
+
 def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
     """Parse WHO's ICD-11 MMS simple tabulation zip into `Code` rows.
 
@@ -479,15 +504,24 @@ def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
 
     code_field = {"chapter": "ChapterNo", "block": "BlockId", "category": "Code"}
     coded: list[tuple[str, dict[str, str]]] = []
-    for row in csv.DictReader(text.splitlines(), delimiter="\t"):
+    # Rows without a WHO identifier (uncoded categories, and the chapter V/X
+    # blocks WHO leaves without a BlockId) are not part of the book; their
+    # children hang on the nearest identified ancestor instead (maintainer
+    # decision, #1297), so no identifier is invented.
+    passthrough: dict[str, str] = {}
+    for row in csv.DictReader(_icd11_records(text), delimiter="\t"):
         kind = (row.get("ClassKind") or "").strip()
         if kind not in code_field:
             raise SystemExit(f"ICD-11: unknown ClassKind {kind!r}")
         code = (row.get(code_field[kind]) or "").strip()
         if not code:
-            if kind != "category":
-                raise SystemExit(f"ICD-11: {kind} row without {code_field[kind]}")
-            continue  # A category without a code is not part of the book.
+            if kind == "chapter":
+                raise SystemExit("ICD-11: chapter row without ChapterNo")
+            for field in ("Linearization URI", "Foundation URI"):
+                uri = (row.get(field) or "").strip()
+                if uri:
+                    passthrough[uri] = (row.get("Parent") or "").strip()
+            continue
         coded.append((code, row))
 
     code_by_uri: dict[str, str] = {}
@@ -508,6 +542,10 @@ def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
         parent_code = ""
         if (row.get("ClassKind") or "").strip() != "chapter":
             parent_uri = (row.get("Parent") or "").strip()
+            visited: set[str] = set()
+            while parent_uri in passthrough and parent_uri not in visited:
+                visited.add(parent_uri)
+                parent_uri = passthrough[parent_uri]
             parent_code = code_by_uri.get(parent_uri, "")
             if not parent_code:
                 raise SystemExit(
