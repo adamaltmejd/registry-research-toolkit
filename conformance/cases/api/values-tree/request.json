@@ -1,0 +1,32 @@
+{
+  "note": "Fails if `parent=` stops answering a book's parentless codes, if `parent=<code>` stops answering exactly that code's children ordered by code, paged by cursor within the node, if `child_count` stops counting children (0 for a leaf) or stops being null on a book without a tree, if a non-empty `q` stops reading the book flat, if an unknown parent code is answered instead of not_found, or if `parent` on a variable's state is accepted beside its allowed twin.",
+  "fixture": "classification-tree",
+  "kind": "catalog",
+  "requests": [
+    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": ""}},
+    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": "A"}},
+    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": "011", "limit": 1}},
+    {
+      "operation": "values",
+      "path": "/api/values/class/tree",
+      "query": {"parent": "011", "limit": 1},
+      "cursor_from": [2, "/data/next_cursor"]
+    },
+    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": "A", "q": "spannmål"}},
+    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": "Z"}},
+    {"operation": "values", "path": "/api/values/class/flat"},
+    {"operation": "values", "path": "/api/values/class/flat", "query": {"parent": ""}},
+    {"operation": "states", "path": "/api/states/scb/example/naring"},
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/naring",
+      "query_from": {"state": [8, "/data/items/0/state_id"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values/scb/example/naring",
+      "query": {"parent": "A"},
+      "query_from": {"state": [8, "/data/items/0/state_id"]}
+    }
+  ]
+}

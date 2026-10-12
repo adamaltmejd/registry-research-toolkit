@@ -4,7 +4,9 @@
 //! label, `q` keeps the rows whose code or label contains it under `fold_search`
 //! (today's `matches_filter`), and `total` counts them before the page. Paging runs
 //! to the end of the set: the code panel and G1 walk sets of 40k codes, so there
-//! is no depth cap.
+//! is no depth cap. A classification's `parent` reads one level of its code tree
+//! (#1297): the roots (`parent=`) or one code's children, each row with its
+//! `child_count`.
 
 use reg_core::fold_search;
 use rusqlite::{Connection, OptionalExtension, params};
@@ -74,6 +76,9 @@ pub struct ClassificationCode {
     level: Option<i64>,
     /// True for a canonical code, null when no canonical list exists.
     is_valid: Option<bool>,
+    /// How many codes name this one as their parent: null when the book has no
+    /// code tree, 0 for a leaf.
+    child_count: Option<i64>,
 }
 
 /// A row of `values`: a classification's code, a state's delivered pair, or a
@@ -113,15 +118,7 @@ pub fn values(server: &Server, scope: Scope, params: &Params) -> Result<serde_js
     if partition.is_some_and(|p| !PARTITIONS.contains(&p)) {
         return Err(Error::invalid_parameter("partition"));
     }
-    let window = match (
-        params.get("column").copied(),
-        params.get("alias_window_from").copied(),
-    ) {
-        (Some(column), Some(from)) => Some((column, from)),
-        (None, None) => None,
-        (Some(_), None) => return Err(Error::invalid_parameter("alias_window_from")),
-        (None, Some(_)) => return Err(Error::invalid_parameter("column")),
-    };
+    let window = window(params)?;
     let conn = catalog.connect()?;
     let reference = params["ref"];
     let mut rows = match refs::resolve(&conn, scope, Some(reference))? {
@@ -129,9 +126,12 @@ pub fn values(server: &Server, scope: Scope, params: &Params) -> Result<serde_js
             if let Some(name) = STATE_PARAMS.iter().find(|n| params.get(n).is_some()) {
                 return Err(Error::invalid_parameter(name));
             }
-            classification_codes(&conn, id)?
+            classification_codes(&conn, id, parent(params)?.filter(|_| q.is_empty()))?
         }
         Target::Variable { id } => {
+            if params.get("parent").is_some() {
+                return Err(Error::invalid_parameter("parent"));
+            }
             let state = state.ok_or_else(|| Error::invalid_parameter("state"))?;
             let book = params
                 .get("classification")
@@ -174,7 +174,8 @@ pub fn values(server: &Server, scope: Scope, params: &Params) -> Result<serde_js
         params.get("classification"),
         window,
         q,
-        scope
+        scope,
+        params.get("parent")
     ]);
     let context = hex(&Sha256::digest(context.to_string().as_bytes()));
     let position = |row: &ValueRow| row.code_label().0.to_owned();
@@ -224,19 +225,80 @@ fn book<'a>(conn: &Connection, scope: Scope, value: &'a str) -> Result<Book<'a>,
     }
 }
 
-fn classification_codes(conn: &Connection, id: i64) -> Result<Vec<ValueRow>, Error> {
+/// `column` with `alias_window_from`: a coded alias window, both or neither.
+fn window<'a>(params: &Params<'a>) -> Result<Option<(&'a str, &'a str)>, Error> {
+    match (
+        params.get("column").copied(),
+        params.get("alias_window_from").copied(),
+    ) {
+        (Some(column), Some(from)) => Ok(Some((column, from))),
+        (None, None) => Ok(None),
+        (Some(_), None) => Err(Error::invalid_parameter("alias_window_from")),
+        (None, Some(_)) => Err(Error::invalid_parameter("column")),
+    }
+}
+
+/// `parent`: absent, empty (the roots) or a code; bounded as `q`. A classification
+/// only; a non-empty `q` drops it and reads the book flat, because a match's
+/// ancestors are not matches.
+fn parent<'a>(params: &Params<'a>) -> Result<Option<&'a str>, Error> {
+    match params.get("parent").copied() {
+        Some(p) if p.contains('\0') || p.chars().count() > 200 => {
+            Err(Error::invalid_parameter("parent"))
+        }
+        p => Ok(p),
+    }
+}
+
+/// A book's codes: all of them, or with `parent` the roots (`""`) or that code's
+/// children. Each row counts its children when the book has a code tree; a book
+/// none of whose codes names a parent has none, so its counts are null and its
+/// roots are all its codes.
+fn classification_codes(
+    conn: &Connection,
+    id: i64,
+    parent: Option<&str>,
+) -> Result<Vec<ValueRow>, Error> {
+    if let Some(code) = parent.filter(|p| !p.is_empty()) {
+        let found: bool = conn.query_row(
+            "SELECT EXISTS (SELECT 1 FROM classification_code cc JOIN value_code vc \
+             ON vc.code_id = cc.code_id WHERE cc.classification_id = ? AND vc.code = ?)",
+            params![id, code],
+            |row| row.get(0),
+        )?;
+        if !found {
+            return Err(Error::new(
+                Code::NotFound,
+                format!("The classification has no code {code:?}."),
+                vec![code.into()],
+            ));
+        }
+    }
+    // One grouped scan of the book counts every code's children.
     let mut stmt = conn.prepare_cached(
-        "SELECT vc.code, vc.label, cc.level, cc.is_valid FROM classification_code cc \
-         JOIN value_code vc ON vc.code_id = cc.code_id WHERE cc.classification_id = ? \
+        "WITH kids AS (SELECT parent_code_id AS code_id, COUNT(*) AS n \
+         FROM classification_code WHERE classification_id = ?1 \
+         AND parent_code_id IS NOT NULL GROUP BY parent_code_id), \
+         tree AS (SELECT EXISTS (SELECT 1 FROM kids) AS tree) \
+         SELECT vc.code, vc.label, cc.level, cc.is_valid, \
+         CASE WHEN tree.tree THEN COALESCE(kids.n, 0) END \
+         FROM classification_code cc JOIN value_code vc ON vc.code_id = cc.code_id \
+         CROSS JOIN tree LEFT JOIN kids ON kids.code_id = cc.code_id \
+         WHERE cc.classification_id = ?1 AND (?2 IS NULL \
+         OR (?2 = '' AND cc.parent_code_id IS NULL) \
+         OR cc.parent_code_id IN (SELECT p.code_id FROM classification_code p \
+         JOIN value_code pv ON pv.code_id = p.code_id \
+         WHERE p.classification_id = ?1 AND pv.code = ?2)) \
          ORDER BY vc.code, vc.label",
     )?;
     let rows = stmt
-        .query_map([id], |row| {
+        .query_map(params![id, parent], |row| {
             Ok(ValueRow::Code(ClassificationCode {
                 code: row.get(0)?,
                 label: row.get(1)?,
                 level: row.get(2)?,
                 is_valid: row.get(3)?,
+                child_count: row.get(4)?,
             }))
         })?
         .collect::<rusqlite::Result<_>>()?;

@@ -3,12 +3,12 @@
     "status": 200,
     "json": {
       "/data/items": [
-        {"code": "1", "label": "Chefer", "level": 1, "is_valid": true},
-        {"code": "11", "label": "Politiker", "level": 2, "is_valid": true},
-        {"code": "12", "label": "Verkställande direktörer", "level": 2, "is_valid": true},
-        {"code": "2", "label": "Specialister", "level": 1, "is_valid": true},
-        {"code": "21", "label": "Ingenjörer", "level": 2, "is_valid": true},
-        {"code": "22", "label": "Läkare", "level": 2, "is_valid": true}
+        {"code": "1", "label": "Chefer", "level": 1, "is_valid": true, "child_count": null},
+        {"code": "11", "label": "Politiker", "level": 2, "is_valid": true, "child_count": null},
+        {"code": "12", "label": "Verkställande direktörer", "level": 2, "is_valid": true, "child_count": null},
+        {"code": "2", "label": "Specialister", "level": 1, "is_valid": true, "child_count": null},
+        {"code": "21", "label": "Ingenjörer", "level": 2, "is_valid": true, "child_count": null},
+        {"code": "22", "label": "Läkare", "level": 2, "is_valid": true, "child_count": null}
       ],
       "/data/total": 6,
       "/data/next_cursor": null
