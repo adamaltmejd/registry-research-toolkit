@@ -300,3 +300,82 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "b1e21ee4e7339fdff728a000624e0cbc943f13093cbba8d4feb8fceeddea6814"
 expected_diagnostic_sha256 = "cd49c15c2ac03e82af939b41a177f893ace52133cdc3284ab40facf21763fb47"
+
+# #1302: SCB-added Moms delivery columns held by SWECOV (Moms_2015..Moms_2022).
+
+[[errata.column]]
+variant = "momsdeklarationsregistret"
+column = "IdPers"
+name = "Redovisande identitet (IdPers)"
+definition = "Identitet som momsredovisningen lämnas under. Avviker från PeOrgNr när redovisningen sker under ett sambandsnummer. Levereras löpnumrerad."
+data_type = "integer"
+is_identifier = true
+is_sensitive = false
+holdings_period = "2015-2022"
+source = "steward-holdings"
+evidence = "SWECOV holds P1105_LopNr_IdPers in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F2, maintainer round 5; the pseudonymised P1105_LopNr_IdPers matches by its stripped name)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "momsdeklarationsregistret"
+column = "IdPers_Typ"
+name = "Typ av IdPers"
+definition = "Typ av sambandsnummer som IdPers avser (gruppmomsnummer, konkursnummer eller representant)."
+data_type = "text"
+holdings_period = "2015-2022"
+source = "steward-holdings"
+evidence = "SWECOV holds IdPers_Typ in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "momsdeklarationsregistret"
+column = "Samma_PeorgNr_IdPers"
+name = "Markering att PeOrgNr och IdPers är lika"
+definition = "Markering att redovisande identitet IdPers är densamma som PeOrgNr."
+data_type = "text"
+holdings_period = "2015-2022"
+source = "steward-holdings"
+evidence = "SWECOV holds Samma_PeorgNr_IdPers in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "momsdeklarationsregistret"
+column = "DatumFDB"
+name = "Datum för FDB-uppgifter"
+definition = "Datum då uppgifterna från Företagsdatabasen (FDB) lades till."
+data_type = "date"
+holdings_period = "2015-2022"
+source = "steward-holdings"
+evidence = "SWECOV holds DatumFDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "momsdeklarationsregistret"
+column = "FDB"
+name = "Markering att PeOrgNr finns i FDB"
+definition = "Markering om uppgifter för PeOrgNr finns i Företagsdatabasen (FDB)."
+data_type = "text"
+holdings_period = "2015-2022"
+source = "steward-holdings"
+evidence = "SWECOV holds FDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "13.IdPers"
+slug = "idpers"
+
+[[variable]]
+native_id = "13.IdPers_Typ"
+slug = "idpers-typ"
+
+[[variable]]
+native_id = "13.Samma_PeorgNr_IdPers"
+slug = "samma-peorgnr-idpers"
+
+[[variable]]
+native_id = "13.DatumFDB"
+slug = "datumfdb"
+
+[[variable]]
+native_id = "13.FDB"
+slug = "fdb"

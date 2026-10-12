@@ -742,3 +742,33 @@ valid_to = "2025-12-31"
 reason = "The source establishes a calendar/reference-year quantity but supplies no own response-domain association for this exact window. Preserve that meaning, original types and dates, and all known year lists. A calendar-year definition does not establish the complete stored finite domain or special codes; keep only this exact window’s response domain unavailable."
 evidence = "Complete accepted source-native families, actual auxiliary joins and complete panel prerequisites; own association/history review including canonical bound books. Exact full-original and coding fingerprint. Proof: Batch51-domain67-source-proof.json; own-binding review Batch51-domain67-complete-own-binding-review.json. No domain continuity or guessed classification version."
 expected_evidence_sha256 = "87dd224707e6af8b1b6bab62447615cea22d5571dd251661d52e7a9c1ea8ae68"
+
+# #1302: arbetsställe columns held by SWECOV beside the avregdatktid precedent.
+
+[[errata.column]]
+variant = "arbetsstalleenheter"
+column = "regdatktid"
+name = "regdatktid"
+definition = "regdatktid"
+holdings_period = "2015-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds regdatktid in FDB_AE_2015..FDB_AE_2022 and the renamed AdmStatStartDatKtid in FDB_AE_2023..2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FDB sheet) lists RegDatKtid for FDB_AE 2015-2024; SCB's Registerinformation export carries no row for it on this variant. Twin of the avregdatktid errata; the 2023-2024 rename maps through the overlay (#1302)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "arbetsstalleenheter"
+column = "jurform"
+name = "Juridisk form"
+definition = "Juridisk form."
+holdings_period = "2015-2022"
+source = "steward-holdings"
+evidence = "SWECOV holds jurform in FDB_AE_2015..FDB_AE_2022; Leveransrapport 2023-2024 (Postbeskrivning) lists it on FDB_AE_2021/2022; SCB's Registerinformation export carries no row for it on this variant (JurForm is documented on juridiska-enheter only, which these tables are not) (#1302)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "1.regdatktid"
+slug = "regdatktid"
+
+[[variable]]
+native_id = "1.jurform"
+slug = "jurform"

@@ -17,24 +17,24 @@ noted = "2026-09-13"
 # `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
-variant = "aku-april-2005-dec-2020"
+variant = "aku-januari-2021"
 column = "HsArbHemmaAntV"
 name = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan, frekvens"
 definition = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan, frekvens"
-holdings_period = "1990-2024"
+holdings_period = "2021-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
+evidence = "SWECOV holds HsArbHemmaAntV only in AKU_RL_2021..AKU_RL_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it on the AKU_RL sheet from 2021. Moved from aku-april-2005-dec-2020 / 1990-2024 (Y-213 pooled range), which misplaced it (#1302 B6)."
+noted = "2026-10-12"
 
 [[errata.column]]
-variant = "aku-april-2005-dec-2020"
+variant = "aku-januari-2021"
 column = "HsArbhemmaV"
 name = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan"
 definition = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan"
-holdings_period = "1990-2024"
+holdings_period = "2021-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
+evidence = "SWECOV holds HsArbhemmaV only in AKU_RL_2021..AKU_RL_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it on the AKU_RL sheet from 2021. Moved from aku-april-2005-dec-2020 / 1990-2024 (Y-213 pooled range), which misplaced it (#1302 B6)."
+noted = "2026-10-12"
 
 [[errata.column]]
 variant = "aku-april-2005-dec-2020"
@@ -1778,6 +1778,134 @@ versions = ["2021", "2022"]
 source = "steward-holdings"
 evidence = "Exact AKU_Corona_2021 and AKU_Corona_2022 physical schemas contain COVIDTARB (float storage in both). Master variable list Utkast_P1105_Variabellista_uppd2025_v5.xlsx transcribes this exact question text under source AKU_Corona and years2021–2022. Accepted SCB AKU register122 contains no literal COVID* variable record. This documents the question and storage only; stored response codes and sensitivity are not independently established."
 noted = "2026-10-01"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+# #1302: the same COVID* questions are held in AKU_2020 (2005-2020 variant).
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDA"
+name = "Du sa tidigare att du <<’har sökt arbete´ om Arbl3=1>><<kommer att börja arbeta inom 3 månader’ om Arbl2=1>><<’vill arbeta’ om Arbl4=1>> men inte kunde arbeta under <<vecka>> eller börja arbeta inom 14 dagar>>. Var anledningen till att du inte kunde börja arbeta på något sätt kopplat till coronapandemin?"
+definition = "Du sa tidigare att du <<’har sökt arbete´ om Arbl3=1>><<kommer att börja arbeta inom 3 månader’ om Arbl2=1>><<’vill arbeta’ om Arbl4=1>> men inte kunde arbeta under <<vecka>> eller börja arbeta inom 14 dagar>>. Var anledningen till att du inte kunde börja arbeta på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDA in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDAEJ2"
+name = "Du sa tidigare också att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+definition = "Du sa tidigare också att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDAEJ2 in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDDEL"
+name = "Du var ju frånvarande från arbetet delar av vecka <<vecka>>.  Var anledningen till din frånvaro på något sätt kopplat till coronapandemin?"
+definition = "Du var ju frånvarande från arbetet delar av vecka <<vecka>>.  Var anledningen till din frånvaro på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDDEL in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDE"
+name = "Du arbetade ju inte något under vecka <<vecka>>.  Var anledningen till att du inte arbetade alls på något sätt kopplat till coronapandemin?"
+definition = "Du arbetade ju inte något under vecka <<vecka>>.  Var anledningen till att du inte arbetade alls på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDE in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDEJSOK"
+name = "Du sa tidigare att du hade kunnat arbeta under <<vecka>> (om du haft ett arbete) men att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+definition = "Du sa tidigare att du hade kunnat arbeta under <<vecka>> (om du haft ett arbete) men att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDEJSOK in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDFMH"
+name = "Du är ju <<Grad >>. Upplever du att du har fått mindre att göra på grund av coronapandemin?"
+definition = "Du är ju <<Grad >>. Upplever du att du har fått mindre att göra på grund av coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDFMH in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDFMHB"
+name = "Under vecka <<vecka<< arbetade du ju mindre än vad du vanligtvis gör. Var anledningen till att du arbetade mindre på något sätt kopplat till coronapandemin?"
+definition = "Under vecka <<vecka<< arbetade du ju mindre än vad du vanligtvis gör. Var anledningen till att du arbetade mindre på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDFMHB in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDHEM"
+name = "Just nu är det många som jobbar hemifrån på grund av coronapandemin. Under  vecka <<vecka>>, arbetade du hemma (helt eller delvis) på grund av corona?"
+definition = "Just nu är det många som jobbar hemifrån på grund av coronapandemin. Under  vecka <<vecka>>, arbetade du hemma (helt eller delvis) på grund av corona?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDHEM in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
+data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+[[errata.column]]
+variant = "aku-april-2005-dec-2020"
+column = "COVIDTARB"
+name = "Du har ju nyligen slutat ditt arbete. Var anledningen till att du slutade på något sätt kopplat till coronapandemin?"
+definition = "Du har ju nyligen slutat ditt arbete. Var anledningen till att du slutade på något sätt kopplat till coronapandemin?"
+data_type = "decimal"
+is_sensitive = true
+is_identifier = false
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "SWECOV holds COVIDTARB in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
+noted = "2026-10-12"
 data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
 
 [[variable]]

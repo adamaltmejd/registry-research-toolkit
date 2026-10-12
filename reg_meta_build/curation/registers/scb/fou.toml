@@ -53,6 +53,29 @@ expected_evidence_sha256 = "611c14804039eaa3472bfa30082967ee0235d413e4db853eacb0
 evidence = "SWECOV holds Storan in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
 
+# #1302 B3/C: later FoU företagssektorn waves deliver documented variables under a new
+# column spelling (STRAT, BGrupp). The state keeps the documented spelling;
+# the SWECOV overlay maps the delivered spelling to it.
+[[errata.delivered]]
+variant = "foretagssektorn"
+column = "Stratum"
+versions = ["2019", "2021"]
+upstream = "omitted-column-in-version"
+native_variable_id = 462
+expected_evidence_sha256 = "b883568f54ff810faf0677f05c132cc791ad4c44693e4a663a4df55c2a70610d"
+evidence = "SWECOV holds STRAT in FTG_FOU_2019 and FTG_FOU_2021; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists STRAT for 2019-2021. Native 462 Stratum is documented on this variant for 2003-2017 and on uoh-personal as STRAT from 2019, the same spelling switch (#1302 B3)."
+noted = "2026-10-12"
+
+[[errata.delivered]]
+variant = "foretagssektorn"
+column = "b-grupp"
+versions = ["2015", "2017"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3310
+expected_evidence_sha256 = "719c54ab3e49c5f8986c71313b90acc9e26747c9ecfc8e30b813fe1c90f5d61a"
+evidence = "SWECOV holds BGrupp in FTG_FOU_2015 and FTG_FOU_2017; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists BGrupp for 2015-2017. SCB documents the branch group as b-grupp (native 3310 branschgrupp) on this variant in 2003 only (#1302 C, medium)."
+noted = "2026-10-12"
+
 [[errata.delivered]]
 variant = "foretagssektorn"
 column = "Stratum"
@@ -14243,3 +14266,33 @@ reason = "These exact source windows have no own bound stored-code domain. Prese
 evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain42b-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
 expected_evidence_sha256 = "ddf07b93f6f1d94db1ff8357381174b42bfecb74dd5ea4a0ff5d407106e013ca"
 expected_diagnostic_sha256 = "a9a8395227d63b8c9649dc995036cc20762fa44f55e327d87fd0eef123342991"
+
+# #1302: FoU företagssektorn 2013 columns held by SWECOV; undocumented, so name = column (register precedent).
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v7001"
+name = "v7001"
+definition = "v7001"
+holdings_period = "2013-2013"
+source = "steward-holdings"
+evidence = "SWECOV holds v7001 in FTG_FOU_2013; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists it for 2013 without a description; SCB's Registerinformation export carries no row for it on this variant (#1302, low confidence on meaning)."
+noted = "2026-10-12"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v7002"
+name = "v7002"
+definition = "v7002"
+holdings_period = "2013-2013"
+source = "steward-holdings"
+evidence = "SWECOV holds v7002 in FTG_FOU_2013; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists it for 2013 without a description; SCB's Registerinformation export carries no row for it on this variant (#1302, low confidence on meaning)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "182.v7001"
+slug = "v7001"
+
+[[variable]]
+native_id = "182.v7002"
+slug = "v7002"
