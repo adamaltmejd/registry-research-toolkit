@@ -405,7 +405,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). `q` keeps the rows whose code or label contains it, case and diacritics folded; `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or a bare name. */
+        /** @description A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or a bare name. */
         get: operations["values"];
         put?: never;
         post?: never;
@@ -476,6 +476,12 @@ export interface components {
         };
         /** @description One code of a classification edition: today's `ClassificationCode`. */
         ClassificationCode: {
+            /**
+             * Format: int64
+             * @description How many codes name this one as their parent: null when the book has no
+             *     code tree, 0 for a leaf.
+             */
+            child_count?: number | null;
             code: string;
             /** @description True for a canonical code, null when no canonical list exists. */
             is_valid?: boolean | null;
@@ -2314,6 +2320,7 @@ export interface operations {
                 classification?: string;
                 column?: string;
                 alias_window_from?: string;
+                parent?: string;
                 q?: string;
                 scope?: components["schemas"]["Scope"];
                 limit?: number;

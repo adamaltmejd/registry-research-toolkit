@@ -493,7 +493,9 @@ export async function getWarnings(
  * the value set of one `state` of the variable `ref`. With `classification`,
  * `partition` picks that declared book's part of the state's codes; `column` with
  * `alias_window_from` selects a coded alias window instead. `q` filters the whole
- * set before the page and `total` counts the matches; `cursor` continues. */
+ * set before the page and `total` counts the matches; `cursor` continues. On a
+ * classification, `parent` reads one level of its code tree: `""` the roots, a
+ * code its children (so `""` is sent, unlike the other parameters). */
 export function getValues(
   ref: string,
   params: {
@@ -502,6 +504,7 @@ export function getValues(
     classification?: string;
     column?: string;
     alias_window_from?: string;
+    parent?: string;
     q?: string;
     cursor?: string | null;
     limit?: number;
@@ -510,7 +513,9 @@ export function getValues(
 ): Promise<ValuesPage> {
   const query = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
-    if (value != null && value !== "") query.set(key, String(value));
+    if (value != null && (value !== "" || key === "parent")) {
+      query.set(key, String(value));
+    }
   }
   return rustGet<ValuesPage>(`/values/${encodeFqid(ref)}`, query, options);
 }

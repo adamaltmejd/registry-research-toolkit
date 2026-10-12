@@ -69,6 +69,7 @@ EQUIVALENCE = {
         "values-state",
         "values-errors",
         "values-stale-cursor",
+        "values-tree",
     ),
     "graph": ("graph-succession", "graph-unheld", "graph-errors"),
     "lineage": ("lineage", "lineage-unheld-reference", "graph-errors"),
