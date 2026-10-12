@@ -93,6 +93,33 @@ from_variant = "individer-16plus"
 to = "scb/lisa"
 to_variant = "individer-15plus"
 
+# ── LISA utbildning: SUN 2000 → SUN 2020 (#1298) ──
+#    LISA names its SUN 2020 education variables differently from their SUN 2000
+#    predecessors, so the derived classification-vintage lift (grouped by register
+#    and variable name) never pairs them. Maintainer decision: curated succession
+#    effective 2019, the first SUN 2020 year, although the SUN 2000 inriktning and
+#    grupp variables are still delivered through 2021.
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/utbildningsniva-3-positioner"
+to = "scb/lisa/sun2020niva"
+effective_year = 2019
+note = "Utbildningsnivå moved from SUN 2000 to SUN 2020"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/utbildningsinriktning-4-positioner"
+to = "scb/lisa/utbildningsinriktning-4-positioner-2"
+effective_year = 2019
+note = "Utbildningsinriktning moved from SUN 2000 to SUN 2020"
+
+[[edge]]
+type = "replaced_by"
+from = "scb/lisa/utbildningsgrupp-enl-sun-2000"
+to = "scb/lisa/sun2020grp"
+effective_year = 2019
+note = "Utbildningsgrupp moved from SUN 2000 to SUN 2020"
+
 # ── LISA näringsgren: SNI coding succession + KU → AGI source switch (#375/#931) ──
 #    The browser groups every LISA näringsgren variable under one concept group; SNI
 #    vintage changes are succession, not a facet. These edges cover the coding steps
