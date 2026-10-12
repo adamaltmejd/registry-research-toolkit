@@ -1110,6 +1110,10 @@ CREATE TABLE classification_code (
         DEFERRABLE INITIALLY DEFERRED
 ) WITHOUT ROWID;
 CREATE INDEX idx_classification_code_code ON classification_code(code_id);
+-- Serves the deferred same-book key's check (without it, writing a child before
+-- its parent scans the book: quadratic on ICD-11-SE) and children-of-code reads.
+CREATE INDEX idx_classification_code_parent
+    ON classification_code(classification_id, parent_code_id);
 
 -- Per-state value-set/classification conformance (#656). A row exists only for
 -- a state whose value set declared a CSV-backed classification. `declared_*`

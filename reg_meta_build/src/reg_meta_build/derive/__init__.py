@@ -111,9 +111,10 @@ def derive_artifact(base: Path, out: Path) -> None:
         with closing(sqlite3.connect(tmp)) as conn:
             conn.executescript(DERIVED_DDL + SEARCH_PIN_DDL)
             # A pre-10.1 base has no code trees (#1297): its copy gains an all-NULL
-            # parent_code_id. ADD COLUMN cannot carry the composite same-book key;
-            # with every value NULL it constrains nothing, and validate_built_db
-            # checks same-book parents by query, not by the declared key.
+            # parent_code_id and its analyzed index, as a fresh build has. ADD
+            # COLUMN cannot carry the composite same-book key; with every value
+            # NULL it constrains nothing, and validate_built_db checks same-book
+            # parents by query, not by the declared key.
             columns = {
                 row[1] for row in conn.execute("PRAGMA table_info(classification_code)")
             }
@@ -121,6 +122,11 @@ def derive_artifact(base: Path, out: Path) -> None:
                 conn.execute(
                     "ALTER TABLE classification_code ADD COLUMN parent_code_id INTEGER"
                 )
+                conn.execute(
+                    "CREATE INDEX idx_classification_code_parent "
+                    "ON classification_code(classification_id, parent_code_id)"
+                )
+                conn.execute("ANALYZE idx_classification_code_parent")
             derive(conn)
             manifest.setdefault("search_pins_sha256", search_pins_sha256(()))
             manifest.update(
