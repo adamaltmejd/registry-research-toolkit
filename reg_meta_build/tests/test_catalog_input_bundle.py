@@ -6,7 +6,6 @@ import hashlib
 import json
 import shutil
 from typing import TYPE_CHECKING
-from zipfile import BadZipFile
 
 import pytest
 from _csv_fixtures import (
@@ -25,10 +24,20 @@ from reg_meta_build.input_snapshot import (
     verify_input_bundle,
 )
 from reg_meta_build.sources.curated_records import CuratedSourceError
-from reg_meta_build.sources.scb_reference_records import ScbReferenceSourceError
+from reg_meta_build.sources.swecov_column_types import SwecovColumnTypesError
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+_SWECOV_COLUMNS = "swecov/derived/swecov_column_types.csv"
+
+
+def _swecov_columns(table: str) -> bytes:
+    """A one-row SWECOV schema CSV declaring column A of `table`."""
+    return (
+        "table_schema,table_name,table_type,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale,ordinal_position\r\n"
+        f"dbo,{table},BASE TABLE,A,int,,10,0,1\r\n"
+    ).encode()
 
 
 def test_catalog_bundle_captures_complete_small_inventory_and_selects_quickly(
@@ -36,21 +45,17 @@ def test_catalog_bundle_captures_complete_small_inventory_and_selects_quickly(
 ) -> None:
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
-    auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
-    auxiliary.write_bytes(
-        b"-- exact source fact\r\n"
-        b"CREATE TABLE [dbo].[Example]([A] [int] NULL) ON [PRIMARY]\r\nGO\r\n"
-    )
+    auxiliary = input_dir / _SWECOV_COLUMNS
+    auxiliary.parent.mkdir(parents=True)
+    auxiliary.write_bytes(_swecov_columns("CIS2004"))
     selection = write_input_bundle(tmp_path / "accepted", input_dir)
 
     bundle = open_input_bundle(selection)
 
     items = {item.path: item for item in bundle.manifest.files}
-    assert items["catalog/SCB/Tabelldefinitioner.sql"].present
-    assert not items["catalog/SCB/ID-kolumner.xlsx"].present
-    assert (
-        bundle.input_dir / "SCB" / "Tabelldefinitioner.sql"
-    ).read_bytes() == auxiliary.read_bytes()
+    assert items[f"catalog/{_SWECOV_COLUMNS}"].present
+    assert not items["catalog/scb_canonical/scb_canonical.toml"].present
+    assert (bundle.input_dir / _SWECOV_COLUMNS).read_bytes() == auxiliary.read_bytes()
     manifest_text = (selection.path / "catalog-bundle.json").read_text(encoding="utf-8")
     assert str(tmp_path) not in manifest_text
     assert bundle.provenance == {
@@ -88,17 +93,12 @@ def test_catalog_bundle_manifest_changes_with_meaningful_auxiliary_input(
 ) -> None:
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
-    auxiliary = input_dir / "SCB" / "Tabelldefinitioner.sql"
-    auxiliary.write_text(
-        "CREATE TABLE [dbo].[First]([A] [int] NULL) ON [PRIMARY]\nGO\n",
-        encoding="utf-8",
-    )
+    auxiliary = input_dir / _SWECOV_COLUMNS
+    auxiliary.parent.mkdir(parents=True)
+    auxiliary.write_bytes(_swecov_columns("First"))
     first = write_input_bundle(tmp_path / "accepted-a", input_dir)
 
-    auxiliary.write_text(
-        "CREATE TABLE [dbo].[Second]([A] [int] NULL) ON [PRIMARY]\nGO\n",
-        encoding="utf-8",
-    )
+    auxiliary.write_bytes(_swecov_columns("Second"))
     second = write_input_bundle(tmp_path / "accepted-b", input_dir)
 
     assert first.manifest_sha256 != second.manifest_sha256
@@ -151,7 +151,7 @@ def test_catalog_bundle_carries_classification_books_but_no_curation_or_naming(
 
 @pytest.mark.parametrize(
     "introduced_relative",
-    ("SCB/Tabelldefinitioner.sql", "Socialstyrelsen/introduced.xlsx"),
+    ("swecov/derived/swecov_column_types.csv", "Socialstyrelsen/introduced.xlsx"),
 )
 def test_catalog_bundle_preparation_rejects_new_source_membership(
     tmp_path: Path,
@@ -343,8 +343,11 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
 @pytest.mark.parametrize(
     ("relative", "payload", "expected_exception"),
     (
-        ("SCB/ID-kolumner.xlsx", b"not a zip", BadZipFile),
-        ("SCB/Tabelldefinitioner.sql", b"\x81", ScbReferenceSourceError),
+        (
+            "swecov/derived/swecov_column_types.csv",
+            b"bad,header\n",
+            SwecovColumnTypesError,
+        ),
     ),
 )
 def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(

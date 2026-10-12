@@ -18,7 +18,7 @@ from _csv_fixtures import (
 from _lisa_fixtures import write_lisa_workbook
 from _prepared_fixtures import accept_prepared, record_file_opens
 from _sos_fixtures import write_sos_input
-from openpyxl import Workbook, load_workbook
+from openpyxl import load_workbook
 from reg_meta_build.cli import run
 from reg_meta_build.errors import EXIT_CONFIG, EXIT_USAGE
 from reg_meta_build.input_snapshot import (
@@ -73,17 +73,6 @@ def _selection(
         (canonical / "sample-codes.csv").write_text(
             "code,label\n001,First\n001,First\n002,Other\n"
         )
-        (source / "SCB/Tabelldefinitioner.sql").write_text(
-            "CREATE TABLE [dbo].[Example](\n[A] [int] NULL\n) ON [PRIMARY]\nGO\n"
-        )
-        identifiers = Workbook()
-        sheet = identifiers.active
-        assert sheet is not None
-        sheet.title = "Blad1"
-        sheet.append(["Tabell", "ID-kolumn", "Beskrivning"])
-        sheet.append(["Example", "A", "Declared identifier"])
-        identifiers.save(source / "SCB/ID-kolumner.xlsx")
-        identifiers.close()
     return write_input_bundle(tmp_path / "accepted", source, lisa_workbook=lisa)
 
 
@@ -182,8 +171,6 @@ def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> Non
         "scb_events",
         "scb_values",
         "scb_validity",
-        "column_types",
-        "join_keys",
         "sos_workbook",
         "lisa_workbook",
         "thin_provider",
@@ -257,8 +244,6 @@ def test_all_selected_source_roles_and_evidence_roundtrip(tmp_path: Path) -> Non
     }
     assert {item.declaration.kind for item in evidence if item.kind == "reference"} >= {
         "event",
-        "column_type",
-        "join_key",
     }
     code_source = next(
         value

@@ -66,11 +66,7 @@ from reg_meta_build.sources.scb_records import (
     ScbInterpretationIssue,
     iter_scb_observations,
 )
-from reg_meta_build.sources.scb_reference_records import (
-    read_scb_column_types,
-    read_scb_events,
-    read_scb_join_keys,
-)
+from reg_meta_build.sources.scb_reference_records import read_scb_events
 from reg_meta_build.sources.scb_values import CleanedScbValues, clean_scb_values
 from reg_meta_build.sources.sos import parse_register_file
 from reg_meta_build.sources.sos_records import clean_sos_source
@@ -124,9 +120,7 @@ type InputRole = Literal[
     "scb_events",
     "scb_values",
     "scb_validity",
-    "column_types",
     "swecov_column_types",
-    "join_keys",
     "sos_workbook",
     "lisa_workbook",
     "thin_provider",
@@ -372,12 +366,8 @@ def _role(path: str, *, origin: str) -> InputRole:
             return roles[path]
     elif path in _THIN:
         return "thin_provider"
-    elif path == "catalog/SCB/Tabelldefinitioner.sql":
-        return "column_types"
     elif path == SWECOV_COLUMN_TYPES_PATH:
         return "swecov_column_types"
-    elif path == "catalog/SCB/ID-kolumner.xlsx":
-        return "join_keys"
     elif path == LISA_BUNDLE_PATH:
         return "lisa_workbook"
     elif path.startswith("catalog/Socialstyrelsen/") and Path(path).suffix == ".xlsx":
@@ -686,18 +676,8 @@ def prepare_catalog_sources(
                             )
                     else:
                         path = bundle.root / entry.path
-                        if entry.role in {
-                            "column_types",
-                            "swecov_column_types",
-                            "join_keys",
-                        }:
-                            result = (
-                                {
-                                    "column_types": read_scb_column_types,
-                                    "swecov_column_types": read_swecov_column_types,
-                                    "join_keys": read_scb_join_keys,
-                                }[entry.role]
-                            )(path, revision)
+                        if entry.role == "swecov_column_types":
+                            result = read_swecov_column_types(path, revision)
                             references(result.declarations, revision, count)
                             tables(result.tables, count)
                         elif entry.role == "lisa_workbook":
