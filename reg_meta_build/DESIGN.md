@@ -1901,12 +1901,33 @@ Python.
 The order of build work: remove the remaining algorithmic waste (byte-identical,
 verified with `dbdiff`); resolve registers in parallel processes, merged in a fixed
 order; cache per-register resolve results by content; keep Pydantic validation at trust
-boundaries only; then re-profile, and move specific kernels into `reg-core` through
-`reg-core-py` only if object overhead still dominates. The whole-bundle resolve cache
-has shipped: `build-db --resolved-out` persists the resolve phase and `materialize-db`
-reuses it (#1397, #1399, #1400, #1403). The open items are #1423, #1424 and #1425.
+boundaries only; then re-profile. The whole-bundle resolve cache has shipped:
+`build-db --resolved-out` persists the resolve phase and `materialize-db` reuses it
+(#1397, #1399, #1400, #1403). The algorithmic-waste and revalidation passes of #1425
+have shipped too (#1493, #1507). The open items are #1423 and #1424.
+
+**Why not partial Rust kernels.** A re-profile after #1493 put per-value binding at
+about 37% of a full build and record decode at about 13%, both dominated by building
+`SourceValueAssociation` objects (about 100M per build). A kernel cannot reach that
+cost: `evidence_sha256` pins a Pydantic dump of those objects, so they must stay Python
+objects. The unpack, locator and interval work a kernel could take over is only 8–12% of
+the build.
+
 Revisit a Rust build only once the curation rules stabilize, and then stage by stage
-behind the same artifact-equality gate, never as one rewrite.
+behind the same artifact-equality gate, never as one rewrite. Its first stage:
+
+- The canonical evidence encoding (the `evidence_sha256` / `_evidence_content` contract)
+  and row-level association handling move into `reg-core`, exposed through
+  `reg-core-py`.
+- The port is proven digest-for-digest against the current Python function, or followed
+  by a one-time verified re-pin.
+- Rust then works on rows from the prepared values store (`values.sqlite`,
+  `associations.bin`) without building Python objects.
+
+Interval and date semantics already live in `reg-core` (the contract table in
+`crates/DESIGN.md`), so this adds no second implementation; that table's "Canonical JSON +
+SHA-256 (build hashes)" row, now owned by `reg_meta_build`, moves to `reg-core` at that
+stage.
 
 ## Commands
 

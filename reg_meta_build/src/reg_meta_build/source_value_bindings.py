@@ -180,33 +180,44 @@ def _unknown(reason: str) -> TemporalScope:
 
 @lru_cache(maxsize=4096)
 def _member_scope(
-    occurrence: TemporalScope,
+    bounds: tuple[tuple[int, int], ...] | None,
     supplied_window: SourceValueWindow | None,
     section_window: SourceValueWindow | None,
     alternatives: tuple[SourceValueWindow | None, ...],
     *,
     invalid_item: bool,
-) -> tuple[TemporalScope | None, str | None]:
+) -> tuple[TemporalScope | None, str | None, tuple[tuple[int, int], ...] | None]:
     # Source lists repeat the same periods across thousands of codes. Cache only
     # immutable period results; each membership retains its own source evidence.
+    # `bounds` is the occurrence's `coding_scope_bounds`, the only part of the
+    # occurrence the result depends on: plain values hash and compare far cheaper
+    # than the Pydantic scope each record carries its own copy of. The third value
+    # is the result's own `coding_scope_bounds`, derived once per cached entry.
     constraints = tuple(
         window for window in (supplied_window, section_window) if window is not None
     )
     if invalid_item:
-        return _unknown("source item validity is unknown"), "unknown_code_validity"
+        return (
+            _unknown("source item validity is unknown"),
+            "unknown_code_validity",
+            None,
+        )
     if any(
         window is None or window.status == "unknown" for window in alternatives
     ) or any(window.status == "unknown" for window in constraints):
-        return _unknown(
-            "supplied source validity is malformed or unknown"
-        ), "unknown_code_validity"
+        return (
+            _unknown("supplied source validity is malformed or unknown"),
+            "unknown_code_validity",
+            None,
+        )
     if not constraints and not alternatives:
-        return TemporalScope(kind="year_independent"), None
-    bounds = coding_scope_bounds(occurrence)
+        return TemporalScope(kind="year_independent"), None, None
     if bounds is None:
-        return _unknown(
-            "code membership requires a finite occurrence scope"
-        ), "unsupported_coding_scope"
+        return (
+            _unknown("code membership requires a finite occurrence scope"),
+            "unsupported_coding_scope",
+            None,
+        )
     # Each validity row is an alternative window. Row/section declarations are
     # independent restrictions. Clamp only to this already-established occurrence.
     effective = []
@@ -225,22 +236,24 @@ def _member_scope(
             if window.end is not None
         ]
         if starts and ends and max(starts) > min(ends):
-            return _unknown(
-                "source validity assertions have no common period"
-            ), "conflicting_code_validity"
+            return (
+                _unknown("source validity assertions have no common period"),
+                "conflicting_code_validity",
+                None,
+            )
         for start, end in bounds:
             lower, upper = max([start, *starts]), min([end, *ends])
             if lower <= upper:
                 effective.append((lower, upper))
     if not effective:
-        return None, None
+        return None, None, None
     merged: list[tuple[int, int]] = []
     for start, end in sorted(effective):
         if merged and start <= merged[-1][1] + 1:
             merged[-1] = merged[-1][0], max(merged[-1][1], end)
         else:
             merged.append((start, end))
-    return TemporalScope(
+    scope = TemporalScope(
         kind="intervals",
         intervals=tuple(
             ScopeInterval(
@@ -251,7 +264,8 @@ def _member_scope(
             )
             for start, end in merged
         ),
-    ), None
+    )
+    return scope, None, coding_scope_bounds(scope)
 
 
 class ValueBindingSession:
@@ -461,8 +475,8 @@ class ValueBindingSession:
                         ].append(association.locator)
                     groups[descriptor.payload_key].append(association)
         claims, bindings = [], []
-        outer_bounds_ready = False
-        outer_bounds = None
+        # The occurrence window every membership below is clamped to: once per bind.
+        outer_bounds = coding_scope_bounds(scope) if groups else None
         for descriptor_key, associations in sorted(groups.items()):
             descriptor = self.session.descriptor(descriptor_key)
             if descriptor.unresolved_members:
@@ -504,16 +518,18 @@ class ValueBindingSession:
                 ):
                     non_membership.append(association)
                     continue
+                # A computed property; read once per association.
+                locator = association.locator
                 validity = self.session.validity_for(
-                    item_id=association.item_id, locator=association.locator
+                    item_id=association.item_id, locator=locator
                 )
                 validity_windows = tuple(value.window for value in validity)
                 invalid_item = (
                     join.validity_target == "item"
                     and self.session.native_item_coordinate(association.item_id) is None
                 )
-                member_scope, issue = _member_scope(
-                    scope,
+                member_scope, issue, member_bounds = _member_scope(
+                    outer_bounds,
                     association.supplied_window,
                     association.section_window,
                     validity_windows,
@@ -522,10 +538,10 @@ class ValueBindingSession:
                 if (
                     declared_identifier
                     and issue == "unknown_code_validity"
-                    and association.locator not in contradictory
+                    and locator not in contradictory
                 ):
-                    bounded, bound_issue = _member_scope(
-                        scope,
+                    bounded, bound_issue, _ = _member_scope(
+                        outer_bounds,
                         association.supplied_window
                         if association.supplied_window is not None
                         and association.supplied_window.status == "known"
@@ -539,49 +555,47 @@ class ValueBindingSession:
                     )
                     if bound_issue is None:
                         member_scope = bounded
-                if association.locator in contradictory:
+                if locator in contradictory:
                     member_scope = _unknown(
                         "source list identifies conflicting members"
                     )
                 if issue:
-                    issues[issue, descriptor_key].append(association.locator)
+                    issues[issue, descriptor_key].append(locator)
                 can_use_edition_membership = (
                     join.validity_target == "item"
                     and issue is None
                     and not invalid_item
-                    and association.locator not in contradictory
+                    and locator not in contradictory
                     and validity
                     and all(
                         window is not None and window.status == "known"
                         for window in validity_windows
                     )
+                    and outer_bounds is not None
                 )
-                if can_use_edition_membership:
-                    if not outer_bounds_ready:
-                        outer_bounds = coding_scope_bounds(scope)
-                        outer_bounds_ready = True
-                    can_use_edition_membership = outer_bounds is not None
                 if can_use_edition_membership:
                     # Explicit edition membership outranks global item dates when
                     # no independent row/section restriction excludes the member.
                     # Keep the original dates and report every widened association.
-                    bounded, bound_issue = _member_scope(
-                        scope,
+                    bounded, bound_issue, bounded_bounds = _member_scope(
+                        outer_bounds,
                         association.supplied_window,
                         association.section_window,
                         (),
                         invalid_item=False,
                     )
+                    # `member_scope` is still the first lookup's result here: the
+                    # identifier and contradiction overrides exclude this branch.
                     if (
                         bound_issue is None
                         and bounded is not None
                         and (
                             member_scope is None
-                            or coding_scope_bounds(member_scope)
+                            or member_bounds
                             != (
                                 outer_bounds
                                 if bounded.kind == "year_independent"
-                                else coding_scope_bounds(bounded)
+                                else bounded_bounds
                             )
                         )
                     ):
