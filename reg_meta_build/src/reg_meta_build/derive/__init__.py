@@ -76,7 +76,8 @@ def derive_artifact(base: Path, out: Path) -> None:
     generation as `derived_from_generation_id`, keeps every other identity key and
     recomputes `generation_id`. A steward copy derives over its full global-plus-
     overlay graph; its physical holdings are left as compiled. An older base gains
-    an empty `search_pin` table and the empty-pins hash. The copy must pass
+    an empty `search_pin` table and the empty-pins hash, and a base older than 10.1
+    gains an all-NULL `classification_code.parent_code_id`. The copy must pass
     `validate_built_db` before it replaces `out` atomically.
     """
     from reg_meta_build.validate import validate_built_db
@@ -109,6 +110,17 @@ def derive_artifact(base: Path, out: Path) -> None:
             )
         with closing(sqlite3.connect(tmp)) as conn:
             conn.executescript(DERIVED_DDL + SEARCH_PIN_DDL)
+            # A pre-10.1 base has no code trees (#1297): its copy gains an all-NULL
+            # parent_code_id. ADD COLUMN cannot carry the composite same-book key;
+            # with every value NULL it constrains nothing, and validate_built_db
+            # checks same-book parents by query, not by the declared key.
+            columns = {
+                row[1] for row in conn.execute("PRAGMA table_info(classification_code)")
+            }
+            if "parent_code_id" not in columns:
+                conn.execute(
+                    "ALTER TABLE classification_code ADD COLUMN parent_code_id INTEGER"
+                )
             derive(conn)
             manifest.setdefault("search_pins_sha256", search_pins_sha256(()))
             manifest.update(
