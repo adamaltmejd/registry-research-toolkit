@@ -2011,6 +2011,15 @@ within one state. Malformed or inverted bounds, repeated columns, duplicate stat
 and unknown fields fail early. The extension cannot introduce code sets or
 classification linkage.
 
+Steward states are inserted as their `<provider>.toml` state arrays list them
+(`_insert_core_graph_from_ir`) and never pass through `merge_adjacent_states` (#1442).
+Each is an explicit state of that input, not a cut that occurrence resolution or coding
+made, and it carries no code set or classification link, so none of the cuts the merge
+exists to re-join can arise. Two day-adjacent states with identical facts are fixed
+where the TOML (or the generator that writes it) lists them, not joined by the builder.
+Revisit when the extension gains code sets or classification linkage, or a steward
+artifact ships day-adjacent states with identical facts.
+
 Steward IDs use explicit prefixed inputs to `id.mint`, including provider and native
 keys. Steward slug pins remain tracked in `fqid_slugs/<steward>/`, under the existing
 snapshot and freeze checks. Publishable builds read those pins from the clean builder

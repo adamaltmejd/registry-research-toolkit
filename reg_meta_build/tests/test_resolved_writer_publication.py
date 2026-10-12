@@ -378,6 +378,45 @@ def _certified(
     return _classified(variable.model_copy(update={"states": states}), book)
 
 
+def _adjacent_states_certified_at_their_far_ends() -> tuple[
+    tuple[ResolvedVariable, ...], dict[str, Any]
+]:
+    # Two day-adjacent halves of the certified state, identical but for their
+    # windows, each carrying the same two same-key certificates: one covers
+    # January only, the other December. A merge that takes the certificates'
+    # hull, whether it compares them reduced or whole, certifies February to
+    # November and publishes; each half must stay apart and be refused.
+    variable, book = _scoped_sentinel_variable()
+    state = variable.states[0]
+    link = state.classification_links[0]
+    conformance = link.conformance
+    assert conformance is not None
+    certificates = tuple(
+        conformance.scoped_sentinels[0].model_copy(
+            update={"valid_from": start, "valid_to": end}
+        )
+        for start, end in (("2000-01-01", "2000-01-31"), ("2000-12-01", "2000-12-31"))
+    )
+    certified = link.model_copy(
+        update={
+            "conformance": conformance.model_copy(
+                update={"scoped_sentinels": certificates}
+            )
+        }
+    )
+    halves = tuple(
+        state.model_copy(
+            update={
+                "valid_from": start,
+                "valid_to": end,
+                "classification_links": (certified,),
+            }
+        )
+        for start, end in (("2000-01-01", "2000-06-30"), ("2000-07-01", "2000-12-31"))
+    )
+    return _classified(variable.model_copy(update={"states": halves}), book)
+
+
 def _alias_window_certified_for_another_book() -> tuple[
     tuple[ResolvedVariable, ...], dict[str, Any]
 ]:
@@ -451,6 +490,12 @@ INVALID_CLASSIFIED_VARIABLES: dict[
     ),
     "scoped-sentinel-certificate-not-covering-the-state": (
         lambda: _certified({"valid_to": "2000-06-30"}),
+        _CERTIFICATE_DISAGREES,
+    ),
+    # Fails if the adjacent-state merge hulls partial certificates into one
+    # full-year certificate that certifies February through November.
+    "scoped-sentinel-certificates-not-covering-adjacent-states": (
+        _adjacent_states_certified_at_their_far_ends,
         _CERTIFICATE_DISAGREES,
     ),
     "scoped-sentinel-certificate-member-not-recorded": (

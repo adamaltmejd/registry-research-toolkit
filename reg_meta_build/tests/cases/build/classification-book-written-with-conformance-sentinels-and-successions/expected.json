@@ -308,7 +308,7 @@
           []
         ]
       ],
-      "note": "A global sentinel keeps its curated meaning; a scoped one names its certificate window and no meaning."
+      "note": "A global sentinel keeps its curated meaning; a scoped one names its certificate window and no meaning. SCOPED's two sentinel periods leave one state whose one certificate spans both (#1442)."
     },
     {
       "table": "state_codes",
@@ -498,6 +498,12 @@
           "scoped",
           "sentinel_classification_codes",
           "2020-01-01",
+          "2020-06-30"
+        ],
+        [
+          "scoped",
+          "sentinel_classification_codes",
+          "2020-07-01",
           "2020-12-31"
         ],
         [
@@ -512,7 +518,8 @@
           "2020-01-01",
           "2020-12-31"
         ]
-      ]
+      ],
+      "note": "SCOPED's warning stays one per sentinel period: conformance reports per binding segment, before the state merge joins the two periods."
     },
     {
       "table": "issues",
