@@ -1661,7 +1661,7 @@ CREATE INDEX idx_variable_state_lineage_source ON variable_state_lineage(source_
 
 CREATE TABLE variable_state_lineage_warning (
     consumer_state_id INTEGER NOT NULL REFERENCES variable_state(state_id),
-    warning_kind      TEXT    NOT NULL,    -- 'ambiguous_source_variant' (no_source_state is build-report only)
+    warning_kind      TEXT    NOT NULL,    -- 'no_source_state', 'ambiguous_source_variant'
     message           TEXT    NOT NULL,
     PRIMARY KEY (consumer_state_id, warning_kind)
 );
