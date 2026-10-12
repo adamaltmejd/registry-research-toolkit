@@ -51,7 +51,12 @@ from pydantic import (
     model_validator,
 )
 from reg_meta_build.holdings_census import census_rows
-from reg_meta_build.inventory import ColumnMapping, InventoryColumn, edition_bounds
+from reg_meta_build.inventory import (
+    ColumnMapping,
+    EditionRange,
+    InventoryColumn,
+    edition_bounds,
+)
 from reg_meta_build.swecov_policy import load_source_policy as _load_source_policy
 
 if TYPE_CHECKING:
@@ -1859,20 +1864,36 @@ def _steward_load_db(db_path: Path):
     return by_regcol
 
 
+def _overlay_edition_bounds(edition: object) -> tuple[tuple[str, str], ...]:
+    """Inclusive ISO bounds of a raw overlay edition: a year, a token, a
+    `{ from, to }` range or a list of those. Raises `ValueError` when malformed."""
+
+    def segment(value: object) -> str | EditionRange:
+        if isinstance(value, dict):
+            return EditionRange.model_validate(value)
+        return str(value)
+
+    if isinstance(edition, list):
+        return edition_bounds(tuple(segment(value) for value in edition))
+    return edition_bounds(segment(edition))
+
+
 def _inventory_period_records(
-    records: list[dict], edition: object
+    records: list[dict], edition: object, *, assess_ranges: bool = False
 ) -> tuple[list[dict], str | None]:
     """Choose already-declared owners by their complete delivery windows.
 
     A range/list is record coverage, not per-column availability; it remains
-    unassessed. Distinct owners active together in one variant stay ambiguous.
+    unassessed unless `assess_ranges` (a reviewed `[[mapping]]`, which must
+    cover its whole edition). Distinct owners active together in one variant
+    stay ambiguous.
     """
-    from reg_meta_build.inventory import _merge, edition_bounds
+    from reg_meta_build.inventory import _merge
     from reg_meta_build.inventory_coverage import _covers
 
-    if not isinstance(edition, (str, int)):
+    if not assess_ranges and not isinstance(edition, (str, int)):
         return records, None
-    bounds = edition_bounds(str(edition))
+    bounds = _overlay_edition_bounds(edition)
     grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for record in records:
         grouped[(record["coord"], record["vslug"])].append(record)
@@ -2072,12 +2093,14 @@ class InventoryMappingOverride(ColumnMapping):
     select_owner: bool = False
     table: str = Field(min_length=1)
     column: str = Field(min_length=1)
-    edition: int | str
+    # The raw `[[edition]]` shape (year, token, `{ from, to }` range or list), so
+    # the override compares equal to the table edition it is pinned to.
+    edition: int | str | dict[str, int | str] | list[int | str | dict[str, int | str]]
     reason: str = Field(min_length=1)
 
     @model_validator(mode="after")
     def _finite_edition(self) -> InventoryMappingOverride:
-        edition_bounds(str(self.edition))
+        _overlay_edition_bounds(self.edition)
         return self
 
 
@@ -2096,7 +2119,7 @@ def _inventory_mapping_records(
         and r["col"] == entry.representation
         and (not entry.select_owner or r["vslug"] == entry.variable.rsplit("/", 1)[1])
     ]
-    admitted, issue = _inventory_period_records(selected, edition)
+    admitted, issue = _inventory_period_records(selected, edition, assess_ranges=True)
     owned = [r for r in admitted if r["vslug"] == entry.variable.rsplit("/", 1)[1]]
     return owned, "stale_declared_mapping_target" if issue or not owned else None
 
