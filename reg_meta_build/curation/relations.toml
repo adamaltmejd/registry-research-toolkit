@@ -4477,7 +4477,7 @@ note = "curated:#737 senast kända uppgift om civilstånd"
 [[edge]]
 type = "same_as"
 a = "scb/fasit/utbildningsniva-aggregat-old"
-b = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
+b = "scb/lisa/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
@@ -4501,22 +4501,22 @@ b = "scb/stativ/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
+a = "scb/lisa/sun2000niva-old"
 b = "scb/rams/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
+a = "scb/lisa/sun2000niva-old"
 b = "scb/slk/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
+a = "scb/lisa/sun2000niva-old"
 b = "scb/sls/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]
 type = "same_as"
-a = "scb/lisa/utbildningsniva-aggregat-old-sun2000"
+a = "scb/lisa/sun2000niva-old"
 b = "scb/stativ/sun2000niva-old"
 note = "curated:#737 utbildningsnivå (aggregat old)"
 [[edge]]

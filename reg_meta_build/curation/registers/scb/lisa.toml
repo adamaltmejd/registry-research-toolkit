@@ -1891,11 +1891,11 @@ slug = "utbildningsniva-aggregat-old"
 
 [[variable]]
 native_id = "34.774.utbildningsniva-aggregat-old-sun2000"
-slug = "utbildningsniva-aggregat-old-sun2000"
+slug = "sun2000niva-old"
 
 [[variable]]
 native_id = "34.774.utbildningsniva-aggregat-old-sun2020"
-slug = "utbildningsniva-aggregat-old-sun2020"
+slug = "sun2020niva-old"
 
 # Y-319: qualified SUN2020 grouping detail; the native fallback stays.
 [[variable]]
