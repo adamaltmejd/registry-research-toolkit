@@ -165,8 +165,8 @@
         "valid_from": "1968-01-01",
         "valid_to": "1968-12-31"
       },
-      "kind": "no_source_state",
-      "message": "no source state for 1968"
+      "kind": "ambiguous_source_variant",
+      "message": "several source variants cover 1968"
     }
   ]
 }

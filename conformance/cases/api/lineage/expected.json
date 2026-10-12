@@ -34,8 +34,8 @@
     "status": 200,
     "json": {
       "/data/edges": [],
-      "/data/warnings/*/warning_kind": ["no_source_state"],
-      "/data/warnings/*/message": ["No source state covers 2010."]
+      "/data/warnings/*/warning_kind": ["ambiguous_source_variant"],
+      "/data/warnings/*/message": ["Several source variants cover 2010."]
     }
   },
   {

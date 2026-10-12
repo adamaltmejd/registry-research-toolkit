@@ -122,8 +122,8 @@ describe("LineageDetails — warnings (the read's failure domain)", () => {
         warnings: [
           {
             consumer_state_id: "1",
-            warning_kind: "no_source_state",
-            message: "No source state covers 2015.",
+            warning_kind: "ambiguous_source_variant",
+            message: "Several source variants cover 2015.",
           },
         ],
       }),
@@ -135,7 +135,7 @@ describe("LineageDetails — warnings (the read's failure domain)", () => {
       .element(page.getByRole("heading", { name: "Lineage warnings" }))
       .toBeVisible();
     await expect
-      .element(page.getByText("No source state covers 2015."))
+      .element(page.getByText("Several source variants cover 2015."))
       .toBeVisible();
   });
 

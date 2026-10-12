@@ -868,10 +868,7 @@ export interface components {
             valid_from: string;
             valid_to: string;
         };
-        /**
-         * @description A build-time warning on one of the variable's states: `no_source_state` or
-         *     `ambiguous_source_variant`.
-         */
+        /** @description A build-time warning on one of the variable's states: `ambiguous_source_variant`. */
         LineageWarning: {
             consumer_state_id: string;
             message: string;
