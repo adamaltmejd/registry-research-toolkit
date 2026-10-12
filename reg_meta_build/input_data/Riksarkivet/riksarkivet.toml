@@ -722,3 +722,89 @@ name = "Mönstringsförrättarkod"
 column = "MFKD"
 definition = "Mönstringsförrättarkod"
 data_type = "text"
+
+# Errata from SWECOV's RA_Insark delivery (#1302): delivered fields that the
+# krigsarkivet codebook omits. Meanings come from Riksarkivet's scanned field
+# documentation "Insarkvariabler-fullst.pdf"; columns are the delivered headers.
+[[register.variable]]
+name = "Råpoäng inskrivningsprov, delprov 1"
+column = "RPG1"
+definition = "Råpoäng på inskrivningsprovets första delprov."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Råpoäng inskrivningsprov, delprov 2"
+column = "RPG2"
+definition = "Råpoäng på inskrivningsprovets andra delprov."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Råpoäng inskrivningsprov, delprov 3"
+column = "RPG3"
+definition = "Råpoäng på inskrivningsprovets tredje delprov."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Råpoäng inskrivningsprov, delprov 4"
+column = "RPG4"
+definition = "Råpoäng på inskrivningsprovets fjärde delprov."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Standardpoäng inskrivningsprov, delprov 1"
+column = "STP1"
+definition = "Standardpoäng (skala 1–9) på inskrivningsprovets första delprov."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Standardpoäng inskrivningsprov, delprov 2"
+column = "STP2"
+definition = "Standardpoäng (skala 1–9) på inskrivningsprovets andra delprov."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Standardpoäng inskrivningsprov, delprov 3"
+column = "STP3"
+definition = "Standardpoäng (skala 1–9) på inskrivningsprovets tredje delprov."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Standardpoäng inskrivningsprov, delprov 4"
+column = "STP4"
+definition = "Standardpoäng (skala 1–9) på inskrivningsprovets fjärde delprov."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Befälslämplighet"
+column = "BEFL"
+definition = "Bedömd lämplighet för befälsutbildning."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Provgrupp"
+column = "PGRP"
+definition = "Grupp för allmän begåvning enligt inskrivningsprovet."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Psykisk funktionsförmåga"
+column = "PF"
+definition = "Skattad psykisk funktionsförmåga (dokumentationens kod PSYF)."
+data_type = "text"
+is_sensitive = true
+
+[[register.variable]]
+name = "Prövningsomgång"
+column = "OMGG"
+definition = "Omgång för prövningen (motsvarar omgångssiffran i INST)."
+data_type = "text"

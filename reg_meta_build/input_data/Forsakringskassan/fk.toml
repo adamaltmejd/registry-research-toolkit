@@ -31,8 +31,12 @@
 # name AS PUBLISHED in the förteckning (case preserved, e.g. `Lopnr`, `Ar_manad`,
 # `Manadsbelopp_ASL_fs`); a parenthetical field ("Diagnoskod (den vuxnas)") is
 # given a clean unique token (`Diagnoskod_vuxen`) with the full name kept in
-# `name`. For the 16 thin registers the `column` is a clean ASCII token derived
-# from the documented benefit field name (same situation as FOHM). The variable
+# `name`. For the 16 thin registers the `column` is the field name FK delivers,
+# as listed per table in SWECOV's FK order workbook ("SWECOV FK data 2025.xlsx":
+# the lev4 table where SWECOV holds one, else the latest lev3/lev2 table), #1302.
+# The pseudonymised person key stays `personnummer`: its delivered column is the
+# P1105 löpnummer, mapped by the steward overlay. Variable slugs are pinned in
+# each register's committed auto.toml, so the column rename kept them. The variable
 # auto-slug folds each column (underscores→hyphens, lowercased), so panel-key
 # refs use the hyphenated/lowercased form (e.g. `Del_from_datum` → `del-from-datum`).
 #
@@ -1831,13 +1835,17 @@ definition = "Klartext av skattad sysselsättning vid sjukfallets start"
 data_type = "text"
 
 # Diagnosis-CODE columns below are linked to the catalog ICD-10-SE classification. The pre-1997 tail is ICD-9 — the code system follows the data year, so the link tags the modern bulk; klartext (name) fields stay unlinked.
+# Delfall 4-1 also carries the four case-start diagnosis fields. MiDAS's Delfall 4-1
+# product has none, but SWECOV's FK order ("SWECOV FK data 2025.xlsx", table
+# FK_DELFALL4_1_SJP) lists DIAGNOS, DIAGNOS_KOD and the Fullstandig_* pair: FK joins
+# the diagnosis at the start of the case onto each sub-case (#1302).
 [[register.variable]]
 name = "Diagnos_kod"
 column = "Diagnos_kod"
 definition = "Kod för huvuddiagnos enligt ICD-10 vid sjukfallets start, treställig nivå"
 data_type = "text"
 is_sensitive = true
-variants = ["fall-1"]
+variants = ["fall-1", "delfall-4-1"]
 classification = "ICD-10-SE"
 
 [[register.variable]]
@@ -1846,7 +1854,7 @@ column = "Diagnos"
 definition = "Klartext för huvuddiagnos enligt ICD-10 vid sjukfallets start, treställig nivå"
 data_type = "text"
 is_sensitive = true
-variants = ["fall-1"]
+variants = ["fall-1", "delfall-4-1"]
 
 [[register.variable]]
 name = "Diagnos_kod_fullstandig"
@@ -1854,7 +1862,7 @@ column = "Diagnos_kod_fullstandig"
 definition = "Kod för huvuddiagnos enligt ICD-10 vid sjukfallets start, finaste nivå"
 data_type = "text"
 is_sensitive = true
-variants = ["fall-1"]
+variants = ["fall-1", "delfall-4-1"]
 classification = "ICD-10-SE"
 
 [[register.variable]]
@@ -1863,7 +1871,7 @@ column = "Diagnos_fullstandig"
 definition = "Klartext för huvuddiagnos enligt ICD-10 vid sjukfallets start, finaste nivå"
 data_type = "text"
 is_sensitive = true
-variants = ["fall-1"]
+variants = ["fall-1", "delfall-4-1"]
 
 [[register.variable]]
 name = "Sjp"
@@ -3708,6 +3716,9 @@ is_identifier = true
 is_sensitive = true
 variants = ["beslut", "utbetalningar-manad", "beslut-bidragsskyldig", "inbetalningar"]
 
+# utbetalningar-barn is per-child payment rows; SWECOV's FK_UHS_lev4 delivery of it
+# carries the child key beside the recipient key (Bilaga 1 Variabellista: "Löpnummer
+# barn"), #1302.
 [[register.variable]]
 name = "LOPNR_BARN"
 column = "LOPNR_BARN"
@@ -3715,7 +3726,7 @@ definition = "Individspecifikt löpnummer för barn"
 data_type = "text"
 is_identifier = true
 is_sensitive = true
-variants = ["beslut", "utbetalningar-manad", "beslut-bidragsskyldig", "inbetalningar"]
+variants = ["utbetalningar-barn", "beslut", "utbetalningar-manad", "beslut-bidragsskyldig", "inbetalningar"]
 
 [[register.variable]]
 name = "ARENDE_STATUS"
@@ -3910,19 +3921,19 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "UTTAGET_MANAD"
 definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
 data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "FROM_DATUM"
 definition = "Första dagen i den period utbetalningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "TOM_DATUM"
 definition = "Sista dagen i den period utbetalningen avser."
 data_type = "date"
 
@@ -3952,7 +3963,7 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "Utb_manad"
 definition = "Den månad (ÅÅÅÅMM) barnbidraget betalades ut."
 data_type = "text"
 
@@ -3981,15 +3992,20 @@ data_type = "text"
 is_identifier = true
 is_sensitive = true
 
+# lev3 delivered a medsökande marker (`medsok`); lev4 delivers the co-applicant
+# as a pseudonymised person key (P1105_LopNr_Medsokande_PersonNr). One concept,
+# now identified by the key (#1302, F5).
 [[register.variable]]
 name = "Medsökande"
-column = "medsokande"
-definition = "Uppgift om medsökande i hushållet ingår i bidraget."
-data_type = "text"  # DERIVED definition (lev3 `medsok`); no published FK field definition
+column = "Medsokande_PersonNr"
+definition = "Person- eller samordningsnummer för medsökande i hushållet (levereras pseudonymiserat som löpnummer)."
+data_type = "text"  # DERIVED definition; no published FK field definition
+is_identifier = true
+is_sensitive = true
 
 [[register.variable]]
 name = "Tilläggsbidrag"
-column = "tillaggsbidrag"
+column = "BELOPP_TILLAGGSBIDRAG"
 definition = "Tilläggsbidrag (för barn) som ingår i bostadsbidraget."
 data_type = "decimal"  # DERIVED definition (lev3 `tillaggsbidrag`)
 
@@ -4001,13 +4017,13 @@ data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "UTBETALNINGSPERIOD_FROMDAT"
 definition = "Första dagen i den period bidraget avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "UTBETALNINGSPERIOD_TOMDAT"
 definition = "Sista dagen i den period bidraget avser."
 data_type = "date"
 
@@ -4037,19 +4053,19 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "UTTAG_MANAD"
 definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
 data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "ERSATTNING_FROM"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "ERSATTNING_TOM"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4079,19 +4095,19 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "UTTAG_MANAD"
 definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
 data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "FROMDAT"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "TOMDAT"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4123,19 +4139,19 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "utbmanad"
 definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
 data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "Utbetalningsperiod_fromdat"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "utbetalningsperiod_tomdat"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4173,19 +4189,19 @@ data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "Utbetalningsperiod_fromdat"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "utbetalningsperiod_tomdat"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Belopp"
-column = "belopp"
+column = "utbetalt_belopp"
 definition = "Utbetalt belopp under perioden."
 data_type = "decimal"
 
@@ -4211,7 +4227,7 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "beslutsmanad"
 definition = "Den månad (ÅÅÅÅMM) ersättningen beslutades/betalades ut (lev3 `beslutsmanad`)."
 data_type = "text"
 
@@ -4253,19 +4269,19 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "UTTAG_MANAD"
 definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
 data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "ERSATTNING_FROM"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "ERSATTNING_TOM"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4295,19 +4311,19 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "UTTAG_MANAD"
 definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
 data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "ERSATTNING_FROM"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "ERSATTNING_TOM"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4430,13 +4446,13 @@ data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "Utbetalningsperiod_fromdat"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "utbetalningsperiod_tomdat"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4480,13 +4496,13 @@ data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "Utbetalningsperiod_fromdat"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "Utbetalningsperiod_tomdat"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4522,19 +4538,19 @@ data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "Utbetalningsperiod_fromdat"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "utbetalningsperiod_tomdat"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Belopp"
-column = "belopp"
+column = "utbetalt_belopp"
 definition = "Utbetalt belopp under perioden."
 data_type = "decimal"
 
@@ -4565,13 +4581,13 @@ data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "ERSATTNFROM"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "ERSATTNTOM"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4649,19 +4665,19 @@ is_sensitive = true
 
 [[register.variable]]
 name = "Utbetalningsmånad"
-column = "utbetalningsmanad"
+column = "UTTAGET_MANAD"
 definition = "Den månad (ÅÅÅÅMM) ersättningen betalades ut."
 data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "FROM_DATUM"
 definition = "Första dagen i den period ersättningen avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "TOM_DATUM"
 definition = "Sista dagen i den period ersättningen avser."
 data_type = "date"
 
@@ -4705,6 +4721,15 @@ column = "omfattning"
 definition = "Vårdbidragets omfattning (andel av heltid)."
 data_type = "decimal"
 
+# Delivered in every SWECOV vårdbidrag table (FK_VB lev2–lev4, "SWECOV FK data
+# 2025.xlsx"); FK publishes no variable description, so the definition is limited
+# to what the field name states (#1302).
+[[register.variable]]
+name = "Nivå merkostnad"
+column = "NIVA_MERKOST"
+definition = "Nivå för merkostnadsdelen av vårdbidraget. FK publicerar ingen beskrivning av fältet eller dess koder."
+data_type = "text"
+
 [[register.variable]]
 name = "Utbetalningsmånad"
 column = "utbetalningsmanad"
@@ -4713,13 +4738,13 @@ data_type = "text"
 
 [[register.variable]]
 name = "Utbetalningsperiod från och med"
-column = "utbetalningsperiod_from"
+column = "Utbetalningsperiod_fromdat"
 definition = "Första dagen i den period bidraget avser."
 data_type = "date"
 
 [[register.variable]]
 name = "Utbetalningsperiod till och med"
-column = "utbetalningsperiod_tom"
+column = "Utbetalningsperiod_tomdat"
 definition = "Sista dagen i den period bidraget avser."
 data_type = "date"
 
