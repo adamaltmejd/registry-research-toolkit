@@ -26362,35 +26362,6 @@ table = "Partner_2024"
 column = "HushallsStallning"
 reason = "Known shared field retained physically in auxiliary holding Partner_2024: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2024-12-31 is already catalog-orderable from HushallPerson_2024/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
 
-# ── DECIDED (maintainer 2026-10-12, #1533): interim unmaps. The #1514/#1515 errata
-# windows miss these editions (school-year editions vs calendar-year windows; CIS2012
-# also holds emp2012). Remove once the corrected errata are in a global build.
-
-[[unmap]]
-table = "CIS2012"
-column = "emp2012"
-reason = "Errata window for scb/innovation-foretag emp2012 does not yet cover the 2012 edition; unorderable until the corrected errata ship (#1533)."
-
-[[unmap]]
-table = "GymnasieskolaAvg_Individ_1997"
-column = "utbildning"
-reason = "Errata window for scb/gymnasieskola-betyg/slutbetyg utbildning starts 1997 and misses school year LA1996; unorderable until the corrected errata ship (#1533)."
-
-[[unmap]]
-table = "GymnasieskolaAvg_Kurs_1997"
-column = "Kurskod_omkodad"
-reason = "Errata window for scb/gymnasieskola-betyg/kursbetyg kurskod-omkodad starts 1997 and misses school year LA1996; unorderable until the corrected errata ship (#1533)."
-
-[[unmap]]
-table = "LReg_1998"
-column = "REKTOR"
-reason = "Errata window for scb/lararreg/tjansteregistret rektor ends 1998 and misses school year LA1998; unorderable until the corrected errata ship (#1533)."
-
-[[unmap]]
-table = "LReg_2012"
-column = "P1105_LopNr_RoKod"
-reason = "Errata window for scb/lararreg/tjansteregistret rektorsomrade ends 2012 and misses school year LA2012; unorderable until the corrected errata ship (#1533)."
-
 # ── DECIDED (maintainer 2026-10-12, #1302 post-B-G follow-up): Grund_Fkl_Fth
 # fritidshem assign, Hreg label companions, catalog-errata maps from #1512/#1514
 # (present in reg_meta 0.48.0), and NVR care-giver name maps (#1512 errata
