@@ -16,6 +16,6 @@ column = "VALUE"
 periods = [["2020-01-01", "2020-12-31"]]
 keep = "keep"
 over = ["other"]
-source_authority = { revision = {{revision key=member:2902}}, locators = {{locators key=member:2800}}, records = {{expected_records key=member:2800}}, codings = {{source_codings key=member:2800}}, raw_codings = {{raw_codings key=member:2800}} }
+source_authority = { records = {{expected_records key=member:2800}}, codings = {{source_codings key=member:2800}}, raw_codings = {{raw_codings key=member:2800}} }
 reason = "Reviewed coding"
 source = "fixture"

@@ -1,0 +1,21 @@
+{
+  "status": "complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "variable_name_over_search_cap"
+      },
+      "fields": [
+        "severity",
+        "subject"
+      ],
+      "rows": [
+        [
+          "warning",
+          "scb/sample/overcap"
+        ]
+      ]
+    }
+  ]
+}

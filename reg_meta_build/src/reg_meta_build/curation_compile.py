@@ -115,6 +115,7 @@ from .source_curation import (
     documented_labels_match,
     evaluate_cases,
     evaluate_source_expectations,
+    toml_inline,
 )
 from .source_effects import apply_occurrence_cases, record_ref
 from .source_evidence import canonical_sha256, evidence_sha256
@@ -4969,7 +4970,6 @@ def compile_coding_register(
                     )
                 continue
             column = next(iter(matches))
-            records = columns[column]
             claims = coding.get(column, ())
             for period_index, (start, end) in enumerate(periods, 1):
                 case_id = f"{ref}/period/{period_index}"
@@ -5126,16 +5126,6 @@ def compile_coding_register(
                                 or any(claim.scope != source_scope for claim in claims)
                             )
                         )
-                        or {
-                            locator
-                            for record in authority_records
-                            for locator in record.locators
-                        }
-                        != set(authority.locators)
-                        or any(
-                            record.source_revision_id != authority.revision.revision_id
-                            for record in records
-                        )
                         or (
                             authority.raw_codings is not None
                             # Distinct claims, compared as sets on both sides.
@@ -5174,9 +5164,32 @@ def compile_coding_register(
                             )
                         )
                     ):
+                        # The curator's re-pin source: the authority as this build
+                        # derives it, reviewed parts (enumeration, labels, witness,
+                        # scope) kept as authored.
+                        current = authority.model_copy(
+                            update={
+                                "records": list(expected),
+                                "codings": list(copied_coding_fingerprints(claims)),
+                                "raw_codings": None
+                                if authority.raw_codings is None
+                                else sorted(set(tokens_of(column))),
+                                "marker_bindings": None
+                                if authority.marker_bindings is None
+                                or value_bindings is None
+                                else list(
+                                    marker_binding_fingerprints(
+                                        value_bindings.get(column, ()), start, end
+                                    )
+                                    or ()
+                                ),
+                            }
+                        )
                         status, detail = (
                             "stale",
-                            "exact source-row coding authority changed",
+                            "exact source-row coding authority changed. Current pins: "
+                            "source_authority = "
+                            + toml_inline(current.model_dump(mode="json")),
                         )
                 if not used:
                     status, detail = "stale", "period has no column occurrence"
@@ -5312,10 +5325,11 @@ def compile_coding_register(
                             data_warning=getattr(entry, "data_warning", None),
                             reason=entry.reason,
                             provenance=(
+                                # The rows of the delivery this build read: the
+                                # authority pins their content, not their position.
                                 f"{entry.source}\nSource rows: "
-                                f"{entry.source_authority.revision.artifact_path}\n"
-                                f"SHA256: {entry.source_authority.revision.artifact_sha256}\n"
-                                f"Rows: {', '.join(locator.physical_table + ':' + locator.physical_record for locator in entry.source_authority.locators)}"
+                                f"{', '.join(sorted({record.source_revision_id for record in originals_of(column)[1]}))}\n"
+                                f"Rows: {', '.join(locator.physical_table + ':' + locator.physical_record for record in originals_of(column)[1] for locator in record.locators)}"
                                 if isinstance(
                                     entry,
                                     (

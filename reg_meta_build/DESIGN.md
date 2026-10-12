@@ -721,9 +721,11 @@ row order, which places a row under its section. A new delivery or a row re-sort
 therefore stales only the entries whose own records or lists changed. A code-list claim
 id names its list's dataset rather than its revision, so an `expected_diagnostic_sha256`
 over a coding diagnostic, whose detail lists claim ids, also survives an unrelated
-delivery. Explicit pins stay explicit: a coding `source_authority` still names its
-source revision and physical row locators, and a `[[coding.support]]` association or a
-documentary row names its physical row.
+delivery. A coding `source_authority` pins content the same way: its original members'
+captured facts and the coding fingerprints, with no delivery revision or row locator, so
+a re-snapshot leaves it fresh (#1436). A stale authority prints the build's current
+`source_authority` as its re-pin source. A `[[coding.support]]` association or a
+documentary row still names its physical row.
 
 Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision is
 window-grained. The compiler checks each window against that column's complete source
@@ -1054,9 +1056,9 @@ owner, variant, physical column and finite occurrence window when source coding 
 establish membership. Its document URL, SHA256 and page references are tracked
 provenance; the build never fetches that document. An alternative authority is the exact
 prepared workbook rows themselves, when their prose supplies the meanings of already
-supplied finite code tokens. This form pins the source revision, physical locators,
-complete original fields, scopes, parent facts and all coding fingerprints. Changed,
-missing or new rows and changed incomplete lists invalidate compilation and application.
+supplied finite code tokens. This form pins the complete original fields, scopes and
+parent facts of each semantic member and all coding fingerprints. Changed, missing or
+new rows and changed incomplete lists invalidate compilation and application.
 
 The same finite authority can certify an already complete own source domain when code
 labels establish a reviewed role. Exact raw and copied fingerprints, complete original
@@ -1501,6 +1503,11 @@ forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CO
 curator identity rationale; maintainer decision, #1296) never reach `data_warning`, and
 `validate_built_db` refuses an artifact that holds one or whose row does not hash to its
 `warning_id`.
+
+A written variable whose name is longer than the reader's 200-character search query cap
+is a `variable_name_over_search_cap` warning issue in the report ledger, never a refusal
+and never a catalog `data_warning` (#1261): the server cannot find it by exact name
+until its name is curated shorter.
 
 ## Strict and diagnostic builds
 

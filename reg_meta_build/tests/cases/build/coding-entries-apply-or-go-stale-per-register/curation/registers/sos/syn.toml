@@ -24,7 +24,7 @@ periods = [["2019-01-01", "2019-12-31"]]
 list = ""
 list_members = [["01", "Label"]]
 witness = ["2020-01-01", "2020-12-31"]
-source_authority = { revision = {{revision source=Socialstyrelsen/ member=SHORT}}, locators = {{locators source=Socialstyrelsen/ member=SHORT}}, records = {{expected_records source=Socialstyrelsen/ member=SHORT}}, codings = {{source_codings source=Socialstyrelsen/ member=SHORT}}, raw_codings = {{raw_codings source=Socialstyrelsen/ member=SHORT}} }
+source_authority = { records = {{expected_records source=Socialstyrelsen/ member=SHORT}}, codings = {{source_codings source=Socialstyrelsen/ member=SHORT}}, raw_codings = {{raw_codings source=Socialstyrelsen/ member=SHORT}} }
 reason = "Reviewed coding"
 source = "fixture"
 
@@ -36,7 +36,7 @@ periods = [["2019-01-01", "2019-12-31"]]
 list = ""
 list_members = [["01", "Label"]]
 witness = ["2020-01-01", "2021-12-31"]
-source_authority = { revision = {{revision source=Socialstyrelsen/ member=VARY}}, locators = {{locators source=Socialstyrelsen/ member=VARY}}, records = {{expected_records source=Socialstyrelsen/ member=VARY}}, codings = {{source_codings source=Socialstyrelsen/ member=VARY}}, raw_codings = {{raw_codings source=Socialstyrelsen/ member=VARY}} }
+source_authority = { records = {{expected_records source=Socialstyrelsen/ member=VARY}}, codings = {{source_codings source=Socialstyrelsen/ member=VARY}}, raw_codings = {{raw_codings source=Socialstyrelsen/ member=VARY}} }
 reason = "Reviewed coding"
 source = "fixture"
 

@@ -1,0 +1,39 @@
+{
+  "note": "A strict build over register 1 (a register list keeps a strict build from needing a clean checkout) of two variables whose delivered names sit at the reader's 200-character search cap (ATCAP, 200) and one past it (OVERCAP, 201). The longer one is reported as a build warning; neither is refused.",
+  "fails_if": "the over-cap check stops reporting a name longer than SEARCH_QUERY_MAX_CHARS (OVERCAP gets no `variable_name_over_search_cap` warning), counts the cap itself as over (ATCAP warns too), or reports it as an error, so the strict build stops completing",
+  "registers": ["1"],
+  "diagnostic": false,
+  "sources": {
+    "description": "Variable 5 delivers ATCAP and variable 6 OVERCAP in edition 99 (2020); their names are 200 and 201 characters.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "ATCAP",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "varname": "Utlandsvistelse — Har du tillbringat minst två sammanhängande veckor utomlands xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        {
+          "colname": "OVERCAP",
+          "cvid": 21,
+          "var_id": 6,
+          "year": "2020",
+          "regver_id": 99,
+          "register": [
+            "TESTREG",
+            1,
+            2
+          ],
+          "varname": "Utlandsvistelse — Har du tillbringat minst två sammanhängande veckor utomlands yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+        }
+      ]
+    }
+  }
+}
