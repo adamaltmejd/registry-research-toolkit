@@ -2956,11 +2956,6 @@ column = "P1105_Lopnr_PeOrgnr"
 edition = { from = 2013, to = 2024 }
 reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
 
-[[unmap]]
-table = "FHM_NVR_Barn"
-column = "P1105_LopNr_care_giver_name"
-reason = "Pseudonymised care-giver name; the care-giver organisation-number lopnr carries fohm/nvr/vardgivare for this table (#1293)."
-
 [[mapping]]
 register_variant = "fohm/nvr/_default"
 variable = "fohm/nvr/personnr"
@@ -3005,11 +3000,6 @@ table = "FHM_NVR_Covid_20240422"
 column = "P1105_Lopnr_PeOrgnr"
 edition = { from = "2020-12", to = "2024-04" }
 reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
-
-[[unmap]]
-table = "FHM_NVR_Covid_20240422"
-column = "P1105_LopNr_care_giver_name"
-reason = "Pseudonymised care-giver name; the care-giver organisation-number lopnr carries fohm/nvr/vardgivare for this table (#1293)."
 
 # ── DECIDED (maintainer 2026-09-02): UHT access tier — keep UHT_Lev2 for the
 # overlapping years; plain UHT stays the sole holdings for 2004-2012 and
@@ -26400,3 +26390,195 @@ reason = "Errata window for scb/lararreg/tjansteregistret rektor ends 1998 and m
 table = "LReg_2012"
 column = "P1105_LopNr_RoKod"
 reason = "Errata window for scb/lararreg/tjansteregistret rektorsomrade ends 2012 and misses school year LA2012; unorderable until the corrected errata ship (#1533)."
+
+# ── DECIDED (maintainer 2026-10-12, #1302 post-B-G follow-up): Grund_Fkl_Fth
+# fritidshem assign, Hreg label companions, catalog-errata maps from #1512/#1514
+# (present in reg_meta 0.48.0), and NVR care-giver name maps (#1512 errata
+# variable fohm/nvr/care-giver-name supersedes the #1293 unmaps).
+#
+# NVR: the two #1293 P1105_LopNr_care_giver_name unmaps (FHM_NVR_Barn,
+# FHM_NVR_Covid_20240422) are removed; the column maps by name to
+# fohm/nvr/care-giver-name, whose state covers both editions. The barnvaccin/covid
+# partitions keep the shared cell one-to-one.
+
+# Grund_Fkl_Fth combines grundskola, förskoleklass and fritidshem pupils; its
+# fritidshem unit keys (AVDFTH, SkolKodFTH, Skolenhetskodfth) are catalogued only in
+# scb/fritidshem/grundskola, whose states are the 15 October snapshots the
+# [[edition]] entries above already carry. Both variants are listed so the
+# grundskola-elever mappings stay; the keys map by name.
+
+[[assign]]
+table = "Grund_Fkl_Fth_2008"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2009"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2010"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2011"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2012"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2013"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2014"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2015"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2016"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2017"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2018"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2019"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2020"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2021"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2022"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2023"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+[[assign]]
+table = "Grund_Fkl_Fth_2024"
+register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+
+# Hreg text-label companions of mapped code columns (round 4 rule).
+
+[[unmap]]
+table = "Hreg_Examina_1990_2022"
+column = "inrnamn"
+reason = "Plain-text label of the code column inr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 4)."
+
+[[unmap]]
+table = "Hreg_Examina_1990_2022"
+column = "tmgrpnamn"
+reason = "Plain-text label of the code column tmgrp in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 4)."
+
+[[unmap]]
+table = "Hreg_Examina_2022_2024"
+column = "inrnamn"
+reason = "Plain-text label of the code column inr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 4)."
+
+[[unmap]]
+table = "Hreg_Examina_2022_2024"
+column = "tmgrpnamn"
+reason = "Plain-text label of the code column tmgrp in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 4)."
+
+# SCB delivery spellings of own-register variables added or confirmed by the
+# #1514 errata; each state covers the table edition in reg_meta 0.48.0.
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/stratum"
+representation = "Stratum"
+table = "FTG_FOU_2019"
+column = "STRAT"
+edition = 2019
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fou/stratum (delivery column Stratum); catalog errata #1514, maintainer-decided 2026-10-12 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/stratum"
+representation = "Stratum"
+table = "FTG_FOU_2021"
+column = "STRAT"
+edition = 2021
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fou/stratum (delivery column Stratum); catalog errata #1514, maintainer-decided 2026-10-12 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/branschgrupp"
+representation = "b-grupp"
+table = "FTG_FOU_2015"
+column = "BGrupp"
+edition = 2015
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fou/branschgrupp (delivery column b-grupp); catalog errata #1514, maintainer-decided 2026-10-12 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/branschgrupp"
+representation = "b-grupp"
+table = "FTG_FOU_2017"
+column = "BGrupp"
+edition = 2017
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fou/branschgrupp (delivery column b-grupp); catalog errata #1514, maintainer-decided 2026-10-12 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fdb/arbetsstalleenheter"
+variable = "scb/fdb/regdatktid"
+representation = "regdatktid"
+table = "FDB_AE_2023"
+column = "AdmStatStartDatKtid"
+edition = 2023
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fdb/regdatktid (delivery column regdatktid); catalog errata #1514, maintainer-decided 2026-10-12 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fdb/arbetsstalleenheter"
+variable = "scb/fdb/regdatktid"
+representation = "regdatktid"
+table = "FDB_AE_2024"
+column = "AdmStatStartDatKtid"
+edition = 2024
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fdb/regdatktid (delivery column regdatktid); catalog errata #1514, maintainer-decided 2026-10-12 (#1302)."
+
+# FK columns whose variant gained the variable in the #1512 errata.
+
+[[mapping]]
+register_variant = "fk/underhallsstod/utbetalningar-barn"
+variable = "fk/underhallsstod/lopnr-barn"
+representation = "LOPNR_BARN"
+table = "FK_UHS_lev4"
+column = "P1105_LopNr_Barn_PersonNr"
+edition = { from = 2018, to = 2025 }
+reason = "FK delivery spelling of the own-register catalog variable fk/underhallsstod/lopnr-barn (delivery column LOPNR_BARN); catalog errata #1512, maintainer-decided 2026-10-12 (#1302)."
+
+[[mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/diagnos-kod-fullstandig"
+representation = "Diagnos_kod_fullstandig"
+table = "FK_DELFALL4_1_SJP_lev4"
+column = "Fullstandig_DIAGNOS_KOD"
+edition = { from = 2012, to = 2025 }
+reason = "FK delivery spelling of the own-register catalog variable fk/sjukpenning/diagnos-kod-fullstandig (delivery column Diagnos_kod_fullstandig); catalog errata #1512, maintainer-decided 2026-10-12 (#1302)."
+
+[[mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/diagnos-fullstandig"
+representation = "Diagnos_fullstandig"
+table = "FK_DELFALL4_1_SJP_lev4"
+column = "Fullstandig_diagnos"
+edition = { from = 2012, to = 2025 }
+reason = "FK delivery spelling of the own-register catalog variable fk/sjukpenning/diagnos-fullstandig (delivery column Diagnos_fullstandig); catalog errata #1512, maintainer-decided 2026-10-12 (#1302)."
