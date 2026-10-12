@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { SvelteSet } from "svelte/reactivity";
 import { type ClassificationCodeModel, getValues } from "./api";
 import { asyncResource } from "./async.svelte";
 import CodeTreeLevel from "./CodeTreeLevel.svelte";
@@ -27,9 +28,12 @@ interface Props {
   /** How many rows to reserve while loading: the parent's `child_count`. */
   expected: number | null;
   levels: Levels;
+  /** The open nodes (ref and code), kept for the panel's life so a filter
+   * round-trip reopens the tree where the reader left it. */
+  opened: SvelteSet<string>;
 }
 
-let { ref, parent, expected, levels }: Props = $props();
+let { ref, parent, expected, levels, opened }: Props = $props();
 
 // The server's ceiling, as the flat panel reads.
 const PAGE_SIZE = 200;
@@ -64,7 +68,14 @@ const resource = asyncResource(() => {
   return read;
 });
 
-let open = $state<Record<string, boolean>>({});
+const nodeKey = (code: string) => `${ref}\u0000${code}`;
+function toggle(code: string, event: Event): void {
+  if ((event.currentTarget as HTMLDetailsElement).open) {
+    opened.add(nodeKey(code));
+  } else {
+    opened.delete(nodeKey(code));
+  }
+}
 </script>
 
 {#if resource.data}
@@ -72,13 +83,13 @@ let open = $state<Record<string, boolean>>({});
     {#each resource.data as code (code.code + "\u0000" + code.label)}
       <li>
         {#if code.child_count}
-          <details bind:open={open[code.code]}>
+          <details open={opened.has(nodeKey(code.code))} ontoggle={(e) => toggle(code.code, e)}>
             <summary class="tree-row">
               <code class="code-key">{code.code}</code>
-              <span class="code-label">{code.label} <span class="child-count">({code.child_count})</span></span>
+              <span class="code-label">{code.label} <span class="child-count">({code.child_count}<span class="visually-hidden"> codes</span>)</span></span>
             </summary>
-            {#if open[code.code]}
-              <CodeTreeLevel {ref} parent={code.code} expected={code.child_count} {levels} />
+            {#if opened.has(nodeKey(code.code))}
+              <CodeTreeLevel {ref} parent={code.code} expected={code.child_count} {levels} {opened} />
             {/if}
           </details>
         {:else}
@@ -90,6 +101,9 @@ let open = $state<Record<string, boolean>>({});
       </li>
     {/each}
   </ul>
+  {#if resource.data.length === 0}
+    <p class="tree-empty" class:nested={parent !== ""}>No codes under {parent || "this classification"}.</p>
+  {/if}
 {:else if resource.error}
   <div class="tree-error" class:nested={parent !== ""} role="alert">
     <p class="error"><span aria-hidden="true">✕</span> Could not load codes: {resource.error}</p>
@@ -99,7 +113,7 @@ let open = $state<Record<string, boolean>>({});
   <div class="tree-loading" class:nested={parent !== ""} aria-busy="true">
     <span class="visually-hidden">Loading codes…</span>
     {#each { length: Math.min(expected ?? 3, MAX_RESERVED) } as _, i (i)}
-      <div class="tree-row"><Skeleton width="60%" /></div>
+      <div class="tree-row"><span class="reserve"><Skeleton width="60%" /></span></div>
     {/each}
   </div>
 {/if}
@@ -111,12 +125,12 @@ let open = $state<Record<string, boolean>>({});
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-1);
   }
   /* A level below the roots: one indent step with a hairline guide, as CodeList
      indents a levelled row. */
   .nested {
-    margin-block-start: 0.25rem;
+    margin-block-start: var(--space-1);
     margin-inline-start: calc(0.45rem + var(--space-2));
     padding-inline-start: calc(0.45rem + var(--space-2) - 1px);
     border-inline-start: 1px solid var(--border);
@@ -124,7 +138,7 @@ let open = $state<Record<string, boolean>>({});
   .tree-loading {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-1);
   }
   /* A reserved row is as tall as the code row it stands in for. */
   .tree-loading .tree-row {
@@ -132,10 +146,11 @@ let open = $state<Record<string, boolean>>({});
     min-height: 1lh;
     align-items: center;
   }
-  .tree-loading .tree-row :global(.skeleton-stack) {
+  .reserve {
     flex: 1;
   }
-  /* CodeList's row: mono code, wrapping label. The disclosure glyph takes a fixed
+  /* CodeList's row, with its spacing so the two lists read alike: mono code,
+     wrapping label. The disclosure glyph takes a fixed
      column so a leaf's code lines up under its open sibling's. */
   .tree-row {
     display: flex;
@@ -144,7 +159,7 @@ let open = $state<Record<string, boolean>>({});
     padding: 0.2rem 0;
   }
   .tree-row::before {
-    flex: 0 0 0.75rem;
+    flex: 0 0 var(--space-3);
     content: "";
     color: var(--text-muted);
   }
@@ -157,10 +172,10 @@ let open = $state<Record<string, boolean>>({});
     display: none;
   }
   summary.tree-row::before {
-    content: "▸";
+    content: "▸" / "";
   }
   details[open] > summary.tree-row::before {
-    content: "▾";
+    content: "▾" / "";
   }
   summary.tree-row:hover {
     background: var(--surface-hover);
@@ -183,6 +198,12 @@ let open = $state<Record<string, boolean>>({});
     overflow-wrap: anywhere;
   }
   .child-count {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+  .tree-empty {
+    margin: 0;
     color: var(--text-muted);
     font-size: var(--text-sm);
   }

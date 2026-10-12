@@ -1,4 +1,5 @@
 <script lang="ts">
+import { SvelteSet } from "svelte/reactivity";
 import { getValues, type ValueRow } from "./api";
 import { asyncResource } from "./async.svelte";
 import CodeList from "./CodeList.svelte";
@@ -213,9 +214,11 @@ const showTree = $derived(
   !filtering && (tree || treePage(resource.data?.items)),
 );
 // Each tree level's read, kept for the panel's life: reopening a node or
-// clearing the filter reads nothing again. Keyed by ref, so a reused panel
-// cannot serve another classification's levels.
+// clearing the filter reads nothing again, and the open nodes, so a filter
+// round-trip reopens the tree as it was. Keyed by ref, so a reused panel cannot
+// serve another classification's levels.
 const levels: Levels = new Map();
+const opened = new SvelteSet<string>();
 // The filter box appears at the same set size the shared viewer has always shown
 // it at — below that it is more chrome than help.
 const showFilter = $derived(
@@ -249,7 +252,7 @@ function retry(): void {
 
   {#if showTree}
     <div class="code-scroll">
-      <CodeTreeLevel {ref} parent="" expected={null} {levels} />
+      <CodeTreeLevel {ref} parent="" expected={null} {levels} {opened} />
     </div>
   {:else if codes.length > 0}
     <CodeList {codes} />
