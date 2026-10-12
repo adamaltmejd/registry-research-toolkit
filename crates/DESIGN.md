@@ -626,6 +626,14 @@ prefix-matches (`ink` finds `inkomst`). `LIKE` patterns escape `%` and `_`. Arms
 authored names compare under `fold_identity` on both sides, because SQLite's own case
 folding is ASCII-only; that folds case, not diacritics.
 
+Every token must match (AND), within one row. The variable arm widens that one step: a
+query of two or more tokens also admits a variable whose register's name or purpose
+supplies some tokens and whose own text supplies the rest, so `covid provtagning` finds
+SmiNet's `Provtagningsdatum` though only the register mentions covid. A register token
+alone never lists a register's variables. These context rows rank after every variable
+whose own text matches the whole query, which keep their order; a single-token query
+admits exactly as before. Synonyms and cross-language expansion are #1490.
+
 There are five arms: register, variable, classification, classification code and
 register value. A code-shaped query (three or more characters, at least one digit) also
 matches codes exactly or by prefix, and surfaces the classifications that contain a
@@ -636,7 +644,10 @@ Ranking and paging rules:
 
 - Pins come first, then one best-bets order: an exact identity match leads, then type
   priors, then relevance. A researcher typing a whole name ("Kön") gets the variables
-  carrying it first, however many registers share it.
+  carrying it first, however many registers share it. A code's identity is its code
+  value, never its label: a value label that happens to name a research concept
+  (`Provtagning`) is an incidental hit and ranks below the variables and registers that
+  match it (#1464), while a code lookup (`C12`) still leads.
 - Every arm takes one bounded candidate prefix of 1,001 rows, folded or not, so later
   pages cannot reorder earlier ones or turn a consumed leaf into a group row.
 - Prefix and group-label promotion switch off when more than 50 candidates match by
