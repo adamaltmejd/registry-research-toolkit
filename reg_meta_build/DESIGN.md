@@ -1948,10 +1948,11 @@ its source and register. A worker reads the scope through its own prepared-recor
 reader and value sessions. It returns every effect of the scope as data: the issues and
 coding reports in the order resolution made them, any exception, the ledger lines and
 the folded values. The parent applies these outcomes strictly in the serial scope order,
-so the database, ledger and bundle are the same bytes for every N:
+so the database and ledger are the same bytes for every N and the bundle holds equal
+content. Bundle bytes are not reproducible across processes even at N = 1 (#1542):
 
-- Every outcome takes one pickle round trip, also when N = 1 resolves it in the parent.
-  The bundle pickle then sees the same object graph for every N.
+- Every outcome takes one pickle round trip, also when N = 1 resolves it in the parent,
+  so the parent folds the same object graph for every N.
 - Each scope clears the value-binding caches first. A cache hit would otherwise hand it
   objects an earlier scope built, and the pickled graph would depend on which scopes its
   process resolved before.
