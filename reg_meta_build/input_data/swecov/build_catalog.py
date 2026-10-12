@@ -2230,11 +2230,15 @@ def _edition_year(edition: object) -> int | None:
 def _table_edition(table: str, overlay: dict) -> object | None:
     """One explicit finite edition for a table, or None → edition worklist.
     Overlay wins; otherwise exactly ONE name-derived period token is trusted
-    (a zero- or multi-token name is period-ambiguous by construction)."""
+    (a zero- or multi-token name is period-ambiguous by construction).
+    A name whose only token is an 8-digit date (Doda_20241231) is an extract
+    stamp: the table may hold a cumulative history, so it goes to review."""
     if table in overlay["edition"]:
         return overlay["edition"][table]
     tokens = extract_periods(table)
     if len(tokens) != 1:
+        return None
+    if _RE_DATE8.search(table) and not extract_periods(_RE_DATE8.sub("", table)):
         return None
     tok = tokens[0]
     return int(tok) if re.fullmatch(r"\d{4}", tok) else tok

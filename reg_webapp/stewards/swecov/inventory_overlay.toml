@@ -1310,6 +1310,13 @@ edition = 2020
 table = "Swedbank_V03_20210520"
 edition = 2020
 
+# DECIDED by maintainer 2026-10-12 (#1170): no time column, so no probe can date it. Taken
+# as the cardholder base of the V01–V03 spending tables, i.e. their span. Inference, not
+# probe evidence; the name's 20210520 is the delivery date.
+[[edition]]
+table = "Swedbank_V04_20210520"
+edition = { from = 2019, to = 2020 }
+
 # name-derived (term-pair / year-range table names; no probe time column):
 
 [[edition]]

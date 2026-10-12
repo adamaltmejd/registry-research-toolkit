@@ -304,6 +304,11 @@ def test_inventory_unmapped_route_retains_holdings_without_inferred_assignment(
 def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
     tmp_path: Path, flavored_db: Path
 ) -> None:
+    """Undated holdings never get a guessed edition: a retained table is listed
+    apart, and a name whose only period is an 8-digit extract stamp goes to the
+    edition worklist, while the same stamp beside a real year token keeps that
+    year. Fails if the stamp is read as coverage (`Stamp_20241231` placed as
+    2024; the Swedbank_V04_20210520 case, #1170)."""
     import hashlib
 
     from reg_meta_build.inventory import load_inventory
@@ -318,6 +323,8 @@ def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
         "Inera/1177,Ordered tests,Known_2020,T_kolumn,\n"
         "Inera/1177,Ordered tests,Undated,T_kolumn,Unknown\n"
         "Inera/1177,Ordered tests,Lookup,Code,Name\n"
+        "Inera/1177,Ordered tests,Stamp_20241231,T_kolumn,\n"
+        "Inera/1177,Ordered tests,Known_2024_20241231,T_kolumn,\n"
     )
     rows = [
         {
@@ -338,8 +345,13 @@ def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
         )
     )
     inventory = load_inventory(steward / "inventory.toml")
-    assert [table.id for table in inventory.tables] == ["Known_2020"]
+    assert {table.id: table.edition for table in inventory.tables} == {
+        "Known_2020": "2020",
+        "Known_2024_20241231": "2024",
+    }
     worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
-    assert worklist["edition_needed"] == []
+    assert worklist["edition_needed"] == [
+        {"table": "Stamp_20241231", "tokens": ["2024"]}
+    ]
     assert worklist["retained_unknown"][0]["table"] == "Undated"
     assert worklist["retained_unknown"][0]["columns"] == ["T_kolumn", "Unknown"]
