@@ -42,11 +42,7 @@ from reg_meta_build.sources.code_lists import read_code_list
 from reg_meta_build.sources.lisa import read_lisa_source
 from reg_meta_build.sources.scb_auxiliary import iter_scb_auxiliary_records
 from reg_meta_build.sources.scb_records import iter_scb_observations
-from reg_meta_build.sources.scb_reference_records import (
-    read_scb_column_types,
-    read_scb_events,
-    read_scb_join_keys,
-)
+from reg_meta_build.sources.scb_reference_records import read_scb_events
 from reg_meta_build.sources.scb_values import clean_scb_values
 from reg_meta_build.sources.sos import parse_directory, parse_register_file
 from reg_meta_build.sources.sos_records import clean_sos_source
@@ -253,14 +249,6 @@ def _code_list(delivery: Delivery, args: dict[str, Any]) -> Any:
     return read_code_list(path, revision, name=args.get("name", path.stem))
 
 
-def _bundle_reader(read: Callable[[Path, SourceRevision], Any]):
-    def reader(delivery: Delivery, args: dict[str, Any]) -> Any:
-        path = delivery.file(args)
-        return read(path, delivery.revision(path, args))
-
-    return reader
-
-
 def _scb_values(delivery: Delivery, args: dict[str, Any]) -> Any:
     assert delivery.snapshot is not None, "scb_values needs an `scb` source"
     cleaned = clean_scb_values(delivery.snapshot)
@@ -302,8 +290,6 @@ READERS: dict[str, Reader] = {
     "sos_parsed": _sos_parsed,
     "lisa_workbook": _lisa_workbook,
     "code_list": _code_list,
-    "scb_column_types": _bundle_reader(read_scb_column_types),
-    "scb_join_keys": _bundle_reader(read_scb_join_keys),
     "scb_records": _scb_records,
     "scb_auxiliary": _scb_auxiliary,
     "scb_events": _scb_events,

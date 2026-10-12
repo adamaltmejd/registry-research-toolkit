@@ -49,7 +49,7 @@ from _sos_fixtures import (
     SosVariable,
     write_sos_input,
 )
-from openpyxl import Workbook, load_workbook
+from openpyxl import load_workbook
 from reader_artifacts import build_inputs_digest, generation_dir
 from reg_meta_build.db import stored_data_warnings
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
@@ -155,17 +155,6 @@ def write_sources(spec: dict, source: Path) -> None:
         + (("unika",) if unika is not None else ())
         + (("vardemangder", "valid_dates") if values else ()),
     )
-    if "join_keys" in scb:
-        # ID-kolumner.xlsx: one worksheet of `Tabell | ID-kolumn | Beskrivning` rows.
-        workbook = Workbook()
-        sheet = workbook.active
-        sheet.append(["Tabell", "ID-kolumn", "Beskrivning"])
-        for row in scb["join_keys"]:
-            sheet.append(row)
-        path = source / "SCB/ID-kolumner.xlsx"
-        workbook.properties.created = workbook.properties.modified = _XLSX_EPOCH
-        workbook.save(path)
-        _fix_zip_times(path)
     for relative, text in spec.get("files", {}).items():
         path = source / relative
         path.parent.mkdir(parents=True, exist_ok=True)

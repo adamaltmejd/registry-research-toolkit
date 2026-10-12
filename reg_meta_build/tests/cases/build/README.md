@@ -65,7 +65,7 @@ the behavior in plain words. For example,
   | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                                                                                     |
   | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                                                                              |
   | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                                                                                   |
-  | `source-rows-`         | physical source rows the build refuses when it loads a scope or a support join                                                                                                    |
+  | `source-rows-`         | physical source rows the build refuses when it loads a scope or a support join                                                                                                   |
   | `warning-`             | the data warnings a build publishes: the register, variable and state each one attaches to, and where its text comes from                                                        |
   | `value-sets-`          | stored value sets: one per distinct membership, its id kept across builds, and the per-column state overlaps formation withholds                                                 |
   | `lineage-`             | source register attribution from a delivered source label, and the state lineage edges, lineage warnings and `[[acknowledge]]` entries it resolves                               |
@@ -132,10 +132,8 @@ case cannot fail and does not belong here.
   - `unika` defaults to one non-sensitive, non-identifier summary row per delivered
     column. `null` delivers no Unika file.
   - `valid_dates` defaults to every value item being valid from 2000 to 2030.
-  - `join_keys` rows are `[table, column, description]` rows of an `ID-kolumner.xlsx`
-    workbook. Without the key no workbook is delivered. The other export reference files
-    are text, so a case delivers them through `files` (`SCB/Timeseries.csv`,
-    `SCB/Tabelldefinitioner.sql`, `SCB/Identifierare.csv`).
+  - The other SCB export files are text, so a case delivers them through `files`
+    (`SCB/Timeseries.csv`, `SCB/Identifierare.csv`).
 - `sos` lists Socialstyrelsen workbooks.
   - `subsets` are Deldatamängder rows: `name`, `label`, `description`, `data_from`,
     `data_to`, `aggregation_level`. An empty list writes no Deldatamängder sheet.

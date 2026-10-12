@@ -2640,8 +2640,6 @@ def _classification_csvs(catalog: Path) -> list[Path]:
 
 # Relative to the input directory; each lands under `catalog/` in the bundle.
 _FIXED_CATALOG_SOURCES = (
-    "SCB/Tabelldefinitioner.sql",
-    "SCB/ID-kolumner.xlsx",
     "swecov/derived/swecov_column_types.csv",
     "scb_canonical/scb_canonical.toml",
     *(f"{directory}/{provider}.toml" for provider, directory in _CURATED_PROVIDERS),
@@ -2809,10 +2807,6 @@ def _validate_bundle_contract(root: Path) -> None:
     """Validate source formats without forming a catalog."""
     from .sources.code_lists import read_code_list
     from .sources.curated_records import read_curated_source
-    from .sources.scb_reference_records import (
-        read_scb_column_types,
-        read_scb_join_keys,
-    )
     from .sources.sos import parse_directory
     from .sources.swecov_column_types import read_swecov_column_types
 
@@ -2842,14 +2836,6 @@ def _validate_bundle_contract(root: Path) -> None:
         for name in source.declared_value_lists:
             path = _canonical_code_list_path(canonical_dir, name)
             read_code_list(path, _bundle_source_revision(path, root), name=name)
-
-    scb = catalog / "SCB"
-    sql_path = scb / "Tabelldefinitioner.sql"
-    if sql_path.is_file():
-        read_scb_column_types(sql_path, _bundle_source_revision(sql_path, root))
-    xlsx_path = scb / "ID-kolumner.xlsx"
-    if xlsx_path.is_file():
-        read_scb_join_keys(xlsx_path, _bundle_source_revision(xlsx_path, root))
 
     swecov_path = catalog / "swecov/derived/swecov_column_types.csv"
     if swecov_path.is_file():

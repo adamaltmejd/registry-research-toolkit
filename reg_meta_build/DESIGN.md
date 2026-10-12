@@ -209,11 +209,9 @@ with retained evidence so the adapter can be repaired. There is no speculative p
 for hypothetical future formats and no custom adapter per SCB register. Each refusal is
 a `SourceFormatError` whose code names the rule it breaks: `source_revision_changed`
 (the bytes differ from the selected revision), `source_file_unreadable`,
-`code_list_layout_unsupported`, `code_list_name_invalid`, `scb_column_types_unsupported`
-(`Tabelldefinitioner.sql`), `scb_join_keys_layout_unsupported` (`ID-kolumner.xlsx`),
-`scb_value_shape_unsupported`, `lisa_layout_unsupported`, `lisa_value_unsupported` (an
-availability period or sensitivity cell), `sos_variable_sheet_invalid` and
-`sos_worksheet_unsupported`.
+`code_list_layout_unsupported`, `code_list_name_invalid`, `scb_value_shape_unsupported`,
+`lisa_layout_unsupported`, `lisa_value_unsupported` (an availability period or
+sensitivity cell), `sos_variable_sheet_invalid` and `sos_worksheet_unsupported`.
 
 `normalization.py` holds the shared mechanical rules. Normalization is idempotent and
 never replaces the original cells:

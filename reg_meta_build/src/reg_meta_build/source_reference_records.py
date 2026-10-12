@@ -1,4 +1,4 @@
-"""Source declarations about native events, export columns and identifier keys.
+"""Source declarations about native events and steward column types.
 
 These observations do not identify catalog entities or create relationships.
 Native tokens retain their delivered representation and source-local meaning.
@@ -61,17 +61,9 @@ class SourceColumnTypeDeclaration(_SourceDeclaration):
     nullable: SourceField
 
 
-class SourceJoinKeyDeclaration(_SourceDeclaration):
-    kind: Literal["join_key"] = "join_key"
-    table_name: SourceField
-    column_name: SourceField
-    description: SourceField
-
-
 type SourceReferenceDeclaration = Annotated[
     SourceEventDeclaration
     | SourceColumnTypeDeclaration
-    | SourceJoinKeyDeclaration
     | SourceCodeCrosswalkDeclaration
     | SourceDerivationDeclaration,
     Field(discriminator="kind"),
@@ -91,6 +83,5 @@ __all__ = [
     "SourceEntityKind",
     "SourceEventAction",
     "SourceEventDeclaration",
-    "SourceJoinKeyDeclaration",
     "SourceReferenceDeclaration",
 ]

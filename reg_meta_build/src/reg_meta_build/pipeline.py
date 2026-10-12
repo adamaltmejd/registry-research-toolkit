@@ -90,7 +90,6 @@ from reg_meta_build.source_naming import (  # noqa: TC001
 from reg_meta_build.source_reference_records import (
     SourceColumnTypeDeclaration,
     SourceEventDeclaration,
-    SourceJoinKeyDeclaration,
 )
 from reg_meta_build.source_scope import (
     declared_dependency_keys,
@@ -103,10 +102,7 @@ from reg_meta_build.source_support import (
     scope_support_diagnostics,
 )
 from reg_meta_build.source_value_bindings import open_value_bindings
-from reg_meta_build.sources.swecov_column_types import (
-    SWECOV_COLUMN_TYPES_PATH,
-    index_steward_column_storage,
-)
+from reg_meta_build.sources.swecov_column_types import index_steward_column_storage
 
 from .errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
 from .source_evidence import canonical_sha256
@@ -896,17 +892,13 @@ def _resolve(
                 disposition = "source_context"
                 if isinstance(item, ReferenceEvidence):
                     declaration = item.declaration
+                    # SWECOV column types (the only column-type source) stay
+                    # source context; formation reads them as steward storage.
                     if isinstance(
                         declaration,
-                        SourceColumnTypeDeclaration
-                        | SourceEventDeclaration
-                        | SourceJoinKeyDeclaration,
+                        SourceColumnTypeDeclaration | SourceEventDeclaration,
                     ):
-                        if not (
-                            isinstance(declaration, SourceColumnTypeDeclaration)
-                            and declaration.revision.artifact_path
-                            == SWECOV_COLUMN_TYPES_PATH
-                        ):
+                        if isinstance(declaration, SourceEventDeclaration):
                             declarations.append(declaration)
                             disposition = "literal_metadata"
                     else:
@@ -1016,12 +1008,7 @@ def _resolve(
                 if register.register_info.steward_table_prefixes
             }
             event_bindings = SourceEventBindings(
-                (
-                    d
-                    for d in declarations
-                    if isinstance(d, SourceEventDeclaration)
-                    and d.revision.dataset in event_sources
-                ),
+                (d for d in declarations if d.revision.dataset in event_sources),
                 event_sources,
                 compiled.event_acknowledgements,
             )
