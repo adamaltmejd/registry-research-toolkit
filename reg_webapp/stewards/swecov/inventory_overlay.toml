@@ -2890,6 +2890,70 @@ register_variant = "fohm/sminet/_default"
 table = "FHM_LAB_ANM"
 register_variant = "fohm/sminet/_default"
 
+# ── DECIDED (maintainer 2026-10-11, #1293): NVR delivery shards and FHM_NVR_Barn
+# column mappings. The delivery uses English pseudonymised names, so nothing
+# matches the fohm/nvr catalog by name. The two NVR tables are disjoint
+# population shards (childhood programme vs covid-19). FHM_NVR_Covid_20240422's
+# mappings wait for its #1170 edition probe.
+
+[[partition]]
+table = "FHM_NVR_Barn"
+label = "barnvaccin"
+
+[[partition]]
+table = "FHM_NVR_Covid_20240422"
+label = "covid"
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/personnr"
+representation = "personnummer"
+table = "FHM_NVR_Barn"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2013, to = 2024 }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccinationsdatum"
+representation = "vaccinationsdatum"
+table = "FHM_NVR_Barn"
+column = "vaccination_date"
+edition = { from = 2013, to = 2024 }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccintyp"
+representation = "vaccintyp"
+table = "FHM_NVR_Barn"
+column = "vaccine_type"
+edition = { from = 2013, to = 2024 }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccin"
+representation = "vaccin"
+table = "FHM_NVR_Barn"
+column = "product_name"
+edition = { from = 2013, to = 2024 }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vardgivare"
+representation = "vardgivare"
+table = "FHM_NVR_Barn"
+column = "P1105_Lopnr_PeOrgnr"
+edition = { from = 2013, to = 2024 }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[unmap]]
+table = "FHM_NVR_Barn"
+column = "P1105_LopNr_care_giver_name"
+reason = "Pseudonymised care-giver name; the care-giver organisation-number lopnr carries fohm/nvr/vardgivare for this table (#1293)."
+
 # ── DECIDED (maintainer 2026-09-02): UHT access tier — keep UHT_Lev2 for the
 # overlapping years; plain UHT stays the sole holdings for 2004-2012 and
 # 2022-2024 (Lev2 was only delivered 2013-2021).
