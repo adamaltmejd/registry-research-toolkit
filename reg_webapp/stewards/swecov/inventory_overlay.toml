@@ -15937,3 +15937,2812 @@ table = "Arb_AGIIndivid202012_Def"
 column = "BOSTADSF_SMAHUS_ULAG_EA"
 edition = "2020-12"
 reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, maintainer-decided 2026-10-12 (#1302 C3)."
+
+# ── DECIDED (maintainer 2026-10-12, #1302 round 3): FEK D1 — Foradlingsvarde,
+# Produktionsvarde, SummaEgetKapital and Utdelning 2003-2021 map to the one
+# representation of their catalog variable whose state covers the table year
+# (fhar003_jmf, fhar001_jmf, fgb370; fgb0362 to 2005, fgb362 from 2006).
+# 1990-2002 wait for catalog coverage (#1504).
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2003"
+column = "Foradlingsvarde"
+edition = 2003
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2004"
+column = "Foradlingsvarde"
+edition = 2004
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2005"
+column = "Foradlingsvarde"
+edition = 2005
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2006"
+column = "Foradlingsvarde"
+edition = 2006
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2007"
+column = "Foradlingsvarde"
+edition = 2007
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2008"
+column = "Foradlingsvarde"
+edition = 2008
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2009"
+column = "Foradlingsvarde"
+edition = 2009
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2010"
+column = "Foradlingsvarde"
+edition = 2010
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2011"
+column = "Foradlingsvarde"
+edition = 2011
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2012"
+column = "Foradlingsvarde"
+edition = 2012
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2013"
+column = "Foradlingsvarde"
+edition = 2013
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2014"
+column = "Foradlingsvarde"
+edition = 2014
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2015"
+column = "Foradlingsvarde"
+edition = 2015
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2016"
+column = "Foradlingsvarde"
+edition = 2016
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2017"
+column = "Foradlingsvarde"
+edition = 2017
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2018_ver2"
+column = "Foradlingsvarde"
+edition = 2018
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2019_ver2"
+column = "Foradlingsvarde"
+edition = 2019
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2020_ver2"
+column = "Foradlingsvarde"
+edition = 2020
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/foradlingsvarde"
+representation = "fhar003_jmf"
+table = "FE2021_ver1"
+column = "Foradlingsvarde"
+edition = 2021
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2003"
+column = "Produktionsvarde"
+edition = 2003
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2004"
+column = "Produktionsvarde"
+edition = 2004
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2005"
+column = "Produktionsvarde"
+edition = 2005
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2006"
+column = "Produktionsvarde"
+edition = 2006
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2007"
+column = "Produktionsvarde"
+edition = 2007
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2008"
+column = "Produktionsvarde"
+edition = 2008
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2009"
+column = "Produktionsvarde"
+edition = 2009
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2010"
+column = "Produktionsvarde"
+edition = 2010
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2011"
+column = "Produktionsvarde"
+edition = 2011
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2012"
+column = "Produktionsvarde"
+edition = 2012
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2013"
+column = "Produktionsvarde"
+edition = 2013
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2014"
+column = "Produktionsvarde"
+edition = 2014
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2015"
+column = "Produktionsvarde"
+edition = 2015
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2016"
+column = "Produktionsvarde"
+edition = 2016
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2017"
+column = "Produktionsvarde"
+edition = 2017
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2018_ver2"
+column = "Produktionsvarde"
+edition = 2018
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2019_ver2"
+column = "Produktionsvarde"
+edition = 2019
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2020_ver2"
+column = "Produktionsvarde"
+edition = 2020
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/produktionsvarde"
+representation = "fhar001_jmf"
+table = "FE2021_ver1"
+column = "Produktionsvarde"
+edition = 2021
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2003"
+column = "SummaEgetKapital"
+edition = 2003
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2004"
+column = "SummaEgetKapital"
+edition = 2004
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2005"
+column = "SummaEgetKapital"
+edition = 2005
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2006"
+column = "SummaEgetKapital"
+edition = 2006
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2007"
+column = "SummaEgetKapital"
+edition = 2007
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2008"
+column = "SummaEgetKapital"
+edition = 2008
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2009"
+column = "SummaEgetKapital"
+edition = 2009
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2010"
+column = "SummaEgetKapital"
+edition = 2010
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2011"
+column = "SummaEgetKapital"
+edition = 2011
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2012"
+column = "SummaEgetKapital"
+edition = 2012
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2013"
+column = "SummaEgetKapital"
+edition = 2013
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2014"
+column = "SummaEgetKapital"
+edition = 2014
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2015"
+column = "SummaEgetKapital"
+edition = 2015
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2016"
+column = "SummaEgetKapital"
+edition = 2016
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2017"
+column = "SummaEgetKapital"
+edition = 2017
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2018_ver2"
+column = "SummaEgetKapital"
+edition = 2018
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2019_ver2"
+column = "SummaEgetKapital"
+edition = 2019
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2020_ver2"
+column = "SummaEgetKapital"
+edition = 2020
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/summa-eget-kapital"
+representation = "fgb370"
+table = "FE2021_ver1"
+column = "SummaEgetKapital"
+edition = 2021
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb0362"
+table = "FE2003"
+column = "Utdelning"
+edition = 2003
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb0362"
+table = "FE2004"
+column = "Utdelning"
+edition = 2004
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb0362"
+table = "FE2005"
+column = "Utdelning"
+edition = 2005
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2006"
+column = "Utdelning"
+edition = 2006
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2007"
+column = "Utdelning"
+edition = 2007
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2008"
+column = "Utdelning"
+edition = 2008
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2009"
+column = "Utdelning"
+edition = 2009
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2010"
+column = "Utdelning"
+edition = 2010
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2011"
+column = "Utdelning"
+edition = 2011
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2012"
+column = "Utdelning"
+edition = 2012
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2013"
+column = "Utdelning"
+edition = 2013
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2014"
+column = "Utdelning"
+edition = 2014
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2015"
+column = "Utdelning"
+edition = 2015
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2016"
+column = "Utdelning"
+edition = 2016
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2017"
+column = "Utdelning"
+edition = 2017
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2018_ver2"
+column = "Utdelning"
+edition = 2018
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2019_ver2"
+column = "Utdelning"
+edition = 2019
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2020_ver2"
+column = "Utdelning"
+edition = 2020
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/utdelning"
+representation = "fgb362"
+table = "FE2021_ver1"
+column = "Utdelning"
+edition = 2021
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+# ── DECIDED (maintainer 2026-10-12, #1302 round 3): P1105 linkage keys map to
+# the own register's identifier variable for that entity (person, household,
+# property, organisation). FK keys ride with the fk.toml rename; NVR is #1293;
+# RTB 1990-1997 Lopnr_Fast is curated separately.
+
+[[mapping]]
+register_variant = "fohm/sminet/_default"
+variable = "fohm/sminet/personnr"
+representation = "personnummer"
+table = "FHM_SMI_FALL"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2020, to = 2024 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2012"
+column = "P1105_LopNr_Hushallsid_2012"
+edition = 2012
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2013"
+column = "P1105_LopNr_Hushallsid_2013"
+edition = 2013
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2014"
+column = "P1105_LopNr_Hushallsid_2014"
+edition = 2014
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2015"
+column = "P1105_LopNr_Hushallsid_2015"
+edition = 2015
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2016"
+column = "P1105_LopNr_Hushallsid_2016"
+edition = 2016
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2017"
+column = "P1105_LopNr_Hushallsid_2017"
+edition = 2017
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2018"
+column = "P1105_LopNr_Hushallsid_2018"
+edition = 2018
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2019"
+column = "P1105_LopNr_Hushallsid_2019"
+edition = 2019
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2020"
+column = "P1105_LopNr_Hushallsid_2020"
+edition = 2020
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2021"
+column = "P1105_LopNr_Hushallsid_2021"
+edition = 2021
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2022"
+column = "P1105_LopNr_Hushallsid_2022"
+edition = 2022
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2023"
+column = "P1105_LopNr_Hushallsid_2023"
+edition = 2023
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/hushallens-boende/individer"
+variable = "scb/hushallens-boende/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallBoende_2024"
+column = "P1105_LopNr_Hushallsid_2024"
+edition = 2024
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2011"
+column = "P1105_LopNr_Hushallsid_2011"
+edition = "2011-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2012"
+column = "P1105_LopNr_Hushallsid_2012"
+edition = "2012-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2013"
+column = "P1105_LopNr_Hushallsid_2013"
+edition = "2013-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2014"
+column = "P1105_LopNr_Hushallsid_2014"
+edition = "2014-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2015"
+column = "P1105_LopNr_Hushallsid_2015"
+edition = "2015-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2016"
+column = "P1105_LopNr_Hushallsid_2016"
+edition = "2016-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2017"
+column = "P1105_LopNr_Hushallsid_2017"
+edition = "2017-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2018"
+column = "P1105_LopNr_Hushallsid_2018"
+edition = "2018-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2019"
+column = "P1105_LopNr_Hushallsid_2019"
+edition = "2019-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2020"
+column = "P1105_LopNr_Hushallsid_2020"
+edition = "2020-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2021"
+column = "P1105_LopNr_Hushallsid_2021"
+edition = "2021-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2022"
+column = "P1105_LopNr_Hushallsid_2022"
+edition = "2022-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2023"
+column = "P1105_LopNr_Hushallsid_2023"
+edition = "2023-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/hushall"
+variable = "scb/rtb/lopnummer-bostadshushall"
+representation = "HushallsID"
+table = "HushallPerson_2024"
+column = "P1105_LopNr_Hushallsid_2024"
+edition = "2024-12-31"
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode1998"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 1998
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode1998"
+column = "P1105_LopNr_FastbetecknG"
+edition = 1998
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode1999"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 1999
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode1999"
+column = "P1105_LopNr_FastbetecknG"
+edition = 1999
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2000"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2000
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2000"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2000
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2001"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2001
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2001"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2001
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2002"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2002
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2002"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2002
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2003"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2003
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2003"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2003
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2004"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2004
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2004"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2004
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2005"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2005
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2005"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2005
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2006"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2006
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2006"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2006
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2007"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2007
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2007"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2007
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2008"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2008
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2008"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2008
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2009"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2009
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2009"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2009
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2010"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2010
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2010"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2010
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2011"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2011
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2011"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2011
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2012"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2012
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2012"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2012
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2013"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2013
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2013"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2013
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "FastBet"
+table = "InrFlyttFlode2014"
+column = "P1105_LopNr_Fastbeteckn"
+edition = 2014
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/inrikes-flyttningar"
+variable = "scb/rtb/fastighetsbeteckning-tidigare"
+representation = "FastbetG"
+table = "InrFlyttFlode2014"
+column = "P1105_LopNr_FastbetecknG"
+edition = 2014
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2015"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2015
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2016"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2016
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2017"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2017
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2018"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2018
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2019"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2019
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2020"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2020
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2021"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2021
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "riksarkivet/inskrivning/_default"
+variable = "riksarkivet/inskrivning/personnr"
+representation = "PENR"
+table = "RA_Insark"
+column = "P1105_Lopnr_PersonNr"
+edition = { from = 1969, to = 1997 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB1998"
+column = "P1105_Lopnr_Fast"
+edition = "1998-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB1999"
+column = "P1105_Lopnr_Fast"
+edition = "1999-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2000"
+column = "P1105_Lopnr_Fast"
+edition = "2000-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2001"
+column = "P1105_Lopnr_Fast"
+edition = "2001-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2002"
+column = "P1105_Lopnr_Fast"
+edition = "2002-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2003"
+column = "P1105_Lopnr_Fast"
+edition = "2003-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2004"
+column = "P1105_Lopnr_Fast"
+edition = "2004-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2005"
+column = "P1105_Lopnr_Fast"
+edition = "2005-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2006"
+column = "P1105_Lopnr_Fast"
+edition = "2006-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2007"
+column = "P1105_Lopnr_Fast"
+edition = "2007-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2008"
+column = "P1105_Lopnr_Fast"
+edition = "2008-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2009"
+column = "P1105_Lopnr_Fast"
+edition = "2009-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2010"
+column = "P1105_Lopnr_Fast"
+edition = "2010-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2011"
+column = "P1105_Lopnr_Fast"
+edition = "2011-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2012"
+column = "P1105_Lopnr_Fast"
+edition = "2012-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2013"
+column = "P1105_Lopnr_Fast"
+edition = "2013-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2014"
+column = "P1105_Lopnr_Fast"
+edition = "2014-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2015"
+column = "P1105_Lopnr_Fast"
+edition = "2015-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2016"
+column = "P1105_Lopnr_Fast"
+edition = "2016-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2017"
+column = "P1105_Lopnr_Fast"
+edition = "2017-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2018"
+column = "P1105_Lopnr_Fast"
+edition = "2018-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2019"
+column = "P1105_Lopnr_Fast"
+edition = "2019-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2020"
+column = "P1105_Lopnr_Fast"
+edition = "2020-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2021"
+column = "P1105_Lopnr_Fast"
+edition = "2021-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2022"
+column = "P1105_Lopnr_Fast"
+edition = "2022-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2023"
+column = "P1105_Lopnr_Fast"
+edition = "2023-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastighetsbeteckning"
+representation = "Fastbet"
+table = "RTB2024"
+column = "P1105_Lopnr_Fast"
+edition = "2024-12-31"
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "sos/can/can"
+variable = "sos/can/personnr"
+representation = "PNR"
+table = "SWECOV_SOS_CANCER"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2005, to = 2022 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "sos/dors/dors"
+variable = "sos/dors/personnr"
+representation = "PNR"
+table = "SWECOV_SOS_DORS"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2005, to = 2023 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "sos/ekb/ekb-manad"
+variable = "sos/ekb/personnr"
+representation = "PNR"
+table = "SWECOV_SOS_EKB_PERS"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2023 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "sos/hsl/hsl"
+variable = "sos/hsl/personnr"
+representation = "PNR"
+table = "SWECOV_SOS_HSL_PERS"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2016, to = 2023 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "sos/lss/_default"
+variable = "sos/lss/personnr"
+representation = "PNR"
+table = "SWECOV_SOS_LSS"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2023 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "sos/par/par-ov"
+variable = "sos/par/personnr"
+representation = "PNR"
+table = "SWECOV_SOS_OV"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2005, to = 2023 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "sos/sol/sol"
+variable = "sos/sol/personnr"
+representation = "PNR"
+table = "SWECOV_SOS_SOL"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2018, to = 2023 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "sos/par/par-sv"
+variable = "sos/par/personnr"
+representation = "PNR"
+table = "SWECOV_SOS_SV"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2005, to = 2023 }
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_1999"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 1999
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2000"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2000
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2001"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2001
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2002"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2002
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2003"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2003
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2004"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2004
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2005"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2005
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2006"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2006
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2007"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2007
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2008"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2008
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2009"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2009
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2010"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2010
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2011"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2011
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2012"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2012
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2013"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2013
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2014"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2014
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2015"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2015
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2016"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2016
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2017"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2017
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2018"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2018
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2019"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2019
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2020"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2020
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2021"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2021
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2022"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2022
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[mapping]]
+register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
+variable = "scb/utrikeshandel/person-orgnr"
+representation = "Orgnr"
+table = "UHV_2023"
+column = "P1105_Lopnr_PeOrgnr"
+edition = 2023
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+# ── DECIDED (maintainer 2026-10-12, #1302 round 3): Äp9 2009-2012 carry the
+# amne-no subject tests beside the sv/eng/ma ones, so each table serves both
+# variants; the shared keys (PersonNr, Skolkod, Hman) map in both, like the
+# Hreg_Reg_1990_1993 dual assign.
+
+[[assign]]
+table = "Äp9_2009"
+register_variant = ["scb/grundskola-prov-ak9/amne-sv-eng-ma", "scb/grundskola-prov-ak9/amne-no"]
+
+[[assign]]
+table = "Äp9_2010"
+register_variant = ["scb/grundskola-prov-ak9/amne-sv-eng-ma", "scb/grundskola-prov-ak9/amne-no"]
+
+[[assign]]
+table = "Äp9_2011"
+register_variant = ["scb/grundskola-prov-ak9/amne-sv-eng-ma", "scb/grundskola-prov-ak9/amne-no"]
+
+[[assign]]
+table = "Äp9_2012"
+register_variant = ["scb/grundskola-prov-ak9/amne-sv-eng-ma", "scb/grundskola-prov-ak9/amne-no"]
+
+# ── DECIDED (maintainer 2026-10-12, #1302 round 3): delivery spellings of
+# own-register catalog variables (SmiNet, Äp9 SkolKommun, Riksarkivet, FDB,
+# FEK KassaBank). Only where the catalog state covers the table edition.
+
+[[mapping]]
+register_variant = "scb/fdb/arbetsstalleenheter"
+variable = "scb/fdb/avregdatktid"
+representation = "avregdatktid"
+table = "FDB_AE_2023"
+column = "AdmStatSlutDatKtid"
+edition = 2023
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fdb/avregdatktid (delivery column avregdatktid); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/fdb/arbetsstalleenheter"
+variable = "scb/fdb/avregdatktid"
+representation = "avregdatktid"
+table = "FDB_AE_2024"
+column = "AdmStatSlutDatKtid"
+edition = 2024
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fdb/avregdatktid (delivery column avregdatktid); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/kassa-och-bank-2"
+representation = "KassaOchBank"
+table = "FE1990"
+column = "KassaBank"
+edition = 1990
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fek/kassa-och-bank-2 (delivery column KassaOchBank); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/kassa-och-bank-2"
+representation = "KassaOchBank"
+table = "FE1991"
+column = "KassaBank"
+edition = 1991
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fek/kassa-och-bank-2 (delivery column KassaOchBank); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/kassa-och-bank-2"
+representation = "KassaOchBank"
+table = "FE1992"
+column = "KassaBank"
+edition = 1992
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fek/kassa-och-bank-2 (delivery column KassaOchBank); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/kassa-och-bank-2"
+representation = "KassaOchBank"
+table = "FE1993"
+column = "KassaBank"
+edition = 1993
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fek/kassa-och-bank-2 (delivery column KassaOchBank); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/kassa-och-bank-2"
+representation = "KassaOchBank"
+table = "FE1994"
+column = "KassaBank"
+edition = 1994
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fek/kassa-och-bank-2 (delivery column KassaOchBank); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/kassa-och-bank-2"
+representation = "KassaOchBank"
+table = "FE1995"
+column = "KassaBank"
+edition = 1995
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fek/kassa-och-bank-2 (delivery column KassaOchBank); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/kassa-och-bank-2"
+representation = "KassaOchBank"
+table = "FE1996"
+column = "KassaBank"
+edition = 1996
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fek/kassa-och-bank-2 (delivery column KassaOchBank); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "fohm/sminet/_default"
+variable = "fohm/sminet/insjuknandedatum"
+representation = "insjuknandedatum"
+table = "FHM_SMI_FALL"
+column = "Insjukningsdatum"
+edition = { from = 2020, to = 2024 }
+reason = "SWECOV delivery spelling of the own-register catalog variable fohm/sminet/insjuknandedatum (delivery column insjuknandedatum); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "fohm/sminet/_default"
+variable = "fohm/sminet/smittskyddsenhet"
+representation = "smittskyddsenhet"
+table = "FHM_SMI_FALL"
+column = "Region"
+edition = { from = 2020, to = 2024 }
+reason = "SWECOV delivery spelling of the own-register catalog variable fohm/sminet/smittskyddsenhet (delivery column smittskyddsenhet); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "riksarkivet/inskrivning/_default"
+variable = "riksarkivet/inskrivning/langd"
+representation = "LNGD"
+table = "RA_Insark"
+column = "LNGD_I_CM"
+edition = { from = 1969, to = 1997 }
+reason = "SWECOV delivery spelling of the own-register catalog variable riksarkivet/inskrivning/langd (delivery column LNGD); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "riksarkivet/inskrivning/_default"
+variable = "riksarkivet/inskrivning/kroppsvikt"
+representation = "MASS"
+table = "RA_Insark"
+column = "MASS_I_KG"
+edition = { from = 1969, to = 1997 }
+reason = "SWECOV delivery spelling of the own-register catalog variable riksarkivet/inskrivning/kroppsvikt (delivery column MASS); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2003"
+column = "SkolKommun"
+edition = "VT2003"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2004"
+column = "SkolKommun"
+edition = "VT2004"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2005"
+column = "SkolKommun"
+edition = "VT2005"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2006"
+column = "SkolKommun"
+edition = "VT2006"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2007"
+column = "SkolKommun"
+edition = "VT2007"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2008"
+column = "SkolKommun"
+edition = "VT2008"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2009"
+column = "SkolKommun"
+edition = "VT2009"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2010"
+column = "SkolKommun"
+edition = "VT2010"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2011"
+column = "SkolKommun"
+edition = "VT2011"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2012"
+column = "SkolKommun"
+edition = "VT2012"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2013"
+column = "SkolKommun"
+edition = "VT2013"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[mapping]]
+register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"
+variable = "scb/grundskola-prov-ak9/kommun"
+representation = "Kommun"
+table = "Äp9_2014"
+column = "SkolKommun"
+edition = "VT2014"
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+# ── DECIDED (maintainer 2026-10-12, #1302 round 4): text-label companions of a
+# code column (Hreg *ben, RTB Medb_Klartext, TFP DELFORMAN) are the same
+# variable as their code column, not variables of their own.
+
+[[unmap]]
+table = "Hreg_Examina_1990_2022"
+column = "huvomgrpben"
+reason = "Plain-text label of the code column huvomgrp in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Examina_1990_2022"
+column = "omrben"
+reason = "Plain-text label of the code column Omr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Examina_2022_2024"
+column = "huvomgrpben"
+reason = "Plain-text label of the code column huvomgrp in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Examina_2022_2024"
+column = "omrben"
+reason = "Plain-text label of the code column Omr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Reg_1990_1993"
+column = "agruppben"
+reason = "Plain-text label of the code column AGrupp in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Reg_1990_1993"
+column = "grenben"
+reason = "Plain-text label of the code column GrenKod in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Reg_1990_1993"
+column = "linjeben"
+reason = "Plain-text label of the code column LinjeKod in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Reg_1993_2022"
+column = "linrben"
+reason = "Plain-text label of the code column LInr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Reg_2022_2024"
+column = "linrben"
+reason = "Plain-text label of the code column LInr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Sok_2015_2022"
+column = "kurskodben"
+reason = "Plain-text label of the code column KursKod in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Sok_2015_2022"
+column = "linrben"
+reason = "Plain-text label of the code column LInr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Sok_2015_2022"
+column = "lprogben"
+reason = "Plain-text label of the code column LProg in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Sok_2022_2024"
+column = "kurskodben"
+reason = "Plain-text label of the code column KursKod in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Sok_2022_2024"
+column = "linrben"
+reason = "Plain-text label of the code column LInr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "Hreg_Sok_2022_2024"
+column = "lprogben"
+reason = "Plain-text label of the code column LProg in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "RTB1990"
+column = "Medb_Klartext"
+reason = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "RTB1991"
+column = "Medb_Klartext"
+reason = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "RTB1992"
+column = "Medb_Klartext"
+reason = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "RTB1993"
+column = "Medb_Klartext"
+reason = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "RTB1994"
+column = "Medb_Klartext"
+reason = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "RTB1995"
+column = "Medb_Klartext"
+reason = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "RTB1996"
+column = "Medb_Klartext"
+reason = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "RTB1997"
+column = "Medb_Klartext"
+reason = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "FK_TFP_DELFALL_lev4"
+column = "DELFORMAN"
+reason = "Plain-text label of the code column DELFORMAN_KOD in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+# ── DECIDED (maintainer 2026-10-12, #1302 round 4): FoU företagssektorn and
+# ITftg IGOV 2008-2010 columns with no catalog codebook (#1509).
+
+[[unmap]]
+table = "FTG_FOU_1999"
+column = "V201"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_1999"
+column = "V601"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_1999"
+column = "VIKT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2001"
+column = "VIKT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2003"
+column = "VIKT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2005"
+column = "V201"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2005"
+column = "VIKT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2007"
+column = "V201"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2007"
+column = "VIKT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2009"
+column = "V201"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2009"
+column = "VIKT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2011"
+column = "Vikt"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2011"
+column = "v201"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2012"
+column = "Vikt"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2013"
+column = "Vikt"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2013"
+column = "v201"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2014"
+column = "Vikt"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2015"
+column = "Vikt"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2015"
+column = "v201"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2017"
+column = "Vikt"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2017"
+column = "v201"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2019"
+column = "SIZE_CLASS"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2019"
+column = "TYPE_INST"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2019"
+column = "TYPE_SECT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2019"
+column = "WEIGHT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2021"
+column = "SIZE_CLASS"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2021"
+column = "TYPE_INST"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2021"
+column = "TYPE_SECT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "FTG_FOU_2021"
+column = "WEIGHT"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "ITftg_2008"
+column = "IGOV"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "ITftg_2009"
+column = "IGOV"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+[[unmap]]
+table = "ITftg_2010"
+column = "IGOV"
+reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
+
+# ── DECIDED (maintainer 2026-10-12, #1302 round 3): SOS PAR kva_typN is a wide
+# pivot; the catalog has no kva_typ base, so the generator's pivot rule cannot
+# reason it (#1495).
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ1"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ10"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ11"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ12"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ13"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ14"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ15"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ16"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ17"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ18"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ19"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ2"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ20"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ21"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ22"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ23"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ24"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ25"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ26"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ27"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ28"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ29"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ3"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ30"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ4"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ5"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ6"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ7"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ8"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_OV"
+column = "kva_typ9"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ1"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ10"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ11"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ12"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ13"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ14"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ15"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ16"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ17"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ18"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ19"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ2"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ20"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ21"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ22"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ23"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ24"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ25"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ26"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ27"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ28"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ29"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ3"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ30"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ4"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ5"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ6"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ7"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ8"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+[[unmap]]
+table = "SWECOV_SOS_SV"
+column = "kva_typ9"
+reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)."
+
+# ── DECIDED (maintainer 2026-10-12, #1302 round 3): InrFlytt 2015-2024 deliver
+# the property keys under two spellings; the short spelling maps.
+
+[[unmap]]
+table = "InrFlyttFlode2015"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2015"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2016"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2016"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2017"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2017"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2018"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2018"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2019"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2019"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2020"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2020"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2021"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2021"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2022"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2022"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2023"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2023"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2024"
+column = "P1105_LopNr_Fastbeteckn"
+reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[unmap]]
+table = "InrFlyttFlode2024"
+column = "P1105_LopNr_FastbetecknG"
+reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
