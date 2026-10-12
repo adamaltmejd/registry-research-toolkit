@@ -3308,6 +3308,201 @@ label = "barn"
 table = "FK_MEKV_lev4"
 label = "vuxna"
 
+# FK person keys (#1302). The P1105 löpnummer headers do not name-match the
+# catalog's key columns, so each lev4 key maps to its variant's identifier.
+# Not mapped: FK_DELFALL1_1_SA_lev4 and FK_MEKB/FK_MEKBBARN_lev4 (the catalog
+# does not cover the edition's first years), FK_ASE_lev4 (its two variants
+# split inside the edition), and FK_UHS_lev4's child key (no state in
+# utbetalningar-barn until the fk.toml errata is prepared).
+[[mapping]]
+register_variant = "fk/aktivitetsstod/_default"
+variable = "fk/aktivitetsstod/lopnr-personnr"
+representation = "personnummer"
+table = "FK_AKTIVITETSTOD_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2025 }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/barnbidrag/_default"
+variable = "fk/barnbidrag/lopnr-personnr"
+representation = "personnummer"
+table = "FK_BAB_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2024 }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/bostadsbidrag/_default"
+variable = "fk/bostadsbidrag/lopnr-personnr"
+representation = "personnummer"
+table = "FK_BOSTADSBIDRAG_lev4"
+column = "P1105_LopNr_Sokande_PersonNr"
+edition = { from = 2018, to = 2025 }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/bostadsersattning/_default"
+variable = "fk/bostadsersattning/lopnr-personnr"
+representation = "personnummer"
+table = "FK_BOSTADSERSATTNING_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = "2025-06" }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/bostadstillagg/_default"
+variable = "fk/bostadstillagg/lopnr-personnr"
+representation = "personnummer"
+table = "FK_BOSTADSTILLAGG_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = "2025-06" }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/sjukpenning/delfall-4-1"
+variable = "fk/sjukpenning/lopnr"
+representation = "Lopnr"
+table = "FK_DELFALL4_1_SJP_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2012, to = 2025 }
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/etableringsersattning/_default"
+variable = "fk/etableringsersattning/lopnr-personnr"
+representation = "personnummer"
+table = "FK_ETABLERINGSERSATTNING_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2024 }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/etableringstillagg/_default"
+variable = "fk/etableringstillagg/lopnr-personnr"
+representation = "personnummer"
+table = "FK_ETABLERINGSTILLAGG_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = "2025-06" }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/persid"
+representation = "PERSID"
+table = "FK_FP_DELFALL1_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2014, to = 2024 }
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/foraldrapenning/fp-delfall1"
+variable = "fk/foraldrapenning/persid-barn"
+representation = "PERSID_BARN"
+table = "FK_FP_DELFALL1_lev4"
+column = "P1105_LopNr_Barn_PersonNr"
+edition = { from = 2014, to = 2024 }
+reason = "Pseudonymised child key; the variant's only child identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/handikappersattning/_default"
+variable = "fk/handikappersattning/lopnr-personnr"
+representation = "personnummer"
+table = "FK_HE_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2024 }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/merkostnadsersattning/mottagare"
+variable = "fk/merkostnadsersattning/lopnr"
+representation = "Lopnr"
+table = "FK_MEKV_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2019, to = 2025 }
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/omvardnadsbidrag/mottagare"
+variable = "fk/omvardnadsbidrag/lopnr"
+representation = "Lopnr"
+table = "FK_OMV_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2019, to = 2025 }
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/omvardnadsbidrag/barn"
+variable = "fk/omvardnadsbidrag/lopnr"
+representation = "Lopnr"
+table = "FK_OMVBARN_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2019, to = 2025 }
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/omvardnadsbidrag/barn"
+variable = "fk/omvardnadsbidrag/lopnr-barn"
+representation = "Lopnr_barn"
+table = "FK_OMVBARN_lev4"
+column = "P1105_LopNr_Barn_PersonNr"
+edition = { from = 2019, to = 2025 }
+reason = "Pseudonymised child key; the variant's only child identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/smittbararpenning/_default"
+variable = "fk/smittbararpenning/lopnr-personnr"
+representation = "personnummer"
+table = "FK_SMITTBARARPENNING_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2024 }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/lopnr"
+representation = "LOPNR"
+table = "FK_TFP_DELFALL_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2024 }
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8"
+variable = "fk/tillfallig-foraldrapenning/lopnr-barn"
+representation = "LOPNR_BARN"
+table = "FK_TFP_DELFALL_lev4"
+column = "P1105_LopNr_Barn_PersonNr"
+edition = { from = 2015, to = 2024 }
+reason = "Pseudonymised child key; the variant's only child identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/underhallsstod/utbetalningar-barn"
+variable = "fk/underhallsstod/lopnr-bm"
+representation = "LOPNR_BM"
+table = "FK_UHS_lev4"
+column = "P1105_LopNr_Bidragsmottagare_PersonNr"
+edition = { from = 2018, to = 2025 }
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/utvecklingsersattning/_default"
+variable = "fk/utvecklingsersattning/lopnr-personnr"
+representation = "personnummer"
+table = "FK_UTVECKLINGSERSATTNING_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2025 }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
+[[mapping]]
+register_variant = "fk/vardbidrag/_default"
+variable = "fk/vardbidrag/lopnr-personnr"
+representation = "personnummer"
+table = "FK_VB_lev4"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2022 }
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."
+
 # ── DECIDED (maintainer-approved 2026-09-02): all 173 GDB geocoded-extract
 # tables → scb/gdb/adresser-fastigheter, the only GDB variant carrying the
 # source material (DeSO, RegSO, address coordinates; entity key uuid-adr).

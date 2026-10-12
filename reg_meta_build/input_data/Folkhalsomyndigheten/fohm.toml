@@ -170,6 +170,26 @@ column = "smittskyddsenhet"
 definition = "Den regionala smittskyddsenhet som ansvarar för fallet."
 data_type = "text"
 
+# Errata from SWECOV's SmiNet delivery (#1302). The column names are the
+# delivered headers. The reason for testing is listed in FoHM's
+# "Extern_variabellista_Covid-19_SmiNet_version_1.xlsx".
+[[register.variable]]
+name = "Anledning till undersökning"
+column = "Anledningtillundersökning"
+definition = "Anledning till undersökningen (provtagningen)."
+data_type = "text"
+is_sensitive = true
+
+# FoHM's external variable list does not document FALLID, so the name is the
+# column name (#1302).
+[[register.variable]]
+name = "FALLID"
+column = "FALLID"
+definition = "Odokumenterat fält. Troligen SmiNets identitet för fallet (anmälan); FoHM:s externa variabellista beskriver det inte."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
+
 
 [[register]]
 key = "nvr"
@@ -270,6 +290,17 @@ name = "Utförande vårdenhet"
 column = "vardenhet"
 definition = "Vårdenhet som utförde vaccinationen."
 data_type = "text"
+
+# Errata from SWECOV's FHM_NVR_Barn delivery (#1302): the delivered header is
+# P1105_LopNr_care_giver_name, a pseudonymised key. FoHM documents no such field,
+# so the name is the column name.
+[[register.variable]]
+name = "care_giver_name"
+column = "care_giver_name"
+definition = "Odokumenterat fält. Troligen vårdgivarens namn, levererat pseudonymiserat som löpnummer; FoHM beskriver inte fältet."
+data_type = "text"
+is_identifier = true
+is_sensitive = true
 
 
 # Maintainer transcription of the SWECOV FHM_CovidWGS physical-schema export.

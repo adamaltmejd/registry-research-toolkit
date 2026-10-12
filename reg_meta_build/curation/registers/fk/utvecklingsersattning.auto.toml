@@ -7,17 +7,17 @@
 # (A4.4a) for the name-fallback curation seam; tomllib ignores it.
 
 [[variable]]
-native_id = "5517508967525103350.belopp"
-slug = "belopp"  # source: kolumnnamn
-
-[[variable]]
-native_id = "5517508967525103350.utbetalningsmanad"
-slug = "utbetalningsmanad"  # source: kolumnnamn
-
-[[variable]]
-native_id = "5517508967525103350.utbetalningsperiod_from"
+native_id = "5517508967525103350.FROM_DATUM"
 slug = "utbetalningsperiod-from"  # source: kolumnnamn
 
 [[variable]]
-native_id = "5517508967525103350.utbetalningsperiod_tom"
+native_id = "5517508967525103350.TOM_DATUM"
 slug = "utbetalningsperiod-tom"  # source: kolumnnamn
+
+[[variable]]
+native_id = "5517508967525103350.UTTAGET_MANAD"
+slug = "utbetalningsmanad"  # source: kolumnnamn
+
+[[variable]]
+native_id = "5517508967525103350.belopp"
+slug = "belopp"  # source: kolumnnamn

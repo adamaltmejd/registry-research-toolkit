@@ -11,13 +11,13 @@ native_id = "7791929252178908414.belopp"
 slug = "belopp"  # source: kolumnnamn
 
 [[variable]]
+native_id = "7791929252178908414.beslutsmanad"
+slug = "utbetalningsmanad"  # source: kolumnnamn
+
+[[variable]]
 native_id = "7791929252178908414.lonekostnad"
 slug = "lonekostnad"  # source: kolumnnamn
 
 [[variable]]
 native_id = "7791929252178908414.sjuklonekostnad"
 slug = "sjuklonekostnad"  # source: kolumnnamn
-
-[[variable]]
-native_id = "7791929252178908414.utbetalningsmanad"
-slug = "utbetalningsmanad"  # source: kolumnnamn

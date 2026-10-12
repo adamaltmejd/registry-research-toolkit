@@ -7,9 +7,9 @@
 # (A4.4a) for the name-fallback curation seam; tomllib ignores it.
 
 [[variable]]
-native_id = "4635732609514065093.belopp"
-slug = "belopp"  # source: kolumnnamn
+native_id = "4635732609514065093.Utb_manad"
+slug = "utbetalningsmanad"  # source: kolumnnamn
 
 [[variable]]
-native_id = "4635732609514065093.utbetalningsmanad"
-slug = "utbetalningsmanad"  # source: kolumnnamn
+native_id = "4635732609514065093.belopp"
+slug = "belopp"  # source: kolumnnamn
