@@ -353,6 +353,12 @@ _ANY_LOPNR_PREFIX = re.compile(r"^(P1105_)?LOPNR_", re.IGNORECASE)
 _PROVENANCE_KALLA = re.compile(r"^Inrapporterat från\b", re.IGNORECASE)
 
 
+def _canonical_kalla(col: dict) -> bool:
+    """A column whose `Källa` names a canonical register: the graft track owns it."""
+    kalla = col.get("kalla")
+    return bool(kalla) and not _PROVENANCE_KALLA.match(kalla)
+
+
 def norm_col(name: str) -> str:
     return _ANY_LOPNR_PREFIX.sub("", name.strip()).upper()
 
@@ -1402,7 +1408,8 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
     Källa-empty columns — genuinely SWECOV-constructed — survive into the flavor.
     (For the commercial / regional / quality-register providers no column carries a
     Källa at all, so this is a no-op there; it only trims the mixed
-    SWECOV-constructed RTB extracts.)
+    SWECOV-constructed RTB extracts.) `cmd_flavor` refuses a holding that drops
+    such a column while its route names no graft/target register (#1302).
 
     EXCEPTION: a `Källa` that is a PROVENANCE phrase ("Inrapporterat från <agency>")
     is NOT a canonical register — it marks data reported FROM an external public
@@ -1429,8 +1436,7 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
     # fold -> {physical column: its enriched entry}, first-seen first.
     groups: dict[str, dict[str, dict]] = {}
     for col in sorted(columns, key=lambda c: c["name"]):
-        kalla = col.get("kalla")
-        if kalla and not _PROVENANCE_KALLA.match(kalla):
+        if _canonical_kalla(col):
             # Källa names a canonical register -> global graft track, not flavor.
             # A provenance phrase ("Inrapporterat från …") is steward-reported data
             # with no canonical home -> keep it in the flavor (see docstring, #443).
@@ -1547,6 +1553,9 @@ def cmd_flavor(args: argparse.Namespace) -> None:
     enriched = json.loads(enriched_path.read_text())
 
     providers: dict[str, str] = {}
+    # Källa-routed columns of holdings with no graft register: `globals` never scans
+    # those holdings, so the columns would land nowhere.
+    ungrafted: list[str] = []
     # (provider, register_key) -> register dict; variants keyed for accretion.
     registers: dict[tuple[str, str], dict] = {}
     for (
@@ -1601,6 +1610,11 @@ def cmd_flavor(args: argparse.Namespace) -> None:
                     f"table(s) absent from holding {key!r}: {missing}"
                 )
             columns = [c for c in columns if c["name"] in table_cols]
+        dropped = sorted(
+            {f"{c['name']} (Källa={c['kalla']})" for c in columns if _canonical_kalla(c)}
+        )
+        if dropped and not _mapping_registers(holding.get("mapping", {})):
+            ungrafted.append(f"{key}: {', '.join(dropped)}")
         variables = _flavor_variables(columns)
         if not variables:
             # Every column was Källa-sourced (canonical) — nothing steward-only
@@ -1619,6 +1633,16 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             "variables": variables,
         }
         reg["_variant_slugs"][var_key] = var_slug
+    if ungrafted:
+        raise SystemExit(
+            "flavor holding columns carry a register Källa, so the flavor leaves "
+            "them to the global graft track, but their route names no `graft` (or "
+            "`target`) register, so `globals` never scans them:\n  "
+            + "\n  ".join(ungrafted)
+            + '\nAdd `graft = "<provider>/<register>"` to the holding\'s [[route]] '
+            "in reg_webapp/stewards/swecov/source_policy.toml and rerun `enrich`. "
+            "No provider output was written."
+        )
 
     # --- curated-provider TOMLs (the extend-db contract) ---
     providers_dir = base / "providers"

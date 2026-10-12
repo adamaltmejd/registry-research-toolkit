@@ -13,3 +13,6 @@ slug = "population"
 
 [register_variant."4969117928487263745.9041324741277064675"]
 slug = "_default"
+
+[register_variant."4969117928487263745.5502852864433693833"]
+slug = "fodelseland-grupperat"
