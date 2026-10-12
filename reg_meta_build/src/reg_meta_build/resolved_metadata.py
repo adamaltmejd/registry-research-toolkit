@@ -332,7 +332,7 @@ class ResolvedStateLineage(_ResolvedWindow):
 
 class ResolvedLineageWarning(_ResolvedModel):
     consumer: ResolvedStateRef
-    kind: Literal["no_source_state", "ambiguous_source_variant"]
+    kind: Literal["ambiguous_source_variant"]
     message: str
 
     _message = field_validator("message")(_require_trimmed)
@@ -429,13 +429,6 @@ def validate_metadata_structure(metadata: ResolvedMetadata) -> None:
     for label, graph in graphs.items():
         _unique(graph, str(label))
         reject_cycles(graph, relation=relations.get(label, "replaced_by"))
-    linked = {state_reference_key(e.consumer) for e in metadata.state_lineage}
-    for warning in metadata.lineage_warnings:
-        if (
-            warning.kind == "no_source_state"
-            and state_reference_key(warning.consumer) in linked
-        ):
-            raise ValueError("no_source_state warning contradicts explicit lineage")
     _unique(
         ((state_reference_key(w.consumer), w.kind) for w in metadata.lineage_warnings),
         "lineage warning",

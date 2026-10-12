@@ -1426,16 +1426,18 @@ selects only that exact admitted variant, matching its resolved source name. An 
 or ambiguous explicit variant cannot fall back to a register default or another
 variant's states. Explicit source-variant defaults resolve unqualified claims with
 genuinely multiple variants and are checked even when unused. Missing evidence produces
-retained lineage warnings and blocking diagnostics: no supported source state withholds
-the edge as a warning; ambiguity between identity-linked source variants is an error.
-Without an accepted variable identity path, even an ambiguous source-variant label
-retains a no-source-state warning and cannot create an edge. Register attribution alone
-does not establish a variable endpoint. Missing accepted endpoints retain that warning
-even for year-independent deliveries. Only positively linked endpoints reach the
-dated-intersection guard; independent endpoints then require an explicit
-independent-edge contract and currently remain errors. No date hull is inferred from the
-source register's other deliveries. Two registers that each name the other as the source
-of one identity-linked variable form a lineage loop, which is refused (`lineage_cycle`).
+diagnostics: no supported source state withholds the edge as a build-report warning
+only, since on real data it fires for tens of thousands of states and buried the rest
+(#1300); ambiguity between identity-linked source variants is an error and is also
+stored as a catalog lineage warning. Without an accepted variable identity path, even an
+ambiguous source-variant label reports a no-source-state warning and cannot create an
+edge. Register attribution alone does not establish a variable endpoint. Missing
+accepted endpoints retain that warning even for year-independent deliveries. Only
+positively linked endpoints reach the dated-intersection guard; independent endpoints
+then require an explicit independent-edge contract and currently remain errors. No date
+hull is inferred from the source register's other deliveries. Two registers that each
+name the other as the source of one identity-linked variable form a lineage loop, which
+is refused (`lineage_cycle`).
 
 Panel keys require supported states in the exact variant. Losing one composite-key
 member makes that entire key unknown; it never manufactures a shorter key. Other axes,

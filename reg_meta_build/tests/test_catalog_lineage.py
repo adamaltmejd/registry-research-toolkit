@@ -134,7 +134,5 @@ def test_independent_register_only_attribution_retains_missing_endpoint_warning(
         "unresolved_lineage_no_source_state"
     ]
     assert result.diagnostics[0].severity == "warning"
-    (warning,) = result.metadata.lineage_warnings
-    assert warning.kind == "no_source_state"
-    assert warning.consumer.period_scope == "year_independent"
-    assert warning.consumer.valid_from is warning.consumer.valid_to is None
+    assert result.diagnostics[0].valid_from is result.diagnostics[0].valid_to is None
+    assert not result.metadata.lineage_warnings

@@ -194,17 +194,6 @@ INVALID_METADATA: dict[str, tuple[Callable[[], ResolvedMetadata], str, str | Non
         "state lineage forms a cycle",
         "lineage_cycle",
     ),
-    # The warning says the consumer has no source state; the edge gives it one.
-    "no-source-state-warning-on-a-linked-consumer": (
-        lambda: _with(
-            "lineage_warnings",
-            _first("lineage_warnings").model_copy(
-                update={"consumer": _first("state_lineage").consumer}
-            ),
-        ),
-        "no_source_state warning contradicts explicit lineage",
-        None,
-    ),
     # A declaration must name the succession predecessor exactly.
     "historical-declaration-naming-no-predecessor": (
         lambda: _historical(target="scb/example/retiired"),

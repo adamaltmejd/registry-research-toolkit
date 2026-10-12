@@ -39,8 +39,7 @@ pub struct LineageEdge {
     source_fqid: Option<String>,
 }
 
-/// A build-time warning on one of the variable's states: `no_source_state` or
-/// `ambiguous_source_variant`.
+/// A build-time warning on one of the variable's states: `ambiguous_source_variant`.
 #[derive(Serialize, ToSchema)]
 pub struct LineageWarning {
     #[serde(serialize_with = "storage_id")]

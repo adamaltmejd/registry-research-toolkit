@@ -3224,7 +3224,7 @@
       },
       "LineageWarning": {
         "type": "object",
-        "description": "A build-time warning on one of the variable's states: `no_source_state` or\n`ambiguous_source_variant`.",
+        "description": "A build-time warning on one of the variable's states: `ambiguous_source_variant`.",
         "required": [
           "consumer_state_id",
           "warning_kind",

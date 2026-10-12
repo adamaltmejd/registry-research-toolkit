@@ -379,11 +379,14 @@ def resolve_catalog_lineage(
                         if not source_states
                         else "Multiple source variants need an explicit lineage choice."
                     )
-                warnings.append(
-                    ResolvedLineageWarning(
-                        consumer=state_ref(fqid, state), kind=kind, message=detail
+                # A missing source state is build-report only (#1300): 28k such
+                # rows on real data buried the few ambiguities in the catalog.
+                if kind == "ambiguous_source_variant":
+                    warnings.append(
+                        ResolvedLineageWarning(
+                            consumer=state_ref(fqid, state), kind=kind, message=detail
+                        )
                     )
-                )
                 diagnostics.append(
                     ResolutionDiagnostic(
                         code="unresolved_lineage_" + kind,
