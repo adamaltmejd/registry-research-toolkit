@@ -38,6 +38,20 @@ if TYPE_CHECKING:
 
 
 type NativeEventKey = tuple[str, str, str]
+# A guarded record's ref, evidence hash, register key and resolved register.
+type GuardedObservation = tuple[
+    SourceRecordRef, str, tuple[str | int, ...] | None, ResolvedRegister | None
+]
+# An event endpoint one record matches, that record's ref and the targets it adds.
+type EndpointObservation = tuple[
+    NativeEventKey, SourceRecordRef, tuple[DependencyKey | None, ...]
+]
+
+
+@dataclass(frozen=True)
+class ScopeEventObservation:
+    guarded: tuple[GuardedObservation, ...]
+    endpoints: tuple[EndpointObservation, ...]
 
 
 @dataclass(frozen=True)
@@ -129,21 +143,37 @@ class SourceEventBindings:
         uses: Mapping[str, Sequence[Mapping[str, object]]],
     ) -> None:
         """Account for complete source scopes, including unresolved endpoint peers."""
+        self.record_scope(self.scope_observation(originals, result, uses))
+
+    def scope_observation(
+        self,
+        originals: tuple[SourceRecord, ...],
+        result: ScopeResolution,
+        uses: Mapping[str, Sequence[Mapping[str, object]]],
+    ) -> ScopeEventObservation:
+        """What `observe_scope` records for one scope, without recording it.
+
+        It reads only the event endpoints and guarded refs fixed at construction,
+        so a worker process can compute it for the parent to record in order.
+        """
+        guarded: list[GuardedObservation] = []
+        endpoints: list[EndpointObservation] = []
         if not originals or originals[0].source not in self.sources.values():
-            return
+            return ScopeEventObservation((), ())
         for record in originals:
             ref = record_ref(record)
             if ref in self.guarded_hashes:
-                self.guarded_hashes[ref].append(evidence_sha256(record))
-                self.guarded_owners[ref] = source_register_key(record)
                 register_key = source_register_key(record)
-                if register_key in result.parents.registers:
-                    self.guarded_registers[register_key] = result.parents.registers[
-                        register_key
-                    ]
+                guarded.append(
+                    (
+                        ref,
+                        evidence_sha256(record),
+                        register_key,
+                        result.parents.registers.get(register_key),
+                    )
+                )
             for kind, key in self._endpoints(record.source, record.subject.native):
-                self.refs[key].add(record_ref(record))
-                targets = self.targets[key]
+                targets: list[DependencyKey | None] = []
                 if kind in {"variable", "member"}:
                     for use in uses[record.record_id]:
                         variable = use["variable"]
@@ -151,18 +181,41 @@ class SourceEventBindings:
                             raise TypeError(
                                 "source event variable target must be an FQID"
                             )
-                        targets.add(("variable", variable) if variable else None)
-                    continue
-                register = result.parents.registers.get(source_register_key(record))
-                if register is None:
-                    targets.add(None)
-                    continue
-                fqid = f"{register.provider}/{register.slug}"
-                if kind == "register":
-                    targets.add(("register", fqid))
+                        targets.append(("variable", variable) if variable else None)
                 else:
-                    variant = result.parents.variants.get(native_variant_key(record))
-                    targets.add(("variant", fqid, variant.slug) if variant else None)
+                    register = result.parents.registers.get(source_register_key(record))
+                    if register is None:
+                        targets.append(None)
+                    elif kind == "register":
+                        targets.append(
+                            ("register", f"{register.provider}/{register.slug}")
+                        )
+                    else:
+                        variant = result.parents.variants.get(
+                            native_variant_key(record)
+                        )
+                        targets.append(
+                            (
+                                "variant",
+                                f"{register.provider}/{register.slug}",
+                                variant.slug,
+                            )
+                            if variant
+                            else None
+                        )
+                endpoints.append((key, ref, tuple(targets)))
+        return ScopeEventObservation(tuple(guarded), tuple(endpoints))
+
+    def record_scope(self, observation: ScopeEventObservation) -> None:
+        """Record one scope's observation; scopes are recorded in a fixed order."""
+        for ref, digest, register_key, register in observation.guarded:
+            self.guarded_hashes[ref].append(digest)
+            self.guarded_owners[ref] = register_key
+            if register_key is not None and register is not None:
+                self.guarded_registers[register_key] = register
+        for key, ref, targets in observation.endpoints:
+            self.refs[key].add(ref)
+            self.targets[key].update(targets)
 
     def observe_unselected(
         self, source: str, natives: Iterable[NativeCoordinates]

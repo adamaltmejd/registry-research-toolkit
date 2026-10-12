@@ -84,6 +84,10 @@ def scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     )
 
 
+def clear_scope_bounds_cache() -> None:
+    _interval_bounds.cache_clear()
+
+
 @lru_cache(maxsize=4096)
 def _interval_bounds(
     intervals: tuple[tuple[str, str | None], ...],

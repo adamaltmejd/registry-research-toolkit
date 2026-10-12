@@ -2,12 +2,18 @@
 
 from __future__ import annotations
 
+import gc
 import gzip
 import json
+import multiprocessing
+import pickle
+import sys
 import time
-from collections import Counter, defaultdict
-from contextlib import ExitStack
-from dataclasses import asdict, dataclass
+import traceback
+from collections import Counter, defaultdict, deque
+from concurrent.futures import ProcessPoolExecutor
+from contextlib import ExitStack, closing
+from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from io import TextIOWrapper
 from pathlib import Path
@@ -58,6 +64,7 @@ from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
 )
+from reg_meta_build.prepared_sources import PreparedSourceRecords
 from reg_meta_build.prepared_values import _DESCRIPTOR
 from reg_meta_build.resolve_code import resolve_code_sha256
 from reg_meta_build.resolved_bundle import ResolvedBuild, write_resolved_bundle
@@ -103,21 +110,34 @@ from reg_meta_build.source_support import (
     diagnostic_register_contexts,
     scope_support_diagnostics,
 )
-from reg_meta_build.source_value_bindings import open_value_bindings
+from reg_meta_build.source_value_bindings import (
+    clear_binding_caches,
+    open_value_bindings,
+)
 from reg_meta_build.sources.swecov_column_types import index_steward_column_storage
 
 from .errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
 from .source_evidence import canonical_sha256, evidence_sha256
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Generator, Iterable
 
-    from reg_meta_build.curation_tree import CurationTree
+    from reg_meta_build.catalog_dependencies import DependencyKey
+    from reg_meta_build.curation_tree import CurationTree, RegisterCuration
+    from reg_meta_build.data_warnings import DataWarning
+    from reg_meta_build.prepared_values import PreparedSourceValues
+    from reg_meta_build.resolved_catalog import (
+        ResolvedEdition,
+        ResolvedRegister,
+        ResolvedVariable,
+    )
+    from reg_meta_build.source_event_resolution import ScopeEventObservation
     from reg_meta_build.source_records import SourceRecord
     from reg_meta_build.source_value_bindings import (
         ValueBindingIssue,
         ValueBindingSession,
     )
+    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
 
 
 # The reader's search `q` cap: MAX_QUERY_CHARS in crates/reg-catalog/src/ops/mod.rs
@@ -332,6 +352,473 @@ def _value_source_issue(
     ), evidence
 
 
+# Source scopes resolve in this process or in forked workers (#1423). Either way each
+# scope's whole effect comes back as one pickled `ScopeOutcome`, and the parent folds
+# the outcomes in the serial scope order, so the output is the same for every worker
+# count by construction.
+
+type ScopeKey = tuple[str, NativeKey | None]
+# One effect of a scope's resolution, in the order resolution made it; a failure is
+# always last.
+type ScopeAction = _IssueAction | _CodingAction | _ScopeFailure
+
+
+@dataclass(frozen=True)
+class _IssueAction:
+    severity: str
+    deferred: bool
+    line: str
+
+
+@dataclass(frozen=True)
+class _CodingAction:
+    """A register's coding curation compiled in this scope."""
+
+    register: str
+    matched: tuple[str, ...]
+    # (compile-report bucket, case ID)
+    statuses: tuple[tuple[str, str | None], ...]
+    # Only when decisions are dumped.
+    cases: tuple[CurationCase, ...]
+
+
+@dataclass(frozen=True)
+class _ScopeContext:
+    """Every scope's read-only inputs; a forked worker inherits them copy-on-write."""
+
+    records: PreparedSourceRecords
+    value_sources: tuple[PreparedSourceValues, ...]
+    whole_sources: frozenset[str]
+    # A register scope's record ordinals, read once before any worker starts.
+    slices: dict[ScopeKey, tuple[int, ...]]
+    scopes: dict[ScopeKey, CompiledScope]
+    pending_source_issues: dict[ScopeKey, list[tuple[NativeKey, ResolutionDiagnostic]]]
+    retained_relationship_issues: dict[str, list[ResolutionDiagnostic]]
+    coding_registers: dict[str, RegisterCuration]
+    books: dict[str, ResolvedClassification]
+    withheld_books: dict[str, tuple[ResolutionDiagnostic, ...]]
+    references: dict[str, str]
+    family_references: dict[str, tuple[str, ...]]
+    label_rules: dict[str, str]
+    classification_overrides: dict[str, tuple[str, str]]
+    support: SourceSupportBindings
+    storage_by_register: dict[str, dict[str, StewardColumnStorage]]
+    event_bindings: SourceEventBindings
+    lineage_refs: frozenset[SourceRecordRef]
+    diagnostic: bool
+    dump_decisions: bool
+
+
+@dataclass(frozen=True)
+class _ScopeFailure:
+    """A scope's exception as data: some exceptions (`RegMetaError`, keyword-only
+    `SourceFormatError`) do not survive a pickle round trip."""
+
+    # The exception itself, when it survives a pickle round trip as its own class
+    # (a Pydantic `ValidationError` does; its constructor cannot rebuild it from
+    # `args`). None when it travels as the fields below.
+    exc: Exception | None
+    # Pickled by reference: its module and qualified name.
+    cls: type[Exception]
+    # A `RegMetaError`'s attributes: exit code, code, class, message, remediation
+    # and any a subclass adds. None for any other exception.
+    state: dict[str, object] | None
+    args: tuple[object, ...]
+    message: str
+    traceback: str
+
+
+def _scope_failure(exc: Exception) -> _ScopeFailure:
+    cls, args = type(exc), exc.args
+    state = dict(vars(exc)) if isinstance(exc, RegMetaError) else None
+    whole: Exception | None = None
+    if state is None:
+        try:
+            if type(pickle.loads(pickle.dumps(exc))) is cls:
+                whole = exc
+        except Exception:  # noqa: BLE001 — falls back to the fields below
+            whole = None
+    try:
+        pickle.dumps((cls, args, state))
+    except Exception:  # noqa: BLE001 — an unimportable class or unpicklable values
+        cls, args, state = RuntimeError, (f"{type(exc).__qualname__}: {exc}",), None
+    return _ScopeFailure(
+        exc=whole,
+        cls=cls,
+        state=state,
+        args=args,
+        message=str(exc),
+        traceback="".join(traceback.format_exception(exc)),
+    )
+
+
+def _raise_scope_failure(failure: _ScopeFailure) -> None:
+    """Raise the scope's exception again as its own class, so the CLI reports the
+    same code, message and exit status as a serial build."""
+    exc: Exception
+    if failure.exc is not None:
+        exc = failure.exc
+    elif issubclass(failure.cls, RegMetaError) and failure.state is not None:
+        exc = failure.cls.__new__(failure.cls)
+        exc.__dict__.update(failure.state)
+    else:
+        try:
+            exc = failure.cls(*failure.args)
+        except Exception:  # noqa: BLE001 — a class its args cannot rebuild
+            exc = RuntimeError(f"{failure.cls.__qualname__}: {failure.message}")
+    exc.add_note(f"Raised while resolving a source scope:\n{failure.traceback}")
+    raise exc
+
+
+@dataclass(frozen=True)
+class ScopeOutcome:
+    """Everything one scope's resolution writes, as data folded in scope order.
+
+    A failed scope carries its journal up to the exception and nothing else.
+    """
+
+    key: ScopeKey
+    journal: tuple[ScopeAction, ...]
+    records: int = 0
+    strict_refusals: int = 0
+    matched_labels: frozenset[str] = frozenset()
+    duplicate_overrides: frozenset[str] = frozenset()
+    data_warnings: tuple[DataWarning, ...] = ()
+    acknowledged: dict[str, int] = field(default_factory=dict)
+    coverage: tuple[CoverageObligation, ...] = ()
+    sibling_pairs: tuple[tuple[str, str], ...] = ()
+    sibling_lines: tuple[str, ...] = ()
+    # (case ID, its `case` ledger line)
+    cases: tuple[tuple[str, str], ...] = ()
+    parent_registers: dict[NativeKey, ResolvedRegister] = field(default_factory=dict)
+    parent_variants: dict[NativeKey, ResolvedVariant] = field(default_factory=dict)
+    parent_editions: dict[NativeKey, ResolvedEdition] = field(default_factory=dict)
+    variables: dict[NativeKey, ResolvedVariable | None] = field(default_factory=dict)
+    withheld: dict[DependencyKey, tuple[ResolutionDiagnostic, ...]] = field(
+        default_factory=dict
+    )
+    added_lines: tuple[str, ...] = ()
+    # (variable FQID, its (source, semantic record key) evidence)
+    evidence: tuple[tuple[str, tuple[tuple[str, tuple[str, ...]], ...]], ...] = ()
+    # False when the scope's occurrences do not account for every original record.
+    accounted: bool = True
+    event_observation: ScopeEventObservation | None = None
+    # (guarded ref, its original, owner register key, resolved owner register)
+    lineage: tuple[
+        tuple[SourceRecordRef, SourceRecord, NativeKey | None, ResolvedRegister | None],
+        ...,
+    ] = ()
+    occurrence_lines: tuple[str, ...] = ()
+
+
+# Set in the parent before any scope resolves; a forked worker inherits it.
+_SCOPE_CONTEXT: _ScopeContext | None = None
+# This process's own prepared-records reader and value sessions, never inherited:
+# they are opened again in each worker (`_open_scope_worker`).
+_SCOPE_HANDLES: (
+    tuple[PreparedSourceRecords, tuple[ValueBindingSession, ...], ExitStack] | None
+) = None
+
+
+def _open_scope_handles(
+    stack: ExitStack,
+) -> tuple[PreparedSourceRecords, tuple[ValueBindingSession, ...], ExitStack]:
+    assert _SCOPE_CONTEXT is not None
+    records = _SCOPE_CONTEXT.records
+    return (
+        PreparedSourceRecords(
+            root=records.root,
+            manifest=records.manifest,
+            input_commit=records.input_commit,
+        ),
+        stack.enter_context(open_value_bindings(_SCOPE_CONTEXT.value_sources)),
+        stack,
+    )
+
+
+def _open_scope_worker() -> None:
+    global _SCOPE_HANDLES
+    # The handles hold their ExitStack, so the sessions stay open until exit.
+    _SCOPE_HANDLES = _open_scope_handles(ExitStack())
+
+
+def _issue_action(value: ResolutionDiagnostic) -> _IssueAction:
+    return _IssueAction(
+        value.severity,
+        value.code == DEFERRED_REFERENCE,
+        ledger_line("issue", value.model_dump(mode="json")),
+    )
+
+
+def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
+    """Resolve one complete source scope from this process's own handles.
+
+    It reads the shared context and writes nothing but `journal` and its result.
+    """
+    context, handles = _SCOPE_CONTEXT, _SCOPE_HANDLES
+    assert context is not None and handles is not None
+    records, sessions, _ = handles
+    scope_started = time.perf_counter()
+    source = key[0]
+    records.clear_decoded_records()
+    clear_binding_caches(sessions)
+    originals = (
+        tuple(records.iter_records(source=source))
+        if source in context.whole_sources
+        else records.read_ordinals(context.slices[key])
+    )
+    _refuse_duplicated_rows(originals)
+    scope = context.scopes[key]
+    scope_coding = tuple(
+        context.coding_registers[name]
+        for name in sorted(
+            set(declared_register_fqids(scope.naming).values())
+            & context.coding_registers.keys()
+        )
+    )
+
+    def record_coding_compilation(
+        register: RegisterCuration,
+        new_cases: tuple[CurationCase, ...],
+        new_diagnostics: tuple[ResolutionDiagnostic, ...],
+    ) -> None:
+        journal.append(
+            _CodingAction(
+                f"{register.register_info.provider}/{register.register_info.slug}",
+                tuple(case.case_id for case in new_cases),
+                tuple(
+                    (
+                        "over_broad"
+                        if diagnostic_issue.code == "overbroad_curation_entry"
+                        else "stale",
+                        diagnostic_issue.case_id,
+                    )
+                    for diagnostic_issue in new_diagnostics
+                ),
+                new_cases if context.dump_decisions else (),
+            )
+        )
+
+    scope_issues: list[ResolutionDiagnostic] = []
+
+    def record_scope_issue(value: ResolutionDiagnostic) -> None:
+        scope_issues.append(value)
+        journal.append(_issue_action(value))
+
+    resolution_started = time.perf_counter()
+    matched_labels: set[str] = set()
+    duplicate_overrides: set[str] = set()
+    result = resolve_source_scope(
+        originals,
+        source_diagnostics=(
+            *scope.source_diagnostics,
+            *context.pending_source_issues.get(key, ()),
+        ),
+        cases=scope.cases,
+        naming=scope.naming,
+        naming_ambiguities=scope.naming_ambiguities,
+        refused_naming=scope.refused_naming,
+        provider_keys=_unique_pairs(scope.provider_keys, "provider key"),
+        derive_native_provider_keys=True,
+        value_sessions=sessions,
+        support=context.support,
+        classifications=context.books,
+        withheld_classifications=context.withheld_books,
+        classification_references=context.references,
+        classification_family_references=context.family_references,
+        label_rules=context.label_rules,
+        classification_overrides=context.classification_overrides,
+        matched_labels=matched_labels,
+        duplicate_overrides=duplicate_overrides,
+        declared_variants=_unique_pairs(scope.variants, "declared variant"),
+        on_diagnostic=record_scope_issue,
+        diagnostic=context.diagnostic,
+        coding_scope=scope,
+        coding_registers=scope_coding,
+        storage_by_register=context.storage_by_register,
+        on_coding_compiled=record_coding_compilation,
+    )
+    _emit_timing(f"pipeline: resolve {key!r}", resolution_started)
+    data_warnings = scope_data_warnings(
+        result,
+        diagnostics=(
+            *scope_issues,
+            *(
+                d
+                for r in result.parents.registers.values()
+                for d in context.retained_relationship_issues.get(
+                    f"{r.provider}/{r.slug}", ()
+                )
+            ),
+        ),
+    )
+    uses: dict[str, list[dict[str, object]]] = {}
+    added_lines = []
+    evidence = []
+    for occurrence in result.corrections.occurrences:
+        variable = result.variables.get(occurrence.variable_key)
+        fqid = (
+            f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug}"
+            if variable is not None
+            else None
+        )
+        disposition: dict[str, object] = {
+            "variable": fqid,
+            "use": occurrence.use,
+            "withheld_fields": occurrence.withheld_fields,
+            "cases": sorted({c.case_id for c in occurrence.corrections}),
+        }
+        for record in occurrence.source_records:
+            uses.setdefault(record.record_id, []).append(disposition)
+        if not occurrence.source_records:
+            added_lines.append(
+                ledger_line(
+                    "added_occurrence",
+                    {"key": occurrence.occurrence_key, **disposition},
+                )
+            )
+        if fqid is not None:
+            evidence.append(
+                (
+                    fqid,
+                    tuple(
+                        (r.source, r.locators[0].semantic_record_key)
+                        for r in occurrence.evidence
+                    ),
+                )
+            )
+    # Invariant kept as a fail-fast guard: identical physical rows (one record id)
+    # are refused when the slice loads, and source-scope resolution accounts for
+    # every original record. A dropped record would vanish from the catalog
+    # silently. The parent raises it in its place in the scope's fold.
+    accounted = set(uses) == {r.record_id for r in originals} and len(uses) == len(
+        originals
+    )
+    lineage = []
+    for original in originals if context.lineage_refs else ():
+        ref = record_ref(original)
+        if ref in context.lineage_refs:
+            owner = source_register_key(original)
+            lineage.append((ref, original, owner, result.parents.registers.get(owner)))
+    outcome = ScopeOutcome(
+        key=key,
+        journal=tuple(journal),
+        records=len(originals),
+        strict_refusals=result.strict_refusals,
+        matched_labels=frozenset(matched_labels),
+        duplicate_overrides=frozenset(duplicate_overrides),
+        data_warnings=data_warnings,
+        acknowledged=dict(result.acknowledged),
+        coverage=result.coverage,
+        sibling_pairs=result.siblings.pairs,
+        sibling_lines=tuple(
+            ledger_line(
+                "sibling_pair",
+                {
+                    "family": pair.family,
+                    "a": pair.a,
+                    "b": pair.b,
+                    "columns": pair.columns,
+                    "disposition": pair.kind,
+                    "refs": [r.model_dump(mode="json") for r in pair.refs],
+                },
+            )
+            for pair in result.siblings.decisions
+        ),
+        cases=tuple(
+            (
+                evaluation.case_id,
+                ledger_line(
+                    "case", evaluation.model_dump(mode="json", exclude={"decision"})
+                ),
+            )
+            for evaluation in result.evaluations
+        ),
+        parent_registers=result.parents.registers,
+        parent_variants=result.parents.variants,
+        parent_editions=result.parents.editions,
+        variables=result.variables,
+        withheld=result.withheld_dependencies,
+        added_lines=tuple(added_lines),
+        evidence=tuple(evidence),
+        accounted=accounted,
+        event_observation=context.event_bindings.scope_observation(
+            originals, result, uses
+        ),
+        lineage=tuple(lineage),
+        occurrence_lines=tuple(
+            ledger_line(
+                "source_occurrence",
+                {"record_id": record_id, "dispositions": dispositions},
+            )
+            for record_id, dispositions in uses.items()
+        ),
+    )
+    _emit_timing(f"pipeline: scope {key!r}", scope_started)
+    return outcome
+
+
+def _scope_outcome_bytes(key: ScopeKey) -> bytes:
+    """One scope's pickled `ScopeOutcome`; a failure is part of the outcome.
+
+    Every worker count takes this one pickle round trip, so the parent folds the
+    same object graph whether a scope resolved here or in a worker.
+    """
+    journal: list[ScopeAction] = []
+    try:
+        outcome = _resolve_scope(key, journal)
+    except Exception as exc:  # noqa: BLE001 — re-raised by the fold, in scope order
+        journal.append(_scope_failure(exc))
+        outcome = ScopeOutcome(key=key, journal=tuple(journal))
+    return pickle.dumps(outcome, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def _scope_outcomes(
+    context: _ScopeContext, order: tuple[ScopeKey, ...], workers: int
+) -> Generator[ScopeOutcome]:
+    """Each scope's outcome, in `order`, resolved here or in `workers` processes."""
+    global _SCOPE_CONTEXT, _SCOPE_HANDLES
+    _SCOPE_CONTEXT = context
+    try:
+        if workers == 1:
+            with ExitStack() as stack:
+                _SCOPE_HANDLES = _open_scope_handles(stack)
+                for key in order:
+                    yield pickle.loads(_scope_outcome_bytes(key))
+            return
+        # Fork shares the context copy-on-write; spawn would pickle it into every
+        # worker. Each worker opens its own reader and value sessions, the parent
+        # holds no record cursor and no thread is alive at the fork, and frozen
+        # objects keep the cycle collector from touching (and so copying) the
+        # shared pages. Unflushed parent output would be written again by a child.
+        sys.stdout.flush()
+        sys.stderr.flush()
+        gc.freeze()
+        pool = ProcessPoolExecutor(
+            workers,
+            mp_context=multiprocessing.get_context("fork"),
+            initializer=_open_scope_worker,
+        )
+        try:
+            # Submitted and consumed in scope order; at most 2 x workers outcomes
+            # wait in memory for the fold.
+            pending = deque()
+            for key in order:
+                pending.append(pool.submit(_scope_outcome_bytes, key))
+                if len(pending) >= 2 * workers:
+                    yield pickle.loads(pending.popleft().result())
+            while pending:
+                yield pickle.loads(pending.popleft().result())
+        except BaseException:
+            pool.terminate_workers()
+            raise
+        finally:
+            pool.shutdown(cancel_futures=True)
+            gc.unfreeze()
+    finally:
+        _SCOPE_CONTEXT = _SCOPE_HANDLES = None
+
+
 @dataclass(frozen=True)
 class BuildPaths:
     """A build's admitted absolute paths: inputs, outputs and reports never overlap."""
@@ -484,6 +971,7 @@ def resolve_catalog(
     curation_dir: Path | None = None,
     dump_decisions: Path | None = None,
     resolved_out: Path | None = None,
+    workers: int = 1,
 ) -> ResolvedBuild:
     """Resolve the compiled curation up to the writer; nothing is placed.
 
@@ -496,6 +984,8 @@ def resolve_catalog(
     directory exists. `materialize.build_catalog` places the result.
     `resolved_out` names a new directory for the result as a resolved bundle
     (`resolved_bundle`), written once the resolve ledger member is closed.
+    `workers` processes resolve the source scopes; the result is the same for any
+    count.
     """
     # Fingerprinted before resolving, so the bundle names the code that ran.
     code = resolve_code_sha256() if resolved_out is not None else ""
@@ -510,6 +1000,7 @@ def resolve_catalog(
         curation_dir=curation_dir,
         dump_decisions=dump_decisions,
         resolved_out=resolved_out,
+        workers=workers,
     )
     assert isinstance(resolved, ResolvedBuild)
     if resolved_out is not None:
@@ -539,6 +1030,7 @@ def check_curation(
     registers: tuple[str, ...],
     curation_dir: Path | None = None,
     dump_decisions: Path | None = None,
+    workers: int = 1,
 ) -> dict[str, object]:
     """Check complete selected scopes before catalog assembly, without a database."""
     if not registers or not all(registers):
@@ -554,6 +1046,7 @@ def check_curation(
         registers=registers,
         curation_dir=curation_dir,
         dump_decisions=dump_decisions,
+        workers=workers,
     )
     assert isinstance(result, dict)
     write_summary(report_dir.resolve(), result)
@@ -573,8 +1066,12 @@ def _resolve(
     curation_dir: Path | None,
     dump_decisions: Path | None,
     resolved_out: Path | None = None,
+    workers: int = 1,
 ) -> ResolvedBuild | dict[str, object]:
     """A catalog's resolution, or with no `output` the local check's report."""
+    if workers < 1 or (workers > 1 and dump_decisions is not None):
+        # The CLI refuses both first, as usage errors.
+        raise ValueError("workers must be 1 or more, and 1 to dump decisions")
     check = output is None
     started = time.perf_counter()
     publishable = not diagnostic and not registers
@@ -1223,6 +1720,8 @@ def _resolve(
                 else {}
             )
             expected = 0
+            slices: dict[ScopeKey, tuple[int, ...]] = {}
+            order: list[ScopeKey] = []
             for entry in entries:
                 assert entry.revision is not None
                 source = entry.revision.dataset
@@ -1237,241 +1736,154 @@ def _resolve(
                     )
                 else:
                     expected += entry.counts.records
-                slices = (
-                    ((None, tuple(prepared.records.iter_records(source=source))),)
-                    if source in whole_sources
-                    else prepared.records.iter_register_slices(
-                        source, keys if registers else None
-                    )
-                )
-                for register, originals in slices:
-                    _refuse_duplicated_rows(originals)
-                    scope_started = time.perf_counter()
-                    scope_key = source, register
-                    scope = scopes.pop(scope_key)
-                    scope_coding = tuple(
-                        coding_registers[name]
-                        for name in sorted(
-                            set(declared_register_fqids(scope.naming).values())
-                            & coding_registers.keys()
+                if source in whole_sources:
+                    order.append((source, None))
+                    continue
+                for register, ordinals in prepared.records.register_slice_ordinals(
+                    source, keys if registers else None
+                ):
+                    if (source, register) in slices:
+                        raise ValueError(
+                            f"a register scope must read as one slice: {register!r}"
                         )
-                    )
+                    slices[source, register] = ordinals
+                    order.append((source, register))
+            prepared.records.clear_decoded_records()
 
-                    def record_coding_compilation(
-                        register, new_cases, new_diagnostics, scope_key=scope_key
-                    ) -> None:
-                        name = f"{register.register_info.provider}/{register.register_info.slug}"
+            def fold(key: ScopeKey, outcome: ScopeOutcome) -> None:
+                """Apply one scope's outcome; outcomes arrive in scope order."""
+                if outcome.key != key:
+                    raise ValueError("source scope outcomes arrived out of order")
+                for action in outcome.journal:
+                    if isinstance(action, _IssueAction):
+                        counts[action.severity] += 1
+                        if action.deferred:
+                            counts["deferred_references"] += 1
+                        events.write(action.line)
+                    elif isinstance(action, _CodingAction):
+                        name = action.register
                         if name in seen_coding:
                             raise ValueError(f"coding register compiled twice: {name}")
                         seen_coding.add(name)
-                        statuses = compiled.report[name]
-                        statuses["entries_matched"].extend(
-                            case.case_id for case in new_cases
-                        )
-                        for diagnostic_issue in new_diagnostics:
-                            statuses[
-                                "over_broad"
-                                if diagnostic_issue.code == "overbroad_curation_entry"
-                                else "stale"
-                            ].append(diagnostic_issue.case_id)
+                        report = compiled.report[name]
+                        report["entries_matched"].extend(action.matched)
+                        for bucket, case_id in action.statuses:
+                            # Typed str, but appended as compile reported it, as before.
+                            report[bucket].append(case_id)  # ty: ignore[invalid-argument-type]
                         if dump_decisions is not None:
-                            compiled.cases[scope_key] = tuple(
+                            compiled.cases[key] = tuple(
                                 sorted(
-                                    (*compiled.cases.get(scope_key, ()), *new_cases),
+                                    (*compiled.cases.get(key, ()), *action.cases),
                                     key=lambda case: case.case_id,
                                 )
                             )
-
-                    resolution_started = time.perf_counter()
-                    scope_issues: list[ResolutionDiagnostic] = []
-
-                    def record_scope_issue(
-                        value: ResolutionDiagnostic,
-                        *,
-                        collected: list[ResolutionDiagnostic] = scope_issues,
-                    ) -> None:
-                        collected.append(value)
-                        issue(value)
-
-                    result = resolve_source_scope(
-                        originals,
-                        source_diagnostics=(
-                            *scope.source_diagnostics,
-                            *pending_source_issues.pop(scope_key, ()),
-                        ),
-                        cases=scope.cases,
-                        naming=scope.naming,
-                        naming_ambiguities=scope.naming_ambiguities,
-                        refused_naming=scope.refused_naming,
-                        provider_keys=_unique_pairs(
-                            scope.provider_keys, "provider key"
-                        ),
-                        derive_native_provider_keys=True,
-                        value_sessions=sessions,
-                        support=support,
-                        classifications=books,
-                        withheld_classifications=withheld_books,
-                        classification_references=references,
-                        classification_family_references=family_references,
-                        label_rules=label_rules,
-                        classification_overrides=classification_overrides,
-                        matched_labels=matched_labels,
-                        duplicate_overrides=duplicate_overrides,
-                        declared_variants=_unique_pairs(
-                            scope.variants, "declared variant"
-                        ),
-                        on_diagnostic=record_scope_issue,
-                        diagnostic=diagnostic,
-                        coding_scope=scope,
-                        coding_registers=scope_coding,
-                        storage_by_register=storage_by_register,
-                        on_coding_compiled=record_coding_compilation,
+                    else:
+                        _raise_scope_failure(action)
+                matched_labels.update(outcome.matched_labels)
+                duplicate_overrides.update(outcome.duplicate_overrides)
+                pending_source_issues.pop(key, None)
+                seen_scopes.add(outcome.key)
+                for warning in outcome.data_warnings:
+                    data_warnings[warning.warning_id] = warning
+                acknowledged.update(outcome.acknowledged)
+                if outcome.strict_refusals:
+                    # Only a diagnostic build counts one; a strict build raised.
+                    counts["strict_refusals"] += outcome.strict_refusals
+                coverage.extend(outcome.coverage)
+                sibling_pairs.update(outcome.sibling_pairs)
+                for line in outcome.sibling_lines:
+                    events.write(line)
+                scope = scopes.pop(key)
+                if registers:
+                    slice_keys.update(
+                        declared_dependency_keys(scope.naming, scope.naming_ambiguities)
                     )
-                    _emit_timing(f"pipeline: resolve {scope_key!r}", resolution_started)
-                    seen_scopes.add(scope_key)
-                    for warning in scope_data_warnings(
-                        result,
-                        diagnostics=(
-                            *scope_issues,
-                            *(
-                                d
-                                for r in result.parents.registers.values()
-                                for d in retained_relationship_issues.get(
-                                    f"{r.provider}/{r.slug}", ()
-                                )
-                            ),
-                        ),
-                    ):
-                        data_warnings[warning.warning_id] = warning
-                    acknowledged.update(result.acknowledged)
-                    if result.strict_refusals:
-                        # Only a diagnostic build counts one; a strict build raised.
-                        counts["strict_refusals"] += result.strict_refusals
-                    coverage.extend(result.coverage)
-                    sibling_pairs.update(result.siblings.pairs)
-                    for pair in result.siblings.decisions:
-                        event(
-                            "sibling_pair",
-                            {
-                                "family": pair.family,
-                                "a": pair.a,
-                                "b": pair.b,
-                                "columns": pair.columns,
-                                "disposition": pair.kind,
-                                "refs": [r.model_dump(mode="json") for r in pair.refs],
-                            },
-                        )
-                    if registers:
-                        slice_keys.update(
-                            declared_dependency_keys(
-                                scope.naming, scope.naming_ambiguities
-                            )
-                        )
-                    for declaration in scope.naming:
-                        if declaration.target.kind == "register_variant":
-                            key = declaration.target.source_key
-                            register_key = declaration.target.register_key
-                            if (
-                                key in variant_registers
-                                and variant_registers[key] != register_key
-                            ):
-                                raise ValueError("conflicting global variant parent")
-                            variant_registers[key] = register_key
-                    for evaluation in result.evaluations:
-                        if evaluation.case_id in seen_cases:
-                            raise ValueError("curation case evaluated more than once")
-                        seen_cases.add(evaluation.case_id)
-                        event(
-                            "case",
-                            evaluation.model_dump(mode="json", exclude={"decision"}),
-                        )
-                    for kind, mapping in (
-                        ("register", result.parents.registers),
-                        ("variant", result.parents.variants),
-                        ("edition", result.parents.editions),
-                    ):
-                        for key, value in mapping.items():
-                            token = kind, key
-                            if token in parents and parents[token] != value:
-                                raise ValueError("conflicting global parent definition")
-                            parents[token] = value
-                    for key, value in result.variables.items():
-                        if key in variables:
-                            raise ValueError("repeated variable family across scopes")
-                        variables[key] = value
-                    for key, causes in result.withheld_dependencies.items():
-                        if key in withheld:
-                            raise ValueError(
-                                "repeated withheld dependency across scopes"
-                            )
-                        withheld[key] = causes
-                    uses = {}
-                    for occurrence in result.corrections.occurrences:
-                        variable = result.variables.get(occurrence.variable_key)
-                        fqid = (
-                            f"{variable.register_ref.provider}/{variable.register_ref.slug}/{variable.slug}"
-                            if variable is not None
-                            else None
-                        )
-                        disposition = {
-                            "variable": fqid,
-                            "use": occurrence.use,
-                            "withheld_fields": occurrence.withheld_fields,
-                            "cases": sorted(
-                                {c.case_id for c in occurrence.corrections}
-                            ),
-                        }
-                        for record in occurrence.source_records:
-                            uses.setdefault(record.record_id, []).append(disposition)
-                        if not occurrence.source_records:
-                            event(
-                                "added_occurrence",
-                                {"key": occurrence.occurrence_key, **disposition},
-                            )
-                        if fqid is not None:
-                            evidence.setdefault(fqid, set()).update(
-                                (r.source, r.locators[0].semantic_record_key)
-                                for r in occurrence.evidence
-                            )
-                    # Invariant kept as a fail-fast guard: identical physical rows
-                    # (one record id) are refused when the slice loads, and
-                    # source-scope resolution accounts for every original record. A
-                    # dropped record would vanish from the catalog silently.
-                    if set(uses) != {r.record_id for r in originals} or len(
-                        uses
-                    ) != len(originals):
-                        raise ValueError(
-                            "physical source occurrence accounting is incomplete"
-                        )
-                    event_bindings.observe_scope(originals, result, uses)
-                    if lineage_originals:
-                        for original in originals:
-                            ref = record_ref(original)
-                            if ref in lineage_originals:
-                                lineage_originals[ref].append(original)
-                                owner = source_register_key(original)
-                                if owner in result.parents.registers:
-                                    lineage_registers[owner] = result.parents.registers[
-                                        owner
-                                    ]
-                    for record_id, dispositions in uses.items():
-                        event(
-                            "source_occurrence",
-                            {"record_id": record_id, "dispositions": dispositions},
-                        )
-                    counts["physical_occurrences"] += len(originals)
-                    counts["scopes"] += 1
-                    event(
-                        "scope_complete",
-                        {
-                            "source": source,
-                            "register": register,
-                            "records": len(originals),
-                        },
+                for declaration in scope.naming:
+                    if declaration.target.kind == "register_variant":
+                        variant_key = declaration.target.source_key
+                        register_key = declaration.target.register_key
+                        if (
+                            variant_key in variant_registers
+                            and variant_registers[variant_key] != register_key
+                        ):
+                            raise ValueError("conflicting global variant parent")
+                        variant_registers[variant_key] = register_key
+                for case_id, line in outcome.cases:
+                    if case_id in seen_cases:
+                        raise ValueError("curation case evaluated more than once")
+                    seen_cases.add(case_id)
+                    events.write(line)
+                for kind, mapping in (
+                    ("register", outcome.parent_registers),
+                    ("variant", outcome.parent_variants),
+                    ("edition", outcome.parent_editions),
+                ):
+                    for parent_key, value in mapping.items():
+                        token = kind, parent_key
+                        if token in parents and parents[token] != value:
+                            raise ValueError("conflicting global parent definition")
+                        parents[token] = value
+                for variable_key, variable in outcome.variables.items():
+                    if variable_key in variables:
+                        raise ValueError("repeated variable family across scopes")
+                    variables[variable_key] = variable
+                for dependency, causes in outcome.withheld.items():
+                    if dependency in withheld:
+                        raise ValueError("repeated withheld dependency across scopes")
+                    withheld[dependency] = causes
+                for line in outcome.added_lines:
+                    events.write(line)
+                for fqid, pairs in outcome.evidence:
+                    evidence.setdefault(fqid, set()).update(pairs)
+                if not outcome.accounted:
+                    raise ValueError(
+                        "physical source occurrence accounting is incomplete"
                     )
-                    _emit_timing(f"pipeline: scope {scope_key!r}", scope_started)
-                    prepared.records.clear_decoded_records()
-                    del result, originals, uses, scope
+                assert outcome.event_observation is not None
+                event_bindings.record_scope(outcome.event_observation)
+                for ref, original, owner, owner_register in outcome.lineage:
+                    lineage_originals[ref].append(original)
+                    if owner_register is not None:
+                        lineage_registers[owner] = owner_register
+                for line in outcome.occurrence_lines:
+                    events.write(line)
+                counts["physical_occurrences"] += outcome.records
+                counts["scopes"] += 1
+                event(
+                    "scope_complete",
+                    {
+                        "source": key[0],
+                        "register": key[1],
+                        "records": outcome.records,
+                    },
+                )
+
+            context = _ScopeContext(
+                records=prepared.records,
+                value_sources=tuple(prepared.value_sources),
+                whole_sources=frozenset(whole_sources),
+                slices=slices,
+                scopes=scopes,
+                pending_source_issues=pending_source_issues,
+                retained_relationship_issues=retained_relationship_issues,
+                coding_registers=coding_registers,
+                books=books,
+                withheld_books=withheld_books,
+                references=references,
+                family_references=family_references,
+                label_rules=label_rules,
+                classification_overrides=classification_overrides,
+                support=support,
+                storage_by_register=storage_by_register,
+                event_bindings=event_bindings,
+                lineage_refs=frozenset(lineage_originals),
+                diagnostic=diagnostic,
+                dump_decisions=dump_decisions is not None,
+            )
+            with closing(_scope_outcomes(context, tuple(order), workers)) as outcomes:
+                for key, outcome in zip(order, outcomes, strict=True):
+                    fold(key, outcome)
+            del context
             _emit_timing("pipeline: all source scopes", phase_started)
             for remaining in pending_source_issues.values():
                 for _, value in remaining:

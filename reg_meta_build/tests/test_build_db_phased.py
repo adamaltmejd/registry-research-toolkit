@@ -385,3 +385,48 @@ def test_writer_only_edit_keeps_the_resolve_code_fingerprint(tmp_path: Path) -> 
         with (tmp_path / package.name / module).open("a", encoding="utf-8") as stream:
             stream.write("\n# edited\n")
         assert (resolve_code_sha256(tmp_path) == before) is unchanged
+
+
+def test_parallel_resolve_is_byte_identical_to_serial(
+    prepared_cache: PreparedCache, tmp_path: Path, capsys
+) -> None:
+    # Fails if the worker count reaches the output (#1423): scope outcomes folded
+    # out of scope order, a ledger event or issue a worker emits that the fold
+    # drops, reorders or repeats, or a pickled object graph that depends on which
+    # scopes a worker resolved before, which would change the bundle bytes.
+    prepared = prepared_cache.get(
+        json.loads((CLASSIFIED / "source.json").read_text(encoding="utf-8"))
+    )
+    shutil.copytree(CLASSIFIED / "curation", tmp_path / "curation")
+    catalog = CatalogFixture(
+        prepared.prepared, prepared.commit, prepared.digest, tmp_path / "curation"
+    )
+    for workers in ("1", "2"):
+        assert (
+            run(
+                [
+                    "build-db",
+                    *_pins(catalog),
+                    "--diagnostic",
+                    "--diagnostic-db-path",
+                    str(tmp_path / f"{workers}.db"),
+                    "--report-dir",
+                    str(tmp_path / f"report-{workers}"),
+                    "--resolved-out",
+                    str(tmp_path / f"bundle-{workers}"),
+                    "--workers",
+                    workers,
+                ]
+            )
+            == EXIT_CONFIG
+        )
+    capsys.readouterr()
+    for name in ("{}.db", "report-{}/events.jsonl.gz"):
+        assert (tmp_path / name.format(1)).read_bytes() == (
+            tmp_path / name.format(2)
+        ).read_bytes()
+    bundles = [
+        {p.name: p.read_bytes() for p in (tmp_path / f"bundle-{n}").iterdir()}
+        for n in (1, 2)
+    ]
+    assert bundles[0] == bundles[1]

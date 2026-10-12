@@ -1277,6 +1277,45 @@ class PreparedSourceRecords:
                     ),
                 )
 
+    def register_slice_ordinals(
+        self, source: str, registers: Collection[NativeKey | None] | None = None
+    ) -> tuple[tuple[NativeKey | None, tuple[int, ...]], ...]:
+        """The slices `iter_register_slices` yields, in its order, each as its
+        records' ordinals, without decoding a record. `read_ordinals` reads one."""
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            keys = self._register_partitions(conn, payload, source, registers)
+            rows = conn.execute(
+                "SELECT register_partition.partition, occurrence.ordinal "
+                "FROM occurrence JOIN register_partition "
+                "USING (provider, register_payload) "
+                "WHERE source=? ORDER BY register_partition.partition, ordinal",
+                (source,),
+            )
+            return tuple(
+                (keys[partition], tuple(row[1] for row in members))
+                for partition, members in groupby(rows, key=lambda row: row[0])
+            )
+
+    def read_ordinals(self, ordinals: tuple[int, ...]) -> tuple[SourceRecord, ...]:
+        """The records at these ordinals, in their order: one slice read on its own
+        connection, without scanning the rest of its source."""
+        with _decoded_database(self.root, self.manifest) as (conn, payload):
+            conn.execute("CREATE TEMP TABLE wanted (ordinal INTEGER PRIMARY KEY)")
+            conn.executemany(
+                "INSERT INTO wanted VALUES (?)", ((ordinal,) for ordinal in ordinals)
+            )
+            rows = tuple(
+                conn.execute(
+                    "SELECT occurrence.* FROM wanted CROSS JOIN occurrence "
+                    "ON occurrence.ordinal=wanted.ordinal ORDER BY wanted.ordinal"
+                )
+            )
+            if len(rows) != len(ordinals):
+                raise PreparedSourceError("prepared occurrence ordinals are missing")
+            return _read_record_batch(
+                conn, payload, rows, self._record_cache, "", (), exact_ordinals=True
+            )
+
     def register_coordinates(
         self, source: str
     ) -> tuple[tuple[NativeKey | None, SourceCoordinate, int], ...]:
