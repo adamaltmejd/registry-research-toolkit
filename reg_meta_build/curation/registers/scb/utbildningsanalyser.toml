@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "utbildningsanalyser"
 native_id = "366"
+steward_table_prefixes = ["Distansutb_"]
 
 [[enrichment.description]]
 register = "scb/utbildningsanalyser"

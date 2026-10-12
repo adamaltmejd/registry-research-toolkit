@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "lararreg"
 native_id = "232"
+steward_table_prefixes = ["LReg_"]
 
 [[enrichment.description]]
 register = "scb/lararreg"
