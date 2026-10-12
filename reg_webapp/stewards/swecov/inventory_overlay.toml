@@ -5770,6 +5770,11 @@ register_variant = "swecov/population/_default"
 table = "SaBo_P1105_LopNr_PersonNr"
 edition = { from = 2015, to = 2020 }
 
+[[unmap]]
+table = "SaBo_P1105_LopNr_PersonNr"
+column = "P1105_Lopnr_personnr"
+reason = "Person join key of the SÄBO membership holding; swecov/population/personnr is orderable from Population_PersonNr_20241231, which covers this edition (#1170)."
+
 # Retain intentionally unowned CIS matrix columns as physical holdings.
 
 [[unmap]]
