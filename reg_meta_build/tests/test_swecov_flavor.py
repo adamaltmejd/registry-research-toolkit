@@ -68,12 +68,17 @@ def test_default_csv_uses_newest_full_inventory_or_requires_argument(
 # --- cmd_flavor: vintage-spelling grouping ------------------------------------
 
 
-def _flavor_register(tmp_path: Path, columns: list[dict]) -> dict:
-    """`cmd_flavor` with `columns` as the `Ordered tests` holding (a disposition
-    entry with no table selector, so the holding's full column list is drawn);
-    returns the register the emitted `inera.toml` carries for it."""
+def _flavor_register(
+    tmp_path: Path, columns: list[dict], mapping: dict | None = None
+) -> dict:
+    """`cmd_flavor` with `columns` (and the route `mapping`, if given) as the
+    `Ordered tests` holding (a disposition entry with no table selector, so the
+    holding's full column list is drawn); returns the register the emitted
+    `inera.toml` carries for it."""
     enriched = _synthetic_enriched()
     enriched["Inera/1177/Ordered tests"]["columns"] = columns
+    if mapping is not None:
+        enriched["Inera/1177/Ordered tests"]["mapping"] = mapping
     root = _run_flavor(tmp_path, enriched)
     provider = tomllib.loads(
         (root / "providers" / "inera.toml").read_text(encoding="utf-8")
@@ -148,19 +153,36 @@ def test_columns_differing_in_letters_stay_separate_variables(tmp_path: Path) ->
     assert [len(v["state"]) for v in variables] == [1, 1]
 
 
+_KALLA_COLUMNS = [
+    _column("Konstruerad"),
+    _column("Sysselsattning", kalla="LISA"),
+    _column("Stodbelopp", kalla="Inrapporterat från Tillväxtverket"),
+]
+
+
 def test_kalla_routes_canonical_columns_out_but_keeps_provenance_columns(
     tmp_path: Path,
 ) -> None:
     variables = _flavor_register(
-        tmp_path,
-        [
-            _column("Konstruerad"),
-            _column("Sysselsattning", kalla="LISA"),
-            _column("Stodbelopp", kalla="Inrapporterat från Tillväxtverket"),
-        ],
+        tmp_path, _KALLA_COLUMNS, {"status": "flavor", "graft": "scb/lisa"}
     )["variable"]
 
     assert [v["name"] for v in variables] == ["Konstruerad", "Stodbelopp"]
+
+
+def test_kalla_column_without_a_graft_register_refuses_before_writing(
+    tmp_path: Path,
+) -> None:
+    """The twin above with no graft on the route: `globals` scans only holdings
+    with a graft/target register, so the Källa column would land nowhere. Fails
+    if the guard is dropped and the column is again silently skipped (#1302)."""
+    with pytest.raises(SystemExit) as refusal:
+        _flavor_register(tmp_path, _KALLA_COLUMNS, {"status": "flavor"})
+
+    message = str(refusal.value)
+    assert "Inera/1177/Ordered tests: Sysselsattning (Källa=LISA)" in message
+    assert "Stodbelopp" not in message
+    assert not (tmp_path / "input_data" / "swecov" / "providers").exists()
 
 
 # --- cmd_flavor: the disposition's register/variant emission -----------------

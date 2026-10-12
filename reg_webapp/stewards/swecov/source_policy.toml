@@ -12,9 +12,13 @@
 # National quality registers — no SCB/SOS catalog home.
 # SWECOV-constructed columns on top of RTB — only the Källa-empty columns
 # survive _flavor_variables (the Källa=RTB ones are canonical, routed to the
-# global graft track). RTB/PostNr is intentionally NOT listed: its only
-# content column (`postnr`, Källa=RTB) is canonical RTB postnummer (→ graft),
-# leaving nothing steward-authored, so it would flavor to a bare linkage id.
+# global graft track, so each such holding's [[route]] names `graft = "scb/rtb"`;
+# `flavor` refuses a Källa column whose route names no graft register).
+# RTB/Födelseuppgifter draws only its SWECOV_Fodelseland_grupperat table (EU
+# grouping lookups) into a population variant. RTB/PostNr is intentionally NOT
+# listed: its only content column (`postnr`, Källa=RTB) is canonical RTB
+# postnummer (→ graft), leaving nothing steward-authored, so it would flavor to a
+# bare linkage id.
 # Skatteverket COVID-19 business-support delivery (SKV_*). The single
 # ("Skatteverket", "") holding carries 10 physical tables = 5 schemes; each
 # disposition entry below names a register/variant and `_FLAVOR_VARIANT_TABLES`
@@ -348,7 +352,8 @@ target = "scb/rams/arbetsstallen"
 category = "RTB"
 detail = "Adress särskilt boende"
 status = "flavor"
-note = "SWECOV-specific SÄBO address extract"
+graft = "scb/rtb"
+note = "SWECOV-specific SÄBO address extract; Källa=RTB UtdAdr1 -> graft onto scb/rtb (#1302)"
 
 [[route]]
 category = "RTB"
@@ -437,7 +442,8 @@ note = "Källa=RTB/Hushållsreg. for Famstall/HushallsStallning/partner-lopnr; F
 category = "RTB"
 detail = "Population"
 status = "flavor"
-note = "Källa empty for IndexPop/Partner/LopNrByte etc. -> SWECOV-constructed population spine"
+graft = "scb/rtb"
+note = "Källa empty for IndexPop/Partner/LopNrByte etc. -> SWECOV-constructed population spine; Källa=RTB Kon/AterAnv/FelPersonNr -> graft onto scb/rtb (#1302)"
 
 [[route]]
 category = "RTB"
@@ -874,6 +880,17 @@ register_name = "Adress särskilt boende"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Adress särskilt boende"
+
+[[flavor]]
+holding = "RTB/Födelseuppgifter"
+provider = "swecov"
+provider_name = "SWECOV (konstruerade variabler)"
+register = "population"
+register_name = "Populationsspine (konstruerad)"
+variant = "fodelseland-grupperat"
+variant_slug = "fodelseland-grupperat"
+variant_name = "Födelseland grupperat"
+tables = ["SWECOV_Fodelseland_grupperat"]
 
 [[flavor]]
 holding = "Skatteverket"
