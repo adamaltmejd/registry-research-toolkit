@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "utbildningsanalyser"
 native_id = "366"
-steward_table_prefixes = ["Distansutb_"]
 
 [[enrichment.description]]
 register = "scb/utbildningsanalyser"
@@ -8318,25 +8317,27 @@ value = "Framtidsplaner_Studera på universitet/högskola eller yrkeshögskola �
 [[errata.column]]
 variant = "distansundervisning-grundskola"
 column = "PersonNr"
+data_type = "integer"
 name = "Personnummer för eleven"
 definition = "Elevens personnummer, levererat som löpnummer."
 is_sensitive = false
 is_identifier = true
 holdings_period = "2020-2022"
 source = "steward-holdings"
-evidence = "SWECOV holds P1105_Lopnr_PersonNr (the löpnummer of PersonNr) in Distansutb_grund_VT20, Distansutb_grund_HT20_VT21 and Distansutb_grund_HT21_VT22; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in the Distansutb delivery view. SCB's Registerinformation export carries no row for the column on distansundervisning-grundskola. is_identifier follows the register's own PersonNr sibling personnr (is_identifier=true, is_sensitive=false). holdings_period is the SWECOV holdings range (#1302)."
+evidence = "SWECOV holds P1105_Lopnr_PersonNr (the löpnummer of PersonNr) in Distansutb_grund_VT20, Distansutb_grund_HT20_VT21 and Distansutb_grund_HT21_VT22; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in the Distansutb delivery view. SCB's Registerinformation export carries no row for the column on distansundervisning-grundskola. is_identifier follows the register's own PersonNr sibling personnr (is_identifier=true, is_sensitive=false). holdings_period is the SWECOV holdings range (#1302). data_type follows SWECOV's storage schema for the P1105 löpnummer header (integer)."
 noted = "2026-10-12"
 
 [[errata.column]]
 variant = "distansundervisning-gymnasieskolan"
 column = "PersonNr"
+data_type = "integer"
 name = "Personnummer för eleven"
 definition = "Elevens personnummer, levererat som löpnummer."
 is_sensitive = false
 is_identifier = true
 holdings_period = "2020-2022"
 source = "steward-holdings"
-evidence = "SWECOV holds P1105_Lopnr_PersonNr (the löpnummer of PersonNr) in Distansutb_gymn_VT20, Distansutb_gymn_HT20_VT21 and Distansutb_gymn_HT21_VT22; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in the Distansutb delivery view. SCB's Registerinformation export carries no row for the column on distansundervisning-gymnasieskolan. is_identifier follows the register's own PersonNr sibling personnr (is_identifier=true, is_sensitive=false). holdings_period is the SWECOV holdings range (#1302)."
+evidence = "SWECOV holds P1105_Lopnr_PersonNr (the löpnummer of PersonNr) in Distansutb_gymn_VT20, Distansutb_gymn_HT20_VT21 and Distansutb_gymn_HT21_VT22; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in the Distansutb delivery view. SCB's Registerinformation export carries no row for the column on distansundervisning-gymnasieskolan. is_identifier follows the register's own PersonNr sibling personnr (is_identifier=true, is_sensitive=false). holdings_period is the SWECOV holdings range (#1302). data_type follows SWECOV's storage schema for the P1105 löpnummer header (integer)."
 noted = "2026-10-12"
 
 [[variable]]

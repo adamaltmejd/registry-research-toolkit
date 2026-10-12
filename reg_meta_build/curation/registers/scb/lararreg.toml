@@ -13241,11 +13241,12 @@ data_warning = "Delivery is documented; the column's meaning and codes are not."
 [[errata.column]]
 variant = "tjansteregistret"
 column = "RoKod"
+data_type = "integer"
 name = "Rektorsområde"
 definition = "Kod för rektorsområde, levererad som löpnummer. Innebörden är en tolkning av kolumnnamnet; den är inte dokumenterad."
 holdings_period = "1989-2012"
 source = "steward-holdings"
-evidence = "SWECOV holds P1105_LopNr_RoKod (the löpnummer of RoKod) in LReg_1989 through LReg_2012. No P1105 list names a source or view for it, and SCB's Registerinformation export carries no row for the column on tjansteregistret. The rektorsområde reading rests on the column name only (maintainer-accepted best guess, #1302)."
+evidence = "SWECOV holds P1105_LopNr_RoKod (the löpnummer of RoKod) in LReg_1989 through LReg_2012. No P1105 list names a source or view for it, and SCB's Registerinformation export carries no row for the column on tjansteregistret. The rektorsområde reading rests on the column name only (maintainer-accepted best guess, #1302). data_type follows SWECOV's storage schema for the P1105 löpnummer header (integer)."
 noted = "2026-10-12"
 data_warning = "The meaning (rektorsområde) is read from the column name; it is not documented."
 
