@@ -6,8 +6,14 @@
 //! A response is a pure function of the server binary, the admitted catalog and docs
 //! databases, the steward branding and the request URL, and none of them changes for
 //! the process's lifetime. So the `ETag` is derived from a boot-time token over the
-//! first four and the request's path and query, not from the body.
+//! first four and the request's path and query, not from the body. The token hashes
+//! the files' bytes, not their identity fields: a catalog's `generation_id` does not
+//! cover its import date, nor the docs `generation` its related documents, and both
+//! reach responses.
 
+use std::fs::File;
+use std::io::Read;
+use std::path::Path;
 use std::sync::Arc;
 
 use axum::extract::{Request, State};
@@ -32,19 +38,14 @@ impl Validators {
     /// code: an unreleased image change keeps `VERSION` but must not answer 304 to
     /// a body it no longer serves.
     pub fn new(server: &Server) -> Arc<Self> {
-        let exe = std::env::current_exe()
-            .and_then(std::fs::read)
-            .expect("read the server binary");
+        let exe = std::env::current_exe().expect("the server binary's path");
         let steward = serde_json::to_string(&server.steward).expect("Steward serializes");
+        let docs = server.docs.as_ref().map(|docs| file_digest(docs.path()));
         let mut token = Sha256::new();
         for part in [
-            Sha256::digest(exe).as_slice(),
-            server.catalog.name().as_bytes(),
-            server.catalog.generation().as_bytes(),
-            server
-                .docs
-                .as_ref()
-                .map_or(b"", |docs| docs.generation().as_bytes()),
+            file_digest(&exe).as_slice(),
+            file_digest(server.catalog.path()).as_slice(),
+            docs.as_ref().map_or(&[][..], |digest| digest.as_slice()),
             steward.as_bytes(),
         ] {
             token.update((part.len() as u64).to_le_bytes());
@@ -78,6 +79,19 @@ impl Validators {
             .chain_update(query)
             .finalize();
         format!("\"{}-{}\"", self.head, hex(&digest[..8]))
+    }
+}
+
+/// The SHA-256 of a file's bytes, read in 1 MiB blocks.
+fn file_digest(path: &Path) -> [u8; 32] {
+    let mut file = File::open(path).expect("open a served file");
+    let mut buffer = vec![0; 1 << 20];
+    let mut digest = Sha256::new();
+    loop {
+        match file.read(&mut buffer).expect("read a served file") {
+            0 => return digest.finalize().into(),
+            n => digest.update(&buffer[..n]),
+        }
     }
 }
 
