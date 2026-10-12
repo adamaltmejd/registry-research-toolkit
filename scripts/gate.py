@@ -57,7 +57,7 @@ SLOTS = 3
 HEAVY = {"g0", "crates", "rust", "release", "flows", "regen", "g1"}
 # The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
 # it, the frontend step fails: raising the budget is a maintainer call. It includes the
-# search fold (about 150 KB gz measured with it).
+# search fold (about 145 KB gz measured with it).
 WASM_GZ_BUDGET = 200_000
 
 
