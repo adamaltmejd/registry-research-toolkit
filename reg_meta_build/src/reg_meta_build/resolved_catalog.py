@@ -488,22 +488,24 @@ def _link_facts(
     A certificate's window, fingerprints and provenance are its decision's
     evidence, not a state fact: two adjacent decisions certifying the same
     members over the same book and column leave one state (#1442). Only
-    certificates that each cover the whole state window reduce; otherwise the
-    link stays whole, its certificate windows keep adjacent states apart, and
-    the catalog validator refuses the uncovered certificate per state.
+    certificates that each cover the whole state window reduce. Otherwise the
+    link's facts carry the state's own window, so the state never merges (two
+    states carrying the same partial certificates would, and the merged
+    certificate's hull would then certify the gap between them); the catalog
+    validator refuses the uncovered certificate per state.
     """
     conformance = link.conformance
+    if conformance is None or not conformance.scoped_sentinels:
+        return link
     if (
-        conformance is None
-        or not conformance.scoped_sentinels
-        or valid_from is None
+        valid_from is None
         or valid_to is None
         or not all(
             c.valid_from <= valid_from and valid_to <= c.valid_to
             for c in conformance.scoped_sentinels
         )
     ):
-        return link
+        return link, valid_from, valid_to
     return (
         link.model_copy(
             update={

@@ -382,34 +382,39 @@ def _adjacent_states_certified_at_their_far_ends() -> tuple[
     tuple[ResolvedVariable, ...], dict[str, Any]
 ]:
     # Two day-adjacent halves of the certified state, identical but for their
-    # windows; one same-key certificate covers January only, the other December.
+    # windows, each carrying the same two same-key certificates: one covers
+    # January only, the other December. A merge that takes the certificates'
+    # hull, whether it compares them reduced or whole, certifies February to
+    # November and publishes; each half must stay apart and be refused.
     variable, book = _scoped_sentinel_variable()
     state = variable.states[0]
     link = state.classification_links[0]
     conformance = link.conformance
     assert conformance is not None
-    halves = []
-    for state_window, certificate_window in (
-        (("2000-01-01", "2000-06-30"), ("2000-01-01", "2000-01-31")),
-        (("2000-07-01", "2000-12-31"), ("2000-12-01", "2000-12-31")),
-    ):
-        certificate = conformance.scoped_sentinels[0].model_copy(
-            update=dict(zip(("valid_from", "valid_to"), certificate_window))
+    certificates = tuple(
+        conformance.scoped_sentinels[0].model_copy(
+            update={"valid_from": start, "valid_to": end}
         )
-        certified = link.model_copy(
+        for start, end in (("2000-01-01", "2000-01-31"), ("2000-12-01", "2000-12-31"))
+    )
+    certified = link.model_copy(
+        update={
+            "conformance": conformance.model_copy(
+                update={"scoped_sentinels": certificates}
+            )
+        }
+    )
+    halves = tuple(
+        state.model_copy(
             update={
-                "conformance": conformance.model_copy(
-                    update={"scoped_sentinels": (certificate,)}
-                )
+                "valid_from": start,
+                "valid_to": end,
+                "classification_links": (certified,),
             }
         )
-        halves.append(
-            state.model_copy(
-                update=dict(zip(("valid_from", "valid_to"), state_window))
-                | {"classification_links": (certified,)}
-            )
-        )
-    return _classified(variable.model_copy(update={"states": tuple(halves)}), book)
+        for start, end in (("2000-01-01", "2000-06-30"), ("2000-07-01", "2000-12-31"))
+    )
+    return _classified(variable.model_copy(update={"states": halves}), book)
 
 
 def _alias_window_certified_for_another_book() -> tuple[
