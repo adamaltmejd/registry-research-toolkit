@@ -1902,6 +1902,11 @@ slug = "utbildningsniva-aggregat-old-sun2020"
 native_id = "34.6416.sun2020grp"
 slug = "sun2020grp"
 
+# #1298: pinned because relations.toml names it as a replaced_by successor.
+[[variable]]
+native_id = "34.66"
+slug = "sun2020niva"
+
 [[variable]]
 native_id = "34.6416.sun2020grp-detalj"
 slug = "sun2020grp-detalj"
