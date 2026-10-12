@@ -2893,8 +2893,8 @@ register_variant = "fohm/sminet/_default"
 # ── DECIDED (maintainer 2026-10-11, #1293): NVR delivery shards and FHM_NVR_Barn
 # column mappings. The delivery uses English pseudonymised names, so nothing
 # matches the fohm/nvr catalog by name. The two NVR tables are disjoint
-# population shards (childhood programme vs covid-19). FHM_NVR_Covid_20240422's
-# mappings wait for its #1170 edition probe.
+# population shards (childhood programme vs covid-19). FHM_NVR_Covid_20240422
+# uses the same pairings over its #1170 probe edition.
 
 [[partition]]
 table = "FHM_NVR_Barn"
@@ -2951,6 +2951,56 @@ reason = "FoHM NVR delivery with English physical names, reviewed against the fo
 
 [[unmap]]
 table = "FHM_NVR_Barn"
+column = "P1105_LopNr_care_giver_name"
+reason = "Pseudonymised care-giver name; the care-giver organisation-number lopnr carries fohm/nvr/vardgivare for this table (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/personnr"
+representation = "personnummer"
+table = "FHM_NVR_Covid_20240422"
+column = "P1105_LopNr_PersonNr"
+edition = { from = "2020-12", to = "2024-04" }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccinationsdatum"
+representation = "vaccinationsdatum"
+table = "FHM_NVR_Covid_20240422"
+column = "vaccination_date"
+edition = { from = "2020-12", to = "2024-04" }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccintyp"
+representation = "vaccintyp"
+table = "FHM_NVR_Covid_20240422"
+column = "vaccine_type"
+edition = { from = "2020-12", to = "2024-04" }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccin"
+representation = "vaccin"
+table = "FHM_NVR_Covid_20240422"
+column = "product_name"
+edition = { from = "2020-12", to = "2024-04" }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vardgivare"
+representation = "vardgivare"
+table = "FHM_NVR_Covid_20240422"
+column = "P1105_Lopnr_PeOrgnr"
+edition = { from = "2020-12", to = "2024-04" }
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[unmap]]
+table = "FHM_NVR_Covid_20240422"
 column = "P1105_LopNr_care_giver_name"
 reason = "Pseudonymised care-giver name; the care-giver organisation-number lopnr carries fohm/nvr/vardgivare for this table (#1293)."
 
@@ -5630,6 +5680,95 @@ edition = { from = 1961, to = 2024 }
 [[edition]]
 table = "FlerGen_Bioforaldrar_20241231"
 edition = { from = 1961, to = 2024 }
+
+# ── DECIDED (maintainer 2026-10-12, #1170): cumulative SWECOV stock snapshots and
+# undated holdings, from two aggregate-only MONA probes. Population_PersonNr's
+# IndexPop marks the 14,828,878 persons registered 1990..2024; the other
+# 1,228,716 rows are their relatives. From 1990 every death, emigration and
+# immigration belongs to an index person; before 1990 deaths are relatives only
+# and migrations are survivor-selected, so the snapshots cover the population
+# from 1990. The filename date (20241231) is the stock date, not the coverage.
+
+# evidence: [DodDatum] (int), 4,240,097 dated rows of 4,240,097; 1961..1989
+# hold relatives' deaths only (about 13k..58k a year, against 88k..98k a year
+# for index persons from 1990)
+[[edition]]
+table = "Doda_20241231"
+edition = { from = 1990, to = 2024 }
+
+# evidence: [datavreg] (int), 1,872,316 dated rows of 1,872,325; from 1990 all
+# emigrations are index persons'
+[[edition]]
+table = "emigranter_20241231"
+edition = { from = 1990, to = 2024 }
+
+# evidence: [datinv] (int), 3,978,980 dated rows of 3,979,008; from 1990 all
+# immigrations are index persons'
+[[edition]]
+table = "immigranter_20241231"
+edition = { from = 1990, to = 2024 }
+
+# evidence: [vaccination_date] (date), 28,541,631 dated rows of 28,541,631;
+# first month 2020-12, last month 2024-04 (re-delivered 2024-04-22)
+[[edition]]
+table = "FHM_NVR_Covid_20240422"
+edition = { from = "2020-12", to = "2024-04" }
+
+# evidence: IndexPop = 1 for 14,828,878 persons registered 1990..2024
+[[edition]]
+table = "Population_PersonNr_20241231"
+edition = { from = 1990, to = 2024 }
+
+# evidence: 15,917,401 persons, all in Population_PersonNr (14,821,012 index
+# persons); birth facts for the 1990..2024 population
+[[assign]]
+table = "Fodelseuppg_20241231"
+register_variant = ["scb/rtb/folkbokforda-personer"]
+
+[[edition]]
+table = "Fodelseuppg_20241231"
+edition = { from = 1990, to = 2024 }
+
+[[unmap]]
+table = "Fodelseuppg_20241231"
+column = "P1105_LopNr_PersonNr"
+reason = "Person join key of an auxiliary birth-information holding; scb/rtb/personnr on scb/rtb/folkbokforda-personer is orderable from the RTB tables. Withheld to keep one physical cell per ordered coordinate; the three birth-information fields stay mapped (#1170)."
+
+# evidence: [År] x [Tillfälle], 1977..2025; Tillfälle 1 = spring (VT), 2 =
+# autumn (HT): 2020 has occasion 2 only (the spring 2020 test was cancelled)
+# and 2025 occasion 1 only
+[[assign]]
+table = "UMU_HogskoleprovRes"
+register_variant = "umu/hogskoleprovet/_default"
+
+[[edition]]
+table = "UMU_HogskoleprovRes"
+edition = { from = "VT1977", to = "VT2025" }
+
+# evidence: 1,860 persons born 2000..2024; first diagnosis year in
+# NDR_incidence 2007..2024 (14 persons not in NDR_incidence)
+[[assign]]
+table = "NDR_heredity"
+register_variant = "ndr/nationella-diabetesregistret/_default"
+
+[[edition]]
+table = "NDR_heredity"
+edition = { from = 2007, to = 2024 }
+
+[[unmap]]
+table = "NDR_heredity"
+column = "P1105_LopNr_PersonNr"
+reason = "Person join key of the family-history holding; ndr/nationella-diabetesregistret/personnr is orderable from NDR_children_2007 and NDR_adults_2010, which overlap this edition (#1170)."
+
+# evidence: 326,814 persons, all index persons; they appear in
+# RTB_SaBo_Adress_2015..2020 (293,060 in 2015 down to 134,939 in 2020)
+[[assign]]
+table = "SaBo_P1105_LopNr_PersonNr"
+register_variant = "swecov/population/_default"
+
+[[edition]]
+table = "SaBo_P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2020 }
 
 # Retain intentionally unowned CIS matrix columns as physical holdings.
 
