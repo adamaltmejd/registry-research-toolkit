@@ -2,7 +2,9 @@
 // `bun run build`): Vite's preview server serves dist/, and Chromium checks that
 //   1. the app mounts (its "Sections" navigation renders),
 //   2. the reg-core .wasm answers 200 with `application/wasm`,
-//   3. with the .wasm request aborted, the bootstrap alert renders in #app.
+//   3. with the .wasm request aborted, the bootstrap alert renders in #app,
+// after checking that dist/_headers stamps /assets/* immutable and that every file
+// there is named by its content hash, which is what makes that rule safe (#1454).
 // It prints the mount time (navigation start to the mounted app) for the record.
 // The API is aborted throughout: the bootstrap needs no server.
 //
@@ -22,6 +24,22 @@ async function open(page: Page, base: string): Promise<void> {
   await page.route("**/api/**", (route) => route.abort());
   await page.goto(base);
 }
+
+const DIST = `${import.meta.dir}/../dist`;
+const IMMUTABLE_ASSETS =
+  "/assets/*\n  Cache-Control: public, max-age=31536000, immutable";
+check(
+  (await Bun.file(`${DIST}/_headers`).text()).includes(IMMUTABLE_ASSETS),
+  "dist/_headers stamps /assets/* immutable",
+);
+// Vite names an emitted file `<name>-<8-character content hash>.<ext>`.
+const unhashed = [...new Bun.Glob("*").scanSync(`${DIST}/assets`)].filter(
+  (name) => !/-[\w-]{8}\.\w+$/.test(name),
+);
+check(
+  unhashed.length === 0,
+  `every dist/assets file is content-hashed${unhashed.length ? ` (not: ${unhashed.join(", ")})` : ""}`,
+);
 
 // In process, not a child process: closing it in `finally` leaves nothing running.
 const server = await preview({

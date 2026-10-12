@@ -15,5 +15,9 @@
       "/meta/scope": "reference"
     }
   },
-  {"status": 304}
+  {"status": 304},
+  {
+    "status": 200,
+    "json": {"/data/import_date": "2026-09-01T00:00:00Z"}
+  }
 ]

@@ -20,7 +20,7 @@
     "directory": "../frontend/dist",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api", "/api/*", "/openapi.json"]
+    "run_worker_first": ["/api", "/api/*", "/openapi.json", "/assets/*"]
   },
   "routes": [{ "pattern": "data.swecov.se/*", "zone_name": "swecov.se" }],
   "observability": { "enabled": true }

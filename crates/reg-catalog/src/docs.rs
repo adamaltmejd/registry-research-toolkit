@@ -64,6 +64,12 @@ impl Docs {
         ))
     }
 
+    /// The admitted database file.
+    #[must_use]
+    pub fn path(&self) -> &Path {
+        &self.path
+    }
+
     /// The docs build's generation (`doc_meta`'s `generation`): a digest of the
     /// documents, so a docs-only rebuild changes it.
     #[must_use]

@@ -1,8 +1,22 @@
 {
+  "note": "Step 2 fails if the validator token misses an input a response shows: the reimported artifact differs only in import_date, which is not part of the generation, so a generation-keyed ETag would answer 304 to its changed context.",
   "fixture": "reader",
   "kind": "catalog",
+  "artifacts": {
+    "reimported": {
+      "identity": {
+        "import_date": "2026-09-01T00:00:00Z"
+      }
+    }
+  },
   "requests": [
     {"operation": "context", "path": "/api/context"},
-    {"operation": "context", "path": "/api/context", "etag_from": 0}
+    {"operation": "context", "path": "/api/context", "etag_from": 0},
+    {
+      "operation": "context",
+      "path": "/api/context",
+      "artifact": "reimported",
+      "etag_from": 0
+    }
   ]
 }

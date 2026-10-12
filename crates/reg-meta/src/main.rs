@@ -21,6 +21,7 @@
 
 mod limit;
 mod mcp;
+mod validator;
 
 use std::convert::Infallible;
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
@@ -30,18 +31,18 @@ use std::sync::Arc;
 use axum::Router;
 use axum::body::Bytes;
 use axum::extract::{DefaultBodyLimit, Path, Query, State};
-use axum::http::{HeaderMap, HeaderValue, StatusCode, header};
+use axum::http::{HeaderValue, StatusCode, header};
 use axum::middleware::from_fn_with_state;
 use axum::response::{IntoResponse, Response};
 use axum::routing::{MethodRouter, get, post};
 use reg_catalog::ops::{
     self, Cache, Download, Meta, Operation, Param, Raw, Run, Server, Steward, body,
 };
-use reg_catalog::{Catalog, DEFAULT_MMAP_SIZE, Docs, Error, Scope, hex};
+use reg_catalog::{Catalog, DEFAULT_MMAP_SIZE, Docs, Error, Scope};
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 
 use crate::limit::Limits;
+use crate::validator::Validators;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -194,11 +195,20 @@ async fn serve(
 ) {
     let openapi = ops::openapi(VERSION).to_json().expect("OpenAPI serializes");
     let limits = Limits::new(Arc::clone(&server), write_limit);
+    let validators = Validators::new(&server);
     // A POST is behind the write limits, as `/mcp` is: the rate limit, then the cap.
     let write = |handler: MethodRouter<Arc<Server>>| -> MethodRouter<Arc<Server>> {
         handler
             .layer::<_, Infallible>(from_fn_with_state(Arc::clone(&limits), limit::guard))
             .layer(DefaultBodyLimit::max(body::MAX_BYTES))
+    };
+    // A GET is behind its validators, which can answer it without running it. A route
+    // layer, so another method's 405 is not one of them.
+    let read = |handler: MethodRouter<Arc<Server>>, cache: Cache| -> MethodRouter<Arc<Server>> {
+        handler.route_layer(from_fn_with_state(
+            (Arc::clone(&validators), cache),
+            validator::guard,
+        ))
     };
     let mut app = Router::new().route("/openapi.json", get(|| async move { json(openapi) }));
     for op in ops::all() {
@@ -208,9 +218,10 @@ async fn serve(
                     submit(op, route, state, query, body)
                 }))
             } else {
-                get(move |state, path, query, headers| {
-                    answer(op, route, state, path, query, headers)
-                })
+                read(
+                    get(move |state, path, query| answer(op, route, state, path, query)),
+                    op.cache,
+                )
             };
             app = app.route(&axum_route(route), handler);
         }
@@ -221,7 +232,10 @@ async fn serve(
                 submit_download(download, state, query, body)
             }))
         } else {
-            get(move |state, path, query, headers| fetch(download, state, path, query, headers))
+            read(
+                get(move |state, path, query| fetch(download, state, path, query)),
+                download.cache,
+            )
         };
         app = app.route(&axum_route(download.path), handler);
     }
@@ -244,7 +258,6 @@ async fn serve(
 /// A response document: `{data, meta}` with status 200, or `{error, meta}` with the
 /// code's status. HTTP and MCP send the same document.
 struct Answer {
-    scope: Scope,
     status: StatusCode,
     body: Value,
 }
@@ -259,11 +272,7 @@ impl Answer {
                 json!({"error": err, "meta": meta}),
             ),
         };
-        Self {
-            scope,
-            status,
-            body,
-        }
+        Self { status, body }
     }
 }
 
@@ -337,35 +346,18 @@ fn request_params(
     [params, query].concat()
 }
 
-/// One operation over HTTP: `{data, meta}` with today's `ETag` and `Cache-Control`
-/// policy and a 304 for a matching `If-None-Match`, or `{error, meta}` with the
-/// code's status.
+/// One operation over HTTP: `{data, meta}`, or `{error, meta}` with the code's
+/// status. [`validator::guard`] adds the 200's `ETag` and `Cache-Control`.
 async fn answer(
     op: &'static Operation,
     route: &'static str,
     State(server): State<Arc<Server>>,
     Path(path): Path<Vec<(String, String)>>,
     Query(query): Query<Vec<(String, String)>>,
-    headers: HeaderMap,
 ) -> Response {
     let params = request_params(route, path, query);
     let answer = run(&server, op, op.route_params(route), params).await;
-    let body = answer.body.to_string();
-    if answer.status != StatusCode::OK {
-        return (answer.status, json(body)).into_response();
-    }
-    let raw = Raw {
-        bytes: body.into_bytes(),
-        headers: Vec::new(),
-    };
-    cached(
-        &server,
-        answer.scope,
-        op.cache,
-        &headers,
-        "application/json",
-        raw,
-    )
+    (answer.status, json(answer.body.to_string())).into_response()
 }
 
 /// One POST operation over HTTP: its body, capped by [`limit::guard`] and parsed
@@ -429,14 +421,13 @@ fn refusal(server: &Server, scope: Scope, err: Error) -> Response {
     (answer.status, json(answer.body.to_string())).into_response()
 }
 
-/// One download over HTTP: the raw bytes with its media type, under the same
-/// validators and tier as an operation, or `{error, meta}` with the code's status.
+/// One download over HTTP: the raw bytes with its media type, or `{error, meta}` with
+/// the code's status. [`validator::guard`] adds the 200's `ETag` and `Cache-Control`.
 async fn fetch(
     download: &'static Download,
     State(server): State<Arc<Server>>,
     Path(path): Path<Vec<(String, String)>>,
     Query(query): Query<Vec<(String, String)>>,
-    headers: HeaderMap,
 ) -> Response {
     let params = request_params(download.path, path, query);
     match call(
@@ -447,48 +438,9 @@ async fn fetch(
     )
     .await
     {
-        (scope, Ok(raw)) => cached(
-            &server,
-            scope,
-            download.cache,
-            &headers,
-            download.media_type,
-            raw,
-        ),
+        (_, Ok(raw)) => raw_response(download.media_type, raw),
         (scope, Err(err)) => refusal(&server, scope, err),
     }
-}
-
-/// A 200 of `raw` with its `ETag`, `Cache-Control` and extra headers, or a 304 for a
-/// matching `If-None-Match`.
-fn cached(
-    server: &Server,
-    scope: Scope,
-    cache: Cache,
-    request: &HeaderMap,
-    media_type: &'static str,
-    raw: Raw,
-) -> Response {
-    let etag = etag(server, scope, &raw.bytes);
-    let revalidated = request
-        .get(header::IF_NONE_MATCH)
-        .and_then(|value| value.to_str().ok())
-        .is_some_and(|value| etag_matches(value, &etag));
-    let mut response = if revalidated {
-        StatusCode::NOT_MODIFIED.into_response()
-    } else {
-        raw_response(media_type, raw)
-    };
-    let validators = response.headers_mut();
-    validators.insert(
-        header::ETAG,
-        HeaderValue::from_str(&etag).expect("ASCII ETag"),
-    );
-    validators.insert(
-        header::CACHE_CONTROL,
-        HeaderValue::from_static(cache.header()),
-    );
-    response
 }
 
 /// A 200 of `raw`'s bytes as `media_type`, with its extra headers.
@@ -499,25 +451,4 @@ fn raw_response(media_type: &'static str, raw: Raw) -> Response {
         response.headers_mut().insert(name, value);
     }
     response
-}
-
-/// Today's `etag.py`: a strong validator over the server version, catalog, generation,
-/// effective scope and the first 16 hex digits of the body's SHA-256.
-fn etag(server: &Server, scope: Scope, body: &[u8]) -> String {
-    let digest = hex(&Sha256::digest(body)[..8]);
-    let scope = serde_json::to_value(scope).expect("Scope serializes");
-    format!(
-        "\"{VERSION}-{}-{}-{}-{digest}\"",
-        server.catalog.name(),
-        server.catalog.generation(),
-        scope.as_str().expect("Scope is a string"),
-    )
-}
-
-/// RFC 9110's weak comparison for `If-None-Match`, with its list and `*` forms.
-fn etag_matches(if_none_match: &str, etag: &str) -> bool {
-    if_none_match
-        .split(',')
-        .map(str::trim)
-        .any(|tag| tag == "*" || tag.strip_prefix("W/").unwrap_or(tag) == etag)
 }

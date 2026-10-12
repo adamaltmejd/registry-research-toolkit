@@ -149,7 +149,9 @@ pub enum Type {
 }
 
 /// The `Cache-Control` tier of a 200 (today's three): identity reads revalidate every
-/// request, fold-bearing reads get a minute, and rebuild-stable documents a day.
+/// request, fold-bearing reads get a minute in the browser and a day in a shared
+/// cache (the edge keys them by deploy generation), and rebuild-stable documents a
+/// day.
 #[derive(Clone, Copy)]
 pub enum Cache {
     Revalidate,
@@ -162,7 +164,7 @@ impl Cache {
     pub fn header(self) -> &'static str {
         match self {
             Self::Revalidate => "no-cache",
-            Self::Minute => "public, max-age=60, must-revalidate",
+            Self::Minute => "public, max-age=60, s-maxage=86400, must-revalidate",
             Self::Day => "public, max-age=86400, must-revalidate",
         }
     }

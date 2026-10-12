@@ -114,6 +114,13 @@ COPY reg_webapp/stewards/ /opt/reg_webapp/stewards/
 COPY reg_webapp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+# The cache validators' content digest (crates/reg-meta/src/validator.rs): the served
+# binary and databases, hashed here because hashing ~640 MB at boot on Fly's throttled
+# rootfs (~8 MiB/s cold) would outlast the entrypoint's readiness deadline. The
+# entrypoint passes it to the server as REG_META_CONTENT_DIGEST.
+RUN sha256sum /usr/local/bin/reg-meta /opt/reg_meta/reg_meta.db /opt/reg_meta/reg_meta_docs.db \
+    | sha256sum | cut -d' ' -f1 > /opt/reg_webapp/content.sha256
+
 # #224 provenance-confinement assertion (deployment-side). The earlier route-source
 # check was vacuous and is retired, and assertion #1 lived in the now-archived MONA
 # bundle build, so this is the one that remains. The bake stage fetches only the

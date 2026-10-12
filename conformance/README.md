@@ -145,7 +145,8 @@ additions:
   `{"startup_error": {"code": ...}}`: the template, run with `{catalog}` set to that
   name, prints the error document as the last line of stderr and exits with the code's
   `exit` status in `api/errors.toml`, without listening.
-- A step with `etag_from: N` sends step N's `ETag` as `If-None-Match`.
+- A step with `etag_from: N` sends step N's `ETag` as `If-None-Match`, and one with
+  `if_none_match` sends that literal header.
 - `docs` names a readable docs source under `cases/fixtures` (markdown under
   `markdown/<register>/`, `related_documents.toml`, binaries under
   `related/<register>/`); its `reg_meta_docs.db` is built beside the catalog. A case

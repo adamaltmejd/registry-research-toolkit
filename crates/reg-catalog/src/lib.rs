@@ -152,6 +152,12 @@ impl Catalog {
         self.manifest.get(key).map_or("", String::as_str)
     }
 
+    /// The admitted database file.
+    #[must_use]
+    pub fn path(&self) -> &Path {
+        &self.path
+    }
+
     #[must_use]
     pub fn generation(&self) -> &str {
         self.manifest("generation_id")

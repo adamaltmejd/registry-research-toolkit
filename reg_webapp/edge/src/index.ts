@@ -25,6 +25,11 @@ interface Env {
 // run_worker_first, so the steward worker must refuse to forward it here.
 const ORIGIN_PATHS = [/^\/api(\/|$)/, /^\/openapi\.json$/];
 const MCP_PATH = /^\/mcp$/;
+// Hashed static assets (assets.run_worker_first has `/assets/*` too): a miss is a
+// 404, not the SPA fallback, which frontend/public/_headers would stamp immutable
+// for a year under the asset's URL (#1454). A hashed asset is never HTML, so an
+// HTML answer from the assets binding is the fallback.
+const ASSETS_PATH = /^\/assets\//;
 
 // Cache-generation versioning (#318): the zone cache key is the full URL
 // including the query string, so stamping the per-deploy DEPLOY_VERSION onto
@@ -33,7 +38,7 @@ const MCP_PATH = /^\/mcp$/;
 // edge TTL still bounds origin traffic within a deploy generation. (cf.cacheKey
 // would be the purpose-built mechanism, but it's Enterprise-only.) The origin
 // tolerates the extra param: `reg-meta serve` drops it before validating the
-// query, and the ETag is content-derived. POSTs get the param too (harmless —
+// query and before deriving the ETag. POSTs get the param too (harmless —
 // they're never cached); branching on method isn't worth the asymmetry.
 const VERSION_PARAM = "__edge_v";
 
@@ -49,6 +54,16 @@ export default {
       if (env.EDGE_TOKEN) forwarded.headers.set("x-edge-token", env.EDGE_TOKEN);
       return fetch(forwarded);
     }
-    return env.ASSETS.fetch(request);
+    const response = await env.ASSETS.fetch(request);
+    if (
+      ASSETS_PATH.test(url.pathname) &&
+      response.headers.get("content-type")?.startsWith("text/html")
+    ) {
+      return new Response("Not found", {
+        status: 404,
+        headers: { "cache-control": "no-store" },
+      });
+    }
+    return response;
   },
 } satisfies ExportedHandler<Env>;
