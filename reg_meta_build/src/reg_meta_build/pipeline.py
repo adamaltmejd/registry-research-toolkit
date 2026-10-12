@@ -414,6 +414,10 @@ class _ScopeFailure:
     """A scope's exception as data: some exceptions (`RegMetaError`, keyword-only
     `SourceFormatError`) do not survive a pickle round trip."""
 
+    # The exception itself, when it survives a pickle round trip as its own class
+    # (a Pydantic `ValidationError` does; its constructor cannot rebuild it from
+    # `args`). None when it travels as the fields below.
+    exc: Exception | None
     # Pickled by reference: its module and qualified name.
     cls: type[Exception]
     # A `RegMetaError`'s attributes: exit code, code, class, message, remediation
@@ -427,11 +431,19 @@ class _ScopeFailure:
 def _scope_failure(exc: Exception) -> _ScopeFailure:
     cls, args = type(exc), exc.args
     state = dict(vars(exc)) if isinstance(exc, RegMetaError) else None
+    whole: Exception | None = None
+    if state is None:
+        try:
+            if type(pickle.loads(pickle.dumps(exc))) is cls:
+                whole = exc
+        except Exception:  # noqa: BLE001 — falls back to the fields below
+            whole = None
     try:
         pickle.dumps((cls, args, state))
     except Exception:  # noqa: BLE001 — an unimportable class or unpicklable values
         cls, args, state = RuntimeError, (f"{type(exc).__qualname__}: {exc}",), None
     return _ScopeFailure(
+        exc=whole,
         cls=cls,
         state=state,
         args=args,
@@ -444,7 +456,9 @@ def _raise_scope_failure(failure: _ScopeFailure) -> None:
     """Raise the scope's exception again as its own class, so the CLI reports the
     same code, message and exit status as a serial build."""
     exc: Exception
-    if issubclass(failure.cls, RegMetaError) and failure.state is not None:
+    if failure.exc is not None:
+        exc = failure.exc
+    elif issubclass(failure.cls, RegMetaError) and failure.state is not None:
         exc = failure.cls.__new__(failure.cls)
         exc.__dict__.update(failure.state)
     else:
