@@ -2075,7 +2075,11 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
 # logical variable yet, so mapping all members to one representation would
 # self-conflict inside the table. They stay in the denominator and are counted
 # in the worklist; upgrade trigger: the first real order that needs a pivot
-# concept.
+# concept. Each member carries `_PIVOT_REASON` so the gap is explicit (#1495).
+_PIVOT_REASON = (
+    "Wide-pivot member of {base}: the inventory has no cell shape for N physical"
+    " columns serving one variable (#1495)."
+)
 
 _DISP_BY_KEY: dict[str, list[tuple[str, str, str, str]]] = defaultdict(list)
 for _entry in _FLAVOR_DISPOSITION:
@@ -2489,6 +2493,12 @@ def cmd_inventory(args: argparse.Namespace) -> None:
             b = _steward_pivot_base(LOPNR_PREFIX.sub("", c))
             if b:
                 base_counts[b] += 1
+        # The unsuffixed base as a physical column is a pivot member too: a lone
+        # `ersk1` beside `ersk` is a pivot of `ersk` (#1302 C5). Counting only;
+        # `ersk` itself still maps directly when the catalog matches it.
+        for c in cols:
+            if (s := LOPNR_PREFIX.sub("", c)) in base_counts:
+                base_counts[s] += 1
         lines += ["", "[[table]]", f"id = {_toml_str(table)}"]
         lines.append(f"edition = {_toml_edition(edition)}")
         if table in overlay["partition"]:
@@ -2549,7 +2559,12 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                     hit = any(by_coordcol[(coord, base.upper())] for coord in coords)
                     if hit:
                         n_pivot += 1  # simplify: pivots stay unmapped (header)
-                        lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
+                        lines += [
+                            "",
+                            "[[table.column]]",
+                            f"name = {_toml_str(col)}",
+                            f"unmapped_reason = {_toml_str(_PIVOT_REASON.format(base=base))}",
+                        ]
                         continue
                 n_unresolved += 1
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
