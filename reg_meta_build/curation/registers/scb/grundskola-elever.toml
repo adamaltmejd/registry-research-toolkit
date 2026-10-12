@@ -349,3 +349,22 @@ slug = "utlsvbakg"
 [[variable]]
 native_id = "193.67.utl-bakg"
 slug = "utl-bakg"
+
+# ── #1302 SWECOV-held columns SCB's export omits (2026-10-12) ──
+# Each column is placed in the table's own view by SWECOV's P1105 delivery list.
+# Names and definitions are written from the column name and the catalog's sibling
+# wording, not copied from the delivery list.
+
+[[errata.column]]
+variant = "individregister"
+column = "MSPR2_ALT"
+name = "Moderna språk inom ramen för språkval (alternativ)"
+definition = "Moderna språk inom ramen för språkval (alternativ)"
+holdings_period = "2008-2008"
+source = "steward-holdings"
+evidence = "SWECOV holds MSPR2_ALT in Grund_Fkl_Fth_2008 (2008); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on individregister. holdings_period is the SWECOV holdings range (#1302)."
+noted = "2026-10-12"
+
+[[variable]]
+native_id = "193.MSPR2_ALT"
+slug = "mspr2-alt"
