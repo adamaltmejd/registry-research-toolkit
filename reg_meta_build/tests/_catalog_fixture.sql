@@ -130,4 +130,4 @@ INSERT INTO variable_state_lineage (
 INSERT INTO variable_state_lineage_warning (
     consumer_state_id, warning_kind, message
 ) VALUES
-    (7, 'no_source_state', 'No source state in register ''testreg'' for variable slug(s) [''parencol''] (any variant).');
+    (7, 'ambiguous_source_variant', 'Multiple source variants need an explicit lineage choice.');

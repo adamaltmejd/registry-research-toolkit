@@ -1428,10 +1428,12 @@ selects only that exact admitted variant, matching its resolved source name. An 
 or ambiguous explicit variant cannot fall back to a register default or another
 variant's states. Explicit source-variant defaults resolve unqualified claims with
 genuinely multiple variants and are checked even when unused. Missing evidence produces
-retained lineage warnings and blocking diagnostics: no supported source state withholds
-the edge as a warning; ambiguity between identity-linked source variants is an error.
-Without an accepted variable identity path, even an ambiguous source-variant label
-retains a no-source-state warning and cannot create an edge. Register attribution alone
+diagnostics: no supported source state withholds the edge as a build-report warning
+only, since on real data it fires for tens of thousands of states and buried the rest
+(#1300); ambiguity between identity-linked source variants is an error and is also
+stored as a catalog lineage warning. Without an accepted variable identity path, even
+an ambiguous source-variant label reports a no-source-state warning and cannot create
+an edge. Register attribution alone
 does not establish a variable endpoint. Missing accepted endpoints retain that warning
 even for year-independent deliveries. Only positively linked endpoints reach the
 dated-intersection guard; independent endpoints then require an explicit

@@ -62,10 +62,13 @@
       ]
     },
     {
+      "note": "Only the ambiguities reach the catalog; GAP's, UNDELIVERED's and UNKNOWN's missing source states stay in the build report (#1300).",
       "table": "lineage_warnings",
-      "where": {"variable": "gap"},
-      "fields": ["kind"],
-      "rows": [["no_source_state"]]
+      "fields": ["variable", "kind"],
+      "rows": [
+        ["defaulted", "ambiguous_source_variant"],
+        ["doubled", "ambiguous_source_variant"]
+      ]
     }
   ]
 }

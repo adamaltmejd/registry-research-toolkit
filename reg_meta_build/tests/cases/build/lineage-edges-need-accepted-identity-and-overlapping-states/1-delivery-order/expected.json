@@ -50,11 +50,10 @@
       ]
     },
     {
+      "note": "UNLINKED's missing source state is reported in the build report only (#1300): the catalog stores no lineage warning for it.",
       "table": "lineage_warnings",
       "fields": ["register", "variable", "kind"],
-      "rows": [
-        ["example", "unlinked", "no_source_state"]
-      ]
+      "rows": []
     }
   ]
 }

@@ -204,8 +204,8 @@ def full_metadata() -> ResolvedMetadata:
         lineage_warnings=(
             ResolvedLineageWarning(
                 consumer=state_ref("two"),
-                kind="no_source_state",
-                message="No linked source state",
+                kind="ambiguous_source_variant",
+                message="Multiple source variants need an explicit lineage choice.",
             ),
         ),
     )
