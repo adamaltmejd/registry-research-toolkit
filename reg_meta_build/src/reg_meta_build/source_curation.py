@@ -166,7 +166,9 @@ class RecordProjection(_CurationModel):
     def _ordered_parents(
         cls, parents: tuple[ParentFactProjection, ...] | None
     ) -> tuple[ParentFactProjection, ...] | None:
-        return None if parents is None else tuple(sorted(parents, key=_model_token))
+        if parents is None or len(parents) < 2:
+            return parents
+        return tuple(sorted(parents, key=_model_token))
 
     @field_validator("fields")
     @classmethod
@@ -214,8 +216,22 @@ def _projection_shape(
     )
 
 
+# Keyed by identity: a frozen model's token never changes, and the same instance is
+# hashed again in quick succession (capture, then the alternatives' sort and
+# uniqueness validators). Each entry holds its model so the id cannot be reused.
+# Bounded so it never grows with a build; a miss only recomputes the same token.
+_MODEL_TOKENS: dict[int, tuple[_CurationModel, str]] = {}
+_MODEL_TOKENS_LIMIT = 1 << 16
+
+
 def _model_token(value: _CurationModel) -> str:
-    return canonical_sha256(value.model_dump(mode="json"))
+    if (cached := _MODEL_TOKENS.get(id(value))) is not None:
+        return cached[1]
+    token = canonical_sha256(value.model_dump(mode="json"))
+    if len(_MODEL_TOKENS) >= _MODEL_TOKENS_LIMIT:
+        _MODEL_TOKENS.clear()
+    _MODEL_TOKENS[id(value)] = (value, token)
+    return token
 
 
 class RecordExpectation(_CurationModel):
@@ -231,6 +247,8 @@ class RecordExpectation(_CurationModel):
     ) -> tuple[RecordProjection, ...]:
         # A set of alternatives: authored order is never evidence, so a projection
         # change that reorders tokens cannot stale an otherwise identical guard.
+        if len(alternatives) < 2:
+            return alternatives
         return tuple(sorted(alternatives, key=_model_token))
 
     @model_validator(mode="after")
@@ -1935,10 +1953,23 @@ def capture_expectations(
     *,
     fields: tuple[str, ...],
     parents: bool = False,
+    projections: dict[
+        tuple[int, tuple[str, ...], bool], tuple[SourceRecord, RecordProjection]
+    ]
+    | None = None,
 ) -> tuple[RecordExpectation, ...]:
-    """Capture a finite conversion baseline; never call this to refresh stale cases."""
+    """Capture a finite conversion baseline; never call this to refresh stale cases.
+
+    `projections` lets a caller that captures the same records repeatedly reuse
+    each record's projection: it is a pure function of the frozen record, `fields`
+    and `parents`. Entries hold their record so its id cannot be reused.
+    """
     grouped = defaultdict(dict)
     for record in records:
+        key = (id(record), fields, parents)
+        if projections is not None and (hit := projections.get(key)) is not None:
+            grouped[record_ref(record)][_model_token(hit[1])] = hit[1]
+            continue
         projection = RecordProjection(
             fields=tuple(
                 FieldExpectation(name=name, status="absent")
@@ -1956,8 +1987,9 @@ def capture_expectations(
             if parents
             else None,
         )
-        token = canonical_sha256(projection.model_dump(mode="json"))
-        grouped[record_ref(record)][token] = projection
+        if projections is not None:
+            projections[key] = (record, projection)
+        grouped[record_ref(record)][_model_token(projection)] = projection
     return tuple(
         RecordExpectation(ref=ref, alternatives=tuple(items.values()))
         for ref, items in sorted(

@@ -859,6 +859,11 @@ class ErrataVariantContext:
             parents=True,
         )
 
+    @functools.cached_property
+    def least_ref(self) -> SourceRecordRef:
+        """Cached: every undated column entry of the variant anchors on it."""
+        return min((record_ref(record) for record in self.records), key=str)
+
     def expectations_for_refs(
         self, references: set[SourceRecordRef]
     ) -> tuple[RecordExpectation, ...]:
@@ -1197,7 +1202,7 @@ def convert_column_entry(
         # nothing about when the independently declared column was delivered.
         # The least ref, not the first row: delivery row order must not move the
         # anchor, its peer guard or the refs its issues cite.
-        references.add(min((record_ref(record) for record in records), key=str))
+        references.add(context.least_ref)
     anchors = context.records_for_refs(references)
     expected = capture_expectations(anchors, fields=("availability",))
     # No column-absent guard: the column was checked against every record of this
