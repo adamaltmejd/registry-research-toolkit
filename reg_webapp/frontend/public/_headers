@@ -1,0 +1,12 @@
+# Workers Assets response headers (#1454), copied to dist/ by Vite and read by both
+# edge workers (reg_webapp/edge/). Everything Vite emits under /assets/ is named by
+# its content hash (scripts/smoke_build.ts checks it), so a changed file is a new
+# URL and the old one never needs revalidating. index.html and the SPA fallback
+# keep Workers' default `max-age=0, must-revalidate`, so a deploy shows at once.
+# Footgun: the rule matches by path, so a MISSING /assets/ file gets the SPA
+# fallback index.html stamped immutable too (the fallback never reaches the worker).
+# A missing hashed name is never served real content later, so this only matters
+# if a browser asks a colo still on the previous deploy for a new hash during
+# rollout; that URL stays broken in that browser until the file's next change.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
