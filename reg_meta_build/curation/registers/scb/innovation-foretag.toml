@@ -12696,9 +12696,9 @@ variant = "_default"
 column = "emp2012"
 name = "emp2012"
 definition = "emp2012"
-holdings_period = "2014-2014"
+holdings_period = "2012-2014"
 source = "steward-holdings"
-evidence = "SWECOV holds emp2012 in CIS2014; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. (#1302)"
+evidence = "SWECOV holds emp2012 in CIS2012 and CIS2014 (pooled range 2012-2014; CIS is biennial, so no 2013 wave); Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. (#1302, #1533)"
 noted = "2026-10-12"
 
 [[variable]]

@@ -270,6 +270,12 @@ variable = "sektortillhorighet"
 description = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form."
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
+[[enrichment.description]]
+register = "scb/fek"
+variable = "forbrukningsvarde"
+description = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015."
+provenance = "Maintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
 # Delivery-column aliases (#365 PR1c) for scb/fek: this file carries
 # 27 of the 45 SWECOV headers mapped to existing SCB variables.
 
