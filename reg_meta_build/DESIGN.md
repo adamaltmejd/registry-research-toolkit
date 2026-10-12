@@ -1939,7 +1939,31 @@ order; cache per-register resolve results by content; keep Pydantic validation a
 boundaries only; then re-profile. The whole-bundle resolve cache has shipped:
 `build-db --resolved-out` persists the resolve phase and `materialize-db` reuses it
 (#1397, #1399, #1400, #1403). The algorithmic-waste and revalidation passes of #1425
-have shipped too (#1493, #1507). The open items are #1423 and #1424.
+have shipped too (#1493, #1507), and so has parallel resolve (#1423). The open item is
+#1424.
+
+**Parallel resolve.** `build-db --workers N` and `check-curation --workers N` resolve
+source scopes in N forked processes; the default is 1. Each scope is one task, keyed by
+its source and register. A worker reads the scope through its own prepared-records
+reader and value sessions. It returns every effect of the scope as data: the issues and
+coding reports in the order resolution made them, any exception, the ledger lines and
+the folded values. The parent applies these outcomes strictly in the serial scope order,
+so the database, ledger and bundle are the same bytes for every N:
+
+- Every outcome takes one pickle round trip, also when N = 1 resolves it in the parent.
+  The bundle pickle then sees the same object graph for every N.
+- Each scope clears the value-binding caches first. A cache hit would otherwise hand it
+  objects an earlier scope built, and the pickled graph would depend on which scopes its
+  process resolved before.
+- An exception travels as data and is raised again at its scope's place in the order,
+  with its own class, code and exit status.
+
+Fork, not spawn, shares the resolve context copy-on-write: about 6 GB at full scale.
+Each worker adds its scope's working set, up to about 1.3 GB for the largest register,
+plus whatever pages reference counting copies. The parent freezes the garbage collector
+before the fork and keeps at most 2 × N outcomes waiting. `--workers` is never keyed
+(the real-seed cache passes it through) and appears in no output. `--dump-decisions`
+needs `--workers 1`.
 
 **Why not partial Rust kernels.** A re-profile after #1493 put per-value binding at
 about 37% of a full build and record decode at about 13%, both dominated by building
@@ -1974,6 +1998,7 @@ reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha25
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
 reg-meta-build --db NEW_DIR build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --registers SPEC[,SPEC...]
 reg-meta-build build-db ... --resolved-out NEW_DIR
+reg-meta-build build-db ... --workers N
 reg-meta-build materialize-db --resolved DIR --report-dir NEW_DIR [--diagnostic --diagnostic-db-path NEW.db] [--registers SPEC[,SPEC...]]
 reg-meta-build check-curation --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --registers SPEC[,SPEC...] --report-dir NEW_DIR
 reg-meta-build inspect-source-records --input-bundle DIR ...

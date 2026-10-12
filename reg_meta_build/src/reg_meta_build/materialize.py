@@ -1145,6 +1145,7 @@ def build_catalog(
     curation_dir: Path | None = None,
     dump_decisions: Path | None = None,
     resolved_out: Path | None = None,
+    workers: int = 1,
 ) -> dict[str, object]:
     """Build the compiled curation; failures never replace an active catalog.
 
@@ -1152,7 +1153,8 @@ def build_catalog(
     completion retains strict errors and returns publication_ready false.
     `registers` builds only the named scopes; its output is never publishable and
     its corpus volume guards do not apply. `resolved_out` also writes the
-    resolution as a bundle that `materialize_resolved` places.
+    resolution as a bundle that `materialize_resolved` places. `workers`
+    processes resolve the source scopes, with the same result for any count.
     """
     started = time.perf_counter()
     publishable = not diagnostic and not registers
@@ -1181,6 +1183,7 @@ def build_catalog(
         curation_dir=curation_dir,
         dump_decisions=dump_decisions,
         resolved_out=resolved_out,
+        workers=workers,
     )
     result = materialize_build(resolved, revision=revision)
     # Reported after publication: a failure here keeps the completed-artifact

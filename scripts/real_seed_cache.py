@@ -866,6 +866,8 @@ def run_build(
             argv += ["--curation-dir", args.curation_dir]
         if resolved_out:
             argv += ["--resolved-out", str(run_dir / "resolved")]
+        # Passed through, never keyed: the output is the same for every count.
+        argv += ["--workers", str(args.workers)]
     else:
         argv += ["materialize-db", "--resolved", str(resolved)]
     argv += ["--report-dir", str(run_dir / "report"), "--timing"]
@@ -1156,6 +1158,12 @@ def main() -> int:
     build.add_argument("--diagnostic", action="store_true")
     build.add_argument("--registers", metavar="SPEC[,SPEC...]")
     build.add_argument("--curation-dir")
+    build.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="build-db --workers on a miss; not part of any key",
+    )
     mode = build.add_mutually_exclusive_group()
     mode.add_argument(
         "--key", action="store_true", help="print the key and its fields only"

@@ -22,6 +22,7 @@ from reg_meta_build.source_coding import (
     resolve_code_membership,
 )
 from reg_meta_build.source_intervals import (
+    clear_scope_bounds_cache,
     coding_scope_bounds,
     reconcile_source_fields,
 )
@@ -688,6 +689,20 @@ class ValueBindingSession:
             self._last_native_key = native_key
             self._last_native_result = result
         return result
+
+
+def clear_binding_caches(sessions: Iterable[ValueBindingSession]) -> None:
+    """Forget every lookup the binding path caches across records.
+
+    A cache hit can hand a scope an object an earlier scope built, so without this
+    a scope's object graph, and the bytes it pickles to, would depend on which
+    scopes the process resolved before it. Cleared before each scope (#1423).
+    """
+    _member_scope.cache_clear()
+    clear_scope_bounds_cache()
+    for binding in sessions:
+        binding._last_native_key = binding._last_native_result = None
+        binding.session.clear_caches()
 
 
 @contextmanager

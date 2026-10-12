@@ -346,6 +346,31 @@ def _add_pipeline_arguments(parser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="Emit phase and source-scope durations to stderr.",
     )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        metavar="N",
+        help=(
+            "Resolve source scopes in N forked processes (default 1). The output is "
+            "the same for every N; each worker adds its scope's working set to "
+            "memory. Not with --dump-decisions."
+        ),
+    )
+
+
+def _pipeline_workers(args: argparse.Namespace) -> int:
+    if args.workers < 1 or (args.workers > 1 and args.dump_decisions):
+        raise RegMetaError(
+            exit_code=EXIT_USAGE,
+            code="pipeline_options_invalid",
+            error_class="usage",
+            message=f"--workers {args.workers}: needs at least 1 worker, and "
+            "--dump-decisions needs exactly 1.",
+            remediation="Pass --workers 1 or more; drop --workers, or set it to 1, "
+            "to dump decisions.",
+        )
+    return args.workers
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -1169,6 +1194,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .materialize import build_catalog
 
     output, registers = _catalog_request(args)
+    workers = _pipeline_workers(args)
     return _run_catalog_build(
         args,
         lambda: build_catalog(
@@ -1182,6 +1208,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             curation_dir=Path(args.curation_dir) if args.curation_dir else None,
             dump_decisions=Path(args.dump_decisions) if args.dump_decisions else None,
             resolved_out=Path(args.resolved_out) if args.resolved_out else None,
+            workers=workers,
         ),
     )
 
@@ -1224,6 +1251,7 @@ def _cmd_check_curation(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             message="--registers needs nonempty comma-separated scope names.",
             remediation="Name each complete register scope once between commas.",
         )
+    workers = _pipeline_workers(args)
     try:
         result = check_curation(
             Path(args.prepared),
@@ -1233,6 +1261,7 @@ def _cmd_check_curation(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             registers=registers,
             curation_dir=Path(args.curation_dir) if args.curation_dir else None,
             dump_decisions=Path(args.dump_decisions) if args.dump_decisions else None,
+            workers=workers,
         )
     except RegMetaError:
         # A located refusal (e.g. CuratedSourceError, also a ValueError)
@@ -2322,7 +2351,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
     ),
     (
         "build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--diagnostic --diagnostic-db-path DB] "
-        "[--registers SPEC[,SPEC...]] [--curation-dir DIR] [--dump-decisions DIR] [--resolved-out DIR]",
+        "[--registers SPEC[,SPEC...]] [--curation-dir DIR] [--dump-decisions DIR] [--resolved-out DIR] [--workers N]",
         "Build from prepared sources and common curation; strict publication is the default.",
     ),
     (

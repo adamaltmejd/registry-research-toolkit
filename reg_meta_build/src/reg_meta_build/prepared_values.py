@@ -702,6 +702,14 @@ class PreparedValueSession:
             self._native_item_coordinate
         )
 
+    def clear_caches(self) -> None:
+        for cached in (
+            self._cached_dictionary,
+            self._cached_validity,
+            self._cached_item_coordinate,
+        ):
+            cached.cache_clear()
+
     def _dictionary(self, kind: str, key: str) -> Any:
         row = self.conn.execute(
             "SELECT p.body FROM dictionary d JOIN payload p ON p.id=d.payload WHERE d.kind=? AND d.key=?",
