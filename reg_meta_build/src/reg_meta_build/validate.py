@@ -395,6 +395,15 @@ def _check_schema_shape(
         else:
             result.fail("value_code.mapping_count missing")
 
+    # #1297: classification code tree — classification_code.parent_code_id.
+    cc_cols = {
+        r["name"] for r in conn.execute("PRAGMA table_info(classification_code)")
+    }
+    if "parent_code_id" in cc_cols:
+        result.ok("classification_code.parent_code_id present")
+    else:
+        result.fail("classification_code.parent_code_id missing")
+
     # #311: curated thematic tag layer — tag + tag_member tables.
     for required in ("tag", "tag_member"):
         if required in tables:
@@ -2512,6 +2521,9 @@ def _check_classification_code_tree(
 ) -> None:
     """#1297 code tree: a parent is a code of the same book, shallower, acyclic."""
     result.section("[classification code tree]")
+    columns = {r[1] for r in conn.execute("PRAGMA table_info(classification_code)")}
+    if "parent_code_id" not in columns:
+        return  # _check_schema_shape already failed.
     outside = conn.execute(
         "SELECT COUNT(*) FROM classification_code c WHERE c.parent_code_id IS NOT NULL "
         "AND NOT EXISTS (SELECT 1 FROM classification_code p "
