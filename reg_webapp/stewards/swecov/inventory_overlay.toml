@@ -18747,8 +18747,9 @@ table = "InrFlyttFlode2024"
 column = "P1105_LopNr_FastbetecknG"
 reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
 
-# ── PENDING maintainer confirmation (2026-10-12, #1302 round 3): RTB
-# 1990-1997 P1105_Lopnr_Fast is the pre-1998 property key fastlopnr.
+# ── DECIDED (maintainer-accepted 2026-10-12, #1302 round 6): RTB 1990-1997
+# P1105_Lopnr_Fast is the pre-1998 property key fastlopnr (FastLopNr); the key
+# space breaks at 1997/1998, when fastighetsbeteckning takes over.
 
 [[mapping]]
 register_variant = "scb/rtb/folkbokforda-personer"
