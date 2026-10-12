@@ -1480,6 +1480,8 @@ class SourceEvidence:
         )
         for record in self.records:
             self.grouped[_record_key(record)].append(record)
+        # Cases over one column pin the same originals: hash each group once.
+        self.original_hashes: dict[tuple[str, tuple[str, ...]], tuple[str, ...]] = {}
         self.effective_columns: dict[tuple[str, tuple[str, ...]], set[NativeKey]] = (
             defaultdict(set)
         )
@@ -1735,10 +1737,15 @@ def _evaluate_case(
     )
     if case.expected_evidence_sha256 is not None:
         refs = {_ref_key(e.ref) for e in (*case.targets, *case.support)}
-        originals = tuple(
-            r for key in sorted(refs) for r in evidence.grouped.get(key, ())
-        )
-        if acknowledgement_evidence_sha256(originals) != case.expected_evidence_sha256:
+        hashes = evidence.original_hashes
+        for key in refs - hashes.keys():
+            hashes[key] = tuple(
+                evidence_sha256(r) for r in evidence.grouped.get(key, ())
+            )
+        if (
+            acknowledgement_hashes_sha256(h for key in refs for h in hashes[key])
+            != case.expected_evidence_sha256
+        ):
             issues = (
                 *issues,
                 ApplicabilityIssue(

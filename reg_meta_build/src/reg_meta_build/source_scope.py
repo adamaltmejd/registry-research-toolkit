@@ -37,7 +37,7 @@ from reg_meta_build.source_curation import (
     SourceEvidence,
     SourceWarningDecision,
     acknowledged_diagnostic,
-    acknowledgement_evidence_sha256,
+    acknowledgement_hashes_sha256,
     current_pins,
     evaluate_cases,
 )
@@ -994,13 +994,23 @@ def resolve_source_scope(
     for issue in siblings.diagnostics:
         emit(issue)
     acknowledged: dict[ResolutionDiagnostic, ResolutionDiagnostic] = {}
+    # Acknowledgements of one column's errors pin the same refs: hash each once.
+    original_hashes: dict[SourceRecordRef, tuple[str, ...]] = {}
+
+    def hashes_of(ref: SourceRecordRef) -> tuple[str, ...]:
+        if ref not in original_hashes:
+            original_hashes[ref] = tuple(
+                evidence_sha256(record) for record in guarded_originals[ref]
+            )
+        return original_hashes[ref]
+
     for case, decision, matched in held.values():
         distinct = tuple(dict.fromkeys(matched))
         current_evidence = (
             None
             if decision.expected_evidence_sha256 is None
-            else acknowledgement_evidence_sha256(
-                (record for ref in decision.refs for record in guarded_originals[ref]),
+            else acknowledgement_hashes_sha256(
+                (token for ref in decision.refs for token in hashes_of(ref)),
                 (token for ref in decision.refs for token in guarded_coding[ref]),
             )
         )

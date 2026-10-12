@@ -82,6 +82,12 @@ def _check_contract(case: CurationCase) -> None:
         raise TypeError("occurrence application accepts only occurrence corrections")
     targets = {item.ref: item for item in case.targets}
     checked = {item.ref: item for item in (*case.support, *case.targets)}
+    # Compared as plain field tuples: a Pydantic __eq__ scan per effect dominated.
+    guarded = {
+        (member.source, member.semantic_record_key)
+        for guard in case.peer_guards
+        for member in guard.expected_members
+    }
     for effect in decision.effects:
         if isinstance(effect, CuratedOccurrenceAddition):
             if not case.peer_guards:
@@ -123,16 +129,17 @@ def _check_contract(case: CurationCase) -> None:
         else:
             if effect.ref not in targets:
                 raise ValueError("an occurrence effect must name an exact target")
-            if isinstance(
-                effect,
-                (
-                    CheckedIdentityChange,
-                    CheckedSourceUse,
-                    CheckedVariantAssignment,
-                    CheckedEditionRebind,
-                ),
-            ) and not any(
-                effect.ref in guard.expected_members for guard in case.peer_guards
+            if (
+                isinstance(
+                    effect,
+                    (
+                        CheckedIdentityChange,
+                        CheckedSourceUse,
+                        CheckedVariantAssignment,
+                        CheckedEditionRebind,
+                    ),
+                )
+                and (effect.ref.source, effect.ref.semantic_record_key) not in guarded
             ):
                 raise ValueError(
                     "an identity/use assignment requires guarded source membership"
