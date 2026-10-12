@@ -33,7 +33,7 @@ const MCP_PATH = /^\/mcp$/;
 // edge TTL still bounds origin traffic within a deploy generation. (cf.cacheKey
 // would be the purpose-built mechanism, but it's Enterprise-only.) The origin
 // tolerates the extra param: `reg-meta serve` drops it before validating the
-// query, and the ETag is content-derived. POSTs get the param too (harmless —
+// query and before deriving the ETag. POSTs get the param too (harmless —
 // they're never cached); branching on method isn't worth the asymmetry.
 const VERSION_PARAM = "__edge_v";
 

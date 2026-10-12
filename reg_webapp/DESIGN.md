@@ -480,18 +480,22 @@ keeps the snapshot equal to the server). Locally, the Vite dev proxy sends
 
 ## ETag / Cache-Control
 
-The Rust server sets the reads' ETags and `Cache-Control` (`crates/reg-catalog`); a POST
-answer (`validate`, `order`, the manifest download) carries no validator.
+The Rust server sets the reads' ETags and `Cache-Control` (tiers in
+`crates/reg-catalog`, validators in `crates/reg-meta/src/validator.rs`); a POST answer
+(`validate`, `order`, the manifest download) carries no validator.
 
-**V1 early-revalidation correction (decision 2026-07-14; not implemented at this
-head).** App code, compiled catalog DB, steward branding configuration and paired docs
-DB are immutable for a process lifetime; changing any of them replaces the process. At
-startup, derive one content-backed HTTP generation token from those inputs, including
-catalog `generation_id`. Loose delivery inventory is not an HTTP input. Include read
-scope in the canonical request identity and caches/cursors. For known pure GET reads,
-derive the validator from that token plus steward and the canonical request identity,
-and satisfy a matching `If-None-Match` before route execution, DB work, or body
-serialization. This makes a 304 cheap without weakening exact representation identity.
+**Early revalidation (#1453).** App code, compiled catalog DB, steward branding
+configuration and paired docs DB are immutable for a process lifetime; changing any of
+them replaces the process. At startup the server derives one token from them: the
+SHA-256 of its own binary (an image change without a version bump still changes it), the
+catalog name and `generation_id`, the docs `generation` and the steward branding. Loose
+delivery inventory is not an HTTP input. A GET read's strong ETag is that token plus the
+request's path and query, without `__edge_v`, so read scope (a parameter or the
+catalog's default) is part of it. A tower layer in front of every GET operation and
+download answers a matching `If-None-Match` with a 304 before the route runs, so a
+revalidation does no DB work and no body serialization. `If-None-Match: *` still runs
+the route, since it matches only a representation that exists. Only a 200 carries the
+ETag and tier.
 
 Browser and shared-cache freshness are separate concerns. Keep a short browser window
 where prompt redeploy visibility matters, but let the Cloudflare cache retain immutable,
@@ -505,9 +509,12 @@ path meets it, so no second in-process response cache is warranted.
   vintage footer reads it to assert a specific deploy version/date, so a stale copy
   would *visibly lie* right after a deploy. Catalog and search reads use `max-age=60`
   because both embed the #322 concept-group folds, which can change at the same browser
-  URL on redeploy. `public` keeps the CF edge cacheable (the #220 probe survives).
-  `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable and a
-  sub-day-stale list is acceptable there; the ETag still guarantees correctness on
+  URL on redeploy, and `s-maxage=86400` for the edge, whose key carries the deploy
+  generation (#318), so a warm search is not revalidated at the origin every minute.
+  `must-revalidate` stays, so no cache serves them stale (it and `s-maxage` both rule
+  out `stale-while-revalidate`). `public` keeps the CF edge cacheable (the #220 probe
+  survives). `/api/docs/*` keeps `max-age=86400` — doc-library content is rebuild-stable
+  and a sub-day-stale list is acceptable there; the ETag still guarantees correctness on
   revalidation. The edge worker (`reg_webapp/edge/`) defers to this origin's
   `Cache-Control` contract (it only stamps the `__edge_v` cache-generation param,
   orthogonal to caching policy), so the per-route policy needs no edge change.
@@ -1224,8 +1231,13 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   `fetch(request)` passthrough to the incoming hostname's zone origin (Fly), so the
   origin ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
   `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
-  navigations without invoking the worker, shadowing `/api` deep-opens. The glob list
-  and the worker's `ORIGIN_PATHS` regexes are a LOCKSTEP pair (comments in both files);
+  navigations without invoking the worker, shadowing `/api` deep-opens. The assets layer
+  reads `frontend/public/_headers` (copied into `dist/`): hashed `/assets/*` files are
+  `public, max-age=31536000, immutable` (#1454); `index.html` and the SPA fallback keep
+  Workers' default `max-age=0, must-revalidate`. The rule matches by path, so a missing
+  `/assets/` file gets the fallback `index.html` stamped immutable (the fallback never
+  runs the worker); the comment in `_headers` bounds that case. The glob list and the
+  worker's `ORIGIN_PATHS` regexes are a LOCKSTEP pair (comments in both files);
   `reg-meta serve` answers exactly the forwarded set. Cloudflare downgrades the origin's
   strong ETag to weak (`W/`) when compression applies — weak comparison is correct for
   GET revalidation, not a bug.
@@ -1234,31 +1246,31 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   data-only rebuilds still count) onto every origin-bound URL as an `__edge_v` query
   param. The zone cache key is the full URL, so each deploy orphans all prior `/api/*`
   cache entries — fresh payloads immediately after deploy, while the per-route TTL still
-  bounds origin traffic *within* a generation (60s for catalog + search, 24h for
-  doc-library). This is the free-plan substitute for `cf.cacheKey` (Enterprise-only) and
-  needs no purge credentials. Origin-side the param is inert: `reg-meta serve` drops it
-  before validating the query (it rejects every other unknown parameter) and the ETag is
-  content-derived. Consequence: `edge-deploy` runs on **image-affecting** pushes too,
-  not just edge paths — an origin deploy that changes API payloads without touching the
-  SPA/contract must still ship a new cache generation. The motivating incident (#303
-  rollout) had the edge serving 11h-old pre-deploy catalog JSON against a freshly
-  deployed SPA; the #317 defensive-rendering rule (SPA tolerates one cache generation of
-  payload skew on additive fields) stays in force regardless, for clients holding
-  *browser*-cached payloads (catalog + search browser TTL is 60s; doc-library is 86400s
-  — both unversioned). Deploys: the `edge-deploy` job in `container-build.yml` rebuilds
-  the SPA (bun pinned to ci.yml's frontend job — bump together) and runs
-  `wrangler deploy` on main pushes touching the SPA, the edge worker, the committed
-  `openapi.json`, or the image surface (cache generation, above) (`CLOUDFLARE_API_TOKEN`
-  repo secret, "Edit Cloudflare Workers" template scoped to the account + swecov.se).
-  The job `needs:` the origin deploy — on a contract-changing push the SPA never goes
-  live before the origin serves the new endpoints (deploy-skew guard; skew 404s are NOT
-  negatively cached: the Cache Rule's Edge TTL is "bypass if no cache-control", and the
-  origin only stamps 200s). After each edge deploy a probe asserts a catalog read
-  returns `CF-Cache-Status: HIT` with a young `Age` (a stale `Age` means cache-key
-  versioning broke) and an edge 304 — the #220 gate as a standing regression check
-  against silent Cache Rule / zone drift. It reads `/api/search`, the cacheable Rust
-  route (`/api/context` is `no-cache`). Manual fallback: build the SPA, then
-  `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
+  bounds origin traffic *within* a generation (24h, `s-maxage` for catalog + search and
+  `max-age` for doc-library). This is the free-plan substitute for `cf.cacheKey`
+  (Enterprise-only) and needs no purge credentials. Origin-side the param is inert:
+  `reg-meta serve` drops it before validating the query (it rejects every other unknown
+  parameter) and before deriving the ETag. Consequence: `edge-deploy` runs on
+  **image-affecting** pushes too, not just edge paths — an origin deploy that changes
+  API payloads without touching the SPA/contract must still ship a new cache generation.
+  The motivating incident (#303 rollout) had the edge serving 11h-old pre-deploy catalog
+  JSON against a freshly deployed SPA; the #317 defensive-rendering rule (SPA tolerates
+  one cache generation of payload skew on additive fields) stays in force regardless,
+  for clients holding *browser*-cached payloads (catalog + search browser TTL is 60s;
+  doc-library is 86400s — both unversioned). Deploys: the `edge-deploy` job in
+  `container-build.yml` rebuilds the SPA (bun pinned to ci.yml's frontend job — bump
+  together) and runs `wrangler deploy` on main pushes touching the SPA, the edge worker,
+  the committed `openapi.json`, or the image surface (cache generation, above)
+  (`CLOUDFLARE_API_TOKEN` repo secret, "Edit Cloudflare Workers" template scoped to the
+  account + swecov.se). The job `needs:` the origin deploy — on a contract-changing push
+  the SPA never goes live before the origin serves the new endpoints (deploy-skew guard;
+  skew 404s are NOT negatively cached: the Cache Rule's Edge TTL is "bypass if no
+  cache-control", and the origin only stamps 200s). After each edge deploy a probe
+  asserts a catalog read returns `CF-Cache-Status: HIT` with a young `Age` (a stale
+  `Age` means cache-key versioning broke) and an edge 304 — the #220 gate as a standing
+  regression check against silent Cache Rule / zone drift. It reads `/api/search`, the
+  cacheable Rust route (`/api/context` is `no-cache`). Manual fallback: build the SPA,
+  then `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
   `wrangler.jsonc`'s header — the config's literal `"dev"` default must not ship).
 - **Zone rules (dashboard, free plan)**: a Cache Rule making `/api/*` on the hostname
   cache-eligible (Cloudflare never caches extensionless API paths by default, even with

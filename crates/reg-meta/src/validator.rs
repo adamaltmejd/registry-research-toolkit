@@ -1,0 +1,127 @@
+//! The cache validators of `serve`: every GET operation and download sits behind
+//! [`guard`], which answers a matching `If-None-Match` with a 304 before the route
+//! runs, so a revalidation does no DB work and no serialization
+//! (`reg_webapp/DESIGN.md`, "`ETag` / `Cache-Control`").
+//!
+//! A response is a pure function of the server binary, the admitted catalog and docs
+//! databases, the steward branding and the request URL, and none of them changes for
+//! the process's lifetime. So the `ETag` is derived from a boot-time token over the
+//! first four and the request's path and query, not from the body.
+
+use std::sync::Arc;
+
+use axum::extract::{Request, State};
+use axum::http::{HeaderValue, StatusCode, Uri, header};
+use axum::middleware::Next;
+use axum::response::{IntoResponse, Response};
+use reg_catalog::hex;
+use reg_catalog::ops::{Cache, Server};
+use sha2::{Digest, Sha256};
+
+use crate::{EDGE_VERSION_PARAM, VERSION};
+
+pub struct Validators {
+    /// The `ETag`'s readable head: the server version, catalog and generation.
+    head: String,
+    /// The SHA-256 of everything a response depends on besides its request.
+    token: [u8; 32],
+}
+
+impl Validators {
+    /// The validators of one server process. The binary's own digest stands for the
+    /// code: an unreleased image change keeps `VERSION` but must not answer 304 to
+    /// a body it no longer serves.
+    pub fn new(server: &Server) -> Arc<Self> {
+        let exe = std::env::current_exe()
+            .and_then(std::fs::read)
+            .expect("read the server binary");
+        let steward = serde_json::to_string(&server.steward).expect("Steward serializes");
+        let mut token = Sha256::new();
+        for part in [
+            Sha256::digest(exe).as_slice(),
+            server.catalog.name().as_bytes(),
+            server.catalog.generation().as_bytes(),
+            server
+                .docs
+                .as_ref()
+                .map_or(b"", |docs| docs.generation().as_bytes()),
+            steward.as_bytes(),
+        ] {
+            token.update((part.len() as u64).to_le_bytes());
+            token.update(part);
+        }
+        Arc::new(Self {
+            head: format!(
+                "{VERSION}-{}-{}",
+                server.catalog.name(),
+                server.catalog.generation()
+            ),
+            token: token.finalize().into(),
+        })
+    }
+
+    /// The strong `ETag` of a GET of `uri`: the boot token and the request's path and
+    /// query, without the edge's cache-generation parameter (an edge redeploy must
+    /// not invalidate a browser's copy of an unchanged answer).
+    fn etag(&self, uri: &Uri) -> String {
+        let query = uri
+            .query()
+            .unwrap_or_default()
+            .split('&')
+            .filter(|pair| pair.split('=').next() != Some(EDGE_VERSION_PARAM))
+            .collect::<Vec<_>>()
+            .join("&");
+        let digest = Sha256::new()
+            .chain_update(self.token)
+            .chain_update(uri.path())
+            .chain_update("?")
+            .chain_update(query)
+            .finalize();
+        format!("\"{}-{}\"", self.head, hex(&digest[..8]))
+    }
+}
+
+/// A GET's validators: a 304 for an `If-None-Match` naming its `ETag`, before the
+/// route runs; otherwise the route's answer, a 200 with its `ETag` and `cache` tier.
+/// `*` matches only a representation that exists, so it is answered after the route.
+pub async fn guard(
+    State((validators, cache)): State<(Arc<Validators>, Cache)>,
+    request: Request,
+    next: Next,
+) -> Response {
+    let etag = validators.etag(request.uri());
+    let tags = request
+        .headers()
+        .get(header::IF_NONE_MATCH)
+        .and_then(|value| value.to_str().ok())
+        .map(|value| value.split(',').map(str::trim).collect::<Vec<_>>())
+        .unwrap_or_default();
+    // RFC 9110's weak comparison: Cloudflare weakens the ETag when it compresses.
+    let listed = tags
+        .iter()
+        .any(|tag| tag.strip_prefix("W/").unwrap_or(tag) == etag);
+    let any = tags.contains(&"*");
+    let mut response = if listed {
+        StatusCode::NOT_MODIFIED.into_response()
+    } else {
+        let response = next.run(request).await;
+        if response.status() != StatusCode::OK {
+            return response;
+        }
+        if any {
+            StatusCode::NOT_MODIFIED.into_response()
+        } else {
+            response
+        }
+    };
+    let headers = response.headers_mut();
+    headers.insert(
+        header::ETAG,
+        HeaderValue::from_str(&etag).expect("ASCII ETag"),
+    );
+    headers.insert(
+        header::CACHE_CONTROL,
+        HeaderValue::from_static(cache.header()),
+    );
+    response
+}

@@ -254,6 +254,11 @@ def run_http_requests(steps, clients):
             body["headers"] = body.get("headers", {}) | {
                 "if-none-match": responses[step["etag_from"]]["headers"]["etag"]
             }
+        if "if_none_match" in step:
+            # A conditional read with a literal validator: a stale or foreign tag.
+            body["headers"] = body.get("headers", {}) | {
+                "if-none-match": step["if_none_match"]
+            }
         response = client.request(
             step.get("method", "GET"),
             step["path"],

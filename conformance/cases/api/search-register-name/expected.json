@@ -1,7 +1,7 @@
 [
   {
     "status": 200,
-    "headers": {"cache-control": "public, max-age=60, must-revalidate"},
+    "headers": {"cache-control": "public, max-age=60, s-maxage=86400, must-revalidate"},
     "json": {
       "/data/items/*/fqid": [
         "scb/example/value",

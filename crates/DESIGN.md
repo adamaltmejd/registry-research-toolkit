@@ -107,9 +107,9 @@ SPA (Svelte) + reg-core-wasm
   results with JSON Schemas. Search (one ranking), order materialization and project
   semantic validation live here.
 - `reg-meta`: the binary, with run modes only. `serve` is the HTTP API (axum + utoipa;
-  ETag, body-size limit and rate limit as tower layers) plus the remote MCP endpoint
-  over streamable HTTP. `mcp` is MCP over stdio against a local catalog, for offline use
-  and private steward catalogs. There is no query CLI.
+  early `ETag` revalidation, body-size limit and rate limit as tower layers) plus the
+  remote MCP endpoint over streamable HTTP. `mcp` is MCP over stdio against a local
+  catalog, for offline use and private steward catalogs. There is no query CLI.
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.

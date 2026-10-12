@@ -10,6 +10,28 @@
         "scope": "reference",
         "__edge_v": "deploy-1"
       }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Valø",
+        "type": "variable",
+        "scope": "reference",
+        "__edge_v": "deploy-2"
+      },
+      "etag_from": 0
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "Valø",
+        "type": "variable",
+        "scope": "reference",
+        "__edge_v": "deploy-2"
+      },
+      "if_none_match": "W/\"0.0.0-global-stale\""
     }
   ]
 }

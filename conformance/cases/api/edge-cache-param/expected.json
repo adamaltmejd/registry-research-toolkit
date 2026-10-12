@@ -6,5 +6,18 @@
         "Valørarkiv"
       ]
     }
+  },
+  {
+    "status": 304,
+    "headers": {"cache-control": "public, max-age=60, s-maxage=86400, must-revalidate"}
+  },
+  {
+    "status": 200,
+    "headers": {"cache-control": "public, max-age=60, s-maxage=86400, must-revalidate"},
+    "json": {
+      "/data/items/0/delivery_column_names": [
+        "Valørarkiv"
+      ]
+    }
   }
 ]
