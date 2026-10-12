@@ -171,8 +171,9 @@ SOURCES: tuple[Source, ...] = (
         kind="who_icd11_simple_tabulation",
         url="https://icdcdn.who.int/static/releasefiles/2026-01/SimpleTabulation-ICD-11-MMS-sv.zip",
         note=(
-            "WHO ICD-11 MMS 2026-01 Swedish simple tabulation; categories with "
-            "ICD-11 codes only, Swedish labels plus TitleEN."
+            "WHO ICD-11 MMS 2026-01 Swedish simple tabulation; chapters coded by "
+            "ChapterNo, blocks by BlockId, categories by their ICD-11 code; Swedish "
+            "labels plus TitleEN."
         ),
     ),
     Source(
@@ -451,12 +452,42 @@ def _strip_icd11_tabulation_prefix(title: str) -> str:
     return text
 
 
+def _icd11_records(text: str) -> list[str]:
+    """The tabulation's records, one line each.
+
+    A multi-paragraph CodingNote carries unquoted line breaks (CRLF or LF),
+    which split its record across lines. The header's last column is a version
+    stamp that records leave out, so a record is complete once it holds one
+    tab fewer than the header; until then each line continues it, its breaks
+    becoming spaces.
+    """
+    lines = text.splitlines()
+    if not lines:
+        return []
+    complete = lines[0].count("\t") - 1
+    records = [lines[0]]
+    pending = ""
+    for line in lines[1:]:
+        pending = f"{pending} {line}" if pending else line
+        if pending.count("\t") >= complete:
+            records.append(pending)
+            pending = ""
+    if pending.strip():
+        raise SystemExit(f"ICD-11: truncated record {pending[:80]!r}")
+    return records
+
+
 def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
     """Parse WHO's ICD-11 MMS simple tabulation zip into `Code` rows.
 
     The zip carries a TSV-like `.txt` with both `Title` (requested language) and
-    `TitleEN`. Chapters/blocks have no ICD-11 code; keep only category rows with
-    a non-empty `Code`.
+    `TitleEN`. Chapters and blocks have no ICD-11 code, so they take WHO's own
+    identifiers verbatim: a chapter its `ChapterNo` (01…26, V, X), a block its
+    `BlockId` (e.g. `BlockL1-1A0`). Neither can collide with a category code
+    (four or more characters, never starting with "Block"); the duplicate check
+    below refuses it if one ever does. Each row's parent is its `Parent` URI:
+    a chapter is a root, a block sits under its chapter or enclosing block, and
+    a category under its block, chapter or parent category.
     """
     with zipfile.ZipFile(io.BytesIO(zip_bytes)) as zf:
         member = next(
@@ -471,12 +502,30 @@ def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
             raise SystemExit("ICD-11: no SimpleTabulation .txt member found")
         text = zf.read(member).decode("utf-8-sig")
 
-    rows = list(csv.DictReader(text.splitlines(), delimiter="\t"))
-    code_by_uri: dict[str, str] = {}
-    for row in rows:
-        code = (row.get("Code") or "").strip()
+    code_field = {"chapter": "ChapterNo", "block": "BlockId", "category": "Code"}
+    coded: list[tuple[str, dict[str, str]]] = []
+    # Rows without a WHO identifier (uncoded categories, and the chapter V/X
+    # blocks WHO leaves without a BlockId) are not part of the book; their
+    # children hang on the nearest identified ancestor instead (maintainer
+    # decision, #1297), so no identifier is invented.
+    passthrough: dict[str, str] = {}
+    for row in csv.DictReader(_icd11_records(text), delimiter="\t"):
+        kind = (row.get("ClassKind") or "").strip()
+        if kind not in code_field:
+            raise SystemExit(f"ICD-11: unknown ClassKind {kind!r}")
+        code = (row.get(code_field[kind]) or "").strip()
         if not code:
+            if kind == "chapter":
+                raise SystemExit("ICD-11: chapter row without ChapterNo")
+            for field in ("Linearization URI", "Foundation URI"):
+                uri = (row.get(field) or "").strip()
+                if uri:
+                    passthrough[uri] = (row.get("Parent") or "").strip()
             continue
+        coded.append((code, row))
+
+    code_by_uri: dict[str, str] = {}
+    for code, row in coded:
         for field in ("Linearization URI", "Foundation URI"):
             uri = (row.get(field) or "").strip()
             if uri:
@@ -484,18 +533,25 @@ def parse_who_icd11_simple_tabulation(zip_bytes: bytes) -> list[Code]:
 
     out: list[Code] = []
     seen: set[str] = set()
-    for row in rows:
-        if (row.get("ClassKind") or "").strip() != "category":
-            continue
-        code = (row.get("Code") or "").strip()
-        if not code:
-            continue
+    for code, row in coded:
         if code in seen:
             raise SystemExit(f"ICD-11: duplicate code {code!r}")
         seen.add(code)
         label_en = _strip_icd11_tabulation_prefix(row.get("TitleEN") or "")
         label = _strip_icd11_tabulation_prefix(row.get("Title") or "") or label_en
-        parent_code = code_by_uri.get((row.get("Parent") or "").strip(), "")
+        parent_code = ""
+        if (row.get("ClassKind") or "").strip() != "chapter":
+            parent_uri = (row.get("Parent") or "").strip()
+            visited: set[str] = set()
+            while parent_uri in passthrough and parent_uri not in visited:
+                visited.add(parent_uri)
+                parent_uri = passthrough[parent_uri]
+            parent_code = code_by_uri.get(parent_uri, "")
+            if not parent_code:
+                raise SystemExit(
+                    f"ICD-11: {code!r} has parent {parent_uri!r}, not a chapter, "
+                    "block or coded category of the tabulation"
+                )
         out.append(
             Code(code=code, label=label, label_en=label_en, parent_code=parent_code)
         )

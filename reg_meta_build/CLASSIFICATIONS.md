@@ -171,7 +171,7 @@ no longer canonical-only. CSVs live under `input_data/classifications/sos/`;
   | ------------ | --------------: | --------------------------------------- | -------------------------------------------------------- |
   | `ATC`        |          16 264 | Läkemedelsverket (MPA)                  | Swedish ATC register; nightly zip                        |
   | `ICD-10-SE`  |          38 928 | Socialstyrelsen                         | Swedish ICD-10                                           |
-  | `ICD-11-SE`  |          35 664 | WHO                                     | Swedish ICD-11 MMS 2026-01 simple tabulation             |
+  | `ICD-11-SE`  |          36 480 | WHO                                     | Swedish ICD-11 MMS 2026-01 simple tabulation             |
   | `KVA`        |          13 548 | Socialstyrelsen                         | KVÅ – care measures (KMÅ medical + KKÅ surgical, merged) |
   | `ICF`        |           1 632 | Socialstyrelsen                         | Functioning, Disability and Health                       |
   | `KSI`        |           2 074 | Socialstyrelsen                         | Social Services Interventions                            |

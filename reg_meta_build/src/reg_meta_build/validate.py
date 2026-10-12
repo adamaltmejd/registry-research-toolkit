@@ -2609,7 +2609,8 @@ def _check_concept_groups(
 
 
 # A code tree deeper than this is refused as cyclic or malformed; the deepest
-# delivered book (ICD-11-SE) is eight levels deep.
+# delivered book (ICD-11-SE) nests up to eight category levels under a chapter
+# and up to three blocks, at most twelve.
 _MAX_CODE_TREE_DEPTH = 32
 
 
