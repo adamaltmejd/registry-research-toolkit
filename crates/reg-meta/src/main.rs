@@ -202,9 +202,10 @@ async fn serve(
             .layer::<_, Infallible>(from_fn_with_state(Arc::clone(&limits), limit::guard))
             .layer(DefaultBodyLimit::max(body::MAX_BYTES))
     };
-    // A GET is behind its validators, which can answer it without running it.
+    // A GET is behind its validators, which can answer it without running it. A route
+    // layer, so another method's 405 is not one of them.
     let read = |handler: MethodRouter<Arc<Server>>, cache: Cache| -> MethodRouter<Arc<Server>> {
-        handler.layer::<_, Infallible>(from_fn_with_state(
+        handler.route_layer(from_fn_with_state(
             (Arc::clone(&validators), cache),
             validator::guard,
         ))

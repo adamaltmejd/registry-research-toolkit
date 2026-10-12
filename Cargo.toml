@@ -17,12 +17,6 @@ pedantic = { level = "warn", priority = -1 }
 [profile.test]
 opt-level = 1
 
-# `reg-meta serve` hashes its binary and databases at boot (validator.rs), and the
-# conformance suite boots a debug server per artifact: unoptimized SHA-256 made that
-# suite several times slower.
-[profile.dev.package.sha2]
-opt-level = 3
-
 # `reg-core-wasm` for the SPA (`bun run gen:wasm`): size over speed, under the
 # gzipped budget `scripts/gate.py` checks.
 [profile.wasm]

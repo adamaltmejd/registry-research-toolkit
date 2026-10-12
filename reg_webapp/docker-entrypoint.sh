@@ -30,6 +30,10 @@ set -- serve --db /opt/reg_meta --catalog "$REG_META_CATALOG" \
 if [ -n "${REG_META_PUBLIC_HOST:-}" ]; then
     set -- "$@" --public-host "$REG_META_PUBLIC_HOST"
 fi
+# The served files' digest, computed when the image was built (Dockerfile), so the
+# server does not hash ~640 MB on the throttled rootfs before it binds.
+REG_META_CONTENT_DIGEST=$(cat /opt/reg_webapp/content.sha256)
+export REG_META_CONTENT_DIGEST
 reg-meta "$@" &
 SERVER_PID=$!
 

@@ -490,11 +490,15 @@ them replaces the process. At startup the server derives one token from them: th
 SHA-256 of the bytes of its own binary (an image change without a version bump still
 changes it), the catalog and docs database files and the steward branding. File bytes,
 not identity fields: `generation_id` does not cover the import date `/api/context`
-shows, nor the docs `generation` the related documents (about 0.3 s for the 627 MB
-catalog on a warm page cache in a release build). Loose delivery inventory is not an
-HTTP input. A GET read's strong ETag is that token plus the request's path and query,
-without `__edge_v`, so read scope (a parameter or the catalog's default) is part of it.
-A tower layer in front of every GET operation and download answers a matching
+shows, nor the docs `generation` the related documents. The image hashes the binary and
+both databases when it is built (`Dockerfile`, passed in as `REG_META_CONTENT_DIGEST` by
+the entrypoint): hashing ~640 MB at boot on the throttled rootfs (~8 MiB/s cold) would
+outlast the entrypoint's 60 s readiness deadline. Without the variable (local runs, the
+conformance suite) the server hashes them at boot, about 0.2 s on a warm page cache.
+Loose delivery inventory is not an HTTP input. A GET read's strong ETag is that token
+plus the request's path and query, without `__edge_v`, so read scope (a parameter or the
+catalog's default) is part of it. A tower layer in front of every GET operation and
+download (a route layer, so another method keeps its 405) answers a matching
 `If-None-Match` with a 304 before the route runs, so a revalidation does no DB work and
 no body serialization. `If-None-Match: *` still runs the route, since it matches only a
 representation that exists. Only a 200 carries the ETag and tier.

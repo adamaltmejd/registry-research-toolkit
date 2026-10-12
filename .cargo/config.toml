@@ -1,0 +1,7 @@
+# Debug `reg-meta serve` hashes its binary and databases at boot unless the image hands
+# it their digest (crates/reg-meta/src/validator.rs), and the conformance suite boots a
+# debug server per artifact: unoptimized SHA-256 pushed CI's rust job past its timeout.
+# Here, not in the root Cargo.toml, which keys the builder's caches (reg-core-py's uv
+# cache-keys, scripts/keyed_cache.py).
+[profile.dev.package.sha2]
+opt-level = 3

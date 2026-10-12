@@ -9,7 +9,9 @@
 //! first four and the request's path and query, not from the body. The token hashes
 //! the files' bytes, not their identity fields: a catalog's `generation_id` does not
 //! cover its import date, nor the docs `generation` its related documents, and both
-//! reach responses.
+//! reach responses. The image hashes them when it is built and hands the digest over
+//! in [`CONTENT_DIGEST_ENV`]: on Fly's throttled rootfs (about 8 MiB/s cold) hashing
+//! the catalog at boot would outlast the entrypoint's readiness deadline.
 
 use std::fs::File;
 use std::io::Read;
@@ -26,6 +28,10 @@ use sha2::{Digest, Sha256};
 
 use crate::{EDGE_VERSION_PARAM, VERSION};
 
+/// The SHA-256 the image computed over the served binary and databases
+/// (`reg_webapp/Dockerfile`); unset, `serve` hashes them itself at boot.
+const CONTENT_DIGEST_ENV: &str = "REG_META_CONTENT_DIGEST";
+
 pub struct Validators {
     /// The `ETag`'s readable head: the server version, catalog and generation.
     head: String,
@@ -37,17 +43,34 @@ impl Validators {
     /// The validators of one server process. The binary's own digest stands for the
     /// code: an unreleased image change keeps `VERSION` but must not answer 304 to
     /// a body it no longer serves.
+    ///
+    /// # Panics
+    ///
+    /// When [`CONTENT_DIGEST_ENV`] is set but not 64 lowercase hex digits, or a served
+    /// file cannot be read.
     pub fn new(server: &Server) -> Arc<Self> {
-        let exe = std::env::current_exe().expect("the server binary's path");
+        let content = if let Ok(digest) = std::env::var(CONTENT_DIGEST_ENV) {
+            assert!(
+                digest.len() == 64
+                    && digest
+                        .bytes()
+                        .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)),
+                "{CONTENT_DIGEST_ENV} is not a SHA-256 hex digest"
+            );
+            digest.into_bytes()
+        } else {
+            let exe = std::env::current_exe().expect("the server binary's path");
+            let mut files = Sha256::new();
+            files.update(file_digest(&exe));
+            files.update(file_digest(server.catalog.path()));
+            if let Some(docs) = &server.docs {
+                files.update(file_digest(docs.path()));
+            }
+            files.finalize().to_vec()
+        };
         let steward = serde_json::to_string(&server.steward).expect("Steward serializes");
-        let docs = server.docs.as_ref().map(|docs| file_digest(docs.path()));
         let mut token = Sha256::new();
-        for part in [
-            file_digest(&exe).as_slice(),
-            file_digest(server.catalog.path()).as_slice(),
-            docs.as_ref().map_or(&[][..], |digest| digest.as_slice()),
-            steward.as_bytes(),
-        ] {
+        for part in [content.as_slice(), steward.as_bytes()] {
             token.update((part.len() as u64).to_le_bytes());
             token.update(part);
         }
