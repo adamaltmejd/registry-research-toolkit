@@ -72,13 +72,14 @@ dev: repo /path/to/checkout HEAD 0123456789abcdef… shots /tmp/reg-webapp-shots
 
 **`--fixture-db`** serves a deterministic synthetic catalog + docs DB pair as
 `REG_META_DB`: the real builder's output for `conformance/cases/fixtures/webapp-dev`,
-from the shared fixture cache (`conformance/fixture_cache.py`, built on a miss). It is
-byte-identical run to run, so a screenshot diff means a code change. It covers every
-route the design reviewer walks (`/`, `/catalog`, `fk/midas`, `scb/lisa`, `scb/rams`,
-`/catalog/scb/lisa/kon`, `/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`,
-`/search?q=kon`, `/project`, `/doc/Kon.md`) but has a handful of rows — use a real DB
-for density questions. With `REG_WEBAPP_STEWARD` set, the catalog is the conformance
-suite's synthetic steward artifact (`conformance/fixture_cache.py`) instead.
+from the shared fixture cache (`conformance/fixture_cache.py`, built on a miss), copied
+into a temp dir that is deleted on exit. It is byte-identical run to run, so a
+screenshot diff means a code change. It covers every route the design reviewer walks
+(`/`, `/catalog`, `fk/midas`, `scb/lisa`, `scb/rams`, `/catalog/scb/lisa/kon`,
+`/catalog/group/scb/rams/ink`, `/catalog/group/class/sun`, `/search?q=kon`, `/project`,
+`/doc/Kon.md`) but has a handful of rows — use a real DB for density questions. With
+`REG_WEBAPP_STEWARD` set, the catalog is the conformance suite's synthetic steward
+artifact (`conformance/fixture_cache.py`) instead.
 
 **A scratch DB** verifies content not yet released (a `build-db` / curation change):
 

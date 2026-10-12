@@ -60,7 +60,10 @@ set -uo pipefail
 set -m
 
 # Leading global flag, consumed before the mode word so every mode accepts it.
+# `fixture_db_dir` is the session's copy of the fixture (empty when the flag is
+# absent); cleanup() removes it, so it must be defined before the trap is installed.
 fixture_db=""
+fixture_db_dir=""
 if [ "${1:-}" = "--fixture-db" ]; then
 	fixture_db=1
 	shift
@@ -228,16 +231,20 @@ cleanup() {
 	if [ ${#pids[@]} -gt 0 ]; then
 		for p in "${pids[@]}"; do kill -- -"$p" 2>/dev/null; done
 	fi
+	if [ -n "$fixture_db_dir" ]; then rm -rf "$fixture_db_dir"; fi
 }
 # Tear every server down on ANY exit — including the one-shot smoke/shot paths, so
 # they never leak a dev server (the failure mode that motivated this mode).
 trap cleanup INT TERM EXIT
 
 # --fixture-db: point EVERY server at a deterministic synthetic catalog via
-# REG_META_DB, so it wins over whatever the environment resolves. The artifact is
-# the conformance fixture cache's (read-only, shared across checkouts, built on a
-# miss), so there is nothing to clean up. The steward artifact carries the same docs
-# DB, so it is its own cache entry beside the gate's docs-less `reader steward`.
+# REG_META_DB, so it wins over whatever the environment resolves. The artifact comes
+# from the conformance fixture cache (shared across checkouts, built on a miss) and is
+# COPIED into a per-session temp dir after the trap: the cache prunes a generation
+# idle for 6 hours, and serving requests does not mark it used, so a long session
+# served straight from the cache would lose its catalog mid-run. The steward artifact
+# carries the same docs DB, so it is its own cache entry beside the gate's docs-less
+# `reader steward`.
 if [ -n "$fixture_db" ]; then
 	fixture=(fixtures/webapp-dev catalog --docs fixtures/webapp-dev/docs)
 	if [ "${REG_WEBAPP_STEWARD:-global}" != "global" ]; then
@@ -247,8 +254,9 @@ if [ -n "$fixture_db" ]; then
 		echo "dev: --fixture-db build failed — see output above." >&2
 		exit 1
 	fi
-	REG_META_DB=$(dirname "$fixture_catalog")
-	export REG_META_DB
+	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture-db.XXXXXX") || exit 1
+	cp "$(dirname "$fixture_catalog")"/*.db "$fixture_db_dir"/ || exit 1
+	export REG_META_DB="$fixture_db_dir"
 	echo "dev: --fixture-db serving a synthetic catalog from $REG_META_DB" >&2
 fi
 
