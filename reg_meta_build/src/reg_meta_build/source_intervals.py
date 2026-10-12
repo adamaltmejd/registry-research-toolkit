@@ -69,7 +69,6 @@ class OccurrenceResolution:
     unsupported_occurrences: tuple[SourceRecord, ...]
 
 
-@lru_cache(maxsize=4096)
 def scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     """Resolve known bounds; date.max represents an explicitly open upper bound.
 
@@ -78,10 +77,21 @@ def scope_bounds(scope: TemporalScope) -> tuple[tuple[int, int], ...] | None:
     """
     if scope.kind != "intervals":
         return None
+    # Cache on the plain interval values: hashing and comparing the Pydantic scope
+    # on every hit cost more than the parse it saves.
+    return _interval_bounds(
+        tuple((interval.start, interval.end) for interval in scope.intervals)
+    )
+
+
+@lru_cache(maxsize=4096)
+def _interval_bounds(
+    intervals: tuple[tuple[str, str | None], ...],
+) -> tuple[tuple[int, int], ...] | None:
     result = []
-    for interval in scope.intervals:
+    for start, end in intervals:
         bounds = []
-        for value, tail in ((interval.start, "01-01"), (interval.end, "12-31")):
+        for value, tail in ((start, "01-01"), (end, "12-31")):
             if value is None:
                 bounds.append(date.max.toordinal())
                 continue

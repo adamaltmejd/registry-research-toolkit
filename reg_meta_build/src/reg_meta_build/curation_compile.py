@@ -103,6 +103,7 @@ from .source_curation import (
     FieldExpectation,
     OccurrenceCorrectionDecision,
     PeerGuard,
+    RecordExpectation,
     RepresentationDecision,
     ResolutionDiagnostic,
     SearchAliasDecision,
@@ -4853,6 +4854,55 @@ def compile_coding_register(
     cases = []
     diagnostics = []
     compact_evidence = {}
+    # Every entry and period on one column reads the same originals, raw coding
+    # tokens and captured expectations: derive each once per register.
+    original_refs: tuple[SourceRecordRef, ...] | None = None
+    column_originals: dict[
+        NativeKey, tuple[set[SourceRecordRef], tuple[SourceRecord, ...], bool]
+    ] = {}
+    claim_tokens: dict[NativeKey, tuple[str, ...]] = {}
+    captured: dict[
+        tuple[NativeKey, tuple[str, ...], bool], tuple[RecordExpectation, ...]
+    ] = {}
+
+    def originals_of(
+        column: NativeKey,
+    ) -> tuple[set[SourceRecordRef], tuple[SourceRecord, ...], bool]:
+        """The column's refs, the originals carrying them, and whether all have one."""
+        nonlocal original_refs
+        if column not in column_originals:
+            if original_refs is None:
+                original_refs = tuple(record_ref(record) for record in originals)
+            refs = {record_ref(record) for record in columns[column]}
+            kept = tuple(
+                (record, ref)
+                for record, ref in zip(originals, original_refs, strict=True)
+                if ref in refs
+            )
+            column_originals[column] = (
+                refs,
+                tuple(record for record, _ in kept),
+                {ref for _, ref in kept} == refs,
+            )
+        return column_originals[column]
+
+    def tokens_of(column: NativeKey) -> tuple[str, ...]:
+        if column not in claim_tokens:
+            claim_tokens[column] = tuple(
+                evidence_sha256(claim) for claim in coding.get(column, ())
+            )
+        return claim_tokens[column]
+
+    def expectations_of(
+        column: NativeKey, fields: tuple[str, ...], parents: bool
+    ) -> tuple[RecordExpectation, ...]:
+        key = (column, fields, parents)
+        if key not in captured:
+            captured[key] = capture_expectations(
+                originals_of(column)[1], fields=fields, parents=parents
+            )
+        return captured[key]
+
     for kind, entries in (
         ("warning", register.coding.warning),
         ("choice", register.coding.choice),
@@ -5005,21 +5055,16 @@ def compile_coding_register(
                 compact = evidence_digest is not None
                 if compact:
                     if column not in compact_evidence:
-                        refs = {record_ref(record) for record in records}
-                        full_originals = tuple(
-                            record for record in originals if record_ref(record) in refs
-                        )
-                        raw_codings = tuple(evidence_sha256(c) for c in claims)
+                        full_originals = originals_of(column)[1]
+                        raw_codings = tokens_of(column)
                         compact_evidence[column] = (
                             full_originals,
                             raw_codings,
                             acknowledgement_evidence_sha256(
                                 full_originals, raw_codings
                             ),
-                            capture_expectations(
-                                full_originals,
-                                fields=tuple(SourceFields.model_fields),
-                                parents=True,
+                            expectations_of(
+                                column, tuple(SourceFields.model_fields), True
                             ),
                         )
                     if compact_evidence[column][2] != evidence_digest:
@@ -5040,14 +5085,9 @@ def compile_coding_register(
                     and entry.source_authority is not None
                 ):
                     authority = entry.source_authority
-                    authority_refs = {record_ref(record) for record in records}
-                    authority_records = tuple(
-                        r for r in originals if record_ref(r) in authority_refs
-                    )
-                    expected = capture_expectations(
-                        authority_records,
-                        fields=tuple(SourceFields.model_fields),
-                        parents=True,
+                    authority_records = originals_of(column)[1]
+                    expected = expectations_of(
+                        column, tuple(SourceFields.model_fields), True
                     )
                     enumeration_matches = (
                         isinstance(entry, CodingDocumentedEntry)
@@ -5097,8 +5137,7 @@ def compile_coding_register(
                         or (
                             authority.raw_codings is not None
                             # Distinct claims, compared as sets on both sides.
-                            and set(authority.raw_codings)
-                            != {evidence_sha256(claim) for claim in claims}
+                            and set(authority.raw_codings) != set(tokens_of(column))
                         )
                         or tuple(sorted(authority.codings))
                         != copied_coding_fingerprints(claims)
@@ -5177,27 +5216,15 @@ def compile_coding_register(
                 assert selection is not None or isinstance(
                     entry, (CodingSentinelEntry, CodingWarningEntry)
                 )
-                target_refs = {record_ref(record) for record in records}
-                target_records = (
-                    authority_records
-                    if isinstance(
-                        entry,
-                        (CodingChoiceEntry, CodingExtendEntry, CodingUncodedEntry),
-                    )
-                    and entry.source_authority is not None
-                    else tuple(
-                        record
-                        for record in originals
-                        if record_ref(record) in target_refs
-                    )
-                )
-                if {record_ref(record) for record in target_records} != target_refs:
+                # Targets, like an authority's records, are this column's originals.
+                if not originals_of(column)[2]:
                     raise ValueError(f"{case_id}: target refs left the original scope")
-                targets = capture_expectations(
-                    target_records,
-                    fields=tuple(SourceFields.model_fields)
+                targets = expectations_of(
+                    column,
+                    tuple(SourceFields.model_fields)
                     if kind in {"documented", "uncoded", "sentinel", "support"}
                     else ("column_name",),
+                    False,
                 )
                 if (
                     isinstance(
