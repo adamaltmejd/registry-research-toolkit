@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type {
@@ -48,6 +48,9 @@ const node: ClassificationShow = {
 beforeEach(() => {
   vi.mocked(getValues).mockReset();
 });
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
   // Fails if the panel stops reading `values` for the classification's FQID
@@ -76,18 +79,37 @@ describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
   // a node reads that node's children once. Fails if the tree is not detected
   // from `child_count`, if a closed node reads its children, or if collapsing and
   // reopening a node reads it again.
+  // The real `getValues` runs and only `fetch` is stubbed, so the assertion is on
+  // the HTTP requests the panel sends: an empty `parent` must reach the wire.
   it("opens a node by reading its children once", async () => {
+    const actual = await vi.importActual<typeof import("./api")>("./api");
+    vi.mocked(getValues).mockImplementation(actual.getValues);
     const levels: Record<string, ClassificationCodeModel[]> = {
       "": [code({ code: "A", label: "Jordbruk", level: null, child_count: 1 })],
       A: [code({ code: "01", label: "Odling", level: 2, child_count: 0 })],
     };
-    vi.mocked(getValues).mockImplementation(async (_ref, params = {}) => {
-      const items =
-        params.parent === undefined
-          ? [...levels[""], ...levels.A]
-          : (levels[params.parent] ?? []);
-      return { items, next_cursor: null, total: items.length };
-    });
+    const requests: URL[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string) => {
+        const url = new URL(input, window.location.origin);
+        requests.push(url);
+        const parent = url.searchParams.get("parent");
+        const items =
+          url.pathname !== "/api/values/class/sun2020"
+            ? []
+            : parent === null
+              ? [...levels[""], ...levels.A]
+              : (levels[parent] ?? []);
+        return new Response(
+          JSON.stringify({
+            data: { items, next_cursor: null, total: items.length },
+            meta: {},
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        );
+      }),
+    );
 
     await render(ClassificationCodesPanel, { node });
 
@@ -102,10 +124,14 @@ describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
     await root.click();
     await expect.element(page.getByText("Odling")).toBeVisible();
 
-    const reads = vi
-      .mocked(getValues)
-      .mock.calls.filter(([, params]) => params?.parent === "A");
-    expect(reads).toHaveLength(1);
+    const byParent = (parent: string) =>
+      requests.filter(
+        (url) =>
+          url.pathname === "/api/values/class/sun2020" &&
+          url.searchParams.get("parent") === parent,
+      );
+    expect(byParent("")).toHaveLength(1);
+    expect(byParent("A")).toHaveLength(1);
   });
 
   // The section used to be omitted for an empty embedded list; its size is now
