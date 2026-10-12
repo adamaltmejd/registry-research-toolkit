@@ -1959,7 +1959,7 @@ produce review material; they do not approve or apply new curation during a buil
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
-global database built under the current `SCHEMA_VERSION` (10.0.0), adds steward-private
+global database built under the current `SCHEMA_VERSION` (10.1.0), adds steward-private
 providers and their registers, variables and states, then compiles accepted physical
 holdings into the same SQLite artifact. A base built under an older schema is rebuilt,
 never migrated. Rebuild the public base once per schema and reuse it for steward

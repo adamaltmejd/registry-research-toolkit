@@ -32,7 +32,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 from .source_evidence import SourceRecordRef  # noqa: TC001
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "10.0.0"
+SCHEMA_VERSION = "10.1.0"
 
 if TYPE_CHECKING:
     from .ir import (
@@ -1093,12 +1093,21 @@ CREATE TABLE classification (
 -- Fresh builds do not emit unknown-validity classification_code rows;
 -- nonconforming observed value-set codes live on
 -- `classification_conformance_code`, keyed by variable_state.
+-- parent_code_id: the code's parent in the same book, from the codebook CSV's
+-- `parent_code` column (#1297). NULL for a top-level code and for every code of
+-- a book without a source tree (no column, or `hierarchy = "flat"`). The
+-- composite key keeps the parent inside the same classification; it is deferred
+-- because a book's rows are written in code order, not parent-first.
 CREATE TABLE classification_code (
     classification_id INTEGER NOT NULL REFERENCES classification(id),
     code_id           INTEGER NOT NULL REFERENCES value_code(code_id),
     level             INTEGER,
     is_valid          INTEGER,
-    PRIMARY KEY (classification_id, code_id)
+    parent_code_id    INTEGER,
+    PRIMARY KEY (classification_id, code_id),
+    FOREIGN KEY (classification_id, parent_code_id)
+        REFERENCES classification_code(classification_id, code_id)
+        DEFERRABLE INITIALLY DEFERRED
 ) WITHOUT ROWID;
 CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 

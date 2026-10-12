@@ -545,11 +545,21 @@ def _write_classifications(
                 classification.slug,
             ),
         )
+        # ResolvedClassification guarantees a parent names exactly one book code.
+        by_code = {
+            code.code: code_ids[code.code, code.label] for code in classification.codes
+        }
         conn.executemany(
-            "INSERT INTO classification_code (classification_id, code_id, level, is_valid) "
-            "VALUES (?, ?, ?, 1)",
+            "INSERT INTO classification_code "
+            "(classification_id, code_id, level, is_valid, parent_code_id) "
+            "VALUES (?, ?, ?, 1, ?)",
             (
-                (classification_id, code_ids[code.code, code.label], code.level)
+                (
+                    classification_id,
+                    code_ids[code.code, code.label],
+                    code.level,
+                    None if code.parent_code is None else by_code[code.parent_code],
+                )
                 for code in sorted(
                     classification.codes, key=lambda c: (c.code, c.label)
                 )
