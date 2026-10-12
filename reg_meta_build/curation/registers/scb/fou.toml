@@ -54,7 +54,7 @@ evidence = "SWECOV holds Storan in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinf
 noted = "2026-09-12"
 
 # #1302 B3/C: later FoU företagssektorn waves deliver documented variables under a new
-# column spelling (STRAT, BGrupp, Sektor). The state keeps the documented spelling;
+# column spelling (STRAT, BGrupp). The state keeps the documented spelling;
 # the SWECOV overlay maps the delivered spelling to it.
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -74,16 +74,6 @@ upstream = "omitted-column-in-version"
 native_variable_id = 3310
 expected_evidence_sha256 = "719c54ab3e49c5f8986c71313b90acc9e26747c9ecfc8e30b813fe1c90f5d61a"
 evidence = "SWECOV holds BGrupp in FTG_FOU_2015 and FTG_FOU_2017; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists BGrupp for 2015-2017. SCB documents the branch group as b-grupp (native 3310 branschgrupp) on this variant in 2003 only (#1302 C, medium)."
-noted = "2026-10-12"
-
-[[errata.delivered]]
-variant = "foretagssektorn"
-column = "INSEKT"
-versions = ["2015", "2017"]
-upstream = "omitted-column-in-version"
-native_variable_id = 1141
-expected_evidence_sha256 = "83b39cdd64fe4cc494e59335cdf51560200f33c83c6617b82285d7ba45bb82fe"
-evidence = "SWECOV holds Sektor in FTG_FOU_2015 and FTG_FOU_2017; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists Sektor for 2015-2017. SCB documents the sector (native 1141 sektortillhorighet) on this variant as INSEKT from 2019 (#1302 C, medium)."
 noted = "2026-10-12"
 
 [[errata.delivered]]
