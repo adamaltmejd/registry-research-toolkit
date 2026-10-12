@@ -18746,3 +18746,78 @@ reason = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB document
 table = "InrFlyttFlode2024"
 column = "P1105_LopNr_FastbetecknG"
 reason = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+# ── PENDING maintainer confirmation (2026-10-12, #1302 round 3): RTB
+# 1990-1997 P1105_Lopnr_Fast is the pre-1998 property key fastlopnr.
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastlopnr"
+representation = "FastLopNr"
+table = "RTB1990"
+column = "P1105_Lopnr_Fast"
+edition = "1990-12-31"
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastlopnr"
+representation = "FastLopNr"
+table = "RTB1991"
+column = "P1105_Lopnr_Fast"
+edition = "1991-12-31"
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastlopnr"
+representation = "FastLopNr"
+table = "RTB1992"
+column = "P1105_Lopnr_Fast"
+edition = "1992-12-31"
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastlopnr"
+representation = "FastLopNr"
+table = "RTB1993"
+column = "P1105_Lopnr_Fast"
+edition = "1993-12-31"
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastlopnr"
+representation = "FastLopNr"
+table = "RTB1994"
+column = "P1105_Lopnr_Fast"
+edition = "1994-12-31"
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastlopnr"
+representation = "FastLopNr"
+table = "RTB1995"
+column = "P1105_Lopnr_Fast"
+edition = "1995-12-31"
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastlopnr"
+representation = "FastLopNr"
+table = "RTB1996"
+column = "P1105_Lopnr_Fast"
+edition = "1996-12-31"
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
+
+[[mapping]]
+register_variant = "scb/rtb/folkbokforda-personer"
+variable = "scb/rtb/fastlopnr"
+representation = "FastLopNr"
+table = "RTB1997"
+column = "P1105_Lopnr_Fast"
+edition = "1997-12-31"
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
