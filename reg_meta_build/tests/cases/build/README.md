@@ -55,6 +55,7 @@ the behavior in plain words. For example,
   | `relations-`           | `relations.toml` edges                                                                                                                                                           |
   | `code-label-pair-`     | `[[code_label_pair]]`                                                                                                                                                            |
   | `search-pins-`         | `search_pins.toml`                                                                                                                                                               |
+  | `search-synonyms-`     | `search_synonyms.toml`                                                                                                                                                           |
   | `acknowledge-`         | `[[acknowledge]]` entries matched against build issues                                                                                                                           |
   | `classification-`      | classification books, references and label bindings                                                                                                                              |
   | `scope-`               | register-scoped builds and checks, and references out of the slice                                                                                                               |

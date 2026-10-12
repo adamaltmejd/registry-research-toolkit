@@ -1,0 +1,11 @@
+# Curated search synonyms (#1490): a query term also matches each of its expansions,
+# for concepts that register text names in another word or language (`testing` →
+# `prov`, `provtagning`). Ranking cannot fix these; the reader is to expand each query
+# term into an OR group of the term and its expansions.
+#
+# Each `[[synonym]]` has a `term`, `expansions` and an optional `note`. The term and
+# every expansion must be one reader query term (`fts_terms`: the `fold_search` fold,
+# split at non-alphanumerics), and an expansion may not fold like its term. Entries are
+# directed: `kön` → `sex` does not imply `sex` → `kön`, so a two-way pair is two
+# entries. The build stores them in the `search_synonym` table as folded
+# `(key, expansion)` rows; scoped and diagnostic builds store none.

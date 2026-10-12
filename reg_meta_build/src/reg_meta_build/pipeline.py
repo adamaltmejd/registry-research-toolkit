@@ -17,8 +17,10 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 
 from reg_meta_build._curation import (
     SEARCH_PINS_FILE,
+    SEARCH_SYNONYMS_FILE,
     curation_error,
     load_search_pins,
+    load_search_synonyms,
 )
 from reg_meta_build.catalog_dependencies import (
     DEFERRED_REFERENCE,
@@ -618,9 +620,10 @@ def _resolve(
     _emit_timing("pipeline: load prepared sources and scope indexes", input_started)
     curation_started = time.perf_counter()
     tree = load_curation_tree(curation_dir)
-    # Loaded in every mode so a malformed pin fails early; only a complete build
-    # stores them (`write_resolved_catalog`).
+    # Loaded in every mode so a malformed pin or synonym fails early; only a
+    # complete build stores them (`write_resolved_catalog`).
     search_pins = load_search_pins(curation_dir / SEARCH_PINS_FILE)
+    search_synonyms = load_search_synonyms(curation_dir / SEARCH_SYNONYMS_FILE)
     references, family_references = _classification_references(tree)
     label_rules = {
         label: entry.classification.slug
@@ -1810,6 +1813,7 @@ def _resolve(
                         if data_warnings[k].code not in BUILD_ONLY_CODES
                     ),
                     search_pins=search_pins,
+                    search_synonyms=search_synonyms,
                     manifest={
                         "import_date": import_date,
                         "prepared_commit": input_commit,

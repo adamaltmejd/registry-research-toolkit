@@ -462,6 +462,14 @@ The target layout:
   `search_pins_sha256` hashes the stored rows and joins the generation; derive gives an
   older-minor base an empty table and the empty-pins hash. Pins are build input, not
   ranking: the reader applies them.
+- `curation/search_synonyms.toml` (#1490) lists directed term → expansions entries for
+  concepts that register text names in another word or language. The term and each
+  expansion must be one reader query term (`fts_terms`), an expansion may not fold like
+  its term, and terms that fold alike share one entry; a two-way pair is two entries. It
+  loads and stores like the pins: as folded `search_synonym` `(key, expansion)` rows in
+  a complete build only, hashed by `search_synonyms_sha256` into the generation, and an
+  older-minor base gains an empty table and the empty-rows hash. It ships empty until
+  the maintainer curates it; the reader expands each query term into an OR group.
 - `worklists/concept_groups.auto.toml` is generated from a built DB for the worklist
   tool, not curation. Enrichment is register-scoped curation in each register file. The
   concept-group generator treats a matching literal register `[[group]]` as an already

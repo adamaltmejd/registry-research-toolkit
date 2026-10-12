@@ -354,8 +354,8 @@ def _build_artifact(
 ) -> Path:
     identity = json.loads((CASES / "reader/fixture/identity.json").read_text())
     identity.update(identity_overrides or {})
-    # The writer hashes the pins it stores.
-    del identity["search_pins_sha256"]
+    # The writer hashes the pins and synonyms it stores.
+    del identity["search_pins_sha256"], identity["search_synonyms_sha256"]
     variables = tuple(
         ResolvedVariable.model_validate_json(json.dumps(value))
         for value in json.loads((source / "catalog.json").read_text())

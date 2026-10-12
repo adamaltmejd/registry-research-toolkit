@@ -157,4 +157,10 @@ mod reg_core_py {
     fn fold_search(s: &str) -> String {
         reg_core::fold_search(s)
     }
+
+    /// `reg_core::fts_terms`, the query terms the reader matches.
+    #[pyfunction]
+    fn fts_terms(s: &str) -> Vec<String> {
+        reg_core::fts_terms(s)
+    }
 }

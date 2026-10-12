@@ -55,7 +55,7 @@ from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
-from reg_core_py import fold_search
+from reg_core_py import fold_search, fts_terms
 
 from reg_meta_build._resolved_common import (
     _PROVIDER_SEED,
@@ -64,7 +64,7 @@ from reg_meta_build._resolved_common import (
     PROVIDER_ID_SOS,
     remaining_windows,
 )
-from reg_meta_build.artifact_identity import search_pins_sha256
+from reg_meta_build.artifact_identity import search_rows_sha256
 from reg_meta_build.data_warnings import BUILD_ONLY_CODES
 from reg_meta_build.db import stored_data_warnings
 from reg_meta_build.derive.browse import check_browse
@@ -271,6 +271,7 @@ def validate_built_db(
         check_chains(conn, result, tables)
         check_coded(conn, result, tables)
         _check_search_pins(conn, result, tables)
+        _check_search_synonyms(conn, result, tables)
         _check_data_warnings(conn, result, tables)
         result.section("[compiled holdings]")
         from .holdings_validation import validate_compiled_holdings
@@ -329,6 +330,7 @@ def _check_schema_shape(
         *CHAIN_TABLES,
         "coded_variable_stats",
         "search_pin",
+        "search_synonym",
         "data_warning",
         "data_warning_text",
     ):
@@ -1648,10 +1650,33 @@ def _check_search_pins(
     stored = conn.execute(
         "SELECT value FROM import_manifest WHERE key = 'search_pins_sha256'"
     ).fetchone()
-    if stored is None or stored[0] != search_pins_sha256(rows):
+    if stored is None or stored[0] != search_rows_sha256(rows):
         result.fail("manifest search_pins_sha256 does not hash the search_pin rows")
     if len(result.failures) == failures:
         result.ok(f"search_pin consistent ({len(rows):,} rows)")
+
+
+def _check_search_synonyms(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """Each ``search_synonym`` key and expansion is one reader query term
+    (``fts_terms``); the manifest's ``search_synonyms_sha256`` hashes the rows."""
+    result.section("[search_synonym]")
+    if "search_synonym" not in tables:
+        return  # _check_schema_shape already failed.
+    rows = conn.execute("SELECT key, expansion FROM search_synonym").fetchall()
+    failures = len(result.failures)
+    if any(fts_terms(text) != [text] for row in rows for text in row):
+        result.fail("search_synonym keys and expansions must be one folded query term")
+    stored = conn.execute(
+        "SELECT value FROM import_manifest WHERE key = 'search_synonyms_sha256'"
+    ).fetchone()
+    if stored is None or stored[0] != search_rows_sha256(rows):
+        result.fail(
+            "manifest search_synonyms_sha256 does not hash the search_synonym rows"
+        )
+    if len(result.failures) == failures:
+        result.ok(f"search_synonym consistent ({len(rows):,} rows)")
 
 
 def _check_data_warnings(

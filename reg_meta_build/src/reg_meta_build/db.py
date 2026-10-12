@@ -623,9 +623,10 @@ CREATE VIRTUAL TABLE value_code_fts USING fts5(
 );
 """
 
-# Curated search pins (`curation/search_pins.toml`), written by a complete build only.
-# Base content, never derived: `derive` creates it empty on an older-minor base.
-SEARCH_PIN_DDL = """\
+# Curated search pins (`curation/search_pins.toml`) and synonyms
+# (`curation/search_synonyms.toml`), written by a complete build only. Base content,
+# never derived: `derive` creates them empty on an older-minor base.
+SEARCH_CURATION_DDL = """\
 CREATE TABLE IF NOT EXISTS search_pin (
     -- fold_search(query): the reader looks a pin up by fold_search(q).
     key TEXT NOT NULL CHECK (length(key) > 0),
@@ -636,6 +637,14 @@ CREATE TABLE IF NOT EXISTS search_pin (
     entity TEXT NOT NULL,
     PRIMARY KEY (key, type, position),
     UNIQUE (key, type, entity)
+) WITHOUT ROWID;
+
+-- #1490: a query term `key` also matches each `expansion` (directed; a two-way
+-- pair is two rows). Both are one `fts_terms` term of the reader's query split.
+CREATE TABLE IF NOT EXISTS search_synonym (
+    key TEXT NOT NULL CHECK (length(key) > 0),
+    expansion TEXT NOT NULL CHECK (length(expansion) > 0 AND expansion != key),
+    PRIMARY KEY (key, expansion)
 ) WITHOUT ROWID;
 """
 
@@ -1783,7 +1792,7 @@ CREATE INDEX idx_holding_mapping_variable_variant
 """
     + DERIVED_DDL
     + SEARCH_INDEX_DDL
-    + SEARCH_PIN_DDL
+    + SEARCH_CURATION_DDL
     + """
 CREATE TABLE import_manifest (
     key TEXT PRIMARY KEY,
