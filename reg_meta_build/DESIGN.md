@@ -469,7 +469,7 @@ The target layout:
   loads and stores like the pins: as folded `search_synonym` `(key, expansion)` rows in
   a complete build only, hashed by `search_synonyms_sha256` into the generation, and an
   older-minor base gains an empty table and the empty-rows hash. It ships empty until
-  the maintainer curates it; the reader expands each query term into an OR group.
+  the maintainer curates it; the reader is to expand each query term into an OR group.
 - `worklists/concept_groups.auto.toml` is generated from a built DB for the worklist
   tool, not curation. Enrichment is register-scoped curation in each register file. The
   concept-group generator treats a matching literal register `[[group]]` as an already
@@ -1849,7 +1849,13 @@ curated stoplist of junk labels (`NULL`, `Ja`/`Nej`, `Uppgift saknas`, the `Okä
 `Okänd*` and `Felaktig*` sentinel families) and ownerless codes: no owning variable and
 no classification, orphans of year projection with nothing to annotate. The exclusions
 hide rows from search only; `value_code` and `value_set` keep every row, and the
-reader's direct code match applies the same owner predicate.
+reader's direct code match applies the same owner predicate. `value_code_fts` is
+contentless (#1296): the reader reads label text from `value_code`, so the folded copy
+is not stored (about 36 MB of the 0.47.0 artifact). Derive drops and refills it, never
+updating or deleting a row, so it needs no `contentless_delete`. `validate_built_db`
+cannot read its text back: it checks the rowid set both ways and probes source rows, the
+first by code_id and the first with a non-ASCII label, for a phrase match of their
+folded label at their rowid.
 
 **Slug reservations.** The slug grammar (with `class` reserved) is `reg-core`'s, reached
 through `reg-core-py`; `slug_grammar.validate_slug` adds the build's slot policy:

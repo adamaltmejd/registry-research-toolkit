@@ -617,8 +617,14 @@ CREATE VIRTUAL TABLE classification_fts USING fts5(
 -- idx_value_code_code_nocase (exact/prefix), since ~55% of codes are purely numeric.
 -- Stoplisted and ownerless labels are left out, so this index has fewer rows than
 -- value_code; the leaf tables keep every row (search-only hiding).
+-- Contentless (#1296): the reader matches it, ranks with bm25 and joins rowid to
+-- value_code for the code and label, so the folded text is not stored twice and
+-- `label` reads back NULL. Insert-only: derive drops and refills it, never UPDATEs
+-- or DELETEs a row, so no `contentless_delete`. Keep columnsize (bm25 needs the
+-- per-row sizes) and the column set (MATCH column filters name `label`).
 CREATE VIRTUAL TABLE value_code_fts USING fts5(
     label,
+    content='',
     tokenize='unicode61 remove_diacritics 0'
 );
 """

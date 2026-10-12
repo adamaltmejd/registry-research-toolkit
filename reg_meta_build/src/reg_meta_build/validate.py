@@ -1532,7 +1532,8 @@ def _check_search_indexes(
 
     The stored row (rowid, verbatim keys, folded text) must equal the derive
     source's, both ways, so a missing, stray, misaligned or unfolded row fails.
-    Corpus only: a real build indexes some value-code labels; a tiny synthetic
+    The contentless `value_code_fts` reads back no text: it is checked by rowid
+    and a phrase probe instead (`_check_contentless_value_code_fts`). Corpus only: a real build indexes some value-code labels; a tiny synthetic
     fixture may stoplist its whole label set."""
     result.section("[search indexes]")
     register_fold_search(conn)
@@ -1564,6 +1565,9 @@ def _check_search_indexes(
         if table not in tables:
             result.fail(f"{table} missing")
             continue
+        if table == "value_code_fts":
+            _check_contentless_value_code_fts(conn, result, source)
+            continue
         unmatched, stray = differ(source, f"SELECT rowid, * FROM {table}")
         if unmatched:
             result.fail(
@@ -1591,6 +1595,74 @@ def _check_search_indexes(
             result.ok(f"value_code_fts populated ({n_idx:,} labels)")
         else:
             result.fail("value_code_fts is EMPTY on a corpus build")
+
+
+# Source rows the contentless value-code index is probed for, per cut.
+_VALUE_CODE_FTS_PROBES = 200
+
+
+def _check_contentless_value_code_fts(
+    conn: sqlite3.Connection, result: ValidationResult, source: str
+) -> None:
+    """`value_code_fts` is contentless (#1296): its columns read back NULL. Its
+    rowids must be exactly the source's code_ids, both ways, and each probed
+    source row must match its own folded label as a phrase at its rowid. The
+    probe takes the first rows by code_id and the first whose label is not
+    ASCII, where an unfolded index (diacritics kept) stops matching."""
+    rowids = f"SELECT code_id FROM ({source})"
+    missing = [
+        rowid
+        for (rowid,) in conn.execute(
+            f"{rowids} EXCEPT SELECT rowid FROM value_code_fts ORDER BY 1"
+        )
+    ]
+    stray = [
+        rowid
+        for (rowid,) in conn.execute(
+            f"SELECT rowid FROM value_code_fts EXCEPT {rowids} ORDER BY 1"
+        )
+    ]
+    if missing:
+        result.fail(
+            f"{len(missing):,} source row(s) not indexed in value_code_fts: "
+            f"rowids {missing[:10]}"
+        )
+    if stray:
+        result.fail(
+            f"{len(stray):,} value_code_fts row(s) index no source row: "
+            f"rowids {stray[:10]}"
+        )
+    probes = dict(
+        conn.execute(
+            f"SELECT * FROM ({source}) ORDER BY 1 LIMIT {_VALUE_CODE_FTS_PROBES}"
+        ).fetchall()
+        + conn.execute(
+            f"SELECT * FROM ({source}) WHERE code_id IN (SELECT code_id FROM "
+            "value_code WHERE label GLOB '*[^ -~]*') "
+            f"ORDER BY 1 LIMIT {_VALUE_CODE_FTS_PROBES}"
+        ).fetchall()
+    )
+    unmatched = [
+        rowid
+        for rowid, text in sorted(probes.items())
+        if fts_terms(text)
+        and conn.execute(
+            "SELECT 1 FROM value_code_fts WHERE value_code_fts MATCH ? AND rowid = ?",
+            ('"' + text.replace('"', '""') + '"', rowid),
+        ).fetchone()
+        is None
+    ]
+    if unmatched:
+        result.fail(
+            f"{len(unmatched):,} probed value_code_fts row(s) do not match their "
+            f"folded label: rowids {unmatched[:10]}"
+        )
+    if not (missing or stray or unmatched):
+        (n_rows,) = conn.execute("SELECT COUNT(*) FROM value_code_fts").fetchone()
+        result.ok(
+            f"value_code_fts indexes all {n_rows:,} source rows; "
+            f"{len(probes):,} probed rows match their folded label"
+        )
 
 
 def _check_planner_statistics(

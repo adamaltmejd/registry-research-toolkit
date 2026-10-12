@@ -1,0 +1,10 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 probed value_code_fts row(s) do not match their folded label: rowids [10]"
+  ],
+  "failures_absent": [
+    "not indexed in value_code_fts",
+    "index no source row"
+  ]
+}
