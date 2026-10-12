@@ -25,6 +25,11 @@ interface Env {
 // run_worker_first, so the steward worker must refuse to forward it here.
 const ORIGIN_PATHS = [/^\/api(\/|$)/, /^\/openapi\.json$/];
 const MCP_PATH = /^\/mcp$/;
+// Hashed static assets (assets.run_worker_first has `/assets/*` too): a miss is a
+// 404, not the SPA fallback, which frontend/public/_headers would stamp immutable
+// for a year under the asset's URL (#1454). A hashed asset is never HTML, so an
+// HTML answer from the assets binding is the fallback.
+const ASSETS_PATH = /^\/assets\//;
 
 // Cache-generation versioning (#318): the zone cache key is the full URL
 // including the query string, so stamping the per-deploy DEPLOY_VERSION onto
@@ -49,6 +54,16 @@ export default {
       if (env.EDGE_TOKEN) forwarded.headers.set("x-edge-token", env.EDGE_TOKEN);
       return fetch(forwarded);
     }
-    return env.ASSETS.fetch(request);
+    const response = await env.ASSETS.fetch(request);
+    if (
+      ASSETS_PATH.test(url.pathname) &&
+      response.headers.get("content-type")?.startsWith("text/html")
+    ) {
+      return new Response("Not found", {
+        status: 404,
+        headers: { "cache-control": "no-store" },
+      });
+    }
+    return response;
   },
 } satisfies ExportedHandler<Env>;

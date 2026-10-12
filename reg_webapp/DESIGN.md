@@ -487,15 +487,17 @@ The Rust server sets the reads' ETags and `Cache-Control` (tiers in
 **Early revalidation (#1453).** App code, compiled catalog DB, steward branding
 configuration and paired docs DB are immutable for a process lifetime; changing any of
 them replaces the process. At startup the server derives one token from them: the
-SHA-256 of its own binary (an image change without a version bump still changes it), the
-catalog name and `generation_id`, the docs `generation` and the steward branding. Loose
-delivery inventory is not an HTTP input. A GET read's strong ETag is that token plus the
-request's path and query, without `__edge_v`, so read scope (a parameter or the
-catalog's default) is part of it. A tower layer in front of every GET operation and
-download answers a matching `If-None-Match` with a 304 before the route runs, so a
-revalidation does no DB work and no body serialization. `If-None-Match: *` still runs
-the route, since it matches only a representation that exists. Only a 200 carries the
-ETag and tier.
+SHA-256 of the bytes of its own binary (an image change without a version bump still
+changes it), the catalog and docs database files and the steward branding. File bytes,
+not identity fields: `generation_id` does not cover the import date `/api/context`
+shows, nor the docs `generation` the related documents (about 0.3 s for the 627 MB
+catalog on a warm page cache in a release build). Loose delivery inventory is not an
+HTTP input. A GET read's strong ETag is that token plus the request's path and query,
+without `__edge_v`, so read scope (a parameter or the catalog's default) is part of it.
+A tower layer in front of every GET operation and download answers a matching
+`If-None-Match` with a 304 before the route runs, so a revalidation does no DB work and
+no body serialization. `If-None-Match: *` still runs the route, since it matches only a
+representation that exists. Only a 200 carries the ETag and tier.
 
 Browser and shared-cache freshness are separate concerns. Keep a short browser window
 where prompt redeploy visibility matters, but let the Cloudflare cache retain immutable,
@@ -1234,13 +1236,15 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   navigations without invoking the worker, shadowing `/api` deep-opens. The assets layer
   reads `frontend/public/_headers` (copied into `dist/`): hashed `/assets/*` files are
   `public, max-age=31536000, immutable` (#1454); `index.html` and the SPA fallback keep
-  Workers' default `max-age=0, must-revalidate`. The rule matches by path, so a missing
-  `/assets/` file gets the fallback `index.html` stamped immutable (the fallback never
-  runs the worker); the comment in `_headers` bounds that case. The glob list and the
-  worker's `ORIGIN_PATHS` regexes are a LOCKSTEP pair (comments in both files);
-  `reg-meta serve` answers exactly the forwarded set. Cloudflare downgrades the origin's
-  strong ETag to weak (`W/`) when compression applies — weak comparison is correct for
-  GET revalidation, not a bug.
+  Workers' default `max-age=0, must-revalidate`. The rule matches by path, so the SPA
+  fallback for a missing `/assets/` file would be stamped immutable too; `/assets/*` is
+  therefore also `run_worker_first`, and the worker answers an HTML (fallback) response
+  there with a `no-store` 404. An existing asset still comes from the assets binding
+  with the `_headers` policy. The glob list (bar `/assets/*`) and the worker's
+  `ORIGIN_PATHS` regexes are a LOCKSTEP pair (comments in both files); `reg-meta serve`
+  answers exactly the forwarded set. Cloudflare downgrades the origin's strong ETag to
+  weak (`W/`) when compression applies — weak comparison is correct for GET
+  revalidation, not a bug.
 - **Edge cache generations (#318)**: the worker stamps a per-deploy `DEPLOY_VERSION`
   (wrangler var; CI passes the commit SHA, `-<run_id>`-suffixed on dispatch so same-SHA
   data-only rebuilds still count) onto every origin-bound URL as an `__edge_v` query
