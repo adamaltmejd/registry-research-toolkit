@@ -6175,8 +6175,8 @@ value = "AstNr_LISA"
 [[errata.column]]
 variant = "individer-15plus"
 column = "AldPens_INKLGP"
-name = "Summa inkomst föranledd av åldersrelaterade pensioner, inklusive garantipension"
-definition = "Summa inkomst föranledd av åldersrelaterade pensioner enligt IoT-definitionen inklusive garantipension (INKLGP). En annan definition än AldPens."
+name = "Summa inkomst av pensioner, inklusive pension från annat nordiskt land"
+definition = "Summa inkomst av pensioner inklusive pension från annat nordiskt land, 2011–2019 (SCB LISA ändringar 2020). Från 2020 ingår sådan pension i AldPens; för 2011–2019 är detta en annan definition än AldPens."
 is_sensitive = false
 is_identifier = false
 holdings_period = "2011-2019"

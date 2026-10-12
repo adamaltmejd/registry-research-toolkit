@@ -48,11 +48,6 @@ register = "scb/gymnasieskola-betyg"
 variable = "kurs"
 delivery_column = "Amneskod_omkodad"
 
-[[enrichment.alias]]
-register = "scb/gymnasieskola-betyg"
-variable = "kurs"
-delivery_column = "Kurskod_omkodad"
-
 [[code_label_pair]]
 code = "scb/gymnasieskola-betyg/huvudman"
 label = "scb/gymnasieskola-betyg/huvudman-namn"
