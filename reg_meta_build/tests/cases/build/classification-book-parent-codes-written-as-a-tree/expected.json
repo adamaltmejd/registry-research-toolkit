@@ -1,0 +1,28 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "classification_codes",
+      "fields": ["slug", "code", "level", "parent"],
+      "rows": [
+        ["flat", "008-", null, null],
+        ["flat", "011-", null, null],
+        ["tree", "01", 2, "A"],
+        ["tree", "011", 3, "01"],
+        ["tree", "0111", 4, "011"],
+        ["tree", "05", 2, "B"],
+        ["tree", "A", null, null],
+        ["tree", "B", null, null],
+        ["tree", "U", null, null]
+      ],
+      "note": "Each parent is a code of its own book; level stays the digit count, so a letter root has none."
+    },
+    {
+      "table": "issues",
+      "where": {"subject": ["flat", "tree"]},
+      "fields": ["code", "subject"],
+      "rows": [],
+      "note": "Neither book reports an issue: tree's parents all resolve, and flat reads no parent cell."
+    }
+  ]
+}

@@ -263,6 +263,7 @@ def validate_built_db(
         _check_concept_groups(conn, result, tables, corpus=corpus)
         _check_classification_replaced_by(conn, result, tables, corpus=corpus)
         _check_classification_derived_from(conn, result, tables, corpus=corpus)
+        _check_classification_code_tree(conn, result)
         _check_variable_replaced_by_vintage_lift(conn, result, tables, corpus=corpus)
         _check_representation_replaced_by(conn, result, tables, corpus=corpus)
         check_states(conn, result, tables)
@@ -2499,6 +2500,51 @@ def _check_concept_groups(
             "— the #571 vintage groups should have become succession edges "
             "(curated umbrella classification groups are permitted)"
         )
+
+
+# A code tree deeper than this is refused as cyclic or malformed; the deepest
+# delivered book (ICD-11-SE) is eight levels deep.
+_MAX_CODE_TREE_DEPTH = 32
+
+
+def _check_classification_code_tree(
+    conn: sqlite3.Connection, result: ValidationResult
+) -> None:
+    """#1297 code tree: a parent is a code of the same book, shallower, acyclic."""
+    result.section("[classification code tree]")
+    outside = conn.execute(
+        "SELECT COUNT(*) FROM classification_code c WHERE c.parent_code_id IS NOT NULL "
+        "AND NOT EXISTS (SELECT 1 FROM classification_code p "
+        "WHERE p.classification_id = c.classification_id AND p.code_id = c.parent_code_id)"
+    ).fetchone()[0]
+    deeper = conn.execute(
+        "SELECT COUNT(*) FROM classification_code c JOIN classification_code p "
+        "ON p.classification_id = c.classification_id AND p.code_id = c.parent_code_id "
+        "WHERE c.level IS NOT NULL AND p.level IS NOT NULL AND p.level >= c.level"
+    ).fetchone()[0]
+    # Walk every code's ancestors; a walk that returns to its start is a cycle,
+    # and one that is still going at the depth bound is refused with it.
+    cyclic = conn.execute(
+        "WITH RECURSIVE walk(book, start, node, depth) AS ("
+        " SELECT classification_id, code_id, parent_code_id, 1 FROM classification_code"
+        " WHERE parent_code_id IS NOT NULL"
+        " UNION ALL"
+        " SELECT w.book, w.start, c.parent_code_id, w.depth + 1 FROM walk w"
+        " JOIN classification_code c ON c.classification_id = w.book AND c.code_id = w.node"
+        " WHERE c.parent_code_id IS NOT NULL AND w.node != w.start AND w.depth < ?)"
+        " SELECT COUNT(DISTINCT book || ':' || start) FROM walk"
+        " WHERE node = start OR depth = ?",
+        (_MAX_CODE_TREE_DEPTH, _MAX_CODE_TREE_DEPTH),
+    ).fetchone()[0]
+    for count, invariant in (
+        (outside, "name a parent outside their own classification"),
+        (deeper, "name a parent at the same or a deeper level"),
+        (cyclic, f"reach a parent cycle or lie deeper than {_MAX_CODE_TREE_DEPTH}"),
+    ):
+        if count:
+            result.fail(f"{count:,} classification code(s) {invariant}")
+    if not (outside or deeper or cyclic):
+        result.ok("classification code parents are same-book, shallower and acyclic")
 
 
 def _check_classification_replaced_by(

@@ -1,0 +1,31 @@
+{
+  "description": "Register 1 (TESTREG, variant 10) delivers VALUE (member 1001, variable 101) in 2020. Three codebooks in the SOS fetch layout (code,label,label_en,parent_code,valid_from,valid_to): tree.csv, a tree under two roots whose child rows come before their parents, plus one parentless code; flat.csv, whose parent_code cells name chapter 01, which is no code of the book (KS87-P's shape); broken.csv, whose code 12 names parent 9, which is no code of the book.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "files": {
+    "classifications/tree.csv": [
+      "code,label,label_en,parent_code,valid_from,valid_to",
+      "01,Jordbruk,,A,,",
+      "011,Odling av ettåriga växter,,01,,",
+      "0111,Odling av spannmål,,011,,",
+      "05,Kolutvinning,,B,,",
+      "A,\"Jordbruk, skogsbruk och fiske\",,,,",
+      "B,Utvinning av mineral,,,,",
+      "U,Okänd verksamhet,,,,"
+    ],
+    "classifications/flat.csv": [
+      "code,label,label_en,parent_code,valid_from,valid_to",
+      "008-,Tarminfektion,,01,,",
+      "011-,Tuberkulos,,01,,"
+    ],
+    "classifications/broken.csv": [
+      "code,label,label_en,parent_code,valid_from,valid_to",
+      "1,Ett,,,,",
+      "11,Elva,,1,,",
+      "12,Tolv,,9,,"
+    ]
+  }
+}

@@ -8,8 +8,9 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
+from reg_meta_build.normalization import normalize_token
 from reg_meta_build.resolved_catalog import (
     ResolvedClassificationCode,
     ResolvedConformance,
@@ -125,12 +126,38 @@ def resolve_classification_conformance(
     return ClassificationConformance(conformance, tuple(diagnostics))
 
 
+def _parent_cell(value: SourceValue) -> str | None:
+    """The delivered `parent_code` cell, normalized like a code; None if blank."""
+    for cell in value.delivered_cells:
+        if normalize_token(cell.name).casefold() == "parent_code":
+            return normalize_token(cell.interpreted_value) or None
+    return None
+
+
+def _member_refs(
+    source: str, members: Iterable[SourceValue]
+) -> tuple[SourceRecordRef, ...]:
+    return tuple(
+        sorted(
+            {
+                SourceRecordRef(
+                    source=source, semantic_record_key=locator.semantic_record_key
+                )
+                for value in members
+                for locator in value.locators
+            },
+            key=repr,
+        )
+    )
+
+
 def resolve_canonical_codes(
     values: Iterable[SourceValue],
     *,
     source: str,
     subject: str,
     book_refs: tuple[SourceRecordRef, ...] = (),
+    hierarchy: Literal["parent_code", "flat"] = "parent_code",
 ) -> CanonicalCodeResolution:
     """Retain agreed codes; withhold only incomplete or contradictory members.
 
@@ -139,6 +166,11 @@ def resolve_canonical_codes(
     associations separately from the distinct payload count returned here.
     A book with no agreed member cites `book_refs` (its codebook declaration)
     and every contested member, so even a codebook without rows is located.
+
+    Under `hierarchy = "parent_code"` each code takes the parent its
+    `parent_code` cell names. A parent that is not an agreed code of this book,
+    or members of one code that disagree on it, is a located error and the code
+    keeps no parent; a `"flat"` book reads no parent cell.
     """
     payloads = {}
     by_code: dict[str | None, list[SourceValue]] = defaultdict(list)
@@ -154,6 +186,7 @@ def resolve_canonical_codes(
         by_code[value.code].append(value)
     codes = []
     diagnostics = []
+    parents: dict[str, tuple[set[str | None], tuple[SourceRecordRef, ...]]] = {}
     for code, members in sorted(
         by_code.items(), key=lambda item: (item[0] is not None, item[0] or "")
     ):
@@ -167,19 +200,7 @@ def resolve_canonical_codes(
                     severity="error",
                     subject=subject,
                     detail=f"Canonical code {code!r} has labels {sorted(labels, key=repr)!r}; no member was selected.",
-                    refs=tuple(
-                        sorted(
-                            {
-                                SourceRecordRef(
-                                    source=source,
-                                    semantic_record_key=locator.semantic_record_key,
-                                )
-                                for value in members
-                                for locator in value.locators
-                            },
-                            key=repr,
-                        )
-                    ),
+                    refs=_member_refs(source, members),
                     fields=("code", "label"),
                     withheld_output=("classification.code",),
                 )
@@ -193,6 +214,34 @@ def resolve_canonical_codes(
                 label=label,
                 # Existing catalog level means ASCII digit count, not an inferred tree.
                 level=len(code) if code.isascii() and code.isdigit() else None,
+            )
+        )
+        if hierarchy == "parent_code":
+            parents[code] = (
+                {_parent_cell(value) for value in members},
+                _member_refs(source, members),
+            )
+    agreed = {code.code for code in codes}
+    for index, resolved in enumerate(codes):
+        if resolved.code not in parents:
+            continue
+        named, refs = parents[resolved.code]
+        if named == {None}:
+            continue
+        if len(named) == 1 and (parent := next(iter(named))) in agreed:
+            codes[index] = resolved.model_copy(update={"parent_code": parent})
+            continue
+        diagnostics.append(
+            ResolutionDiagnostic(
+                code="unresolved_classification_parent",
+                severity="error",
+                subject=subject,
+                detail=f"Canonical code {resolved.code!r} names parent codes "
+                f"{sorted(named, key=repr)!r}, not exactly one agreed code of this "
+                "book; the code keeps no parent.",
+                refs=refs,
+                fields=("code", "parent_code"),
+                withheld_output=("classification.code.parent",),
             )
         )
     if not codes:

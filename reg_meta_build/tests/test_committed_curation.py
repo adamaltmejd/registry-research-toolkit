@@ -145,9 +145,12 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     # Every declared book reads through the build's own CSV reader, with members,
     # and passes the build's canonical-code rule: one label per code and no blank
     # code. A book that fails it is withheld by the build with
-    # conflicting_classification_labels or unknown_classification_member. Its
-    # curated sentinels then pass the build's book model, which refuses a sentinel
-    # also in the canonical code set (classification_entry_invalid at build).
+    # conflicting_classification_labels or unknown_classification_member, and a
+    # parent_code naming no code of the book (unless the book is declared flat)
+    # is an unresolved_classification_parent error. Its tree and curated
+    # sentinels then pass the build's book model, which refuses a parent cycle, a
+    # parent no shallower than its child, and a sentinel also in the canonical
+    # code set (classification_entry_invalid at build).
     books = REPO_ROOT / "input_data" / "classifications"
     for entry in tree.classifications:
         path = books / entry.classification.codes_file
@@ -164,7 +167,10 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
         book = read_code_list(path, revision, name=path.stem)
         assert book.associations, entry.classification.short_name
         resolved = resolve_canonical_codes(
-            book.values.values(), source=path.name, subject=entry.classification.slug
+            book.values.values(),
+            source=path.name,
+            subject=entry.classification.slug,
+            hierarchy=entry.classification.hierarchy,
         )
         issues = resolved.diagnostics
         assert not issues, [(issue.code, issue.detail) for issue in issues]

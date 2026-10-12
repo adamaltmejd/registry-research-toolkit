@@ -1152,6 +1152,15 @@ succession edges. The book keeps its place in a derived edition chain, so no edg
 it. A literal source-reference dictionary or checked declaration establishes a variable
 binding. Code overlap percentages, URL guesses and name similarity cannot.
 
+A book's code tree comes only from its codebook's delivered `parent_code` cells (#1297).
+A parent that names no agreed code of the same book is a located
+`unresolved_classification_parent` error, never dropped silently; a cycle or a parent no
+shallower than its child refuses the book. The tree is never inferred from code shape or
+from another book. A source whose parent cells name something outside the book declares
+`hierarchy = "flat"` in its classification file, which is visible curation rather than a
+heuristic: KS87-P's cells are KS87 chapter numbers, and its sheet has no chapter rows.
+`validate_built_db` re-checks the stored tree: same book, shallower level, acyclic.
+
 The label binding is a rule. A state whose value-set version label exactly matches an
 entry on a classification's label list binds to that classification, whether the label
 comes from a source list or a `[[coding.documented]]` entry. A matching segment that no

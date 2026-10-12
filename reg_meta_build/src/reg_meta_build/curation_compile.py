@@ -178,6 +178,7 @@ class CompiledCodebook:
     source: str
     descriptor: str
     metadata: dict[str, str | int | list[dict[str, str]] | None]
+    hierarchy: Literal["parent_code", "flat"] = "parent_code"
 
 
 @dataclass(frozen=True)
@@ -7026,6 +7027,7 @@ def compile_curation(
                         "family_aliases",
                         "codes_file",
                         "sentinel_codes",
+                        "hierarchy",
                     },
                 ),
                 "sentinel_codes": [
@@ -7039,6 +7041,7 @@ def compile_curation(
                     )
                 ],
             },
+            hierarchy=entry.classification.hierarchy,
         )
         for entry in tree.classifications
     )

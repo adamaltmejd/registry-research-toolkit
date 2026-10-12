@@ -1,0 +1,5 @@
+{
+  "note": "Book tree reads its parents from the CSV's parent_code column: 01 and 05 hang under roots A and B, 011 under 01, 0111 under 011, and A, B and U have none. Child rows come before their parents in the file and in code order, so the writer cannot rely on parent-first insertion. Book flat delivers parent_code cells naming chapter 01, which is no code of the book, and declares hierarchy = \"flat\" (KS87-P's declaration): its codes keep no parent and the build reports nothing about them.",
+  "fails_if": "`resolve_canonical_codes` (source_classifications.py) stops reading the parent_code cell or `_write_classifications` (materialize.py) stops writing parent_code_id (tree's codes lose their parents), the writer maps a parent to another code's id, or the flat declaration stops suppressing the parent cells (flat reports unresolved_classification_parent)",
+  "sources": "scb-classification-trees"
+}

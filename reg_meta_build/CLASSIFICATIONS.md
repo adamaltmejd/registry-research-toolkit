@@ -20,6 +20,7 @@ codes_file = "isced2011.csv"  # under input_data/classifications/; SOS books und
 sentinel_codes = [            # optional
   { code = "-1", meaning = "Uppgift saknas" },
 ]
+# hierarchy = "flat"          # optional: do not read parent_code cells (CSV format)
 
 [binding]                     # optional
 # label_source = "sos"        # provider whose value-set labels carry it; absent = SCB
@@ -76,12 +77,21 @@ vardekod,vardebenamning
 002,Förskoleklass
 ```
 
-Example (universal header, extra columns ignored):
+Example (SOS fetch output):
 
 ```csv
-code,label,label_en,parent_code
-A01,Tyfoidfeber,Typhoid fever,A00-A09
+code,label,label_en,parent_code,valid_from,valid_to
+A00-A09,Infektionssjukdomar utgående från mag-tarmkanalen,,01,1997-01-01,
+A01,Tyfoidfeber och paratyfoidfeber,,A00-A09,1997-01-01,
 ```
+
+`parent_code` builds the book's code tree (`classification_code.parent_code_id`). Each
+non-blank cell must name an agreed code of the same book; otherwise the build reports a
+located `unresolved_classification_parent` error and the code keeps no parent. A parent
+cycle, or a parent whose digit level is not shallower than its child's, refuses the book
+(`classification_entry_invalid`). A source whose cells name codes outside the book
+declares `hierarchy = "flat"` in `[classification]`, and its parent cells are not read:
+KS87-P's cells are KS87 chapter numbers, and no chapter is a row of that book.
 
 ## Workflow
 

@@ -125,6 +125,12 @@ class ClassificationMetadata(_CurationModel):
     # Relative to `input_data/classifications/`; SOS books sit under `sos/`.
     codes_file: str
     sentinel_codes: tuple[SentinelCode, ...] = ()
+    # How the book's code tree is read. "parent_code": from the CSV's
+    # `parent_code` column, where every named parent must be a code of the book
+    # (a book without the column has no tree). "flat": the book has no tree and
+    # its `parent_code` cells are not read, for a source whose cells name codes
+    # outside the book (KS87-P's KAPITEL chapter numbers).
+    hierarchy: Literal["parent_code", "flat"] = "parent_code"
 
     _names = field_validator("short_name", "name")(_require_trimmed)
 

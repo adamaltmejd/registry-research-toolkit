@@ -1,0 +1,27 @@
+{
+  "status": "blocked",
+  "result": {"database": null},
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code", "subject", "fields", "withheld_output"],
+      "rows": [
+        ["unresolved_classification_parent", "broken", ["code", "parent_code"], ["classification.code.parent"]]
+      ],
+      "note": "The only error, located at book broken."
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "unresolved_classification_parent"},
+      "fields": ["source", "key"],
+      "rows": [
+        [
+          "classifications/broken.csv",
+          ["code-list:broken", "value:eb22bdd550bffd43a743179929a943565f8c66f1b9a4820789e7391a66b1d3a9"]
+        ]
+      ],
+      "note": "The error cites code 12's codebook row and no other: the value key is the canonical SHA-256 of that row's cells [\"12\", \"Tolv\", \"\", \"9\", \"\", \"\"]."
+    }
+  ]
+}
