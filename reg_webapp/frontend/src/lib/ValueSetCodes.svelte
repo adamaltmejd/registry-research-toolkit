@@ -2,6 +2,7 @@
 import { getValues, type ValueRow } from "./api";
 import { asyncResource } from "./async.svelte";
 import CodeList from "./CodeList.svelte";
+import CodeTreeLevel, { type Levels } from "./CodeTreeLevel.svelte";
 import FilterInput from "./FilterInput.svelte";
 import { Button, Skeleton } from "./ui";
 
@@ -27,6 +28,12 @@ import { Button, Skeleton } from "./ui";
 // shared CodeList so a value set, a classification's codes and a mismatch list
 // all look alike; CodeList renders these pages verbatim because the filter and
 // the bound both live here.
+//
+// A classification whose codes name their parents (#1297: the first page's rows
+// carry a non-null `child_count`) renders as a code tree instead, unfiltered:
+// its roots, each node opening onto its children (CodeTreeLevel). A filter
+// switches back to the flat matches with their paging, so the filter and its
+// count behave as for any set. A book without a tree renders as before.
 
 interface Props {
   /** Whose codes to read: a variable FQID (with `stateId`) or a classification
@@ -131,6 +138,15 @@ const resource = asyncResource((signal) => {
   if (codeCount === 0) {
     return Promise.resolve({ items: [], next_cursor: null, total: 0 });
   }
+  // The tree reads its own levels: the flat first page has said what it had to
+  // (the set's size, and that it is a tree), so an unfiltered read is not repeated.
+  if (tree && query.trim() === "") {
+    return Promise.resolve({
+      items: [],
+      next_cursor: null,
+      total: setSize ?? 0,
+    });
+  }
   return getValues(
     ref,
     {
@@ -167,18 +183,39 @@ const filtering = $derived(query.trim().length > 0);
 
 // The whole set's size: the caller's count, else the `total` of the first
 // unfiltered page (a filtered `total` counts matches, not the set, so it never
-// stands in). Remembered per set so typing a filter can't make the box vanish.
-let answeredSize = $state<{ identity: string; size: number } | null>(null);
+// stands in), and whether that page is a code tree's. Remembered per set so
+// typing a filter can't make the box vanish or the tree forget itself.
+let answered = $state<{ identity: string; size: number; tree: boolean } | null>(
+  null,
+);
+function treePage(items: ValueRow[] | undefined): boolean {
+  const first = items?.[0];
+  return (
+    first !== undefined && "child_count" in first && first.child_count != null
+  );
+}
 $effect(() => {
   const data = resource.data;
-  if (codeCount === null && data && !filtering) {
-    answeredSize = { identity: setIdentity, size: data.total };
+  if (data && !filtering && answered?.identity !== setIdentity) {
+    answered = {
+      identity: setIdentity,
+      size: data.total,
+      tree: treePage(data.items),
+    };
   }
 });
-const setSize = $derived(
-  codeCount ??
-    (answeredSize?.identity === setIdentity ? answeredSize.size : null),
+const known = $derived(answered?.identity === setIdentity ? answered : null);
+const setSize = $derived(codeCount ?? known?.size ?? null);
+const tree = $derived(known?.tree ?? false);
+// The page itself decides too, so a tree's flat first page never renders flat
+// before the effect above has remembered it.
+const showTree = $derived(
+  !filtering && (tree || treePage(resource.data?.items)),
 );
+// Each tree level's read, kept for the panel's life: reopening a node or
+// clearing the filter reads nothing again. Keyed by ref, so a reused panel
+// cannot serve another classification's levels.
+const levels: Levels = new Map();
 // The filter box appears at the same set size the shared viewer has always shown
 // it at — below that it is more chrome than help.
 const showFilter = $derived(
@@ -210,11 +247,17 @@ function retry(): void {
     />
   {/if}
 
-  {#if codes.length > 0}
+  {#if showTree}
+    <div class="code-scroll">
+      <CodeTreeLevel {ref} parent="" expected={null} {levels} />
+    </div>
+  {:else if codes.length > 0}
     <CodeList {codes} />
   {/if}
 
-  {#if resource.loading}
+  {#if showTree}
+    <!-- The tree owns its loading, error and paging states. -->
+  {:else if resource.loading}
     <div class="codes-status" aria-busy="true">
       <span class="visually-hidden">Loading codes…</span>
       <Skeleton count={codes.length > 0 ? 1 : 3} />
@@ -237,7 +280,7 @@ function retry(): void {
     </p>
   {/if}
 
-  {#if nextCursor !== null && !resource.error}
+  {#if nextCursor !== null && !resource.error && !showTree}
     <div class="codes-more">
       <!-- Outside the status chain, so the button the reader just pressed is NOT
            swapped for a skeleton mid-page — that drops keyboard focus to <body>
@@ -259,6 +302,11 @@ function retry(): void {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
+  }
+  /* CodeList's bounded scroll, around the tree. */
+  .code-scroll {
+    max-height: 18rem;
+    overflow-y: auto;
   }
   .codes-empty,
   .codes-progress {

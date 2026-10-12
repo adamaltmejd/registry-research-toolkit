@@ -20,7 +20,7 @@ vi.mock("./api", async (importOriginal) => {
 function code(
   over: Partial<ClassificationCodeModel> & { code: string; label: string },
 ): ClassificationCodeModel {
-  return { level: 1, is_valid: true, ...over };
+  return { level: 1, is_valid: true, child_count: null, ...over };
 }
 
 function valuesFor(fqid: string, items: ClassificationCodeModel[]): void {
@@ -51,7 +51,8 @@ beforeEach(() => {
 
 describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
   // Fails if the panel stops reading `values` for the classification's FQID
-  // (the codes used to arrive embedded on the node).
+  // (the codes used to arrive embedded on the node), or if a book without a code
+  // tree (`child_count` null) is read by level or rendered as disclosures.
   it("renders the edition's codes from the values facet", async () => {
     valuesFor("class/sun2020", [
       code({ code: "1", label: "Förgymnasial" }),
@@ -65,6 +66,46 @@ describe("ClassificationCodesPanel — the edition's `values` (#609)", () => {
       .toBeVisible();
     await expect.element(page.getByText("Förgymnasial")).toBeVisible();
     await expect.element(page.getByText("Eftergymnasial")).toBeVisible();
+    expect(document.querySelector("details")).toBeNull();
+    for (const [, params] of vi.mocked(getValues).mock.calls) {
+      expect(params?.parent).toBeUndefined();
+    }
+  });
+
+  // #1297: a book whose codes name their parents renders its roots, and opening
+  // a node reads that node's children once. Fails if the tree is not detected
+  // from `child_count`, if a closed node reads its children, or if collapsing and
+  // reopening a node reads it again.
+  it("opens a node by reading its children once", async () => {
+    const levels: Record<string, ClassificationCodeModel[]> = {
+      "": [code({ code: "A", label: "Jordbruk", level: null, child_count: 1 })],
+      A: [code({ code: "01", label: "Odling", level: 2, child_count: 0 })],
+    };
+    vi.mocked(getValues).mockImplementation(async (_ref, params = {}) => {
+      const items =
+        params.parent === undefined
+          ? [...levels[""], ...levels.A]
+          : (levels[params.parent] ?? []);
+      return { items, next_cursor: null, total: items.length };
+    });
+
+    await render(ClassificationCodesPanel, { node });
+
+    const root = page.getByText("Jordbruk");
+    await expect.element(root).toBeVisible();
+    await expect.element(page.getByText("Odling")).not.toBeInTheDocument();
+
+    await root.click();
+    await expect.element(page.getByText("Odling")).toBeVisible();
+    await root.click();
+    await expect.element(page.getByText("Odling")).not.toBeInTheDocument();
+    await root.click();
+    await expect.element(page.getByText("Odling")).toBeVisible();
+
+    const reads = vi
+      .mocked(getValues)
+      .mock.calls.filter(([, params]) => params?.parent === "A");
+    expect(reads).toHaveLength(1);
   });
 
   // The section used to be omitted for an empty embedded list; its size is now

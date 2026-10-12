@@ -110,6 +110,18 @@ in place, without a read: an empty coding and no coding are different facts. Ins
 panel `CodeList` renders each page as given (a page is a window, so the viewer's own
 grouping is off), and typing is debounced into one read.
 
+A classification whose codes name their parents (#1297) renders as a code tree. The
+panel's first read is the flat page it always reads: its `total` is the book's size for
+the filter, and a non-null `child_count` on its rows says the book has a tree.
+Unfiltered, `CodeTreeLevel` then shows the roots (`values?parent=`), each node with
+children a native `<details>` whose subtree mounts only while open and reads
+`parent=<code>` once; a panel-lifetime cache keyed by classification and parent keeps
+collapse, reopen and a cleared filter from reading again. A level longer than a page is
+read page by page within its node, with no "load more". While a node loads it reserves
+one skeleton row per announced child (up to the scroll box's height), so opening a node
+does not shift the page (#1139). A filter shows the flat matches with their paging, as
+for any set; a book without a tree (`child_count` null) renders exactly as before.
+
 Storage IDs, `state_id` included, are decimal strings on the wire. The browser never
 converts them to JavaScript numbers; comparisons use integer-safe ordering.
 
