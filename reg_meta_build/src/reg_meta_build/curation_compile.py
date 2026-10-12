@@ -3904,6 +3904,10 @@ def compile_scb_preliminary(
     ):
         if scope.register_key is None:
             records = prepared.records.iter_records(source=scope.source)
+        elif scope.register_key[1] != "scb":
+            # A register key names its provider, and every record in its slice has
+            # that provider, so the SCB-only loop below would skip each one unread.
+            continue
         else:
             records = (
                 record
