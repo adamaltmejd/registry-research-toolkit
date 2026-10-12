@@ -274,34 +274,55 @@ fn classification_codes(
             ));
         }
     }
-    // One grouped scan of the book counts every code's children.
-    let mut stmt = conn.prepare_cached(
-        "WITH kids AS (SELECT parent_code_id AS code_id, COUNT(*) AS n \
-         FROM classification_code WHERE classification_id = ?1 \
-         AND parent_code_id IS NOT NULL GROUP BY parent_code_id), \
-         tree AS (SELECT EXISTS (SELECT 1 FROM kids) AS tree) \
-         SELECT vc.code, vc.label, cc.level, cc.is_valid, \
-         CASE WHEN tree.tree THEN COALESCE(kids.n, 0) END \
-         FROM classification_code cc JOIN value_code vc ON vc.code_id = cc.code_id \
-         CROSS JOIN tree LEFT JOIN kids ON kids.code_id = cc.code_id \
-         WHERE cc.classification_id = ?1 AND (?2 IS NULL \
-         OR (?2 = '' AND cc.parent_code_id IS NULL) \
-         OR cc.parent_code_id IN (SELECT p.code_id FROM classification_code p \
-         JOIN value_code pv ON pv.code_id = p.code_id \
-         WHERE p.classification_id = ?1 AND pv.code = ?2)) \
-         ORDER BY vc.code, vc.label",
-    )?;
-    let rows = stmt
-        .query_map(params![id, parent], |row| {
-            Ok(ValueRow::Code(ClassificationCode {
-                code: row.get(0)?,
-                label: row.get(1)?,
-                level: row.get(2)?,
-                is_valid: row.get(3)?,
-                child_count: row.get(4)?,
-            }))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
+    // One statement per mode, so each level is an index seek on
+    // idx_classification_code_parent (classification_id, parent_code_id) rather
+    // than a filtered scan of the book; each row's count is a seek on the same
+    // index, and the tree test one uncorrelated seek.
+    macro_rules! codes {
+        ($filter:literal) => {
+            concat!(
+                "SELECT vc.code, vc.label, cc.level, cc.is_valid, \
+                 CASE WHEN EXISTS (SELECT 1 FROM classification_code t \
+                 WHERE t.classification_id = ?1 AND t.parent_code_id IS NOT NULL) \
+                 THEN (SELECT COUNT(*) FROM classification_code k \
+                 WHERE k.classification_id = ?1 AND k.parent_code_id = cc.code_id) END \
+                 FROM classification_code cc JOIN value_code vc ON vc.code_id = cc.code_id \
+                 WHERE cc.classification_id = ?1",
+                $filter,
+                " ORDER BY vc.code, vc.label"
+            )
+        };
+    }
+    let (sql, code) = match parent {
+        None => (codes!(""), None),
+        Some("") => (codes!(" AND cc.parent_code_id IS NULL"), None),
+        Some(code) => (
+            codes!(
+                " AND cc.parent_code_id IN (SELECT p.code_id FROM classification_code p \
+                 JOIN value_code pv ON pv.code_id = p.code_id \
+                 WHERE p.classification_id = ?1 AND pv.code = ?2)"
+            ),
+            Some(code),
+        ),
+    };
+    let mut stmt = conn.prepare_cached(sql)?;
+    let row = |row: &rusqlite::Row| {
+        Ok(ValueRow::Code(ClassificationCode {
+            code: row.get(0)?,
+            label: row.get(1)?,
+            level: row.get(2)?,
+            is_valid: row.get(3)?,
+            child_count: row.get(4)?,
+        }))
+    };
+    let rows = match code {
+        None => stmt
+            .query_map([id], row)?
+            .collect::<rusqlite::Result<_>>()?,
+        Some(code) => stmt
+            .query_map(params![id, code], row)?
+            .collect::<rusqlite::Result<_>>()?,
+    };
     Ok(rows)
 }
 
