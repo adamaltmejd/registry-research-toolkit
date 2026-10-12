@@ -7,6 +7,7 @@ the source observations are never modified.
 
 from __future__ import annotations
 
+import json
 from collections import defaultdict
 from datetime import date
 from functools import cached_property
@@ -1838,6 +1839,27 @@ def current_pins(
             f'"{canonical_sha256(distinct[0].model_dump(mode="json"))}"'
         )
     return f" Current pins: {'; '.join(pins)}." if pins else ""
+
+
+def toml_inline(value: object) -> str:
+    """A JSON-shaped value as one inline TOML value; ``None`` members are omitted.
+
+    Prints a current pin a curator copies into an inline curation table.
+    """
+    if isinstance(value, dict):
+        items = ", ".join(
+            f"{json.dumps(key)} = {toml_inline(item)}"
+            for key, item in value.items()
+            if item is not None
+        )
+        return "{ " + items + " }"
+    if isinstance(value, (list, tuple)):
+        return "[" + ", ".join(toml_inline(item) for item in value) + "]"
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, str):
+        return json.dumps(value, ensure_ascii=False)
+    return str(value)
 
 
 def settle_acknowledgements(

@@ -9,5 +9,5 @@
       "coding authority requires finite original rows and complete source coding fingerprints"
     ]
   },
-  "note": "The source authority is a structurally complete literal (one SCB Registerinformation member's captured record, revision and locators, with placeholder 64-hex fingerprints): the loader checks its shape, never its values, so only the named field is wrong."
+  "note": "The source authority is a structurally complete literal (one SCB Registerinformation member's captured record, with placeholder 64-hex fingerprints): the loader checks its shape, never its values, so only the named field is wrong."
 }

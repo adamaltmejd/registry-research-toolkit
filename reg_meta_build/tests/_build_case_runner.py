@@ -66,6 +66,7 @@ from reg_meta_build.source_coordinates import native_variant_key
 from reg_meta_build.source_curation import (
     acknowledgement_evidence_sha256,
     capture_expectations,
+    toml_inline,
 )
 from reg_meta_build.source_evidence import canonical_sha256, evidence_sha256
 from reg_meta_build.source_naming import authored_naming_id
@@ -261,13 +262,6 @@ class PreparedSet:
     def opened(self):
         return _opened(self.prepared, self.commit, self.digest)
 
-    def revision(self, record: SourceRecord) -> dict:
-        return next(
-            revision.model_dump(mode="json")
-            for revision in self.opened().records.manifest.revisions
-            if revision.revision_id == record.source_revision_id
-        )
-
     def relationship(self, table: str):
         """The one literal relationship declaration delivered in ``table``."""
         (declaration,) = (
@@ -397,24 +391,6 @@ PROSE = ("name", "definition", "description", "operational_definition")
 _PLACEHOLDER = re.compile(r"\{\{\s*([a-z0-9_]+)((?:\s+[a-z_]+=[^\s}]*)*)\s*\}\}")
 
 
-def toml_inline(value) -> str:
-    """A JSON-shaped value as one inline TOML value; ``None`` members are omitted."""
-    if isinstance(value, dict):
-        items = ", ".join(
-            f"{json.dumps(key)} = {toml_inline(item)}"
-            for key, item in value.items()
-            if item is not None
-        )
-        return "{ " + items + " }"
-    if isinstance(value, (list, tuple)):
-        return "[" + ", ".join(toml_inline(item) for item in value) + "]"
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    if isinstance(value, str):
-        return json.dumps(value, ensure_ascii=False)
-    return str(value)
-
-
 def _column(record: SourceRecord) -> str:
     column = record.fields.column_name
     return (column and column.value) or ""
@@ -524,12 +500,6 @@ _DIRECTIVES: dict[str, Callable[[PreparedSet, dict[str, str]], object]] = {
     "period_scope": lambda s, a: _scope(
         _one(s.records(), a), a, "edition_period_scope"
     ),
-    "revision": lambda s, a: s.revision(_one(s.records(), a)),
-    "locators": lambda s, a: [
-        locator.model_dump(mode="json")
-        for record in _select(s.records(), a)
-        for locator in record.locators
-    ],
     "marker_bindings": lambda s, a: _marker_bindings(s, _one(s.records(), a), a),
     "raw_codings": lambda s, a: sorted(set(s.coding_sha256(_select(s.records(), a)))),
     "source_codings": lambda s, a: list(

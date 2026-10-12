@@ -15,6 +15,16 @@
       ]
     },
     {
+      "table": "issues",
+      "where": {
+        "code": "retained_unattached_source_relationship",
+        "subject": {"contains": ["row:"]}
+      },
+      "fields": ["subject"],
+      "rows": [],
+      "note": "The subject names the crosswalk row by its content, never its row number (#1436). Fails if the subject carries the physical record again, so an acknowledgement of it would go stale when the sheet is re-sorted."
+    },
+    {
       "table": "evidence",
       "where": {
         "disposition": ["out_of_slice_relationship", "unbound_relationship", "retained_unattached"]

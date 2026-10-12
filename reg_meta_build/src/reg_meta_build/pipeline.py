@@ -105,7 +105,7 @@ from reg_meta_build.source_value_bindings import open_value_bindings
 from reg_meta_build.sources.swecov_column_types import index_steward_column_storage
 
 from .errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
-from .source_evidence import canonical_sha256
+from .source_evidence import canonical_sha256, evidence_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -916,6 +916,10 @@ def _resolve(
                             )
                         )
                         if relationship is not None and not outside_slice:
+                            # A declaration row's semantic key is its sheet, so its
+                            # own content, not its row number, tells rows apart in a
+                            # subject that survives a re-sort (#1436).
+                            row = f"{declaration.locator.physical_table}:{evidence_sha256(declaration)}"
                             if isinstance(
                                 relationship, RetainedDocumentaryRelationship
                             ):
@@ -923,7 +927,7 @@ def _resolve(
                                 retained_issue = ResolutionDiagnostic(
                                     code="retained_unattached_source_relationship",
                                     severity="warning",
-                                    subject=f"{relationship.register_ref}:{declaration.locator.physical_table}:{declaration.locator.physical_record}",
+                                    subject=f"{relationship.register_ref}:{row}",
                                     detail=relationship.reason,
                                     refs=(
                                         SourceRecordRef(
@@ -950,7 +954,7 @@ def _resolve(
                                         ResolutionDiagnostic(
                                             code="unresolved_documentary_operand",
                                             severity="warning",
-                                            subject=f"{relationship.owner}:{declaration.locator.physical_table}:{declaration.locator.physical_record}:{coordinate}",
+                                            subject=f"{relationship.owner}:{row}:{coordinate}",
                                             detail=f"{unresolved.token!r}: {unresolved.reason} The owner-bound literal is retained without claiming executable or fully bound semantics.",
                                             refs=(
                                                 SourceRecordRef(

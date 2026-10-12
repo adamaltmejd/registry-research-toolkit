@@ -67,10 +67,6 @@ from .source_curation import (
     SourceEnumeration,
     SupportedCodingAssociation,
 )
-from .source_evidence import (  # noqa: TC001 - Pydantic resolves nested authority models at runtime.
-    RecordLocator,
-    SourceRevision,
-)
 from .source_intervals import coding_scope_bounds
 from .source_records import SourceFields, TemporalScope
 from .tags import load_tags
@@ -1699,12 +1695,15 @@ class CodingExtendEntry(_CheckedCodingEntry):
 
 
 class PreparedCodingAuthority(_CurationModel):
-    """Exact original source rows supplying the documented finite meanings."""
+    """Exact original source members supplying the documented finite meanings.
 
-    revision: SourceRevision
+    Pinned by content only: no delivery revision, row number or physical cell, so a
+    re-snapshot or a row re-sort leaves an authority whose members are unchanged
+    fresh (#1436).
+    """
+
     period_block: str | None = Field(default=None, min_length=1)
     source_scope: TemporalScope | None = None
-    locators: list[RecordLocator] = Field(min_length=1)
     records: list[RecordExpectation] = Field(min_length=1)
     codings: list[Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]]
     enumeration: SourceEnumeration | None = None
@@ -1779,9 +1778,9 @@ class PreparedCodingAuthority(_CurationModel):
                 )
         if len({record.ref for record in self.records}) != len(self.records):
             raise ValueError("source authority must name distinct original members")
+        if len({record.ref.source for record in self.records}) != 1:
+            raise ValueError("source authority rows must come from one source")
         for record in self.records:
-            if record.ref.source != self.revision.dataset:
-                raise ValueError("source authority rows must use the declared revision")
             for alternative in record.alternatives:
                 if (
                     {field.name for field in alternative.fields}

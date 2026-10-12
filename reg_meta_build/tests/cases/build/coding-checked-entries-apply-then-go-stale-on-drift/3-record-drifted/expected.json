@@ -14,12 +14,21 @@
           "curation/registers/scb/pdf.toml#/coding.documented/1/period/1",
           "curation/registers/scb/sentinel.toml#/coding.sentinel/1/period/1",
           "curation/registers/scb/substantive.toml#/coding.sentinel/1/period/1",
-          "curation/registers/scb/support.toml#/coding.support/1/period/1"
+          "curation/registers/scb/support.toml#/coding.support/1/period/1",
+          "curation/registers/scb/repeat.toml#/coding.choice/1/period/1",
+          "curation/registers/scb/unlabelled.toml#/coding.extend/1/period/1",
+          "curation/registers/scb/rowskeep.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/labels.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/marker.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/witness.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/dockeep.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/held.toml#/coding.extend/1/period/1"
         ]
       },
       "fields": [
         "case_id"
       ],
+      "note": "repeat, unlabelled, rowskeep, labels, marker, witness, dockeep and held pin source authority over rows this delivery leaves unchanged, while the delivery's revision changes and EXTEND's inserted 2021 row shifts the row numbers of every later register: they stay applied. Fails if `source_authority` pins the delivery revision or physical row locators again (#1436): each of them would go stale.",
       "rows": [
         [
           "curation/registers/scb/choice.toml#/coding.choice/1/period/1"
@@ -37,6 +46,46 @@
           "curation/registers/scb/alpha.toml#/coding.documented/1/period/1"
         ]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "case_id": [
+          "curation/registers/scb/alpha.toml#/coding.documented/1/period/1",
+          "curation/registers/scb/alternatives.toml#/coding.choice/1/period/1",
+          "curation/registers/scb/choice.toml#/coding.choice/1/period/1",
+          "curation/registers/scb/extend.toml#/coding.extend/1/period/1",
+          "curation/registers/scb/rows.toml#/coding.documented/1/period/1"
+        ],
+        "detail": {
+          "contains": [
+            "Current pins: source_authority = { \"records\" = [{ \"ref\" = { \"source\" = \"scb-registerinformation\"",
+            "\"codings\" = ["
+          ]
+        }
+      },
+      "fields": [
+        "case_id"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/alpha.toml#/coding.documented/1/period/1"
+        ],
+        [
+          "curation/registers/scb/alternatives.toml#/coding.choice/1/period/1"
+        ],
+        [
+          "curation/registers/scb/choice.toml#/coding.choice/1/period/1"
+        ],
+        [
+          "curation/registers/scb/extend.toml#/coding.extend/1/period/1"
+        ],
+        [
+          "curation/registers/scb/rows.toml#/coding.documented/1/period/1"
+        ]
+      ],
+      "note": "Each record-drifted authority prints its current pin, the curator's re-pin source (#1436): the build's own records and coding fingerprints as one inline TOML table. Fails if the stale detail stops carrying the current `source_authority`."
     },
     {
       "table": "state_codes",
