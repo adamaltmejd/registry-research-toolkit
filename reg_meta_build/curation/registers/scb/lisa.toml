@@ -1891,11 +1891,11 @@ slug = "utbildningsniva-aggregat-old"
 
 [[variable]]
 native_id = "34.774.utbildningsniva-aggregat-old-sun2000"
-slug = "utbildningsniva-aggregat-old-sun2000"
+slug = "sun2000niva-old"
 
 [[variable]]
 native_id = "34.774.utbildningsniva-aggregat-old-sun2020"
-slug = "utbildningsniva-aggregat-old-sun2020"
+slug = "sun2020niva-old"
 
 # Y-319: qualified SUN2020 grouping detail; the native fallback stays.
 [[variable]]
@@ -2339,11 +2339,11 @@ slug = "examenskommun"
 
 [[variable]]
 native_id = "34.778"
-slug = "utbildningsniva-3-positioner"
+slug = "sun2000niva"
 
 [[variable]]
 native_id = "34.801"
-slug = "utbildningsgrupp-enl-sun-2000"
+slug = "sun2000grp"
 
 [[variable]]
 native_id = "34.1054"
@@ -3153,11 +3153,11 @@ slug = "sysselsattningsstatus-november"
 
 [[variable]]
 native_id = "34.784.sun2000inr"
-slug = "utbildningsinriktning-4-positioner"
+slug = "sun2000inr"
 
 [[variable]]
 native_id = "34.784.sun2020inr"
-slug = "utbildningsinriktning-4-positioner-2"
+slug = "sun2020inr"
 
 # Y-291 2026-09-28: LISA STORE/non-MiDAS and MiDAS source-basis partitions.
 # SCB `lisa-bakgrundsfakta-1990-2017` Bilaga 4 documents STORE as the
