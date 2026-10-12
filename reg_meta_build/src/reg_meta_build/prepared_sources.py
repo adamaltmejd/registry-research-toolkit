@@ -970,6 +970,14 @@ class PreparedSourceRecords:
     _register_cache: dict[str, tuple[tuple[str, int, NativeKey | None], ...]] = field(
         default_factory=dict, init=False, repr=False, compare=False
     )
+    # Every register slice of a source as ordinals, in `iter_register_slices`
+    # order. The store has no (source, register) index, so each slice query scans
+    # and sorts the whole source; compile asks for one register at a time, nearly a
+    # thousand times on the real seed. One scan per source, then primary-key seeks.
+    # Ordinals only, never records: resolve already holds these same ints.
+    _slice_cache: dict[str, tuple[tuple[NativeKey | None, tuple[int, ...]], ...]] = (
+        field(default_factory=dict, init=False, repr=False, compare=False)
+    )
 
     def clear_decoded_records(self) -> None:
         """Release decoded originals after a complete consumer phase.
@@ -1251,70 +1259,75 @@ class PreparedSourceRecords:
         Register labels may differ under one native identity. Include every physical
         row, including parent-only and unknown-variable rows. Unknown registers have
         a separate slice; no source evidence is assigned to a fabricated register.
-        The small temporary relation orders the read without changing accepted data.
-        Given `registers`, no other register is decoded.
+        Slices are read by ordinal from the per-source partition (see
+        `_slice_cache`). Given `registers`, no other register is decoded.
         """
+        wanted = self.register_slice_ordinals(source, registers)
+        if not wanted:
+            return
         with _decoded_database(self.root, self.manifest) as (conn, payload):
-            keys = self._register_partitions(conn, payload, source, registers)
-            rows = conn.execute(
-                "SELECT occurrence.*, register_partition.partition FROM occurrence "
-                "JOIN register_partition USING (provider, register_payload) "
-                "WHERE source=? ORDER BY register_partition.partition, ordinal",
-                (source,),
-            )
-            for partition, members in groupby(rows, key=lambda row: row["partition"]):
-                yield (
-                    keys[partition],
-                    _read_record_batch(
-                        conn,
-                        payload,
-                        tuple(members),
-                        self._record_cache,
-                        "JOIN register_partition USING (provider, register_payload) "
-                        "WHERE occurrence.source=? AND register_partition.partition=?",
-                        (source, partition),
-                        exact_ordinals=True,
-                    ),
-                )
+            for register, ordinals in wanted:
+                yield register, self._read_ordinals(conn, payload, ordinals)
 
     def register_slice_ordinals(
         self, source: str, registers: Collection[NativeKey | None] | None = None
     ) -> tuple[tuple[NativeKey | None, tuple[int, ...]], ...]:
         """The slices `iter_register_slices` yields, in its order, each as its
-        records' ordinals, without decoding a record. `read_ordinals` reads one."""
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
-            keys = self._register_partitions(conn, payload, source, registers)
-            rows = conn.execute(
-                "SELECT register_partition.partition, occurrence.ordinal "
-                "FROM occurrence JOIN register_partition "
-                "USING (provider, register_payload) "
-                "WHERE source=? ORDER BY register_partition.partition, ordinal",
-                (source,),
-            )
-            return tuple(
-                (keys[partition], tuple(row[1] for row in members))
-                for partition, members in groupby(rows, key=lambda row: row[0])
-            )
+        records' ordinals, without decoding a record. `read_ordinals` reads one.
+
+        Slices are partitioned by (provider, register), so one key (notably the
+        unknown register, None) can name more than one slice; the filter keeps
+        each, in the complete source's order."""
+        if source not in self._slice_cache:
+            with _decoded_database(self.root, self.manifest) as (conn, payload):
+                keys = self._register_partitions(conn, payload, source, None)
+                rows = conn.execute(
+                    "SELECT register_partition.partition, occurrence.ordinal "
+                    "FROM occurrence JOIN register_partition "
+                    "USING (provider, register_payload) "
+                    "WHERE source=? ORDER BY register_partition.partition, ordinal",
+                    (source,),
+                )
+                self._slice_cache[source] = tuple(
+                    (keys[partition], tuple(row[1] for row in members))
+                    for partition, members in groupby(rows, key=lambda row: row[0])
+                )
+        return tuple(
+            (register, ordinals)
+            for register, ordinals in self._slice_cache[source]
+            if registers is None or register in registers
+        )
 
     def read_ordinals(self, ordinals: tuple[int, ...]) -> tuple[SourceRecord, ...]:
         """The records at these ordinals, in their order: one slice read on its own
         connection, without scanning the rest of its source."""
         with _decoded_database(self.root, self.manifest) as (conn, payload):
-            conn.execute("CREATE TEMP TABLE wanted (ordinal INTEGER PRIMARY KEY)")
-            conn.executemany(
-                "INSERT INTO wanted VALUES (?)", ((ordinal,) for ordinal in ordinals)
+            return self._read_ordinals(conn, payload, ordinals)
+
+    def _read_ordinals(
+        self,
+        conn: sqlite3.Connection,
+        payload: Callable[[int, str], Any],
+        ordinals: tuple[int, ...],
+    ) -> tuple[SourceRecord, ...]:
+        conn.execute(
+            "CREATE TEMP TABLE IF NOT EXISTS wanted (ordinal INTEGER PRIMARY KEY)"
+        )
+        conn.execute("DELETE FROM wanted")
+        conn.executemany(
+            "INSERT INTO wanted VALUES (?)", ((ordinal,) for ordinal in ordinals)
+        )
+        rows = tuple(
+            conn.execute(
+                "SELECT occurrence.* FROM wanted CROSS JOIN occurrence "
+                "ON occurrence.ordinal=wanted.ordinal ORDER BY wanted.ordinal"
             )
-            rows = tuple(
-                conn.execute(
-                    "SELECT occurrence.* FROM wanted CROSS JOIN occurrence "
-                    "ON occurrence.ordinal=wanted.ordinal ORDER BY wanted.ordinal"
-                )
-            )
-            if len(rows) != len(ordinals):
-                raise PreparedSourceError("prepared occurrence ordinals are missing")
-            return _read_record_batch(
-                conn, payload, rows, self._record_cache, "", (), exact_ordinals=True
-            )
+        )
+        if len(rows) != len(ordinals):
+            raise PreparedSourceError("prepared occurrence ordinals are missing")
+        return _read_record_batch(
+            conn, payload, rows, self._record_cache, "", (), exact_ordinals=True
+        )
 
     def register_coordinates(
         self, source: str
