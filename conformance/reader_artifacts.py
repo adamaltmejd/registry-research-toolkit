@@ -129,14 +129,16 @@ def replicate_filler(case: Path, destination: Path) -> Path:
 
 
 def fixture_source(fixture: str | Path) -> Path:
-    """The readable source directory a fixture name (or path) builds from."""
+    """The readable source directory a fixture name (or path) builds from:
+    `reader`, `reader/<case>` and `fixtures/<case>` under `cases`, any other name
+    under the builder's holdings cases."""
     return (
         fixture
         if isinstance(fixture, Path)
         else CASES / "reader/fixture"
         if fixture == "reader"
         else CASES / fixture
-        if fixture.startswith("reader/")
+        if fixture.startswith(("reader/", "fixtures/"))
         else BUILDER_CASES / fixture
     )
 

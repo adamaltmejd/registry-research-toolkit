@@ -1,0 +1,172 @@
+{
+  "variable_groups": [
+    {
+      "register": "scb/rams",
+      "key": "ink",
+      "label": "Inkomst",
+      "source": "token",
+      "axes": [
+        {
+          "axis": "month",
+          "ordinal": 0,
+          "label": "månad"
+        }
+      ],
+      "members": [
+        {
+          "variable": "scb/rams/inkjan",
+          "facets": [
+            {
+              "axis": "month",
+              "value": "01",
+              "label": "januari"
+            }
+          ]
+        },
+        {
+          "variable": "scb/rams/inkfeb",
+          "facets": [
+            {
+              "axis": "month",
+              "value": "02",
+              "label": "februari"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "register": "scb/lisa",
+      "key": "lonefink-rep",
+      "label": "Lönefink månadsfamilj",
+      "source": "curated",
+      "axes": [
+        {
+          "axis": "month",
+          "ordinal": 0,
+          "label": "månad"
+        }
+      ],
+      "members": [
+        {
+          "variable": "scb/lisa/lonfink",
+          "delivery_column_name": "LonFinkJan",
+          "facets": [
+            {
+              "axis": "month",
+              "value": "01",
+              "label": "januari"
+            }
+          ]
+        },
+        {
+          "variable": "scb/lisa/lonfink",
+          "delivery_column_name": "LonFinkFeb",
+          "facets": [
+            {
+              "axis": "month",
+              "value": "02",
+              "label": "februari"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "classification_groups": [
+    {
+      "key": "sun",
+      "label": "Svensk utbildningsnomenklatur",
+      "source": "curated",
+      "members": [
+        {
+          "classification": "sun2020",
+          "facet_value": "niva",
+          "facet_label": "Utbildningsnivå"
+        },
+        {
+          "classification": "niva-test",
+          "facet_value": "aggregat",
+          "facet_label": "Aggregat"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "slug": "income",
+      "label": "Income & earnings",
+      "members": [
+        {
+          "target": "scb/lisa/kon",
+          "rank": 0,
+          "starred": true,
+          "note": "fixture recommendation"
+        },
+        {
+          "target": "scb/lisa",
+          "rank": 1,
+          "starred": false
+        }
+      ]
+    },
+    {
+      "slug": "employment",
+      "label": "Employment",
+      "members": [
+        {
+          "target": "scb/rams",
+          "rank": 0,
+          "starred": false
+        }
+      ]
+    }
+  ],
+  "variable_same_as": [
+    {
+      "a": "scb/lisa/kon",
+      "b": "scb/rams/syss"
+    }
+  ],
+  "successions": [
+    {
+      "predecessor": "scb/lisa/kon",
+      "successor": "scb/rams/syss",
+      "effective_year": 2019,
+      "description": "kon→syss"
+    }
+  ],
+  "state_lineage": [
+    {
+      "consumer": {
+        "variable": "scb/lisa/kon",
+        "variant": "individer-15plus",
+        "delivery_column_name": "Kon",
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31"
+      },
+      "source": {
+        "variable": "scb/rams/syss",
+        "variant": "standard",
+        "delivery_column_name": "Syss",
+        "valid_from": "1990-01-01",
+        "valid_to": "9999-12-31"
+      },
+      "valid_from": "2018-01-01",
+      "valid_to": "9999-12-31"
+    }
+  ],
+  "lineage_warnings": [
+    {
+      "consumer": {
+        "variable": "scb/lisa/lan",
+        "variant": "individer-15plus",
+        "delivery_column_name": "Lan",
+        "valid_from": "1968-01-01",
+        "valid_to": "1968-12-31"
+      },
+      "kind": "no_source_state",
+      "message": "no source state for 1968"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "slug": "sun1996",
+    "short_name": "SUN1996",
+    "name": "Svensk utbildningsnomenklatur",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Förgymnasial utbildning"
+      }
+    ]
+  },
+  {
+    "slug": "sun2000",
+    "short_name": "SUN2000",
+    "name": "Svensk utbildningsnomenklatur",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Förgymnasial utbildning"
+      }
+    ]
+  },
+  {
+    "slug": "sun2020",
+    "short_name": "SUN2020",
+    "name": "Svensk utbildningsnomenklatur",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Förgymnasial utbildning"
+      },
+      {
+        "code": "2",
+        "label": "Gymnasial utbildning"
+      }
+    ]
+  },
+  {
+    "slug": "niva-test",
+    "short_name": "NIVA",
+    "name": "Utbildningsnivå – aggregat",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Låg"
+      },
+      {
+        "code": "2",
+        "label": "Hög"
+      }
+    ]
+  }
+]

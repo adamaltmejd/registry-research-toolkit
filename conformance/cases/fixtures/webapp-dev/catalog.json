@@ -1,0 +1,732 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "kon",
+    "provider_key": "44",
+    "name": "Kön",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Kon",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "1",
+              "Man"
+            ],
+            [
+              "2",
+              "Kvinna"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "forsamling",
+    "provider_key": "960",
+    "name": "Församling",
+    "definition": null,
+    "description": null,
+    "operational_definition": "Parish of registration at year end.",
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "1952-01-01",
+        "valid_to": "1990-12-31",
+        "delivery_column_name": "Forsamling",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "9001",
+              "Församling 1"
+            ],
+            [
+              "9002",
+              "Församling 2"
+            ],
+            [
+              "9003",
+              "Församling 3"
+            ]
+          ]
+        },
+        "value_set_version_label": "Församling historisk"
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "1991-01-01",
+        "valid_to": "2005-12-31",
+        "delivery_column_name": "Forsamling",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "9101",
+              "Socken 1"
+            ],
+            [
+              "9102",
+              "Socken 2"
+            ],
+            [
+              "9103",
+              "Socken 3"
+            ]
+          ]
+        },
+        "value_set_version_label": "Församling 1991"
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "2006-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "Forsamling",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "9201",
+              "Distrikt 1"
+            ],
+            [
+              "9202",
+              "Distrikt 2"
+            ],
+            [
+              "9203",
+              "Distrikt 3"
+            ]
+          ]
+        },
+        "value_set_version_label": "Församling 2006"
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "2020-01-01",
+        "valid_to": "2023-12-31",
+        "delivery_column_name": "Forsamling",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "9301",
+              "Distrikt 1"
+            ],
+            [
+              "9302",
+              "Distrikt 2"
+            ],
+            [
+              "9303",
+              "Distrikt 3"
+            ]
+          ]
+        },
+        "value_set_version_label": "Församling 2020"
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "lonfink",
+    "provider_key": "950",
+    "name": "Lön per månad",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2018-12-31",
+        "delivery_column_name": "LonFinkJan",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ],
+    "aliases": [
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "delivery_column_name": "LonFinkJan",
+        "windows": [
+          {
+            "valid_from": "2018-01-01",
+            "valid_to": "2018-01-31"
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "delivery_column_name": "LonFinkFeb",
+        "windows": [
+          {
+            "valid_from": "2018-02-01",
+            "valid_to": "2018-02-28"
+          }
+        ]
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "delivery_column_name": "LonFinkMars",
+        "windows": [
+          {
+            "valid_from": "2018-03-01",
+            "valid_to": "2018-03-31"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "lan",
+    "provider_key": "980",
+    "name": "Län",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "1968-01-01",
+        "valid_to": "1968-12-31",
+        "delivery_column_name": "Lan",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "1995-01-01",
+        "valid_to": "1996-12-31",
+        "delivery_column_name": "Lan",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "1998-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Lan",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "lisa",
+      "name": "LISA"
+    },
+    "slug": "forvink-ers",
+    "provider_key": "990",
+    "name": "Förvärvsinkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "1968-01-01",
+        "valid_to": "1999-12-31",
+        "delivery_column_name": "ForvErs",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "individer-15plus",
+          "name": "Individer 15+"
+        },
+        "valid_from": "2000-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "ForvErsNy",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "syss",
+    "provider_key": "77",
+    "name": "Sysselsättning",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "standard",
+          "name": "Std",
+          "panel_entity_key": [
+            "foretag",
+            "arbetsstalle"
+          ],
+          "panel_time_key": "period",
+          "panel_time_grain": "delivery"
+        },
+        "valid_from": "1990-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Syss",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null,
+        "value_set": {
+          "members": [
+            [
+              "0",
+              "Ej sysselsatt"
+            ],
+            [
+              "1",
+              "Sysselsatt"
+            ]
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "syss-kv",
+    "provider_key": "78",
+    "name": "Sysselsättning kvartal",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "quarterly",
+          "name": "Qtr",
+          "panel_entity_key": "peorgnr",
+          "panel_time_key": [
+            "ar",
+            "kvartal"
+          ],
+          "panel_time_grain": "row"
+        },
+        "valid_from": "2005-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "SyssKv",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "inkjan",
+    "provider_key": "900",
+    "name": "Inkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "standard",
+          "name": "Std",
+          "panel_entity_key": [
+            "foretag",
+            "arbetsstalle"
+          ],
+          "panel_time_key": "period",
+          "panel_time_grain": "delivery"
+        },
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "InkJan",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "inkfeb",
+    "provider_key": "901",
+    "name": "Inkomst",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "standard",
+          "name": "Std",
+          "panel_entity_key": [
+            "foretag",
+            "arbetsstalle"
+          ],
+          "panel_time_key": "period",
+          "panel_time_grain": "delivery"
+        },
+        "valid_from": "2019-01-01",
+        "valid_to": "2019-12-31",
+        "delivery_column_name": "InkFeb",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "foretag",
+    "provider_key": "70",
+    "name": "Företag",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": true,
+    "states": [
+      {
+        "variant": {
+          "slug": "standard",
+          "name": "Std",
+          "panel_entity_key": [
+            "foretag",
+            "arbetsstalle"
+          ],
+          "panel_time_key": "period",
+          "panel_time_grain": "delivery"
+        },
+        "valid_from": "1990-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Foretag",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "arbetsstalle",
+    "provider_key": "71",
+    "name": "Arbetsställe",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": true,
+    "states": [
+      {
+        "variant": {
+          "slug": "standard",
+          "name": "Std",
+          "panel_entity_key": [
+            "foretag",
+            "arbetsstalle"
+          ],
+          "panel_time_key": "period",
+          "panel_time_grain": "delivery"
+        },
+        "valid_from": "1990-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Arbetsstalle",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "peorgnr",
+    "provider_key": "72",
+    "name": "Organisationsnummer",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": true,
+    "states": [
+      {
+        "variant": {
+          "slug": "quarterly",
+          "name": "Qtr",
+          "panel_entity_key": "peorgnr",
+          "panel_time_key": [
+            "ar",
+            "kvartal"
+          ],
+          "panel_time_grain": "row"
+        },
+        "valid_from": "1990-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "PeOrgNr",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "ar",
+    "provider_key": "73",
+    "name": "År",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "quarterly",
+          "name": "Qtr",
+          "panel_entity_key": "peorgnr",
+          "panel_time_key": [
+            "ar",
+            "kvartal"
+          ],
+          "panel_time_grain": "row"
+        },
+        "valid_from": "1990-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Ar",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "rams",
+      "name": "RAMS"
+    },
+    "slug": "kvartal",
+    "provider_key": "74",
+    "name": "Kvartal",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "quarterly",
+          "name": "Qtr",
+          "panel_entity_key": "peorgnr",
+          "panel_time_key": [
+            "ar",
+            "kvartal"
+          ],
+          "panel_time_grain": "row"
+        },
+        "valid_from": "1990-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "Kvartal",
+        "data_type": "char",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "fk",
+      "slug": "midas",
+      "name": "MiDAS"
+    },
+    "slug": "sjukpenningdagar",
+    "provider_key": "88",
+    "name": "Sjukpenningdagar",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "standard",
+          "name": "Standard"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "9999-12-31",
+        "delivery_column_name": "SjukpenningDagar",
+        "data_type": "integer",
+        "data_length": null,
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  }
+]
