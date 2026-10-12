@@ -467,8 +467,8 @@ def documented_period_block(
                 or window.start is None
             ):
                 return None
-            current_scope, issue = _member_scope(
-                claims[0].scope,
+            current_scope, issue, _ = _member_scope(
+                coding_scope_bounds(claims[0].scope),
                 window,
                 None,
                 (),
