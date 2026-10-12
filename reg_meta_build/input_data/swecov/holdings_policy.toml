@@ -22,6 +22,10 @@ table = "Hreg_H_omr"
 reason = "Education code/name reference lookup; no observation holdings."
 
 [[exclude]]
+table = "Hreg_H_hsk_2023"
+reason = "Higher-education institution code/name reference lookup; no observation holdings."
+
+[[exclude]]
 table = "klartext_utbildning"
 reason = "Education code/name reference lookup; no observation holdings."
 
