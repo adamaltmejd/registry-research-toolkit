@@ -1,0 +1,25 @@
+{
+  "note": "The documented VALUE 2022 occurrence supplies identity for omitted VALUE 2020. OTHER supplies the 2020 edition. The warning is curator annotation; the evidence pin covers only the documented source row.",
+  "fails_if": "Delivered annotations are rejected or dropped, or their warning spreads to the documented edition or another column.",
+  "sources": {
+    "description": "VALUE documented in 2022; OTHER documents the edition receiving the 2020 addition.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE",
+          "year": "2022",
+          "regver_id": 2022
+        },
+        {
+          "cvid": 1002,
+          "var_id": 102,
+          "colname": "OTHER",
+          "year": "2020",
+          "regver_id": 2020
+        }
+      ]
+    }
+  }
+}

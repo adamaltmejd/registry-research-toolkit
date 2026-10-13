@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101"
+slug = "value"
+[[variable]]
+native_id = "1.102"
+slug = "other"
+
+[[errata.delivered]]
+variant = "people"
+column = "VALUE"
+versions = ["2020"]
+data_warning = "Historical definitions are not documented as identical."
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:1001}}
+evidence = "Reviewed historical delivery"
+noted = "2026-10-13"

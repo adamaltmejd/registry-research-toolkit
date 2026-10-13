@@ -34,7 +34,6 @@ from .curation_tree import (
     CodingWarningEntry,
     EnrichmentAliasEntry,
     EnrichmentDescriptionEntry,
-    ErrataColumnEntry,
     ErrataDataTypeEntry,
     ErrataDeliveredEntry,
     ErrataFieldEntry,
@@ -6388,13 +6387,15 @@ def compile_errata(
                     )
                     continue
                 assert isinstance(converted.decision, OccurrenceCorrectionDecision)
-                if isinstance(row, ErrataColumnEntry) and row.data_warning is not None:
+                if row.data_warning is not None:
                     converted = converted.model_copy(
                         update={
                             "decision": converted.decision.model_copy(
                                 update={
                                     "data_warning": row.data_warning,
-                                    "data_warning_fields": ("data_type",),
+                                    "data_warning_fields": ("definition",)
+                                    if isinstance(row, ErrataDeliveredEntry)
+                                    else ("data_type",),
                                 }
                             )
                         }
