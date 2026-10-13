@@ -5621,7 +5621,7 @@ native_variable_id = 4963
 [[errata.delivered]]
 variant = "individer-15plus"
 column = "CfarNr_LISA"
-data_type = "integer"
+data_type = "text"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
 expected_evidence_sha256 = "45deb98c1048481868a538ab1aa0e0991cf20c71f0b5612b19fc83984385a1bc"
 evidence = "Positive exact-named LISA documentary identity, holdings2010–15 and actual post2016 same-native LISA column establish exactphysical role. Preserve source-role owner scb/lisa/cfar-nummer-2; no generic PeOrg/Cfar sibling merge or copied storage metadata. PrefixP1105 is existing inventory pseudonym representation, not identity inference. Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
@@ -5632,7 +5632,7 @@ native_variable_id = 14
 [[errata.delivered]]
 variant = "individer-15plus"
 column = "PeOrgNr_LISA"
-data_type = "integer"
+data_type = "text"
 versions = ["2010", "2011", "2012", "2013", "2014", "2015"]
 expected_evidence_sha256 = "ceaafc106ecf8fca843699aec4a6354624f18ca02bdb9cf9938b69e498906e5d"
 evidence = "Positive exact-named LISA documentary identity, holdings2010–15 and actual post2016 same-native LISA column establish exactphysical role. Preserve source-role owner scb/lisa/person-orgnr-2; no generic PeOrg/Cfar sibling merge or copied storage metadata. PrefixP1105 is existing inventory pseudonym representation, not identity inference. Exact accepted SWECOV physical holdings; full prepared source native family and literal documentary role reviewed2026-10-01. Preserve all existing source deliveries. No source-code/type/width/operation/flag borrowing. Accepted inventory exact mapping and complete headers: Holdings54-exact-table-storage-prefix-ownership.json; storage artifact SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295. Explicit storage_column names only its own physical header."
@@ -6200,3 +6200,66 @@ noted = "2026-10-12"
 [[variable]]
 native_id = "34.AldPens_INKLGP"
 slug = "aldpens-inklgp"
+
+# SCB documents these LISA Individ columns on individer-15plus only, but delivers
+# them on individer-16plus 1990-2009 (#1516, maintainer-decided 2026-10-13).
+
+[[errata.delivered]]
+variant = "individer-16plus"
+donor_variant = "individer-15plus"
+column = "CfarNr_LISA"
+data_type = "text"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+expected_evidence_sha256 = "528554c6edf175e897fa45ad6628a869aa2937f3f281895a7256387d9d645472"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 41 (P1105_LopNr_CfarNr_LISA, 1990-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 149 (CfarNr_LISA, 1990-2021)."
+noted = "2026-10-13"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 14
+
+[[errata.delivered]]
+variant = "individer-16plus"
+donor_variant = "individer-15plus"
+column = "PeOrgNr_LISA"
+data_type = "text"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+expected_evidence_sha256 = "1a6c03ee5734d2ff99405088fa0e3a9aee7d6b78970b9d4755344e9439a724c9"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 40 (P1105_LopNr_PeOrgNr_LISA, 1990-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 147 (PeOrgNr_LISA, 1990-2021)."
+noted = "2026-10-13"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 56
+
+[[errata.delivered]]
+variant = "individer-16plus"
+donor_variant = "individer-15plus"
+column = "SjukP_Bdag_MiDAS"
+data_type = "integer"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+expected_evidence_sha256 = "4d0fd5f91c3b502ac650704ab0a948c49f7d459f67e90ffb81c6cd5c8656c3a5"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 111 (SjukP_Bdag_MiDAS, 1994-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 491 (1994-2021, FK)."
+noted = "2026-10-13"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 31532
+
+[[errata.delivered]]
+variant = "individer-16plus"
+donor_variant = "individer-15plus"
+column = "SjukP_Ndag_MiDAS"
+data_type = "decimal"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+expected_evidence_sha256 = "a8adc1af36942227d2d7a027ede8d854ebe308b243e8a42eecb0058264a1dc68"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 112 (SjukP_Ndag_MiDAS, 1994-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 492 (1994-2021, FK)."
+noted = "2026-10-13"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 31533
+
+[[errata.delivered]]
+variant = "individer-16plus"
+donor_variant = "individer-15plus"
+column = "SjukP_Belopp_MiDAS"
+data_type = "integer"
+versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
+expected_evidence_sha256 = "8f983bea6ca7f5e662ea19170e2af77823c0f0c9a3d299b9aef80925af018d56"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, LISA individ row 113 (SjukP_Belopp_MiDAS, 1994-2020, Individ_ÅÅÅÅ); LISA samtliga variabler.xlsx, Individ row 493 (1994-2021, FK)."
+noted = "2026-10-13"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 31534

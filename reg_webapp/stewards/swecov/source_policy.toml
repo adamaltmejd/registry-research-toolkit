@@ -193,7 +193,7 @@ target = "scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"
 category = "Firms"
 detail = "Företagens ekonomi"
 status = "mapped"
-note = "weak column grounding (18%); SWECOV FE extract is heavily derived — most columns to flavor graft"
+note = "every FE table (FE1990-FE2023) is FEK fek-slutdata; FE1990-FE2002 via fek.toml errata (maintainer D6, OP-2026-10-13-E)"
 target = "scb/fek/fek-slutdata"
 
 [[route]]
