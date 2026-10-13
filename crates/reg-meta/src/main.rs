@@ -15,7 +15,8 @@
 //! the edge token in `REG_META_EDGE_TOKEN` (`limit.rs`): `--write-limit` tokens
 //! (default 60), refilled one a second. `--mmap-size` sets each SQLite connection's
 //! `PRAGMA mmap_size` (default 2 GiB, `reg_catalog::DEFAULT_MMAP_SIZE`; 0 disables
-//! memory-mapping). `mcp` serves the MCP
+//! memory-mapping). Once bound, `serve` prints `listening on ADDR:PORT` on stderr,
+//! the port the kernel chose under `--port 0`. `mcp` serves the MCP
 //! tools over stdio. A refusal prints the error document on stderr and exits with the
 //! code's status.
 
@@ -245,6 +246,13 @@ async fn serve(
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("bind the port");
+    // One stable line naming the bound address, so `--port 0` is usable: the
+    // conformance harness will start servers that way and read this line once the
+    // G1 pinned baseline binary prints it (#1529).
+    eprintln!(
+        "listening on {}",
+        listener.local_addr().expect("the bound address")
+    );
     // The peer address keys the write rate limit of a request not proven to come
     // through the edge.
     axum::serve(
