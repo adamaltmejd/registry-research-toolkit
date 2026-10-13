@@ -251,28 +251,12 @@ native_id = "168.4027.ngs-styr"
 slug = "ngs-styr"  # source: kolumnnamn
 
 [[variable]]
-native_id = "168.AretsResultat"
-slug = "aretsresultat"  # source: kolumnnamn
-
-[[variable]]
 native_id = "168.ImputeradeForetag"
 slug = "imputeradeforetag"  # source: kolumnnamn
 
 [[variable]]
-native_id = "168.ResultatEfterFinansiellaPoster"
-slug = "resultatefterfinansiellaposter"  # source: kolumnnamn
-
-[[variable]]
 native_id = "168.Stg"
 slug = "stg"  # source: kolumnnamn
-
-[[variable]]
-native_id = "168.SummaAnlTillg"
-slug = "summaanltillg"  # source: kolumnnamn
-
-[[variable]]
-native_id = "168.SummaEgetKapitalOchSkulder"
-slug = "summaegetkapitalochskulder"  # source: kolumnnamn
 
 [[variable]]
 native_id = "168.SummaFinansiellaTillg"
