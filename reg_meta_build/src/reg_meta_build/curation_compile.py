@@ -3904,6 +3904,10 @@ def compile_scb_preliminary(
     ):
         if scope.register_key is None:
             records = prepared.records.iter_records(source=scope.source)
+        elif scope.register_key[1] != "scb":
+            # A register key names its provider, and every record in its slice has
+            # that provider, so the SCB-only loop below would skip each one unread.
+            continue
         else:
             records = (
                 record
@@ -5532,6 +5536,10 @@ def compile_occurrence_corrections(
     diagnostics = []
     report: dict[str, dict[str, list[str]]] = {}
     locations: dict[str, list[Any]] = defaultdict(list)
+    # Each errata entry re-captures its whole native family (targets plus
+    # support), usually with the same guarded fields; reuse the projections for
+    # this stage only.
+    projections: dict[Any, Any] = {}
     for scope in scopes:
         for name, key in _scope_registers(scope):
             locations[name].append((scope, key))
@@ -5631,6 +5639,7 @@ def compile_occurrence_corrections(
                             authority_records,
                             fields=tuple(SourceFields.model_fields),
                             parents=True,
+                            projections=projections,
                         )
                         and entry.expected_evidence_sha256
                         == acknowledgement_evidence_sha256(family)
@@ -5858,6 +5867,7 @@ def compile_occurrence_corrections(
                             ),
                             fields=entry_guarded_fields,
                             parents=True,
+                            projections=projections,
                         ),
                         support=capture_expectations(
                             tuple(
@@ -5879,6 +5889,7 @@ def compile_occurrence_corrections(
                                     or entry.authority_records is not None
                                 )
                             ),
+                            projections=projections,
                         )
                         + (
                             tuple(entry.authority)
