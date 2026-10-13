@@ -31,11 +31,11 @@ noted = "2026-10-13"
 variant = "people"
 column = "WIDE"
 name = "WIDE"
-definition = "Curated decimal over integer storage"
+definition = "Documented decimal over integer storage"
 versions = ["2020"]
 data_type = "decimal"
-source = "steward-holdings"
-evidence = "held"
+source = "scb-docs"
+evidence = "documented"
 noted = "2026-10-13"
 
 [[errata.column]]
@@ -66,6 +66,17 @@ versions = ["2020"]
 data_type = "integer"
 source = "steward-holdings"
 evidence = "held"
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "people"
+column = "DOCONLY"
+name = "DOCONLY"
+definition = "Documented text SWECOV storage does not hold"
+versions = ["2020"]
+data_type = "text"
+source = "scb-docs"
+evidence = "documented"
 noted = "2026-10-13"
 
 [[errata.delivered]]

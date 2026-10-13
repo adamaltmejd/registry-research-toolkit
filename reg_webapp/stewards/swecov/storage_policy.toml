@@ -34,7 +34,7 @@ table_prefixes = ["Grund_Fkl_Fth_"]
 table_prefixes = ["GymnasieskolaAvg_Individ_", "GymnasieskolaAvg_Kurs_"]
 
 [register."scb/hreg"]
-table_prefixes = ["Hreg_Examina", "Hreg_Reg"]
+table_prefixes = ["Hreg_Examina", "Hreg_Reg", "Hreg_Sok"]
 
 [register."scb/innovation-foretag"]
 table_prefixes = ["CIS"]
@@ -48,11 +48,19 @@ table_prefixes = ["IVP_"]
 [register."scb/konkurser"]
 table_prefixes = ["Konkurs_"]
 
+# Stored as the P1105 löpnummer header.
+[register."scb/konkurser".storage_columns]
+PersonNr_opnr = "P1105_LopNr_PersonNr_opnr"
+
 [register."scb/ksju"]
 table_prefixes = ["KSju_"]
 
 [register."scb/lararreg"]
 table_prefixes = ["LReg_"]
+
+# Stored as the P1105 löpnummer header.
+[register."scb/lararreg".storage_columns]
+RoKod = "P1105_LopNr_RoKod"
 
 [register."scb/lisa"]
 table_prefixes = [
@@ -71,7 +79,7 @@ CfarNr_LISA = "P1105_LopNr_CfarNr_LISA"
 PeOrgNr_LISA = "P1105_LopNr_PeOrgNr_LISA"
 
 [register."scb/rtb"]
-table_prefixes = ["RTB_SaBo_InrFlyttFlode", "Doda_20241231"]
+table_prefixes = ["RTB_SaBo_InrFlyttFlode", "Doda_20241231", "Fodelseuppg_"]
 
 [register."scb/utrikeshandel"]
 table_prefixes = ["UHV_"]

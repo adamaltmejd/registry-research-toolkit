@@ -23,14 +23,17 @@ _REPO = Path(__file__).resolve().parents[2]
 
 def test_storage_check_reports_each_disagreement_kind(tmp_path: Path) -> None:
     """Pins the worklist: HELD is an uncurated steward holding, MIXED a curated
-    integer with a text storage wave, WIDE a curated decimal over integer storage,
-    and Guid (folded onto storage GUID) a storage type outside the catalog
-    vocabulary. ELSEWHERE is stored only under a table outside the register's
-    prefixes, so it is unmatched. AGREES matches its storage, and Renamed matches
-    the PHYS header the policy's storage_columns names, so neither is a finding.
-    Fails if the check drops a kind, stops folding the column, ignores the policy
-    prefixes or header mapping, skips an unmatched entry silently, or reports an
-    agreeing type."""
+    integer with a text storage wave, WIDE a documented (scb-docs) decimal over
+    integer storage, and Guid (folded onto storage GUID) a storage type outside
+    the catalog vocabulary. ELSEWHERE, a steward holding, is stored only under a
+    table outside the register's prefixes, so it is unmatched; DOCONLY, a
+    documented column storage does not hold, is no finding. AGREES matches its
+    storage, and Renamed matches the PHYS header the policy's storage_columns
+    names, so neither is a finding. Fails if the check drops a kind, stops
+    folding the column, ignores the policy prefixes or header mapping, skips an
+    unmatched steward-held column silently, stops comparing a documented type that
+    storage holds, reports a documented column absent from storage, or reports
+    an agreeing type."""
     findings = storage_type_findings(
         load_register_files(_CASE / "curation"),
         load_storage_policy(_CASE / "storage_policy.toml"),

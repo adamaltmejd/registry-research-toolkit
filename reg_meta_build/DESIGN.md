@@ -219,8 +219,9 @@ Authority depends on the fact and scope, rather than a universal file ordering:
   storage-table prefixes (folded column names join waves; the policy's `storage_columns`
   names the physical header where storage spells a column differently) and writes
   `derived/storage_type_findings.tsv`. Disagreeing storage, uncurated steward holdings
-  and curated entries that match no storage column print a warning in the refresh
-  summary; curation, not the check, decides what changes. Storage metadata never
+  and steward holdings or typed delivered columns that match no storage column print a
+  warning in the refresh summary; a documented column SWECOV does not hold is no
+  finding. Curation, not the check, decides what changes. Storage metadata never
   establishes per-year availability or row content.
 - Agents can investigate official handbooks separately and author structured curation
   with document/page references. Neither preparation nor a build extracts or interprets

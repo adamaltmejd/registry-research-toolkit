@@ -146,10 +146,11 @@ class StorageFinding:
     SQL type outside the catalog vocabulary). ``narrower``: storage is strictly
     narrower than the curated type, which documented Datatyp can legitimately
     widen. ``uncurated``: a steward-holdings column with no curated type that
-    storage could type. ``unmatched``: a curated type or steward holding whose
-    column the register's storage tables do not hold, so nothing checked it (a
-    misspelt header, a missing ``storage_columns`` mapping or a table outside the
-    prefixes).
+    storage could type. ``unmatched``: a steward holding or typed
+    ``errata.delivered`` column the register's storage tables do not hold, so
+    nothing checked it (a misspelt header, a missing ``storage_columns`` mapping
+    or a table outside the prefixes). A documented (``scb-docs``) type is
+    compared only where storage holds its column.
     """
 
     kind: FindingKind
@@ -199,7 +200,9 @@ def storage_type_findings(
                 f"{register.source_file}#/errata.delivered/{index}",
                 entry.column,
                 entry.data_type,
-                False,
+                # A typed delivered erratum is an additional physical column
+                # typed from steward storage, so storage must hold it.
+                True,
             )
             for index, entry in enumerate(register.errata.delivered, 1)
             if entry.data_type is not None
@@ -211,9 +214,14 @@ def storage_type_findings(
             tables = by_column.get(headers.get(folded, folded))
             kind: FindingKind | None
             if not tables:
-                findings.append(
-                    StorageFinding("unmatched", name, location, column, data_type, "")
-                )
+                # Only a steward-held column is expected in storage; a column
+                # SCB documents need not be one SWECOV holds.
+                if holding:
+                    findings.append(
+                        StorageFinding(
+                            "unmatched", name, location, column, data_type, ""
+                        )
+                    )
                 continue
             classes = {data_type_class(kind) for kind in tables.values()}
             if data_type is None:
