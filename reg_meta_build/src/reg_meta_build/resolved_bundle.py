@@ -219,9 +219,11 @@ class _SortedSet:
 
 
 class _Pickler(pickle.Pickler):
-    """Writes one frame whose bytes depend only on its content (#1542).
+    """Writes one frame whose bytes are the same in any process (#1542).
 
-    The memo is keyed by object identity, so a plain pickle of equal content
+    Not a canonical form over equal values: model and container sharing, a
+    model's set fields and dict order are written as built, which the pipeline
+    does deterministically. The memo is keyed by object identity, so a plain pickle of equal content
     differs by which equal strings are one object (pydantic-core's JSON string
     cache decides that per process) and by the order of each model's
     `__pydantic_fields_set__`. The pickler never offers a `str` or a `set` to a

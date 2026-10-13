@@ -78,12 +78,14 @@ the DDL, derive or validation can skip resolution. The bundle holds:
   would dominate the bundle;
 - `events.jsonl.gz`, a copy of the resolve ledger member.
 
-The payload bytes are a function of the resolution's content, in any process (#1542). A
-plain pickle is not: its memo is keyed by object identity, so it records which equal
-strings happen to be one object (pydantic-core's JSON string cache decides that per
-process), and it writes each model's `__pydantic_fields_set__` in the set's iteration
-order, which follows the string hash seed. The bundle's pickler therefore writes every
-string as one copy of its own per value in the frame, and every set as
+The same inputs and code write the same payload bytes in any process (#1542). The bytes
+are not canonical over equal values: object sharing, which fields a model was given and
+dict order are written as the pipeline built them, which is deterministic. What a plain
+pickle adds per process is removed: its memo is keyed by object identity, so it records
+which equal strings happen to be one object (pydantic-core's JSON string cache decides
+that per process), and it writes each model's `__pydantic_fields_set__` in the set's
+iteration order, which follows the string hash seed. The bundle's pickler therefore
+writes every string as one copy of its own per value in the frame, and every set as
 `set(sorted names)`. The copy is its own because a class's module and name are memoized
 strings too: a data string that is the very same object (an interned identifier) would
 otherwise be written as a reference to them. The pickler offers no hook for a `str` or a
