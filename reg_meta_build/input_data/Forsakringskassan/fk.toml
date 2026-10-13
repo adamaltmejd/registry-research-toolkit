@@ -3728,6 +3728,16 @@ is_identifier = true
 is_sensitive = true
 variants = ["utbetalningar-barn", "beslut", "utbetalningar-manad", "beslut-bidragsskyldig", "inbetalningar"]
 
+# SWECOV's FK_UHS_lev4 delivery of utbetalningar-barn also carries the payment month
+# (Bilaga 1 Variabellista: "Utbetalningsmånad"), which MiDAS's product sheet does not
+# list (#1302).
+[[register.variable]]
+name = "Utbetalningsmånad"
+column = "Utbetalningsmanad"
+definition = "Månad som utbetalningen avser."
+data_type = "text"  # DERIVED definition; no published FK field definition
+variants = ["utbetalningar-barn"]
+
 [[register.variable]]
 name = "ARENDE_STATUS"
 column = "ARENDE_STATUS"
