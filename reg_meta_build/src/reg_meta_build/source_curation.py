@@ -1971,10 +1971,16 @@ def capture_expectations(
             grouped[record_ref(record)][_model_token(hit[1])] = hit[1]
             continue
         projection = RecordProjection(
+            # Unvalidated: each pair comes from the record's SourceFields, whose
+            # validators already checked it at preparation (the store is digest-
+            # pinned), and an unknown name fails at getattr. The keyword sets match
+            # the validating calls, so fields_set, equality and dumps are unchanged.
             fields=tuple(
-                FieldExpectation(name=name, status="absent")
+                FieldExpectation.model_construct(name=name, status="absent")
                 if field is None
-                else FieldExpectation(name=name, status=field.status, value=field.value)
+                else FieldExpectation.model_construct(
+                    name=name, status=field.status, value=field.value
+                )
                 for name in fields
                 for field in (getattr(record.fields, name),)
             ),
