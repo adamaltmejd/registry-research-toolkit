@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "lisa"
 native_id = "34"
-steward_table_prefixes = ["Ftg_2022", "Individ_2010", "Individ_2011", "Individ_2012", "Individ_2013", "Individ_2014", "Individ_2015"]
 
 # ══ LISA doc coverage (Y-116, was input_data/scb_canonical/lisa_canonical.toml) ══
 # Columns documented in SCB's own doc library (lisa-bakgrundsfakta-1990-2017) but
@@ -5627,7 +5626,6 @@ evidence = "Positive exact-named LISA documentary identity, holdings2010–15 an
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 14
-storage_column = "P1105_LopNr_CfarNr_LISA"
 
 [[errata.delivered]]
 variant = "individer-15plus"
@@ -5638,7 +5636,6 @@ evidence = "Positive exact-named LISA documentary identity, holdings2010–15 an
 noted = "2026-10-01"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 56
-storage_column = "P1105_LopNr_PeOrgNr_LISA"
 
 [[errata.delivered]]
 variant = "individer-15plus"

@@ -1,0 +1,78 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+
+[[errata.column]]
+variant = "people"
+column = "HELD"
+name = "HELD"
+definition = "Held, no curated type"
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "people"
+column = "MIXED"
+name = "MIXED"
+definition = "Curated integer, one text storage wave"
+versions = ["2020"]
+data_type = "integer"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "people"
+column = "WIDE"
+name = "WIDE"
+definition = "Curated decimal over integer storage"
+versions = ["2020"]
+data_type = "decimal"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "people"
+column = "ELSEWHERE"
+name = "ELSEWHERE"
+definition = "Stored only outside the register's prefixes"
+versions = ["2020"]
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "people"
+column = "Guid"
+versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+data_type = "text"
+evidence = "accepted delivery"
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "people"
+column = "AGREES"
+name = "AGREES"
+definition = "Curated integer over integer storage"
+versions = ["2020"]
+data_type = "integer"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "people"
+column = "Renamed"
+versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+data_type = "integer"
+evidence = "stored under the policy's physical header PHYS"
+noted = "2026-10-13"

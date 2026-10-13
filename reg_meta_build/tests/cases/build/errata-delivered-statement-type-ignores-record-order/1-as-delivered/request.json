@@ -1,0 +1,79 @@
+{
+  "replaces": [
+    "test_source_effect_delivery.py::test_delivered_type_is_order_independent_across_records_and_storage"
+  ],
+  "note": "The old test's records as delivered: VALUE documented 2018=integer and (as 'value') 2022=decimal, with a curated data_type text standing in for the old test's CIS2004 smallint and CIS2012 varchar storage (#1562: the global build reads no steward storage, so storage order no longer exists), the 2020 target edition carried by another variable (EDITION). PAIR (same two documented types, no curated type) is added beside it so the type itself, not only the provenance, depends on every documented record: with VALUE's curated text the widened type is text whatever the documented records say. Expected values: the old test's `provenance == provenance` claim across orders becomes the sorted 'Documented Datatyp: 2018=integer, 2022=decimal' substring (format pinned by errata-delivered-statement-types-widen-documentation-and-curated-type); the types are derived from the fixture by the widening rule that sibling's parametrize table pins (integer+text -> text; integer+decimal -> decimal). Step 2 delivers the same rows reversed and expects these projections.",
+  "fails_if": "`scb_errata.convert_delivered_entry` types the addition from only the first documented record (for example `documented_classes[:1]`), so PAIR's 2020 state is integer instead of decimal",
+  "sources": {
+    "description": "Register TEST (1, variant 2). VALUE (var 5) is documented in 2018 as integer and, spelled 'value', in 2022 as decimal; PAIR (var 6) in 2018 as integer and in 2022 as decimal. EDITION (var 99) delivers 2020, so a 2020 edition exists that neither column is delivered in. VALUE's entry curates data_type text (the former CIS2004 smallint + CIS2012 varchar storage, widened); PAIR's curates none.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "VALUE",
+          "cvid": 10,
+          "var_id": 5,
+          "year": "2018",
+          "regver_id": 2018,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "integer"
+        },
+        {
+          "colname": "value",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "decimal"
+        },
+        {
+          "colname": "PAIR",
+          "cvid": 11,
+          "var_id": 6,
+          "year": "2018",
+          "regver_id": 2018,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "integer"
+        },
+        {
+          "colname": "PAIR",
+          "cvid": 21,
+          "var_id": 6,
+          "year": "2022",
+          "regver_id": 2022,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "decimal"
+        },
+        {
+          "colname": "EDITION",
+          "cvid": 30,
+          "var_id": 99,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "TEST",
+            1,
+            2
+          ],
+          "data_type": "int"
+        }
+      ]
+    }
+  }
+}

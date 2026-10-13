@@ -42,11 +42,6 @@ from .source_evidence import canonical_sha256
 from .source_occurrences import source_occurrence
 from .source_periods import source_scopes
 from .source_records import NativeCoordinates, SourceFields, TemporalScope, value_field
-from .sources.swecov_column_types import (
-    SWECOV_COLUMN_TYPES_PATH,
-    infer_steward_column_type,
-    steward_column_storage_classes,
-)
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -55,7 +50,6 @@ if TYPE_CHECKING:
     from .source_coordinates import NativeKey
     from .source_curation import OccurrenceEffect, RecordExpectation, SourceRecordRef
     from .source_records import SourceRecord
-    from .source_reference_records import SourceColumnTypeDeclaration
 
 _FILE_NAME = "curation/registers/scb/<slug>.toml"
 _CODE = "scb_errata_invalid"
@@ -891,16 +885,16 @@ def convert_delivered_entry(
     case_id: str,
     context: ErrataVariantContext,
     donor_context: ErrataVariantContext | None = None,
-    steward_table_prefixes: tuple[str, ...] = (),
-    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
+    curated_type: str | None = None,
     preserve_blank_native_base: bool = False,
     additional_physical_column: bool = False,
-    storage_column: str | None = None,
 ) -> ErrataConversion:
     """Retain the availability stated by an accepted omission declaration.
 
     An elsewhere-documented column must identify one source-native variable.
-    Its documented type and matching storage schemas supply widened type evidence.
+    Its documented type and the entry's optional curated type supply widened type
+    evidence (without one, the documented class stands); an additional physical
+    column takes the curated type alone.
     Proximity in time never proves flags or code membership.
     A compiler-proved simultaneous component keeps the negative native base as
     guarded support and uses the existing independent addition path instead.
@@ -910,14 +904,6 @@ def convert_delivered_entry(
         raise ValueError("donor_variant requires its source context")
     if additional_physical_column and entry.native_variable_id is None:
         raise ValueError("additional physical delivery requires native_variable_id")
-    if storage_column is not None and (
-        not additional_physical_column
-        or not storage_column.strip()
-        or storage_column != storage_column.strip()
-    ):
-        raise ValueError(
-            "explicit storage header requires an additional physical delivery and a trimmed nonempty header"
-        )
     records, editions = context.records, context.editions
     target_variant = native_variant_key(records[0])
     assert target_variant is not None
@@ -980,18 +966,16 @@ def convert_delivered_entry(
     documented_classes = tuple(
         data_type_class(value) for _, value in documented_values if value is not None
     )
-    storage_classes, storage_evidence = steward_column_storage_classes(
-        storage_column or entry.column, steward_table_prefixes, storage_columns or {}
+    curated_classes = (
+        {kind} if curated_type and (kind := data_type_class(curated_type)) else set()
     )
-    if storage_column is not None and not storage_classes:
-        return ErrataConversion(None, ("unsupported_storage_header",), references)
     inferred_type = (
-        widen_data_type_classes(storage_classes)
+        widen_data_type_classes(curated_classes)
         if additional_physical_column
         else (
             widen_data_type_classes(
                 (
-                    *storage_classes,
+                    *curated_classes,
                     *(kind for kind in documented_classes if kind is not None),
                 )
             )
@@ -1002,7 +986,7 @@ def convert_delivered_entry(
     provenance = "\n".join(
         (
             entry.provenance,
-            storage_evidence or f"SWECOV storage {SWECOV_COLUMN_TYPES_PATH}: none",
+            f"Curated data_type: {curated_type or 'none'}",
             "Documented Datatyp: "
             + ", ".join(
                 f"{edition}={value or 'none'}" for edition, value in documented_values
@@ -1216,10 +1200,8 @@ def convert_column_entry(
     case_id: str,
     context: ErrataVariantContext,
     declared_flags: frozenset[str],
-    steward_table_prefixes: tuple[str, ...] = (),
-    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> ErrataConversion:
-    """Retain supplied facts; infer only uncurated steward-held storage types.
+    """Retain supplied facts; the type is the curated ``data_type`` or unknown.
 
     The old ``all_versions`` interpretation of undated holdings supplies no annual
     evidence. Retain one undated occurrence, not a claim for each existing edition.
@@ -1271,32 +1253,14 @@ def convert_column_entry(
     variant = native_variant_key(records[0])
     assert register is not None and variant is not None
     variable = (*register, "declared-column", fold_column(entry.column))
-    inferred_type = None
-    storage_evidence = None
-    if (
-        entry.source == "steward-holdings"
-        and entry.data_type is None
-        and storage_columns
-    ):
-        inferred_type, storage_evidence = infer_steward_column_type(
-            entry.column, steward_table_prefixes, storage_columns
-        )
-    provenance = (
-        f"{entry.provenance}\n{storage_evidence}"
-        if storage_evidence is not None
-        else entry.provenance
-    )
+    provenance = entry.provenance
     fields = SourceFields(
         availability=value_field(True),
         column_name=value_field(entry.column),
         name=value_field(normalize_text(entry.name)),
         description=value_field(normalize_text(entry.definition, multiline=True)),
         data_type=(
-            value_field(entry.data_type)
-            if entry.data_type is not None
-            else value_field(inferred_type)
-            if inferred_type is not None
-            else None
+            value_field(entry.data_type) if entry.data_type is not None else None
         ),
         classification_declared=value_field(entry.classification)
         if entry.classification is not None

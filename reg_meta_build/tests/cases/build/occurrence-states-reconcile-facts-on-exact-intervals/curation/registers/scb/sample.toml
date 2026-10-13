@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "sample"
 native_id = "1"
-steward_table_prefixes = ["CIS"]
 [[variant]]
 native_id = "1.10"
 slug = "people"
@@ -135,15 +134,3 @@ slug = "c-blank-only"
 [[variable]]
 native_id = "1.284"
 slug = "c-unknown-only"
-[[variable]]
-native_id = "1.291"
-slug = "st-dec"
-[[variable]]
-native_id = "1.292"
-slug = "st-text"
-[[variable]]
-native_id = "1.293"
-slug = "st-none"
-[[variable]]
-native_id = "1.296"
-slug = "sd-one"

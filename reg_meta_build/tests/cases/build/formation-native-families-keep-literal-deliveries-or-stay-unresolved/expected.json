@@ -111,11 +111,11 @@
       "where": {
         "subject": "scb/sample/ty-conflict",
         "code": "unknown_data_type",
-        "detail": {"contains": ["Documented Datatyp: date, integer", "CIS2020=int"]}
+        "detail": {"contains": ["Documented Datatyp: date, integer"]}
       },
       "fields": ["subject"],
       "rows": [["scb/sample/ty-conflict"]],
-      "note": "test_incompatible_documented_types_retain_detail_and_conflict: the documented types and the storage wave both reach the detail."
+      "note": "test_incompatible_documented_types_retain_detail_and_conflict: the documented types reach the detail."
     },
     {
       "table": "issues",
@@ -202,18 +202,18 @@
       "table": "states",
       "where": {"variable": "ty-widen"},
       "fields": ["variable", "data_type", "data_length"],
-      "rows": [["ty-widen", "decimal", null]],
-      "note": "test_widened_segment_records_documented_and_storage_provenance: varchar+float widens, the all-numeric storage caps it to decimal, and the disagreeing lengths leave no length."
+      "rows": [["ty-widen", "text", null]],
+      "note": "test_widened_segment_records_documented_and_storage_provenance: varchar+float widens to text (no curation narrows a text widening, #1562), and the disagreeing lengths leave no length."
     },
     {
       "table": "states",
       "where": {
         "variable": "ty-widen",
-        "provenance": {"contains": ["Documented Datatyp: decimal, text", "CIS2018=int, CIS2020=float"]}
+        "provenance": {"contains": ["Documented Datatyp: decimal, text"]}
       },
       "fields": ["variable"],
       "rows": [["ty-widen"]],
-      "note": "The documented types and the storage waves both reach the state's provenance."
+      "note": "The documented types reach the state's provenance."
     },
     {
       "table": "states",

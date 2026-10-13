@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "fou"
 native_id = "182"
-steward_table_prefixes = ["FTG_FOU_"]
 
 # scb/fou [[errata.delivered]] candidates were computed 2026-09-12 against
 # SCB's raw Registerinformation export; folded duplicate columns are merged
@@ -96,7 +95,6 @@ evidence = "SWECOV holds V201 in FTG_FOU_2005..2009; public SCB documentation (U
 noted = "2026-10-13"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3331
-storage_column = "V201"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -107,7 +105,6 @@ evidence = "SWECOV holds v201 in FTG_FOU_2011..2015; public SCB documentation (U
 noted = "2026-10-13"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3331
-storage_column = "v201"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -118,7 +115,6 @@ evidence = "SWECOV holds Vikt in FTG_FOU_2011..2015; public SCB documentation (U
 noted = "2026-10-13"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3402
-storage_column = "Vikt"
 
 [[errata.column]]
 variant = "foretagssektorn"

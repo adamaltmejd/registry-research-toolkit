@@ -36,10 +36,6 @@
     "test_source_intervals.py::test_single_source_type_spelling_is_classified_without_changing_original[numerisk-decimal]",
     "test_source_intervals.py::test_single_source_type_spelling_is_classified_without_changing_original[alfanumerisk-text]",
     "test_source_intervals.py::test_single_source_type_spelling_is_classified_without_changing_original[Character-text]",
-    "test_source_intervals.py::test_numeric_storage_caps_only_all_numeric_waves[classes0-decimal]",
-    "test_source_intervals.py::test_numeric_storage_caps_only_all_numeric_waves[classes1-text]",
-    "test_source_intervals.py::test_numeric_storage_caps_only_all_numeric_waves[classes2-text]",
-    "test_source_intervals.py::test_single_declared_type_is_not_rewritten_by_storage",
     "test_source_intervals.py::test_data_type_widening_absorbs_source_attribution_disagreement",
     "test_source_intervals.py::test_unanimous_source_attribution_resolves_normally",
     "test_source_intervals.py::test_real_gaps_and_parallel_column_periods_survive",
@@ -53,10 +49,10 @@
     "test_source_interval_populations.py::test_same_column_definition_conflict_is_not_absorbed",
     "test_source_interval_populations.py::test_term_structured_pooled_label_stays_unsupported"
   ],
-  "note": "One variable per old test or parametrize row, so each leg reconciles its own overlapping members and the issues projections can say which legs conflict and which do not. Expected values are the old tests' asserted values, with three translations the delivered sources force. (1) The SCB reader classifies Datatyp at read (scb_records._data_type_field), so an SCB widening's provenance lists the classes it widened ('Documented Datatyp: decimal, integer' for float+integer), where the old tests' hand-built records carried literals; the literal-spelling provenance survives only through SOS, which passes numerisk, alfanumerisk and Character through unclassified (NUM, ALF, CHR). (2) For the same reason a single float member is decimal, not the old test's 'float' (sd-one): what the case keeps is that storage does not rewrite a single declared type. (3) The old fold-level 'in either order' loops are covered by the order-independence property in test_source_intervals.py, not by a reversed build. Every variable slug is this curation's [[variable]] pin.",
-  "fails_if": "`reconcile_source_fields` (source_intervals.py) stops resolving a listed `_UNIT_PAIRS` pair to its published spelling, widens date with integer, takes the maximum length across lengths whose declared types differ, applies the SWECOV numeric storage cap when any storage wave is not numeric or rewrites a single declared type from storage, lets an unknown Datatyp contradict a supplied one, stops absorbing a source-text disagreement, or absorbs a definition disagreement (`definition` added to `_ABSORBED_OCCURRENCE_CONFLICT_FIELDS`); or `resolve_occurrence_intervals` stops cutting at an occurrence's end (so the March 2018 text runs on through December), stops refusing year 9999 in `scope_bounds`, drops a named member's state because a sibling is unplaced, or reports a literal blank column as `unsupported_occurrence` instead of `omitted_columnless_occurrence`",
+  "note": "One variable per old test or parametrize row, so each leg reconciles its own overlapping members and the issues projections can say which legs conflict and which do not. Expected values are the old tests' asserted values, with two translations the delivered sources force. (1) The SCB reader classifies Datatyp at read (scb_records._data_type_field), so an SCB widening's provenance lists the classes it widened ('Documented Datatyp: decimal, integer' for float+integer), where the old tests' hand-built records carried literals; the literal-spelling provenance survives only through SOS, which passes numerisk, alfanumerisk and Character through unclassified (NUM, ALF, CHR). (2) The old fold-level 'in either order' loops are covered by the order-independence property in test_source_intervals.py, not by a reversed build. Every variable slug is this curation's [[variable]] pin.",
+  "fails_if": "`reconcile_source_fields` (source_intervals.py) stops resolving a listed `_UNIT_PAIRS` pair to its published spelling, widens date with integer, takes the maximum length across lengths whose declared types differ, lets an unknown Datatyp contradict a supplied one, stops absorbing a source-text disagreement, or absorbs a definition disagreement (`definition` added to `_ABSORBED_OCCURRENCE_CONFLICT_FIELDS`); or `resolve_occurrence_intervals` stops cutting at an occurrence's end (so the March 2018 text runs on through December), stops refusing year 9999 in `scope_bounds`, drops a named member's state because a sibling is unplaced, or reports a literal blank column as `unsupported_occurrence` instead of `omitted_columnless_occurrence`",
   "sources": {
-    "description": "Register TESTREG (1, variant 10), every row a 2020 member unless noted; each variable delivers its members in one column named after its slug, member CVID = var_id * 10 + 1, 2, 3. Units u01..u11 (vars 201..211): each listed unit pair, published spelling first. x01..x05 (221..225): unlisted unit sets. l00..l06 (231..237, no 234): Datatyp and Datalängd pairs. w00..w05 (241..246): Datatyp pairs. d-src, d-opdef, d-ref (261..263): two members whose source, operational definition or reference period text differs. d-def (267): two members whose Variabeldefinition differs (January income, February income). a-widen (264): source texts Fråga 1 and Fråga 2 with Datatyp integer and text; a-same (265): both Fråga 1. opt (266): integer beside an empty Datatyp. p-month (271): 2018 integer beside the month range 2018-03 - 2018-03 typed text. p-gap (273): 2018 and 2020. p-lasar (275): Läsåret 2014/2015. p-komvux (278): the term-structured pooled label Komvux HT 1988 - VT 2024. c-unknown-beside (281): a named member beside a whitespace-only Kolumnnamn; c-blank-beside (282): beside a literal blank one; c-blank-only (283): two literal blanks; c-unknown-only (284): one whitespace Kolumnnamn. st-dec, st-text, st-none (291..293): Datatyp varchar and float, with SWECOV storage CIS2018/CIS2020 int+float, int+varchar, int+uniqueidentifier; sd-one (296): one float member, storage CIS2018 int. SOS PAR_OV (2001-2020): NUM numerisk, ALF alfanumerisk, CHR Character, and OPN Heltal 2001-9999.",
+    "description": "Register TESTREG (1, variant 10), every row a 2020 member unless noted; each variable delivers its members in one column named after its slug, member CVID = var_id * 10 + 1, 2, 3. Units u01..u11 (vars 201..211): each listed unit pair, published spelling first. x01..x05 (221..225): unlisted unit sets. l00..l06 (231..237, no 234): Datatyp and Datalängd pairs. w00..w05 (241..246): Datatyp pairs. d-src, d-opdef, d-ref (261..263): two members whose source, operational definition or reference period text differs. d-def (267): two members whose Variabeldefinition differs (January income, February income). a-widen (264): source texts Fråga 1 and Fråga 2 with Datatyp integer and text; a-same (265): both Fråga 1. opt (266): integer beside an empty Datatyp. p-month (271): 2018 integer beside the month range 2018-03 - 2018-03 typed text. p-gap (273): 2018 and 2020. p-lasar (275): Läsåret 2014/2015. p-komvux (278): the term-structured pooled label Komvux HT 1988 - VT 2024. c-unknown-beside (281): a named member beside a whitespace-only Kolumnnamn; c-blank-beside (282): beside a literal blank one; c-blank-only (283): two literal blanks; c-unknown-only (284): one whitespace Kolumnnamn. SOS PAR_OV (2001-2020): NUM numerisk, ALF alfanumerisk, CHR Character, and OPN Heltal 2001-9999.",
     "scb": {
       "registerinformation": [
         {"cvid": 2011, "var_id": 201, "colname": "U01", "unit": "MWh"},
@@ -260,14 +256,7 @@
         {"cvid": 2822, "var_id": 282, "colname": "\"\""},
         {"cvid": 2831, "var_id": 283, "colname": "\"\""},
         {"cvid": 2832, "var_id": 283, "colname": "\"\""},
-        {"cvid": 2841, "var_id": 284, "colname": " "},
-        {"cvid": 2911, "var_id": 291, "colname": "ST_DEC", "data_type": "varchar"},
-        {"cvid": 2912, "var_id": 291, "colname": "ST_DEC", "data_type": "float"},
-        {"cvid": 2921, "var_id": 292, "colname": "ST_TEXT", "data_type": "varchar"},
-        {"cvid": 2922, "var_id": 292, "colname": "ST_TEXT", "data_type": "float"},
-        {"cvid": 2931, "var_id": 293, "colname": "ST_NONE", "data_type": "varchar"},
-        {"cvid": 2932, "var_id": 293, "colname": "ST_NONE", "data_type": "float"},
-        {"cvid": 2961, "var_id": 296, "colname": "SD_ONE", "data_type": "float"}
+        {"cvid": 2841, "var_id": 284, "colname": " "}
       ]
     },
     "sos": [
@@ -319,18 +308,6 @@
           }
         ]
       }
-    ],
-    "files": {
-      "swecov/derived/swecov_column_types.csv": [
-        "table_schema,table_name,table_type,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale,ordinal_position",
-        "dbo,CIS2018,BASE TABLE,ST_DEC,int,,,,1",
-        "dbo,CIS2020,BASE TABLE,ST_DEC,float,,,,2",
-        "dbo,CIS2018,BASE TABLE,ST_TEXT,int,,,,3",
-        "dbo,CIS2020,BASE TABLE,ST_TEXT,varchar,,,,4",
-        "dbo,CIS2018,BASE TABLE,ST_NONE,int,,,,5",
-        "dbo,CIS2020,BASE TABLE,ST_NONE,uniqueidentifier,,,,6",
-        "dbo,CIS2018,BASE TABLE,SD_ONE,int,,,,7"
-      ]
-    }
+    ]
   }
 }

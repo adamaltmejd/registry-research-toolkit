@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "hreg"
 native_id = "47"
-steward_table_prefixes = ["Hreg_Examina", "Hreg_Reg"]
 
 # Y-318: the four delivered Anställningskategori classification versions have
 # distinct owners. The 2001 and current versions are also delivered for years

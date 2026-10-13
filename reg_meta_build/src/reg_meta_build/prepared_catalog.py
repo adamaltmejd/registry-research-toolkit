@@ -70,10 +70,6 @@ from reg_meta_build.sources.scb_reference_records import read_scb_events
 from reg_meta_build.sources.scb_values import CleanedScbValues, clean_scb_values
 from reg_meta_build.sources.sos import parse_register_file
 from reg_meta_build.sources.sos_records import clean_sos_source
-from reg_meta_build.sources.swecov_column_types import (
-    SWECOV_COLUMN_TYPES_PATH,
-    read_swecov_column_types,
-)
 
 from .source_evidence import SourceRevision
 
@@ -120,7 +116,6 @@ type InputRole = Literal[
     "scb_events",
     "scb_values",
     "scb_validity",
-    "swecov_column_types",
     "sos_workbook",
     "lisa_workbook",
     "thin_provider",
@@ -366,8 +361,6 @@ def _role(path: str, *, origin: str) -> InputRole:
             return roles[path]
     elif path in _THIN:
         return "thin_provider"
-    elif path == SWECOV_COLUMN_TYPES_PATH:
-        return "swecov_column_types"
     elif path == LISA_BUNDLE_PATH:
         return "lisa_workbook"
     elif path.startswith("catalog/Socialstyrelsen/") and Path(path).suffix == ".xlsx":
@@ -676,11 +669,7 @@ def prepare_catalog_sources(
                             )
                     else:
                         path = bundle.root / entry.path
-                        if entry.role == "swecov_column_types":
-                            result = read_swecov_column_types(path, revision)
-                            references(result.declarations, revision, count)
-                            tables(result.tables, count)
-                        elif entry.role == "lisa_workbook":
+                        if entry.role == "lisa_workbook":
                             result = read_lisa_source(path, revision)
                             evidence(
                                 WorksheetContextEvidence(

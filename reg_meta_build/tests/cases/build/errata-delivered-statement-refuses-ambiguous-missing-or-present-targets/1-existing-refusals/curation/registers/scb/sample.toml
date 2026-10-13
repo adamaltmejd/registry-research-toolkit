@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "sample"
 native_id = "1"
-steward_table_prefixes = ["CIS"]
 [[variant]]
 native_id = "1.2"
 slug = "people"
@@ -127,14 +126,3 @@ evidence = "accepted delivery"
 noted = "2026-09-25"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 30
-
-[[errata.delivered]]
-variant = "people"
-column = "ADDW"
-versions = ["2020"]
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-evidence = "accepted delivery"
-noted = "2026-09-25"
-upstream = "additional-physical-column-in-version"
-native_variable_id = 29
-storage_column = "WRONG"

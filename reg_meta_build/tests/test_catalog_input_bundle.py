@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import shutil
 from typing import TYPE_CHECKING
@@ -11,7 +10,6 @@ import pytest
 from _csv_fixtures import (
     repin_input_bundle,
     write_input_bundle,
-    write_input_bundle_from_snapshot,
     write_scb_input,
     write_scb_snapshot,
 )
@@ -24,7 +22,6 @@ from reg_meta_build.input_snapshot import (
     verify_input_bundle,
 )
 from reg_meta_build.sources.curated_records import CuratedSourceError
-from reg_meta_build.sources.swecov_column_types import SwecovColumnTypesError
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -45,17 +42,12 @@ def test_catalog_bundle_captures_complete_small_inventory_and_selects_quickly(
 ) -> None:
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
-    auxiliary = input_dir / _SWECOV_COLUMNS
-    auxiliary.parent.mkdir(parents=True)
-    auxiliary.write_bytes(_swecov_columns("CIS2004"))
     selection = write_input_bundle(tmp_path / "accepted", input_dir)
 
     bundle = open_input_bundle(selection)
 
     items = {item.path: item for item in bundle.manifest.files}
-    assert items[f"catalog/{_SWECOV_COLUMNS}"].present
     assert not items["catalog/scb_canonical/scb_canonical.toml"].present
-    assert (bundle.input_dir / _SWECOV_COLUMNS).read_bytes() == auxiliary.read_bytes()
     manifest_text = (selection.path / "catalog-bundle.json").read_text(encoding="utf-8")
     assert str(tmp_path) not in manifest_text
     assert bundle.provenance == {
@@ -88,20 +80,25 @@ def test_catalog_bundle_explicit_verify_and_unlisted_file_rejection(
         open_input_bundle(changed)
 
 
-def test_catalog_bundle_manifest_changes_with_meaningful_auxiliary_input(
+def test_catalog_bundle_manifest_ignores_the_steward_storage_schema(
     tmp_path: Path,
 ) -> None:
+    # Fails if the global capture reads SWECOV's storage-schema CSV again (#1562):
+    # a listed file changes the manifest whether it is absent, present or edited,
+    # and the prepare and build keys both derive from that manifest.
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
-    auxiliary = input_dir / _SWECOV_COLUMNS
-    auxiliary.parent.mkdir(parents=True)
-    auxiliary.write_bytes(_swecov_columns("First"))
-    first = write_input_bundle(tmp_path / "accepted-a", input_dir)
+    absent = write_input_bundle(tmp_path / "accepted-a", input_dir)
+    storage = input_dir / _SWECOV_COLUMNS
+    storage.parent.mkdir(parents=True)
+    storage.write_bytes(_swecov_columns("First"))
+    present = write_input_bundle(tmp_path / "accepted-b", input_dir)
+    storage.write_bytes(_swecov_columns("Second"))
+    changed = write_input_bundle(tmp_path / "accepted-c", input_dir)
 
-    auxiliary.write_bytes(_swecov_columns("Second"))
-    second = write_input_bundle(tmp_path / "accepted-b", input_dir)
-
-    assert first.manifest_sha256 != second.manifest_sha256
+    assert {absent.manifest_sha256, changed.manifest_sha256} == {
+        present.manifest_sha256
+    }
 
 
 def test_catalog_bundle_carries_classification_books_but_no_curation_or_naming(
@@ -149,15 +146,11 @@ def test_catalog_bundle_carries_classification_books_but_no_curation_or_naming(
     }
 
 
-@pytest.mark.parametrize(
-    "introduced_relative",
-    ("swecov/derived/swecov_column_types.csv", "Socialstyrelsen/introduced.xlsx"),
-)
 def test_catalog_bundle_preparation_rejects_new_source_membership(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
-    introduced_relative: str,
 ) -> None:
+    introduced_relative = "Socialstyrelsen/introduced.xlsx"
     input_dir = tmp_path / "source"
     write_scb_input(input_dir)
     books = input_dir / "classifications"
@@ -338,69 +331,3 @@ def test_catalog_bundle_preparation_rejects_invalid_consumed_input(
     assert error["code"] == "curated_source_invalid"
     assert "invalid global curated TOML" in error["message"]
     assert not (snapshot.path.parent / "bundle").exists()
-
-
-@pytest.mark.parametrize(
-    ("relative", "payload", "expected_exception"),
-    (
-        (
-            "swecov/derived/swecov_column_types.csv",
-            b"bad,header\n",
-            SwecovColumnTypesError,
-        ),
-    ),
-)
-def test_bundle_prepare_and_verify_reject_invalid_small_consumed_contracts(
-    tmp_path: Path,
-    relative: str,
-    payload: bytes,
-    expected_exception: type[Exception],
-) -> None:
-    input_dir = tmp_path / "source"
-    write_scb_input(input_dir)
-    malformed = input_dir / relative
-    malformed.parent.mkdir(parents=True, exist_ok=True)
-    malformed.write_bytes(payload)
-
-    snapshot = write_scb_snapshot(tmp_path / "accepted", input_dir / "SCB")
-    repository = snapshot.path.parent
-    snapshot_manifest = (snapshot.path / "manifest.json").read_bytes()
-    output = repository / "bundle"
-    with pytest.raises(expected_exception):
-        prepare_input_bundle(input_dir, snapshot, output)
-
-    assert not output.exists()
-    assert (snapshot.path / "manifest.json").read_bytes() == snapshot_manifest
-    assert git(repository, "rev-parse", "HEAD") == snapshot.input_commit
-    assert not git(repository, "status", "--porcelain=v1", "--untracked-files=all")
-
-    # Accept a malformed fixture by committing it into a valid bundle with a
-    # matching manifest entry, so the explicit verifier is independently required
-    # to exercise the same consumer.
-    malformed.unlink()
-    selection = write_input_bundle_from_snapshot(input_dir, snapshot)
-    manifest_path = selection.path / "catalog-bundle.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    entry = next(
-        item for item in manifest["files"] if item["path"] == f"catalog/{relative}"
-    )
-    assert entry["present"] is False
-    accepted_payload = selection.path / "catalog" / relative
-    accepted_payload.parent.mkdir(parents=True, exist_ok=True)
-    accepted_payload.write_bytes(payload)
-    entry.update(
-        present=True, size=len(payload), sha256=hashlib.sha256(payload).hexdigest()
-    )
-    manifest_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    selection = repin_input_bundle(selection, "accept malformed small input")
-    bundle_manifest = manifest_path.read_bytes()
-
-    with pytest.raises(expected_exception):
-        verify_input_bundle(selection)
-
-    assert manifest_path.read_bytes() == bundle_manifest
-    assert git(repository, "rev-parse", "HEAD") == selection.input_commit
-    assert not git(repository, "status", "--porcelain=v1", "--untracked-files=all")

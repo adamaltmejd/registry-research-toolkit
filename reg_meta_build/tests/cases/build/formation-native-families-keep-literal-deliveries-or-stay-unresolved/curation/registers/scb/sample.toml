@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "sample"
 native_id = "1"
-steward_table_prefixes = ["CIS"]
 [[variant]]
 native_id = "1.10"
 slug = "people"

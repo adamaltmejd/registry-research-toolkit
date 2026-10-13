@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "rtb"
 native_id = "2"
-steward_table_prefixes = ["RTB_SaBo_InrFlyttFlode", "Doda_20241231"]
 
 # SWECOV existing-register holdings for scb/rtb use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in

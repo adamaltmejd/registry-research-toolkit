@@ -46,7 +46,7 @@
         ["scb/sample/x04", ["measurement_unit"], "2020-01-01", "2020-12-31"],
         ["scb/sample/x05", ["measurement_unit"], "2020-01-01", "2020-12-31"]
       ],
-      "note": "The only occurrence conflicts, each on its 2020 segment: test_same_column_definition_conflict_is_not_absorbed (d-def: one conflict naming only the definition), the length table's expected_fields (l04 date+integer, l05 '8,2', l06 an unknown type beside a length), test_declared_type_widening's two conflicts (w02 date+integer, w03 uniqueidentifier+integer) and the five unlisted unit sets. Every other leg asserted `result.issues == ()`: the listed units, the absorbed source texts (d-src, d-opdef, d-ref), a-widen, a-same, opt, the storage legs and p-month raise none."
+      "note": "The only occurrence conflicts, each on its 2020 segment: test_same_column_definition_conflict_is_not_absorbed (d-def: one conflict naming only the definition), the length table's expected_fields (l04 date+integer, l05 '8,2', l06 an unknown type beside a length), test_declared_type_widening's two conflicts (w02 date+integer, w03 uniqueidentifier+integer) and the five unlisted unit sets. Every other leg asserted `result.issues == ()`: the listed units, the absorbed source texts (d-src, d-opdef, d-ref), a-widen, a-same, opt and p-month raise none."
     },
     {
       "table": "states",
@@ -91,29 +91,6 @@
         ["num", "decimal", "Documented Datatyp: numerisk"]
       ],
       "note": "test_single_source_type_spelling_is_classified_without_changing_original: a single delivered spelling is classified, with the literal kept as provenance. OPN has no state (below)."
-    },
-    {
-      "table": "states",
-      "where": {"variable": ["st-dec", "st-text", "st-none", "l01", "sd-one"]},
-      "fields": ["variable", "data_type"],
-      "rows": [
-        ["st-dec", "decimal"],
-        ["st-text", "text"],
-        ["st-none", "text"],
-        ["l01", "text"],
-        ["sd-one", "decimal"]
-      ],
-      "note": "test_numeric_storage_caps_only_all_numeric_waves: varchar+float widens to text, and storage caps it to decimal only when every wave is numeric (int+float), not int+varchar or int+uniqueidentifier (no class); l01 is the same varchar+float pair with no storage, text. test_single_declared_type_is_not_rewritten_by_storage: sd-one's single declared type stays (decimal, not the int storage's integer)."
-    },
-    {
-      "table": "states",
-      "where": {
-        "variable": ["st-dec"],
-        "provenance": {"contains": ["Documented Datatyp: decimal, text", "CIS2018=int, CIS2020=float"]}
-      },
-      "fields": ["variable"],
-      "rows": [["st-dec"]],
-      "note": "test_numeric_storage_caps_only_all_numeric_waves's provenance asserts: the documented types and the storage waves both reach the state's provenance."
     },
     {
       "table": "states",

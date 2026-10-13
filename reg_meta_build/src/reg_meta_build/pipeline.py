@@ -44,7 +44,6 @@ from reg_meta_build.concept_groups import CodeLabelPair  # noqa: TC001
 from reg_meta_build.curation_compile import (
     CompiledCodebook,
     CompiledCuration,
-    _swecov_columns,
     coding_entry_windows,
     compile_curation,
     compile_deferred_naming,
@@ -96,10 +95,7 @@ from reg_meta_build.source_naming import (  # noqa: TC001
     NamingAmbiguity,
     NamingDeclaration,
 )
-from reg_meta_build.source_reference_records import (
-    SourceColumnTypeDeclaration,
-    SourceEventDeclaration,
-)
+from reg_meta_build.source_reference_records import SourceEventDeclaration
 from reg_meta_build.source_scope import (
     declared_dependency_keys,
     declared_register_fqids,
@@ -114,7 +110,6 @@ from reg_meta_build.source_value_bindings import (
     clear_binding_caches,
     open_value_bindings,
 )
-from reg_meta_build.sources.swecov_column_types import index_steward_column_storage
 
 from .errors import EXIT_CONFIG, EXIT_USAGE, RegMetaError
 from .source_evidence import canonical_sha256, evidence_sha256
@@ -137,7 +132,6 @@ if TYPE_CHECKING:
         ValueBindingIssue,
         ValueBindingSession,
     )
-    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
 
 
 # The reader's search `q` cap: MAX_QUERY_CHARS in crates/reg-catalog/src/ops/mod.rs
@@ -402,7 +396,6 @@ class _ScopeContext:
     label_rules: dict[str, str]
     classification_overrides: dict[str, tuple[str, str]]
     support: SourceSupportBindings
-    storage_by_register: dict[str, dict[str, StewardColumnStorage]]
     event_bindings: SourceEventBindings
     lineage_refs: frozenset[SourceRecordRef]
     diagnostic: bool
@@ -635,7 +628,6 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
         diagnostic=context.diagnostic,
         coding_scope=scope,
         coding_registers=scope_coding,
-        storage_by_register=context.storage_by_register,
         on_coding_compiled=record_coding_compilation,
     )
     _emit_timing(f"pipeline: resolve {key!r}", resolution_started)
@@ -1147,13 +1139,11 @@ def _resolve(
         CompiledScope(source=source, register_key=register)
         for source, register in sorted(visit, key=repr)
     )
-    storage_columns = _swecov_columns(prepared)
     compiled = compile_curation(
         tree,
         prepared,
         scope_seeds,
         subset=bool(registers),
-        storage_columns=storage_columns,
     )
     _emit_timing("pipeline: compile selected curation", curation_started)
     contract_started = time.perf_counter()
@@ -1199,7 +1189,7 @@ def _resolve(
             for source, register in sorted(outside_keys, key=repr)
         )
         outside_naming, outside_ambiguities, outside_refused = compile_deferred_naming(
-            tree, prepared, outside, storage_columns
+            tree, prepared, outside
         )
         unselected_scopes = {
             key: CompiledScope(
@@ -1400,15 +1390,9 @@ def _resolve(
                 disposition = "source_context"
                 if isinstance(item, ReferenceEvidence):
                     declaration = item.declaration
-                    # SWECOV column types (the only column-type source) stay
-                    # source context; formation reads them as steward storage.
-                    if isinstance(
-                        declaration,
-                        SourceColumnTypeDeclaration | SourceEventDeclaration,
-                    ):
-                        if isinstance(declaration, SourceEventDeclaration):
-                            declarations.append(declaration)
-                            disposition = "literal_metadata"
+                    if isinstance(declaration, SourceEventDeclaration):
+                        declarations.append(declaration)
+                        disposition = "literal_metadata"
                     else:
                         outside_slice = (
                             bool(registers)
@@ -1512,13 +1496,6 @@ def _resolve(
                     },
                 )
                 counts["prepared_evidence"] += 1
-            storage_by_register = {
-                f"{register.register_info.provider}/{register.register_info.slug}": index_steward_column_storage(
-                    register.register_info.steward_table_prefixes, storage_columns
-                )
-                for register in tree.registers
-                if register.register_info.steward_table_prefixes
-            }
             event_bindings = SourceEventBindings(
                 (d for d in declarations if d.revision.dataset in event_sources),
                 event_sources,
@@ -1877,7 +1854,6 @@ def _resolve(
                 label_rules=label_rules,
                 classification_overrides=classification_overrides,
                 support=support,
-                storage_by_register=storage_by_register,
                 event_bindings=event_bindings,
                 lineage_refs=frozenset(lineage_originals),
                 diagnostic=diagnostic,

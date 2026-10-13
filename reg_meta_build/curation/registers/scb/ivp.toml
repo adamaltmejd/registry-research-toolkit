@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "ivp"
 native_id = "135"
-steward_table_prefixes = ["IVP_"]
 
 [[identity.partition]]
 variable = "135.1853"

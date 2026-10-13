@@ -27626,7 +27626,7 @@ edition = "2023-12"
 reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
 
 # DECIDED 2026-10-13 (maintainer, #1509 G1): FoU storage spellings onto the #1560 errata
-# variables (errata.delivered storage_column V201 / v201 / Vikt).
+# variables (errata.delivered physical columns V201 / v201 / Vikt).
 
 [[mapping]]
 register_variant = "scb/fou/foretagssektorn"

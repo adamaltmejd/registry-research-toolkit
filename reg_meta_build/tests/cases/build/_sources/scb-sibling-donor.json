@@ -67,11 +67,5 @@
         "data_type": "integer"
       }
     ]
-  },
-  "files": {
-    "swecov/derived/swecov_column_types.csv": [
-      "table_schema,table_name,table_type,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale,ordinal_position",
-      "dbo,SAMPLE2020,BASE TABLE,VALUE_STORAGE,varchar,,,,1"
-    ]
   }
 }

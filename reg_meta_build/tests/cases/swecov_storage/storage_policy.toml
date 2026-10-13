@@ -1,0 +1,5 @@
+[register."scb/sample"]
+table_prefixes = ["CIS"]
+
+[register."scb/sample".storage_columns]
+Renamed = "PHYS"
