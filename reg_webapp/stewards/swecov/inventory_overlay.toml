@@ -17797,6 +17797,33 @@ edition = 2021
 reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
 
 [[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2022"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2022
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable (documented for 2022-2024 by the #1502 errata); maintainer-decided 2026-10-13 (Operator batch on #1502/#1504)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2023"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2023
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable (documented for 2022-2024 by the #1502 errata); maintainer-decided 2026-10-13 (Operator batch on #1502/#1504)."
+
+[[mapping]]
+register_variant = "scb/konkurser/konkurser-offentliga-ackord"
+variable = "scb/konkurser/person-orgnr"
+representation = "opnr"
+table = "Konkurs_2024"
+column = "P1105_Lopnr_PeOrgNr_opnr"
+edition = 2024
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable (documented for 2022-2024 by the #1502 errata); maintainer-decided 2026-10-13 (Operator batch on #1502/#1504)."
+
+[[mapping]]
 register_variant = "riksarkivet/inskrivning/_default"
 variable = "riksarkivet/inskrivning/personnr"
 representation = "PENR"
@@ -24617,126 +24644,6 @@ column = "LonFInkSep"
 reason = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
 
 [[unmap]]
-table = "Konkurs_2022"
-column = "anst"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2022"
-column = "beslutstid"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2022"
-column = "bransch"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2022"
-column = "fform"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2022"
-column = "kommun"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2022"
-column = "lan"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2022"
-column = "obtyp"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2022"
-column = "startar"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "anst"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "beslutstid"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "bransch"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "fform"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "kommun"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "lan"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "obtyp"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "startar"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "anst"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "beslutstid"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "bransch"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "fform"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "kommun"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "lan"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "obtyp"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "startar"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
-
-[[unmap]]
 table = "KSju_20151"
 column = "Ksjulan"
 reason = "Retained physical field for edition 2015-Q1; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
@@ -26879,21 +26786,6 @@ table = "SWECOV_SOS_LMED"
 column = "ARBETSPL_PSEUDO"
 edition = { from = "2005-07", to = 2023 }
 reason = "SWECOV delivery spelling (pseudonymised) of the LMED workplace code ARBETSPL. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
-
-[[unmap]]
-table = "Konkurs_2022"
-column = "P1105_Lopnr_PeOrgNr_opnr"
-reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json. Maintainer-decided 2026-10-13 (#1302): scb/konkurser/person-orgnr ends 2021; follow-up #1496."
-
-[[unmap]]
-table = "Konkurs_2023"
-column = "P1105_Lopnr_PeOrgNr_opnr"
-reason = "Retained physical field for edition 2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json. Maintainer-decided 2026-10-13 (#1302): scb/konkurser/person-orgnr ends 2021; follow-up #1496."
-
-[[unmap]]
-table = "Konkurs_2024"
-column = "P1105_Lopnr_PeOrgNr_opnr"
-reason = "Retained physical field for edition 2024; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json. Maintainer-decided 2026-10-13 (#1302): scb/konkurser/person-orgnr ends 2021; follow-up #1496."
 
 [[unmap]]
 table = "UHV_1997"
