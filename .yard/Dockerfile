@@ -1,10 +1,22 @@
 # Lane image. Boxes set their own HOME and PATH, so tools are linked onto the
 # default PATH and uv reads its settings from /etc/uv/uv.toml, not ENV.
-# Package downloads go through [isolation].egress (PyPI) at run time; only uv
-# and the interpreter .python-version names are baked in.
+# Package downloads go through [isolation].egress (PyPI, crates.io) at run
+# time; uv, the interpreter .python-version names and the Rust toolchain are
+# baked in. Rust and a C linker are needed because `uv sync` builds the
+# editable crates/reg-core-py member with maturin.
 FROM ghcr.io/astral-sh/uv:0.13.0 AS uv
 
+# The toolchain reg_webapp/Dockerfile pins; copied out of rustup because boxes
+# set their own HOME and PATH.
+FROM rust:1.99.0-slim-trixie@sha256:24e632c09342c20abf8312cf4f61430a911c01ed3a5e4c02b87292b1c39c5273 AS rust
+RUN cp -a "$(rustc --print sysroot)" /toolchain
+
 FROM pinfold/profile-default:latest
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=rust /toolchain /opt/rust
+RUN ln -s /opt/rust/bin/* /usr/local/bin/ && cargo --version
 COPY --from=uv /uv /uvx /usr/local/bin/
 # uv takes its interpreter install dir only from the environment, so the
 # interpreter is linked onto PATH and uv finds it there with downloads off.
