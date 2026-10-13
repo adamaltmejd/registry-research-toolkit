@@ -353,8 +353,7 @@ target = "scb/rams/arbetsstallen"
 category = "RTB"
 detail = "Adress särskilt boende"
 status = "flavor"
-graft = "scb/rtb"
-note = "SWECOV-specific SÄBO address extract; Källa=RTB UtdAdr1 -> graft onto scb/rtb (#1302)"
+note = "SWECOV-specific SÄBO address extract; Källa=RTB UtdAdr1 stays in the flavor beside UtdAdr2 (keep_columns) so the table orders as one variant (maintainer 2026-10-13, #1302)"
 
 [[route]]
 category = "RTB"
@@ -889,6 +888,9 @@ register_name = "Adress särskilt boende"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Adress särskilt boende"
+# UtdAdr1 is RTB's address continuation line as delivered in the SÄBO extract;
+# kept with UtdAdr2 so RTB_SaBo_Adress_* orders as one variant (#1302).
+keep_columns = ["UtdAdr1"]
 
 [[flavor]]
 holding = "RTB/Födelseuppgifter"

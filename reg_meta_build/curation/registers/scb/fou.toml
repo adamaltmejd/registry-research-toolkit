@@ -86,6 +86,50 @@ expected_evidence_sha256 = "83b39cdd64fe4cc494e59335cdf51560200f33c83c6617b82285
 evidence = "SWECOV holds Sektor in FTG_FOU_2015 and FTG_FOU_2017; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FoU sheet) lists Sektor for 2015-2017. SCB documents the sector (native 1141 sektortillhorighet) on this variant as INSEKT from 2019 (#1302 C, medium)."
 noted = "2026-10-12"
 
+# #1509: FoU questionnaire row 201 and the survey weight, delivered under other spellings.
+[[errata.delivered]]
+variant = "foretagssektorn"
+column = "v0201"
+versions = ["2005", "2007", "2009"]
+expected_evidence_sha256 = "191accb0b20152560f0142cc9871bf2ea4e65d2603d176478e9e358478e76b70"
+evidence = "SWECOV holds V201 in FTG_FOU_2005..2009; public SCB documentation (UF0301 SCBDOK 2007/2009, questionnaire row 201) identifies it as övriga driftkostnader for own R&D (row 201) (#1509 research, .durable-scratch/swecov-worklists/1509-fou-itftg-codebooks.md; maintainer 2026-10-13, high/medium-confidence subset)."
+noted = "2026-10-13"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 3331
+storage_column = "V201"
+
+[[errata.delivered]]
+variant = "foretagssektorn"
+column = "v0201"
+versions = ["2011", "2013", "2015"]
+expected_evidence_sha256 = "191accb0b20152560f0142cc9871bf2ea4e65d2603d176478e9e358478e76b70"
+evidence = "SWECOV holds v201 in FTG_FOU_2011..2015; public SCB documentation (UF0301 SCBDOK 2011–2015) identifies it as övriga driftkostnader for own R&D (row 201) (#1509 research, .durable-scratch/swecov-worklists/1509-fou-itftg-codebooks.md; maintainer 2026-10-13, high/medium-confidence subset)."
+noted = "2026-10-13"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 3331
+storage_column = "v201"
+
+[[errata.delivered]]
+variant = "foretagssektorn"
+column = "ViktRev"
+versions = ["2011", "2013", "2015"]
+expected_evidence_sha256 = "82799c779286f5c541e1172aaa3786e4536dcd00d9b40422877c1051d926304d"
+evidence = "SWECOV holds Vikt in FTG_FOU_2011..2015; public SCB documentation (UF0301 SCBDOK 2011–2015, estimation section) identifies it as the weight N_h/m_h adjusted for unit nonresponse (#1509 research, .durable-scratch/swecov-worklists/1509-fou-itftg-codebooks.md; maintainer 2026-10-13, high/medium-confidence subset)."
+noted = "2026-10-13"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 3402
+storage_column = "Vikt"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "WEIGHT"
+name = "Uppräkningstal"
+definition = "Uppräkningstal N_h/m_h inom stratum (rak uppräkning) för företaget."
+holdings_period = "2019-2021"
+source = "steward-holdings"
+evidence = "SWECOV holds WEIGHT in FTG_FOU_2019 and FTG_FOU_2021; SCB's FoU i Sverige 2019/2021 statistikframställning (UF0301) defines the business-sector weight as N_h/m_h within strata; SCB's Registerinformation export carries no row for it on this variant (#1509; maintainer 2026-10-13)."
+noted = "2026-10-13"
+
 [[errata.delivered]]
 variant = "foretagssektorn"
 column = "Stratum"
@@ -14330,3 +14374,7 @@ slug = "v7001"
 [[variable]]
 native_id = "182.v7002"
 slug = "v7002"
+
+[[variable]]
+native_id = "182.WEIGHT"
+slug = "weight"

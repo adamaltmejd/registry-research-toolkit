@@ -133,6 +133,24 @@ noted = "2026-09-12"
 
 [[errata.delivered]]
 variant = "individuppgifter-agi"
+column = "BOSTADSF_SMAHUS_UL_AG_AG"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "9f97e91fbae695d26432894f74ea55c1c3fe075c97ea9c4f806704e41d542379"
+evidence = "SWECOV holds this column as BOSTADSF_SMAHUS_ULAG_AG (the [[enrichment.alias]] in this file) in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents BOSTADSF_SMAHUS_UL_AG_AG in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020. Missed by the 2026-09-12 batch because the delivery spelling differs (#1505; maintainer 2026-10-13)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "individuppgifter-agi"
+column = "BOSTADSF_SMAHUS_UL_AG_EA"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "10eed25010c209348613c7609daef07feafe1f8ea54953af04485bb9a83b1868"
+evidence = "SWECOV holds this column as BOSTADSF_SMAHUS_ULAG_EA (the [[enrichment.alias]] in this file) in the Arb_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12; SCB documents BOSTADSF_SMAHUS_UL_AG_EA in both 2019 and 2020 löne-stream versions (clone source: 2020, löne- och förmånsutb) and nothing after 2020. Missed by the 2026-09-12 batch because the delivery spelling differs (#1505; maintainer 2026-10-13)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "individuppgifter-agi"
 column = "DM_VID_BILFORMAN_EJ_ULAG_SA"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
@@ -845,3 +863,27 @@ list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
 witness = ["2020-01-01", "2020-12-31"]
 reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
 source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30."
+
+[[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
+variable = "392.16099.bostadsf-smahus-ul-ag-ag"
+variant = "392.1519"
+column = "BOSTADSF_SMAHUS_UL_AG_AG"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30; extended to the UL_AG pair 2026-10-13 (#1505)."
+
+[[coding.extend]]
+data_warning = "The documented 0/1 response domain is assumed to continue in this delivery; historical SCB encoding of an absent checkbox as 0 has not been independently verified."
+variable = "392.16099.bostadsf-smahus-ul-ag-ea"
+variant = "392.1519"
+column = "BOSTADSF_SMAHUS_UL_AG_EA"
+periods = [["2021-01-01", "2021-12-31"], ["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"]]
+list = "Förekomst"
+list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
+source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30; extended to the UL_AG pair 2026-10-13 (#1505)."
