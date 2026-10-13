@@ -115,6 +115,30 @@ native_id = "195.ersdag1"
 slug = "ersdag1"  # source: kolumnnamn
 
 [[variable]]
+native_id = "195.ersk1"
+slug = "ersk1"  # source: kolumnnamn
+
+[[variable]]
+native_id = "195.ersm1"
+slug = "ersm1"  # source: kolumnnamn
+
+[[variable]]
+native_id = "195.fallk1"
+slug = "fallk1"  # source: kolumnnamn
+
+[[variable]]
+native_id = "195.fallm1"
+slug = "fallm1"  # source: kolumnnamn
+
+[[variable]]
+native_id = "195.kdagk1"
+slug = "kdagk1"  # source: kolumnnamn
+
+[[variable]]
+native_id = "195.kdagm1"
+slug = "kdagm1"  # source: kolumnnamn
+
+[[variable]]
 native_id = "195.one_sni"
 slug = "one-sni"  # source: kolumnnamn
 
