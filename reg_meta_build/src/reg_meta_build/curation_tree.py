@@ -378,6 +378,7 @@ class ErrataEditionPeriodEntry(_CurationModel):
 
 
 class ErrataDeliveredEntry(_CurationModel):
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     variant: str
     donor_variant: str | None = None
     column: str
