@@ -6233,6 +6233,13 @@ def compile_errata(
                 ):
                     blockers = ("ambiguous named version",)
                     converted = None
+                elif (
+                    isinstance(row, ErrataDeliveredEntry)
+                    and row.donor_variant is not None
+                    and not by_variant.get(variant_ids[row.donor_variant])
+                ):
+                    blockers = ("no_documented_column_identity",)
+                    converted = None
                 elif table == "column" and (
                     accepted_names.get(f"{register_id}.{row.column}") is None
                     or accepted_names[f"{register_id}.{row.column}"].entry.slug is None
@@ -6255,9 +6262,22 @@ def compile_errata(
                             fold_column(row.column),
                             tuple(row.versions),
                         ]
+                        donor_context = None
+                        if entry.donor_variant_id is not None:
+                            donor_id = entry.donor_variant_id
+                            donor_context = variant_contexts.get(donor_id)
+                            if donor_context is None:
+                                donor_context = ErrataVariantContext(
+                                    by_variant.get(donor_id, ()),
+                                    register_id,
+                                    donor_id,
+                                    bound_editions.get(donor_id, ()),
+                                )
+                                variant_contexts[donor_id] = donor_context
+                        documented_context = donor_context or context
                         donor_keys = {
                             native_variable_key(record)
-                            for record in context.by_column.get(
+                            for record in documented_context.by_column.get(
                                 fold_column(row.column), ()
                             )
                             if entry.native_variable_id is None
@@ -6270,7 +6290,9 @@ def compile_errata(
                             assert base is not None
                             native_id = next(
                                 record.subject.native.variable_id
-                                for record in context.by_column[fold_column(row.column)]
+                                for record in documented_context.by_column[
+                                    fold_column(row.column)
+                                ]
                                 if native_variable_key(record) == base
                             )
                             by_edition: dict[NativeKey, set[NativeKey]] = defaultdict(
@@ -6282,7 +6304,9 @@ def compile_errata(
                             ).items():
                                 if owner[: len(base)] != base:
                                     continue
-                                for record in context.by_variable.get(native_id, ()):
+                                for record in documented_context.by_variable.get(
+                                    native_id, ()
+                                ):
                                     literal = _literal_field(record, "column_name")
                                     if (
                                         literal is None
@@ -6305,6 +6329,7 @@ def compile_errata(
                             entry,
                             case_id=case_id,
                             context=context,
+                            donor_context=donor_context,
                             steward_table_prefixes=register.register_info.steward_table_prefixes,
                             storage_columns=register_storage_columns,
                             preserve_blank_native_base=component_base_key is not None,
@@ -6345,6 +6370,11 @@ def compile_errata(
                     row, ErrataDeliveredEntry
                 ) and row.expected_evidence_sha256 != acknowledgement_evidence_sha256(
                     context.records_for_refs(set(result.evidence_refs))
+                    + (
+                        donor_context.records_for_refs(set(result.evidence_refs))
+                        if donor_context is not None
+                        else ()
+                    )
                 ):
                     statuses["stale"].append(case_id)
                     diagnostics.append(
@@ -6392,6 +6422,10 @@ def compile_errata(
                     )
                     continue
                 if table == "delivered":
+                    # Sibling additions inherit the donor’s reviewed literal owner.
+                    ownership_records = (
+                        donor_context.records if donor_context is not None else members
+                    )
                     effects = []
                     rebinding_blockers = []
                     corrected_families = {}
@@ -6430,7 +6464,7 @@ def compile_errata(
                             continue
                         original_pairs = {
                             (record_ref(record), row.column)
-                            for record in members
+                            for record in ownership_records
                             if source_occurrence(record).variable_key == variable_key
                             and _literal_field(record, "column_name") == row.column
                         }

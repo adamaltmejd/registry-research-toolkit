@@ -1,0 +1,83 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "column": [
+          "VALUE",
+          "OTHER"
+        ]
+      },
+      "fields": [
+        "register",
+        "variable",
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to",
+        "data_type"
+      ],
+      "rows": [
+        [
+          "sample",
+          "value",
+          "early",
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31",
+          "text"
+        ],
+        [
+          "sample",
+          "value",
+          "later",
+          "VALUE",
+          "2022-01-01",
+          "2022-12-31",
+          "integer"
+        ],
+        [
+          "sample",
+          "other",
+          "later",
+          "OTHER",
+          "2022-01-01",
+          "2022-12-31",
+          "integer"
+        ],
+        [
+          "sample",
+          "other",
+          "early",
+          "OTHER",
+          "2020-01-01",
+          "2020-12-31",
+          "integer"
+        ],
+        [
+          "sample",
+          "other",
+          "early",
+          "OTHER",
+          "2018-01-01",
+          "2018-12-31",
+          "integer"
+        ]
+      ]
+    }
+  ]
+}

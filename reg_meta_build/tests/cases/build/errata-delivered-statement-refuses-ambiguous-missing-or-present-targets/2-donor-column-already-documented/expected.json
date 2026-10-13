@@ -1,0 +1,35 @@
+{
+  "status": "diagnostic_complete",
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": [
+          "stale_curation_entry",
+          "overbroad_curation_entry"
+        ]
+      },
+      "fields": [
+        "code",
+        "detail"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/sample.toml#/errata.delivered/1: scb_errata_now_present:documented_on_target_variant; use a plain delivered entry"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "column": "VALUE",
+        "valid_from": "2021-01-01"
+      },
+      "fields": [
+        "variable"
+      ],
+      "rows": []
+    }
+  ]
+}

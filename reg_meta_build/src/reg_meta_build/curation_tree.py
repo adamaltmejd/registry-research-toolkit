@@ -379,6 +379,7 @@ class ErrataEditionPeriodEntry(_CurationModel):
 
 class ErrataDeliveredEntry(_CurationModel):
     variant: str
+    donor_variant: str | None = None
     column: str
     versions: list[str]
     evidence: str
