@@ -11,15 +11,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import sqlite3
 import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
 from _swecov_fixtures import (
+    POLICY,
     build_catalog,
     copied_layout,
     flavored_db_fixture,  # noqa: F401
     inventory_worklist as _inventory_worklist,
+    run_flavor,
     run_generator,
     run_inventory as _run_inventory,
     synthetic_enriched as _synthetic_enriched,
@@ -364,3 +367,74 @@ def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
     ]
     assert worklist["retained_unknown"][0]["table"] == "Undated"
     assert worklist["retained_unknown"][0]["columns"] == ["T_kolumn", "Unknown"]
+
+
+# --- cmd_inventory: a year-independent table (#1538) --------------------------
+
+
+def test_year_independent_flavor_table_maps_as_year_independent_holdings(
+    tmp_path: Path,
+) -> None:
+    """The committed policy's year-independent flavor table, through the real
+    path: `cmd_flavor` emits its variant's states as year-independent,
+    `extend_db` writes them with no calendar window, and an overlay edition
+    `"_default"` places the table as a year-independent holding whose mapping
+    the catalog serves (no coverage miss, a resolver-emitted column). Fails if
+    the flavor dates the states 0001-01-01..9999-12-31 (the `_default` table
+    then has no year-independent owner and is refused), if `cmd_inventory`
+    cannot read `_default` or emits it without its `period_scope`, or if
+    extension writes the state so the catalog does not serve it."""
+    from contextlib import closing
+
+    from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+    from reg_meta_build.extend_db import extend_db
+    from reg_meta_build.holdings_compile import canonical_inventory
+    from reg_meta_build.inventory_coverage import coverage_misses
+
+    (table,) = POLICY.variant_tables()[
+        ("swecov", "population", "fodelseland-grupperat")
+    ]
+    root = run_flavor(tmp_path / "flavor", _synthetic_enriched())
+    base_db = build_reader_artifact(
+        tmp_path / "base",
+        "reader/classification-editions",
+        "catalog",
+        identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
+    )
+    extend_db(
+        base_db=base_db,
+        providers_dir=root / "providers",
+        db_dir=tmp_path / "flavored",
+        steward="swecov",
+        slug_dir=root.parents[1] / "fqid_slugs" / "swecov",
+        diagnostic=True,
+    )
+    flavored = tmp_path / "flavored" / "reg_meta.db"
+
+    steward = _run_inventory(
+        tmp_path,
+        flavored,
+        f'[[edition]]\ntable = "{table}"\nedition = "_default"\n',
+        table,
+        [f"{table}_kolumn"],
+        holding=("RTB", "Födelseuppgifter"),
+    )
+
+    (emitted,) = tomllib.loads(
+        (steward / "inventory.toml").read_text(encoding="utf-8")
+    )["table"]
+    assert (emitted["edition"], emitted["period_scope"]) == (
+        "_default",
+        "year_independent",
+    )
+    assert [
+        (m["register_variant"], m["representation"])
+        for column in emitted["column"]
+        for m in column["mapping"]
+    ] == [("swecov/population/fodelseland-grupperat", f"{table}_kolumn")]
+    assert _inventory_worklist(tmp_path)["retained_unknown"] == []
+    inventory = load_delivery_inventory(steward / "inventory.toml")
+    with closing(sqlite3.connect(flavored)) as conn:
+        report = coverage_misses(conn, inventory)
+        canonical_inventory(conn, inventory)
+    assert (report.pairs, report.misses) == (1, ())

@@ -159,6 +159,9 @@ class IRVariableState(_IRBase):
     # Y-202: True when the state spans a pooled multi-year edition range with no
     # explicit annual coverage. Steward/curated IR leaves the default False.
     pooled: bool = False
+    # "year_independent": a physical delivery with no calendar window; both
+    # bounds are None and the materializer writes them as NULL, not sentinels.
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
 
 
 class IRVariableAlias(_IRBase):

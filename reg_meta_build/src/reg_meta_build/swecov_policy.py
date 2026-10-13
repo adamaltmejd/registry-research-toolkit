@@ -103,6 +103,10 @@ class FlavorDisposition(_PolicyModel):
     # `sensitive_columns`: flavor variables flagged `is_sensitive`.
     keep_columns: list[str] = Field(default_factory=list)
     sensitive_columns: list[str] = Field(default_factory=list)
+    # `year_independent`: the variant's table has physical delivery scope but no
+    # calendar coverage, so its states carry no window (the inventory places the
+    # table at edition `_default`).
+    period_scope: Literal["intervals", "year_independent"] = "intervals"
 
     @model_validator(mode="after")
     def _tables(self) -> FlavorDisposition:
@@ -233,6 +237,14 @@ class SourcePolicy(_PolicyModel):
             for entry in self.flavor
             if entry.tables is not None
         }
+
+    def year_independent_variants(self) -> frozenset[tuple[str, str, str]]:
+        """The flavor coordinates whose states carry no calendar window."""
+        return frozenset(
+            (entry.provider, entry.register_key, entry.variant)
+            for entry in self.flavor
+            if entry.period_scope == "year_independent"
+        )
 
     def variant_columns(
         self,

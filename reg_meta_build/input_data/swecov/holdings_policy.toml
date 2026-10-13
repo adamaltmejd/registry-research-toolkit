@@ -33,12 +33,6 @@ reason = "Education code/name reference lookup; no observation holdings."
 table = "IFA_Kassakod_Lev3"
 reason = "Unemployment fund code/name/validity lookup; no person observations."
 
-[[retain_unknown]]
-table = "SWECOV_Fodelseland_grupperat"
-register = "swecov/population"
-rows_sha256 = "08859112fe6a117d8e5f15921aaafa5c241b4e74ae399675c301a1541df13eac"
-reason = "EU classification labels are not delivery dates; calendar coverage is undocumented."
-
 [[unmap]]
 table = "Population_PersonNr_20241231"
 column = "FodelseArManDag"

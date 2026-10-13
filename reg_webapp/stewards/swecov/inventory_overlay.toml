@@ -19,7 +19,11 @@
 #       Explicit edition for a table whose name yields zero or several period
 #       tokens. `edition` uses the shared period grammar: a year int, a token
 #       string ("2019-Q3", "HT2020"), an inline range { from = ..., to = ... },
-#       or a list of those for an interrupted series.
+#       or a list of those for an interrupted series. `edition = "_default"`
+#       declares a year-independent table instead: it is emitted with
+#       `period_scope = "year_independent"` and maps only year-independent
+#       states (a [[flavor]] `period_scope` in source_policy.toml), never a
+#       finite stand-in.
 #   [[school_year]] register, anchor
 #       Per-register school-year rule: SCB's school registers deliver school
 #       years, so a table of theirs named by ONE year holds the school year
@@ -1287,6 +1291,14 @@ reason = "superseded by KTA_2021_individmodellen_231208 (probe: 231208 row count
 [[exclude]]
 table = "KTA_2021_transaktionsmodellen_230210"
 reason = "superseded by KTA_2021_transaktionsmodellen_231208 (probe: 231208 row count >= 230210 in every pair)"
+
+# ── year-independent tables ────────────────────────────────────────────────
+
+# A world-region grouping of birth country with no calendar coverage
+# (maintainer decision 2026-10-12, #1538).
+[[edition]]
+table = "SWECOV_Fodelseland_grupperat"
+edition = "_default"
 
 # ── DECIDED (maintainer-approved 2026-09-01, MONA probe evidence): editions derived from the
 # period distributions (dominant time column; noise years below

@@ -902,6 +902,9 @@ variant = "fodelseland-grupperat"
 variant_slug = "fodelseland-grupperat"
 variant_name = "Födelseland grupperat"
 tables = ["SWECOV_Fodelseland_grupperat"]
+# A world-region grouping of birth country: one delivery with no calendar
+# coverage, so its states carry no window (maintainer decision 2026-10-12, #1538).
+period_scope = "year_independent"
 
 [[flavor]]
 holding = "Skatteverket"

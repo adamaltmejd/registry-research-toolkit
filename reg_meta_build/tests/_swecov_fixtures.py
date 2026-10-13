@@ -164,22 +164,42 @@ def flavored_db_fixture(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return write_flavored_db(tmp_path_factory.mktemp("db") / "reg_meta_swecov.db")
 
 
+def run_flavor(tmp_path: Path, enriched: dict[str, dict]) -> Path:
+    """Run `cmd_flavor` in a synthetic package layout; return its input root
+    (`providers/` and, two levels up, `fqid_slugs/swecov/`)."""
+    base = tmp_path / "input_data" / "swecov"
+    derived = base / "derived"
+    derived.mkdir(parents=True)
+    (derived / "holdings_enriched.json").write_text(
+        json.dumps(enriched), encoding="utf-8"
+    )
+    build_catalog.cmd_flavor(
+        argparse.Namespace(csv=base / "SWECOV_variables_2025-12-11.csv")
+    )
+    return base
+
+
 def run_inventory(
-    tmp_path: Path, db: Path, overlay: str, table: str, columns: list[str]
+    tmp_path: Path,
+    db: Path,
+    overlay: str,
+    table: str,
+    columns: list[str],
+    *,
+    holding: tuple[str, str] = ("Inera/1177", "Ordered tests"),
 ) -> Path:
     """`cmd_inventory` over a synthetic one-table CSV; returns the steward dir.
 
-    The table lands under the `Ordered tests` holding, whose disposition entry
-    names no table selector — so the table NAME decides only its edition, while
-    its columns resolve against the flavored DB (`inera/bestallda-prover`)."""
+    By default the table lands under the `Ordered tests` holding, whose
+    disposition entry names no table selector — so the table NAME decides only
+    its edition, while its columns resolve against the flavored DB
+    (`inera/bestallda-prover`)."""
     steward_dir = tmp_path / "steward"
     steward_dir.mkdir()
     (steward_dir / "inventory_overlay.toml").write_text(overlay, encoding="utf-8")
     csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
     csv_path.write_text(
-        "Category,Detail,Table\n"
-        + ",".join(("Inera/1177", "Ordered tests", table, *columns))
-        + "\n",
+        "Category,Detail,Table\n" + ",".join((*holding, table, *columns)) + "\n",
         encoding="utf-8",
     )
 

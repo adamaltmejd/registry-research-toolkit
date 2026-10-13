@@ -1392,6 +1392,10 @@ _FLAVOR_VARIANT_TABLES = _POLICY.variant_tables()
 # physical names from the disposition entry (source_policy.toml, #1302).
 _FLAVOR_VARIANT_COLUMNS = _POLICY.variant_columns()
 
+# (provider, register, variant) whose table has no calendar coverage: its states
+# are emitted year-independent instead of open-dated (#1538).
+_FLAVOR_YEAR_INDEPENDENT = _POLICY.year_independent_variants()
+
 
 def _kebab(text: str) -> str:
     """ASCII kebab slug: NFKD-transliterate (ä→a), lower, non-alnum→'-'. Used
@@ -1520,6 +1524,8 @@ def _flavor_provider_toml(
             ]
             if variant.get("description"):
                 lines.append(f"description = {_toml_str(variant['description'])}")
+            if variant.get("period_scope", "intervals") != "intervals":
+                lines.append(f"period_scope = {_toml_str(variant['period_scope'])}")
         for variant in reg["variants"]:
             for variable in variant["variables"]:
                 lines += [
@@ -1653,6 +1659,9 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             "key": var_key,
             "name": var_name,
             "description": None,
+            "period_scope": "year_independent"
+            if (prov_slug, reg_key, var_key) in _FLAVOR_YEAR_INDEPENDENT
+            else "intervals",
             "variables": variables,
         }
         reg["_variant_slugs"][var_key] = var_slug
@@ -1932,15 +1941,20 @@ def _inventory_period_records(
 
     A range/list is record coverage, not per-column availability; it remains
     unassessed unless `assess_ranges` (a reviewed `[[mapping]]`, which must
-    cover its whole edition). Distinct owners active together in one variant
-    stay ambiguous.
+    cover its whole edition). The year-independent edition `_default` admits
+    only year-independent states, and a finite edition only dated ones: neither
+    scope stands in for the other. Distinct owners active together in one
+    variant stay ambiguous.
     """
     from reg_meta_build.inventory import _merge
     from reg_meta_build.inventory_coverage import _covers
 
-    if not assess_ranges and not isinstance(edition, (str, int)):
+    independent = edition == _YEAR_INDEPENDENT_EDITION
+    if not independent and not assess_ranges and not isinstance(edition, (str, int)):
         return records, None
-    bounds = _overlay_edition_bounds(edition)
+    bounds = () if independent else _overlay_edition_bounds(edition)
+    scope = "year_independent" if independent else "intervals"
+    records = [r for r in records if r["period_scope"] == scope]
     grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for record in records:
         grouped[(record["coord"], record["vslug"])].append(record)
@@ -1954,13 +1968,14 @@ def _inventory_period_records(
             by_column[member["col"]].append(member)
         active = []
         for column_records in by_column.values():
+            if independent:
+                active.extend(column_records)
+                continue
             windows = _merge(
                 [
                     (r["valid_from"], r["valid_to"])
                     for r in column_records
-                    if r["period_scope"] == "intervals"
-                    and r["valid_from"] is not None
-                    and r["valid_to"] is not None
+                    if r["valid_from"] is not None and r["valid_to"] is not None
                 ]
             )
             if all(_covers(interval, tuple(windows)) for interval in bounds):
@@ -2097,7 +2112,9 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
 #
 #   [[exclude]]  table, reason      — discard a superseded delivery
 #   [[edition]]  table, edition     — explicit edition where the table name
-#                                     yields zero or several period tokens
+#                                     yields zero or several period tokens;
+#                                     `"_default"` declares a year-independent
+#                                     table (emitted with that period_scope)
 #   [[mapping]] table, column, edition, register_variant, variable, representation, reason
 #                                   — exact reviewed representation, guarded by
 #                                     physical coordinates and full catalog coverage
@@ -2134,6 +2151,10 @@ for _entry in _FLAVOR_DISPOSITION:
 
 
 _SCHOOL_YEAR_ANCHORS = ("spring", "autumn", "vt", "ht")
+
+# The inventory grammar's whole-edition token for a year-independent table
+# (reg_meta_build/DESIGN.md → Inventory TOML): never a finite period.
+_YEAR_INDEPENDENT_EDITION = "_default"
 
 
 class InventoryMappingOverride(ColumnMapping):
@@ -2553,6 +2574,8 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                 base_counts[s] += 1
         lines += ["", "[[table]]", f"id = {_toml_str(table)}"]
         lines.append(f"edition = {_toml_edition(edition)}")
+        if edition == _YEAR_INDEPENDENT_EDITION:
+            lines.append('period_scope = "year_independent"')
         if table in overlay["partition"]:
             lines.append(f"partition = {_toml_str(overlay['partition'][table])}")
         for col in cols:

@@ -623,6 +623,47 @@ def test_inverted_state_window_is_rejected_through_extend_db(
     assert "state[0] has an inverted validity window" in error.message
 
 
+@pytest.mark.parametrize(
+    "old, new, refusal",
+    [
+        (
+            '  is_sensitive = true\n  variants = ["_default"]',
+            '  is_sensitive = true\n  variants = ["_default"]\n  valid_from = "2018"',
+            "state 'KONTO' in year-independent variant '_default' carries a "
+            "validity bound.",
+        ),
+        (
+            '    column = "BELOPP"',
+            '    column = "BELOPP"\n    aliases = ["BELOPP_SEK"]',
+            "state 'BELOPP' in year-independent variant '_default' carries "
+            "co-delivered aliases.",
+        ),
+    ],
+)
+def test_year_independent_variant_refuses_a_window_through_extend_db(
+    tmp_path: Path, base_db: Path, old: str, new: str, refusal: str
+) -> None:
+    # Fails if a year-independent variant's state is written with a calendar
+    # window, either inherited from its variable (here) or through an alias's
+    # dated window table, instead of being refused. Its accepted twin is
+    # `test_swecov_inventory.py`'s year-independent flavor table.
+    text = (
+        _BASE_TOML.replace(
+            '  description = "One table"',
+            '  description = "One table"\n  period_scope = "year_independent"',
+            1,
+        )
+        .replace(
+            '    data_type = "varchar"\n    valid_from = "2018"',
+            '    data_type = "varchar"',
+            1,
+        )
+        .replace(old, new, 1)
+    )
+    error = _assert_rejected_without_output(tmp_path, base_db, text)
+    assert refusal in error.message
+
+
 def test_variable_key_cannot_repeat_within_one_variant_through_extend_db(
     tmp_path: Path, base_db: Path
 ) -> None:
