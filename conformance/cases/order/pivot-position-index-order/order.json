@@ -61,7 +61,7 @@
   ],
   "provenance": {
     "artifact_kind": "steward",
-    "catalog_generation_id": "0f3158c318a8c1f3be19a97ddd2ee507aaedb2105c28f47aa2bd59fcc42cc2f2",
+    "catalog_generation_id": "e3d5fcc91a3287b371185f4f266a0c64542a488e4a48e7a6856392f00eb7a419",
     "catalog_schema_version": "11.0.0",
     "mode": "steward_holdings",
     "project_hash": "bd3f68142ec9f36cddfa1d8925d17df1116a7f70a07b094b4a113f560a592c32",
