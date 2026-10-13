@@ -1,0 +1,6 @@
+interface:
+  display_name: "Yard Drive"
+  short_description: "Answer a Yard board's attention items"
+  default_prompt: "Use $yard-drive to answer the Yard board's open attention items."
+policy:
+  allow_implicit_invocation: true

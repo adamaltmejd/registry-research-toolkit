@@ -6,9 +6,13 @@
 flavor = "gfm"
 
 # _raw is untracked marker output; AGENTS.md is agent config, not a rendered doc.
+# The Yard skills `yard init` scaffolds keep upstream bytes so a re-init diffs cleanly.
 extend-exclude = [
   "reg_meta_build/docs/_raw/",
   "AGENTS.md",
+  ".agents/skills/yard-drive/SKILL.md",
+  ".agents/skills/yard-file/SKILL.md",
+  ".agents/skills/yard-operator/SKILL.md",
 ]
 
 [extensions]
