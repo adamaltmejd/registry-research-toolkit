@@ -598,6 +598,108 @@ definition = "Vapenfri efter mönstring. Koder: X=Vapenfri"
 data_type = "text"
 is_sensitive = true
 
+# PV_1997_2010 is one INSARK delivery (#1579; maintainer-approved OP-2026-10-13-E):
+# INSIPROV fields and the SIPE/SAFHE psychologist ratings it carries are declared here.
+
+[[register.variable]]
+name = "Inskrivningsprovsvärde, verbal förmåga"
+column = "gckap"
+definition = "Inskrivningsprovsvärde, verbal förmåga (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is co-delivered in PV_1997_2010; INSARK ownership records the single-register delivery decision (#1579)."
+
+[[register.variable]]
+name = "Inskrivningsprov/G-faktor/Provgrupp"
+column = "gkap"
+definition = "Inskrivningsprov/G-faktor/Provgrupp (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is co-delivered in PV_1997_2010; INSARK ownership records the single-register delivery decision (#1579)."
+
+[[register.variable]]
+name = "Inskrivningsprovsvärde, spatial förmåga"
+column = "gvkap"
+definition = "Inskrivningsprovsvärde, spatial förmåga (Skala 1-9)"
+data_type = "integer"
+is_sensitive = true
+data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is co-delivered in PV_1997_2010; INSARK ownership records the single-register delivery decision (#1579)."
+
+[[register.variable]]
+name = "Iprovsdatum"
+column = "pkapdat"
+definition = "Iprovsdatum (YYYY-MM-DD TT:MM)"
+data_type = "datetime"
+data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is co-delivered in PV_1997_2010; INSARK ownership records the single-register delivery decision (#1579)."
+
+[[register.variable]]
+name = "SIPE, social mognad"
+column = "sipes"
+definition = "Psykologens skattning (1-5) av social mognad. SIPE: the enrolment psychologist's 1-5 rating of four personality dimensions, documented in aggregate in Insarkvariabler-fullst.pdf p.14; the letter key follows published research (Peters & Barclay 2025, Eur J Population, doi:10.1007/s10680-025-09748-4; Ludvigsson et al. 2022, PMC9329412) because the official key is classified."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "SIPE, intensitet"
+column = "sipei"
+definition = "Psykologens skattning (1-5) av intensitet. SIPE: the enrolment psychologist's 1-5 rating of four personality dimensions, documented in aggregate in Insarkvariabler-fullst.pdf p.14; the letter key follows published research (Peters & Barclay 2025, Eur J Population, doi:10.1007/s10680-025-09748-4; Ludvigsson et al. 2022, PMC9329412) because the official key is classified."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "SIPE, psykisk energi"
+column = "sipep"
+definition = "Psykologens skattning (1-5) av psykisk energi. SIPE: the enrolment psychologist's 1-5 rating of four personality dimensions, documented in aggregate in Insarkvariabler-fullst.pdf p.14; the letter key follows published research (Peters & Barclay 2025, Eur J Population, doi:10.1007/s10680-025-09748-4; Ludvigsson et al. 2022, PMC9329412) because the official key is classified."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "SIPE, emotionell stabilitet"
+column = "sipee"
+definition = "Psykologens skattning (1-5) av emotionell stabilitet. SIPE: the enrolment psychologist's 1-5 rating of four personality dimensions, documented in aggregate in Insarkvariabler-fullst.pdf p.14; the letter key follows published research (Peters & Barclay 2025, Eur J Population, doi:10.1007/s10680-025-09748-4; Ludvigsson et al. 2022, PMC9329412) because the official key is classified."
+data_type = "integer"
+is_sensitive = true
+
+[[register.variable]]
+name = "SAFHE, avsnitt S"
+column = "safhes"
+definition = "Psykologens skattning (1-5) av avsnitt S i SAFHE-intervjun. SAFHE: the enrolment psychologist's 1-5 rating of one section of the SAFHE interview outline, documented in aggregate in Insarkvariabler-fullst.pdf p.14; what each letter denotes is not documented, so the section is named by its letter only."
+data_type = "integer"
+is_sensitive = true
+data_warning = "The SAFHE section letter is not expanded: no public source documents which interview section each letter denotes."
+
+[[register.variable]]
+name = "SAFHE, avsnitt A"
+column = "safhea"
+definition = "Psykologens skattning (1-5) av avsnitt A i SAFHE-intervjun. SAFHE: the enrolment psychologist's 1-5 rating of one section of the SAFHE interview outline, documented in aggregate in Insarkvariabler-fullst.pdf p.14; what each letter denotes is not documented, so the section is named by its letter only."
+data_type = "integer"
+is_sensitive = true
+data_warning = "The SAFHE section letter is not expanded: no public source documents which interview section each letter denotes."
+
+[[register.variable]]
+name = "SAFHE, avsnitt F"
+column = "safhef"
+definition = "Psykologens skattning (1-5) av avsnitt F i SAFHE-intervjun. SAFHE: the enrolment psychologist's 1-5 rating of one section of the SAFHE interview outline, documented in aggregate in Insarkvariabler-fullst.pdf p.14; what each letter denotes is not documented, so the section is named by its letter only."
+data_type = "integer"
+is_sensitive = true
+data_warning = "The SAFHE section letter is not expanded: no public source documents which interview section each letter denotes."
+
+[[register.variable]]
+name = "SAFHE, avsnitt H"
+column = "safheh"
+definition = "Psykologens skattning (1-5) av avsnitt H i SAFHE-intervjun. SAFHE: the enrolment psychologist's 1-5 rating of one section of the SAFHE interview outline, documented in aggregate in Insarkvariabler-fullst.pdf p.14; what each letter denotes is not documented, so the section is named by its letter only."
+data_type = "integer"
+is_sensitive = true
+data_warning = "The SAFHE section letter is not expanded: no public source documents which interview section each letter denotes."
+
+[[register.variable]]
+name = "SAFHE, avsnitt E"
+column = "safhee"
+definition = "Psykologens skattning (1-5) av avsnitt E i SAFHE-intervjun. SAFHE: the enrolment psychologist's 1-5 rating of one section of the SAFHE interview outline, documented in aggregate in Insarkvariabler-fullst.pdf p.14; what each letter denotes is not documented, so the section is named by its letter only."
+data_type = "integer"
+is_sensitive = true
+data_warning = "The SAFHE section letter is not expanded: no public source documents which interview section each letter denotes."
+
 [[register]]
 key = "insiprov"
 name = "Inskrivningsprov"
@@ -616,8 +718,8 @@ is_sensitive = true
 [[register.variable]]
 name = "Iprovsdatum"
 column = "pkapdat"
-definition = "Iprovsdatum"
-data_type = "date"
+definition = "Iprovsdatum (YYYY-MM-DD TT:MM)"
+data_type = "datetime"
 
 [[register.variable]]
 name = "Inskrivningsprov/G-faktor/Provgrupp"
