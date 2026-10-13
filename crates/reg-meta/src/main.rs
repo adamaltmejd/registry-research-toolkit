@@ -247,8 +247,8 @@ async fn serve(
         .await
         .expect("bind the port");
     // One stable line naming the bound address, so `--port 0` is usable: the
-    // conformance harness will start servers that way and read this line once the
-    // G1 pinned baseline binary prints it (#1529).
+    // conformance harness (`ServerPool`) starts servers that way and reads the port
+    // from this line (#1529).
     eprintln!(
         "listening on {}",
         listener.local_addr().expect("the bound address")

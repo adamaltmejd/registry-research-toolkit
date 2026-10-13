@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shlex
 import signal
-import socket
 import sqlite3
 import subprocess
 import time
@@ -23,7 +23,8 @@ from reg_meta_build.errors import RegMetaError
 
 CASES = Path(__file__).parent / "cases"
 READY_PATH = "/openapi.json"
-IDENTITY_PATH = "/api/context"
+# The line `reg-meta serve` prints on stderr once bound.
+LISTENING = re.compile(rb"^listening on \S+:(\d+)\n", re.MULTILINE)
 SERVER_READY_SECONDS = 120
 EXIT_STATUS = {
     code["code"]: code.get("exit")
@@ -199,7 +200,7 @@ def assert_startup_refusal(request, refusal, servers, tmp_path):
 
 def _assert_refused(servers, db, catalog, refusal):
     completed = subprocess.run(
-        servers.argv(db, catalog, _free_port()),
+        servers.argv(db, catalog, 0),
         cwd=CASES.parents[1],
         stdin=subprocess.DEVNULL,
         capture_output=True,
@@ -292,8 +293,9 @@ class ServerPool:
     """One server process per artifact, started from a `--server-cmd` template.
 
     The template is split like a shell command line, and `{db}` (the artifact
-    directory), `{catalog}` (`global` or the artifact's steward) and `{port}` are
-    substituted in each word. The process also gets
+    directory), `{catalog}` (`global` or the artifact's steward) and `{port}` (0:
+    the server picks a port and prints it) are substituted in each word. The
+    process also gets
     `artifact_env`, runs in its own process group (so stopping it also stops
     what `uv run` launched) and logs to `log_dir`."""
 
@@ -332,96 +334,60 @@ class ServerPool:
 
     def start(self, env):
         log = self.log_dir / f"server-{len(self.servers)}.log"
-        expected = _artifact_identity(Path(env["REG_META_DB"]) / "reg_meta.db")
-        observed = None
-        deadline = time.monotonic() + SERVER_READY_SECONDS
-        # A server that exits before answering may have lost its port to another
-        # process between `_free_port` and its bind: retry on a fresh port.
-        for _attempt in range(3):
-            port = _free_port()
-            argv = self.argv(env["REG_META_DB"], env["REG_WEBAPP_STEWARD"], port)
-            with log.open("ab") as output:
-                process = subprocess.Popen(
-                    argv,
-                    cwd=CASES.parents[1],
-                    env=os.environ | env,
-                    stdin=subprocess.DEVNULL,
-                    stdout=output,
-                    stderr=subprocess.STDOUT,
-                    start_new_session=True,
-                )
+        argv = self.argv(env["REG_META_DB"], env["REG_WEBAPP_STEWARD"], 0)
+        with log.open("wb") as output:
+            process = subprocess.Popen(
+                argv,
+                cwd=CASES.parents[1],
+                env=os.environ | env,
+                stdin=subprocess.DEVNULL,
+                stdout=output,
+                stderr=subprocess.STDOUT,
+                start_new_session=True,
+            )
+        client = _ready(process, log, time.monotonic() + SERVER_READY_SECONDS)
+        if client is None:
+            _stop(process)
+            raise RuntimeError(
+                f"server never answered {READY_PATH}: {shlex.join(argv)}\n"
+                f"{log.read_text(errors='replace')[-4000:]}"
+            )
+        return process, client
+
+
+def _ready(process, log, deadline):
+    """A client of the server once it answers `READY_PATH`, or None when the process
+    exits or the deadline passes first.
+
+    The server binds `--port 0` and names the bound address in `LISTENING` on its
+    log, so the client reaches this server and no other worker's. `READY_PATH` is
+    static, so polling it stacks no work on a server still on its cold first read."""
+    client = None
+    while time.monotonic() < deadline:
+        if client is None and (match := LISTENING.search(log.read_bytes())):
             # A connection per request: uvicorn closes one after an unhandled
             # exception's 500, and the next step must not inherit that reset.
             client = httpx2.Client(
-                base_url=f"http://127.0.0.1:{port}",
+                base_url=f"http://127.0.0.1:{int(match[1])}",
                 timeout=60,
                 limits=httpx2.Limits(max_keepalive_connections=0),
             )
-            ready, observed = _ready(process, client, deadline, expected, observed)
-            if ready:
-                return process, client
-            client.close()
-            _stop(process)
-            if time.monotonic() >= deadline:
-                break
-        raise RuntimeError(
-            f"server never answered {IDENTITY_PATH} as artifact {expected}"
-            f" (last answer: {observed}): {shlex.join(argv)}\n"
-            f"{log.read_text(errors='replace')[-4000:]}"
-        )
-
-
-def _artifact_identity(catalog_db):
-    """The `(generation_id, import_date)` an artifact's server reports in
-    `IDENTITY_PATH`. Both: `generation_id` does not cover the import date, and an
-    `artifacts` entry's other generation differs only there."""
-    with closing(sqlite3.connect(f"{catalog_db.as_uri()}?mode=ro", uri=True)) as conn:
-        manifest = dict(
-            conn.execute(
-                "SELECT key, value FROM import_manifest"
-                " WHERE key IN ('generation_id', 'import_date')"
-            )
-        )
-    return manifest.get("generation_id"), manifest.get("import_date")
-
-
-def _ready(process, client, deadline, expected, observed):
-    """Poll `READY_PATH` until a server answers, then ask `IDENTITY_PATH` once:
-    True when the answer is the `expected` artifact and our process is alive,
-    False on another identity, an exit or the deadline; also the last identity
-    an answer reported.
-
-    `READY_PATH` is static, so polling it stacks no work on a server still on its
-    cold first read; `IDENTITY_PATH` counts the catalog, so it is asked once and
-    given the rest of the budget rather than polled under a short timeout.
-
-    simplify: `_free_port` plus this identity check only narrow the window in
-    which another xdist worker's server holds our port (#1529); they guarantee
-    nothing, since distinct fixtures can report the same identity (a docs-only
-    twin, two fixtures on the same seed and import date). The guarantee is
-    `--port 0` with the address the server prints on stderr, which replaces both
-    once the G1 baseline pin (`conformance/differential/served.py` runs the
-    pinned binary through `ServerPool`) is a release that prints it."""
-    while time.monotonic() < deadline:
-        try:
-            client.get(READY_PATH, timeout=1)
-        except httpx2.TransportError:
-            pass
-        else:
+        if client is not None:
             try:
-                response = client.get(
-                    IDENTITY_PATH, timeout=max(deadline - time.monotonic(), 1)
-                )
-                body = response.json()
-                observed = (body["meta"]["generation"], body["data"]["import_date"])
-            except httpx2.TransportError, ValueError, KeyError, TypeError:
-                return False, observed
-            return observed == expected and process.poll() is None, observed
+                client.get(READY_PATH, timeout=1)
+            except httpx2.TransportError:
+                pass
+            else:
+                # An exited server's released port can be answered by another.
+                if process.poll() is None:
+                    return client
         # Waiting on the process paces the poll and notices an early exit.
         with suppress(subprocess.TimeoutExpired):
             process.wait(timeout=0.05)
-            return False, observed
-    return False, observed
+            break
+    if client is not None:
+        client.close()
+    return None
 
 
 def _stop(process):
@@ -433,25 +399,3 @@ def _stop(process):
         with suppress(ProcessLookupError):
             os.killpg(process.pid, signal.SIGKILL)
         process.wait()
-
-
-def _free_port():
-    """A loopback port held back for the server about to bind it.
-
-    A port merely probed free can be drawn again by another xdist worker before
-    our server binds it (#1529). A connection closed from the accepting side
-    leaves the port in TIME_WAIT (about a minute on Linux), which the kernel
-    skips when it picks a port for `bind(0)` but lets an `SO_REUSEADDR` bind
-    take, as tokio's does. This only makes a collision rarer: a server that
-    starts slower than the TIME_WAIT can still lose its port; `_ready` says
-    what replaces this."""
-    with socket.socket() as listener:
-        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        listener.bind(("127.0.0.1", 0))
-        listener.listen(1)
-        port = listener.getsockname()[1]
-        with socket.create_connection(("127.0.0.1", port)):
-            accepted, _ = listener.accept()
-            # The accepting side closes first, so the TIME_WAIT is on `port`.
-            accepted.close()
-    return port
