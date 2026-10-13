@@ -1629,6 +1629,7 @@
     "fk/9011624717046135047.TYP": "typ",
     "fk/9011624717046135047.TYP_BESLUT": "typ-beslut",
     "fk/9011624717046135047.TYP_INBET": "typ-inbet",
+    "fk/9011624717046135047.Utbetalningsmanad": "utbetalningsmanad",
     "fohm/7376555732108864140.Gisaid": "gisaid",
     "fohm/7376555732108864140.Lineage": "lineage-field",
     "fohm/7376555732108864140.P1105_LopNr_PersonNr": "p1105-lopnr-personnr",
