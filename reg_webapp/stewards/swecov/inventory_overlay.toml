@@ -19499,16 +19499,6 @@ column = "Utbild"
 reason = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1998-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
 
 [[unmap]]
-table = "Grund_Fkl_Fth_2008"
-column = "AK"
-reason = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 2008-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[unmap]]
-table = "Grund_Fkl_Fth_2008"
-column = "SKOM"
-reason = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 2008-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[unmap]]
 table = "LReg_1989"
 column = "Argang"
 reason = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1989 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
@@ -26279,71 +26269,71 @@ reason = "Known shared field retained physically in auxiliary holding Partner_20
 
 [[assign]]
 table = "Grund_Fkl_Fth_2008"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2009"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2010"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2011"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2012"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2013"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2014"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2015"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2016"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2017"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2018"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2019"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2020"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2021"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2022"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2023"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 [[assign]]
 table = "Grund_Fkl_Fth_2024"
-register_variant = ["scb/grundskola-elever/individregister", "scb/fritidshem/grundskola"]
+register_variant = "scb/grundskola-elever/individregister"
 
 # Hreg text-label companions of mapped code columns (round 4 rule).
 
@@ -34724,3 +34714,24 @@ table = "FE2023_ver1"
 column = "SummaTillgangar"
 edition = 2023
 reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+# ── Grund_Fkl_Fth single-register owner (#1579; OP-2026-10-13-E) ──
+
+[[mapping]]
+register_variant = "scb/grundskola-elever/individregister"
+variable = "scb/grundskola-elever/arskurs"
+representation = "Arskurs"
+table = "Grund_Fkl_Fth_2008"
+column = "AK"
+edition = "2008-10-15"
+reason = "SCB delivery report, sheet Skolverkets elevreg., row 16, identifies AK as Årskurs for 2008-2016; the owner emits Arskurs at exactly 2008-10-15. Maintainer-approved 2026-10-13 (OP-2026-10-13-E)."
+
+[[mapping]]
+register_variant = "scb/grundskola-elever/individregister"
+variable = "scb/grundskola-elever/kommun"
+representation = "Kommun"
+table = "Grund_Fkl_Fth_2008"
+column = "SKOM"
+edition = "2008-10-15"
+reason = "SCB delivery report, sheet Skolverkets elevreg., row 11, identifies SKOM as Skolkommun for 2008-2016; the owner emits Kommun (Kommun för där grundskolan ligger) at exactly 2008-10-15. Maintainer-approved 2026-10-13 (OP-2026-10-13-E)."
+

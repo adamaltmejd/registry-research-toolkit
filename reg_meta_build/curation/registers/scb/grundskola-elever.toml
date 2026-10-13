@@ -375,3 +375,48 @@ noted = "2026-10-12"
 [[variable]]
 native_id = "193.MSPR2_ALT"
 slug = "mspr2-alt"
+
+# Grund_Fkl_Fth_2008-2024 is one combined annual (15 October) pupil delivery owned by
+# individregister (#1579); its fritidshem columns have no owner column here.
+
+[[errata.column]]
+variant = "individregister"
+column = "AvdFTH"
+name = "Fritidshemsavdelningens namn"
+definition = "Fritidshemsavdelningens namn, löpnummer vid leverans"
+versions = ["15 oktober 2008", "15 oktober 2009", "15 oktober 2010", "15 oktober 2011", "15 oktober 2012", "15 oktober 2013", "15 oktober 2014", "15 oktober 2015", "15 oktober 2016", "15 oktober 2017", "15 oktober 2018", "15 oktober 2019", "15 oktober 2020", "15 oktober 2021", "15 oktober 2022", "15 oktober 2023", "15 oktober 2024"]
+source = "steward-holdings"
+evidence = "SCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "individregister"
+column = "SkolKodFTH"
+name = "Skolkod fritidshem"
+definition = "Löpnummer för skolorna"
+versions = ["15 oktober 2008", "15 oktober 2009", "15 oktober 2010", "15 oktober 2011", "15 oktober 2012"]
+source = "steward-holdings"
+evidence = "SCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "individregister"
+column = "SkolenhetsKodFTH"
+name = "Skolenhetskod fritidshem"
+definition = "Definerar en skolenhet, löpnummer vid leverans"
+versions = ["15 oktober 2013", "15 oktober 2014", "15 oktober 2015", "15 oktober 2016", "15 oktober 2017", "15 oktober 2018", "15 oktober 2019", "15 oktober 2020", "15 oktober 2021", "15 oktober 2022", "15 oktober 2023", "15 oktober 2024"]
+source = "steward-holdings"
+evidence = "SCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
+noted = "2026-10-13"
+
+[[variable]]
+native_id = "193.AvdFTH"
+slug = "avdelningsbeteckning-fritidshem"
+
+[[variable]]
+native_id = "193.SkolKodFTH"
+slug = "skolkod-fritidshem"
+
+[[variable]]
+native_id = "193.SkolenhetsKodFTH"
+slug = "skolenhetskod-fritidshem"
