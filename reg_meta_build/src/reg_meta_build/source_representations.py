@@ -227,6 +227,7 @@ def form_representations(
     variable_key: NativeKey,
     variants: Mapping[NativeKey, ResolvedVariant | None],
     subject: str,
+    nameless: bool = False,
 ) -> tuple[
     list[ResolvedState],
     tuple[ResolvedAlias, ...],
@@ -250,6 +251,8 @@ def form_representations(
     The fifth result names every (variant, column, field, period) where accepted
     parallel columns disagree on one fact, so the obligation keeps its window
     but drops that exact claimed fact like a waived delivery slice.
+    `nameless` says the variable has no common name to fall back on, so a shared
+    state whose columns disagree on the name is withheld instead of nulling it.
     """
     if not cases:
         return states, (), [], (), ()
@@ -419,6 +422,18 @@ def form_representations(
                     ("representations",),
                     ("state", "representations"),
                     "The identity has additional parallel columns outside the accepted representation group.",
+                )
+                continue
+            if nameless and len({s.name for s in represented}) != 1:
+                # A nameless shared state is only valid under a common variable
+                # name. Without one, siblings that disagree on the name withhold the
+                # slice in either metadata mode rather than nulling the name. A
+                # blank sibling name never reaches here: formation withholds it.
+                report(
+                    "conflicting_representation_fact",
+                    ("name",),
+                    ("state", "representations"),
+                    "Parallel representations disagree on the delivered name; the shared state is withheld.",
                 )
                 continue
             values = {}

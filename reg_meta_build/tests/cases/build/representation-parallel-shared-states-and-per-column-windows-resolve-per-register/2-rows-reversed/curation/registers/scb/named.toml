@@ -1,0 +1,39 @@
+[register]
+provider = "scb"
+slug = "named"
+native_id = "13"
+[[variant]]
+native_id = "13.130"
+slug = "people"
+[[variable]]
+native_id = "13.13"
+slug = "income"
+[[identity.partition]]
+variable = "13.13"
+columns = { First = "13.13", Second = "13.13" }
+columns_ref = "reviewed parallel source-native quantity"
+[[representation.parallel]]
+variable = "13.13"
+variant = "13.130"
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=13 key=member:1300,member:1301}}
+evidence = "Reviewed parallel columns"
+noted = "2026-10-11"
+[[representation.parallel.columns]]
+column = "First"
+valid_from = "2020-01-01"
+valid_to = "2022-12-31"
+source_editions = ["2020-2022"]
+[[representation.parallel.columns]]
+column = "Second"
+valid_from = "2022-01-01"
+valid_to = "2024-12-31"
+source_editions = ["2022-2024"]
+[[representation.delivery_metadata]]
+variable = "13.13"
+fields = ["name"]
+records = {{expected_records key=member:1300,member:1301}}
+columns = [{ variant_key = {{variant_key key=member:1300}}, column = "First", valid_from = "2020-01-01", valid_to = "2022-12-31", expected_codings = [] }, { variant_key = {{variant_key key=member:1301}}, column = "Second", valid_from = "2022-01-01", valid_to = "2024-12-31", expected_codings = [] }]
+evidence = "Exact supplied delivery names"
+noted = "2026-10-11"

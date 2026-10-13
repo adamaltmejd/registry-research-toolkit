@@ -5,7 +5,7 @@
       "table": "issues",
       "where": {"severity": "error"},
       "fields": ["subject", "code", "case_id", "fields"],
-      "note": "Every error. units, texts and fixunit report none (the replaced tests assert no error). bare is the baseline: without an entry the two edition names conflict. overlap keeps its same-column unit conflict under a name permission. descriptions permits only descriptions, so its names still conflict and it forms no variable. coded's entry goes stale on the added list (stale_representation_coding at its entry, subject its native variable 6.6) and its names then conflict. fixname's checked name correction is not waived by the name permission.",
+      "note": "Every error. units, texts and fixunit report none (the replaced tests assert no error). bare is the baseline: without an entry the two edition names conflict. overlap keeps its same-column unit conflict under a name permission. descriptions permits only descriptions, so its names still conflict and it forms no variable. coded's entry goes stale on the added list (stale_representation_coding at its entry, subject its native variable 6.6) and its names then conflict. fixname's checked name correction is not waived by the name permission. overname's two same-column 2020 rows deliver two names under a name permission: the permission leaves the variable without a common name and the conflict leaves the 2020 state none, so that state is withheld (unresolved_variable_name, located on 2020) and the variable has no supported state.",
       "rows": [
         ["scb/overlap/income", "conflicting_occurrence_facts", null, ["measurement_unit"]],
         ["scb/bare/income", "conflicting_variable_fact", null, ["name"]],
@@ -17,7 +17,19 @@
         ["scb/coded/income", "unresolved_variable_name", null, ["name"]],
         ["scb/coded/income", "missing_coding_period", null, ["coding"]],
         ["scb/fixname/income", "conflicting_variable_fact", null, ["name"]],
-        ["scb/fixname/income", "unresolved_variable_name", null, ["name"]]
+        ["scb/fixname/income", "unresolved_variable_name", null, ["name"]],
+        ["scb/overname/income", "conflicting_occurrence_facts", null, ["name"]],
+        ["scb/overname/income", "unresolved_variable_name", null, ["name"]],
+        ["scb/overname/income", "no_supported_states", null, ["availability", "period"]]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": "scb/overname/income", "code": "unresolved_variable_name"},
+      "fields": ["valid_from", "valid_to"],
+      "note": "overname's withheld name is located on the contested 2020 state, not left undated.",
+      "rows": [
+        ["2020-01-01", "2020-12-31"]
       ]
     },
     {
@@ -87,7 +99,8 @@
         ["descriptions", "DESCRIPTIONS", "Testning"],
         ["coded", "CODED", "Testning"],
         ["fixname", "FIXNAME", "Testning"],
-        ["fixunit", "FIXUNIT", "Testning"]
+        ["fixunit", "FIXUNIT", "Testning"],
+        ["overname", "OVERNAME", "Testning"]
       ]
     },
     {
@@ -102,7 +115,8 @@
         ["descriptions", "people", "Individer", "Alla individer", null, null, null, null],
         ["coded", "people", "Individer", "Alla individer", null, null, null, null],
         ["fixname", "people", "Individer", "Alla individer", null, null, null, null],
-        ["fixunit", "people", "Individer", "Alla individer", null, null, null, null]
+        ["fixunit", "people", "Individer", "Alla individer", null, null, null, null],
+        ["overname", "people", "Individer", "Alla individer", null, null, null, null]
       ]
     },
     {
