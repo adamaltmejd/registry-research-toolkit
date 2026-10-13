@@ -13,6 +13,13 @@ outside Git. The compiler validates their mappings and coverage before publishin
 immutable DB. Only the compiled artifact supplies browse membership, semantic admission,
 physical coverage, and order materialization to the deployed webapp.
 
+`storage_policy.toml` maps global registers to their SWECOV storage-table prefixes for
+the inventory command's storage type check. The global catalog build reads no steward
+input, so that check is where SWECOV storage meets curated global types: it writes
+`derived/storage_type_findings.tsv` and warns in the run summary when storage disagrees
+with a curated type, a steward-held column lacks one, or a curated entry matches no
+storage column. Curation decides the fix.
+
 SWECOV remains the proving steward while the workflow is tested pre-v1. Extracting its
 branding and delivery pipeline into a steward-owned system is separate from this runtime
 cut; use that extracted system as the pattern for later steward deployments.

@@ -1,0 +1,89 @@
+# SWECOV storage-schema table prefixes per global register (#1562).
+#
+# Each register selects the SWECOV storage tables whose columns its curated
+# data types are checked against: literal table-name prefixes, folded column
+# names. `storage_columns` names the physical header where storage spells a
+# curated column differently beyond the fold. Only the steward-side storage check (`build_catalog.py inventory`,
+# reg_meta_build.swecov_storage) reads this file. The global build never reads
+# SWECOV storage; a type it needs is curated in the register TOML.
+
+[register."scb/agi"]
+table_prefixes = ["Arb_AGIIndivid"]
+
+[register."scb/aku"]
+table_prefixes = ["AKU_"]
+
+[register."scb/fdb"]
+table_prefixes = ["FDB_AE_"]
+
+[register."scb/fek"]
+table_prefixes = ["FE19", "FE20"]
+
+[register."scb/fou"]
+table_prefixes = ["FTG_FOU_"]
+
+# 2005-2015 hold v0201 as V201/v201 and ViktRev as Vikt.
+[register."scb/fou".storage_columns]
+v0201 = "V201"
+ViktRev = "Vikt"
+
+[register."scb/grundskola-elever"]
+table_prefixes = ["Grund_Fkl_Fth_"]
+
+[register."scb/gymnasieskola-betyg"]
+table_prefixes = ["GymnasieskolaAvg_Individ_", "GymnasieskolaAvg_Kurs_"]
+
+[register."scb/hreg"]
+table_prefixes = ["Hreg_Examina", "Hreg_Reg", "Hreg_Sok"]
+
+[register."scb/innovation-foretag"]
+table_prefixes = ["CIS"]
+
+# CIS2004 holds PeOrgNrHe only as its P1105 pseudonym.
+[register."scb/innovation-foretag".storage_columns]
+PeOrgNrHe = "P1105_LopNr_PeOrgNrHe"
+
+[register."scb/it-anvandning"]
+table_prefixes = ["ITftg_"]
+
+[register."scb/ivp"]
+table_prefixes = ["IVP_"]
+
+[register."scb/konkurser"]
+table_prefixes = ["Konkurs_"]
+
+# Stored as the P1105 löpnummer header.
+[register."scb/konkurser".storage_columns]
+PersonNr_opnr = "P1105_LopNr_PersonNr_opnr"
+
+[register."scb/ksju"]
+table_prefixes = ["KSju_"]
+
+[register."scb/lararreg"]
+table_prefixes = ["LReg_"]
+
+# Stored as the P1105 löpnummer header.
+[register."scb/lararreg".storage_columns]
+RoKod = "P1105_LopNr_RoKod"
+
+[register."scb/lisa"]
+table_prefixes = [
+  "Ftg_2022",
+  "Individ_2010",
+  "Individ_2011",
+  "Individ_2012",
+  "Individ_2013",
+  "Individ_2014",
+  "Individ_2015",
+]
+
+# The 2010-2015 holdings carry the P1105 pseudonym prefix.
+[register."scb/lisa".storage_columns]
+CfarNr_LISA = "P1105_LopNr_CfarNr_LISA"
+PeOrgNr_LISA = "P1105_LopNr_PeOrgNr_LISA"
+
+[register."scb/rtb"]
+table_prefixes = ["RTB_SaBo_InrFlyttFlode", "Doda_20241231", "Fodelseuppg_"]
+
+[register."scb/utrikeshandel"]
+table_prefixes = ["UHV_"]

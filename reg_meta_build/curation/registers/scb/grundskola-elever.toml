@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "grundskola-elever"
 native_id = "193"
-steward_table_prefixes = ["Grund_Fkl_Fth_"]
 
 # SWECOV existing-register holdings for scb/grundskola-elever use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in
@@ -11,6 +10,7 @@ steward_table_prefixes = ["Grund_Fkl_Fth_"]
 [[errata.column]]
 variant = "individregister"
 column = "Ar"
+data_type = "text"
 name = "År"
 definition = "År"
 holdings_period = "1990-2024"
@@ -21,6 +21,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "individregister"
 column = "FTH"
+data_type = "text"
 name = "Anger om eleven är inskriven i fritidshem"
 definition = "Anger om eleven är inskriven i fritidshem"
 holdings_period = "1990-2024"
@@ -31,6 +32,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "individregister"
 column = "GRREKTFTH"
+data_type = "text"
 name = "Gemensam rektor med fritidshem"
 definition = "Gemensam rektor med fritidshem"
 holdings_period = "1990-2024"
@@ -41,6 +43,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "individregister"
 column = "HMANFTH"
+data_type = "text"
 name = "Huvudman fritidshem"
 definition = "Huvudman fritidshem"
 holdings_period = "1990-2024"
@@ -51,6 +54,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "individregister"
 column = "MSPR1_SPRAK"
+data_type = "text"
 name = "Moderna språk inom ramen för elevens val (språk)"
 definition = "Moderna språk inom ramen för elevens val (språk)"
 holdings_period = "1990-2024"
@@ -61,6 +65,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "individregister"
 column = "MSPR2_SPRAK"
+data_type = "text"
 name = "Moderna språk inom ramen för språkval (språk)"
 definition = "Moderna språk inom ramen för språkval (språk)"
 holdings_period = "1990-2024"
@@ -71,6 +76,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "individregister"
 column = "OBTIDFTH"
+data_type = "text"
 name = "Eleven är inskriven på fritidshem under obekväma tider."
 definition = "Eleven är inskriven på fritidshem under obekväma tider."
 holdings_period = "1990-2024"
@@ -358,6 +364,7 @@ slug = "utl-bakg"
 [[errata.column]]
 variant = "individregister"
 column = "MSPR2_ALT"
+data_type = "text"
 name = "Moderna språk inom ramen för språkval (alternativ)"
 definition = "Moderna språk inom ramen för språkval (alternativ)"
 holdings_period = "2008-2008"

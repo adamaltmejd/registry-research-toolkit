@@ -43,7 +43,6 @@ from .curation_tree import (
 )
 from .fqid_slugs import SlugEntry, _parse_variant_id, freeze_state, load_freeze_states
 from .normalization import normalize_token
-from .prepared_catalog import ReferenceEvidence
 from .resolved_catalog import ResolvedClassificationSuccession, ResolvedVariant
 from .resolved_metadata import (
     ResolvedClassificationDerivation,
@@ -143,16 +142,10 @@ from .source_records import (
     SourceRecord,
     TemporalScope,
 )
-from .source_reference_records import SourceColumnTypeDeclaration
 from .source_value_bindings import (
     bind_code_lists,
     marker_binding_fingerprints,
     open_value_bindings,
-)
-from .sources.swecov_column_types import (
-    SWECOV_COLUMN_TYPES_PATH,
-    index_swecov_column_types,
-    steward_column_types,
 )
 
 if TYPE_CHECKING:
@@ -5978,18 +5971,6 @@ def _partition_memberships(
     }
 
 
-def _swecov_columns(
-    prepared: PreparedCatalogSources,
-) -> dict[tuple[str, str], SourceColumnTypeDeclaration]:
-    return index_swecov_column_types(
-        item.declaration
-        for item in prepared.iter_evidence()
-        if isinstance(item, ReferenceEvidence)
-        and isinstance(item.declaration, SourceColumnTypeDeclaration)
-        and item.declaration.revision.artifact_path == SWECOV_COLUMN_TYPES_PATH
-    )
-
-
 def compile_errata(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -5999,7 +5980,6 @@ def compile_errata(
     ],
     *,
     subset: bool,
-    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> tuple[
     dict[Any, tuple[CurationCase, ...]],
     dict[Any, tuple[NamingDeclaration, ...]],
@@ -6019,8 +5999,6 @@ def compile_errata(
         register.errata.edition_period for register in tree.registers
     ):
         return {}, {}, {}, (), {}
-    if storage_columns is None:
-        storage_columns = _swecov_columns(prepared)
     locations: dict[int, list[tuple[Any, tuple[str | int, ...]]]] = defaultdict(list)
     for scope in scopes:
         for name, key in _scope_registers(scope):
@@ -6063,9 +6041,6 @@ def compile_errata(
         register_id = int(native_id)
         name = f"scb/{register.register_info.slug}"
         statuses = _family_status(report, name)
-        register_storage_columns = steward_column_types(
-            register.register_info.steward_table_prefixes, storage_columns
-        )
         accepted_names = {
             item.entry.source_id: item
             for item, _ in reversed(_register_naming_entries(tree, register))
@@ -6329,13 +6304,11 @@ def compile_errata(
                             case_id=case_id,
                             context=context,
                             donor_context=donor_context,
-                            steward_table_prefixes=register.register_info.steward_table_prefixes,
-                            storage_columns=register_storage_columns,
+                            curated_type=row.data_type,
                             preserve_blank_native_base=component_base_key is not None,
                             additional_physical_column=(
                                 row.upstream == "additional-physical-column-in-version"
                             ),
-                            storage_column=row.storage_column,
                         )
                         blockers, converted = result.blockers, result.case
                     else:
@@ -6348,8 +6321,6 @@ def compile_errata(
                             context=context,
                             declared_flags=frozenset(row.model_fields_set)
                             & {"is_identifier", "is_sensitive"},
-                            steward_table_prefixes=register.register_info.steward_table_prefixes,
-                            storage_columns=register_storage_columns,
                         )
                         blockers, converted = result.blockers, result.case
                 if converted is None:
@@ -6986,7 +6957,6 @@ def compile_deferred_naming(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
     scopes: tuple[CompiledScope, ...],
-    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> tuple[
     dict[Any, tuple[Any, ...]],
     dict[Any, tuple[NamingAmbiguity, ...]],
@@ -7029,7 +6999,6 @@ def compile_deferred_naming(
         scopes,
         partition_members,
         subset=True,
-        storage_columns=storage_columns,
     )
     for key, extra in errata_naming.items():
         naming[key] = (*naming.get(key, ()), *extra)
@@ -7052,7 +7021,6 @@ def compile_curation(
     scopes: tuple[CompiledScope, ...],
     *,
     subset: bool = False,
-    storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
 ) -> CompiledCuration:
     """Compile global families, wiring, and exact issue acknowledgements."""
     from .pipeline import CompiledScope
@@ -7348,7 +7316,6 @@ def compile_curation(
         scopes,
         _partition_memberships(partition_cases),
         subset=subset,
-        storage_columns=storage_columns,
     )
     matrix_cases, matrix_names, matrix_keys, matrix_diagnostics = compile_matrix_repr(
         tree,

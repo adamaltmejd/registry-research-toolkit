@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "ksju"
 native_id = "195"
-steward_table_prefixes = ["KSju_"]
 
 # SWECOV existing-register holdings for scb/ksju use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in
@@ -11,6 +10,7 @@ steward_table_prefixes = ["KSju_"]
 [[errata.column]]
 variant = "sjukfranvaro-sjukloneperioden"
 column = "ersdag1"
+data_type = "decimal"
 name = "Antal ersättningsdagar, oviktade"
 definition = "Antal ersättningsdagar, oviktade"
 holdings_period = "1990-2024"
@@ -21,6 +21,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "sjukfranvaro-sjukloneperioden"
 column = "Felaktig"
+data_type = "decimal"
 name = "Är alltid 0 (eller NULL)"
 definition = "Är alltid 0 (eller NULL)"
 holdings_period = "1990-2024"
@@ -31,6 +32,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "sjukfranvaro-sjukloneperioden"
 column = "one_sni"
+data_type = "decimal"
 name = "1 eller NULL (1 om det bara finns ett arbetsställe)"
 definition = "1 eller NULL (1 om det bara finns ett arbetsställe)"
 holdings_period = "1990-2024"
@@ -41,6 +43,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "sjukfranvaro-sjukloneperioden"
 column = "pnra"
+data_type = "decimal"
 name = "? - (inehåller värde 0 eller 1)"
 definition = "? - (inehåller värde 0 eller 1)"
 holdings_period = "1990-2024"
@@ -51,6 +54,7 @@ noted = "2026-06-14"
 [[errata.column]]
 variant = "sjukfranvaro-sjukloneperioden"
 column = "tillagg"
+data_type = "text"
 name = "Alltid tom för de godkända, men kod för de med statuskod 18"
 definition = "Alltid tom för de godkända, men kod för de med statuskod 18"
 holdings_period = "1990-2024"

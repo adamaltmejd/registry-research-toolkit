@@ -2640,7 +2640,6 @@ def _classification_csvs(catalog: Path) -> list[Path]:
 
 # Relative to the input directory; each lands under `catalog/` in the bundle.
 _FIXED_CATALOG_SOURCES = (
-    "swecov/derived/swecov_column_types.csv",
     "scb_canonical/scb_canonical.toml",
     *(f"{directory}/{provider}.toml" for provider, directory in _CURATED_PROVIDERS),
 )
@@ -2808,7 +2807,6 @@ def _validate_bundle_contract(root: Path) -> None:
     from .sources.code_lists import read_code_list
     from .sources.curated_records import read_curated_source
     from .sources.sos import parse_directory
-    from .sources.swecov_column_types import read_swecov_column_types
 
     catalog = root / "catalog"
     for path in _classification_csvs(catalog):
@@ -2836,12 +2834,6 @@ def _validate_bundle_contract(root: Path) -> None:
         for name in source.declared_value_lists:
             path = _canonical_code_list_path(canonical_dir, name)
             read_code_list(path, _bundle_source_revision(path, root), name=name)
-
-    swecov_path = catalog / "swecov/derived/swecov_column_types.csv"
-    if swecov_path.is_file():
-        read_swecov_column_types(
-            swecov_path, _bundle_source_revision(swecov_path, root)
-        )
 
     manifest_path = root / BUNDLE_MANIFEST_NAME
     if manifest_path.is_file():

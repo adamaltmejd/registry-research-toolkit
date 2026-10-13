@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "aku"
 native_id = "122"
-steward_table_prefixes = ["AKU_"]
 
 [[errata.delivered]]
 variant = "aku-april-2005-dec-2020"
@@ -19,6 +18,7 @@ noted = "2026-09-13"
 [[errata.column]]
 variant = "aku-januari-2021"
 column = "HsArbHemmaAntV"
+data_type = "text"
 name = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan, frekvens"
 definition = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan, frekvens"
 holdings_period = "2021-2024"
@@ -29,6 +29,7 @@ noted = "2026-10-12"
 [[errata.column]]
 variant = "aku-januari-2021"
 column = "HsArbhemmaV"
+data_type = "text"
 name = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan"
 definition = "Arbete hemifrån egna bostaden i huvudsysslan, senaste veckan"
 holdings_period = "2021-2024"
@@ -39,6 +40,7 @@ noted = "2026-10-12"
 [[errata.column]]
 variant = "aku-april-2005-dec-2020"
 column = "Hu12a"
+data_type = "text"
 name = "När upphör din tidsbegränsade anställning?"
 definition = "När upphör din tidsbegränsade anställning?"
 holdings_period = "1990-2024"

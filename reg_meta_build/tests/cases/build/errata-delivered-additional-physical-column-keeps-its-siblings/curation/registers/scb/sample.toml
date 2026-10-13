@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "sample"
 native_id = "1"
-steward_table_prefixes = ["CIS"]
 [[variant]]
 native_id = "1.2"
 slug = "people"
@@ -112,4 +111,4 @@ evidence = "accepted delivery"
 noted = "2026-09-25"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 28
-storage_column = "PHYSICAL"
+data_type = "text"

@@ -200,17 +200,29 @@ Authority depends on the fact and scope, rather than a universal file ordering:
   provenance.
 - SWECOV holdings establish possession by that project. Multi-year tables do not
   establish per-year column availability.
-- SWECOV's MONA storage-schema export supplies type evidence for steward-held columns
-  absent from SCB documentation and for delivered errata. Each register selects its
-  tables by literal prefixes; folded column names join waves. For delivered errata,
-  storage classes widen with documented Datatyp from the same column and variant.
-  Integer widens to decimal, and any text wave widens the variable to text. Date-only
-  waves yield date; date mixed with a numeric class leaves the type unresolved with the
-  evidence in the diagnostic. Conflicting documented Datatyp values on overlapping
-  editions also widen by that lattice. When every SWECOV wave in the register's
-  prefix-selected tables stores the column numerically, that numeric evidence caps a
-  widened text declaration to the numeric classes. Storage metadata never establishes
-  per-year availability or row content.
+- The global build reads no steward-derived input (#1562): steward changes never change
+  the global catalog automatically. SWECOV's MONA storage-schema export is steward
+  evidence; a type it once supplied is curated in the register file instead. A
+  steward-held `[[errata.column]]` takes its type only from its `data_type`; a delivered
+  erratum's optional `data_type` widens with documented Datatyp from the same column and
+  variant. Integer widens to decimal, and any text class widens the variable to text.
+  Date alone yields date; date mixed with a numeric class leaves the type unresolved
+  with the evidence in the diagnostic. Conflicting documented Datatyp values on
+  overlapping editions also widen by that lattice, and nothing narrows a text widening
+  back to a numeric class: where SCB documents a column as text in one edition and
+  numeric in another, the state is text even if storage holds numbers. A delivered
+  erratum without `data_type` takes the documented class alone. A column left untyped is
+  withheld with a located `unknown_data_type` error until curation types or acknowledges
+  it.
+- The SWECOV refresh (`build_catalog.py inventory`) cross-checks every curated type on a
+  register that `reg_webapp/stewards/swecov/storage_policy.toml` maps to literal
+  storage-table prefixes (folded column names join waves; the policy's `storage_columns`
+  names the physical header where storage spells a column differently) and writes
+  `derived/storage_type_findings.tsv`. Disagreeing storage, uncurated steward holdings
+  and steward holdings or typed delivered columns that match no storage column print a
+  warning in the refresh summary; a documented column SWECOV does not hold is no
+  finding. Curation, not the check, decides what changes. Storage metadata never
+  establishes per-year availability or row content.
 - Agents can investigate official handbooks separately and author structured curation
   with document/page references. Neither preparation nor a build extracts or interprets
   PDFs or calls an LLM.
@@ -595,7 +607,7 @@ documented elsewhere on the variant and names edition tokens verbatim. Optional
 `donor_variant` names a different variant of the same register: identity and digest come
 from its documented column, while added states use the target variant’s edition tokens
 and retain the native owner. This requires the column to be undocumented on the target;
-an anchored additional physical delivery (with optional `storage_column`) keeps existing
+an anchored additional physical delivery (with optional `data_type`) keeps existing
 target siblings and guards and digests the complete native family on both donor and
 target variants. The native-variable anchor selects one documented identity when the
 same column literal belongs to multiple variables in the variant's history. An anchor
@@ -661,12 +673,9 @@ requires a native-variable anchor and adds the exact physical column alongside t
 edition's existing columns. It retains positive siblings and negative native bases
 unchanged. Complete native-family and edition peers guard the addition, including
 siblings outside the target period. An already supplied own literal refuses the entry.
-This mode takes storage type only from that physical column's storage evidence; it does
-not borrow predecessor metadata, flags, operation or coding. An optional
-`storage_column` names a reviewed physical header when it differs from the catalog
-literal. It is permitted only in this anchored mode and must have a supported storage
-declaration under the inspected table prefixes. Missing or unsupported headers refuse
-the addition; header suffixes never infer a mapping.
+This mode takes its type only from the entry's curated `data_type`, without the
+documented donor's Datatyp; it does not borrow predecessor metadata, flags, operation or
+coding. Without one the addition stays untyped with a located `unknown_data_type`.
 
 An exact `errata.field` column-name correction can replace a positively supplied old
 label when complete holdings headers and documentation establish the same native
@@ -931,14 +940,14 @@ a stale declaration leaves the parent withheld exactly as without it.
 
 An added delivery names an existing identity, variant, edition and supplied period with
 checked evidence. It is a declaration, not a fabricated physical source row. Supplying
-column presence derives type by widening SWECOV storage with documented Datatyp on the
-same column and variant; an unclassifiable documented type or date mixed with numeric
-leaves it unresolved. Flags and coding are not copied from another edition. Any donor
-metadata or membership must be explicitly selected and guarded. Undated `all_versions`
-holdings preserve unknown coverage; pooled editions cannot create annual states.
-Delivery correction guards capture every supplied source field, parent fact and coding
-reference from both donor and target evidence. Changed meaning or bindings makes the
-correction stale, even when the physical column and storage type remain unchanged.
+column presence derives type by widening the entry's curated `data_type` with documented
+Datatyp on the same column and variant; an unclassifiable documented type or date mixed
+with numeric leaves it unresolved. Flags and coding are not copied from another edition.
+Any donor metadata or membership must be explicitly selected and guarded. Undated
+`all_versions` holdings preserve unknown coverage; pooled editions cannot create annual
+states. Delivery correction guards capture every supplied source field, parent fact and
+coding reference from both donor and target evidence. Changed meaning or bindings makes
+the correction stale, even when the physical column and storage type remain unchanged.
 
 `[[representation.matrix]]` activates a reviewed answer partition in its owning register
 file. It names a source mode, a normalized evidence JSON path inside the curation tree
@@ -1056,7 +1065,7 @@ published spelling; all other disagreements remain conflicts. Distinct canonical
 nonnegative integer `data_length` values reconcile to their maximum only when every
 length-supplying observation declares the same resolved `data_type`. When distinct
 documented data types widen within one class, canonical nonnegative lengths use the same
-maximum rule. A widening across classes, including a storage-capped text result, has no
+maximum rule. A widening across classes, including a numeric-capped text result, has no
 length and no length conflict. Unmapped or incompatible types keep their conflicts.
 Other conflicting fields still raise occurrence diagnostics.
 

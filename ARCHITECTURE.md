@@ -290,18 +290,19 @@ in.
 
 This is the complete list of boundaries a test may assert at.
 
-  | Boundary                                 | Oracle (data, not code)                                                                                 |
-  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                      |
-  | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                      |
-  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB    |
-  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                             |
-  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                              |
-  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                            |
-  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, policy and authored mappings |
-  | Frontend                                 | rendered DOM, the accessibility tree and the codegen'd API types                                        |
-  | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                              |
+  | Boundary                                 | Oracle (data, not code)                                                                                       |
+  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                            |
+  | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                            |
+  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB          |
+  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                      |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                                   |
+  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                    |
+  | Curation + SWECOV storage → findings     | `derived/storage_type_findings.tsv`: fixture → `expected.tsv` in `reg_meta_build/tests/cases/swecov_storage/` |
+  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                                  |
+  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, policy and authored mappings       |
+  | Frontend                                 | rendered DOM, the accessibility tree and the codegen'd API types                                              |
+  | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                                    |
 
 Compiled holdings admission, scoped browse/search and selection guards are pinned
 through source-built request/expected corpora in `conformance/cases/`.

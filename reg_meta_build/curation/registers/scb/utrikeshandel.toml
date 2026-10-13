@@ -2,7 +2,6 @@
 provider = "scb"
 slug = "utrikeshandel"
 native_id = "188"
-steward_table_prefixes = ["UHV_"]
 
 # SWECOV existing-register holdings for scb/utrikeshandel use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in
@@ -11,6 +10,7 @@ steward_table_prefixes = ["UHV_"]
 [[errata.column]]
 variant = "varu-landfordelat-intrastat"
 column = "KN8"
+data_type = "decimal"
 name = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)"
 definition = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)"
 holdings_period = "1990-2024"
@@ -362,6 +362,7 @@ expected_diagnostic_sha256 = "9bc0ea28a446835b1cff22b3ebf90fd0c79b16bf592e2a3efc
 [[errata.column]]
 variant = "varu-landfordelat-intrastat"
 column = "SPIN2002"
+data_type = "text"
 name = "Produktgrupp enligt SPIN 2002"
 definition = "Produktgrupp enligt SPIN 2002."
 holdings_period = "1997-2011"

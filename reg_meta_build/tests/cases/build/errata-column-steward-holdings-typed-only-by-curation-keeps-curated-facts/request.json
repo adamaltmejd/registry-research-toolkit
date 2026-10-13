@@ -1,0 +1,10 @@
+{
+  "replaces": [
+    "test_source_effect_routing.py::test_steward_storage_type_and_flags_preserve_curated_identifier",
+    "test_source_effect_routing.py::test_column_declaration_preserves_only_supplied_flags_and_periods[FIX-versions1]",
+    "test_source_effect_routing.py::test_column_declaration_preserves_only_supplied_flags_and_periods[FIX-None]"
+  ],
+  "note": "A steward-held [[errata.column]] takes its type only from its curated data_type (#1562): the global build reads no steward storage. Without one the state stays untyped with a located unknown_data_type error, the interim outcome for a worklisted column not yet curated. Expected literals: c-stew null with that issue, its is_identifier 1 and is_sensitive 0; c-cur integer with no issue. Each entry names versions = [\"2020\"] while the register also delivers 2018 and 2022 (EDITION, var 99), so each forms exactly one 2020 state (valid_to 2020-12-31): test_column_declaration_preserves_only_supplied_flags_and_periods[FIX-versions1] binds its one addition to the 2020 edition beside a later delivered edition that gains none. The third entry declares BLK for 2020, and the source documents the column by name only as Blk (var 31) in 2022, another spelling in another edition; the entry is refused as column_now_documented in the '<entry locator>: <blockers>' format the compile reports, and forms no c-documented state.",
+  "fails_if": "`scb_errata.convert_column_entry` types a steward-held column from anything but its curated `data_type`, stops reporting an untyped one as unknown_data_type, drops a curated `is_identifier`, adds a declared column to editions its `versions` do not name, or stops refusing a column the source documents (`column_now_documented`), including one documented under another spelling or only in another edition",
+  "sources": "scb-delivered-statements"
+}

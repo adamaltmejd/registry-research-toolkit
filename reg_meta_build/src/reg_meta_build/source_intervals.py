@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING, Literal
 from reg_meta_build._curation import (
     SOURCE_DATA_TYPE_ALIASES,
     data_type_class,
-    fold_column,
     widen_data_type_classes,
 )
 from reg_meta_build.source_occurrences import EffectiveOccurrence, effective_occurrence
@@ -30,9 +29,7 @@ from reg_meta_build.source_records import (
 from .source_evidence import SourceField
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Mapping
-
-    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
+    from collections.abc import Iterable
 
 
 @dataclass(frozen=True)
@@ -315,7 +312,6 @@ def reconcile_source_fields(
     records: tuple[SourceRecord | EffectiveOccurrence | SourceParentObservation, ...],
     *,
     support: tuple[SourceFields, ...] = (),
-    storage: StewardColumnStorage | None = None,
 ) -> tuple[SourceFields, tuple[str, ...]]:
     resolved = {}
     conflicts = []
@@ -383,8 +379,6 @@ def reconcile_source_fields(
             provenance = "Documented Datatyp: " + ", ".join(
                 sorted(str(value) for status, value in values if status == "value")
             )
-            if storage is not None:
-                provenance += "; " + storage.provenance
             if all(kind is not None for kind in classes):
                 widened_classes = frozenset(
                     kind for kind in classes if kind is not None
@@ -393,19 +387,6 @@ def reconcile_source_fields(
             else:
                 widened = None
             if widened is not None:
-                assert widened_classes is not None
-                if (
-                    widened == "text"
-                    and storage is not None
-                    and storage.classes
-                    and storage.classes <= {"integer", "decimal"}
-                ):
-                    widened = widen_data_type_classes(
-                        kind
-                        for kind in storage.classes | widened_classes
-                        if kind is not None and kind in {"integer", "decimal"}
-                    )
-                    assert widened is not None
                 resolved[name] = SourceField(
                     status="value", value=widened, raw_value=provenance
                 )
@@ -470,16 +451,12 @@ def _reconciled_segment(
     column: str,
     lower: str | None,
     upper: str | None,
-    storage: Mapping[str, StewardColumnStorage] | None,
     *,
     period_scope: Literal["intervals", "year_independent"] = "intervals",
 ) -> tuple[SourceSegment, tuple[OccurrenceIssue, ...]]:
     issues: list[OccurrenceIssue] = []
     occurrences = tuple(record for item in winners for record in item.evidence)
-    fields, conflicts = reconcile_source_fields(
-        winners,
-        storage=storage.get(fold_column(column)) if storage is not None else None,
-    )
+    fields, conflicts = reconcile_source_fields(winners)
     diagnostic_conflicts = tuple(
         name for name in conflicts if name not in _ABSORBED_OCCURRENCE_CONFLICT_FIELDS
     )
@@ -508,8 +485,6 @@ def _reconciled_segment(
 
 def resolve_occurrence_intervals(
     records: Iterable[SourceRecord | EffectiveOccurrence],
-    *,
-    storage: Mapping[str, StewardColumnStorage] | None = None,
 ) -> OccurrenceResolution:
     """Keep independently supported facts on exact, non-overlapping column periods.
 
@@ -626,7 +601,7 @@ def resolve_occurrence_intervals(
             by_column.pop(column, None)
             continue
         segment, segment_issues = _reconciled_segment(
-            tuple(members), column, None, None, storage, period_scope="year_independent"
+            tuple(members), column, None, None, period_scope="year_independent"
         )
         issues.extend(segment_issues)
         segments.append(segment)
@@ -661,9 +636,7 @@ def resolve_occurrence_intervals(
                 date.fromordinal(start).isoformat(),
                 date.fromordinal(end).isoformat(),
             )
-            segment, segment_issues = _reconciled_segment(
-                winners, column, lower, upper, storage
-            )
+            segment, segment_issues = _reconciled_segment(winners, column, lower, upper)
             issues.extend(segment_issues)
             column_segments.append(segment)
         segments.extend(_merge_adjacent_pooled(column_segments))

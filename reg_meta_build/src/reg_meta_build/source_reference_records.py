@@ -1,4 +1,4 @@
-"""Source declarations about native events and steward column types.
+"""Source declarations about native events.
 
 These observations do not identify catalog entities or create relationships.
 Native tokens retain their delivered representation and source-local meaning.
@@ -52,18 +52,8 @@ class SourceEventDeclaration(_SourceDeclaration):
     document_token: DeliveredCell
 
 
-class SourceColumnTypeDeclaration(_SourceDeclaration):
-    kind: Literal["column_type"] = "column_type"
-    table_name: SourceField
-    column_name: SourceField
-    data_type: SourceField
-    declared_width: SourceField
-    nullable: SourceField
-
-
 type SourceReferenceDeclaration = Annotated[
     SourceEventDeclaration
-    | SourceColumnTypeDeclaration
     | SourceCodeCrosswalkDeclaration
     | SourceDerivationDeclaration,
     Field(discriminator="kind"),
@@ -79,7 +69,6 @@ class CleanedSourceReferences:
 
 __all__ = [
     "CleanedSourceReferences",
-    "SourceColumnTypeDeclaration",
     "SourceEntityKind",
     "SourceEventAction",
     "SourceEventDeclaration",

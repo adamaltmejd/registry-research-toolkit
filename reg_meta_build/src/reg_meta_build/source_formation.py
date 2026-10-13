@@ -48,7 +48,6 @@ if TYPE_CHECKING:
     from reg_meta_build.source_coding import CodingResolution, CodingSegment
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_records import SourceFields, SourceRecord
-    from reg_meta_build.sources.swecov_column_types import StewardColumnStorage
 
     from .source_evidence import SourceField
 
@@ -717,7 +716,6 @@ def form_native_variable(
     coding: Mapping[NativeKey, CodingResolution],
     representations: tuple[CurationCase, ...] = (),
     diagnostic: bool = False,
-    storage: Mapping[str, StewardColumnStorage] | None = None,
 ) -> VariableFormation:
     """Form one ordinary native identity; return unsafe aspects as explicit issues.
 
@@ -977,7 +975,7 @@ def form_native_variable(
     for key, members in sorted(by_variant.items(), key=lambda item: repr(item[0])):
         variant = variants[key]
         assert variant is not None
-        resolution = resolve_occurrence_intervals(members, storage=storage)
+        resolution = resolve_occurrence_intervals(members)
         intervals.append(resolution)
         variant_issues = []
         for problem in resolution.issues:
@@ -1141,7 +1139,7 @@ def form_native_variable(
                             for correction in occurrence.corrections
                             for line in correction.provenance.splitlines()
                             if line.startswith(
-                                ("SWECOV storage ", "Documented Datatyp: ")
+                                ("Curated data_type: ", "Documented Datatyp: ")
                             )
                         }
                     )

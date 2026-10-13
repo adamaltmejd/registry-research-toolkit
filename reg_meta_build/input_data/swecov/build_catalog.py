@@ -2781,6 +2781,54 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         print(f"\nVALIDATION FAILED — the supersession worklist:\n{exc.message}")
         raise SystemExit(1) from exc
     print(f"  load_inventory: OK ({len(inv.tables)} tables)")
+    _check_storage_types(args, repo_root)
+
+
+def _check_storage_types(args: argparse.Namespace, repo_root: Path) -> None:
+    """Report curated global data types that SWECOV storage disagrees with (#1562).
+
+    The global build never reads the storage schema, so this refresh is where a
+    disagreement surfaces. It is a worklist, never an automatic global change.
+    """
+    from reg_meta_build.curation_tree import load_register_files
+    from reg_meta_build.swecov_storage import (
+        load_storage_policy,
+        read_storage_types,
+        storage_type_findings,
+        write_storage_findings,
+    )
+
+    storage_csv = args.csv.parent / "derived" / "swecov_column_types.csv"
+    if not storage_csv.is_file():
+        print(f"  WARNING: storage type check skipped: {storage_csv} is missing")
+        return
+    findings = storage_type_findings(
+        load_register_files(repo_root / "reg_meta_build" / "curation"),
+        load_storage_policy(
+            repo_root / "reg_webapp" / "stewards" / "swecov" / "storage_policy.toml"
+        ),
+        read_storage_types(storage_csv),
+    )
+    dest = args.csv.parent / "derived" / "storage_type_findings.tsv"
+    write_storage_findings(findings, dest)
+    counts = {
+        kind: sum(item.kind == kind for item in findings)
+        for kind in ("disagrees", "uncurated", "unmatched", "narrower")
+    }
+    line = (
+        f"storage type check: {counts['disagrees']} curated types disagree with"
+        f" SWECOV storage, {counts['uncurated']} steward-holdings columns lack a"
+        f" curated type, {counts['unmatched']} curated entries match no storage"
+        f" column, {counts['narrower']} curated types are wider than storage;"
+        f" worklist {dest}"
+    )
+    # In the run summary on stdout beside the other counts, so it is not lost.
+    warning = (
+        "WARNING: "
+        if counts["disagrees"] or counts["uncurated"] or counts["unmatched"]
+        else ""
+    )
+    print(f"  {warning}{line}")
 
 
 # --- errata: the columns held in editions the catalog has no window for ------

@@ -279,27 +279,12 @@ class RegisterIdentity(_CurationModel):
     slug: str
     native_id: str | None = None
     name: str | None = None
-    steward_table_prefixes: tuple[str, ...] = ()
     source_labels: list[str] = Field(default_factory=list)
 
     _provider = field_validator("provider")(_require_trimmed)
     _slug = field_validator("slug")(_require_trimmed)
     _native_id = field_validator("native_id")(_require_trimmed)
     _name = field_validator("name")(_require_trimmed)
-
-    @field_validator("steward_table_prefixes", mode="before")
-    @classmethod
-    def _prefix_list(cls, value: object) -> object:
-        return tuple(value) if isinstance(value, list) else value
-
-    @field_validator("steward_table_prefixes")
-    @classmethod
-    def _literal_prefixes(cls, value: tuple[str, ...]) -> tuple[str, ...]:
-        if any(not prefix or prefix != prefix.strip() for prefix in value):
-            raise ValueError("steward table prefixes must be non-empty literal names")
-        if len(value) != len(set(value)):
-            raise ValueError("steward table prefixes must be unique")
-        return value
 
     @field_validator("source_labels")
     @classmethod
@@ -340,6 +325,9 @@ class RegisterVariableSlug(_CurationModel):
     slug: str | None = None
     replaced_by: str | None = None
     deprecated: bool = False
+
+
+CatalogDataType = Literal["integer", "decimal", "text", "date"]
 
 
 class ErrataVersionEntry(_CurationModel):
@@ -387,21 +375,16 @@ class ErrataDeliveredEntry(_CurationModel):
     noted: str
     upstream: str | None = None
     native_variable_id: int | None = None
-    storage_column: str | None = None
+    # Curated physical storage type of the delivered column. It takes the place
+    # storage evidence had: widened with documented Datatyp, or alone for an
+    # additional physical column. Absent leaves only the documented type.
+    data_type: CatalogDataType | None = None
     # Full originals of the documented column and the rows the entry rewrites or
     # keeps beside its additions; a drifted definition makes the entry stale.
     expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
     @model_validator(mode="after")
     def _additional_delivery_anchor(self) -> ErrataDeliveredEntry:
-        if self.storage_column is not None and (
-            self.upstream != "additional-physical-column-in-version"
-            or not self.storage_column.strip()
-            or self.storage_column != self.storage_column.strip()
-        ):
-            raise ValueError(
-                "storage_column requires an anchored additional physical delivery and an exact header"
-            )
         if (
             self.upstream == "additional-physical-column-in-version"
             and self.native_variable_id is None
