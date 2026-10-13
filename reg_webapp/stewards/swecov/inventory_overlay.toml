@@ -21500,11 +21500,6 @@ column = "P1105_Lopnr_PersonNr_Partner"
 reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. RTB source policy explicitly identifies annual family status columns and their native family register; original table year and own family-status state fix the December 31 snapshot."
 
 [[unmap]]
-table = "PV_1997_2010"
-column = "anvpsyk"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
 table = "RTB_PostNr_2015"
 column = "P1105_LopNr_Personnr"
 reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Source workbook declares RTB PostNr for 2015–2020, supporting the RTB population register home. The actual current own PostNr catalog coverage ends in 1997; these six physical postnr columns remain unmapped. Original annual holding periods are retained without inventing year-end snapshot dates."
