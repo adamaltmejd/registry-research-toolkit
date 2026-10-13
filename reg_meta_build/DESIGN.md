@@ -78,6 +78,16 @@ the DDL, derive or validation can skip resolution. The bundle holds:
   would dominate the bundle;
 - `events.jsonl.gz`, a copy of the resolve ledger member.
 
+The payload bytes are a function of the resolution's content, in any process (#1542). A
+plain pickle is not: its memo is keyed by object identity, so it records which equal
+strings happen to be one object (pydantic-core's JSON string cache decides that per
+process), and it writes each model's `__pydantic_fields_set__` in the set's iteration
+order, which follows the string hash seed. The bundle's pickler therefore writes every
+string as the frame's first equal one and every set as `set(sorted names)`. The pickler
+offers no hook for a `str` or a `set`, so it rebuilds the containers of each frame and
+each model's state around canonical values as it writes them. That costs the write
+(about 2.6 times the pickling time on the synthetic suite), not the load.
+
 The pickle is a cache artifact keyed by the exact resolve code, never a public contract:
 there is no migration between format versions, and a bundle from other resolve code is
 rebuilt, not read. The builder enforces this itself.
@@ -99,13 +109,14 @@ bundle's (`resolved_bundle_scope_mismatch`); for a strict request, a diagnostic 
 that took a path a strict resolution refuses (`resolved_bundle_strict_refused`, below)
 and any bundle with resolution errors (`resolved_bundle_blocked`), the same publication
 guard as a strict build; a payload whose size or SHA-256 differs
-(`resolved_bundle_digest_mismatch`); any pickled global that is not a Pydantic model
-defined in a `reg_meta_build` module (`resolved_bundle_global_refused`); unreadable
-frames (`resolved_bundle_invalid`); and loaded counts that differ from the build result
-(`resolved_bundle_count_mismatch`). The writer then revalidates every model strictly. A
-publishable materialization captures and stamps the builder commit as `build_catalog`
-does, at materialization time. The report starts from the bundle's ledger member, so the
-materialized report's ledger is byte-identical to the unphased build's.
+(`resolved_bundle_digest_mismatch`); any pickled global that is neither `set` nor a
+Pydantic model defined in a `reg_meta_build` module (`resolved_bundle_global_refused`);
+unreadable frames (`resolved_bundle_invalid`); and loaded counts that differ from the
+build result (`resolved_bundle_count_mismatch`). The writer then revalidates every model
+strictly. A publishable materialization captures and stamps the builder commit as
+`build_catalog` does, at materialization time. The report starts from the bundle's
+ledger member, so the materialized report's ledger is byte-identical to the unphased
+build's.
 
 The materializing mode is the request's, not the resolving run's, so the release flow's
 strict build can place its diagnostic candidate's bundle (#1404). Resolution reads the
@@ -1964,8 +1975,7 @@ its source and register. A worker reads the scope through its own prepared-recor
 reader and value sessions. It returns every effect of the scope as data: the issues and
 coding reports in the order resolution made them, any exception, the ledger lines and
 the folded values. The parent applies these outcomes strictly in the serial scope order,
-so the database and ledger are the same bytes for every N and the bundle holds equal
-content. Bundle bytes are not reproducible across processes even at N = 1 (#1542):
+so the database, the ledger and the bundle are the same bytes for every N:
 
 - Every outcome takes one pickle round trip, also when N = 1 resolves it in the parent,
   so the parent folds the same object graph for every N.
