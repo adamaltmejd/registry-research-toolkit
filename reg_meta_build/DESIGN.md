@@ -490,16 +490,16 @@ The target layout:
   it, as `search_pin` rows keyed by `fold_search(query)` (`reg-core-py`, the fold the
   reader applies to `q`), and a pin that does not resolve fails that build with the
   file, entry and FQID. Scoped and diagnostic builds store no pins. The manifest's
-  `search_pins_sha256` hashes the stored rows and joins the generation; derive gives an
-  older-minor base an empty table and the empty-pins hash. Pins are build input, not
+  `search_pins_sha256` hashes the stored rows and joins the generation; derive keeps
+  the base's table and hash. Pins are build input, not
   ranking: the reader applies them.
 - `curation/search_synonyms.toml` (#1490) lists directed term → expansions entries for
   concepts that register text names in another word or language. The term and each
   expansion must be one reader query term (`fts_terms`), an expansion may not fold like
   its term, and terms that fold alike share one entry; a two-way pair is two entries. It
   loads and stores like the pins: as folded `search_synonym` `(key, expansion)` rows in
-  a complete build only, hashed by `search_synonyms_sha256` into the generation, and an
-  older-minor base gains an empty table and the empty-rows hash. It ships empty until
+  a complete build only, hashed by `search_synonyms_sha256` into the generation, and derive
+  keeps them. It ships empty until
   the maintainer curates it; the reader is to expand each query term into an OR group.
 - `worklists/concept_groups.auto.toml` is generated from a built DB for the worklist
   tool, not curation. Enrichment is register-scoped curation in each register file. The
@@ -2386,14 +2386,18 @@ as its own file ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest").
 
 **Wide-pivot member sets** (#1495). The columns of one table that map one
 `(register_variant, variable, representation)` with a `member` index are one location,
-the member set. Its members never conflict with each other; the set conflicts with any
+the member set; the representation groups by its identity fold, as compilation resolves
+it, so `DIA` and `dia` are one set. Its members never conflict with each other; the set conflicts with any
 other location, including a plain mapping of the same representation in that table.
 Position members serve the same cell, the table's whole edition. Year and month members
 serve disjoint sub-cells: each holds only its own period, and the overlap check compares
 those periods, so a year set beside a plain table of a later year is legal. Within a
-set: one kind, unique indexes and at least two members; gaps are allowed, because real
-sets have them. A year or month member lies inside one segment of the table's edition,
-so a year-independent table takes position members only. Readers clip a member's held
+set: one kind and unique indexes; gaps are allowed, because real sets have them, and a
+set may have one member. A year or month member lies inside one segment of the table's
+edition, so a year-independent table takes position members only. A member column
+carries exactly one mapping: the order reader keys a held column by table and column,
+so a second mapping would inherit or drop the member's period. A member therefore never
+also serves another variant. Readers clip a member's held
 periods with `COALESCE(member bounds, holding_period)`.
 
 ### Holdings curation rules

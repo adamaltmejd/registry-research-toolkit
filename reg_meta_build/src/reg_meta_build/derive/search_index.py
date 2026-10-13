@@ -111,9 +111,7 @@ def register_fold_search(conn: sqlite3.Connection) -> None:
 def derive_search_indexes(conn: sqlite3.Connection) -> None:
     """Drop and refill the full-text indexes with `fold_search` text of the core graph.
 
-    Dropping also replaces an older base's external-content indexes and their
-    `variable_fts_content` view, whose name the new index's shadow table takes, and
-    its `variable_search_text` view with the table. Commits.
+    Commits.
     """
     # simplify: a steward extension refolds the inherited value-code labels its
     # overlay never changes; skip value_code_fts there if derive misses its budget.
@@ -121,12 +119,7 @@ def derive_search_indexes(conn: sqlite3.Connection) -> None:
     register_fold_search(conn)
     for table in SEARCH_INDEXES:
         conn.execute(f"DROP TABLE IF EXISTS {table}")
-    conn.execute("DROP VIEW IF EXISTS variable_fts_content")
-    # A view before 9.7, a table since; each DROP refuses the other kind.
-    for (kind,) in conn.execute(
-        "SELECT type FROM sqlite_master WHERE name = 'variable_search_text'"
-    ).fetchall():
-        conn.execute(f"DROP {kind.upper()} variable_search_text")
+    conn.execute("DROP TABLE IF EXISTS variable_search_text")
     conn.execute("DROP INDEX IF EXISTS idx_value_code_code_nocase")
     conn.executescript(SEARCH_INDEX_DDL)
     conn.execute(f"INSERT INTO variable_search_text {VARIABLE_SEARCH_TEXT} ORDER BY 1")

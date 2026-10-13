@@ -14,15 +14,10 @@ from contextlib import closing
 from dataclasses import replace
 from typing import TYPE_CHECKING
 
-from reg_meta_build.artifact_identity import (
-    builder_commit,
-    generation_id,
-    search_rows_sha256,
-)
+from reg_meta_build.artifact_identity import builder_commit, generation_id
 from reg_meta_build.db import (
     DERIVED_DDL,
     SCHEMA_VERSION,
-    SEARCH_CURATION_DDL,
     _unlink_wal_sidecars,
     get_manifest,
     open_built_db,
@@ -75,8 +70,7 @@ def derive_artifact(base: Path, out: Path) -> None:
     The copy takes this builder's schema version and commit, records the base's
     generation as `derived_from_generation_id`, keeps every other identity key and
     recomputes `generation_id`. A steward copy derives over its full global-plus-
-    overlay graph; its physical holdings are left as compiled. An older base gains
-    empty `search_pin` and `search_synonym` tables and their empty-rows hashes. The
+    overlay graph; its physical holdings and search curation are left as built. The
     copy must pass `validate_built_db` before it replaces `out` atomically.
     """
     from reg_meta_build.validate import validate_built_db
@@ -108,10 +102,8 @@ def derive_artifact(base: Path, out: Path) -> None:
                 "generation_id"
             )
         with closing(sqlite3.connect(tmp)) as conn:
-            conn.executescript(DERIVED_DDL + SEARCH_CURATION_DDL)
+            conn.executescript(DERIVED_DDL)
             derive(conn)
-            manifest.setdefault("search_pins_sha256", search_rows_sha256(()))
-            manifest.setdefault("search_synonyms_sha256", search_rows_sha256(()))
             manifest.update(
                 schema_version=SCHEMA_VERSION,
                 builder_commit=revision,

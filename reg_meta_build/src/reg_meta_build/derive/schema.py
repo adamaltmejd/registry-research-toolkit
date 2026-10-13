@@ -13,7 +13,7 @@ import sqlite3
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Literal
 
-from reg_meta_build.derive.browse import browse_scopes
+from reg_meta_build.derive.browse import HELD_HI, HELD_LO, browse_scopes
 from reg_meta_build.derive.states import named_rows, register_catalog_udfs
 
 if TYPE_CHECKING:
@@ -27,12 +27,6 @@ type CodedRow = tuple[str, str, int, int, int]
 # The reader's aggregate and its read-scope predicate, moved from
 # `reg_meta.queries` and `reg_meta.holdings`. Derive passes a scope
 # `browse_scopes` already admitted, so the reader's `resolve_scope` stays behind.
-
-
-# A held mapping's period bounds over its table's `holding_period` row `hp`: a
-# year/month pivot member holds only its own period (#1495), inside the edition.
-_HELD_LO = "COALESCE(hm.member_lo, hp.lo)"
-_HELD_HI = "COALESCE(hm.member_hi, hp.hi)"
 
 
 def scope_predicate(
@@ -65,7 +59,7 @@ def scope_predicate(
             raise ValueError("scope bounds must be ISO dates")
         member += (
             " AND ht.scope = 'intervals' AND EXISTS (SELECT 1 FROM holding_period hp "
-            f"WHERE hp.table_id = ht.table_id AND {_HELD_LO} <= '{hi}' AND {_HELD_HI} >= '{lo}')"
+            f"WHERE hp.table_id = ht.table_id AND {HELD_LO} <= '{hi}' AND {HELD_HI} >= '{lo}')"
         )
     if variant_sql is not None:
         member += f" AND hm.variant_id = {variant_sql}"
@@ -77,7 +71,7 @@ def scope_predicate(
         lo_sql, hi_sql = bounds_sql
         member += (
             " AND (ht.scope = 'year_independent' OR EXISTS (SELECT 1 FROM holding_period hp "
-            f"WHERE hp.table_id = ht.table_id AND {_HELD_LO} <= {hi_sql} AND {_HELD_HI} >= {lo_sql}))"
+            f"WHERE hp.table_id = ht.table_id AND {HELD_LO} <= {hi_sql} AND {HELD_HI} >= {lo_sql}))"
         )
 
     def correlated(source: str, anchor: str) -> str:

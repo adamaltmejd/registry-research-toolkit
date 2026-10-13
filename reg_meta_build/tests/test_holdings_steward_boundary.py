@@ -343,11 +343,6 @@ def test_derive_stamps_the_checkout_commit_and_keeps_identity_only_inputs_distin
     assert derived_a["derived_from_generation_id"] == base_a["generation_id"]
     assert derived_b["derived_from_generation_id"] == base_b["generation_id"]
     assert derived_a["generation_id"] != derived_b["generation_id"]
-    with sqlite3.connect(base.with_name("reg_meta.db")) as conn:
-        columns = [
-            row[1] for row in conn.execute("PRAGMA table_info(classification_code)")
-        ]
-    assert "parent_code_id" in columns
     assert git(checkout, "status", "--porcelain", "--untracked-files=no") == ""
     assert local_config.read_text() == "# unrelated local configuration\n"
 
