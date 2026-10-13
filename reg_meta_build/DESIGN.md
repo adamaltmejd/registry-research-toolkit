@@ -397,13 +397,16 @@ cleaning. Full verification belongs at preparation/acceptance. The accepted immu
 revision is the trust boundary; decoding uses bounded caches and indexed semantic-key
 lookups. The decoded-record cache keeps at most 8,192 recent originals, including during
 compilation; callers still receive complete ordered batches and retain their own
-records. Eviction reconstructs the same pinned originals and does not change guards,
-source fingerprints or output. Phase-end clearing additionally releases the remaining
-cache. Register batches use an exact temporary ordinal relation for uncached originals
-and seek the existing locator/cell primary keys. This avoids rescanning the source for
-each register, preserves original ordinal/position order and multiplicity, and writes
-nothing to accepted prepared files. Native-family reads keep their existing indexed
-path; no persistent cache or prepared-format change is required.
+records. Decoded interned payloads are cached per reader (at most 65,536), across its
+connections, so the per-register reads of compile do not decode the same payloads again.
+Eviction reconstructs the same pinned originals and does not change guards, source
+fingerprints or output. Phase-end clearing additionally releases the remaining caches,
+and the parent clears them before forking resolve workers. Register batches use an exact
+temporary ordinal relation for uncached originals and seek the existing locator/cell
+primary keys. This avoids rescanning the source for each register, preserves original
+ordinal/position order and multiplicity, and writes nothing to accepted prepared files.
+Native-family reads keep their existing indexed path; no persistent cache or
+prepared-format change is required.
 
 Support target cardinality uses a distinct native-coordinate projection before attaching
 facts. It avoids hydrating unrelated prose and cells but includes unknown/ambiguous

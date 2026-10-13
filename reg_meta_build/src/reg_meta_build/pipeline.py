@@ -793,6 +793,9 @@ def _scope_outcomes(
         # shared pages. Unflushed parent output would be written again by a child.
         sys.stdout.flush()
         sys.stderr.flush()
+        # Workers open their own reader; drop the parent's decoded caches so they are
+        # neither frozen into the shared pages nor inherited.
+        context.records.clear_decoded_records()
         gc.freeze()
         pool = ProcessPoolExecutor(
             workers,
