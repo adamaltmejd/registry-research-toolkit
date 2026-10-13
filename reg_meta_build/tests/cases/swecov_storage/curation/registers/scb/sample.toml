@@ -87,3 +87,12 @@ expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000
 data_type = "integer"
 evidence = "stored under the policy's physical header PHYS"
 noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "people"
+column = "Outside"
+versions = ["2020"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+data_type = "integer"
+evidence = "stored only outside the register's prefixes"
+noted = "2026-10-13"

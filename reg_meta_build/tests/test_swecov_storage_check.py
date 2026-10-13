@@ -26,14 +26,16 @@ def test_storage_check_reports_each_disagreement_kind(tmp_path: Path) -> None:
     integer with a text storage wave, WIDE a documented (scb-docs) decimal over
     integer storage, and Guid (folded onto storage GUID) a storage type outside
     the catalog vocabulary. ELSEWHERE, a steward holding, is stored only under a
-    table outside the register's prefixes, so it is unmatched; DOCONLY, a
+    table outside the register's prefixes, so it is unmatched, and so is
+    Outside, a typed delivered erratum stored only there; DOCONLY, a
     documented column storage does not hold, is no finding. AGREES matches its
     storage, and Renamed matches the PHYS header the policy's storage_columns
     names, so neither is a finding. Fails if the check drops a kind, stops
     folding the column, ignores the policy prefixes or header mapping, skips an
-    unmatched steward-held column silently, stops comparing a documented type that
-    storage holds, reports a documented column absent from storage, or reports
-    an agreeing type."""
+    unmatched steward-held column or typed delivered erratum silently (as it
+    would if typed delivered entries stopped counting as steward-held), stops
+    comparing a documented type that storage holds, reports a documented column
+    absent from storage, or reports an agreeing type."""
     findings = storage_type_findings(
         load_register_files(_CASE / "curation"),
         load_storage_policy(_CASE / "storage_policy.toml"),
