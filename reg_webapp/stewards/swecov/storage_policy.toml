@@ -39,6 +39,10 @@ table_prefixes = ["Hreg_Examina", "Hreg_Reg", "Hreg_Sok"]
 [register."scb/innovation-foretag"]
 table_prefixes = ["CIS"]
 
+# CIS2004 holds PeOrgNrHe only as its P1105 pseudonym.
+[register."scb/innovation-foretag".storage_columns]
+PeOrgNrHe = "P1105_LopNr_PeOrgNrHe"
+
 [register."scb/it-anvandning"]
 table_prefixes = ["ITftg_"]
 

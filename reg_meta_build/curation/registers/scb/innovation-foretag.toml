@@ -6210,16 +6210,15 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "Text storage is assumed from the field meaning and related source identifiers; the historical storage type and length are not independently documented."
 variant = "_default"
 column = "PeOrgNrHe"
-data_type = "text"
+data_type = "integer"
 name = "PeOrgNrHe"
 definition = "PeOrgNrHe"
 is_identifier = true
-holdings_period = "2002-2020"
+holdings_period = "2004-2004"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). 2026-10-01 maintainer-authorized storage-type assumption: interpret this exact pooled 2002-2020 unmasked PeOrgNrHe holdings declaration as text. Complete related unmasked organisation-number native families 3578 (36 originals) and 1839 (6 originals) supply text where populated. Integer P1105_LopNr_PeOrgNr/PeOrgNrHe columns are distinct masked delivery keys; their physical types remain unchanged. No exact supplied PeOrgNrHe DDL proves this pooled encoding. Do not infer length, alter the identifier meaning or change any original source record."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. SWECOV's MONA storage holds it only as the masked delivery key P1105_LopNr_PeOrgNrHe (int) in table CIS2004; no CIS table holds an unmasked PeOrgNrHe, and the other waves carry P1105_LopNr_PeOrgNr instead. 2026-10-13 maintainer decision: type integer and holdings 2004 only, replacing the 2026-10-01 text assumption for an unmasked pooled 2002-2020 column."
 noted = "2026-06-14"
 
 [[errata.column]]
