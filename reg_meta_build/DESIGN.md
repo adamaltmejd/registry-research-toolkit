@@ -1405,18 +1405,24 @@ definition and the name are not waived. A shared state records no definition dis
 definition conflict stays the variable-level `conflicting_variable_fact`, and only a
 checked calendar-month definition puts a definition claim on an obligation. Siblings
 that disagree on the name leave the variable without a common name, so without a name
-permission it forms no variable (`unresolved_variable_name`). Genuine source gaps,
-unknown scopes, and pooled scopes without a carried range claim no delivery in the first
-place. A range-carrying pooled scope claims its whole range as one obligation,
-discharged by its one marked state. A variable — or one of its variants — that the
-dependency ledger withholds outright, with source evidence, answers for its own claim
-through that entry, whichever stage recorded it, and for nothing past that exact
-coordinate: an exact source-linked blocker stays a curation blocker without covering a
-sibling. Anything else missing is an engineering defect, not a curation question: the
-build names the source records and the exact missing window. A strict build stops before
-any output is placed; a diagnostic build records the miss as an error diagnostic and
-still completes with a nonpublishable database. A missing optional field or an unrelated
-diagnostic is no permission to drop the state it belongs to.
+permission it forms no variable (`unresolved_variable_name`). With one, no state can
+fall back on a common name and none may carry no name. A delivery whose own name is
+blank or conflicting is withheld, located on its window (`unresolved_variable_name`),
+and a shared slice whose columns disagree on the name is withheld like any unresolved
+representation slice (`conflicting_representation_fact` on `name`), in either metadata
+mode; either window leaves the obligation. Under a common variable name a nameless state
+is valid and stays. Genuine source gaps, unknown scopes, and pooled scopes without a
+carried range claim no delivery in the first place. A range-carrying pooled scope claims
+its whole range as one obligation, discharged by its one marked state. A variable — or
+one of its variants — that the dependency ledger withholds outright, with source
+evidence, answers for its own claim through that entry, whichever stage recorded it, and
+for nothing past that exact coordinate: an exact source-linked blocker stays a curation
+blocker without covering a sibling. Anything else missing is an engineering defect, not
+a curation question: the build names the source records and the exact missing window. A
+strict build stops before any output is placed; a diagnostic build records the miss as
+an error diagnostic and still completes with a nonpublishable database. A missing
+optional field or an unrelated diagnostic is no permission to drop the state it belongs
+to.
 
 ### Groups, relations and dependent output
 

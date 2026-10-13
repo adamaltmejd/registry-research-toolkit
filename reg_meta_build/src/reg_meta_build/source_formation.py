@@ -434,7 +434,7 @@ def _slice_of(state: ResolvedState, source: ResolvedState) -> bool:
 # The obligation claim each fact an accepted representation can dispute travels
 # on. The column texts share one claim, `column_text_claim`. The definition and the
 # name are not listed: a shared state records no definition dispute, and a disputed
-# name leaves the variable without a common name (DESIGN.md, delivery coverage).
+# name withholds the shared state (DESIGN.md, delivery coverage).
 _DISPUTED_FACT_CLAIMS = {
     "data_type": "data_type_claim",
     "data_length": "data_length_claim",
@@ -924,6 +924,10 @@ def form_native_variable(
             (f"variable.{field_name}",),
         )
     name = _text(canonical, "name")
+    # A name permission leaves the variable without a common name, so every state
+    # must carry its own positive name (`ResolvedVariable`); a delivery that
+    # establishes none is withheld below, located, instead of failing the build.
+    nameless = bool(name_cases) and not name
     if not name and not name_cases:
         issue(
             "unresolved_variable_name",
@@ -1045,6 +1049,18 @@ def form_native_variable(
                     )
                 )
             for segment in segments:
+                segment_name = _text(segment.fields, "name")
+                if nameless and not (segment_name and segment_name.strip()):
+                    issue(
+                        "unresolved_variable_name",
+                        "The variable has no common name and this delivery establishes none of its own; the state is withheld.",
+                        ("name",),
+                        ("state",),
+                        segment.occurrences,
+                        valid_from=segment.valid_from,
+                        valid_to=segment.valid_to,
+                    )
+                    continue
                 folded = all(
                     not occurrence.identity_checked
                     for occurrence in segment.effective_occurrences
@@ -1179,6 +1195,7 @@ def form_native_variable(
             variable_key=variable_key,
             variants=variants,
             subject=subject,
+            nameless=nameless,
         )
     )
     states.extend(independent_states)

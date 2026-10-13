@@ -3,7 +3,7 @@
     {
       "table": "issues",
       "fields": ["code", "subject", "valid_from", "valid_to"],
-      "note": "Every issue of the build. MIXED and PARTIAL withhold exactly their conflicting overlap; MISSING's 2022 lacks Second, which the omission (its own period, 2022-2024) took away; the untyped column is the only unknown type; SIBLING's 2022 is a disputed shared slice, once per disputed text (the fields below), ONETEXT's once for its one disputed text and DESCRIBED's once for its description, whose permitted literal descriptions stay on the states (delivery_text_projected). No unexplained_delivery_* issue: every withheld or sibling-assigned window is explained, the old allowed check_delivery_coverage calls, and a text fact the shared state nulls is explained by its conflicting_representation_fact, not reported again as a delivery fact change.",
+      "note": "Every issue of the build. MIXED and PARTIAL withhold exactly their conflicting overlap; MISSING's 2022 lacks Second, which the omission (its own period, 2022-2024) took away; the untyped column is the only unknown type; SIBLING's 2022 is a disputed shared slice, once per disputed text (the fields below), ONETEXT's once for its one disputed text and DESCRIBED's once for its description, whose permitted literal descriptions stay on the states (delivery_text_projected). NAMED's permitted names differ too, and its 2022 dispute withholds the shared state. HALFNAMED's blank First name against Second's 'Income' is the same dispute on the shared slice, but the variable keeps the common name 'Income', so the shared state stays, nameless under it. HALFNAMED's blank Variabelnamn also leaves its Unika summary row unmatched (unknown_support_key), a fixture side effect. No unexplained_delivery_* issue: every withheld or sibling-assigned window is explained, the old allowed check_delivery_coverage calls, and a text fact the shared state nulls is explained by its conflicting_representation_fact, not reported again as a delivery fact change.",
       "rows": [
         ["conflicting_representation_decisions", "scb/mixed/income", "2022-01-01", "2022-12-31"],
         ["conflicting_representation_decisions", "scb/partial/income", "2022-07-01", "2022-12-31"],
@@ -11,17 +11,21 @@
         ["conflicting_representation_fact", "scb/sibling/income", "2022-01-01", "2022-12-31"],
         ["conflicting_representation_fact", "scb/onetext/income", "2022-01-01", "2022-12-31"],
         ["conflicting_representation_fact", "scb/described/income", "2022-01-01", "2022-12-31"],
+        ["conflicting_representation_fact", "scb/named/income", "2022-01-01", "2022-12-31"],
+        ["conflicting_representation_fact", "scb/halfnamed/income", "2022-01-01", "2022-12-31"],
         ["conflicting_variable_fact", "scb/sibling/income", null, null],
         ["delivery_text_projected", "scb/described/income", null, null],
+        ["delivery_text_projected", "scb/named/income", null, null],
         ["curated_state_omission", "scb/missing/income", "2022-01-01", "2024-12-31"],
         ["missing_representation_metadata", "scb/missing/income", "2022-01-01", "2022-12-31"],
-        ["unknown_data_type", "scb/storeuntyped/income", "2020-01-01", "2020-12-31"]
+        ["unknown_data_type", "scb/storeuntyped/income", "2020-01-01", "2020-12-31"],
+        ["unknown_support_key", "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 14)))", null, null]
       ]
     },
     {
       "table": "states",
       "fields": ["register", "column", "valid_from", "valid_to"],
-      "note": "One shared state per shared window, stored under the first column by name (the old deterministic storage label), never one per column. Outside 2022 each pooled original keeps its own state. MIXED and MISSING write no 2022 state; PARTIAL keeps only the part of 2022 no competing entry claims.",
+      "note": "One shared state per shared window, stored under the first column by name (the old deterministic storage label), never one per column. Outside 2022 each pooled original keeps its own state. MIXED, MISSING and NAMED write no 2022 state; PARTIAL keeps only the part of 2022 no competing entry claims.",
       "rows": [
         ["storetext", "First", "2020-01-01", "2020-12-31"],
         ["storenum", "First", "2020-01-01", "2020-12-31"],
@@ -46,7 +50,12 @@
         ["onetext", "Second", "2023-01-01", "2024-12-31"],
         ["described", "First", "2020-01-01", "2021-12-31"],
         ["described", "First", "2022-01-01", "2022-12-31"],
-        ["described", "Second", "2023-01-01", "2024-12-31"]
+        ["described", "Second", "2023-01-01", "2024-12-31"],
+        ["named", "First", "2020-01-01", "2021-12-31"],
+        ["named", "Second", "2023-01-01", "2024-12-31"],
+        ["halfnamed", "First", "2020-01-01", "2021-12-31"],
+        ["halfnamed", "First", "2022-01-01", "2022-12-31"],
+        ["halfnamed", "Second", "2023-01-01", "2024-12-31"]
       ]
     },
     {
@@ -75,7 +84,9 @@
         ["onetext", "First", "2022-01-01", "2022-12-31", "shared", null, null, null],
         ["onetext", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null],
         ["described", "First", "2022-01-01", "2022-12-31", "shared", null, null, null],
-        ["described", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null]
+        ["described", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["halfnamed", "First", "2022-01-01", "2022-12-31", "shared", null, null, null],
+        ["halfnamed", "Second", "2022-01-01", "2022-12-31", "shared", null, null, null]
       ]
     },
     {
@@ -125,13 +136,16 @@
     },
     {
       "table": "issues",
-      "where": {"subject": ["scb/onetext/income", "scb/described/income"]},
+      "where": {"subject": ["scb/onetext/income", "scb/described/income", "scb/named/income", "scb/halfnamed/income"]},
       "fields": ["subject", "code", "fields", "valid_from", "valid_to"],
-      "note": "ONETEXT disputes only the operational definition (Second's against First's blank); both carry the same source attribution, so no dispute names it. DESCRIBED disputes only the description, which its delivery-metadata entry permits to vary.",
+      "note": "ONETEXT disputes only the operational definition (Second's against First's blank); both carry the same source attribution, so no dispute names it. DESCRIBED disputes only the description, which its delivery-metadata entry permits to vary. NAMED disputes the name its entry permits: a shared state has no common name to fall back on and cannot carry none, so the dispute withholds the 2022 slice instead of nulling a fact.",
       "rows": [
         ["scb/onetext/income", "conflicting_representation_fact", ["operational_definition"], "2022-01-01", "2022-12-31"],
         ["scb/described/income", "conflicting_representation_fact", ["description"], "2022-01-01", "2022-12-31"],
-        ["scb/described/income", "delivery_text_projected", ["description"], null, null]
+        ["scb/described/income", "delivery_text_projected", ["description"], null, null],
+        ["scb/named/income", "conflicting_representation_fact", ["name"], "2022-01-01", "2022-12-31"],
+        ["scb/named/income", "delivery_text_projected", ["name"], null, null],
+        ["scb/halfnamed/income", "conflicting_representation_fact", ["name"], "2022-01-01", "2022-12-31"]
       ]
     },
     {
@@ -146,6 +160,19 @@
         ["described", "2020-01-01", "First description", null, null],
         ["described", "2022-01-01", null, null, null],
         ["described", "2023-01-01", "Second description", null, null]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": ["named", "halfnamed"]},
+      "fields": ["register", "valid_from", "name", "state_name"],
+      "note": "NAMED forms a variable without a common name; each original outside 2022 keeps its own permitted literal name. HALFNAMED's variable takes the common name 'Income' (First's blank name is unobserved), so its shared 2022 state may stay nameless and is kept.",
+      "rows": [
+        ["named", "2020-01-01", null, "Income"],
+        ["named", "2023-01-01", null, "Earnings"],
+        ["halfnamed", "2020-01-01", "Income", null],
+        ["halfnamed", "2022-01-01", "Income", null],
+        ["halfnamed", "2023-01-01", "Income", "Income"]
       ]
     },
     {
