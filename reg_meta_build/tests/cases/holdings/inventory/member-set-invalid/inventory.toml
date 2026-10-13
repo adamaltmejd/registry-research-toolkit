@@ -39,9 +39,10 @@ variable = "sos/par/diagnos"
 representation = "DIA"
 member = { position = 1 }
 
-# A set of one.
+# Two columns claim one index under spellings of one representation: sets
+# group by the representation's identity fold, as compilation does.
 [[table]]
-id = "Single"
+id = "Respelled"
 edition = 2018
 [[table.column]]
 name = "DIA1"
@@ -50,6 +51,46 @@ register_variant = "sos/par/sluten"
 variable = "sos/par/diagnos"
 representation = "DIA"
 member = { position = 1 }
+[[table.column]]
+name = "dia1"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "dia"
+member = { position = 1 }
+
+# A member column with a second mapping: the reader would order the plain
+# mapping under the member's year. A set of one member is legal.
+[[table]]
+id = "MemberFirst"
+edition = 2018
+[[table.column]]
+name = "DIA_2018"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { year = 2018 }
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "HDIA"
+
+# The same column with its mappings in the other order.
+[[table]]
+id = "MemberSecond"
+edition = 2018
+[[table.column]]
+name = "DIA_2018"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "HDIA"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { year = 2018 }
 
 # A year member outside the edition.
 [[table]]

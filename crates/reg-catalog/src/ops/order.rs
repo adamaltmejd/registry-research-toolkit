@@ -824,9 +824,8 @@ impl Match {
 /// (today's `Holdings.matches`), mapped as `representation` when given and in a
 /// table with a period overlapping `bounds` when given, where a year or month
 /// member's own period must overlap them too; ordered by table and column.
-// simplify: one Match per (table, column) takes its member from the column's first
-// mapping row; split the key per mapping if a column ever maps one representation as a
-// year/month member and another plainly (unpinned `windows_block` would then clip both).
+// One Match per (table, column) carries the column's member: the builder refuses a
+// member column with a second mapping (`inventory_member_invalid`), so it is unambiguous.
 fn matches(
     conn: &Connection,
     id: i64,

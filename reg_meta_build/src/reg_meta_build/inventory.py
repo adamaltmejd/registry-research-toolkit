@@ -33,6 +33,7 @@ from pydantic import (
     model_validator,
 )
 from reg_core_py import (
+    fold_identity,
     next_iso_day,
     parse_fqid,
     period_bounds,
@@ -292,9 +293,9 @@ class ColumnMember(_InventoryModel):
     `{ position = N }`; an `Hushallsid_<year>` or monthly column maps its base with
     `{ year = YYYY }` or `{ month = "YYYY-MM" }` and serves only that sub-period.
 
-    Exactly one kind. The set rules (one kind, unique indexes, at least two
-    members, a year or month inside the table's edition) need the whole table, so
-    `validate_inventory_placements` owns them."""
+    Exactly one kind. The set rules (one kind, unique indexes, a year or month
+    inside the table's edition, a member column's only mapping) need the whole
+    table, so `validate_inventory_placements` owns them."""
 
     position: StrictInt | None = Field(default=None, ge=1)
     year: StrictInt | None = Field(default=None, ge=1000, le=9999)
@@ -416,7 +417,9 @@ class InventoryColumn(_InventoryModel):
     `mappings` may be empty: an unresolved column is still inventoried, so it
     stays in the coverage denominator without being admitted or orderable.
     Several mappings let one physical column serve several register variants
-    (the combined Utrikeshandel table)."""
+    (the combined Utrikeshandel table), unless one of them is a wide-pivot
+    member: a member column carries exactly that one mapping
+    (`_check_member_sets`)."""
 
     name: str = Field(min_length=1)
     mappings: tuple[ColumnMapping, ...] = Field(default=(), alias="mapping")
@@ -438,8 +441,8 @@ class InventoryColumn(_InventoryModel):
         a second holding, and the degenerate case of the one-to-one
         resolution invariant (the cross-location arm is
         `DeliveryInventory._check_one_to_one_resolution`). A member index does
-        not make it a second coordinate: one column is at most one member of a
-        set, as `canonical_inventory`'s triple check also holds."""
+        not make it a second coordinate, and a member column carries no other
+        mapping at all (`_check_member_sets`)."""
         seen: set[tuple[str, str, str]] = set()
         if self.unmapped_reason is not None and self.mappings:
             raise _InventoryGuardError(
@@ -765,45 +768,58 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
 
 def _check_member_sets(tables: tuple[InventoryTable, ...]) -> None:
     """A wide-pivot member set's own rules (#1495), per table and
-    `(register_variant, variable, representation)`: one member kind, unique
-    indexes and at least two members (gaps are allowed: real sets have them). A
+    `(register_variant, variable, representation)`: one member kind and unique
+    indexes (gaps are allowed: real sets have them, and one member is a set). A
     year or month member lies inside one segment of the table's edition, so a
-    year-independent table takes position members only."""
+    year-independent table takes position members only.
+
+    A member column carries exactly one mapping. The order reader keys a held
+    column by `(table, column)` and takes the member from the column, not the
+    mapping, so a second mapping would inherit or drop the member's period.
+
+    Sets group by the representation's `fold_identity`, the fold
+    `canonical_inventory` resolves through, so `DIA` and `dia` are one set here
+    as they are once compiled."""
     problems: list[str] = []
     for table in tables:
-        sets: dict[tuple[str, str, str], list[tuple[str, ColumnMember]]] = {}
+        sets: dict[tuple[str, str, str], list[tuple[str, str, ColumnMember]]] = {}
         for column in table.columns:
+            if len(column.mappings) > 1 and any(
+                mapping.member is not None for mapping in column.mappings
+            ):
+                problems.append(
+                    f"{_location(table.id, column.name)}: a wide-pivot member "
+                    f"column carries {len(column.mappings)} mappings — a member "
+                    "column maps exactly one coordinate"
+                )
             for mapping in column.mappings:
                 if mapping.member is not None:
                     key = (
                         mapping.register_variant,
                         mapping.variable,
-                        mapping.representation,
+                        fold_identity(mapping.representation),
                     )
-                    sets.setdefault(key, []).append((column.name, mapping.member))
+                    sets.setdefault(key, []).append(
+                        (column.name, mapping.representation, mapping.member)
+                    )
         if not sets:
             continue
         segments = (
             edition_bounds(table.edition) if table.period_scope == "intervals" else ()
         )
-        for (variant, variable, representation), members in sets.items():
+        for (variant, variable, _), members in sets.items():
             where = (
-                f"{_member_location(table.id, representation)} ({variant} {variable})"
+                f"{_member_location(table.id, members[0][1])} ({variant} {variable})"
             )
-            kinds = sorted({member.kind for _, member in members})
+            kinds = sorted({member.kind for _, _, member in members})
             if len(kinds) > 1:
                 problems.append(
                     f"{where} mixes member kinds {', '.join(kinds)} — index one "
                     "set one way"
                 )
                 continue
-            if len(members) < 2:
-                problems.append(
-                    f"{where} has the single member {members[0][0]!r} — map a "
-                    "lone column directly, without a member index"
-                )
             claimed: dict[int | str, str] = {}
-            for name, member in members:
+            for name, _, member in members:
                 if member.index in claimed:
                     problems.append(
                         f"{where}: columns {claimed[member.index]!r} and {name!r} "

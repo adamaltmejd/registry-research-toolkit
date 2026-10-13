@@ -8,6 +8,16 @@
       "retain_unknown_reason": null
     },
     {
+      "physical_id": "Monthly",
+      "scope": "intervals",
+      "edition": {
+        "from": 2019,
+        "to": 2020
+      },
+      "partition": null,
+      "retain_unknown_reason": null
+    },
+    {
       "physical_id": "Panel",
       "scope": "intervals",
       "edition": {
@@ -32,6 +42,11 @@
       "hi": "2020-12-31"
     },
     {
+      "physical_id": "Monthly",
+      "lo": "2019-01-01",
+      "hi": "2020-12-31"
+    },
+    {
       "physical_id": "Panel",
       "lo": "2018-01-01",
       "hi": "2020-12-31"
@@ -46,6 +61,16 @@
     {
       "physical_id": "Hushall2020",
       "name": "Hushallsid",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Monthly",
+      "name": "DIA_202002",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Monthly",
+      "name": "DIA_202012",
       "unmapped_reason": null
     },
     {
@@ -82,6 +107,22 @@
       "variable": "scb/example/hushall",
       "representation_literal": "Hushallsid",
       "representation_canonical": "Hushallsid"
+    },
+    {
+      "physical_id": "Monthly",
+      "name": "DIA_202002",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/diagnos",
+      "representation_literal": "DIA",
+      "representation_canonical": "DIA"
+    },
+    {
+      "physical_id": "Monthly",
+      "name": "DIA_202012",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/diagnos",
+      "representation_literal": "DIA",
+      "representation_canonical": "DIA"
     },
     {
       "physical_id": "Panel",
@@ -125,6 +166,20 @@
     }
   ],
   "members": [
+    {
+      "physical_id": "Monthly",
+      "name": "DIA_202002",
+      "member_position": null,
+      "member_lo": "2020-02-01",
+      "member_hi": "2020-02-29"
+    },
+    {
+      "physical_id": "Monthly",
+      "name": "DIA_202012",
+      "member_position": null,
+      "member_lo": "2020-12-01",
+      "member_hi": "2020-12-31"
+    },
     {
       "physical_id": "Panel",
       "name": "Hushallsid_2018",

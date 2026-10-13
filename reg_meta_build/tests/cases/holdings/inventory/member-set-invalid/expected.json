@@ -1,19 +1,24 @@
 {
-  "note": "One wide-pivot member set per rule, each in its own table; the refusal lists every broken set. Gaps in a set are legal (the pivot-members compile case has one).",
-  "fails_if": "a member set mixing position and year, two columns claiming one index, a set of one, a year member outside its table's edition or a month member its table's edition does not cover stops being refused, or the set rules stop naming the table and representation",
+  "note": "One wide-pivot member set per rule, each in its own table; the refusal lists every broken set. Gaps in a set are legal (the pivot-members compile case has one), and so is a set of one member (MemberFirst and MemberSecond refuse only for their second mapping).",
+  "fails_if": "a member set mixing position and year, two columns claiming one index (also under two spellings of one representation), a year member outside its table's edition, a month member its table's edition does not cover or a member column carrying a second mapping (in either order) stops being refused, a set of one member is refused, or the set rules stop naming the table and representation",
   "error": {
     "code": "inventory_member_invalid",
     "locators": [
-      "table"
+      "table",
+      "table['MemberFirst'].column['DIA_2018']",
+      "table['MemberSecond'].column['DIA_2018']"
     ],
     "message_contains": [
       "table['Mixed'] member set 'DIA' (sos/par/sluten sos/par/diagnos) mixes member kinds position, year",
       "table['Duplicate'] member set 'DIA' (sos/par/sluten sos/par/diagnos): columns 'DIA1' and 'DIA01' both claim position 1",
-      "table['Single'] member set 'DIA' (sos/par/sluten sos/par/diagnos) has the single member 'DIA1'",
+      "table['Respelled'] member set 'DIA' (sos/par/sluten sos/par/diagnos): columns 'DIA1' and 'dia1' both claim position 1",
+      "table['MemberFirst'].column['DIA_2018']: a wide-pivot member column carries 2 mappings",
+      "table['MemberSecond'].column['DIA_2018']: a wide-pivot member column carries 2 mappings",
       "table['Panel'] member set 'Hushallsid' (scb/rtb/individer scb/rtb/hushallsid): column 'Hushallsid_2021' year 2021 lies outside the table's edition 2018..2019",
       "table['Jobb2018'] member set 'Lon' (scb/jobb/jobb scb/jobb/lon): column 'Lon_201901' month '2019-01' lies outside the table's edition 2018"
     ],
     "message_excludes": [
+      "single member",
       "'Hushallsid_2018' year",
       "'Lon_201812' month"
     ]
