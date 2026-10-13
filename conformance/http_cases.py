@@ -23,6 +23,7 @@ from reg_meta_build.errors import RegMetaError
 
 CASES = Path(__file__).parent / "cases"
 READY_PATH = "/openapi.json"
+IDENTITY_PATH = "/api/context"
 SERVER_READY_SECONDS = 120
 EXIT_STATUS = {
     code["code"]: code.get("exit")
@@ -331,6 +332,8 @@ class ServerPool:
 
     def start(self, env):
         log = self.log_dir / f"server-{len(self.servers)}.log"
+        expected = _artifact_identity(Path(env["REG_META_DB"]) / "reg_meta.db")
+        observed = None
         deadline = time.monotonic() + SERVER_READY_SECONDS
         # A server that exits before answering may have lost its port to another
         # process between `_free_port` and its bind: retry on a fresh port.
@@ -354,36 +357,71 @@ class ServerPool:
                 timeout=60,
                 limits=httpx2.Limits(max_keepalive_connections=0),
             )
-            if _ready(process, client, deadline):
+            ready, observed = _ready(process, client, deadline, expected, observed)
+            if ready:
                 return process, client
             client.close()
             _stop(process)
             if time.monotonic() >= deadline:
                 break
         raise RuntimeError(
-            f"server never answered {READY_PATH}: {shlex.join(argv)}\n"
+            f"server never answered {IDENTITY_PATH} as artifact {expected}"
+            f" (last answer: {observed}): {shlex.join(argv)}\n"
             f"{log.read_text(errors='replace')[-4000:]}"
         )
 
 
-def _ready(process, client, deadline):
-    """Poll `READY_PATH` until the server answers (True), or it exits or the
-    deadline passes (False)."""
+def _artifact_identity(catalog_db):
+    """The `(generation_id, import_date)` an artifact's server reports in
+    `IDENTITY_PATH`. Both: `generation_id` does not cover the import date, and an
+    `artifacts` entry's other generation differs only there."""
+    with closing(sqlite3.connect(f"{catalog_db.as_uri()}?mode=ro", uri=True)) as conn:
+        manifest = dict(
+            conn.execute(
+                "SELECT key, value FROM import_manifest"
+                " WHERE key IN ('generation_id', 'import_date')"
+            )
+        )
+    return manifest.get("generation_id"), manifest.get("import_date")
+
+
+def _ready(process, client, deadline, expected, observed):
+    """Poll `READY_PATH` until a server answers, then ask `IDENTITY_PATH` once:
+    True when the answer is the `expected` artifact and our process is alive,
+    False on another identity, an exit or the deadline; also the last identity
+    an answer reported.
+
+    `READY_PATH` is static, so polling it stacks no work on a server still on its
+    cold first read; `IDENTITY_PATH` counts the catalog, so it is asked once and
+    given the rest of the budget rather than polled under a short timeout.
+
+    simplify: `_free_port` plus this identity check only narrow the window in
+    which another xdist worker's server holds our port (#1529); they guarantee
+    nothing, since distinct fixtures can report the same identity (a docs-only
+    twin, two fixtures on the same seed and import date). The guarantee is
+    `--port 0` with the address the server prints on stderr, which replaces both
+    once the G1 baseline pin (`conformance/differential/served.py` runs the
+    pinned binary through `ServerPool`) is a release that prints it."""
     while time.monotonic() < deadline:
         try:
             client.get(READY_PATH, timeout=1)
         except httpx2.TransportError:
             pass
         else:
-            # simplify: a foreign listener that took the port before our bind
-            # could answer before our process exits; hand the server a bound
-            # socket instead if that ever bites.
-            return process.poll() is None
+            try:
+                response = client.get(
+                    IDENTITY_PATH, timeout=max(deadline - time.monotonic(), 1)
+                )
+                body = response.json()
+                observed = (body["meta"]["generation"], body["data"]["import_date"])
+            except httpx2.TransportError, ValueError, KeyError, TypeError:
+                return False, observed
+            return observed == expected and process.poll() is None, observed
         # Waiting on the process paces the poll and notices an early exit.
         with suppress(subprocess.TimeoutExpired):
             process.wait(timeout=0.05)
-            return False
-    return False
+            return False, observed
+    return False, observed
 
 
 def _stop(process):
@@ -398,7 +436,22 @@ def _stop(process):
 
 
 def _free_port():
-    """A loopback port the kernel just reported free."""
-    with socket.socket() as probe:
-        probe.bind(("127.0.0.1", 0))
-        return probe.getsockname()[1]
+    """A loopback port held back for the server about to bind it.
+
+    A port merely probed free can be drawn again by another xdist worker before
+    our server binds it (#1529). A connection closed from the accepting side
+    leaves the port in TIME_WAIT (about a minute on Linux), which the kernel
+    skips when it picks a port for `bind(0)` but lets an `SO_REUSEADDR` bind
+    take, as tokio's does. This only makes a collision rarer: a server that
+    starts slower than the TIME_WAIT can still lose its port; `_ready` says
+    what replaces this."""
+    with socket.socket() as listener:
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        listener.bind(("127.0.0.1", 0))
+        listener.listen(1)
+        port = listener.getsockname()[1]
+        with socket.create_connection(("127.0.0.1", port)):
+            accepted, _ = listener.accept()
+            # The accepting side closes first, so the TIME_WAIT is on `port`.
+            accepted.close()
+    return port
