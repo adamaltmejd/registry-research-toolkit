@@ -61,12 +61,13 @@ artifact's steward) and `{port}` are substituted in each word. The runner starts
 server per cached artifact from the repository root, with `REG_META_DB`,
 `REG_WEBAPP_STEWARD` and `REG_WEBAPP_STEWARDS_DIR` in its environment, waits until
 `GET /openapi.json` answers (120 s at most), reuses it for every case on that artifact
-and stops it at session end. A server that exits before answering is retried on a fresh
-port, and a start that fails is not retried for later cases on that artifact. Its output
-goes to `servers*/server-N.log` under the pytest base temp. A case's `search_pins` names
-a pins file in its directory that the artifact build stores (fixtures have no pins
-otherwise); an expected `build_error` is that build's located refusal, and such a case
-sends no requests.
+and stops it at session end. Each port is reserved in TIME_WAIT before the server binds
+it, so concurrent workers never draw the same one. A server that exits before answering
+is retried on a fresh port, and a start that fails is not retried for later cases on
+that artifact. Its output goes to `servers*/server-N.log` under the pytest base temp. A
+case's `search_pins` names a pins file in its directory that the artifact build stores
+(fixtures have no pins otherwise); an expected `build_error` is that build's located
+refusal, and such a case sends no requests.
 
 The Rust server (`reg-meta serve`), on the whole suite, the `api` corpus and the MCP
 equivalence suite included (the Rust HTTP run, part of G0 and CI), and the

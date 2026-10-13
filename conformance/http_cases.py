@@ -375,9 +375,10 @@ def _ready(process, client, deadline):
         except httpx2.TransportError:
             pass
         else:
-            # simplify: a foreign listener that took the port before our bind
-            # could answer before our process exits; hand the server a bound
-            # socket instead if that ever bites.
+            # simplify: `_free_port` reserves the port against other workers, but
+            # a process outside the run that binds it explicitly could still
+            # answer before our process exits; hand the server a bound socket
+            # instead if that ever bites.
             return process.poll() is None
         # Waiting on the process paces the poll and notices an early exit.
         with suppress(subprocess.TimeoutExpired):
@@ -398,7 +399,21 @@ def _stop(process):
 
 
 def _free_port():
-    """A loopback port the kernel just reported free."""
-    with socket.socket() as probe:
-        probe.bind(("127.0.0.1", 0))
-        return probe.getsockname()[1]
+    """A loopback port reserved for the server about to bind it.
+
+    A port merely probed free can be drawn again by another xdist worker before
+    our server binds it (#1529); that worker's server then answers our readiness
+    poll and our cases read its artifact. A connection closed from the accepting
+    side leaves the port in TIME_WAIT (about a minute), which the kernel skips
+    when it picks a port for `bind(0)` but lets an `SO_REUSEADDR` bind take, as
+    tokio's does."""
+    with socket.socket() as listener:
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        listener.bind(("127.0.0.1", 0))
+        listener.listen(1)
+        port = listener.getsockname()[1]
+        with socket.create_connection(("127.0.0.1", port)):
+            accepted, _ = listener.accept()
+            # The accepting side closes first, so the TIME_WAIT is on `port`.
+            accepted.close()
+    return port
