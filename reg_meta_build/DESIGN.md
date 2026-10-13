@@ -2053,10 +2053,11 @@ within one state. A variant may declare `period_scope = "year_independent"` (the
 inventory and thin-provider key; `pooled` is not a steward scope): its states are
 written with NULL bounds, never as an open 0001-01-01..9999-12-31 interval, and any
 inherited validity bound or alias in that variant is refused. The SWECOV generator emits
-it from a `[[flavor]]` `period_scope`, and places the table at edition `_default` from
-an overlay `[[edition]]`. Malformed or inverted bounds, repeated columns, duplicate
-state keys and unknown fields fail early. The extension cannot introduce code sets or
-classification linkage.
+it from a `[[flavor]]` `period_scope`, with each near-duplicate spelling as its own
+variable instead of an alias, and places the table at edition `_default` from an overlay
+`[[edition]]` (a reviewed `[[mapping]]` may name `_default` too). Malformed or inverted
+bounds, repeated columns, duplicate state keys and unknown fields fail early. The
+extension cannot introduce code sets or classification linkage.
 
 Steward states are inserted as their `<provider>.toml` state arrays list them
 (`_insert_core_graph_from_ir`) and never pass through `merge_adjacent_states` (#1442).

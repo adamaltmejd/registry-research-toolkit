@@ -19,6 +19,7 @@ import pytest
 from _swecov_fixtures import (
     POLICY,
     build_catalog,
+    column as _column,
     copied_layout,
     flavored_db_fixture,  # noqa: F401
     inventory_worklist as _inventory_worklist,
@@ -371,30 +372,31 @@ def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
 
 # --- cmd_inventory: a year-independent table (#1538) --------------------------
 
+_INDEPENDENT_HOLDING = ("RTB", "Födelseuppgifter")
+(_INDEPENDENT_TABLE,) = POLICY.variant_tables()[
+    ("swecov", "population", "fodelseland-grupperat")
+]
+# Three punctuations of one column, co-delivered in the year-independent table:
+# a dated variant would group them as one state with aliases. All three kebab to
+# `birth-country`, so the flavor keys them in sorted physical-name order (space <
+# `-` < `_`): the bare key, then `-2`, then `-3`.
+_INDEPENDENT_TWINS = ["Birth country", "Birth-country", "Birth_country"]
 
-def test_year_independent_flavor_table_maps_as_year_independent_holdings(
-    tmp_path: Path,
-) -> None:
+
+@pytest.fixture(scope="module")
+def independent_flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """The committed policy's year-independent flavor table, through the real
-    path: `cmd_flavor` emits its variant's states as year-independent,
-    `extend_db` writes them with no calendar window, and an overlay edition
-    `"_default"` places the table as a year-independent holding whose mapping
-    the catalog serves (no coverage miss, a resolver-emitted column). Fails if
-    the flavor dates the states 0001-01-01..9999-12-31 (the `_default` table
-    then has no year-independent owner and is refused), if `cmd_inventory`
-    cannot read `_default` or emits it without its `period_scope`, or if
-    extension writes the state so the catalog does not serve it."""
-    from contextlib import closing
-
+    path: `cmd_flavor` (with three punctuation twins added to that table) then
+    `extend_db` over a reader base artifact. Returns the flavored DB."""
     from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
     from reg_meta_build.extend_db import extend_db
-    from reg_meta_build.holdings_compile import canonical_inventory
-    from reg_meta_build.inventory_coverage import coverage_misses
 
-    (table,) = POLICY.variant_tables()[
-        ("swecov", "population", "fodelseland-grupperat")
-    ]
-    root = run_flavor(tmp_path / "flavor", _synthetic_enriched())
+    tmp_path = tmp_path_factory.mktemp("independent")
+    enriched = _synthetic_enriched()
+    holding = enriched["/".join(_INDEPENDENT_HOLDING)]
+    holding["columns"] += [_column(name) for name in _INDEPENDENT_TWINS]
+    holding["table_columns"][_INDEPENDENT_TABLE] += _INDEPENDENT_TWINS
+    root = run_flavor(tmp_path / "flavor", enriched)
     base_db = build_reader_artifact(
         tmp_path / "base",
         "reader/classification-editions",
@@ -409,15 +411,45 @@ def test_year_independent_flavor_table_maps_as_year_independent_holdings(
         slug_dir=root.parents[1] / "fqid_slugs" / "swecov",
         diagnostic=True,
     )
-    flavored = tmp_path / "flavored" / "reg_meta.db"
+    return tmp_path / "flavored" / "reg_meta.db"
 
-    steward = _run_inventory(
+
+def _independent_inventory(tmp_path: Path, db: Path, overlay: str, columns) -> Path:
+    return _run_inventory(
         tmp_path,
-        flavored,
+        db,
+        overlay,
+        _INDEPENDENT_TABLE,
+        columns,
+        holding=_INDEPENDENT_HOLDING,
+    )
+
+
+def test_year_independent_flavor_table_maps_as_year_independent_holdings(
+    tmp_path: Path, independent_flavored_db: Path
+) -> None:
+    """`cmd_flavor` emits the year-independent variant's states with no calendar
+    window, each co-delivered spelling as its own variable, and an overlay
+    edition `"_default"` places the table as a year-independent holding whose
+    every column maps to its own literal and is served by the catalog (no
+    coverage miss). Fails if the flavor dates the states
+    0001-01-01..9999-12-31 (the `_default` table then has no year-independent
+    owner and is refused), if it groups the twins as aliases (extension refuses
+    the provider TOML, `curated_toml_invalid`), if a third colliding spelling
+    reuses a key or keys out of name order, if `cmd_inventory` cannot read
+    `_default` or emits it without its `period_scope`, or if extension writes
+    the state so the catalog does not serve it."""
+    from contextlib import closing
+
+    from reg_meta_build.holdings_compile import canonical_inventory
+    from reg_meta_build.inventory_coverage import coverage_misses
+
+    table = _INDEPENDENT_TABLE
+    steward = _independent_inventory(
+        tmp_path,
+        independent_flavored_db,
         f'[[edition]]\ntable = "{table}"\nedition = "_default"\n',
-        table,
-        [f"{table}_kolumn"],
-        holding=("RTB", "Födelseuppgifter"),
+        [f"{table}_kolumn", *_INDEPENDENT_TWINS],
     )
 
     (emitted,) = tomllib.loads(
@@ -427,14 +459,89 @@ def test_year_independent_flavor_table_maps_as_year_independent_holdings(
         "_default",
         "year_independent",
     )
-    assert [
-        (m["register_variant"], m["representation"])
+    assert {
+        column["name"]: [
+            (m["register_variant"], m["representation"]) for m in column["mapping"]
+        ]
         for column in emitted["column"]
-        for m in column["mapping"]
-    ] == [("swecov/population/fodelseland-grupperat", f"{table}_kolumn")]
+    } == {
+        name: [("swecov/population/fodelseland-grupperat", name)]
+        for name in (f"{table}_kolumn", *_INDEPENDENT_TWINS)
+    }
     assert _inventory_worklist(tmp_path)["retained_unknown"] == []
     inventory = load_delivery_inventory(steward / "inventory.toml")
-    with closing(sqlite3.connect(flavored)) as conn:
+    with closing(sqlite3.connect(independent_flavored_db)) as conn:
         report = coverage_misses(conn, inventory)
         canonical_inventory(conn, inventory)
-    assert (report.pairs, report.misses) == (1, ())
+        # Each spelling maps to its own variable, keyed by its ordinal.
+        provider_key = {
+            column["name"]: conn.execute(
+                "SELECT v.provider_key FROM variable v"
+                " JOIN register r USING (register_id)"
+                " JOIN provider p USING (provider_id)"
+                " WHERE p.slug || '/' || r.slug || '/' || v.slug = ?",
+                (mapping["variable"],),
+            ).fetchone()[0]
+            for column in emitted["column"]
+            for mapping in column["mapping"]
+            if column["name"] in _INDEPENDENT_TWINS
+        }
+    assert provider_key == {
+        "Birth country": "birth-country",
+        "Birth-country": "birth-country-2",
+        "Birth_country": "birth-country-3",
+    }
+    assert (report.pairs, report.misses) == (4, ())
+
+
+def test_range_edition_never_admits_a_year_independent_state(
+    tmp_path: Path, independent_flavored_db: Path
+) -> None:
+    """A finite range edition over the year-independent table finds no dated
+    owner: the column is refused as `no_covering_delivery_owner` and the
+    inventory is not replaced. Fails if an unassessed range/list returns its
+    records before the period-scope filter, which maps the column to a
+    year-independent state that dated coverage then misses."""
+    table = _INDEPENDENT_TABLE
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _independent_inventory(
+            tmp_path,
+            independent_flavored_db,
+            f'[[edition]]\ntable = "{table}"\nedition = {{ from = 2019, to = 2020 }}\n',
+            [f"{table}_kolumn"],
+        )
+    (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
+    assert (entry["column"], entry["code"]) == (
+        f"{table}_kolumn",
+        "no_covering_delivery_owner",
+    )
+
+
+def test_reviewed_mapping_pins_a_year_independent_edition(
+    tmp_path: Path, independent_flavored_db: Path
+) -> None:
+    """A reviewed `[[mapping]]` pinned to edition `"_default"` maps a physical
+    column with no catalog literal to a year-independent representation. Fails
+    if `[[mapping]]` accepts only finite editions, which refuses the overlay as
+    malformed."""
+    table = _INDEPENDENT_TABLE
+    variable = "swecov/population/swecov-fodelseland-grupperat-kolumn"
+    overlay = (
+        f'[[edition]]\ntable = "{table}"\nedition = "_default"\n\n'
+        "[[mapping]]\n"
+        f'table = "{table}"\n'
+        'column = "Physical"\n'
+        'edition = "_default"\n'
+        'register_variant = "swecov/population/fodelseland-grupperat"\n'
+        f'variable = "{variable}"\n'
+        f'representation = "{table}_kolumn"\n'
+        'reason = "Exact reviewed source coordinate"\n'
+    )
+    steward = _independent_inventory(
+        tmp_path, independent_flavored_db, overlay, ["Physical"]
+    )
+    (emitted,) = load_delivery_inventory(steward / "inventory.toml").tables
+    (physical,) = emitted.columns
+    assert [(str(m.variable), m.representation) for m in physical.mappings] == [
+        (variable, f"{table}_kolumn")
+    ]

@@ -43,6 +43,7 @@ import sys
 import unicodedata
 from collections import defaultdict
 from dataclasses import dataclass, field
+from itertools import count
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -1411,6 +1412,8 @@ def _flavor_variables(
     columns: list[dict],
     keep: frozenset[str] = frozenset(),
     sensitive: frozenset[str] = frozenset(),
+    *,
+    year_independent: bool = False,
 ) -> list[dict]:
     """Project an enriched holding's columns into curated variable dictionaries.
 
@@ -1447,7 +1450,13 @@ def _flavor_variables(
     same `_ANY_LOPNR_PREFIX` that produced the `normalized` fold input (it is an
     order-template artifact, not a column identity — see #365); a stripped column
     flags `is_identifier`. Validity is left open: delivery coverage is a project
-    selection, not a register fact."""
+    selection, not a register fact.
+
+    A `year_independent` variant does not group: a co-delivered alias needs a
+    dated window, which such a state has none of, so CuratedAdapter refuses
+    aliases there (#1538). Each spelling becomes its own variable; a key that
+    two spellings kebab to alike (`Birth-country` / `Birth_country`) takes an
+    ordinal suffix in name order."""
     # fold -> {physical column: its enriched entry}, first-seen first.
     groups: dict[str, dict[str, dict]] = {}
     for col in sorted(columns, key=lambda c: c["name"]):
@@ -1459,9 +1468,11 @@ def _flavor_variables(
         logical = _ANY_LOPNR_PREFIX.sub("", col["name"]).strip()
         if not logical:
             continue
-        groups.setdefault(_norm_alnum(col["normalized"]), {}).setdefault(logical, col)
+        fold = logical if year_independent else _norm_alnum(col["normalized"])
+        groups.setdefault(fold, {}).setdefault(logical, col)
 
     variables: list[dict] = []
+    keys: set[str] = set()
     for spellings in groups.values():
         first_column, first_entry = next(iter(spellings.items()))
         # Multistate curated contract (#981): the delivery column and its window
@@ -1476,9 +1487,14 @@ def _flavor_variables(
             # The other spellings are co-delivered, so they ride as `aliases` of
             # this one state — see the docstring.
             state["aliases"] = aliases
+        key = _kebab(first_entry["normalized"]) or f"v{len(variables)}"
+        if key in keys:
+            # Spellings of one fold that a year-independent variant split apart.
+            key = next(f"{key}-{n}" for n in count(2) if f"{key}-{n}" not in keys)
+        keys.add(key)
         variables.append(
             {
-                "key": _kebab(first_entry["normalized"]) or f"v{len(variables)}",
+                "key": key,
                 "name": first_column,
                 "definition": None,
                 "description": first_entry.get("description") or None,
@@ -1644,7 +1660,10 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         )
         if dropped and not _mapping_registers(holding.get("mapping", {})):
             ungrafted.append(f"{key}: {', '.join(dropped)}")
-        variables = _flavor_variables(columns, keep, sensitive)
+        independent = (prov_slug, reg_key, var_key) in _FLAVOR_YEAR_INDEPENDENT
+        variables = _flavor_variables(
+            columns, keep, sensitive, year_independent=independent
+        )
         if not variables:
             # Every column was Källa-sourced (canonical) — nothing steward-only
             # remains. The curated contract requires >= 1 variable per variant,
@@ -1659,9 +1678,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             "key": var_key,
             "name": var_name,
             "description": None,
-            "period_scope": "year_independent"
-            if (prov_slug, reg_key, var_key) in _FLAVOR_YEAR_INDEPENDENT
-            else "intervals",
+            "period_scope": "year_independent" if independent else "intervals",
             "variables": variables,
         }
         reg["_variant_slugs"][var_key] = var_slug
@@ -1950,11 +1967,18 @@ def _inventory_period_records(
     from reg_meta_build.inventory_coverage import _covers
 
     independent = edition == _YEAR_INDEPENDENT_EDITION
-    if not independent and not assess_ranges and not isinstance(edition, (str, int)):
+    scope = "year_independent" if independent else "intervals"
+    # Scope before the unassessed-range return: a range/list still never admits
+    # a year-independent state. An emptied list falls through to the refusal.
+    records = [r for r in records if r["period_scope"] == scope]
+    if (
+        records
+        and not independent
+        and not assess_ranges
+        and not isinstance(edition, (str, int))
+    ):
         return records, None
     bounds = () if independent else _overlay_edition_bounds(edition)
-    scope = "year_independent" if independent else "intervals"
-    records = [r for r in records if r["period_scope"] == scope]
     grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for record in records:
         grouped[(record["coord"], record["vslug"])].append(record)
@@ -2118,6 +2142,7 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
 #   [[mapping]] table, column, edition, register_variant, variable, representation, reason
 #                                   — exact reviewed representation, guarded by
 #                                     physical coordinates and full catalog coverage
+#                                     (`edition` may be `"_default"`)
 #   [[assign]]   table, register_variant (str or list)
 #                                   — variant coordinate(s) where the curated
 #                                     MAPPING cannot place the table (residue
@@ -2171,8 +2196,11 @@ class InventoryMappingOverride(ColumnMapping):
     reason: str = Field(min_length=1)
 
     @model_validator(mode="after")
-    def _finite_edition(self) -> InventoryMappingOverride:
-        _overlay_edition_bounds(self.edition)
+    def _known_edition(self) -> InventoryMappingOverride:
+        # `_default` is the year-independent edition the [[edition]] path admits;
+        # every other edition must parse as a finite period.
+        if self.edition != _YEAR_INDEPENDENT_EDITION:
+            _overlay_edition_bounds(self.edition)
         return self
 
 
