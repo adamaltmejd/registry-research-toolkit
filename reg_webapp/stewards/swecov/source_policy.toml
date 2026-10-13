@@ -13,7 +13,8 @@
 # SWECOV-constructed columns on top of RTB — only the Källa-empty columns
 # survive _flavor_variables (the Källa=RTB ones are canonical, routed to the
 # global graft track, so each such holding's [[route]] names `graft = "scb/rtb"`;
-# `flavor` refuses a Källa column whose route names no graft register).
+# `flavor` refuses a Källa column whose route names no graft register), unless
+# the [[flavor]] entry's `keep_columns` keeps them as steward copies.
 # RTB/Födelseuppgifter draws only its SWECOV_Fodelseland_grupperat table (EU
 # grouping lookups) into a population variant. RTB/PostNr is intentionally NOT
 # listed: its only content column (`postnr`, Källa=RTB) is canonical RTB
@@ -442,8 +443,7 @@ note = "Källa=RTB/Hushållsreg. for Famstall/HushallsStallning/partner-lopnr; F
 category = "RTB"
 detail = "Population"
 status = "flavor"
-graft = "scb/rtb"
-note = "Källa empty for IndexPop/Partner/LopNrByte etc. -> SWECOV-constructed population spine; Källa=RTB Kon/AterAnv/FelPersonNr -> graft onto scb/rtb (#1302)"
+note = "SWECOV-constructed population spine; Källa=RTB Kon/AterAnv/FelPersonNr stay in the flavor as SWECOV copies (keep_columns) so the table orders as one variant (maintainer 2026-10-13, #1302)"
 
 [[route]]
 category = "RTB"
@@ -870,6 +870,15 @@ register_name = "Populationsspine (konstruerad)"
 variant = "_default"
 variant_slug = "_default"
 variant_name = "Populationsspine (konstruerad)"
+# Population_PersonNr_20241231 orders as one variant: assigning it scb/rtb too
+# would map its person key onto scb/rtb/personnr beside RTB1990..2024. AterAnv
+# and FelPersonNr are SCB-generated personnummer flags with no orderable RTB
+# home; Kon is RTB's sex as delivered with the spine. FodelseArMan and
+# FodelseArManDag make persons easier to identify: share with caution, never by
+# default; FodelseArManDag stays unmapped in the overlay (maintainer 2026-10-13,
+# #1302).
+keep_columns = ["Kon", "AterAnv", "FelPersonNr"]
+sensitive_columns = ["FodelseArMan", "FodelseArManDag"]
 
 [[flavor]]
 holding = "RTB/Adress särskilt boende"

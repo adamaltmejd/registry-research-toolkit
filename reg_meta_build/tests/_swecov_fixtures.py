@@ -78,6 +78,15 @@ def synthetic_enriched() -> dict[str, dict]:
         column("Covid-19 antikroppar"),
         column("Covid_19_antikroppar"),
     ]
+    # Every column a disposition's keep/sensitive list names, the kept ones with
+    # a register Källa, so the flavor's column lists resolve against the holding.
+    variant_columns = POLICY.variant_columns()
+    for key, prov_slug, _, reg_key, _, var_key, *_ in POLICY.disposition():
+        keep, sensitive = variant_columns.get(
+            (prov_slug, reg_key, var_key), (frozenset(), frozenset())
+        )
+        enriched[key]["columns"] += [column(c, kalla="RTB") for c in sorted(keep)]
+        enriched[key]["columns"] += [column(c) for c in sorted(sensitive - keep)]
     return enriched
 
 

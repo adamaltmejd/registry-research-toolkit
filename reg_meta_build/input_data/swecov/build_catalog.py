@@ -1388,6 +1388,10 @@ _FLAVOR_DISPOSITION = _POLICY.disposition()
 # the holding's full column union (the default for every other flavor provider).
 _FLAVOR_VARIANT_TABLES = _POLICY.variant_tables()
 
+# (provider, register, variant) -> (keep_columns, sensitive_columns): exact
+# physical names from the disposition entry (source_policy.toml, #1302).
+_FLAVOR_VARIANT_COLUMNS = _POLICY.variant_columns()
+
 
 def _kebab(text: str) -> str:
     """ASCII kebab slug: NFKD-transliterate (ä→a), lower, non-alnum→'-'. Used
@@ -1399,7 +1403,11 @@ def _kebab(text: str) -> str:
     return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", folded.lower())).strip("-")
 
 
-def _flavor_variables(columns: list[dict]) -> list[dict]:
+def _flavor_variables(
+    columns: list[dict],
+    keep: frozenset[str] = frozenset(),
+    sensitive: frozenset[str] = frozenset(),
+) -> list[dict]:
     """Project an enriched holding's columns into curated variable dictionaries.
 
     A column whose master-list `Källa` names a canonical source REGISTER (LISA,
@@ -1415,7 +1423,10 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
     is NOT a canonical register — it marks data reported FROM an external public
     agency that has no reg_meta home (Tillväxtverket's korttidsarbete). That is
     precisely steward-flavor content, so such columns are KEPT in the flavor rather
-    than routed to a graft target that doesn't exist (#443).
+    than routed to a graft target that doesn't exist (#443). The disposition's
+    `keep` names (exact physical columns) are kept too: the steward table must stay
+    orderable as one variant, so its Källa columns are the steward's own copies
+    (#1302). `sensitive` names flag their variable `is_sensitive`.
 
     Surviving columns are GROUPED by their `_norm_alnum` fold (lopnr-stripped,
     NFKD-transliterated, upper-cased, non-alphanumerics dropped), so the vintage
@@ -1436,7 +1447,7 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
     # fold -> {physical column: its enriched entry}, first-seen first.
     groups: dict[str, dict[str, dict]] = {}
     for col in sorted(columns, key=lambda c: c["name"]):
-        if _canonical_kalla(col):
+        if _canonical_kalla(col) and col["name"] not in keep:
             # Källa names a canonical register -> global graft track, not flavor.
             # A provenance phrase ("Inrapporterat från …") is steward-reported data
             # with no canonical home -> keep it in the flavor (see docstring, #443).
@@ -1468,7 +1479,7 @@ def _flavor_variables(columns: list[dict]) -> list[dict]:
                 "definition": None,
                 "description": first_entry.get("description") or None,
                 "is_identifier": bool(_ANY_LOPNR_PREFIX.match(first_entry["name"])),
-                "is_sensitive": False,
+                "is_sensitive": any(e["name"] in sensitive for e in spellings.values()),
                 "states": [state],
             }
         )
@@ -1610,12 +1621,24 @@ def cmd_flavor(args: argparse.Namespace) -> None:
                     f"table(s) absent from holding {key!r}: {missing}"
                 )
             columns = [c for c in columns if c["name"] in table_cols]
+        keep, sensitive = _FLAVOR_VARIANT_COLUMNS.get(
+            (prov_slug, reg_key, var_key), (frozenset(), frozenset())
+        )
+        if absent := sorted((keep | sensitive) - {c["name"] for c in columns}):
+            raise SystemExit(
+                f"flavor column list of {(prov_slug, reg_key, var_key)} names "
+                f"column(s) absent from holding {key!r}: {absent}"
+            )
         dropped = sorted(
-            {f"{c['name']} (Källa={c['kalla']})" for c in columns if _canonical_kalla(c)}
+            {
+                f"{c['name']} (Källa={c['kalla']})"
+                for c in columns
+                if _canonical_kalla(c) and c["name"] not in keep
+            }
         )
         if dropped and not _mapping_registers(holding.get("mapping", {})):
             ungrafted.append(f"{key}: {', '.join(dropped)}")
-        variables = _flavor_variables(columns)
+        variables = _flavor_variables(columns, keep, sensitive)
         if not variables:
             # Every column was Källa-sourced (canonical) — nothing steward-only
             # remains. The curated contract requires >= 1 variable per variant,
