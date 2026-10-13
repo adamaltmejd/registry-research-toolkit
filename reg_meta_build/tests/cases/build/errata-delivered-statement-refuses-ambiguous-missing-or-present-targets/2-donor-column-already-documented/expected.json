@@ -7,16 +7,17 @@
         "code": [
           "stale_curation_entry",
           "overbroad_curation_entry"
-        ]
+        ],
+        "detail": {
+          "contains": "sample.toml#/errata.delivered/1: scb_errata_now_present:documented_on_target_variant"
+        }
       },
       "fields": [
-        "code",
-        "detail"
+        "code"
       ],
       "rows": [
         [
-          "stale_curation_entry",
-          "curation/registers/scb/sample.toml#/errata.delivered/1: scb_errata_now_present:documented_on_target_variant; use a plain delivered entry"
+          "stale_curation_entry"
         ]
       ]
     },
