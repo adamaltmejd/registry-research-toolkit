@@ -605,16 +605,30 @@ jobs:
       # any other type).
       # This probe and the cache probe below are anchored: edge-deploy-swecov runs
       # them against its own EDGE_HOST.
+      # Both probes wait for the new worker version (#1491): `wrangler deploy`
+      # returns before every PoP serves it, so the first request can reach the
+      # previous version. The worker exposes no version header, so each probe
+      # retries on its own signal of the new version (the .wasm hashed for this
+      # build; a young cache entry under this DEPLOY_VERSION) for a bounded
+      # window, then fails naming what it expected and what it last saw.
       - name: Edge .wasm probe
         if: steps.head.outputs.skip != 'true'
         working-directory: reg_webapp/frontend
         env:
           EDGE_HOST: catalog.swecov.se
         run: &edge-wasm-probe |
+          window=180 interval=10
           wasm=$(cd dist && ls assets/*.wasm)
-          read -r code type < <(curl -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
-          echo "$wasm: $code $type"
-          [ "$code" = 200 ] && [ "$type" = application/wasm ] || { echo "FATAL: the deployed .wasm answered $code $type" >&2; exit 1; }
+          deadline=$((SECONDS + window))
+          # Before the new assets reach a PoP, the hashed path answers the worker's
+          # no-store 404: retry anything but 200 application/wasm.
+          while :; do
+            read -r code type < <(curl -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
+            echo "$wasm: $code $type"
+            [ "$code" = 200 ] && [ "$type" = application/wasm ] && break
+            [ "$SECONDS" -lt "$deadline" ] || { echo "FATAL: expected this build's $wasm as 200 application/wasm within ${window}s, last saw $code $type" >&2; exit 1; }
+            sleep "$interval"
+          done
       # Standing #220 regression probe: the /api/* Cache Rule and the ETag
       # contract are zone-dashboard state (click-ops, no IaC) — assert after
       # every edge deploy that a search read still caches (MISS/HIT family,
@@ -628,20 +642,25 @@ jobs:
         if: steps.head.outputs.skip != 'true'
         env:
           EDGE_HOST: catalog.swecov.se
+          DEPLOY_VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
         run: &edge-cache-probe |
+          window=180 interval=10
           url="https://$EDGE_HOST/api/search?q=inkomst"
-          curl -sfo /dev/null "$url"   # warm the colo
-          status=""
-          for _ in 1 2 3; do
-            sleep 2
-            status=$(curl -sfo /dev/null -w '%header{cf-cache-status}' "$url")
-            [ "$status" = "HIT" ] && break
+          deadline=$((SECONDS + window))
+          # One request per attempt, so status and Age come from the same isolate.
+          # A MISS (the new cache key's first read warms it) or an old HIT (a PoP
+          # still on the previous worker version) retries until the window ends.
+          while :; do
+            IFS='|' read -r code status age < <(curl -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
+            echo "$code cf-cache-status: $status, age: ${age:-0}s"
+            [ "$status" = HIT ] && [ "${age:-0}" -le 600 ] && break
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              [ "$status" = HIT ] || { echo "FATAL: /api/* not edge-cached within ${window}s, last saw $code $status (Cache Rule missing?)" >&2; exit 1; }
+              echo "FATAL: expected a young HIT under DEPLOY_VERSION $DEPLOY_VERSION within ${window}s, last saw a HIT ${age}s old — the new worker version is not served everywhere, or #318 DEPLOY_VERSION cache-key versioning is broken" >&2
+              exit 1
+            fi
+            sleep "$interval"
           done
-          echo "cf-cache-status: $status"
-          [ "$status" = "HIT" ] || { echo "FATAL: /api/* not edge-cached (Cache Rule missing?)" >&2; exit 1; }
-          age=$(curl -sfo /dev/null -w '%header{age}' "$url")
-          echo "age: ${age:-0}s"
-          [ "${age:-0}" -le 600 ] || { echo "FATAL: edge HIT is ${age}s old — pre-deploy cache entry still reachable (#318 DEPLOY_VERSION cache-key versioning broken?)" >&2; exit 1; }
           etag=$(curl -sfo /dev/null -w '%header{etag}' "$url")
           code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
           echo "If-None-Match -> $code"
@@ -789,4 +808,5 @@ jobs:
         if: steps.head.outputs.skip != 'true'
         env:
           EDGE_HOST: data.swecov.se
+          DEPLOY_VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
         run: *edge-cache-probe
