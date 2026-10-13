@@ -79,16 +79,17 @@ def test_lone_suffixed_column_beside_its_base_is_a_reasoned_pivot_member(
     its direct mapping (the KSju `ersk`/`ersk1` shape, #1302 C5). Fails if the
     pivot count ignores the unsuffixed base column (the lone `T_kolumn1` falls to
     unresolved with no reason), if pivot members are emitted without
-    `unmapped_reason`, or if the base column is swept into the pivot."""
+    `unmapped_reason`, if the base column is swept into the pivot, or if an
+    unresolved column is missing from the worklist."""
     steward = _run_inventory(
         tmp_path,
         flavored_db,
         '[[edition]]\ntable = "T"\nedition = 2021\n',
         "T",
-        ["T_kolumn", "T_kolumn1"],
+        ["T_kolumn", "T_kolumn1", "Okand_kolumn"],
     )
     (table,) = load_delivery_inventory(steward / "inventory.toml").tables
-    base, member = table.columns
+    _, base, member = table.columns
     assert [m.representation for m in base.mappings] == ["T_kolumn"]
     assert member.name == "T_kolumn1"
     assert member.mappings == ()
@@ -96,6 +97,14 @@ def test_lone_suffixed_column_beside_its_base_is_a_reasoned_pivot_member(
         "Wide-pivot member of T_kolumn: the inventory has no cell shape for N"
         " physical columns serving one variable (#1495)."
     )
+    assert _inventory_worklist(tmp_path)["unresolved"] == [
+        {
+            "table": "T",
+            "column": "Okand_kolumn",
+            "edition": 2021,
+            "register_variants": ["inera/bestallda-prover/_default"],
+        }
+    ]
 
 
 # --- cmd_inventory: per-register school-year editions ------------------------

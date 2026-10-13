@@ -2423,6 +2423,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         "assignment_needed": [],
         "stale_overlay_entries": stale,
         "mapping_scope_needed": [],
+        "unresolved": [],
     }
     for table, column in overlay["mapping"]:
         if (
@@ -2618,6 +2619,14 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                         ]
                         continue
                 n_unresolved += 1
+                worklist["unresolved"].append(
+                    {
+                        "table": table,
+                        "column": col,
+                        "edition": edition,
+                        "register_variants": sorted(coords),
+                    }
+                )
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
             recs, scope_issue = _inventory_period_records(recs, edition)
