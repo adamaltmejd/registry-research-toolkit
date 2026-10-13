@@ -623,7 +623,7 @@ jobs:
           # Before the new assets reach a PoP, the hashed path answers the worker's
           # no-store 404: retry anything but 200 application/wasm.
           while :; do
-            read -r code type < <(curl -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
+            read -r code type < <(curl -m 15 -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
             echo "$wasm: $code $type"
             [ "$code" = 200 ] && [ "$type" = application/wasm ] && break
             [ "$SECONDS" -lt "$deadline" ] || { echo "FATAL: expected this build's $wasm as 200 application/wasm within ${window}s, last saw $code $type" >&2; exit 1; }
@@ -651,7 +651,7 @@ jobs:
           # A MISS (the new cache key's first read warms it) or an old HIT (a PoP
           # still on the previous worker version) retries until the window ends.
           while :; do
-            IFS='|' read -r code status age < <(curl -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
+            IFS='|' read -r code status age < <(curl -m 15 -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
             echo "$code cf-cache-status: $status, age: ${age:-0}s"
             [ "$status" = HIT ] && [ "${age:-0}" -le 600 ] && break
             if [ "$SECONDS" -ge "$deadline" ]; then
@@ -661,8 +661,8 @@ jobs:
             fi
             sleep "$interval"
           done
-          etag=$(curl -sfo /dev/null -w '%header{etag}' "$url")
-          code=$(curl -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
+          etag=$(curl -m 15 -sfo /dev/null -w '%header{etag}' "$url")
+          code=$(curl -m 15 -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
           echo "If-None-Match -> $code"
           [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
       # Public-host MCP smoke: the hosted
