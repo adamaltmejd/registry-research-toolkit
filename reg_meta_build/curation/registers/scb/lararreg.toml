@@ -13229,6 +13229,7 @@ expected_diagnostic_sha256 = "814793b67b0e4fc8f5616d84fe061dffc2d6f821ccf98234e6
 [[errata.column]]
 variant = "tjansteregistret"
 column = "REKTOR"
+data_type = "text"
 name = "REKTOR"
 definition = "Uppgift om rektor i tjänsteregistret; innebörden är inte dokumenterad."
 holdings_period = "1989-07-01/1999-06-30"

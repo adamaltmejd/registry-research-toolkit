@@ -10,6 +10,7 @@ native_id = "167"
 [[errata.column]]
 variant = "konkurser-offentliga-ackord"
 column = "tidning"
+data_type = "text"
 name = "Nummer på postgumman (från och med 1997)"
 definition = "Nummer på postgumman (från och med 1997)"
 holdings_period = "1990-2024"

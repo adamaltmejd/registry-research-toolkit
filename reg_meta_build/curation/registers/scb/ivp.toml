@@ -32,6 +32,7 @@ data_warning = "Source operational definitions for LevB, LevB2 and TotB2 include
 [[errata.column]]
 variant = "industrins-varuproduktion"
 column = "KvantText"
+data_type = "text"
 name = "Anger vilken kvantitetsenhet som gäller för levererad och totalt producerad kvantitet."
 definition = "Anger vilken kvantitetsenhet som gäller för levererad och totalt producerad kvantitet."
 holdings_period = "1990-2024"

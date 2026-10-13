@@ -10,6 +10,7 @@ native_id = "1"
 [[errata.column]]
 variant = "arbetsstalleenheter"
 column = "avregdatktid"
+data_type = "date"
 name = "Avregistreringsår"
 definition = "Avregistreringsår"
 holdings_period = "1990-2024"
@@ -747,6 +748,7 @@ expected_evidence_sha256 = "87dd224707e6af8b1b6bab62447615cea22d5571dd251661d52e
 [[errata.column]]
 variant = "arbetsstalleenheter"
 column = "regdatktid"
+data_type = "date"
 name = "regdatktid"
 definition = "regdatktid"
 holdings_period = "2015-2024"
@@ -757,6 +759,7 @@ noted = "2026-10-12"
 [[errata.column]]
 variant = "arbetsstalleenheter"
 column = "jurform"
+data_type = "text"
 name = "Juridisk form"
 definition = "Juridisk form."
 holdings_period = "2015-2022"

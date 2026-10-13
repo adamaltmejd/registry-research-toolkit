@@ -10,6 +10,7 @@ native_id = "188"
 [[errata.column]]
 variant = "varu-landfordelat-intrastat"
 column = "KN8"
+data_type = "decimal"
 name = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)"
 definition = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)"
 holdings_period = "1990-2024"
@@ -361,6 +362,7 @@ expected_diagnostic_sha256 = "9bc0ea28a446835b1cff22b3ebf90fd0c79b16bf592e2a3efc
 [[errata.column]]
 variant = "varu-landfordelat-intrastat"
 column = "SPIN2002"
+data_type = "text"
 name = "Produktgrupp enligt SPIN 2002"
 definition = "Produktgrupp enligt SPIN 2002."
 holdings_period = "1997-2011"
