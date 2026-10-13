@@ -573,30 +573,33 @@ literal edition name. For a name the period parser cannot interpret, its documen
 parser can interpret, makes the entry stale. No register coverage or nearby edition
 supplies an inferred period, and other unparseable names remain unsupported.
 `[[errata.delivered]]` carries `variant`, literal `column`, existing `versions`,
-`expected_evidence_sha256`, `evidence`, `noted`, and optional `upstream` and
-`native_variable_id`; it adds omitted rows for a column documented elsewhere on the
-variant and names edition tokens verbatim. Optional `donor_variant` names a different
-variant of the same register: identity and digest come from its documented column, while
-added states use the target variant’s edition tokens and retain the native owner. This
-requires the column to be undocumented on the target; an anchored additional physical
-delivery (with optional `storage_column`) keeps existing target siblings and guards and
-digests the complete native family on both donor and target variants. The
-native-variable anchor selects one documented identity when the same column literal
-belongs to multiple variables in the variant's history. An anchor must occur under that
-column; without one, the column must identify exactly one variable across the complete
-variant history. The required evidence digest (`acknowledgement_evidence_sha256`) covers
-the full originals the entry relies on: every documented row of the column, the native
-rows it rewrites or keeps beside its additions, and, for an additional physical column,
-the complete native family. It leaves out the edition support, which for a declared
-edition is the whole variant. A changed digest makes the entry stale, so a drifted
-sibling definition is reviewed again rather than cloned. Each original contributes its
-own content, not its delivery's revision, so a change elsewhere in the delivery leaves
-the entry fresh. `[[errata.column]]` carries the variable identity (`name` and
-`definition`), a source and evidence, plus either named versions, bounded
-`holdings_period`, or the legacy undated `all_versions = true`; it mints a variable for
-a column SCB documents nowhere on that variant. Its identity is `(register, column)`, so
-two variants of one register use the same variable identity. `source` records the
-evidence class; it does not change the materialized rows.
+`expected_evidence_sha256`, `evidence`, `noted`, and optional `upstream`,
+`native_variable_id`, and nonblank `data_warning`; it adds omitted rows for a column
+documented elsewhere on the variant and names edition tokens verbatim. Optional
+`donor_variant` names a different variant of the same register: identity and digest come
+from its documented column, while added states use the target variant’s edition tokens
+and retain the native owner. This requires the column to be undocumented on the target;
+an anchored additional physical delivery (with optional `storage_column`) keeps existing
+target siblings and guards and digests the complete native family on both donor and
+target variants. The native-variable anchor selects one documented identity when the
+same column literal belongs to multiple variables in the variant's history. An anchor
+must occur under that column; without one, the column must identify exactly one variable
+across the complete variant history. The required evidence digest
+(`acknowledgement_evidence_sha256`) covers the full originals the entry relies on: every
+documented row of the column, the native rows it rewrites or keeps beside its additions,
+and, for an additional physical column, the complete native family. It leaves out the
+edition support, which for a declared edition is the whole variant. A changed digest
+makes the entry stale, so a drifted sibling definition is reviewed again rather than
+cloned. Each original contributes its own content, not its delivery's revision, so a
+change elsewhere in the delivery leaves the entry fresh. The optional `data_warning`
+annotates only the occurrences the entry adds, with the warning field `definition`; its
+text is curator annotation, excluded from the evidence digest. `[[errata.column]]`
+carries the variable identity (`name` and `definition`), a source and evidence, plus
+either named versions, bounded `holdings_period`, or the legacy undated
+`all_versions = true`; it mints a variable for a column SCB documents nowhere on that
+variant. Its identity is `(register, column)`, so two variants of one register use the
+same variable identity. `source` records the evidence class; it does not change the
+materialized rows.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column anywhere on this variant? One column/variant omission is exactly

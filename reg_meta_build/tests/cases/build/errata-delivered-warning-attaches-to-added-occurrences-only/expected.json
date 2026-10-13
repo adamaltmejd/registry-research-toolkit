@@ -1,0 +1,87 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "other",
+          "people",
+          "OTHER",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "value",
+          "people",
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31"
+        ],
+        [
+          "value",
+          "people",
+          "VALUE",
+          "2022-01-01",
+          "2022-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to",
+        "summary",
+        "fields"
+      ],
+      "rows": [
+        [
+          "value",
+          "people",
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31",
+          "Historical definitions are not documented as identical.",
+          [
+            "definition"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "report_warnings",
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to",
+        "summary",
+        "fields"
+      ],
+      "rows": [
+        [
+          "value",
+          "people",
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31",
+          "Historical definitions are not documented as identical.",
+          [
+            "definition"
+          ]
+        ]
+      ]
+    }
+  ]
+}
