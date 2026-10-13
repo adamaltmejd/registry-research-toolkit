@@ -1,0 +1,6 @@
+interface:
+  display_name: "Yard File"
+  short_description: "File and size tickets, decide proposals"
+  default_prompt: "Use $yard-file to file this work as Yard tickets."
+policy:
+  allow_implicit_invocation: true

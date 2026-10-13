@@ -34,3 +34,4 @@ target/
 archive/
 ARCHITECTURE.md
 AGENTS.md
+.yard/local/
