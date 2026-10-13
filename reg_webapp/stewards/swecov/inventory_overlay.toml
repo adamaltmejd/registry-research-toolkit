@@ -27513,3 +27513,1231 @@ table = "FTG_FOU_2015"
 column = "Vikt"
 edition = 2015
 reason = "SWECOV storage spelling Vikt of the catalog variable scb/fou/viktrev (delivery column ViktRev); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+# Double-J delivery spelling of the merchanting-adjusted net turnover (SCB
+# delivery report "Bilaga 1 Leveransrapport uppd 2023-2024", FEK rows 109/177).
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/nettoomsattning-justerad-merchanting"
+representation = "fhar400_jmf"
+table = "FE2003"
+column = "NettoomsattningJjusteradForMerchanting"
+edition = 2003
+reason = "FEK long-name delivery column (double-J spelling, SCB delivery report FEK rows 109/177) of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/nettoomsattning-justerad-merchanting"
+representation = "fhar400_jmf"
+table = "FE2004"
+column = "NettoomsattningJjusteradForMerchanting"
+edition = 2004
+reason = "FEK long-name delivery column (double-J spelling, SCB delivery report FEK rows 109/177) of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/nettoomsattning-justerad-merchanting"
+representation = "fhar400_jmf"
+table = "FE2005"
+column = "NettoomsattningJjusteradForMerchanting"
+edition = 2005
+reason = "FEK long-name delivery column (double-J spelling, SCB delivery report FEK rows 109/177) of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/nettoomsattning-justerad-merchanting"
+representation = "fhar400_jmf"
+table = "FE2006"
+column = "NettoomsattningJjusteradForMerchanting"
+edition = 2006
+reason = "FEK long-name delivery column (double-J spelling, SCB delivery report FEK rows 109/177) of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/nettoomsattning-justerad-merchanting"
+representation = "fhar400_jmf"
+table = "FE2008"
+column = "NettoomsattningJjusteradForMerchanting"
+edition = 2008
+reason = "FEK long-name delivery column (double-J spelling, SCB delivery report FEK rows 109/177) of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/fek/fek-slutdata"
+variable = "scb/fek/nettoomsattning-justerad-merchanting"
+representation = "fhar400_jmf"
+table = "FE2009"
+column = "NettoomsattningJjusteradForMerchanting"
+edition = 2009
+reason = "FEK long-name delivery column (double-J spelling, SCB delivery report FEK rows 109/177) of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "umu/hogskoleprovet/_default"
+variable = "umu/hogskoleprovet/lopnr-personnr"
+representation = "Personnummer"
+table = "UMU_HogskoleprovRes"
+column = "P1105_LopNr_PersonNr"
+edition = [{ from = "VT1977", to = "HT2019" }, { from = "HT2020", to = "VT2025" }]
+reason = "Pseudonymized person key of the primary högskoleprov holding; input_data/UMU/umu.toml identifies P1105_LopNr_PersonNr with the documented field Personnummer; maintainer-decided 2026-10-13 (#1302)."
+
+# FE1997-FE2002 hold Företagsstatistik företagsenhet slutdata, whose catalog
+# windows cover exactly 1997-2002 (FEK's own editions start 2003); the FEK
+# pooled grafts stay assigned. Maintainer-decided 2026-10-13 (#1302).
+
+[[assign]]
+table = "FE1997"
+register_variant = ["scb/fek/fek-slutdata", "scb/foretagsstatistik/fs-slutdata-foretagsenhet"]
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/aktier-och-andelar"
+representation = "gem2131"
+table = "FE1997"
+column = "AktierOchAndelar"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/foradlingsvarde"
+representation = "har0003"
+table = "FE1997"
+column = "Foradlingsvarde"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forbrukningsvarde"
+representation = "har0002"
+table = "FE1997"
+column = "Forbrukningsvarde"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forskott-anlaggningstillgangar"
+representation = "gem2028"
+table = "FE1997"
+column = "ForskottAvseendeMateriellaAnlaggningstillgangar"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forutbetalda-kostnader-upplupna-intakter"
+representation = "gem2129"
+table = "FE1997"
+column = "ForutbetKostnUpplupnaInt"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/loner-och-andra-ersattningar"
+representation = "gem0801"
+table = "FE1997"
+column = "KostnaderForLonerOchAndraErsattningar"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/kundfordringar"
+representation = "gem2111"
+table = "FE1997"
+column = "Kundfordringar"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/mark"
+representation = "gem2015"
+table = "FE1997"
+column = "Mark"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/medelantal-anstallda"
+representation = "gem5000"
+table = "FE1997"
+column = "MedelantalAnstallda"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/nettoomsattning"
+representation = "gem0103"
+table = "FE1997"
+column = "Nettoomsattning"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/naringsgren-sni5"
+representation = "Ng_5"
+table = "FE1997"
+column = "Ng_5"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-fordringar"
+representation = "gem2121"
+table = "FE1997"
+column = "OvrKortfristigaFordringar"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-kortfristiga-placeringar"
+representation = "gem2132"
+table = "FE1997"
+column = "OvrigaKortfristigaPlaceringar"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/produktionsvarde"
+representation = "har0001"
+table = "FE1997"
+column = "Produktionsvarde"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/rorelseresultat"
+representation = "gem0140"
+table = "FE1997"
+column = "Rorelseresultat"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/skatteskulder"
+representation = "gem2341"
+table = "FE1997"
+column = "Skatteskulder"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-bruttoinvesteringar"
+representation = "gem3300"
+table = "FE1997"
+column = "SummaBruttoinvesteringar"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-eget-kapital"
+representation = "gem2210"
+table = "FE1997"
+column = "SummaEgetKapital"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-ravaror-handelsvaror"
+representation = "gem0120"
+table = "FE1997"
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-nettoinvesteringar"
+representation = "gem3500"
+table = "FE1997"
+column = "SummaNettoinvesteringar"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/varulager"
+representation = "gem2110"
+table = "FE1997"
+column = "Varulager"
+edition = 1997
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[assign]]
+table = "FE1998"
+register_variant = ["scb/fek/fek-slutdata", "scb/foretagsstatistik/fs-slutdata-foretagsenhet"]
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/aktier-och-andelar"
+representation = "gem2131"
+table = "FE1998"
+column = "AktierOchAndelar"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/foradlingsvarde"
+representation = "har0003"
+table = "FE1998"
+column = "Foradlingsvarde"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forbrukningsvarde"
+representation = "har0002"
+table = "FE1998"
+column = "Forbrukningsvarde"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forskott-anlaggningstillgangar"
+representation = "gem2028"
+table = "FE1998"
+column = "ForskottAvseendeMateriellaAnlaggningstillgangar"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forutbetalda-kostnader-upplupna-intakter"
+representation = "gem2129"
+table = "FE1998"
+column = "ForutbetKostnUpplupnaInt"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/loner-och-andra-ersattningar"
+representation = "gem0801"
+table = "FE1998"
+column = "KostnaderForLonerOchAndraErsattningar"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/kundfordringar"
+representation = "gem2111"
+table = "FE1998"
+column = "Kundfordringar"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/mark"
+representation = "gem2015"
+table = "FE1998"
+column = "Mark"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/medelantal-anstallda"
+representation = "gem5000"
+table = "FE1998"
+column = "MedelantalAnstallda"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/nettoomsattning"
+representation = "gem0103"
+table = "FE1998"
+column = "Nettoomsattning"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/naringsgren-sni5"
+representation = "Ng_5"
+table = "FE1998"
+column = "Ng_5"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-fordringar"
+representation = "gem2121"
+table = "FE1998"
+column = "OvrKortfristigaFordringar"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-kortfristiga-placeringar"
+representation = "gem2132"
+table = "FE1998"
+column = "OvrigaKortfristigaPlaceringar"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/produktionsvarde"
+representation = "har0001"
+table = "FE1998"
+column = "Produktionsvarde"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/rorelseresultat"
+representation = "gem0140"
+table = "FE1998"
+column = "Rorelseresultat"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/skatteskulder"
+representation = "gem2341"
+table = "FE1998"
+column = "Skatteskulder"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-bruttoinvesteringar"
+representation = "gem3300"
+table = "FE1998"
+column = "SummaBruttoinvesteringar"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-eget-kapital"
+representation = "gem2210"
+table = "FE1998"
+column = "SummaEgetKapital"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-ravaror-handelsvaror"
+representation = "gem0120"
+table = "FE1998"
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-nettoinvesteringar"
+representation = "gem3500"
+table = "FE1998"
+column = "SummaNettoinvesteringar"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/varulager"
+representation = "gem2110"
+table = "FE1998"
+column = "Varulager"
+edition = 1998
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[assign]]
+table = "FE1999"
+register_variant = ["scb/fek/fek-slutdata", "scb/foretagsstatistik/fs-slutdata-foretagsenhet"]
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/aktier-och-andelar"
+representation = "gem2131"
+table = "FE1999"
+column = "AktierOchAndelar"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/foradlingsvarde"
+representation = "har0003"
+table = "FE1999"
+column = "Foradlingsvarde"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forbrukningsvarde"
+representation = "har0002"
+table = "FE1999"
+column = "Forbrukningsvarde"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forskott-anlaggningstillgangar"
+representation = "gem2028"
+table = "FE1999"
+column = "ForskottAvseendeMateriellaAnlaggningstillgangar"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forutbetalda-kostnader-upplupna-intakter"
+representation = "gem2129"
+table = "FE1999"
+column = "ForutbetKostnUpplupnaInt"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/loner-och-andra-ersattningar"
+representation = "gem0801"
+table = "FE1999"
+column = "KostnaderForLonerOchAndraErsattningar"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/kundfordringar"
+representation = "gem2111"
+table = "FE1999"
+column = "Kundfordringar"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/mark"
+representation = "gem2015"
+table = "FE1999"
+column = "Mark"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/medelantal-anstallda"
+representation = "gem5000"
+table = "FE1999"
+column = "MedelantalAnstallda"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/nettoomsattning"
+representation = "gem0103"
+table = "FE1999"
+column = "Nettoomsattning"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/naringsgren-sni5"
+representation = "Ng_5"
+table = "FE1999"
+column = "Ng_5"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-fordringar"
+representation = "gem2121"
+table = "FE1999"
+column = "OvrKortfristigaFordringar"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-kortfristiga-placeringar"
+representation = "gem2132"
+table = "FE1999"
+column = "OvrigaKortfristigaPlaceringar"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/produktionsvarde"
+representation = "har0001"
+table = "FE1999"
+column = "Produktionsvarde"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/rorelseresultat"
+representation = "gem0140"
+table = "FE1999"
+column = "Rorelseresultat"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/skatteskulder"
+representation = "gem2341"
+table = "FE1999"
+column = "Skatteskulder"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-bruttoinvesteringar"
+representation = "gem3300"
+table = "FE1999"
+column = "SummaBruttoinvesteringar"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-eget-kapital"
+representation = "gem2210"
+table = "FE1999"
+column = "SummaEgetKapital"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-ravaror-handelsvaror"
+representation = "gem0120"
+table = "FE1999"
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-nettoinvesteringar"
+representation = "gem3500"
+table = "FE1999"
+column = "SummaNettoinvesteringar"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/varulager"
+representation = "gem2110"
+table = "FE1999"
+column = "Varulager"
+edition = 1999
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[assign]]
+table = "FE2000"
+register_variant = ["scb/fek/fek-slutdata", "scb/foretagsstatistik/fs-slutdata-foretagsenhet"]
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/aktier-och-andelar"
+representation = "gem2131"
+table = "FE2000"
+column = "AktierOchAndelar"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/foradlingsvarde"
+representation = "har0003"
+table = "FE2000"
+column = "Foradlingsvarde"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forbrukningsvarde"
+representation = "har0002"
+table = "FE2000"
+column = "Forbrukningsvarde"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forskott-anlaggningstillgangar"
+representation = "gem2028"
+table = "FE2000"
+column = "ForskottAvseendeMateriellaAnlaggningstillgangar"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forutbetalda-kostnader-upplupna-intakter"
+representation = "gem2129"
+table = "FE2000"
+column = "ForutbetKostnUpplupnaInt"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/loner-och-andra-ersattningar"
+representation = "gem0801"
+table = "FE2000"
+column = "KostnaderForLonerOchAndraErsattningar"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/kundfordringar"
+representation = "gem2111"
+table = "FE2000"
+column = "Kundfordringar"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/mark"
+representation = "gem2015"
+table = "FE2000"
+column = "Mark"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/medelantal-anstallda"
+representation = "gem5000"
+table = "FE2000"
+column = "MedelantalAnstallda"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/nettoomsattning"
+representation = "gem0103"
+table = "FE2000"
+column = "Nettoomsattning"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/naringsgren-sni5"
+representation = "Ng_5"
+table = "FE2000"
+column = "Ng_5"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-fordringar"
+representation = "gem2121"
+table = "FE2000"
+column = "OvrKortfristigaFordringar"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-kortfristiga-placeringar"
+representation = "gem2132"
+table = "FE2000"
+column = "OvrigaKortfristigaPlaceringar"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/produktionsvarde"
+representation = "har0001"
+table = "FE2000"
+column = "Produktionsvarde"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/rorelseresultat"
+representation = "gem0140"
+table = "FE2000"
+column = "Rorelseresultat"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/skatteskulder"
+representation = "gem2341"
+table = "FE2000"
+column = "Skatteskulder"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-bruttoinvesteringar"
+representation = "gem3300"
+table = "FE2000"
+column = "SummaBruttoinvesteringar"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-eget-kapital"
+representation = "gem2210"
+table = "FE2000"
+column = "SummaEgetKapital"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-ravaror-handelsvaror"
+representation = "gem0120"
+table = "FE2000"
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-nettoinvesteringar"
+representation = "gem3500"
+table = "FE2000"
+column = "SummaNettoinvesteringar"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/varulager"
+representation = "gem2110"
+table = "FE2000"
+column = "Varulager"
+edition = 2000
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[assign]]
+table = "FE2001"
+register_variant = ["scb/fek/fek-slutdata", "scb/foretagsstatistik/fs-slutdata-foretagsenhet"]
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/aktier-och-andelar"
+representation = "gem2131"
+table = "FE2001"
+column = "AktierOchAndelar"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/foradlingsvarde"
+representation = "har0003"
+table = "FE2001"
+column = "Foradlingsvarde"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forbrukningsvarde"
+representation = "har0002"
+table = "FE2001"
+column = "Forbrukningsvarde"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forskott-anlaggningstillgangar"
+representation = "gem2028"
+table = "FE2001"
+column = "ForskottAvseendeMateriellaAnlaggningstillgangar"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forutbetalda-kostnader-upplupna-intakter"
+representation = "gem2129"
+table = "FE2001"
+column = "ForutbetKostnUpplupnaInt"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/loner-och-andra-ersattningar"
+representation = "gem0801"
+table = "FE2001"
+column = "KostnaderForLonerOchAndraErsattningar"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/kundfordringar"
+representation = "gem2111"
+table = "FE2001"
+column = "Kundfordringar"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/mark"
+representation = "gem2015"
+table = "FE2001"
+column = "Mark"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/medelantal-anstallda"
+representation = "gem5000"
+table = "FE2001"
+column = "MedelantalAnstallda"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/nettoomsattning"
+representation = "gem0103"
+table = "FE2001"
+column = "Nettoomsattning"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/naringsgren-sni5"
+representation = "Ng_5"
+table = "FE2001"
+column = "Ng_5"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-fordringar"
+representation = "gem2121"
+table = "FE2001"
+column = "OvrKortfristigaFordringar"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-kortfristiga-placeringar"
+representation = "gem2132"
+table = "FE2001"
+column = "OvrigaKortfristigaPlaceringar"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/produktionsvarde"
+representation = "har0001"
+table = "FE2001"
+column = "Produktionsvarde"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/rorelseresultat"
+representation = "gem0140"
+table = "FE2001"
+column = "Rorelseresultat"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/skatteskulder"
+representation = "gem2341"
+table = "FE2001"
+column = "Skatteskulder"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-bruttoinvesteringar"
+representation = "gem3300"
+table = "FE2001"
+column = "SummaBruttoinvesteringar"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-eget-kapital"
+representation = "gem2210"
+table = "FE2001"
+column = "SummaEgetKapital"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-ravaror-handelsvaror"
+representation = "gem0120"
+table = "FE2001"
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-nettoinvesteringar"
+representation = "gem3500"
+table = "FE2001"
+column = "SummaNettoinvesteringar"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/varulager"
+representation = "gem2110"
+table = "FE2001"
+column = "Varulager"
+edition = 2001
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[assign]]
+table = "FE2002"
+register_variant = ["scb/fek/fek-slutdata", "scb/foretagsstatistik/fs-slutdata-foretagsenhet"]
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/aktier-och-andelar"
+representation = "gem2131"
+table = "FE2002"
+column = "AktierOchAndelar"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/foradlingsvarde"
+representation = "har0003"
+table = "FE2002"
+column = "Foradlingsvarde"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forbrukningsvarde"
+representation = "har0002"
+table = "FE2002"
+column = "Forbrukningsvarde"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forskott-anlaggningstillgangar"
+representation = "gem2028"
+table = "FE2002"
+column = "ForskottAvseendeMateriellaAnlaggningstillgangar"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/forutbetalda-kostnader-upplupna-intakter"
+representation = "gem2129"
+table = "FE2002"
+column = "ForutbetKostnUpplupnaInt"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/loner-och-andra-ersattningar"
+representation = "gem0801"
+table = "FE2002"
+column = "KostnaderForLonerOchAndraErsattningar"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/kundfordringar"
+representation = "gem2111"
+table = "FE2002"
+column = "Kundfordringar"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/mark"
+representation = "gem2015"
+table = "FE2002"
+column = "Mark"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/medelantal-anstallda"
+representation = "gem5000"
+table = "FE2002"
+column = "MedelantalAnstallda"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/nettoomsattning"
+representation = "gem0103"
+table = "FE2002"
+column = "Nettoomsattning"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/naringsgren-sni5"
+representation = "Ng_5"
+table = "FE2002"
+column = "Ng_5"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-fordringar"
+representation = "gem2121"
+table = "FE2002"
+column = "OvrKortfristigaFordringar"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/ovriga-kortfristiga-placeringar"
+representation = "gem2132"
+table = "FE2002"
+column = "OvrigaKortfristigaPlaceringar"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/produktionsvarde"
+representation = "har0001"
+table = "FE2002"
+column = "Produktionsvarde"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/rorelseresultat"
+representation = "gem0140"
+table = "FE2002"
+column = "Rorelseresultat"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/skatteskulder"
+representation = "gem2341"
+table = "FE2002"
+column = "Skatteskulder"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-bruttoinvesteringar"
+representation = "gem3300"
+table = "FE2002"
+column = "SummaBruttoinvesteringar"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-eget-kapital"
+representation = "gem2210"
+table = "FE2002"
+column = "SummaEgetKapital"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-ravaror-handelsvaror"
+representation = "gem0120"
+table = "FE2002"
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/summa-nettoinvesteringar"
+representation = "gem3500"
+table = "FE2002"
+column = "SummaNettoinvesteringar"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+[[mapping]]
+register_variant = "scb/foretagsstatistik/fs-slutdata-foretagsenhet"
+variable = "scb/foretagsstatistik/varulager"
+representation = "gem2110"
+table = "FE2002"
+column = "Varulager"
+edition = 2002
+reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
