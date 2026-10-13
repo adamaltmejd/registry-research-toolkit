@@ -65,6 +65,8 @@
   "conformance/cases/order/outside-column-window/request.json#/project": "709bc2ced4e845e7e02e261d508a9c2c862d3437235416ee718f4643de503b14",
   "conformance/cases/order/outside-period/request.json#/project": "6f56735f1054e7936ae35ab153254d204e10da77bbacb1d71e82bd4477150a89",
   "conformance/cases/order/partitions/request.json#/project": "04703c78c541c483a9a5065f44b992a9def1069021a89b4442b22e15879984de",
+  "conformance/cases/order/pivot-position-index-order/request.json#/project": "bd3f68142ec9f36cddfa1d8925d17df1116a7f70a07b094b4a113f560a592c32",
+  "conformance/cases/order/pivot-year-slice/request.json#/project": "834a5f68dcdaf941698ce25a94485c9f8105f260e5c5974f980c03df1e3a64e5",
   "conformance/cases/order/range/request.json#/project": "66ee56e44a1033a17f5a062f973dc9a5dbae119d389183824c18a67c962acd24",
   "crates/reg-core/tests/project/corpus/accepts_panels/input.json": "116f158ed1098df7f428ea9fdaf122f64daf5cb5fb16982be7a7bdb6ed58db68",
   "crates/reg-core/tests/project/corpus/binding_period_within_source/input.json": "b26d1ba86abf6feba822a4cd5cd7e165e3b6321d80203ffafe457a5874f7f9e6",
