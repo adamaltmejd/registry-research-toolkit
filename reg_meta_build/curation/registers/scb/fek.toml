@@ -2238,3 +2238,15 @@ slug = "langfristiga-aktier-och-andelar"
 [[variable]]
 native_id = "168.SNI92"
 slug = "sni92"
+
+# fenr is documented on the verksamhetsenhet variant only; SCB delivers it on
+# the företagsenhet FE tables 2022-2023 (#1516, maintainer-decided 2026-10-13).
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+donor_variant = "fek-slutdata-verksamhetsenhet"
+column = "fenr"
+versions = ["2022", "2023"]
+expected_evidence_sha256 = "4b2697d8b4c1e38899494e0cdb6d485c738085e3fd40a6ad1cf676aec34398c0"
+evidence = "SCB Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx, FEK row 6 (P1105_LopNr_FENr, Företagsenhetens löpnummer, 2022-2023, FEÅÅÅÅ(_verX))."
+noted = "2026-10-13"
