@@ -1,0 +1,5 @@
+{
+  "note": "A donor entry must refuse when the target already documents the column, even outside the requested edition. The sibling-donor build case is its allowed twin.",
+  "fails_if": "The donor path skips the own-variant documented-column guard.",
+  "sources": "scb-sibling-donor"
+}

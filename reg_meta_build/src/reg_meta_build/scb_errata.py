@@ -135,6 +135,7 @@ class ErrataDelivered:
     versions: tuple[str, ...]
     provenance: str
     native_variable_id: int | None = None
+    donor_variant_id: int | None = None
 
 
 # The `[[column]]` fields that say WHERE the variable is delivered rather
@@ -397,6 +398,17 @@ def resolve_scb_errata(
             entry, "delivered", registers, variants
         )
         values = entry.values
+        donor_variant_id = None
+        if "donor_variant" in values:
+            donor = _require_str(values, "donor_variant", context)
+            register = entry.register_fqid.split("/")[1]
+            donor_variant_id = variants.get(f"{register}/{donor}")
+            if donor_variant_id is None or donor_variant_id == variant_id:
+                raise curation_error(
+                    "scb_errata_unknown_variant",
+                    f"{context}: donor_variant {donor!r} must name a different variant of the same register.",
+                    "Use a sibling [[variant]] slug from this register file.",
+                )
         column = _require_str(values, "column", context)
         ctx = f"{context}/{column}"
         evidence = _require_evidence(values, ctx)
@@ -426,6 +438,7 @@ def resolve_scb_errata(
                 named,
                 provenance,
                 cast("int | None", values.get("native_variable_id")),
+                donor_variant_id,
             )
         )
 
@@ -877,6 +890,7 @@ def convert_delivered_entry(
     *,
     case_id: str,
     context: ErrataVariantContext,
+    donor_context: ErrataVariantContext | None = None,
     steward_table_prefixes: tuple[str, ...] = (),
     storage_columns: dict[tuple[str, str], SourceColumnTypeDeclaration] | None = None,
     preserve_blank_native_base: bool = False,
@@ -892,6 +906,8 @@ def convert_delivered_entry(
     guarded support and uses the existing independent addition path instead.
     """
     context.require_coordinates(entry.register_id, entry.register_variant_id)
+    if (entry.donor_variant_id is None) != (donor_context is None):
+        raise ValueError("donor_variant requires its source context")
     if additional_physical_column and entry.native_variable_id is None:
         raise ValueError("additional physical delivery requires native_variable_id")
     if storage_column is not None and (
@@ -903,10 +919,25 @@ def convert_delivered_entry(
             "explicit storage header requires an additional physical delivery and a trimmed nonempty header"
         )
     records, editions = context.records, context.editions
+    target_variant = native_variant_key(records[0])
+    assert target_variant is not None
     for name in entry.versions:
         if not any(edition.name == name for edition in editions):
             raise ValueError(f"missing edition conversion binding: {name!r}")
-    documented = context.by_column.get(fold_column(entry.column), ())
+    documented_context = donor_context or context
+    if donor_context is not None:
+        assert entry.donor_variant_id is not None
+        donor_context.require_coordinates(entry.register_id, entry.donor_variant_id)
+        own = context.by_column.get(fold_column(entry.column), ())
+        if own:
+            return ErrataConversion(
+                None,
+                (
+                    "scb_errata_now_present:documented_on_target_variant; use a plain delivered entry",
+                ),
+                tuple(sorted({record_ref(record) for record in own}, key=str)),
+            )
+    documented = documented_context.by_column.get(fold_column(entry.column), ())
     if not documented:
         return ErrataConversion(None, ("no_documented_column_identity",), ())
     candidates = (
@@ -985,25 +1016,39 @@ def convert_delivered_entry(
     guards = [
         PeerGuard(
             guard_id=f"{case_id}:documented-column",
-            source=records[0].source,
+            source=candidates[0].source,
             native=NativeCoordinates(
                 register_id=entry.register_id,
-                register_variant_id=entry.register_variant_id,
+                register_variant_id=documented_context.variant_id,
                 variable_id=entry.native_variable_id,
             ),
             folded_column=fold_column(entry.column),
             expected_members=references,
         )
     ]
-    if additional_physical_column:
-        family = context.by_variable.get(native.variable_id, ())
+    if donor_context is not None:
         guards.append(
             PeerGuard(
-                guard_id=f"{case_id}:complete-native-family",
+                guard_id=f"{case_id}:target-column-absent",
                 source=records[0].source,
                 native=NativeCoordinates(
                     register_id=entry.register_id,
                     register_variant_id=entry.register_variant_id,
+                ),
+                folded_column=fold_column(entry.column),
+                expected_members=(),
+            )
+        )
+    family_contexts = (context,) if donor_context is None else (donor_context, context)
+    for family_context in family_contexts if additional_physical_column else ():
+        family = family_context.by_variable.get(native.variable_id, ())
+        guards.append(
+            PeerGuard(
+                guard_id=f"{case_id}:complete-native-family:{family_context.variant_id}",
+                source=family_context.records[0].source,
+                native=NativeCoordinates(
+                    register_id=entry.register_id,
+                    register_variant_id=family_context.variant_id,
                     variable_id=native.variable_id,
                 ),
                 expected_members=tuple(
@@ -1100,7 +1145,7 @@ def convert_delivered_entry(
                 occurrence_key=f"{case_id}:{canonical_sha256([list(edition.key), entry.column])}",
                 provider="scb",
                 variable_key=original.variable_key,
-                variant_key=original.variant_key,
+                variant_key=target_variant,
                 edition_key=edition.key,
                 fields=SourceFields(
                     availability=value_field(True),
@@ -1133,7 +1178,9 @@ def convert_delivered_entry(
     relied = targets | set(references) | retained_blank_refs
     if additional_physical_column:
         relied.update(
-            record_ref(r) for r in context.by_variable.get(native.variable_id, ())
+            record_ref(r)
+            for family_context in family_contexts
+            for r in family_context.by_variable.get(native.variable_id, ())
         )
     # A declared edition's support is the whole variant slice: it guards the
     # date assertion below, but would stale the pin on any unrelated delivery.
@@ -1146,6 +1193,8 @@ def convert_delivered_entry(
     # Ownership depends on the complete supplied meaning and source bindings.
     # Capturing flags/coding guards them; it does not copy them across editions.
     expected = context.expectations_for_refs(required)
+    if donor_context is not None:
+        expected += donor_context.expectations_for_refs(required)
     case = CurationCase(
         case_id=case_id,
         targets=tuple(item for item in expected if item.ref in targets),
