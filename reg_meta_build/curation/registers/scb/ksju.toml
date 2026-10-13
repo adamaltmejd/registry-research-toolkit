@@ -13,9 +13,11 @@ column = "ersdag1"
 data_type = "decimal"
 name = "Antal ersättningsdagar, oviktade"
 definition = "Antal ersättningsdagar, oviktade"
-holdings_period = "1990-2024"
+is_sensitive = true
+is_identifier = false
+holdings_period = "2015-2023"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 10) documents it as the unweighted counterpart of ersdagar (row 11). SWECOV holds it as float in every KSju quarterly table, KSju_20151 through KSju_20234, and ordered the same variables in each, so holdings are 2015-2023 (2026-10-13 maintainer decision, replacing the pooled 1990-2024 range from Y-213). is_sensitive/is_identifier follow sibling ersdagar."
 noted = "2026-06-14"
 
 [[errata.column]]
