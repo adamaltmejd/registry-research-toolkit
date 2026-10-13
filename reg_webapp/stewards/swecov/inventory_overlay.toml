@@ -20758,7 +20758,7 @@ register_variant = ["scb/rtb/hushall"]
 
 [[assign]]
 table = "PV_1997_2010"
-register_variant = ["pliktverket/insark/_default", "pliktverket/insiprov/_default"]
+register_variant = "pliktverket/insark/_default"
 
 [[assign]]
 table = "RTB_PostNr_2015"
@@ -21501,57 +21501,7 @@ reason = "Physical column retained without a verified catalog representation for
 
 [[unmap]]
 table = "PV_1997_2010"
-column = "P1105_LopNr_PersonNr"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
 column = "anvpsyk"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "safhea"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "safhee"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "safhef"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "safheh"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "safhes"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "sipee"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "sipei"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "sipep"
-reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
-
-[[unmap]]
-table = "PV_1997_2010"
-column = "sipes"
 reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The Pliktverket holding combines exact own-source INSARK fields (ten names) and INSIPROV fields (four names); no diagnosis register columns occur. Existing pooled 1997–2010 period is retained without claiming per-column annual availability."
 
 [[unmap]]
@@ -34715,7 +34665,7 @@ column = "SummaTillgangar"
 edition = 2023
 reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
 
-# ── Grund_Fkl_Fth single-register owner (#1579; OP-2026-10-13-E) ──
+# ── Grund_Fkl_Fth + PV_1997_2010 single-register owners (#1579; OP-2026-10-13-E) ──
 
 [[mapping]]
 register_variant = "scb/grundskola-elever/individregister"
@@ -34735,3 +34685,11 @@ column = "SKOM"
 edition = "2008-10-15"
 reason = "SCB delivery report, sheet Skolverkets elevreg., row 11, identifies SKOM as Skolkommun for 2008-2016; the owner emits Kommun (Kommun för där grundskolan ligger) at exactly 2008-10-15. Maintainer-approved 2026-10-13 (OP-2026-10-13-E)."
 
+[[mapping]]
+register_variant = "pliktverket/insark/_default"
+variable = "pliktverket/insark/personnr"
+representation = "penr"
+table = "PV_1997_2010"
+column = "P1105_LopNr_PersonNr"
+edition = { from = 1997, to = 2010 }
+reason = "Pseudonymised person key of the INSARK mönstring delivery (pliktverket_variabler.xls, Mönstringsregister row 6: Personnummer); PV_1997_2010 is one INSARK delivery (#1579). Maintainer-approved 2026-10-13 (OP-2026-10-13-E)."
