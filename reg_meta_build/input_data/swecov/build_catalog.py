@@ -1391,7 +1391,6 @@ _FLAVOR_VARIANT_TABLES = _POLICY.variant_tables()
 # (provider, register, variant) -> (keep_columns, sensitive_columns): exact
 # physical names from the disposition entry (source_policy.toml, #1302).
 _FLAVOR_VARIANT_COLUMNS = _POLICY.variant_columns()
-_FLAVOR_SELECTED_COLUMNS = _POLICY.variant_selected_columns()
 
 
 def _kebab(text: str) -> str:
@@ -1625,9 +1624,6 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         keep, sensitive = _FLAVOR_VARIANT_COLUMNS.get(
             (prov_slug, reg_key, var_key), (frozenset(), frozenset())
         )
-        selected = _FLAVOR_SELECTED_COLUMNS.get((prov_slug, reg_key, var_key))
-        if selected is not None:
-            keep = selected
         if absent := sorted((keep | sensitive) - {c["name"] for c in columns}):
             raise SystemExit(
                 f"flavor column list of {(prov_slug, reg_key, var_key)} names "
@@ -1642,8 +1638,6 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         )
         if dropped and not _mapping_registers(holding.get("mapping", {})):
             ungrafted.append(f"{key}: {', '.join(dropped)}")
-        if selected is not None:
-            columns = [c for c in columns if c["name"] in selected]
         variables = _flavor_variables(columns, keep, sensitive)
         if not variables:
             # Every column was Källa-sourced (canonical) — nothing steward-only
