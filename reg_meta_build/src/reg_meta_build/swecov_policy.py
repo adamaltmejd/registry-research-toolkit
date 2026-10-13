@@ -97,6 +97,7 @@ class FlavorDisposition(_PolicyModel):
     variant_slug: str = Field(min_length=1)
     variant_name: str = Field(min_length=1)
     tables: list[str] | None = None
+    columns: list[str] | None = None
     # Exact physical column names. `keep_columns`: Källa-sourced columns the
     # flavor keeps as the steward's own variables instead of leaving them to the
     # graft track (a steward table that must stay orderable as one variant).
@@ -115,6 +116,17 @@ class FlavorDisposition(_PolicyModel):
             or len(set(self.tables)) != len(self.tables)
         ):
             raise ValueError("flavor tables must be nonblank and unique")
+        if self.columns is not None:
+            if (
+                not self.columns
+                or any(not name.strip() for name in self.columns)
+                or len(set(self.columns)) != len(self.columns)
+            ):
+                raise ValueError("flavor columns must be nonempty, nonblank and unique")
+            if self.keep_columns:
+                raise ValueError("flavor columns cannot be combined with keep_columns")
+            if not set(self.sensitive_columns) <= set(self.columns):
+                raise ValueError("flavor sensitive_columns must be a subset of columns")
         for names in (self.keep_columns, self.sensitive_columns):
             if any(not name.strip() for name in names) or len(set(names)) != len(names):
                 raise ValueError("flavor column lists must be nonblank and unique")
@@ -232,6 +244,15 @@ class SourcePolicy(_PolicyModel):
             (entry.provider, entry.register_key, entry.variant): tuple(entry.tables)
             for entry in self.flavor
             if entry.tables is not None
+        }
+
+    def variant_selected_columns(self) -> dict[tuple[str, str, str], frozenset[str]]:
+        return {
+            (entry.provider, entry.register_key, entry.variant): frozenset(
+                entry.columns
+            )
+            for entry in self.flavor
+            if entry.columns is not None
         }
 
     def variant_columns(
