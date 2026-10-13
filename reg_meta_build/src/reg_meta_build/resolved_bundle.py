@@ -15,8 +15,9 @@ Layout:
 - `events.jsonl.gz`: a copy of the closed resolve-phase ledger member.
 
 Each frame has its own pickler and unpickler, so the pickle memo stays bounded by
-the largest variable. Loading checks every payload's size and SHA-256 before any
-unpickling and admits only `reg_meta_build` models through `find_class`.
+the largest variable. A frame's bytes depend only on its content (`_Pickler`).
+Loading checks every payload's size and SHA-256 before any unpickling and admits only
+`reg_meta_build` models and `set` through `find_class`.
 
 A bundle serves either mode. A strict resolution that did not raise took neither
 strict/diagnostic fork (`source_scope` names them), so a diagnostic one of the same
@@ -204,15 +205,94 @@ _REBUILD = (
 )
 
 
-class _Pickler(pickle.Pickler):
-    """Writes each distinct code set once, as a reference into `code_sets`."""
+class _SortedSet:
+    """A set written as `set(names)` with its names sorted: a pickled set follows
+    its iteration order, which follows the string hash seed."""
 
-    def __init__(self, file: Any, code_sets: dict[ResolvedCodeSet, int]) -> None:
+    __slots__ = ("names",)
+
+    def __init__(self, names: tuple[str, ...]) -> None:
+        self.names = names
+
+    def __reduce__(self) -> tuple[type[set], tuple[tuple[str, ...]]]:
+        return set, (self.names,)
+
+
+class _Pickler(pickle.Pickler):
+    """Writes one frame whose bytes are the same in any process (#1542).
+
+    Not a canonical form over equal values: model and container sharing, a
+    model's set fields and dict order are written as built, which the pipeline
+    does deterministically. The memo is keyed by object identity, so a plain pickle of equal content
+    differs by which equal strings are one object (pydantic-core's JSON string
+    cache decides that per process) and by the order of each model's
+    `__pydantic_fields_set__`. The pickler never offers a `str` or a `set` to a
+    hook, so `dump` and `reducer_override` (which sees every model) rebuild each
+    container around the frame's first string of each value and write each set as
+    a `_SortedSet`. The canonical string is the pickler's own copy: a class's module
+    and qualified name are memoized strings no hook sees, so a data string that is
+    the same object as one (an interned identifier) would be written as a reference
+    to it. With `code_sets`, each distinct code set is written once, as a reference
+    into it.
+    """
+
+    def __init__(self, file: Any, code_sets: dict[ResolvedCodeSet, int] | None) -> None:
         super().__init__(file, protocol=_PROTOCOL)
         self._code_sets = code_sets
+        self._strings: dict[str, str] = {}
+        self._names: dict[frozenset[str], tuple[str, ...]] = {}
+        # A canonical copy of every container in the frame, keyed by the original's
+        # id. The entry holds the original too: a container pydantic builds per
+        # call (a model's filtered private attributes) would otherwise be freed and
+        # its id reused by the next one.
+        # simplify: doubles the frame's containers, bounded by the largest
+        # variable; revisit if bundle writing shows in the full build's peak memory.
+        self._copies: dict[int, tuple[object, object]] = {}
+
+    def dump(self, obj: Any) -> None:
+        super().dump(self._canonical(obj))
+
+    def reducer_override(self, obj: Any) -> Any:
+        if not isinstance(obj, BaseModel):
+            return NotImplemented
+        # Pydantic's own reduction, its state rebuilt around canonical values.
+        func, args, state, *rest = obj.__reduce_ex__(_PROTOCOL)
+        return (func, args, self._canonical(state), *rest)
+
+    def _canonical(self, obj: Any) -> Any:
+        kind = type(obj)
+        if kind is str:
+            if (canonical := self._strings.get(obj)) is None:
+                # A new object unless `obj` has at most one character; no global's
+                # module or name is that short.
+                canonical = self._strings[obj] = obj[:1] + obj[1:]
+            return canonical
+        if kind is set:
+            # A model's fields set. A fresh wrapper per set, so no two loaded
+            # models share one; `sorted` refuses mixed types.
+            key = frozenset(obj)
+            names = self._names.get(key)
+            if names is None:
+                names = self._names[key] = tuple(sorted(map(self._canonical, key)))
+            return _SortedSet(names)
+        if kind is frozenset:
+            raise TypeError("a resolve bundle holds no frozenset: its order varies")
+        if kind is not tuple and kind is not list and kind is not dict:
+            # Models reach `reducer_override`; the loader admits no other type
+            # that could hold a string.
+            return obj
+        if (cached := self._copies.get(id(obj))) is not None:
+            return cached[1]
+        copy = (
+            {self._canonical(k): self._canonical(v) for k, v in obj.items()}
+            if kind is dict
+            else kind(map(self._canonical, obj))
+        )
+        self._copies[id(obj)] = (obj, copy)
+        return copy
 
     def persistent_id(self, obj: object) -> int | None:
-        if type(obj) is not ResolvedCodeSet:
+        if type(obj) is not ResolvedCodeSet or self._code_sets is None:
             return None
         # Frozen models hash and compare by field values, so equal memberships
         # held by distinct objects share one entry.
@@ -220,7 +300,8 @@ class _Pickler(pickle.Pickler):
 
 
 class _Unpickler(pickle.Unpickler):
-    """Admits only `reg_meta_build` Pydantic models; anything else is refused."""
+    """Admits only `reg_meta_build` Pydantic models and `set` (a `_SortedSet`);
+    anything else is refused."""
 
     def __init__(
         self, file: Any, path: Path, code_sets: tuple[ResolvedCodeSet, ...]
@@ -230,6 +311,8 @@ class _Unpickler(pickle.Unpickler):
         self._code_sets = code_sets
 
     def find_class(self, module: str, name: str) -> Any:
+        if (module, name) == ("builtins", "set"):
+            return set
         # Resolving the name may import a module, so check the module first;
         # then require a model defined there, not a name it merely imports.
         found = (
@@ -245,7 +328,7 @@ class _Unpickler(pickle.Unpickler):
             raise _refusal(
                 BUNDLE_GLOBAL_REFUSED,
                 f"{self._path}: refusing pickled global {module}.{name}; a bundle "
-                "holds only reg_meta_build models",
+                "holds only reg_meta_build models and sets",
                 "Do not load this bundle; " + _REBUILD,
             )
         return found
@@ -282,7 +365,7 @@ def write_resolved_bundle(
     with zstd.open(directory / CODE_SETS_FILE, "wb") as stream:
         # Insertion order is reference order: entry i is persistent id i.
         for code_set in code_sets:
-            pickle.Pickler(stream, protocol=_PROTOCOL).dump(code_set)
+            _Pickler(stream, None).dump(code_set)
     shutil.copyfile(resolved.ledger, directory / EVENTS_FILE)
     registers = result.get("registers", [])
     assert isinstance(registers, list)

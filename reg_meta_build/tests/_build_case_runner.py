@@ -1447,6 +1447,7 @@ build_catalog(
     Path(a["report"]), curation_dir=Path(a["curation_dir"]),
     diagnostic=a["diagnostic"], registers=tuple(a["registers"]),
     dump_decisions=Path(a["dump_decisions"]),
+    resolved_out=Path(a["resolved_out"]),
 )
 """
 
@@ -1486,6 +1487,12 @@ def _tree_bytes(path: Path) -> dict[str, bytes]:
     return files
 
 
+def _bundle_payloads(bundle: Path) -> dict:
+    """The payload digests a resolve bundle's `bundle.json` records."""
+    record = json.loads((bundle / "bundle.json").read_text(encoding="utf-8"))
+    return record["payloads"]
+
+
 def run_step(
     step: Path,
     cache: PreparedCache,
@@ -1522,6 +1529,7 @@ def run_step(
             diagnostic=request.get("diagnostic", True),
             registers=registers,
             dump_decisions=decisions,
+            resolved_out=scratch / "resolved" if rebuild else None,
         )
 
     try:
@@ -1555,11 +1563,14 @@ def run_step(
                 "diagnostic": request.get("diagnostic", True),
                 "registers": list(registers),
                 "dump_decisions": str(again / "decisions"),
+                "resolved_out": str(again / "resolved"),
             }
         )
         actual["rebuilt_identical"] = all(
             _tree_bytes(scratch / name) == _tree_bytes(again / name)
             for name in ("reg_meta.db", "report/events.jsonl.gz", "decisions")
+        ) and _bundle_payloads(scratch / "resolved") == _bundle_payloads(
+            again / "resolved"
         )
     if "error" in expected:
         actual["error"] = None
