@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from datetime import date
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -157,6 +157,8 @@ class SourceValueAssociation:
     the section's own locator; cleaning does not select an effective period.
     """
 
+    evidence_position: ClassVar[frozenset[str]] = frozenset({"row_number"})
+
     row_number: int
     descriptor_key: str
     value_key: str
@@ -182,6 +184,9 @@ class SourceValueAssociation:
 @dataclass(frozen=True, slots=True)
 class SourceValueValidity:
     """One exact native-item validity assertion without interval projection."""
+
+    evidence_position: ClassVar[frozenset[str]] = frozenset({"row_number"})
+    evidence_multiset: ClassVar[frozenset[str]] = frozenset({"locators"})
 
     row_number: int
     item_id: str | None

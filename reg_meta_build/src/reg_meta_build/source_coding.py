@@ -13,7 +13,7 @@ from collections import defaultdict
 from dataclasses import asdict, dataclass
 from datetime import date
 from itertools import pairwise
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 from reg_meta_build.resolved_catalog import ResolvedCodeSet
 from reg_meta_build.source_intervals import coding_scope_bounds
@@ -37,6 +37,10 @@ class CodeMembershipClaim:
     occurrence; an unknown scope or validity cannot safely establish membership.
     """
 
+    evidence_multiset: ClassVar[frozenset[str]] = frozenset(
+        {"associations", "validity"}
+    )
+
     code: str | None
     label: str | None
     scope: TemporalScope
@@ -48,6 +52,9 @@ class CodeMembershipClaim:
 @dataclass(frozen=True, slots=True)
 class CodeListClaim:
     """One source list bound to an occurrence, optionally omitting unknown identifier periods."""
+
+    evidence_position: ClassVar[frozenset[str]] = frozenset({"claim_id"})
+    evidence_multiset: ClassVar[frozenset[str]] = frozenset({"members"})
 
     claim_id: str
     scope: TemporalScope

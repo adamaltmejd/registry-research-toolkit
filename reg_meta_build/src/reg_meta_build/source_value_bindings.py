@@ -13,7 +13,7 @@ from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass, replace
 from datetime import date
 from functools import lru_cache
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from reg_meta_build.source_coding import (
     CodeListClaim,
@@ -119,6 +119,18 @@ class ValueBindingIssue:
 
 @dataclass(frozen=True)
 class ValueListBinding:
+    evidence_position: ClassVar[frozenset[str]] = frozenset(
+        {"claim_id", "record_id", "value_revision_id"}
+    )
+    evidence_multiset: ClassVar[frozenset[str]] = frozenset(
+        {
+            "record_locators",
+            "inactive_associations",
+            "non_membership_associations",
+            "item_validity_set_aside",
+        }
+    )
+
     claim_id: str | None
     record_id: str
     record_locators: tuple[RecordLocator, ...]

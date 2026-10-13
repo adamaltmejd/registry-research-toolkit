@@ -721,14 +721,21 @@ several rows (a record's locators, list members, their associations and validity
 compare as multisets: order is immaterial, multiplicity is not. Cells, derivation
 clauses and operands keep the order positions address, and an evidence table keeps its
 row order, which places a row under its section. A new delivery or a row re-sort
-therefore stales only the entries whose own records or lists changed. A code-list claim
-id names its list's dataset rather than its revision, so an `expected_diagnostic_sha256`
-over a coding diagnostic, whose detail lists claim ids, also survives an unrelated
-delivery. A coding `source_authority` pins content the same way: its original members'
-captured facts and the coding fingerprints, with no delivery revision or row locator, so
-a re-snapshot leaves it fresh (#1436). A stale authority prints the build's current
-`source_authority` as its re-pin source. A `[[coding.support]]` association or a
-documentary row still names its physical row.
+therefore stales only the entries whose own records or lists changed. The encoding is
+the value's canonical JSON dump with rules declared per type, not per field name: the
+model or dataclass that carries a delivery position names it in `evidence_position`
+(omitted) and its row-gathered lists in `evidence_multiset` (entries sorted by their
+canonical JSON); a `SourceRevision` encodes as its dataset. The rules apply only to the
+declaring type, so a content field elsewhere that reuses a name such as `members` or
+`record_id` stays in the digest in its own order, and every undeclared type, plain dicts
+included, encodes verbatim (#1536). This per-type encoding is the contract a port of the
+digest must reproduce. A code-list claim id names its list's dataset rather than its
+revision, so an `expected_diagnostic_sha256` over a coding diagnostic, whose detail
+lists claim ids, also survives an unrelated delivery. A coding `source_authority` pins
+content the same way: its original members' captured facts and the coding fingerprints,
+with no delivery revision or row locator, so a re-snapshot leaves it fresh (#1436). A
+stale authority prints the build's current `source_authority` as its re-pin source. A
+`[[coding.support]]` association or a documentary row still names its physical row.
 
 Coding register entries name finite ISO `periods = [[from, to], ...]` when a decision is
 window-grained. The compiler checks each window against that column's complete source

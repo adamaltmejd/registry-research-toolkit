@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
 import re
-from typing import Any, Literal, Self
+from functools import cache
+from typing import Any, ClassVar, Literal, Self
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, model_validator
 
@@ -54,38 +56,16 @@ def canonical_sha256(value: Any) -> str:
 
 
 _EVIDENCE_JSON = TypeAdapter(object, config=ConfigDict(ser_json_inf_nan="constants"))
-# Where and in which delivery a fact arrived: a new delivery or a row re-sort
-# changes these without changing what a record says. Record and claim ids are
-# derived: a record id hashes facts its record repeats, a claim id names its list.
-# Semantic keys, file and table names, content-addressed value and descriptor
+# `evidence_position`: where and in which delivery a fact arrived. A new delivery or
+# a row re-sort changes these without changing what a record says. Record and claim
+# ids are derived: a record id hashes facts its record repeats, a claim id names its
+# list. Semantic keys, file and table names, content-addressed value and descriptor
 # keys, and delivered cells stay in the digest.
-_DELIVERY_POSITION = frozenset(
-    {
-        "source_revision_id",
-        "value_revision_id",
-        "row_number",
-        "physical_record",
-        "physical_cells",
-        "record_id",
-        "claim_id",
-    }
-)
-# Collections gathered from several physical rows, in delivered row order: a re-sort
-# reorders them, so they compare as multisets. Every other list keeps its order:
-# cells in column order, derivation clauses and operands addressed by position, and
-# an evidence table's rows, whose order places a row under its section.
-_ROW_ORDERED = frozenset(
-    {
-        "locators",
-        "record_locators",
-        "members",
-        "associations",
-        "validity",
-        "inactive_associations",
-        "non_membership_associations",
-        "item_validity_set_aside",
-    }
-)
+# `evidence_multiset`: collections gathered from several physical rows, in delivered
+# row order: a re-sort reorders them, so they compare as multisets. Every other list
+# keeps its order: cells in column order, derivation clauses and operands addressed
+# by position, and an evidence table's rows, whose order places a row under its
+# section.
 
 
 def evidence_sha256(value: Any) -> str:
@@ -97,33 +77,87 @@ def evidence_sha256(value: Any) -> str:
     a new delivery or a row re-sort leaves every guard whose own records are unchanged
     fresh. Objects gathered from several rows form a multiset: their order is
     immaterial, their multiplicity is not.
+
+    The encoding is the value's JSON dump (`canonical_json` of Pydantic's JSON mode)
+    with two per-type rules, declared on the model or dataclass that owns the field
+    and applied only there, never by field name elsewhere (#1536):
+    `evidence_position` names fields that say where and in which delivery a fact
+    arrived, which are omitted; `evidence_multiset` names lists gathered from several
+    physical rows, whose encoded entries are sorted by their canonical JSON. A
+    `SourceRevision` encodes as its dataset. Every other type, plain dicts included,
+    encodes verbatim, lists in their own order.
     """
     return canonical_sha256(
         _evidence_content(
-            _EVIDENCE_JSON.dump_python(value, mode="json", warnings="error")
+            value, _EVIDENCE_JSON.dump_python(value, mode="json", warnings="error")
         )
     )
 
 
-def _evidence_content(value: Any) -> Any:
-    if isinstance(value, dict):
-        content = {}
-        for key, item in value.items():
-            if key in _DELIVERY_POSITION:
-                continue
-            if key == "revision" and isinstance(item, dict) and "revision_id" in item:
-                # A nested SourceRevision: its dataset, not the delivery.
-                content[key] = item["dataset"]
-            elif key in _ROW_ORDERED and isinstance(item, list):
-                content[key] = sorted(
-                    (_evidence_content(entry) for entry in item), key=canonical_json
+@cache
+def _evidence_shape(
+    cls: type,
+) -> tuple[dict[str, str], frozenset[str], frozenset[str]]:
+    """A type's dump key -> attribute map and its declared evidence rules."""
+    if issubclass(cls, BaseModel):
+        keys: dict[str, str] = {}
+        for name, info in cls.model_fields.items():
+            for key in (name, info.alias, info.serialization_alias):
+                if key is not None:
+                    keys[key] = name
+    elif dataclasses.is_dataclass(cls):
+        keys = {field.name: field.name for field in dataclasses.fields(cls)}
+    else:
+        return {}, frozenset(), frozenset()
+    position = getattr(cls, "evidence_position", frozenset())
+    multiset = getattr(cls, "evidence_multiset", frozenset())
+    if not (position | multiset) <= set(keys.values()):
+        raise TypeError(f"{cls.__qualname__} declares evidence rules for no field")
+    return keys, position, multiset
+
+
+def _evidence_content(value: Any, dumped: Any) -> Any:
+    """Apply the evidence rules to `dumped`, the JSON dump of `value`.
+
+    The object and its dump are walked together so each rule applies only to the
+    type that declares it. `value` is None below a node that has no object to
+    follow; the dump then encodes verbatim.
+    """
+    if isinstance(dumped, dict):
+        if isinstance(value, SourceRevision):
+            # A source revision: its dataset, not the delivery.
+            return value.dataset
+        if isinstance(value, dict):
+            return {
+                key: _evidence_content(child, item)
+                for child, (key, item) in zip(
+                    value.values(), dumped.items(), strict=True
                 )
-            else:
-                content[key] = _evidence_content(item)
+            }
+        keys, position, multiset = _evidence_shape(type(value))
+        content = {}
+        for key, item in dumped.items():
+            name = keys.get(key)
+            if name in position:
+                continue
+            encoded = _evidence_content(
+                None if name is None else getattr(value, name), item
+            )
+            if name in multiset and isinstance(encoded, list):
+                encoded = sorted(encoded, key=canonical_json)
+            content[key] = encoded
         return content
-    if isinstance(value, list):
-        return [_evidence_content(item) for item in value]
-    return value
+    if isinstance(dumped, list):
+        children = (
+            list(value)
+            if isinstance(value, (list, tuple, set, frozenset))
+            else [None] * len(dumped)
+        )
+        return [
+            _evidence_content(child, item)
+            for child, item in zip(children, dumped, strict=True)
+        ]
+    return dumped
 
 
 class SourceRevision(_SourceModel):
@@ -210,6 +244,10 @@ class SourceField(_SourceModel):
 
 
 class RecordLocator(_SourceModel):
+    evidence_position: ClassVar[frozenset[str]] = frozenset(
+        {"physical_record", "physical_cells"}
+    )
+
     semantic_record_key: tuple[str, ...]
     physical_file: str
     physical_table: str
