@@ -9,17 +9,6 @@ native_id = "168"
 
 [[errata.column]]
 variant = "fek-slutdata"
-column = "AretsResultat"
-data_type = "decimal"
-name = "Årets resultat"
-definition = "Årets resultat"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
 column = "ImputeradeForetag"
 data_type = "text"
 name = "Imputerade företag"
@@ -31,98 +20,10 @@ noted = "2026-06-14"
 
 [[errata.column]]
 variant = "fek-slutdata"
-column = "KassaOchBank"
-data_type = "decimal"
-name = "Kassa och bank"
-definition = "Kassa och bank"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "Leverantorsskulder"
-data_type = "decimal"
-name = "Leverantörsskulder"
-definition = "Leverantörsskulder"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "MaskinerOchInventarier"
-data_type = "decimal"
-name = "Maskiner och inventarier"
-definition = "Maskiner och inventarier"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "RedovisatResultat"
-data_type = "decimal"
-name = "Redovisat årsresultat"
-definition = "Redovisat årsresultat"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "ResultatEfterFinansiellaPoster"
-data_type = "decimal"
-name = "Resultat efter finansiella poster"
-definition = "Resultat efter finansiella poster"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "Skattekostnader"
-data_type = "decimal"
-name = "Skatt"
-definition = "Skatt"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
 column = "Stg"
 data_type = "text"
 name = "Storleksgrupp anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1 eller ej"
 definition = "Storleksgrupp anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1 eller ej"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "SummaAnlTillg"
-data_type = "decimal"
-name = "Summa anläggningstillgångar"
-definition = "Summa anläggningstillgångar"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "SummaEgetKapitalOchSkulder"
-data_type = "decimal"
-name = "Summa eget kapital och skulder"
-definition = "Summa eget kapital och skulder"
 holdings_period = "1990-2024"
 source = "steward-holdings"
 evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
@@ -163,76 +64,10 @@ noted = "2026-06-14"
 
 [[errata.column]]
 variant = "fek-slutdata"
-column = "SummaKortfristigaSkulder"
-data_type = "decimal"
-name = "Summa kortfristiga skulder"
-definition = "Summa kortfristiga skulder"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "SummaLangfristigaSkulder"
-data_type = "decimal"
-name = "Summa långfristiga skulder"
-definition = "Summa långfristiga skulder"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
 column = "SummaMateriellaAnlaggningstillgangar"
 data_type = "decimal"
 name = "Summa materiella anläggningstillgångar"
 definition = "Summa materiella anläggningstillgångar"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "SummaObeskattadeReserver"
-data_type = "decimal"
-name = "Summa obeskattade reserver"
-definition = "Summa obeskattade reserver"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "SummaOmsattningstillgangar"
-data_type = "decimal"
-name = "Summa omsättningstillgångar"
-definition = "Summa omsättningstillgångar"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "SummaPersonalkostnader"
-data_type = "decimal"
-name = "Summa personalkostnader"
-definition = "Summa personalkostnader"
-holdings_period = "1990-2024"
-source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "fek-slutdata"
-column = "SummaTillgangar"
-data_type = "decimal"
-name = "Summa tillgångar"
-definition = "Summa tillgångar"
 holdings_period = "1990-2024"
 source = "steward-holdings"
 evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
@@ -1278,26 +1113,6 @@ native_id = "168.4027.ng"
 slug = "naringsgren"
 
 [[variable]]
-native_id = "168.KassaOchBank"
-slug = "kassa-och-bank-2"
-
-[[variable]]
-native_id = "168.Leverantorsskulder"
-slug = "leverantorsskulder-2"
-
-[[variable]]
-native_id = "168.MaskinerOchInventarier"
-slug = "maskiner-och-inventarier-2"
-
-[[variable]]
-native_id = "168.RedovisatResultat"
-slug = "redovisat-arsresultat"
-
-[[variable]]
-native_id = "168.Skattekostnader"
-slug = "skatt"
-
-[[variable]]
 native_id = "168.SummaKortfristigaFordringar"
 slug = "summa-kortfristiga-fordringar-2"
 
@@ -1306,34 +1121,8 @@ native_id = "168.SummaKortfristigaPlaceringar"
 slug = "summa-kortfristiga-placeringar-2"
 
 [[variable]]
-native_id = "168.SummaKortfristigaSkulder"
-slug = "summa-kortfristiga-skulder-2"
-
-[[variable]]
-native_id = "168.SummaLangfristigaSkulder"
-slug = "summa-langfristiga-skulder-2"
-
-[[variable]]
 native_id = "168.SummaMateriellaAnlaggningstillgangar"
 slug = "summa-materiella-anlaggningstillgangar-2"
-
-[[variable]]
-native_id = "168.SummaObeskattadeReserver"
-slug = "summa-obeskattade-reserver-2"
-
-[[variable]]
-native_id = "168.SummaOmsattningstillgangar"
-slug = "summa-omsattningstillgangar-2"
-
-[[variable]]
-native_id = "168.SummaPersonalkostnader"
-slug = "summa-personalkostnader-2"
-
-[[variable]]
-native_id = "168.SummaTillgangar"
-slug = "summa-tillgangar-2"
-
-# register 176
 
 [[identity.partition]]
 variable = "168.56"
@@ -1692,3 +1481,753 @@ reason = "These exact historical fields have no own bound source domain. Later i
 evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
 expected_evidence_sha256 = "7507cafef174b1e6c7ec5f6d17f7cb1f083a7c45fc192942ae2aff19f4b0d1f6"
 expected_diagnostic_sha256 = "dc3b54f735073d9dec2e3ca821711e06aefbfbee66107ff36b20ab7ff4e16255"
+
+# FE1990-FE2002 are FEK fek-slutdata deliveries (maintainer D6, OP-2026-10-13-E):
+# SCB's Registerinformation export documents the variant from 2003; the SCB
+# delivery report, sheet FEK, documents each historical header. Historical
+# classifications (Agkat, AnstklAkt, Jurform, Sektor, Ng_5) record occurrence only;
+# no later coding is inherited.
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1990"
+evidence = "SWECOV holds FE1990, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1991"
+evidence = "SWECOV holds FE1991, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1992"
+evidence = "SWECOV holds FE1992, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1993"
+evidence = "SWECOV holds FE1993, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1994"
+evidence = "SWECOV holds FE1994, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1995"
+evidence = "SWECOV holds FE1995, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1996"
+evidence = "SWECOV holds FE1996, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1997"
+evidence = "SWECOV holds FE1997, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1998"
+evidence = "SWECOV holds FE1998, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "1999"
+evidence = "SWECOV holds FE1999, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "2000"
+evidence = "SWECOV holds FE2000, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "2001"
+evidence = "SWECOV holds FE2001, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "fek-slutdata"
+name = "2002"
+evidence = "SWECOV holds FE2002, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "Agkat"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 74
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 8,65, documents the physical header Agkat in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/agarkontroll (Agkat), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb202"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4309
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 66, documents the physical header AktierOchAndelar in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/aktier-och-andelar (fgb202), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "AnstKlAkt"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 666
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 9,68, documents the physical header AnstklAkt in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/anstallda-storleksklass (AnstKlAkt), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0111"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4316
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 13,72, documents the physical header AretsResultat in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fgb0111 (fgb0111), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fga10"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4175
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 75, documents the physical header Bruttoinvesteringar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-bruttoinvesteringar (fga10), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb237"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4297
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 76, documents the physical header Byggnader in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/byggnader (fgb237), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb370"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4224
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 78, documents the physical header EgetKapital in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-eget-kapital (fgb370), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fhar003_jmf"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 87
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 18,82, documents the physical header Foradlingsvarde in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/foradlingsvarde (fhar003_jmf), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr509"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4255
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 19,83, documents the physical header ForandringAvLagerOchPagaendeArbete in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/forandring-lager-pagaende-arbete (fgr509), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fhar002_jmf"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4872
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 20,84, documents the physical header Forbrukningsvarde in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/forbrukningsvarde (fhar002_jmf), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0102"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4218
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 85, documents the physical header ForskottAvseendeMateriellaAnlaggningstillgangar in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/forskott-anlaggningstillgangar (fgb0102), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb205"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4204
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 86, documents the physical header ForutbetKostnUpplupnaInt in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/forutbetalda-kostnader-upplupna-intakter (fgb205), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "Jurform"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 34
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 23,89, documents the physical header Jurform in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/juridisk-form (Jurform), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb200"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4205
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 90, documents the physical header KassaBank in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/kassa-och-bank (fgb200), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb200"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4205
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 24,91, documents the physical header KassaOchBank in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/kassa-och-bank (fgb200), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0121"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4248
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 92, documents the physical header KorfristigaSkulder in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-kortfristiga-skulder (fgb0121), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0106"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4210
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 93, documents the physical header KortfristigaFordringar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-kortfristiga-fordringar (fgb0106), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0107"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4211
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 94, documents the physical header KortfristigaPlaceringar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-kortfristiga-placeringar (fgb0107), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr512"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4263
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 25,95, documents the physical header KostnaderForLonerOchAndraErsattningar in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/kostnader-loner-ersattningar (fgr512), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb204"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4206
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 98, documents the physical header Kundfordringar in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/kundfordringar (fgb204), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0118"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4249
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 100, documents the physical header LangfristigaSkulder in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-langfristiga-skulder (fgb0118), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb300"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4228
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 26,101, documents the physical header Leverantorsskulder in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/leverantorsskulder (fgb300), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb235"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4296
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 103, documents the physical header Mark in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/mark (fgb235), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb236"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4065
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 104, documents the physical header MaskinerInventarier in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/maskiner-och-inventarier (fgb236), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb236"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4065
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 27,105, documents the physical header MaskinerOchInventarier in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/maskiner-och-inventarier (fgb236), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0103"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4212
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 106, documents the physical header MateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-materiella-anlaggningstillgangar (fgb0103), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr6101"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4098
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 28,107, documents the physical header MedelantalAnstallda in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/medelantal-anstallda (fgr6101), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr400"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4256
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 29,108, documents the physical header Nettoomsattning in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/nettoomsattning (fgr400), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0105"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4216
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 117, documents the physical header OvrKortfristigaFordringar in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/ovriga-kortfristiga-fordringar (fgb0105), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb203"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4217
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 115, documents the physical header OvrigaKortfristigaPlaceringar in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/ovriga-kortfristiga-placeringar (fgb203), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr527"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4273
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 116, documents the physical header OvrigaPersonalkostnader in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/ovriga-personalkostnader (fgr527), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "PeOrgNr"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 56
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 7, documents the physical header P1105_LopNr_PeOrgNr in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/person-orgnr (PeOrgNr), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "PeorgnrHe"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 56
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 7,118, documents the physical header P1105_LopNr_PeOrgNrHe in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/person-orgnr (PeorgnrHe), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fsum901"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 47390
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fhar001_jmf"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4873
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 33,121, documents the physical header Produktionsvarde in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/produktionsvarde (fhar001_jmf), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr1599"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4327
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 34,122, documents the physical header RedovisatResultat in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/redovisat-resultat (fgr1599), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr0160"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4280
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 35,123, documents the physical header ResultatEfterFinansiellaPoster in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/resultat-efter-finansiella-poster (fgr0160), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr0140"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4279
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 36,124, documents the physical header Rorelseresultat in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/rorelseresultat (fgr0140), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "Sektor"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 1141
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 38,126, documents the physical header Sektor in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/sektortillhorighet (Sektor), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr598"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4317
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 39,127, documents the physical header Skattekostnader in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/skattekostnader (fgr598), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb301"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4229
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 40,128, documents the physical header Skatteskulder in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/skatteskulder (fgb301), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb2022"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4207
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 43,133, documents the physical header SummaAnlTillg in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/anlaggningstillgangar (fgb2022), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fga10"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4175
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 44,134, documents the physical header SummaBruttoinvesteringar in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-bruttoinvesteringar (fga10), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb370"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4224
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 45,135, documents the physical header SummaEgetKapital in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-eget-kapital (fgb370), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb1399"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4247
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 46,136, documents the physical header SummaEgetKapitalOchSkulder in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/eget-kapital-och-skulder (fgb1399), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0121"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4248
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 50,140, documents the physical header SummaKortfristigaSkulder in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-kortfristiga-skulder (fgb0121), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr500"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4269
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 51,141, documents the physical header SummaKostnaderForRavarorOchHandelsvaror in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-kostnader-ravaror-handelsvaror (fgr500), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0118"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4249
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 52,142, documents the physical header SummaLangfristigaSkulder in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-langfristiga-skulder (fgb0118), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fga20"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4080
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 54,144, documents the physical header SummaNettoinvesteringar in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-nettoinvesteringar (fga20), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0115"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4250
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 55,145, documents the physical header SummaObeskattadeReserver in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-obeskattade-reserver (fgb0115), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb2021"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4213
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 56,146, documents the physical header SummaOmsattningstillgangar in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-omsattningstillgangar (fgb2021), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr0128"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4270
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 57,147, documents the physical header SummaPersonalkostnader in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-personalkostnader (fgr0128), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb1299"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4214
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 58,148, documents the physical header SummaTillgangar in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/summa-tillgangar (fgb1299), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0362"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4275
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 61,151, documents the physical header Utdelning in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/utdelning (fgb0362), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb219"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4215
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 62,152, documents the physical header Varulager in FE1990-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/varulager (fgb219), documented from 2003, is the clone source."
+noted = "2026-10-13"
+
+# Low-grade attachments (OP-2026-10-13-E (1)); data_warning lands with Y-6.
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr6101"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4098
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 67, documents the physical header Anstallda in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/medelantal-anstallda (fgr6101), documented from 2003, is the clone source. Low-grade identity: the historical definition is not documented as identical; attached by maintainer decision OP-2026-10-13-E (1)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb238"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 19939
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 77, documents the physical header ByggnaderMark in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/byggnader-mark-markanlaggningar (fgb238), documented from 2003, is the clone source. Low-grade identity: the historical definition is not documented as identical; attached by maintainer decision OP-2026-10-13-E (1)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb0104"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4208
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 81, documents the physical header FinansiellaTillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/finansiella-anlaggningstillgangar (fgb0104), documented from 2003, is the clone source. Low-grade identity: the historical definition is not documented as identical; attached by maintainer decision OP-2026-10-13-E (1)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr512"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4263
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 102, documents the physical header Lonekostnader in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/kostnader-loner-ersattningar (fgr512), documented from 2003, is the clone source. Low-grade identity: the historical definition is not documented as identical; attached by maintainer decision OP-2026-10-13-E (1)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "Ng"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 112, documents the physical header Ng_5 in FE1997-FE2002; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/naringsgren (Ng), documented from 2003, is the clone source. Low-grade identity: the historical definition is not documented as identical; attached by maintainer decision OP-2026-10-13-E (1)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgr400"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4256
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 114, documents the physical header Omsattning in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/nettoomsattning (fgr400), documented from 2003, is the clone source. Low-grade identity: the historical definition is not documented as identical; attached by maintainer decision OP-2026-10-13-E (1)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "fek-slutdata"
+column = "fgb232"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+native_variable_id = 19920
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 132, documents the physical header SummaAktierIKoncernOchIntresseforetag in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fgb232 (fgb232), documented from 2003, is the clone source. Low-grade identity: the historical definition is not documented as identical; attached by maintainer decision OP-2026-10-13-E (1)."
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+data_type = "decimal"
+name = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+definition = "SCB delivery report documents KostnaderForOvrigaSocialaAvgifterOchPensionskostnader for FE1997-FE2002; no substantive historical definition is supplied. Retained as a separate historical delivered-column identity."
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+source = "steward-holdings"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row 97, documents KostnaderForOvrigaSocialaAvgifterOchPensionskostnader in FE1997-FE2002; no FEK native item has the same scope (maintainer D6 + OP-2026-10-13-E)."
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "LangfristigaAktierOchAndelar"
+data_type = "decimal"
+name = "LangfristigaAktierOchAndelar"
+definition = "SCB delivery report documents LangfristigaAktierOchAndelar for FE1997-FE2002; no substantive historical definition is supplied. Retained as a separate historical delivered-column identity."
+versions = ["1997", "1998", "1999", "2000", "2001", "2002"]
+source = "steward-holdings"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row 99, documents LangfristigaAktierOchAndelar in FE1997-FE2002; no FEK native item has the same scope (maintainer D6 + OP-2026-10-13-E)."
+noted = "2026-10-13"
+
+[[errata.column]]
+variant = "fek-slutdata"
+column = "SNI92"
+data_type = "text"
+name = "SNI92"
+definition = "SCB delivery report documents SNI92 for FE1990-FE1996; no substantive historical definition is supplied. Retained as a separate historical delivered-column identity."
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+source = "steward-holdings"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row 129, documents SNI92 in FE1990-FE1996; no FEK native item has the same scope (maintainer D6 + OP-2026-10-13-E)."
+noted = "2026-10-13"
+
+[[variable]]
+native_id = "168.KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+slug = "kostnader-for-ovriga-sociala-avgifter-och-pensionskostnader"
+
+[[variable]]
+native_id = "168.LangfristigaAktierOchAndelar"
+slug = "langfristiga-aktier-och-andelar"
+
+[[variable]]
+native_id = "168.SNI92"
+slug = "sni92"
