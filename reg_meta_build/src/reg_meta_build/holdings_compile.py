@@ -180,14 +180,19 @@ def compile_holdings(
                 literal_columns[column.name].mappings if physical_id in logical else ()
             )
             for literal, mapping in zip(literals, column.mappings, strict=True):
+                member = mapping.member
+                lo, hi = (member and member.bounds()) or (None, None)
                 conn.execute(
-                    "INSERT INTO holding_mapping(column_id, variant_id, variable_id, representation_literal, representation_canonical) VALUES (?, ?, ?, ?, ?)",
+                    "INSERT INTO holding_mapping(column_id, variant_id, variable_id, representation_literal, representation_canonical, member_position, member_lo, member_hi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                     (
                         column_id,
                         variants[mapping.register_variant],
                         variables[mapping.variable],
                         literal.representation,
                         mapping.representation,
+                        member and member.position,
+                        lo,
+                        hi,
                     ),
                 )
                 mappings_count += 1

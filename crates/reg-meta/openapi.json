@@ -3667,6 +3667,17 @@
             "type": "string",
             "description": "The table's edition, rendered as a period."
           },
+          "member": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PivotMember",
+                "description": "The column's wide-pivot member index; absent for a plain column."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "partition": {
             "type": [
               "string",
@@ -3678,6 +3689,48 @@
             "type": "string"
           }
         }
+      },
+      "PivotMember": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "position"
+            ],
+            "properties": {
+              "position": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "year"
+            ],
+            "properties": {
+              "year": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "`YYYY-MM`.",
+            "required": [
+              "month"
+            ],
+            "properties": {
+              "month": {
+                "type": "string",
+                "description": "`YYYY-MM`."
+              }
+            }
+          }
+        ],
+        "description": "A wide-pivot member index (#1495): one of N physical columns that together\ndeliver one representation. A position member serves the table's whole edition;\na year or month member serves only that period, so it is ordered only when the\nslice reaches it. Members order by index, so `DIA2` precedes `DIA10`."
       },
       "Population": {
         "type": "object",

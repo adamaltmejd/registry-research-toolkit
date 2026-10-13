@@ -1,0 +1,165 @@
+{
+  "tables": [
+    {
+      "physical_id": "Hushall2020",
+      "scope": "intervals",
+      "edition": 2020,
+      "partition": null,
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Panel",
+      "scope": "intervals",
+      "edition": {
+        "from": 2018,
+        "to": 2020
+      },
+      "partition": null,
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Wide2018",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Hushall2020",
+      "lo": "2020-01-01",
+      "hi": "2020-12-31"
+    },
+    {
+      "physical_id": "Panel",
+      "lo": "2018-01-01",
+      "hi": "2020-12-31"
+    },
+    {
+      "physical_id": "Wide2018",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Hushall2020",
+      "name": "Hushallsid",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Panel",
+      "name": "Hushallsid_2018",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Panel",
+      "name": "Hushallsid_2019",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA1",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA10",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA2",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Hushall2020",
+      "name": "Hushallsid",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/hushall",
+      "representation_literal": "Hushallsid",
+      "representation_canonical": "Hushallsid"
+    },
+    {
+      "physical_id": "Panel",
+      "name": "Hushallsid_2018",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/hushall",
+      "representation_literal": "Hushallsid",
+      "representation_canonical": "Hushallsid"
+    },
+    {
+      "physical_id": "Panel",
+      "name": "Hushallsid_2019",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/hushall",
+      "representation_literal": "Hushallsid",
+      "representation_canonical": "Hushallsid"
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA1",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/diagnos",
+      "representation_literal": "DIA",
+      "representation_canonical": "DIA"
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA10",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/diagnos",
+      "representation_literal": "DIA",
+      "representation_canonical": "DIA"
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA2",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/diagnos",
+      "representation_literal": "DIA",
+      "representation_canonical": "DIA"
+    }
+  ],
+  "members": [
+    {
+      "physical_id": "Panel",
+      "name": "Hushallsid_2018",
+      "member_position": null,
+      "member_lo": "2018-01-01",
+      "member_hi": "2018-12-31"
+    },
+    {
+      "physical_id": "Panel",
+      "name": "Hushallsid_2019",
+      "member_position": null,
+      "member_lo": "2019-01-01",
+      "member_hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA1",
+      "member_position": 1,
+      "member_lo": null,
+      "member_hi": null
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA10",
+      "member_position": 10,
+      "member_lo": null,
+      "member_hi": null
+    },
+    {
+      "physical_id": "Wide2018",
+      "name": "DIA2",
+      "member_position": 2,
+      "member_lo": null,
+      "member_hi": null
+    }
+  ],
+  "warnings": []
+}

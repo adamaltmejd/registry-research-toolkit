@@ -284,7 +284,9 @@ def _held_deliveries(
     physical: dict[tuple[int, int, str, str], list[tuple[str, str]]] = {}
     for row in conn.execute(
         "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, "
-        "ht.scope, hp.lo, hp.hi FROM holding_mapping hm "
+        # A year/month pivot member holds only its own period (#1495).
+        "ht.scope, COALESCE(hm.member_lo, hp.lo), COALESCE(hm.member_hi, hp.hi) "
+        "FROM holding_mapping hm "
         "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
         "JOIN provider p USING(provider_id) JOIN holding_column hc USING(column_id) "
         "JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) "

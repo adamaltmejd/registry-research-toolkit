@@ -16,3 +16,29 @@ name = "Kon_recode"
 register_variant = "scb/lisa/individer-15plus"
 variable = "scb/lisa/kon"
 representation = "Kon"
+
+# A wide-pivot member set is one location, so a plain column of the same
+# representation in the same table is a second one.
+[[table]]
+id = "dbo.PAR_Wide"
+edition = 2018
+[[table.column]]
+name = "DIA1"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { position = 1 }
+[[table.column]]
+name = "DIA2"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { position = 2 }
+[[table.column]]
+name = "DIA"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"

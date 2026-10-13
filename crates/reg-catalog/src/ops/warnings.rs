@@ -11,6 +11,7 @@ use utoipa::openapi::{ArrayBuilder, RefOr, Schema};
 
 use super::refs::{self, Target};
 use super::{Components, Params, Server, component};
+use crate::held::{HELD_HI, HELD_LO};
 use crate::{Code, Error, Scope};
 
 /// A retained source limitation or interpretation assumption: the builder's
@@ -201,10 +202,12 @@ fn stored(row: &rusqlite::Row) -> rusqlite::Result<DataWarning> {
 /// is requested.
 fn held(period: bool, variant: bool, representation: bool) -> String {
     let held_period = if period {
-        " AND ht.scope = 'intervals' AND EXISTS (SELECT 1 FROM holding_period hp \
-         WHERE hp.table_id = ht.table_id AND hp.lo <= :hi AND hp.hi >= :lo)"
+        format!(
+            " AND ht.scope = 'intervals' AND EXISTS (SELECT 1 FROM holding_period hp \
+             WHERE hp.table_id = ht.table_id AND {HELD_LO} <= :hi AND {HELD_HI} >= :lo)"
+        )
     } else {
-        ""
+        String::new()
     };
     let held_variant = if variant {
         "(SELECT selected.register_variant_id FROM register_variant selected \

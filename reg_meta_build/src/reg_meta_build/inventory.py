@@ -27,6 +27,7 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    StrictInt,
     ValidationError,
     field_validator,
     model_validator,
@@ -59,6 +60,7 @@ _UNMAPPED_REASON = "inventory_unmapped_reason_invalid"
 _EDITION = "inventory_edition_invalid"
 _PERIOD_SCOPE = "inventory_period_scope_invalid"
 _CELL_CONFLICT = "inventory_cell_conflict"
+_MEMBER = "inventory_member_invalid"
 
 
 class _InventoryGuardError(ValueError):
@@ -274,8 +276,80 @@ def _location(table_id: str, column_name: str) -> str:
     return f"table[{table_id!r}].column[{column_name!r}]"
 
 
+def _member_location(table_id: str, representation: str) -> str:
+    """A wide-pivot member set as one location: all of a table's columns that map
+    one `(variant, variable, representation)` with a member index (#1495)."""
+    return f"table[{table_id!r}] member set {representation!r}"
+
+
 def _representation_label(representation: str) -> str:
     return f"representation {representation!r}"
+
+
+class ColumnMember(_InventoryModel):
+    """A wide-pivot member index (#1495): which member of an N:1 column set this
+    physical column is. `DIA1..DIA30` each map the base representation `DIA` with
+    `{ position = N }`; an `Hushallsid_<year>` or monthly column maps its base with
+    `{ year = YYYY }` or `{ month = "YYYY-MM" }` and serves only that sub-period.
+
+    Exactly one kind. The set rules (one kind, unique indexes, at least two
+    members, a year or month inside the table's edition) need the whole table, so
+    `validate_inventory_placements` owns them."""
+
+    position: StrictInt | None = Field(default=None, ge=1)
+    year: StrictInt | None = Field(default=None, ge=1000, le=9999)
+    month: str | None = Field(default=None, pattern=r"^[0-9]{4}-(0[1-9]|1[0-2])$")
+
+    @model_validator(mode="after")
+    def _one_kind(self) -> ColumnMember:
+        if (
+            sum(value is not None for value in (self.position, self.year, self.month))
+            != 1
+        ):
+            raise _InventoryGuardError(
+                _MEMBER,
+                "member must state exactly one of position, year or month",
+            )
+        return self
+
+    @property
+    def kind(self) -> str:
+        return (
+            "position"
+            if self.position is not None
+            else "year"
+            if self.year is not None
+            else "month"
+        )
+
+    @property
+    def index(self) -> int | str:
+        return next(
+            value
+            for value in (self.position, self.year, self.month)
+            if value is not None
+        )
+
+    def bounds(self) -> _Interval | None:
+        """The ISO period a year or month member serves; None for a position."""
+        if self.year is not None:
+            return period_bounds(f"{self.year:04d}")
+        if self.month is not None:
+            return period_bounds(self.month)
+        return None
+
+    @classmethod
+    def from_columns(
+        cls, position: int | None, lo: str | None, hi: str | None
+    ) -> ColumnMember | None:
+        """The inverse of `holding_mapping`'s member columns: a position, or the
+        year or month whose canonical token renders `(lo, hi)`."""
+        if position is not None:
+            return cls(position=position)
+        if lo is None or hi is None:
+            return None
+        token = period_token_for_bounds(lo, hi)
+        return cls(year=int(token)) if len(token) == 4 else cls(month=token)
 
 
 class ColumnMapping(_InventoryModel):
@@ -287,11 +361,14 @@ class ColumnMapping(_InventoryModel):
     register), `variable` the 3-segment binding FQID, and `representation` the
     canonical reg_meta `variable_alias.delivery_column_name` this column
     corresponds to. The
-    representation is a required join discriminator, not an output substitute."""
+    representation is a required join discriminator, not an output substitute.
+    `member` marks the column as one indexed member of a wide pivot (#1495); the
+    member set, not the column, is then the location that serves the cell."""
 
     register_variant: str
     variable: str
     representation: str = Field(min_length=1)
+    member: ColumnMember | None = None
 
     @field_validator("register_variant")
     @classmethod
@@ -360,14 +437,21 @@ class InventoryColumn(_InventoryModel):
         under one column states one cell twice — a generator or merge slip, not
         a second holding, and the degenerate case of the one-to-one
         resolution invariant (the cross-location arm is
-        `DeliveryInventory._check_one_to_one_resolution`)."""
-        seen: set[ColumnMapping] = set()
+        `DeliveryInventory._check_one_to_one_resolution`). A member index does
+        not make it a second coordinate: one column is at most one member of a
+        set, as `canonical_inventory`'s triple check also holds."""
+        seen: set[tuple[str, str, str]] = set()
         if self.unmapped_reason is not None and self.mappings:
             raise _InventoryGuardError(
                 _UNMAPPED_REASON, "unmapped_reason cannot accompany mappings"
             )
         for mapping in self.mappings:
-            if mapping in seen:
+            triple = (
+                mapping.register_variant,
+                mapping.variable,
+                mapping.representation,
+            )
+            if triple in seen:
                 raise _InventoryGuardError(
                     _DUPLICATE_MAPPING,
                     f"duplicate mapping {mapping.register_variant} "
@@ -375,7 +459,7 @@ class InventoryColumn(_InventoryModel):
                     f"({_representation_label(mapping.representation)}) — state "
                     "each logical coordinate once per column",
                 )
-            seen.add(mapping)
+            seen.add(triple)
         return self
 
 
@@ -494,8 +578,10 @@ class InventoryTable(_InventoryModel):
 
 
 # One mapping's physical placement, as `_check_one_to_one_resolution` compares
-# them: `(table id, column name, representation, edition bounds, partition)`.
-_Placement = tuple[str, str, str, tuple[_Interval, ...], str | None]
+# them: `(location, representation, served bounds, partition)`. The location is a
+# `(table, column)`, or a table's member set; the served bounds are the table's
+# edition, or a year or month member's own period.
+_Placement = tuple[str, str, tuple[_Interval, ...], str | None]
 
 
 class DeliveryInventory(_InventoryModel):
@@ -597,11 +683,21 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     date does not prove supersession. Curators remove superseded deliveries so
     the inventory states current holdings only.
 
+    Wide-pivot members (#1495): the columns of one table that map one
+    `(register_variant, variable, representation)` with a member index are ONE
+    location, its member set. Its members never conflict with each other, and the
+    set conflicts with any other location, a plain mapping of the same
+    representation in the same table included. Position members serve the
+    table's whole edition; a year or month member serves only its own period, so
+    the overlap check compares those. `_check_member_sets` holds the set's own
+    rules first.
+
     Cost: group by `(register_variant, variable, period_scope)` and compare
     pairwise only within each group. An inventory with many variables avoids a
     global quadratic scan; the usual largest group is one variable's annual
     series with a few dozen editions.
     """
+    _check_member_sets(tables)
     located: dict[tuple[str, str, str], list[_Placement]] = {}
     for table in tables:
         bounds = (
@@ -614,23 +710,22 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     mapping.variable,
                     table.period_scope,
                 )
+                served = bounds
+                if mapping.member is None:
+                    location = _location(table.id, column.name)
+                else:
+                    location = _member_location(table.id, mapping.representation)
+                    if (period := mapping.member.bounds()) is not None:
+                        served = (period,)
                 located.setdefault(key, []).append(
-                    (
-                        table.id,
-                        column.name,
-                        mapping.representation,
-                        bounds,
-                        table.partition,
-                    )
+                    (location, mapping.representation, served, table.partition)
                 )
     conflicts: list[str] = []
     reported: set[tuple[str, ...]] = set()
     for (variant, variable, scope), placements in located.items():
-        for index, (a_table, a_column, a_rep, a_bounds, a_part) in enumerate(
-            placements
-        ):
-            for b_table, b_column, b_rep, b_bounds, b_part in placements[index + 1 :]:
-                if (a_table, a_column) == (b_table, b_column):
+        for index, (a_location, a_rep, a_bounds, a_part) in enumerate(placements):
+            for b_location, b_rep, b_bounds, b_part in placements[index + 1 :]:
+                if a_location == b_location:
                     # One location serving one cell IS the invariant; a
                     # repeated triple there is `InventoryColumn`'s error.
                     continue
@@ -641,16 +736,16 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                 overlap = _overlap(a_bounds, b_bounds)
                 if not overlap and scope == "intervals":
                     continue
-                pair = (variant, variable, a_table, a_column, b_table, b_column)
+                pair = (variant, variable, a_location, b_location)
                 if pair in reported:
                     # One conflicting location pair is one curation decision,
                     # even when several mappings locate the same coordinate.
                     continue
                 reported.add(pair)
                 conflicts.append(
-                    f"{_location(a_table, a_column)} "
+                    f"{a_location} "
                     f"({_representation_label(a_rep)}) and "
-                    f"{_location(b_table, b_column)} "
+                    f"{b_location} "
                     f"({_representation_label(b_rep)}) both map "
                     f"{variant} {variable} over {'_default' if scope == 'year_independent' else _render(overlap)}"
                     + _partition_hint(a_part, b_part)
@@ -665,6 +760,78 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
             "superseded delivery at curation instead of choosing here (a "
             "filename date is not proof of supersession) — reg_meta_build/"
             "DESIGN.md → Holdings curation rules.",
+        )
+
+
+def _check_member_sets(tables: tuple[InventoryTable, ...]) -> None:
+    """A wide-pivot member set's own rules (#1495), per table and
+    `(register_variant, variable, representation)`: one member kind, unique
+    indexes and at least two members (gaps are allowed: real sets have them). A
+    year or month member lies inside one segment of the table's edition, so a
+    year-independent table takes position members only."""
+    problems: list[str] = []
+    for table in tables:
+        sets: dict[tuple[str, str, str], list[tuple[str, ColumnMember]]] = {}
+        for column in table.columns:
+            for mapping in column.mappings:
+                if mapping.member is not None:
+                    key = (
+                        mapping.register_variant,
+                        mapping.variable,
+                        mapping.representation,
+                    )
+                    sets.setdefault(key, []).append((column.name, mapping.member))
+        if not sets:
+            continue
+        segments = (
+            edition_bounds(table.edition) if table.period_scope == "intervals" else ()
+        )
+        for (variant, variable, representation), members in sets.items():
+            where = (
+                f"{_member_location(table.id, representation)} ({variant} {variable})"
+            )
+            kinds = sorted({member.kind for _, member in members})
+            if len(kinds) > 1:
+                problems.append(
+                    f"{where} mixes member kinds {', '.join(kinds)} — index one "
+                    "set one way"
+                )
+                continue
+            if len(members) < 2:
+                problems.append(
+                    f"{where} has the single member {members[0][0]!r} — map a "
+                    "lone column directly, without a member index"
+                )
+            claimed: dict[int | str, str] = {}
+            for name, member in members:
+                if member.index in claimed:
+                    problems.append(
+                        f"{where}: columns {claimed[member.index]!r} and {name!r} "
+                        f"both claim {member.kind} {member.index!r}"
+                    )
+                    continue
+                claimed[member.index] = name
+                period = member.bounds()
+                if period is None:
+                    continue
+                if not segments:
+                    problems.append(
+                        f"{where}: column {name!r} is a {member.kind} member of a "
+                        "year-independent table — only position members serve a "
+                        "table without periods"
+                    )
+                elif not any(
+                    lo <= period[0] and period[1] <= hi for lo, hi in segments
+                ):
+                    problems.append(
+                        f"{where}: column {name!r} {member.kind} {member.index!r} "
+                        f"lies outside the table's edition {_render(segments)}"
+                    )
+    if problems:
+        raise _InventoryGuardError(
+            _MEMBER,
+            "invalid wide-pivot member set:\n"
+            + "\n".join(f"    {line}" for line in problems),
         )
 
 

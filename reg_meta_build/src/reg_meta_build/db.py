@@ -32,7 +32,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 from .source_evidence import SourceRecordRef  # noqa: TC001
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "10.1.0"
+SCHEMA_VERSION = "11.0.0"
 
 if TYPE_CHECKING:
     from .ir import (
@@ -1788,7 +1788,20 @@ CREATE TABLE holding_mapping (
     -- Representative spelling of the resolver-emitted delivery column (states + participating
     -- alias windows) the literal folds onto; never temporal semantic resolution.
     representation_canonical TEXT NOT NULL CHECK (length(representation_canonical) > 0),
-    PRIMARY KEY (column_id, variant_id, variable_id, representation_canonical)
+    -- Authored wide-pivot member position (#1495); never a column-name suffix parse.
+    member_position INTEGER CHECK (member_position IS NULL
+        OR (typeof(member_position) = 'integer' AND member_position > 0)),
+    -- Inclusive lower ISO bound of an authored year/month member; never the table edition.
+    member_lo TEXT CHECK (member_lo IS NULL
+        OR member_lo GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+    -- Inclusive upper ISO bound of an authored year/month member; never the table edition.
+    member_hi TEXT CHECK (member_hi IS NULL
+        OR member_hi GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+    PRIMARY KEY (column_id, variant_id, variable_id, representation_canonical),
+    -- At most one member kind: a position, or a year/month period, or neither.
+    CHECK ((member_lo IS NULL) = (member_hi IS NULL)),
+    CHECK (member_lo IS NULL OR member_lo <= member_hi),
+    CHECK (member_position IS NULL OR member_lo IS NULL)
 );
 
 -- Candidate logical-to-physical index; verify order with plan 02 EXPLAIN QUERY PLAN.

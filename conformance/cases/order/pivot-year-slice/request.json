@@ -1,0 +1,32 @@
+{
+  "fixture": "pivot-members",
+  "artifact": "steward",
+  "fails_if": "a year member outside the ordered slice (Hushallsid_2018) is ordered, a year member is credited with its table's whole edition instead of its own year, or the member index is missing from the manifest",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Hushall",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": 2019,
+          "to": 2020
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/hushall",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}

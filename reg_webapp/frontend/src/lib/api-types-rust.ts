@@ -1012,9 +1012,26 @@ export interface components {
             column: string;
             /** @description The table's edition, rendered as a period. */
             edition: string;
+            member?: components["schemas"]["PivotMember"] | null;
             /** @description The table's disjoint-partition label; absent when it has none. */
             partition?: string | null;
             table: string;
+        };
+        /**
+         * @description A wide-pivot member index (#1495): one of N physical columns that together
+         *     deliver one representation. A position member serves the table's whole edition;
+         *     a year or month member serves only that period, so it is ordered only when the
+         *     slice reaches it. Members order by index, so `DIA2` precedes `DIA10`.
+         */
+        PivotMember: {
+            /** Format: int64 */
+            position: number;
+        } | {
+            /** Format: int64 */
+            year: number;
+        } | {
+            /** @description `YYYY-MM`. */
+            month: string;
         };
         Population: {
             comment?: string | null;

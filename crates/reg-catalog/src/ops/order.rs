@@ -101,6 +101,39 @@ struct Physical {
     /// The table's disjoint-partition label; absent when it has none.
     #[serde(skip_serializing_if = "Option::is_none")]
     partition: Option<String>,
+    /// The column's wide-pivot member index; absent for a plain column.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    member: Option<Member>,
+}
+
+/// A wide-pivot member index (#1495): one of N physical columns that together
+/// deliver one representation. A position member serves the table's whole edition;
+/// a year or month member serves only that period, so it is ordered only when the
+/// slice reaches it. Members order by index, so `DIA2` precedes `DIA10`.
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, ToSchema)]
+#[serde(rename_all = "lowercase")]
+#[schema(as = PivotMember)]
+enum Member {
+    Position(i64),
+    Year(i64),
+    /// `YYYY-MM`.
+    Month(String),
+}
+
+impl Member {
+    /// From `holding_mapping`'s member columns; the builder writes a year as its
+    /// whole calendar year and a month as its whole month.
+    fn from_columns(position: Option<i64>, lo: Option<String>, hi: Option<String>) -> Option<Self> {
+        if let Some(position) = position {
+            return Some(Self::Position(position));
+        }
+        let (lo, hi) = (lo?, hi?);
+        let year = &lo[..4];
+        if lo.ends_with("-01-01") && hi == format!("{year}-12-31") {
+            return Some(Self::Year(year.parse().expect("an ISO year")));
+        }
+        Some(Self::Month(lo[..7].to_owned()))
+    }
 }
 
 /// An availability clip: the binding asked for `requested_period` and is ordered
@@ -476,7 +509,7 @@ impl Order<'_> {
         let mut blocked = false;
         for m in matches(self.conn, id, variant, pinned.as_deref(), "intervals", None)? {
             let physical: Vec<Interval> = m
-                .periods
+                .served()
                 .iter()
                 .flat_map(|b| requested.iter().filter_map(|r| intersect(b, r)))
                 .collect();
@@ -541,7 +574,7 @@ impl Order<'_> {
             .filter_map(|s| s.emitted.delivery_column_name.clone())
             .min()
             .expect("an unblocked year-independent resolution has a column");
-        let located: Vec<(String, String, Option<String>)> = if self.steward {
+        let mut located: Vec<(String, String, Option<String>, Option<Member>)> = if self.steward {
             let canonical = canonical(self.conn, id, variant, &column)?;
             matches(
                 self.conn,
@@ -552,18 +585,21 @@ impl Order<'_> {
                 None,
             )?
             .into_iter()
-            .map(|m| (m.table, m.column, m.partition))
+            .map(|m| (m.table, m.column, m.partition, m.member))
             .collect()
         } else {
-            vec![(String::new(), column.clone(), None)]
+            vec![(String::new(), column.clone(), None, None)]
         };
+        // Stable: plain columns keep their table-and-name order; members order by
+        // index, not name.
+        located.sort_by(|a, b| (&a.0, &a.3).cmp(&(&b.0, &b.3)));
         if located.is_empty() {
             let message = "no year-independent steward table maps this delivery column";
             let period = Some("_default".to_owned());
             self.finding(source, binding, "mapping_missing", message.into(), period);
             return Ok(());
         }
-        for (table, physical, partition) in located {
+        for (table, physical, partition, member) in located {
             self.entries.push(Entry {
                 source: source.name.clone(),
                 logical: logical(source, binding, &column),
@@ -573,6 +609,7 @@ impl Order<'_> {
                     table,
                     column: physical,
                     partition,
+                    member,
                 },
             });
         }
@@ -625,7 +662,7 @@ impl Order<'_> {
                     bounds,
                 )? {
                     let overlaps: Vec<Interval> = m
-                        .periods
+                        .served()
                         .iter()
                         .filter_map(|b| intersect(b, &slice))
                         .collect();
@@ -634,7 +671,8 @@ impl Order<'_> {
                     }
                     covered.extend(overlaps.iter().cloned());
                     let key = (m.table, m.column, column.clone());
-                    contribute(&mut contributions, key, overlaps, m.periods, m.partition);
+                    let held = (m.periods, m.partition, m.member);
+                    contribute(&mut contributions, key, overlaps, held);
                 }
             } else {
                 // The global fallback: canonical resolution is the topology, and a
@@ -645,8 +683,7 @@ impl Order<'_> {
                     &mut contributions,
                     key,
                     vec![slice.clone()],
-                    Vec::new(),
-                    None,
+                    Held::default(),
                 );
             }
             for gap in gaps(std::slice::from_ref(&slice), covered) {
@@ -670,9 +707,11 @@ impl Order<'_> {
                 c.edition = merge(c.days.clone());
             }
         }
-        // Stable: ties keep first-contribution order, as today's sort does.
+        // Stable: ties keep first-contribution order, as today's sort does. A
+        // member orders by its index, not its column name.
         contributions.sort_by(|a, b| {
-            (&a.key.0, &a.edition, &a.key.1).cmp(&(&b.key.0, &b.edition, &b.key.1))
+            (&a.key.0, &a.edition, &a.member, &a.key.1)
+                .cmp(&(&b.key.0, &b.edition, &b.member, &b.key.1))
         });
         for c in contributions {
             let (table, physical, column) = c.key;
@@ -685,6 +724,7 @@ impl Order<'_> {
                     table,
                     column: physical,
                     partition: c.partition,
+                    member: c.member,
                 },
             });
         }
@@ -693,31 +733,37 @@ impl Order<'_> {
 }
 
 /// One entry in the making: `(table, physical column, representation)`, the table's
-/// edition and partition, and the requested days it serves.
+/// edition and partition, the column's member index, and the requested days it
+/// serves.
 struct Contribution {
     key: (String, String, String),
     edition: Vec<Interval>,
     partition: Option<String>,
+    member: Option<Member>,
     days: Vec<Interval>,
 }
+
+/// A held column's table edition, partition and member index.
+type Held = (Vec<Interval>, Option<String>, Option<Member>);
 
 fn contribute(
     contributions: &mut Vec<Contribution>,
     key: (String, String, String),
     days: Vec<Interval>,
-    edition: Vec<Interval>,
-    partition: Option<String>,
+    (edition, partition, member): Held,
 ) {
     match contributions.iter_mut().find(|c| c.key == key) {
         Some(c) => {
             c.days.extend(days);
             c.edition = edition;
             c.partition = partition;
+            c.member = member;
         }
         None => contributions.push(Contribution {
             key,
             edition,
             partition,
+            member,
             days,
         }),
     }
@@ -751,7 +797,8 @@ fn canonical(conn: &Connection, id: i64, variant: i64, column: &str) -> Result<S
 }
 
 /// A held physical location of a binding: a table's column, with the table's
-/// identity, partition, scope source and edition periods.
+/// identity, partition, scope source and edition periods, and the column's member
+/// index with the period a year or month member serves.
 struct Match {
     table_id: i64,
     table: String,
@@ -759,11 +806,24 @@ struct Match {
     partition: Option<String>,
     source_ref: String,
     periods: Vec<Interval>,
+    member: Option<Member>,
+    member_period: Option<Interval>,
+}
+
+impl Match {
+    /// The periods the column serves: a year or month member's own period (inside
+    /// the edition, as the builder holds), else the table's edition.
+    fn served(&self) -> Vec<Interval> {
+        self.member_period
+            .clone()
+            .map_or_else(|| self.periods.clone(), |period| vec![period])
+    }
 }
 
 /// The held locations of the variable under the variant in tables of `scope`
 /// (today's `Holdings.matches`), mapped as `representation` when given and in a
-/// table with a period overlapping `bounds` when given; ordered by table and column.
+/// table with a period overlapping `bounds` when given, where a year or month
+/// member's own period must overlap them too; ordered by table and column.
 fn matches(
     conn: &Connection,
     id: i64,
@@ -775,17 +835,19 @@ fn matches(
     let (lo, hi) = bounds.unzip();
     let mut stmt = conn.prepare_cached(
         "SELECT DISTINCT ht.table_id, ht.physical_id, hc.name, ht.partition, ht.source_ref, \
-         hp.lo, hp.hi \
+         hp.lo, hp.hi, hm.member_position, hm.member_lo, hm.member_hi \
          FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE hm.variable_id = ?1 AND hm.variant_id = ?2 AND ht.scope = ?3 \
          AND (?4 IS NULL OR hm.representation_canonical = ?4) \
          AND (?5 IS NULL OR EXISTS (SELECT 1 FROM holding_period p \
               WHERE p.table_id = ht.table_id AND p.lo <= ?6 AND p.hi >= ?5)) \
+         AND (?5 IS NULL OR hm.member_lo IS NULL OR (hm.member_lo <= ?6 AND hm.member_hi >= ?5)) \
          ORDER BY ht.physical_id, hc.name, hp.lo, hp.hi",
     )?;
     let rows = stmt.query_map(params![id, variant, scope, representation, lo, hi], |row| {
         let period: (Option<String>, Option<String>) = (row.get(5)?, row.get(6)?);
+        let (member_lo, member_hi): (Option<String>, Option<String>) = (row.get(8)?, row.get(9)?);
         Ok((
             Match {
                 table_id: row.get(0)?,
@@ -794,6 +856,8 @@ fn matches(
                 partition: row.get(3)?,
                 source_ref: row.get(4)?,
                 periods: Vec::new(),
+                member: Member::from_columns(row.get(7)?, member_lo.clone(), member_hi.clone()),
+                member_period: member_lo.zip(member_hi),
             },
             period,
         ))

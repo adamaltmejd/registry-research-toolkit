@@ -9,7 +9,12 @@ from typing import TYPE_CHECKING
 from .artifact_identity import GENERATION_KEYS, STEWARD_GENERATION_KEYS, generation_id
 from .holdings_accounting import DISPOSITIONS
 from .holdings_compile import canonical_inventory
-from .inventory import DeliveryInventory, InventoryTable, edition_bounds
+from .inventory import (
+    ColumnMember,
+    DeliveryInventory,
+    InventoryTable,
+    edition_bounds,
+)
 from .slug_grammar import validate_slug
 
 if TYPE_CHECKING:
@@ -129,11 +134,17 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
                         f"Holding mapping ownership mismatch at column {column['column_id']}"
                     )
                 prefix = f"{mapping['provider_slug']}/{mapping['register_slug']}"
+                member = ColumnMember.from_columns(
+                    mapping["member_position"],
+                    mapping["member_lo"],
+                    mapping["member_hi"],
+                )
                 mappings.append(
                     {
                         "register_variant": f"{prefix}/{mapping['variant_slug']}",
                         "variable": f"{prefix}/{mapping['variable_slug']}",
                         "representation": mapping["representation_literal"],
+                        "member": member,
                     }
                 )
                 stored_canonical.append(mapping["representation_canonical"])

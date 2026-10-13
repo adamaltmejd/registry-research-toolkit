@@ -19,6 +19,11 @@ pub(crate) struct Narrow<'a> {
     pub column: Option<&'a str>,
 }
 
+/// A held mapping's bounds over its table's `holding_period` row `hp`: a year or
+/// month pivot member holds only its own period, which lies inside the edition.
+pub(crate) const HELD_LO: &str = "COALESCE(hm.member_lo, hp.lo)";
+pub(crate) const HELD_HI: &str = "COALESCE(hm.member_hi, hp.hi)";
+
 fn held(source: &str, anchor: &str, narrow: Narrow) -> String {
     let mut sql = format!(
         "EXISTS (SELECT 1 FROM {source} JOIN holding_column hc USING(column_id) \
@@ -28,8 +33,8 @@ fn held(source: &str, anchor: &str, narrow: Narrow) -> String {
         write!(
             sql,
             " AND ht.scope = 'intervals' AND EXISTS (SELECT 1 FROM holding_period hp \
-             WHERE hp.table_id = ht.table_id AND hp.lo <= '{hi:04}-12-31' \
-             AND hp.hi >= '{lo:04}-01-01')"
+             WHERE hp.table_id = ht.table_id AND {HELD_LO} <= '{hi:04}-12-31' \
+             AND {HELD_HI} >= '{lo:04}-01-01')"
         )
         .expect("write to String");
     }

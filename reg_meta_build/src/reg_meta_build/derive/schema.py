@@ -29,6 +29,12 @@ type CodedRow = tuple[str, str, int, int, int]
 # `browse_scopes` already admitted, so the reader's `resolve_scope` stays behind.
 
 
+# A held mapping's period bounds over its table's `holding_period` row `hp`: a
+# year/month pivot member holds only its own period (#1495), inside the edition.
+_HELD_LO = "COALESCE(hm.member_lo, hp.lo)"
+_HELD_HI = "COALESCE(hm.member_hi, hp.hi)"
+
+
 def scope_predicate(
     scope: Scope,
     kind: Literal["variable", "register", "provider", "variant"],
@@ -59,7 +65,7 @@ def scope_predicate(
             raise ValueError("scope bounds must be ISO dates")
         member += (
             " AND ht.scope = 'intervals' AND EXISTS (SELECT 1 FROM holding_period hp "
-            f"WHERE hp.table_id = ht.table_id AND hp.lo <= '{hi}' AND hp.hi >= '{lo}')"
+            f"WHERE hp.table_id = ht.table_id AND {_HELD_LO} <= '{hi}' AND {_HELD_HI} >= '{lo}')"
         )
     if variant_sql is not None:
         member += f" AND hm.variant_id = {variant_sql}"
@@ -71,7 +77,7 @@ def scope_predicate(
         lo_sql, hi_sql = bounds_sql
         member += (
             " AND (ht.scope = 'year_independent' OR EXISTS (SELECT 1 FROM holding_period hp "
-            f"WHERE hp.table_id = ht.table_id AND hp.lo <= {hi_sql} AND hp.hi >= {lo_sql}))"
+            f"WHERE hp.table_id = ht.table_id AND {_HELD_LO} <= {hi_sql} AND {_HELD_HI} >= {lo_sql}))"
         )
 
     def correlated(source: str, anchor: str) -> str:

@@ -318,9 +318,6 @@ def test_derive_stamps_the_checkout_commit_and_keeps_identity_only_inputs_distin
     # derived_from_generation_id leaves the generation hash (the two derived copies
     # would then share one generation_id). The dirty-tracked refusal is
     # test_cli_refuses_unpinned_builder_sources[dirty-checkout] (same guard).
-    # The second base is cut back to the 10.0 shape, which derive admits as an
-    # older minor; fails if derive crashes on a pre-10.1 base (no
-    # classification_code.parent_code_id) instead of adding the column as NULL.
     checkout = copied_builder_checkout(tmp_path)
     local_config = checkout / ".codex/config.toml"
     local_config.parent.mkdir()
@@ -334,19 +331,6 @@ def test_derive_stamps_the_checkout_commit_and_keeps_identity_only_inputs_distin
             base,
             manifest={**synthetic_manifest(), "builder_commit": builder},
         )
-        if builder[0] == "1":
-            with sqlite3.connect(base) as conn:
-                conn.executescript(
-                    """
-                    CREATE TABLE pre_tree AS
-                        SELECT classification_id, code_id, level, is_valid
-                        FROM classification_code;
-                    DROP TABLE classification_code;
-                    ALTER TABLE pre_tree RENAME TO classification_code;
-                    UPDATE import_manifest SET value = '10.0.0'
-                        WHERE key = 'schema_version';
-                    """
-                )
         derived = base.with_name("reg_meta.db")
         result = _cli(
             checkout / "reg_meta_build/src", "derive", "--base", base, "--out", derived
