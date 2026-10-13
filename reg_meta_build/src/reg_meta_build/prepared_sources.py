@@ -15,7 +15,7 @@ import re
 import shutil
 import sqlite3
 import tempfile
-from contextlib import closing, contextmanager
+from contextlib import AbstractContextManager, closing, contextmanager
 from dataclasses import dataclass, field
 from functools import lru_cache
 from itertools import groupby, islice
@@ -570,9 +570,30 @@ def _readonly(database: Path) -> sqlite3.Connection:
     return sqlite3.connect(database.as_uri() + "?mode=ro&immutable=1", uri=True)
 
 
-def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
-    @lru_cache(maxsize=8192)
+# simplify: clear-all at the limit, not LRU, mirroring `_DECODED_RECORD_CACHE_LIMIT`:
+# a hit stays one dict lookup. On the synthetic corpus no reader holds more than
+# 2048 distinct payloads, so the limit is set by memory, not by measured reuse
+# (~1 KB per decoded entry there, so ~70 MB at the limit, per process). Measure the
+# real seed's distinct payloads per source if compile memory or misses dominate.
+_DECODED_PAYLOAD_CACHE_LIMIT = 65536
+
+
+def _payload_reader(
+    conn: sqlite3.Connection, cache: dict[tuple[int, str], Any]
+) -> Callable[[int, str], Any]:
     def payload(key: int, kind: str) -> Any:
+        # Keyed by kind as well, so a wrong-kind reference still misses and fails.
+        try:
+            return cache[key, kind]
+        except KeyError:
+            pass
+        value = decode(key, kind)
+        if len(cache) >= _DECODED_PAYLOAD_CACHE_LIMIT:
+            cache.clear()
+        cache[key, kind] = value
+        return value
+
+    def decode(key: int, kind: str) -> Any:
         row = conn.execute(
             "SELECT kind, body FROM payload WHERE id = ?", (key,)
         ).fetchone()
@@ -664,12 +685,12 @@ def _payload_reader(conn: sqlite3.Connection) -> Callable[[int, str], Any]:
 
 @contextmanager
 def _decoded_database(
-    root: Path, manifest: PreparedSourceManifest
+    root: Path, manifest: PreparedSourceManifest, cache: dict[tuple[int, str], Any]
 ) -> Iterator[tuple[sqlite3.Connection, Callable[[int, str], Any]]]:
     try:
         with closing(_readonly(root / manifest.database_path)) as conn:
             conn.row_factory = sqlite3.Row
-            yield conn, _payload_reader(conn)
+            yield conn, _payload_reader(conn, cache)
     except (sqlite3.Error, ValueError, KeyError, TypeError) as exc:
         if isinstance(exc, PreparedSourceError):
             raise
@@ -978,14 +999,28 @@ class PreparedSourceRecords:
     _slice_cache: dict[str, tuple[tuple[NativeKey | None, tuple[int, ...]], ...]] = (
         field(default_factory=dict, init=False, repr=False, compare=False)
     )
+    # Decoded payloads by (payload id, kind), shared by every connection this reader
+    # opens: compile reads one register per `iter_register_slices` call, each on a
+    # new connection, and payloads are interned across registers and passes. Payload
+    # ids are scoped to this reader's one database. Values are frozen models and
+    # tuples, decoded purely from the digest-pinned bytes, so a hit equals a decode.
+    _payload_cache: dict[tuple[int, str], Any] = field(
+        default_factory=dict, init=False, repr=False, compare=False
+    )
 
     def clear_decoded_records(self) -> None:
-        """Release decoded originals after a complete consumer phase.
+        """Release decoded originals and payloads after a complete consumer phase.
 
         Accepted files, coordinate indexes and callers' retained records stay intact;
         later reads reconstruct the same complete originals from the pinned input.
         """
         self._record_cache.clear()
+        self._payload_cache.clear()
+
+    def _decoded(
+        self,
+    ) -> AbstractContextManager[tuple[sqlite3.Connection, Callable[[int, str], Any]]]:
+        return _decoded_database(self.root, self.manifest, self._payload_cache)
 
     @property
     def records(self) -> Iterator[SourceRecord]:
@@ -1028,7 +1063,7 @@ class PreparedSourceRecords:
             "variable_id": "variable_payload",
             "column_name": "fields_payload",
         }
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             for join in joins:
                 selected = tuple(sorted({columns[name] for name in join.keys}))
                 projection = ", ".join(
@@ -1082,7 +1117,7 @@ class PreparedSourceRecords:
         SQL seeks only those families instead of scanning the source. Records
         without a complete family are available separately.
         """
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             join = self._selected_register_join(conn, payload, source, registers)
             selected = ""
             parameters: tuple[Any, ...] = (source,)
@@ -1149,7 +1184,7 @@ class PreparedSourceRecords:
         registers: Collection[NativeKey | None] | None = None,
     ) -> Iterator[tuple[NativeKey, tuple[PreparedNamingRecord, ...]]]:
         """Keep native-family order, reading only naming evidence for thin providers."""
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             join = self._selected_register_join(conn, payload, source, registers)
             families = conn.execute(
                 f"SELECT DISTINCT occurrence.family_payload FROM occurrence {join}"
@@ -1180,7 +1215,7 @@ class PreparedSourceRecords:
         select_family: Callable[[NativeKey], bool] | None = None,
     ) -> Iterator[tuple[NativeKey, tuple[PreparedPartitionRecord, ...]]]:
         """Read checked facts in native-family order, selecting before projection."""
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             join = self._selected_register_join(conn, payload, source, registers)
             rows = conn.execute(
                 f"SELECT {_PARTITION_COLUMNS}, occurrence.family_payload "
@@ -1202,7 +1237,7 @@ class PreparedSourceRecords:
         self, source: str, registers: Collection[NativeKey | None]
     ) -> Iterator[tuple[NativeKey | None, tuple[PreparedNamingRecord, ...]]]:
         """Read parent/variant naming fields, preserving registerless scope behavior."""
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             if None in registers:
                 yield (
                     None,
@@ -1265,7 +1300,7 @@ class PreparedSourceRecords:
         wanted = self.register_slice_ordinals(source, registers)
         if not wanted:
             return
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             for register, ordinals in wanted:
                 yield register, self._read_ordinals(conn, payload, ordinals)
 
@@ -1279,7 +1314,7 @@ class PreparedSourceRecords:
         unknown register, None) can name more than one slice; the filter keeps
         each, in the complete source's order."""
         if source not in self._slice_cache:
-            with _decoded_database(self.root, self.manifest) as (conn, payload):
+            with self._decoded() as (conn, payload):
                 keys = self._register_partitions(conn, payload, source, None)
                 rows = conn.execute(
                     "SELECT register_partition.partition, occurrence.ordinal "
@@ -1301,7 +1336,7 @@ class PreparedSourceRecords:
     def read_ordinals(self, ordinals: tuple[int, ...]) -> tuple[SourceRecord, ...]:
         """The records at these ordinals, in their order: one slice read on its own
         connection, without scanning the rest of its source."""
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             return self._read_ordinals(conn, payload, ordinals)
 
     def _read_ordinals(
@@ -1334,7 +1369,7 @@ class PreparedSourceRecords:
     ) -> tuple[tuple[NativeKey | None, SourceCoordinate, int], ...]:
         """Each distinct register coordinate with its physical occurrence count,
         keyed as `iter_register_slices` yields it, without decoding a record."""
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             result = []
             for row in conn.execute(
                 "SELECT provider, register_payload, COUNT(*) AS records "
@@ -1351,7 +1386,7 @@ class PreparedSourceRecords:
     ) -> Iterator[NativeCoordinates]:
         """Each distinct set of native IDs, only in `registers` unless None,
         without decoding a record."""
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             for row in conn.execute(
                 "SELECT DISTINCT provider, register_payload, native_payload "
                 "FROM occurrence WHERE source=?",
@@ -1372,7 +1407,7 @@ class PreparedSourceRecords:
         return self._iter("WHERE source=? AND family_payload IS NULL", (source,))
 
     def _iter(self, where: str, parameters: tuple[str, ...]) -> Iterator[SourceRecord]:
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             seen = 0
             rows = conn.execute(
                 f"SELECT * FROM occurrence {where} ORDER BY ordinal", parameters
@@ -1400,7 +1435,7 @@ class PreparedSourceRecords:
         """Decode one table at a time, preserving table and row occurrence order."""
         where = "WHERE source = ?" if source is not None else ""
         parameters = (source,) if source is not None else ()
-        with _decoded_database(self.root, self.manifest) as (conn, payload):
+        with self._decoded() as (conn, payload):
             table_count = row_count = 0
             for table in conn.execute(
                 f"SELECT * FROM evidence_table {where} ORDER BY ordinal", parameters
