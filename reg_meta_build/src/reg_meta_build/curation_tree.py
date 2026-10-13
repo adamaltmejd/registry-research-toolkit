@@ -393,13 +393,6 @@ class ErrataDeliveredEntry(_CurationModel):
 
     @model_validator(mode="after")
     def _additional_delivery_anchor(self) -> ErrataDeliveredEntry:
-        if self.donor_variant is not None and (
-            self.storage_column is not None
-            or self.upstream == "additional-physical-column-in-version"
-        ):
-            raise ValueError(
-                "donor_variant cannot use additional physical delivery or storage_column"
-            )
         if self.storage_column is not None and (
             self.upstream != "additional-physical-column-in-version"
             or not self.storage_column.strip()

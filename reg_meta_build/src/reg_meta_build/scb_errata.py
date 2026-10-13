@@ -908,12 +908,6 @@ def convert_delivered_entry(
     context.require_coordinates(entry.register_id, entry.register_variant_id)
     if (entry.donor_variant_id is None) != (donor_context is None):
         raise ValueError("donor_variant requires its source context")
-    if donor_context is not None and (
-        additional_physical_column or storage_column is not None
-    ):
-        raise ValueError(
-            "donor_variant cannot use additional physical delivery or storage_column"
-        )
     if additional_physical_column and entry.native_variable_id is None:
         raise ValueError("additional physical delivery requires native_variable_id")
     if storage_column is not None and (
@@ -1045,15 +1039,16 @@ def convert_delivered_entry(
                 expected_members=(),
             )
         )
-    if additional_physical_column:
-        family = context.by_variable.get(native.variable_id, ())
+    family_contexts = (context,) if donor_context is None else (donor_context, context)
+    for family_context in family_contexts if additional_physical_column else ():
+        family = family_context.by_variable.get(native.variable_id, ())
         guards.append(
             PeerGuard(
-                guard_id=f"{case_id}:complete-native-family",
-                source=records[0].source,
+                guard_id=f"{case_id}:complete-native-family:{family_context.variant_id}",
+                source=family_context.records[0].source,
                 native=NativeCoordinates(
                     register_id=entry.register_id,
-                    register_variant_id=entry.register_variant_id,
+                    register_variant_id=family_context.variant_id,
                     variable_id=native.variable_id,
                 ),
                 expected_members=tuple(
@@ -1183,7 +1178,9 @@ def convert_delivered_entry(
     relied = targets | set(references) | retained_blank_refs
     if additional_physical_column:
         relied.update(
-            record_ref(r) for r in context.by_variable.get(native.variable_id, ())
+            record_ref(r)
+            for family_context in family_contexts
+            for r in family_context.by_variable.get(native.variable_id, ())
         )
     # A declared edition's support is the whole variant slice: it guards the
     # date assertion below, but would stale the pin on any unrelated delivery.

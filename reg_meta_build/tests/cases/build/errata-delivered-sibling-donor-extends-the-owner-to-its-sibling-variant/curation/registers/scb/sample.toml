@@ -2,6 +2,7 @@
 provider = "scb"
 slug = "sample"
 native_id = "1"
+steward_table_prefixes = ["SAMPLE"]
 [[variant]]
 native_id = "1.2"
 slug = "later"
@@ -25,7 +26,10 @@ slug = "edition"
 variant = "early"
 donor_variant = "later"
 column = "VALUE"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 5
+storage_column = "VALUE_STORAGE"
 versions = ["2020"]
-expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:101}}
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:101,member:103,member:104,member:105}}
 evidence = "Synthetic sibling delivery"
 noted = "2026-10-13"

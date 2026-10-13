@@ -6262,9 +6262,22 @@ def compile_errata(
                             fold_column(row.column),
                             tuple(row.versions),
                         ]
+                        donor_context = None
+                        if entry.donor_variant_id is not None:
+                            donor_id = entry.donor_variant_id
+                            donor_context = variant_contexts.get(donor_id)
+                            if donor_context is None:
+                                donor_context = ErrataVariantContext(
+                                    by_variant.get(donor_id, ()),
+                                    register_id,
+                                    donor_id,
+                                    bound_editions.get(donor_id, ()),
+                                )
+                                variant_contexts[donor_id] = donor_context
+                        documented_context = donor_context or context
                         donor_keys = {
                             native_variable_key(record)
-                            for record in context.by_column.get(
+                            for record in documented_context.by_column.get(
                                 fold_column(row.column), ()
                             )
                             if entry.native_variable_id is None
@@ -6277,7 +6290,9 @@ def compile_errata(
                             assert base is not None
                             native_id = next(
                                 record.subject.native.variable_id
-                                for record in context.by_column[fold_column(row.column)]
+                                for record in documented_context.by_column[
+                                    fold_column(row.column)
+                                ]
                                 if native_variable_key(record) == base
                             )
                             by_edition: dict[NativeKey, set[NativeKey]] = defaultdict(
@@ -6289,7 +6304,9 @@ def compile_errata(
                             ).items():
                                 if owner[: len(base)] != base:
                                     continue
-                                for record in context.by_variable.get(native_id, ()):
+                                for record in documented_context.by_variable.get(
+                                    native_id, ()
+                                ):
                                     literal = _literal_field(record, "column_name")
                                     if (
                                         literal is None
@@ -6308,18 +6325,6 @@ def compile_errata(
                                 len(owners) > 1 for owners in by_edition.values()
                             ):
                                 component_base_key = base
-                        donor_context = None
-                        if entry.donor_variant_id is not None:
-                            donor_id = entry.donor_variant_id
-                            donor_context = variant_contexts.get(donor_id)
-                            if donor_context is None:
-                                donor_context = ErrataVariantContext(
-                                    by_variant.get(donor_id, ()),
-                                    register_id,
-                                    donor_id,
-                                    bound_editions.get(donor_id, ()),
-                                )
-                                variant_contexts[donor_id] = donor_context
                         result = convert_delivered_entry(
                             entry,
                             case_id=case_id,
