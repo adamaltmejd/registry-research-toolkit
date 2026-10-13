@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal, Self
+from typing import ClassVar, Literal, Self
 
 from pydantic import Field, field_validator, model_validator
 
@@ -286,6 +286,8 @@ class SourceEvidenceRow(_SourceModel):
 
 
 class SourceEvidenceTable(_SourceModel):
+    evidence_position: ClassVar[frozenset[str]] = frozenset({"source_revision_id"})
+
     source: str
     source_revision_id: str
     name: str
@@ -293,6 +295,11 @@ class SourceEvidenceTable(_SourceModel):
 
 
 class SourceRecord(_SourceModel):
+    evidence_position: ClassVar[frozenset[str]] = frozenset(
+        {"record_id", "source_revision_id"}
+    )
+    evidence_multiset: ClassVar[frozenset[str]] = frozenset({"locators"})
+
     record_id: str
     source: str
     source_revision_id: str
