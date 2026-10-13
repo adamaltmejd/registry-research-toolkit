@@ -227,8 +227,11 @@ class _Pickler(pickle.Pickler):
     `__pydantic_fields_set__`. The pickler never offers a `str` or a `set` to a
     hook, so `dump` and `reducer_override` (which sees every model) rebuild each
     container around the frame's first string of each value and write each set as
-    a `_SortedSet`. With `code_sets`, each distinct code set is written once, as a
-    reference into it.
+    a `_SortedSet`. The canonical string is the pickler's own copy: a class's module
+    and qualified name are memoized strings no hook sees, so a data string that is
+    the same object as one (an interned identifier) would be written as a reference
+    to it. With `code_sets`, each distinct code set is written once, as a reference
+    into it.
     """
 
     def __init__(self, file: Any, code_sets: dict[ResolvedCodeSet, int] | None) -> None:
@@ -252,13 +255,16 @@ class _Pickler(pickle.Pickler):
             return NotImplemented
         # Pydantic's own reduction, its state rebuilt around canonical values.
         func, args, state, *rest = obj.__reduce_ex__(_PROTOCOL)
-        canonical = {key: self._canonical(value) for key, value in state.items()}
-        return (func, args, canonical, *rest)
+        return (func, args, self._canonical(state), *rest)
 
     def _canonical(self, obj: Any) -> Any:
         kind = type(obj)
         if kind is str:
-            return self._strings.setdefault(obj, obj)
+            if (canonical := self._strings.get(obj)) is None:
+                # A new object unless `obj` has at most one character; no global's
+                # module or name is that short.
+                canonical = self._strings[obj] = obj[:1] + obj[1:]
+            return canonical
         if kind is set:
             # A model's fields set. A fresh wrapper per set, so no two loaded
             # models share one; `sorted` refuses mixed types.

@@ -83,10 +83,13 @@ plain pickle is not: its memo is keyed by object identity, so it records which e
 strings happen to be one object (pydantic-core's JSON string cache decides that per
 process), and it writes each model's `__pydantic_fields_set__` in the set's iteration
 order, which follows the string hash seed. The bundle's pickler therefore writes every
-string as the frame's first equal one and every set as `set(sorted names)`. The pickler
-offers no hook for a `str` or a `set`, so it rebuilds the containers of each frame and
-each model's state around canonical values as it writes them. That costs the write
-(about 2.6 times the pickling time on the synthetic suite), not the load.
+string as one copy of its own per value in the frame, and every set as
+`set(sorted names)`. The copy is its own because a class's module and name are memoized
+strings too: a data string that is the very same object (an interned identifier) would
+otherwise be written as a reference to them. The pickler offers no hook for a `str` or a
+`set`, so it rebuilds the containers of each frame and each model's state around
+canonical values as it writes them. That costs the write, several times a plain
+pickle's, not the load.
 
 The pickle is a cache artifact keyed by the exact resolve code, never a public contract:
 there is no migration between format versions, and a bundle from other resolve code is
