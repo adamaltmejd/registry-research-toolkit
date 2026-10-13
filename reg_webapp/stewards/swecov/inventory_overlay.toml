@@ -5800,734 +5800,917 @@ reason = "Person join key of the SÄBO membership holding; swecov/population/per
 [[unmap]]
 table = "CIS2002"
 column = "CO21"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "CO41"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "CO51"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "CO61"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "CO71"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "Co55"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co11"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co12"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co13"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co14"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co15"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co22"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co23"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co24"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co25"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co42"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co43"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co44"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co45"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co52"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co53"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co54"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co62"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co63"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co64"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co65"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co72"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co73"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co74"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2002"
 column = "co75"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "CO21"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "CO41"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "CO51"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "CO61"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "CO71"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co11"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co12"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co13"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co14"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co22"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co23"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co24"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co42"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co43"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co44"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co52"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co53"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co54"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co62"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co63"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co64"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co72"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co73"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2004"
 column = "co74"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "CO21"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "CO41"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "CO51"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "CO61"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "CO71"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co11"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co12"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co13"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co14"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co22"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co23"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co24"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co42"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co43"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co44"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co52"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co53"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co54"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co62"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co63"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co64"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co72"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co73"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2006"
 column = "co74"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "CO21"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "CO41"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "CO51"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "CO61"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "CO71"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "Co55"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co11"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co12"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co13"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co14"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co15"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co22"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co23"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co24"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co25"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co42"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co43"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co44"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co45"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co52"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co53"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co54"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co62"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co63"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co64"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co65"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co72"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co73"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co74"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2008"
 column = "co75"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "Co52"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "Co54"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co11"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co12"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co13"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co14"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co15"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co21"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co22"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co23"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co24"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co25"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co41"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co42"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co43"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co44"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co45"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co51"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co53"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co55"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co61"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co62"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co63"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co64"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co65"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co71"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co72"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co73"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co74"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2010"
 column = "co75"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO311"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO313"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO315"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO321"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO322"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO323"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO324"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO325"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO81"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO83"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "CO85"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "Co52"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "Co54"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co11"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co12"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co13"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co14"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co15"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co21"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co22"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co23"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co24"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co25"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co312"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co314"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co41"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co42"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co43"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co44"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co45"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co51"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co53"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co55"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co61"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co62"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co63"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co64"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co65"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co71"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co72"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co73"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co74"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co75"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co82"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 [[unmap]]
 table = "CIS2012"
 column = "co84"
+reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)."
 
 # Reviewed finite physical-to-catalog representations; raw holding names stay literal.
 
@@ -28741,3 +28924,911 @@ table = "FE2002"
 column = "Varulager"
 edition = 2002
 reason = "FE long-name delivery column of the same Företagsstatistik företagsenhet item (exact label and 1997-2002 window); maintainer-decided 2026-10-13 (#1302)."
+
+# Interim holds from the 2026-10-13 curation run: no settled owner yet; each
+# reason names its follow-up issue.
+
+[[unmap]]
+table = "FE1990"
+column = "Anstallda"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "Bruttoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "ByggnaderMark"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "EgetKapital"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "FinansiellaTillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "Foradlingsvarde"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "KorfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "KortfristigaFordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "KortfristigaPlaceringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "Kundfordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "LangfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "Lonekostnader"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "MaskinerInventarier"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "MateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "Omsattning"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "Rorelseresultat"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "SNI92"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "Skatteskulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "SummaAktierIKoncernOchIntresseforetag"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "SummaNettoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1990"
+column = "Varulager"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Anstallda"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Bruttoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "ByggnaderMark"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "EgetKapital"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "FinansiellaTillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Foradlingsvarde"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "KorfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "KortfristigaFordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "KortfristigaPlaceringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Kundfordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "LangfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Lonekostnader"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "MaskinerInventarier"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "MateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Omsattning"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Rorelseresultat"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "SNI92"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Skatteskulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "SummaAktierIKoncernOchIntresseforetag"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "SummaNettoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1991"
+column = "Varulager"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Anstallda"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Bruttoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "ByggnaderMark"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "EgetKapital"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "FinansiellaTillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Foradlingsvarde"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "KorfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "KortfristigaFordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "KortfristigaPlaceringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Kundfordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "LangfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Lonekostnader"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "MaskinerInventarier"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "MateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Omsattning"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Rorelseresultat"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "SNI92"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Skatteskulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "SummaAktierIKoncernOchIntresseforetag"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "SummaNettoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1992"
+column = "Varulager"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Anstallda"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Bruttoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "ByggnaderMark"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "EgetKapital"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "FinansiellaTillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Foradlingsvarde"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "KorfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "KortfristigaFordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "KortfristigaPlaceringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Kundfordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "LangfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Lonekostnader"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "MaskinerInventarier"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "MateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Omsattning"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Rorelseresultat"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "SNI92"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Skatteskulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "SummaAktierIKoncernOchIntresseforetag"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "SummaNettoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1993"
+column = "Varulager"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Anstallda"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Bruttoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "ByggnaderMark"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "EgetKapital"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "FinansiellaTillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Foradlingsvarde"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "KorfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "KortfristigaFordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "KortfristigaPlaceringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Kundfordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "LangfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Lonekostnader"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "MaskinerInventarier"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "MateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Omsattning"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Rorelseresultat"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "SNI92"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Skatteskulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "SummaAktierIKoncernOchIntresseforetag"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "SummaNettoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1994"
+column = "Varulager"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Anstallda"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Bruttoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "ByggnaderMark"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "EgetKapital"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "FinansiellaTillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Foradlingsvarde"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "KorfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "KortfristigaFordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "KortfristigaPlaceringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Kundfordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "LangfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Lonekostnader"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "MaskinerInventarier"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "MateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Omsattning"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Rorelseresultat"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "SNI92"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Skatteskulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "SummaAktierIKoncernOchIntresseforetag"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "SummaNettoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1995"
+column = "Varulager"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Anstallda"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Bruttoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "ByggnaderMark"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "EgetKapital"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "FinansiellaTillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Foradlingsvarde"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "KorfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "KortfristigaFordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "KortfristigaPlaceringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Kundfordringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "LangfristigaSkulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Lonekostnader"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "MaskinerInventarier"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "MateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Omsattning"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Rorelseresultat"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "SNI92"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Skatteskulder"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "SummaAktierIKoncernOchIntresseforetag"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "SummaNettoinvesteringar"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1996"
+column = "Varulager"
+reason = "Interim hold: FE 1990-1996 column documented in SCB's FEK delivery report (Bilaga 1, FEK sheet) with no catalog register covering these years (FEK editions start 2003, Företagsstatistik 1997); follow-up #1504. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "Hreg_Examina_1990_2022"
+column = "Omr"
+reason = "Interim hold: examina 'Utbildningsområde' with no catalog variable shown to be the same (utbildningsomrade is a course resource-allocation area, amnesomrade the 1977-1993 Ämnesområde); follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "Hreg_Examina_2022_2024"
+column = "Omr"
+reason = "Interim hold: examina 'Utbildningsområde' with no catalog variable shown to be the same (utbildningsomrade is a course resource-allocation area, amnesomrade the 1977-1993 Ämnesområde); follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_1999"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2000"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2001"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2002"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2003"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2004"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2005"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2006"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2007"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2008"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2009"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2010"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2011"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2012"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2013"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2014"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2015"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2016"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2017"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2018"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2019"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2020"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2021"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "LReg_2022"
+column = "PrTjledig"
+reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "immigranter_20241231"
+column = "datinv"
+reason = "Interim hold: immigration event date ('Datum för immigration'); no catalog variable is shown to carry the event date (senaste-invandringsdatum is the latest, flergenreg/datinv the earliest immigration); follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
