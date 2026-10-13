@@ -1,0 +1,80 @@
+# Switchyard v3. Configuration changes take effect through yard sync.
+# Current use: SWECOV curation. No gates yet; every candidate is approved by
+# hand after the Sol review.
+max_lanes = 2
+approve = "manual"
+
+[target]
+ref = "main"
+protected_paths = ["AGENTS.md", "CLAUDE.md", ".agents/", ".claude/", ".codex/", ".pi/", ".github/"]
+
+# PyPI only, for uv. Models and MCP use their own routes.
+[isolation]
+egress = ["pypi.org", "files.pythonhosted.org"]
+
+# Every Codex agent runs on the fast tier through the committed
+# .codex/config.toml, which Yard stages as the box's user config.
+[agents.astra]
+harness = "codex"
+login = true
+model = "gpt-6-astra"
+effort = "low"
+
+[agents.sonnet]
+harness = "claude"
+login = true
+model = "claude-sonnet-5-5"
+effort = "medium"
+
+[agents.sol]
+harness = "codex"
+login = true
+model = "gpt-6.1-sol"
+effort = "high"
+
+# default is the heavy lane.
+[workflows.default]
+implementer = "astra"
+review = ["code"]
+access = "write"
+total_work_timeout_minutes = 360
+instructions = """
+Follow AGENTS.md. Smallest safe change, in the ticket's scope only; prefer
+deletion to addition. Pre-v1: no compat shims, migration code or speculative
+options. Never simplify away the load-bearing guards: PII/MONA confinement,
+k-anonymity/disclosure control, determinism/byte-identity, JSON-contract
+validation, fail-fast. If the work grows past the ticket, do less and file a
+proposal.
+
+SWECOV curation lives in reg_webapp/stewards/swecov/ and
+reg_meta_build/input_data/swecov/. Curated entries come from the ticket's
+evidence; do not invent values the evidence leaves open, and propose a
+follow-up instead. Never read, create or commit a holdings extract or any
+.local/ file.
+
+There are no gates. Before declaring done run
+`uv run python -m pytest reg_meta_build/tests -k swecov -n auto` and
+`uv run --no-project scripts/gate.py lint`, plus focused tests for anything
+else you touched, and name what ran in the commit message.
+"""
+
+[workflows.light]
+implementer = "sonnet"
+
+[workflows.plan]
+access = "read-only"
+review = "none"
+
+[review]
+max_rounds = 3
+blocking = "P1"
+
+[review.seats.code]
+agent = "sol"
+instructions = """
+Judge the change against AGENTS.md and the ticket. Blocking: a curated value
+the cited evidence does not support, a weakened load-bearing guard (PII/MONA
+confinement, disclosure control, determinism, contract validation,
+fail-fast), a confidential extract or .local/ content in the diff, a test
+that fails the AGENTS.md testing policy, and work outside the ticket's scope.
+"""

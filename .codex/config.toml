@@ -1,0 +1,4 @@
+# Codex fast mode for every Codex agent Yard runs (Yard stages this file as the
+# box's user-level config). Tier only: no MCP servers, hooks or rules; see
+# README.md.
+service_tier = "fast"
