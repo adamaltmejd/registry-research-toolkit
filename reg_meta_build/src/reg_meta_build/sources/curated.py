@@ -52,7 +52,13 @@ _REGISTER_KEYS = frozenset(
         "variable",
     }
 )
-_VARIANT_KEYS = frozenset({"key", "name", "description", "valid_from", "valid_to"})
+_VARIANT_KEYS = frozenset(
+    {"key", "name", "description", "valid_from", "valid_to", "period_scope"}
+)
+# The variant scopes a steward table can declare: the global thin-provider and
+# inventory vocabulary (`period_scope`), minus `pooled`, which steward deliveries
+# never carry.
+_VARIANT_SCOPES = ("intervals", "year_independent")
 _VARIABLE_KEYS = frozenset(
     {
         "name",
@@ -128,6 +134,9 @@ class _CuratedVariant:
     valid_from: str | None  # None → no variant-specific floor
     valid_to: str | None  # None → no variant-specific ceiling
     synthesized: bool
+    # "year_independent": every state in this variant has physical delivery
+    # scope but no calendar window (NULL bounds, never 0001-01-01..9999-12-31).
+    period_scope: str = "intervals"
 
 
 @dataclass(frozen=True)
@@ -299,6 +308,16 @@ class CuratedAdapter:
                 variant_valid_to,
                 f"register {key!r} variant {vk!r}",
             )
+            period_scope = v.get("period_scope", "intervals")
+            if period_scope not in _VARIANT_SCOPES:
+                raise curation_error(
+                    "curated_toml_invalid",
+                    f"{path.name}: register {key!r} variant {vk!r}: "
+                    f"period_scope {period_scope!r} is not one of "
+                    f"{list(_VARIANT_SCOPES)}.",
+                    "Omit period_scope for dated states, or set "
+                    '"year_independent" for a table with no calendar coverage.',
+                )
             variants.append(
                 _CuratedVariant(
                     key=vk,
@@ -309,6 +328,7 @@ class CuratedAdapter:
                     valid_from=variant_valid_from,
                     valid_to=variant_valid_to,
                     synthesized=False,
+                    period_scope=period_scope,
                 )
             )
         if not variants:
@@ -729,6 +749,7 @@ class CuratedAdapter:
                             "give distinct state windows.",
                         )
                     seen_state_keys.add(state_key)
+                    independent = variant_by_key[vk].period_scope == "year_independent"
                     state_id = mint(
                         "state",
                         self.provider,
@@ -751,6 +772,7 @@ class CuratedAdapter:
                         value_set_id=None,
                         value_set_version_label=state.value_set_version_label,
                         provenance=f"steward:{self.steward}",
+                        period_scope="year_independent" if independent else "intervals",
                     )
                     for column in state.columns:
                         yield IRVariableAlias(
@@ -777,6 +799,31 @@ class CuratedAdapter:
     ) -> tuple[str | None, str | None]:
         base_valid_from = state.valid_from or var.valid_from or reg.valid_from
         base_valid_to = state.valid_to or var.valid_to or reg.valid_to
+        if variant.period_scope == "year_independent":
+            # A year-independent state has no calendar window at all; an inherited
+            # bound would fake one, and a co-delivered alias's window table is
+            # dated only, so either is refused rather than dropped.
+            bounded = any(
+                bound is not None
+                for bound in (
+                    base_valid_from,
+                    base_valid_to,
+                    variant.valid_from,
+                    variant.valid_to,
+                )
+            )
+            if bounded or state.aliases:
+                raise curation_error(
+                    "curated_toml_invalid",
+                    f"{self.provider}.toml: register {reg.key!r} variable "
+                    f"{var.key!r} state {state.column!r} in year-independent "
+                    f"variant {variant.key!r} carries "
+                    + ("a validity bound." if bounded else "co-delivered aliases."),
+                    "Drop valid_from/valid_to from the state, variable, register "
+                    "and variant, and declare each co-delivered spelling as its "
+                    "own variable.",
+                )
+            return None, None
         starts = [
             self._expanded_boundary(d, end=False)
             for d in (base_valid_from, variant.valid_from)

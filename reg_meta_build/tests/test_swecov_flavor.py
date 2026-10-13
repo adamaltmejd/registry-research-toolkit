@@ -18,6 +18,7 @@ from _swecov_fixtures import (
     build_catalog,
     column as _column,
     copied_layout,
+    run_flavor,
     run_generator,
     synthetic_enriched as _synthetic_enriched,
 )
@@ -79,7 +80,7 @@ def _flavor_register(
     enriched["Inera/1177/Ordered tests"]["columns"] = columns
     if mapping is not None:
         enriched["Inera/1177/Ordered tests"]["mapping"] = mapping
-    root = _run_flavor(tmp_path, enriched)
+    root = run_flavor(tmp_path, enriched)
     provider = tomllib.loads(
         (root / "providers" / "inera.toml").read_text(encoding="utf-8")
     )
@@ -219,7 +220,7 @@ def test_disposition_column_list_naming_an_absent_column_refuses(
         c for c in enriched["RTB/Population"]["columns"] if c["name"] != "FodelseArMan"
     ]
     with pytest.raises(SystemExit) as refusal:
-        _run_flavor(tmp_path, enriched)
+        run_flavor(tmp_path, enriched)
 
     assert "absent from holding 'RTB/Population': ['FodelseArMan']" in str(
         refusal.value
@@ -230,24 +231,10 @@ def test_disposition_column_list_naming_an_absent_column_refuses(
 # --- cmd_flavor: the disposition's register/variant emission -----------------
 
 
-def _run_flavor(tmp_path: Path, enriched: dict[str, dict]) -> Path:
-    """Run `cmd_flavor` in a synthetic package layout; return its input root."""
-    base = tmp_path / "input_data" / "swecov"
-    derived = base / "derived"
-    derived.mkdir(parents=True)
-    (derived / "holdings_enriched.json").write_text(
-        json.dumps(enriched), encoding="utf-8"
-    )
-    build_catalog.cmd_flavor(
-        argparse.Namespace(csv=base / "SWECOV_variables_2025-12-11.csv")
-    )
-    return base
-
-
 @pytest.fixture(scope="module")
 def flavor_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """One generator run for every test that reads its provider TOMLs."""
-    return _run_flavor(tmp_path_factory.mktemp("flavor"), _synthetic_enriched())
+    return run_flavor(tmp_path_factory.mktemp("flavor"), _synthetic_enriched())
 
 
 @pytest.fixture(scope="module")
@@ -362,7 +349,7 @@ def test_generated_slug_pins_bind_to_emitted_graph(flavor_root: Path) -> None:
 
 
 def test_repeated_flavor_generation_is_deterministic(tmp_path: Path) -> None:
-    root = _run_flavor(tmp_path, _synthetic_enriched())
+    root = run_flavor(tmp_path, _synthetic_enriched())
     providers_dir = root / "providers"
     before = {path.name: path.read_bytes() for path in providers_dir.glob("*.toml")}
 
@@ -394,7 +381,7 @@ def test_removed_provider_refuses_stale_toml_before_writing(tmp_path: Path) -> N
     """A provider TOML the current disposition no longer emits blocks the run:
     the CLI, under a policy without that provider, names the file and writes no
     provider output at all."""
-    root = _run_flavor(tmp_path, _synthetic_enriched())
+    root = run_flavor(tmp_path, _synthetic_enriched())
     providers_dir = root / "providers"
     stale = providers_dir / "swedbank.toml"
     assert stale.is_file()
@@ -423,5 +410,5 @@ def test_flavor_rejects_stale_declared_table_before_writing(tmp_path: Path) -> N
     table = POLICY.variant_tables()[entry[1], entry[3], entry[5]][0]
     enriched[entry[0]]["table_columns"].pop(table)
     with pytest.raises(SystemExit, match=r"table\(s\) absent from holding"):
-        _run_flavor(tmp_path, enriched)
+        run_flavor(tmp_path, enriched)
     assert not (tmp_path / "providers").exists()

@@ -2117,10 +2117,9 @@ def _insert_core_graph_from_ir(
 ) -> None:
     """Insert a provider-shaped core graph from adapter IR.
 
-    The global materializer calls this after clearing adapter-written rows; the
-    steward overlay calls it additively on a released DB. ``provider_ids`` is
-    supplied only for the latter because steward providers are not global seed
-    rows.
+    Only the steward overlay (`extend_db`) calls this, additively on a released
+    DB; ``provider_ids`` maps its providers because steward providers are not
+    global seed rows.
     """
 
     def provider_id(provider: str) -> int:
@@ -2205,15 +2204,16 @@ def _insert_core_graph_from_ir(
 
     # None→sentinel reconciliation at the insert site: valid_to=None →
     # '9999-12-31', value_set_version_label=None → '' (the DDL NOT NULL
-    # DEFAULTs). Steward IR declares no classification associations.
+    # DEFAULTs). A year-independent state keeps both bounds NULL (the DDL CHECK).
+    # Steward IR declares no classification associations.
     conn.executemany(
         "INSERT INTO variable_state "
-        "(state_id, variable_id, register_variant_id, valid_from, valid_to, "
-        " data_type, data_length, delivery_column_name, source_register_text, "
-        " operational_definition, provenance, pooled, value_set_id, "
-        " value_set_version_label) "
-        "VALUES (:state_id, :variable_id, :register_variant_id, :valid_from, "
-        " :valid_to, :data_type, :data_length, :delivery_column_name, "
+        "(state_id, variable_id, register_variant_id, period_scope, valid_from, "
+        " valid_to, data_type, data_length, delivery_column_name, "
+        " source_register_text, operational_definition, provenance, pooled, "
+        " value_set_id, value_set_version_label) "
+        "VALUES (:state_id, :variable_id, :register_variant_id, :period_scope, "
+        " :valid_from, :valid_to, :data_type, :data_length, :delivery_column_name, "
         " :source_register_text, :operational_definition, :provenance, :pooled, "
         " :value_set_id, :value_set_version_label)",
         [
@@ -2221,10 +2221,15 @@ def _insert_core_graph_from_ir(
                 "state_id": s.state_id,
                 "variable_id": s.variable_id,
                 "register_variant_id": s.register_variant_id,
-                "valid_from": s.valid_from
+                "period_scope": s.period_scope,
+                "valid_from": None
+                if s.period_scope == "year_independent"
+                else s.valid_from
                 if s.valid_from is not None
                 else _VALID_FROM_UNKNOWN,
-                "valid_to": s.valid_to
+                "valid_to": None
+                if s.period_scope == "year_independent"
+                else s.valid_to
                 if s.valid_to is not None
                 else _VALID_TO_SENTINEL,
                 "data_type": s.data_type,

@@ -2297,7 +2297,13 @@ def _era_column_slugs(
 
     era: dict[int, str] = {}
     for column_slug, vids in contested.items():
-        if _eras_overlap([windows[vid] for vid in vids]):
+        # A year-independent state (NULL bounds: a steward flavor, or a global
+        # dateless declaration such as LISA's) has no era: it is delivered
+        # alongside any other, so the set is a conflict (#1538). Dated sets take
+        # the unchanged path; a contested dateless set used to raise TypeError.
+        if any(
+            None in window for vid in vids for window in windows[vid]
+        ) or _eras_overlap([windows[vid] for vid in vids]):
             continue
         starts = {vid: min(f for f, _t in windows[vid]) for vid in vids}
         first, *later = sorted(vids, key=starts.__getitem__)
