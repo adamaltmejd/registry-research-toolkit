@@ -2036,17 +2036,3 @@ refs = ["{\"semantic_record_key\":[\"summary\",\"417368858a952c5b895b971e7ba0a14
 expected_evidence_sha256 = "015a04af0e8497d71360ed62e27d13cfa97c29a622d97375b6019ca0313390af"
 reason = "User-approved bounded source limitation,2026-10-01: Retain these exact blank-column summary source records without attaching their flags to guessed physical columns or deleting originals."
 evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code,subject,all refs,fields and window; no broadened selector. Preserve every original field,parent,source period and ordered coding association. The diagnostic becomes a warning; all withheld outputs remain withheld. Source-limitations42-typed-review.json; LOVA-bare4-current-user-review.json; Selected-support213-PAR-dictionary6-user-review.md; Final13-user-review-proposal.json."
-
-# #1302 F9 (maintainer round 5: graft into scb/rtb): RTB columns of SWECOV's SaBo address extracts. (F8's
-# Population_PersonNr AterAnv/FelPersonNr are SWECOV flavor variables since 2026-10-13: SCB-generated
-# personnummer flags with no orderable RTB home.)
-
-[[errata.column]]
-variant = "folkbokforda-personer"
-column = "UtdAdr1"
-name = "Folkbokföringsadress fortsättning. Kan också innehålla ett gårdsnamn."
-definition = "Folkbokföringsadress fortsättning. Kan också innehålla ett gårdsnamn."
-holdings_period = "2015-2020"
-source = "steward-holdings"
-evidence = "SWECOV holds UtdAdr1 in RTB_SaBo_Adress_2015..RTB_SaBo_Adress_2020 beside UtdAdr2; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (RTB sheet) lists it with source RTB; SCB's Registerinformation export carries no row for it on this variant. Name and definition copied from the inrikes-flyttningar entry so both states belong to one variable (#1302 F9)."
-noted = "2026-10-12"

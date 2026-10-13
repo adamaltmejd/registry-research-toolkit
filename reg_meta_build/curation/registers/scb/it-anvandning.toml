@@ -1017,6 +1017,17 @@ source = "steward-holdings"
 evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
+# #1509: the filter question parenting IGOVIF/IGOVFM/IGOVRT/IGOVAL/IGOVPR.
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "IGOV"
+name = "Använde internet för kontakter med myndigheter"
+definition = "Om företaget använde internet för kontakter med myndigheter, kommuner eller landsting under föregående år (ja/nej)."
+holdings_period = "2008-2010"
+source = "steward-holdings"
+evidence = "SWECOV holds IGOV in ITftg_2008..ITftg_2010; SCB's IT0101 SCBDOK 2008 and the Eurostat ENT2008–2010 model questionnaires (B5) document it as the parent of the IGOV* sub-items minted here; SCB's Registerinformation export carries no row for it on this variant (#1509; maintainer 2026-10-13)."
+noted = "2026-10-13"
+
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
 column = "IGOVIF"
@@ -12057,3 +12068,7 @@ slug = "storan-foretag"
 [[variable]]
 native_id = "258.LAN"
 slug = "lan-foretag"
+
+[[variable]]
+native_id = "258.IGOV"
+slug = "igov"
