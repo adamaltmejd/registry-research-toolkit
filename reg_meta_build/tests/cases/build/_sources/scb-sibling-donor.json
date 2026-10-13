@@ -26,6 +26,19 @@
           3
         ],
         "data_type": "integer"
+      },
+      {
+        "colname": "OTHER",
+        "cvid": 103,
+        "var_id": 5,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": [
+          "TEST",
+          1,
+          2
+        ],
+        "data_type": "integer"
       }
     ]
   }

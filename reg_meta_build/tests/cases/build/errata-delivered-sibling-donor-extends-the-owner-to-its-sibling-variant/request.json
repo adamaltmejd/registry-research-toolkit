@@ -1,5 +1,5 @@
 {
-  "note": "The documented native variable 1.5 owns VALUE on both variants. Target edition 2020 comes from variant 3; identity and integer type come from variant 2. No existing delivered case crosses variants.",
-  "fails_if": "The converter looks up the column on the target, mints a declared-column identity, or retains the donor variant on the addition.",
+  "note": "Native family 1.5 documents VALUE and OTHER on the donor, with reviewed partition owners 1.5.value and 1.5.other. VALUE must retain its owner on both variants; OTHER remains donor-only. Target edition 2020 comes from variant 3; identity and integer type come from variant 2. Expected states follow this source fixture and partition, exercising sibling delivery through the prepared-inputs-to-artifact boundary.",
+  "fails_if": "Split-owner rebinding searches target records instead of donor records (refusing VALUE with no split owner), chooses the other partition owner, mints a declared-column identity, or retains the donor variant on the addition.",
   "sources": "scb-sibling-donor"
 }

@@ -6417,6 +6417,10 @@ def compile_errata(
                     )
                     continue
                 if table == "delivered":
+                    # Sibling additions inherit the donor’s reviewed literal owner.
+                    ownership_records = (
+                        donor_context.records if donor_context is not None else members
+                    )
                     effects = []
                     rebinding_blockers = []
                     corrected_families = {}
@@ -6455,7 +6459,7 @@ def compile_errata(
                             continue
                         original_pairs = {
                             (record_ref(record), row.column)
-                            for record in members
+                            for record in ownership_records
                             if source_occurrence(record).variable_key == variable_key
                             and _literal_field(record, "column_name") == row.column
                         }

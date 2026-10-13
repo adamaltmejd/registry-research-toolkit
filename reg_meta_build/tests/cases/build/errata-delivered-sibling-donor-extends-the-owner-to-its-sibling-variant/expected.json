@@ -17,7 +17,10 @@
     {
       "table": "states",
       "where": {
-        "column": "VALUE"
+        "column": [
+          "VALUE",
+          "OTHER"
+        ]
       },
       "fields": [
         "register",
@@ -43,6 +46,15 @@
           "value",
           "later",
           "VALUE",
+          "2022-01-01",
+          "2022-12-31",
+          "integer"
+        ],
+        [
+          "sample",
+          "other",
+          "later",
+          "OTHER",
           "2022-01-01",
           "2022-12-31",
           "integer"
