@@ -97,6 +97,12 @@ class FlavorDisposition(_PolicyModel):
     variant_slug: str = Field(min_length=1)
     variant_name: str = Field(min_length=1)
     tables: list[str] | None = None
+    # Exact physical column names. `keep_columns`: Källa-sourced columns the
+    # flavor keeps as the steward's own variables instead of leaving them to the
+    # graft track (a steward table that must stay orderable as one variant).
+    # `sensitive_columns`: flavor variables flagged `is_sensitive`.
+    keep_columns: list[str] = Field(default_factory=list)
+    sensitive_columns: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _tables(self) -> FlavorDisposition:
@@ -109,6 +115,9 @@ class FlavorDisposition(_PolicyModel):
             or len(set(self.tables)) != len(self.tables)
         ):
             raise ValueError("flavor tables must be nonblank and unique")
+        for names in (self.keep_columns, self.sensitive_columns):
+            if any(not name.strip() for name in names) or len(set(names)) != len(names):
+                raise ValueError("flavor column lists must be nonblank and unique")
         return self
 
 
@@ -223,6 +232,19 @@ class SourcePolicy(_PolicyModel):
             (entry.provider, entry.register_key, entry.variant): tuple(entry.tables)
             for entry in self.flavor
             if entry.tables is not None
+        }
+
+    def variant_columns(
+        self,
+    ) -> dict[tuple[str, str, str], tuple[frozenset[str], frozenset[str]]]:
+        """(keep_columns, sensitive_columns) per flavor coordinate."""
+        return {
+            (entry.provider, entry.register_key, entry.variant): (
+                frozenset(entry.keep_columns),
+                frozenset(entry.sensitive_columns),
+            )
+            for entry in self.flavor
+            if entry.keep_columns or entry.sensitive_columns
         }
 
 

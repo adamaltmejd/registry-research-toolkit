@@ -185,6 +185,48 @@ def test_kalla_column_without_a_graft_register_refuses_before_writing(
     assert not (tmp_path / "input_data" / "swecov" / "providers").exists()
 
 
+def test_disposition_column_lists_keep_kalla_columns_and_flag_sensitive(
+    flavor_providers: dict,
+) -> None:
+    """The committed population disposition keeps its Källa=RTB columns as
+    steward variables (its route names no graft) and flags FodelseArMan and
+    FodelseArManDag `is_sensitive`. Fails if `keep_columns` stops overriding the
+    Källa routing or `sensitive_columns` stops reaching the emitted variable
+    (#1302)."""
+    register = next(
+        r for r in flavor_providers["swecov"]["register"] if r["key"] == "population"
+    )
+    sensitive = {
+        v["name"]: v.get("is_sensitive", False)
+        for v in register["variable"]
+        if v["variants"] == ["_default"]
+    }
+
+    assert {"Kon", "AterAnv", "FelPersonNr"} <= sensitive.keys()
+    assert [name for name, flag in sensitive.items() if flag] == [
+        "FodelseArMan",
+        "FodelseArManDag",
+    ]
+
+
+def test_disposition_column_list_naming_an_absent_column_refuses(
+    tmp_path: Path,
+) -> None:
+    """A keep/sensitive name the holding no longer delivers refuses before any
+    provider TOML is written, rather than silently flagging nothing."""
+    enriched = _synthetic_enriched()
+    enriched["RTB/Population"]["columns"] = [
+        c for c in enriched["RTB/Population"]["columns"] if c["name"] != "FodelseArMan"
+    ]
+    with pytest.raises(SystemExit) as refusal:
+        _run_flavor(tmp_path, enriched)
+
+    assert "absent from holding 'RTB/Population': ['FodelseArMan']" in str(
+        refusal.value
+    )
+    assert not (tmp_path / "input_data" / "swecov" / "providers").exists()
+
+
 # --- cmd_flavor: the disposition's register/variant emission -----------------
 
 
