@@ -29832,3 +29832,183 @@ reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-regist
 table = "immigranter_20241231"
 column = "datinv"
 reason = "Interim hold: immigration event date ('Datum för immigration'); no catalog variable is shown to carry the event date (senaste-invandringsdatum is the latest, flergenreg/datinv the earliest immigration); follow-up #1516. Maintainer-decided 2026-10-13 (#1302)."
+
+[[unmap]]
+table = "FE1997"
+column = "Byggnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1997"
+column = "ForandringAvLagerOchPagaendeArbete"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1997"
+column = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1997"
+column = "LangfristigaAktierOchAndelar"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1997"
+column = "OvrigaPersonalkostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1997"
+column = "Utdelning"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1998"
+column = "Byggnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1998"
+column = "ForandringAvLagerOchPagaendeArbete"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1998"
+column = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1998"
+column = "LangfristigaAktierOchAndelar"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1998"
+column = "OvrigaPersonalkostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1998"
+column = "Utdelning"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1999"
+column = "Byggnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1999"
+column = "ForandringAvLagerOchPagaendeArbete"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1999"
+column = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1999"
+column = "LangfristigaAktierOchAndelar"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1999"
+column = "OvrigaPersonalkostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE1999"
+column = "Utdelning"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2000"
+column = "Byggnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2000"
+column = "ForandringAvLagerOchPagaendeArbete"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2000"
+column = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2000"
+column = "LangfristigaAktierOchAndelar"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2000"
+column = "OvrigaPersonalkostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2000"
+column = "Utdelning"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2001"
+column = "Byggnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2001"
+column = "ForandringAvLagerOchPagaendeArbete"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2001"
+column = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2001"
+column = "LangfristigaAktierOchAndelar"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2001"
+column = "OvrigaPersonalkostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2001"
+column = "Utdelning"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2002"
+column = "Byggnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2002"
+column = "ForandringAvLagerOchPagaendeArbete"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2002"
+column = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2002"
+column = "LangfristigaAktierOchAndelar"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2002"
+column = "OvrigaPersonalkostnader"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
+
+[[unmap]]
+table = "FE2002"
+column = "Utdelning"
+reason = "Interim hold: FE 1997-2002 column with no documented counterpart among the Företagsstatistik/FEK variables for these years (the SCB delivery report gives no crosswalk for this item); follow-up #1504. Maintainer-decided 2026-10-13 (#1504 batch)."
