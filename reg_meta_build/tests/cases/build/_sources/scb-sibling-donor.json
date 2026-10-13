@@ -1,0 +1,32 @@
+{
+  "scb": {
+    "registerinformation": [
+      {
+        "colname": "VALUE",
+        "cvid": 101,
+        "var_id": 5,
+        "year": "2022",
+        "regver_id": 2022,
+        "register": [
+          "TEST",
+          1,
+          2
+        ],
+        "data_type": "integer"
+      },
+      {
+        "colname": "EDITION",
+        "cvid": 102,
+        "var_id": 99,
+        "year": "2020",
+        "regver_id": 2020,
+        "register": [
+          "TEST",
+          1,
+          3
+        ],
+        "data_type": "integer"
+      }
+    ]
+  }
+}

@@ -6233,6 +6233,13 @@ def compile_errata(
                 ):
                     blockers = ("ambiguous named version",)
                     converted = None
+                elif (
+                    isinstance(row, ErrataDeliveredEntry)
+                    and row.donor_variant is not None
+                    and not by_variant.get(variant_ids[row.donor_variant])
+                ):
+                    blockers = ("no_documented_column_identity",)
+                    converted = None
                 elif table == "column" and (
                     accepted_names.get(f"{register_id}.{row.column}") is None
                     or accepted_names[f"{register_id}.{row.column}"].entry.slug is None
@@ -6301,10 +6308,23 @@ def compile_errata(
                                 len(owners) > 1 for owners in by_edition.values()
                             ):
                                 component_base_key = base
+                        donor_context = None
+                        if entry.donor_variant_id is not None:
+                            donor_id = entry.donor_variant_id
+                            donor_context = variant_contexts.get(donor_id)
+                            if donor_context is None:
+                                donor_context = ErrataVariantContext(
+                                    by_variant.get(donor_id, ()),
+                                    register_id,
+                                    donor_id,
+                                    bound_editions.get(donor_id, ()),
+                                )
+                                variant_contexts[donor_id] = donor_context
                         result = convert_delivered_entry(
                             entry,
                             case_id=case_id,
                             context=context,
+                            donor_context=donor_context,
                             steward_table_prefixes=register.register_info.steward_table_prefixes,
                             storage_columns=register_storage_columns,
                             preserve_blank_native_base=component_base_key is not None,
@@ -6345,6 +6365,11 @@ def compile_errata(
                     row, ErrataDeliveredEntry
                 ) and row.expected_evidence_sha256 != acknowledgement_evidence_sha256(
                     context.records_for_refs(set(result.evidence_refs))
+                    + (
+                        donor_context.records_for_refs(set(result.evidence_refs))
+                        if donor_context is not None
+                        else ()
+                    )
                 ):
                     statuses["stale"].append(case_id)
                     diagnostics.append(

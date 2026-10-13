@@ -1,0 +1,5 @@
+{
+  "note": "The documented native variable 1.5 owns VALUE on both variants. Target edition 2020 comes from variant 3; identity and integer type come from variant 2. No existing delivered case crosses variants.",
+  "fails_if": "The converter looks up the column on the target, mints a declared-column identity, or retains the donor variant on the addition.",
+  "sources": "scb-sibling-donor"
+}
