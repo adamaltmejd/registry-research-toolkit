@@ -121,3 +121,7 @@ slug = "typ-beslut"  # source: kolumnnamn
 [[variable]]
 native_id = "9011624717046135047.TYP_INBET"
 slug = "typ-inbet"  # source: kolumnnamn
+
+[[variable]]
+native_id = "9011624717046135047.Utbetalningsmanad"
+slug = "utbetalningsmanad"  # source: kolumnnamn
