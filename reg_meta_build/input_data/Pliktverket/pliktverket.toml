@@ -700,6 +700,14 @@ data_type = "integer"
 is_sensitive = true
 data_warning = "The SAFHE section letter is not expanded: no public source documents which interview section each letter denotes."
 
+[[register.variable]]
+name = "Psykologens signatur"
+column = "anvpsyk"
+definition = "Signaturkod för den inskrivningspsykolog som gjorde bedömningen (kort alfanumerisk kod, cirka 200 olika värden 1997-2010). Identifierar bedömaren, inte den mönstrande."
+data_type = "text"
+is_sensitive = true
+data_warning = "Not in the provider's field documentation. The meaning is inferred from the column name and the code pattern (a MONA aggregate count: about 200 distinct short codes); maintainer decision OP-2026-10-13-G."
+
 [[register]]
 key = "insiprov"
 name = "Inskrivningsprov"
