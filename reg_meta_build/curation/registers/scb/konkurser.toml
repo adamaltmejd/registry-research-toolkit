@@ -7,6 +7,170 @@ native_id = "167"
 # `holdings_period` ranges; each entry preserves its delivery source in
 # `evidence`, and holdings lists do not supply a source data type.
 
+# #1502: SCB's Registerinformation export documents konkurser-offentliga-ackord
+# through 2021 only (raw versions 1996-2021); SWECOV holds Konkurs_2022..2024
+# with the 2021 column set. The versions are named in the variant's YYYY
+# convention and the documented columns are cloned from 2021 (maintainer-decided
+# 2026-10-13, Operator batch on #1502/#1504).
+
+[[errata.version]]
+variant = "konkurser-offentliga-ackord"
+name = "2022"
+evidence = "SWECOV holds Konkurs_2022 for edition 2022; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024 rows 18210-18219 describe Konkurs_2022 with the same columns and types as Konkurs_2021."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "konkurser-offentliga-ackord"
+name = "2023"
+evidence = "SWECOV holds Konkurs_2023 for edition 2023; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord rows 5-14 list the Konkurs_ÅÅÅÅ columns for 2023-2024; that list is a draft."
+noted = "2026-10-13"
+
+[[errata.version]]
+variant = "konkurser-offentliga-ackord"
+name = "2024"
+evidence = "SWECOV holds Konkurs_2024 for edition 2024; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord rows 5-14 list the Konkurs_ÅÅÅÅ columns for 2023-2024; that list is a draft."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "opnr"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "636220c74e848206a3b81fc74c5c802a0ecc5c9ed7eee44a284af10255ce9afa"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18210, documents opnr in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 6, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "beslutstid"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "2cdfdaed49128155b7b8c434d3bc851c3518254fda627aee3047129f687a3ed7"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18212, documents beslutstid in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 7, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "lan"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "a5f3f3f2ea3f80bc69bdcc1d3e6b344062c82b012e6640966d26c180347729a3"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18213, documents lan in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 8, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "kommun"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "17dac4354eaad977138dea0d02d35a10c7f7d89d47d30d8548f3aae6bd96c8c9"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18214, documents kommun in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 9, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). Coded as in 2021."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "obtyp"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "35c3bb3271de787ab599d0ff05699b319f4f9fe76e89c6b5e9c612a4925f207c"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18215, documents obtyp in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 10, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "fform"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "595268827b78ac0a5d35b1015c9eb920c0b06668494ec7f736ea954ba38dc9b1"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18216, documents fform in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 11, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "bransch"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "8022c96361fc6963af5e7d0e5c69039a50b4ccdc29a0aef1d867a2147503837c"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18217, documents bransch in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 12, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021). The list's 'SNI2002' text is stale: SCB documents bransch as SNI2007 (VarId 18011) in every version 2009-2021, so the clone keeps SNI2007."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "anst"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "e3a7bafecd03a5ed94d2a57fb20f29414e4527989e22bf0d598c7aabc3932b5c"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18218, documents anst in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 13, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "konkurser-offentliga-ackord"
+column = "startar"
+versions = ["2022", "2023", "2024"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "42207a19d1001076b08dacdabc6bb62fad10e20e756f292c5883b03a8e53f4ab"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024, row 18219, documents startar in Konkurs_2022 with the same type as Konkurs_2021; Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord, row 14, lists it for 2023-2024 (source Konk.OffAck, view Konkurs_ÅÅÅÅ); that list is a draft. SCB documents the column through 2021 (clone source: 2021)."
+noted = "2026-10-13"
+
+# #1502: the 2022-2024 versions carry no own code lists; each coded column continues
+# its 2021 list (maintainer-decided 2026-10-13: kommun/lan inherit the 2021
+# coding, bransch keeps SNI2007).
+
+[[coding.extend]]
+variable = "167.36"
+variant = "167.240"
+column = "kommun"
+periods = [["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"]]
+list = "2021-01-01/ Län, kommuner och församlingar"
+witness = ["2021-01-01", "2021-12-31"]
+reason = "The 2022-2024 versions are errata-added clones of 2021 (no SCB Registerinformation rows); continue the 290-code municipality list supplied for 2021 over 2022-2024 only. Original yearly lists and labels are unchanged."
+source = "SCB Registerinformation, register 167 variant 240, kommun 2021: complete own list '2021-01-01/ Län, kommuner och församlingar'. Delivery evidence: Bilaga 1 Leveransrapport uppd 2023-2024 (Konkurs_2022) and Utkast_P1105_Variabellista_uppd2025_v5.xlsx (2023-2024, draft)."
+data_warning = "The 2022-2024 coding continues the 2021 code list; SCB has not published code lists for these years."
+
+[[coding.extend]]
+variable = "167.49"
+variant = "167.240"
+column = "lan"
+periods = [["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"]]
+list = "2021-01-01/ Län, kommuner och församlingar"
+witness = ["2021-01-01", "2021-12-31"]
+reason = "The 2022-2024 versions are errata-added clones of 2021 (no SCB Registerinformation rows); continue the 21-code county list supplied for 2021 over 2022-2024 only. Original yearly lists and labels are unchanged."
+source = "SCB Registerinformation, register 167 variant 240, lan 2021: complete own list '2021-01-01/ Län, kommuner och församlingar'. Delivery evidence: Bilaga 1 Leveransrapport uppd 2023-2024 (Konkurs_2022) and Utkast_P1105_Variabellista_uppd2025_v5.xlsx (2023-2024, draft)."
+data_warning = "The 2022-2024 coding continues the 2021 code list; SCB has not published code lists for these years."
+
+[[coding.extend]]
+variable = "167.18011"
+variant = "167.240"
+column = "bransch"
+periods = [["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"]]
+list = "SNI 2007, Branscher, alternativ"
+witness = ["2021-01-01", "2021-12-31"]
+reason = "The 2022-2024 versions are errata-added clones of 2021 (no SCB Registerinformation rows); continue the 823-code SNI2007 list (the delivery list's 'SNI2002' text is stale; SCB documents bransch as SNI2007 in every version 2009-2021) supplied for 2021 over 2022-2024 only. Original yearly lists and labels are unchanged."
+source = "SCB Registerinformation, register 167 variant 240, bransch 2021: complete own list 'SNI 2007, Branscher, alternativ'. Delivery evidence: Bilaga 1 Leveransrapport uppd 2023-2024 (Konkurs_2022) and Utkast_P1105_Variabellista_uppd2025_v5.xlsx (2023-2024, draft)."
+data_warning = "The 2022-2024 coding continues the 2021 code list; SCB has not published code lists for these years."
+
+[[coding.extend]]
+variable = "167.34"
+variant = "167.240"
+column = "fform"
+periods = [["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"]]
+list = "fform"
+witness = ["2021-01-01", "2021-12-31"]
+reason = "The 2022-2024 versions are errata-added clones of 2021 (no SCB Registerinformation rows); continue the 5-code legal-form list supplied for 2021 over 2022-2024 only. Original yearly lists and labels are unchanged."
+source = "SCB Registerinformation, register 167 variant 240, fform 2021: complete own list 'fform'. Delivery evidence: Bilaga 1 Leveransrapport uppd 2023-2024 (Konkurs_2022) and Utkast_P1105_Variabellista_uppd2025_v5.xlsx (2023-2024, draft)."
+data_warning = "The 2022-2024 coding continues the 2021 code list; SCB has not published code lists for these years."
+
+[[coding.extend]]
+variable = "167.21549"
+variant = "167.240"
+column = "obtyp"
+periods = [["2022-01-01", "2022-12-31"], ["2023-01-01", "2023-12-31"], ["2024-01-01", "2024-12-31"]]
+list = "Objekttyp2"
+witness = ["2021-01-01", "2021-12-31"]
+reason = "The 2022-2024 versions are errata-added clones of 2021 (no SCB Registerinformation rows); continue the 2-code bankruptcy/composition list supplied for 2021 over 2022-2024 only. Original yearly lists and labels are unchanged."
+source = "SCB Registerinformation, register 167 variant 240, obtyp 2021: complete own list 'Objekttyp2'. Delivery evidence: Bilaga 1 Leveransrapport uppd 2023-2024 (Konkurs_2022) and Utkast_P1105_Variabellista_uppd2025_v5.xlsx (2023-2024, draft)."
+data_warning = "The 2022-2024 coding continues the 2021 code list; SCB has not published code lists for these years."
+
 [[errata.column]]
 variant = "konkurser-offentliga-ackord"
 column = "tidning"
