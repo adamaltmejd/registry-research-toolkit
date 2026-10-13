@@ -18566,17 +18566,7 @@ reason = "Delivered column with no catalog codebook entry for this survey year; 
 
 [[unmap]]
 table = "FTG_FOU_2005"
-column = "V201"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "FTG_FOU_2005"
 column = "VIKT"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "FTG_FOU_2007"
-column = "V201"
 reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
 
 [[unmap]]
@@ -18586,22 +18576,7 @@ reason = "Delivered column with no catalog codebook entry for this survey year; 
 
 [[unmap]]
 table = "FTG_FOU_2009"
-column = "V201"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "FTG_FOU_2009"
 column = "VIKT"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "FTG_FOU_2011"
-column = "Vikt"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "FTG_FOU_2011"
-column = "v201"
 reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
 
 [[unmap]]
@@ -18610,31 +18585,11 @@ column = "Vikt"
 reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
 
 [[unmap]]
-table = "FTG_FOU_2013"
-column = "Vikt"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "FTG_FOU_2013"
-column = "v201"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
 table = "FTG_FOU_2014"
 column = "Vikt"
 reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
 
 [[unmap]]
-table = "FTG_FOU_2015"
-column = "Vikt"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "FTG_FOU_2015"
-column = "v201"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
 table = "FTG_FOU_2017"
 column = "Vikt"
 reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
@@ -18660,11 +18615,6 @@ column = "TYPE_SECT"
 reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
 
 [[unmap]]
-table = "FTG_FOU_2019"
-column = "WEIGHT"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
 table = "FTG_FOU_2021"
 column = "SIZE_CLASS"
 reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
@@ -18677,26 +18627,6 @@ reason = "Delivered column with no catalog codebook entry for this survey year; 
 [[unmap]]
 table = "FTG_FOU_2021"
 column = "TYPE_SECT"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "FTG_FOU_2021"
-column = "WEIGHT"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "ITftg_2008"
-column = "IGOV"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "ITftg_2009"
-column = "IGOV"
-reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
-
-[[unmap]]
-table = "ITftg_2010"
-column = "IGOV"
 reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)."
 
 # ── DECIDED (maintainer 2026-10-12, #1302 round 3): SOS PAR kva_typN is a wide
@@ -26848,3 +26778,738 @@ reason = "Recipient key of both assigned assistansersättning variants, split at
 table = "FK_ASE_lev4"
 column = "ERS_MANAD"
 reason = "Payment month (ar-manad) of both assigned assistansersättning variants, split at 2018-10; neither variant alone covers the 2015-2024 edition and union coverage is not supported yet (#1555). Maintainer-decided 2026-10-13 (#1302)."
+
+# DECIDED 2026-10-13 (maintainer, #1505 G2): AGI 2021-2023 ULAG spellings onto the UL_AG
+# variables #1560 delivers for those years, as the 2019-2020 tables above.
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202101_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-01"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202101_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-01"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202102_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-02"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202102_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-02"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202103_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-03"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202103_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-03"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202104_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-04"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202104_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-04"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202105_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-05"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202105_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-05"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202106_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-06"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202106_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-06"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202107_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-07"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202107_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-07"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202108_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-08"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202108_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-08"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202109_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-09"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202109_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-09"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202110_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-10"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202110_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-10"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202111_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-11"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202111_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-11"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202112_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2021-12"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202112_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2021-12"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202201_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-01"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202201_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-01"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202202_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-02"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202202_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-02"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202203_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-03"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202203_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-03"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202204_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-04"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202204_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-04"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202205_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-05"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202205_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-05"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202206_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-06"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202206_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-06"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202207_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-07"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202207_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-07"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202208_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-08"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202208_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-08"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202209_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-09"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202209_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-09"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202210_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-10"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202210_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-10"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202211_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-11"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202211_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-11"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202212_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2022-12"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202212_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2022-12"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202301_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-01"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202301_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-01"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202302_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-02"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202302_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-02"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202303_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-03"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202303_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-03"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202304_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-04"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202304_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-04"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202305_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-05"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202305_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-05"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202306_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-06"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202306_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-06"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202307_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-07"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202307_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-07"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202308_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-08"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202308_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-08"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202309_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-09"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202309_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-09"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202310_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-10"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202310_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-10"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202311_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-11"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202311_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-11"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ag"
+representation = "BOSTADSF_SMAHUS_UL_AG_AG"
+table = "Arb_AGIIndivid202312_Def"
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+edition = "2023-12"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/agi/individuppgifter-agi"
+variable = "scb/agi/bostadsf-smahus-ul-ag-ea"
+representation = "BOSTADSF_SMAHUS_UL_AG_EA"
+table = "Arb_AGIIndivid202312_Def"
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+edition = "2023-12"
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+# DECIDED 2026-10-13 (maintainer, #1509 G1): FoU storage spellings onto the #1560 errata
+# variables (errata.delivered storage_column V201 / v201 / Vikt).
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/v0201"
+representation = "v0201"
+table = "FTG_FOU_2005"
+column = "V201"
+edition = 2005
+reason = "SWECOV storage spelling V201 of the catalog variable scb/fou/v0201 (delivery column v0201); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/v0201"
+representation = "v0201"
+table = "FTG_FOU_2007"
+column = "V201"
+edition = 2007
+reason = "SWECOV storage spelling V201 of the catalog variable scb/fou/v0201 (delivery column v0201); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/v0201"
+representation = "v0201"
+table = "FTG_FOU_2009"
+column = "V201"
+edition = 2009
+reason = "SWECOV storage spelling V201 of the catalog variable scb/fou/v0201 (delivery column v0201); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/v0201"
+representation = "v0201"
+table = "FTG_FOU_2011"
+column = "v201"
+edition = 2011
+reason = "SWECOV storage spelling v201 of the catalog variable scb/fou/v0201 (delivery column v0201); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/v0201"
+representation = "v0201"
+table = "FTG_FOU_2013"
+column = "v201"
+edition = 2013
+reason = "SWECOV storage spelling v201 of the catalog variable scb/fou/v0201 (delivery column v0201); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/v0201"
+representation = "v0201"
+table = "FTG_FOU_2015"
+column = "v201"
+edition = 2015
+reason = "SWECOV storage spelling v201 of the catalog variable scb/fou/v0201 (delivery column v0201); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/viktrev"
+representation = "ViktRev"
+table = "FTG_FOU_2011"
+column = "Vikt"
+edition = 2011
+reason = "SWECOV storage spelling Vikt of the catalog variable scb/fou/viktrev (delivery column ViktRev); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/viktrev"
+representation = "ViktRev"
+table = "FTG_FOU_2013"
+column = "Vikt"
+edition = 2013
+reason = "SWECOV storage spelling Vikt of the catalog variable scb/fou/viktrev (delivery column ViktRev); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+
+[[mapping]]
+register_variant = "scb/fou/foretagssektorn"
+variable = "scb/fou/viktrev"
+representation = "ViktRev"
+table = "FTG_FOU_2015"
+column = "Vikt"
+edition = 2015
+reason = "SWECOV storage spelling Vikt of the catalog variable scb/fou/viktrev (delivery column ViktRev); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
