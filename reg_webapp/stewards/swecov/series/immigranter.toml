@@ -7,7 +7,3 @@ variants = ["scb/rtb/invandringar"]
 [[table]]
 table = "immigranter_20241231"
 edition = { from = 1990, to = 2024 }
-
-[[column]]
-column = "datinv"
-hold = { follow_up = "#1516", reason = "Interim hold: immigration event date ('Datum för immigration'); no catalog variable is shown to carry the event date (senaste-invandringsdatum is the latest, flergenreg/datinv the earliest immigration); follow-up #1516. Maintainer-decided 2026-10-13 (#1302)." }

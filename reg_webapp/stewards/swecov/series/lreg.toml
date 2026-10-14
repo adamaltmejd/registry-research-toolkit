@@ -695,11 +695,6 @@ tables = ["LReg_2016"]
 unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2016 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
 
 [[column]]
-column = "PrTjledig"
-tables = ["LReg_1999", "LReg_2000", "LReg_2001", "LReg_2002", "LReg_2003", "LReg_2004", "LReg_2005", "LReg_2006", "LReg_2007", "LReg_2008", "LReg_2009", "LReg_2010", "LReg_2011", "LReg_2012", "LReg_2013", "LReg_2014", "LReg_2015", "LReg_2016", "LReg_2017", "LReg_2018", "LReg_2019", "LReg_2020", "LReg_2021", "LReg_2022"]
-hold = { follow_up = "#1516", reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)." }
-
-[[column]]
 column = "SFITyp"
 tables = ["LReg_1999"]
 unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
