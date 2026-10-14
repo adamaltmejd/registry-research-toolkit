@@ -11,6 +11,7 @@ worklist. Curation, not this check, decides what changes.
 from __future__ import annotations
 
 import csv
+import io
 import re
 from collections import defaultdict
 from dataclasses import dataclass
@@ -100,9 +101,22 @@ def read_storage_types(path: Path) -> dict[tuple[str, str], str]:
 
     A missing or unreadable export is a `StorageSchemaError`: the check never
     skips (#1594)."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        reason = exc.strerror if isinstance(exc, OSError) else str(exc)
+        raise StorageSchemaError(
+            f"storage-schema export {path} is unreadable ({reason}); pass the "
+            "steward's information_schema column export as --storage-csv"
+        ) from exc
+    return parse_storage_types(text, str(path))
+
+
+def parse_storage_types(text: str, path: str) -> dict[tuple[str, str], str]:
+    """`read_storage_types` over already-read export text; `path` names it in errors."""
     result: dict[tuple[str, str], str] = {}
     try:
-        with path.open(encoding="utf-8", newline="") as handle:
+        with io.StringIO(text, newline="") as handle:
             rows = csv.reader(handle, strict=True)
             if tuple(next(rows)) != _HEADER:
                 raise StorageSchemaError(f"invalid storage-schema header in {path}")
@@ -133,11 +147,6 @@ def read_storage_types(path: Path) -> dict[tuple[str, str], str]:
                         f"{path} row {row_number} repeats table and folded column {key!r}"
                     )
                 result[key] = values["data_type"]
-    except OSError as exc:
-        raise StorageSchemaError(
-            f"storage-schema export {path} is unreadable ({exc.strerror}); pass the "
-            "steward's information_schema column export as --storage-csv"
-        ) from exc
     except (UnicodeDecodeError, csv.Error, StopIteration) as exc:
         raise StorageSchemaError(
             f"invalid storage-schema export {path}: {exc}"

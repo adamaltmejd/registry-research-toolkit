@@ -424,7 +424,7 @@ def extend_db(
 
         accounting = None
         if holdings_input is not None:
-            inventory = load_inventory(holdings_input / "policy/inventory.toml")
+            inventory = load_inventory(holdings_input / INVENTORY_ROLE_PATH)
             if inventory.steward != steward:
                 raise ValueError(
                     "Accepted inventory steward does not match selected steward"
@@ -624,7 +624,7 @@ def read_private_holdings_input(
     """Verify accepted input and optionally materialize its committed bytes for a build."""
     from ._accepted_prepared import read_accepted_manifest
     from .input_snapshot import _git, _git_bytes, _index_tags
-    from .steward_storage import StorageSchemaError, read_storage_types
+    from .steward_storage import StorageSchemaError, parse_storage_types
 
     if materialize_to is not None and (
         not materialize_to.is_dir() or any(materialize_to.iterdir())
@@ -704,15 +704,16 @@ def read_private_holdings_input(
             "Private input manifest roles must name distinct members: "
             + ", ".join(f"{role} = {roles[role]}" for role in CANDIDATE_ROLES)
         )
-    storage_export = selection.root / roles["storage_export"]
+    # Parse the accepted blob the loop above verified, never the working tree again.
+    member = (Path(selection.relative) / roles["storage_export"]).as_posix()
+    committed = _git_bytes(
+        selection.repository, "cat-file", "blob", f"{input_commit}:{member}"
+    )
     try:
-        read_storage_types(storage_export)
-    except StorageSchemaError as exc:
-        # Name the member candidate-relative, never by the checkout's path.
-        reason = str(exc).replace(str(storage_export), roles["storage_export"])
+        parse_storage_types(committed.decode("utf-8"), roles["storage_export"])
+    except (UnicodeDecodeError, StorageSchemaError) as exc:
         raise ValueError(
-            "Private input storage_export role is not a storage-schema export: "
-            + reason
+            f"Private input storage_export role is not a storage-schema export: {exc}"
         ) from None
     if not any(
         name.startswith("providers/") and name.endswith(".toml") for name in proofs

@@ -147,3 +147,31 @@ def test_table_in_a_series_and_a_scope_exclusion_is_refused(tmp_path: Path) -> N
         "T2019": ["series/prover.toml"],
         "T2020": ["series/prover.toml"],
     }
+
+
+@pytest.mark.parametrize(
+    ("decision", "admitted"),
+    [
+        ('unmap = "No catalog owner."', True),
+        ('hold = { follow_up = "#1603", reason = "No catalog owner yet." }', False),
+    ],
+)
+def test_only_an_all_unmap_series_may_omit_its_register(
+    tmp_path: Path, decision: str, admitted: bool
+) -> None:
+    """A series declares its register; only tables with no catalog owner, every
+    column unmapped, may omit it. A hold there is refused, located at the column.
+    Fails if a series without a register accepts a decision other than unmap."""
+    body = (
+        'id = "barn"\n\n[[table]]\ntable = "T2020"\nedition = 2020\n\n'
+        f'[[column]]\ncolumn = "Kol"\n{decision}\n'
+    )
+    spec_dir = _spec(tmp_path, {"barn": body})
+    if admitted:
+        (series,) = load_steward_spec(spec_dir).series
+        assert series.register_coord is None
+        return
+    with pytest.raises(RegMetaError) as refused:
+        load_steward_spec(spec_dir)
+    assert refused.value.code == SERIES_REGISTER_MISMATCH
+    assert "column[1] (Kol)" in refused.value.message

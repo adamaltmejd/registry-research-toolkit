@@ -2343,13 +2343,15 @@ A steward's delivery decisions are authored as `stewards/<id>/scope.toml` plus o
 is one register's tables across years: it names the register, the variants its tables
 deliver, each member table's explicit edition (or year-independent scope and partition),
 how a bare-year edition is spelled (`edition_spelling`: annual, or a school-year anchor)
-and its curated column decisions. Membership is the only grouping authority; nothing
-groups tables by name. A column decision selects whole member tables and is exactly one
-of a reviewed mapping, a permanent `unmap`, an interim `hold` (its `follow_up` must
-parse as an issue reference; the build never reads the issue), a `storage_header` or a
-`graft_onto`. The scope holds the census guard (`census_sha256`), the lookup, exclude
-and retain-unknown dispositions, census-holding routes for the enrichment stages and the
-steward-owned flavor registers.
+and its curated column decisions. Only a series whose every column decision is an
+`unmap` (tables with no catalog owner) may omit the register; any mapping, hold,
+`storage_header` or `graft_onto` refuses without one. Membership is the only grouping
+authority; nothing groups tables by name. A column decision selects whole member tables
+and is exactly one of a reviewed mapping, a permanent `unmap`, an interim `hold` (its
+`follow_up` must parse as an issue reference; the build never reads the issue), a
+`storage_header` or a `graft_onto`. The scope holds the census guard (`census_sha256`),
+the lookup, exclude and retain-unknown dispositions, census-holding routes for the
+enrichment stages and the steward-owned flavor registers.
 
 A series boundary is a documented break in the source (a changed population frame, unit
 or subject key, cited in a comment at the top of each split series file), never a change

@@ -171,6 +171,29 @@ def test_an_unknown_edition_spelling_is_refused(
     assert refused.value.code == "steward_spec_invalid"
 
 
+def test_a_stage_refuses_a_census_table_the_spec_does_not_dispose_of(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """Every stage that reads the spec against a census holds it to the
+    one-disposition rule, not only `inventory`: `ground` here. Fails if a stage
+    loads the spec unchecked, which quietly gives the undisposed table no
+    admissible variant. Its twin, a census whose every table is a series
+    member, is every passing `run_inventory` case."""
+    csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
+    csv_path.write_text(
+        "Category,Detail,Table\n"
+        "Inera/1177,Ordered tests,T2012,T_kolumn\n"
+        "Inera/1177,Ordered tests,T2013,T_kolumn\n",
+        encoding="utf-8",
+    )
+    spec = write_spec(tmp_path / "steward", csv_path, {"s": one_table_series("T2012")})
+    with pytest.raises(RegMetaError, match="T2013") as refused:
+        build_catalog.cmd_ground(
+            argparse.Namespace(csv=csv_path, spec=spec, db=flavored_db)
+        )
+    assert refused.value.code == "steward_table_disposition_invalid"
+
+
 # --- cmd_inventory: scope dispositions ---------------------------------------
 
 

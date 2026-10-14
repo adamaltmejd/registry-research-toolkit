@@ -808,7 +808,7 @@ def lookup_doc(
 def cmd_enrich(args: argparse.Namespace) -> None:
     base = args.csv.parent
     holdings = parse_inventory(args.csv)
-    spec = load_steward_spec(args.spec)
+    spec = _checked_spec(args, holdings)
     print("extracting documentation sources:", file=sys.stderr)
     index = build_doc_index(base)
 
@@ -2251,11 +2251,24 @@ def _mapping_db(
     return Path(result["db_path"])
 
 
+def _checked_spec(args: argparse.Namespace, holdings: dict) -> StewardSpec:
+    """The spec at `args.spec`, held to the census at `args.csv`.
+
+    The stages that take their decisions from the census (`ground`, `enrich`,
+    `inventory`) run the census guard and the one-disposition rule here, so an
+    unseriesed table refuses instead of quietly getting no admissible variant.
+    `globals`, `grafts` and `flavor` read `enrich`'s output, already held."""
+    spec = load_steward_spec(args.spec)
+    tables = {table for h in holdings.values() for table in h.table_columns}
+    check_census(spec, args.csv, tables)
+    return spec
+
+
 def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
     """`inventory`'s emitter over an already-built mapping DB: `args.csv`,
     `args.spec` and `args.out`. Returns the loaded spec."""
-    spec = load_steward_spec(args.spec)
     holdings = parse_inventory(args.csv)
+    spec = _checked_spec(args, holdings)
     steward_dir = args.out
     steward_dir.mkdir(parents=True, exist_ok=True)
     # A table may appear under several (Category, Detail) keys; its columns merge.
@@ -2263,7 +2276,6 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
     for h in holdings.values():
         for table, cols in h.table_columns.items():
             census.setdefault(table, set()).update(cols)
-    check_census(spec, args.csv, set(census))
     by_regcol = _steward_load_db(db)
     representative = _representative_spelling(db)
     # coord -> {UPPER(col): [(coord, vslug, canonical col)]} narrowed per lookup.
@@ -2650,7 +2662,7 @@ def cmd_normalize(args: argparse.Namespace) -> None:
 def cmd_ground(args: argparse.Namespace) -> None:
     holdings = parse_inventory(args.csv)
     index = load_variant_index(args.db)
-    non_catalog = load_steward_spec(args.spec).scope.non_catalog_categories
+    non_catalog = _checked_spec(args, holdings).scope.non_catalog_categories
     print(f"{len(holdings)} (Category, Detail) pairs; {len(index)} catalog variants\n")
     for universe, label in (
         (True, "IN-UNIVERSE (SCB/SOS)"),

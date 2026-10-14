@@ -1541,6 +1541,8 @@ def _cmd_verify_input_bundle(
 
 
 def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .holdings_accounting import INVENTORY_ROLE_PATH
+
     start = time.perf_counter()
     if not (args.holdings_input and args.input_commit and args.input_manifest_sha256):
         raise RegMetaError(
@@ -1552,7 +1554,7 @@ def _cmd_extend_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         )
     candidate = Path(args.holdings_input).expanduser().resolve()
     providers_dir = candidate / "providers"
-    inventory_path = candidate / "policy/inventory.toml"
+    inventory_path = candidate / INVENTORY_ROLE_PATH
     try:
         result = extend_db(
             base_db=Path(args.base_db),

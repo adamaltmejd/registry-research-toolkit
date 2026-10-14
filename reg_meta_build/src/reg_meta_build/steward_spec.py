@@ -461,9 +461,9 @@ class SeriesColumn(_SpecModel):
 
 class Series(_SpecModel):
     id: str
-    # Required whenever the series admits a variant. A series of tables with no
-    # catalog owner (every column unmapped or held) names none, since no
-    # register is established for it.
+    # Required unless every column decision is an unmap: a series of tables with
+    # no catalog owner names none, since no register is established for it
+    # (`_check_series` refuses any other decision without one).
     register_coord: RegisterCoordinate | None = Field(default=None, alias="register")
     variants: list[VariantCoordinate] = Field(default_factory=list)
     edition_spelling: EditionSpelling = "annual"
@@ -624,6 +624,12 @@ def _check_series(path: Path, series: Series) -> None:
     grafts: dict[str, int] = {}
     for index, entry in enumerate(series.columns, 1):
         where = f"{path}: series {series.id!r} column[{index}] ({entry.column})"
+        if series.register_coord is None and entry.unmap is None:
+            raise _spec_error(
+                SERIES_REGISTER_MISMATCH,
+                f"{where}: only an unmap needs no series register; declare the "
+                "series `register` for a mapping, hold, storage_header or graft_onto",
+            )
         outside = sorted(set(entry.tables or ()) - set(every))
         if outside:
             raise _spec_error(
