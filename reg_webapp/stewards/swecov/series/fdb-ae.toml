@@ -1,0 +1,97 @@
+id = "fdb-ae"
+register = "scb/fdb"
+variants = ["scb/fdb/arbetsstalleenheter"]
+
+# route note: stem:FDB_AE_: incl. _Ng_ näringsgren extras
+
+[[table]]
+table = "FDB_AE_2015"
+edition = 2015
+
+[[table]]
+table = "FDB_AE_2016"
+edition = 2016
+
+[[table]]
+table = "FDB_AE_2017"
+edition = 2017
+
+[[table]]
+table = "FDB_AE_2018"
+edition = 2018
+
+[[table]]
+table = "FDB_AE_2019"
+edition = 2019
+
+[[table]]
+table = "FDB_AE_2020"
+edition = 2020
+
+[[table]]
+table = "FDB_AE_2021"
+edition = 2021
+
+[[table]]
+table = "FDB_AE_2022"
+edition = 2022
+
+[[table]]
+table = "FDB_AE_2023"
+edition = 2023
+
+[[table]]
+table = "FDB_AE_2024"
+edition = 2024
+
+[[column]]
+column = "AdmStatSlutDatKtid"
+tables = ["FDB_AE_2023", "FDB_AE_2024"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/avregdatktid", representation = "avregdatktid" }]
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fdb/avregdatktid (delivery column avregdatktid); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "AdmStatStartDatKtid"
+tables = ["FDB_AE_2023", "FDB_AE_2024"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/regdatktid", representation = "regdatktid" }]
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/fdb/regdatktid (delivery column regdatktid); catalog errata #1514, maintainer-decided 2026-10-12 (#1302)."
+
+[[column]]
+column = "Kommun"
+tables = ["FDB_AE_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["FDB_AE_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["FDB_AE_2021"]
+unmap = "Retained physical field for edition 2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["FDB_AE_2022"]
+unmap = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "aestat"
+tables = ["FDB_AE_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "aestat"
+tables = ["FDB_AE_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "aestat"
+tables = ["FDB_AE_2021"]
+unmap = "Retained physical field for edition 2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "aestat"
+tables = ["FDB_AE_2022"]
+unmap = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

@@ -1,0 +1,7 @@
+id = "scrcr-id2759-rot"
+register = "scrcr/kolorektalcancer"
+variants = ["scrcr/kolorektalcancer/_default"]
+
+[[table]]
+table = "SCRCR_id2759_rot"
+edition = { from = 2019, to = 2023 }

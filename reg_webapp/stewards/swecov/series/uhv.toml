@@ -1,0 +1,284 @@
+id = "uhv"
+register = "scb/utrikeshandel"
+variants = ["scb/utrikeshandel/varu-landfordelat-intrastat"]
+
+# route note: exact tie with landfordelad-extrastat; SWECOV UHV is the combined flow — needs sign-off
+
+[[table]]
+table = "UHV_1997"
+edition = 1997
+
+[[table]]
+table = "UHV_1998"
+edition = 1998
+
+[[table]]
+table = "UHV_1999"
+edition = 1999
+
+[[table]]
+table = "UHV_2000"
+edition = 2000
+
+[[table]]
+table = "UHV_2001"
+edition = 2001
+
+[[table]]
+table = "UHV_2002"
+edition = 2002
+
+[[table]]
+table = "UHV_2003"
+edition = 2003
+
+[[table]]
+table = "UHV_2004"
+edition = 2004
+
+[[table]]
+table = "UHV_2005"
+edition = 2005
+
+[[table]]
+table = "UHV_2006"
+edition = 2006
+
+[[table]]
+table = "UHV_2007"
+edition = 2007
+
+[[table]]
+table = "UHV_2008"
+edition = 2008
+
+[[table]]
+table = "UHV_2009"
+edition = 2009
+
+[[table]]
+table = "UHV_2010"
+edition = 2010
+
+[[table]]
+table = "UHV_2011"
+edition = 2011
+
+[[table]]
+table = "UHV_2012"
+edition = 2012
+
+[[table]]
+table = "UHV_2013"
+edition = 2013
+
+[[table]]
+table = "UHV_2014"
+edition = 2014
+
+[[table]]
+table = "UHV_2015"
+edition = 2015
+
+[[table]]
+table = "UHV_2016"
+edition = 2016
+
+[[table]]
+table = "UHV_2017"
+edition = 2017
+
+[[table]]
+table = "UHV_2018"
+edition = 2018
+
+[[table]]
+table = "UHV_2019"
+edition = 2019
+
+[[table]]
+table = "UHV_2020"
+edition = 2020
+
+[[table]]
+table = "UHV_2021"
+edition = 2021
+
+[[table]]
+table = "UHV_2022"
+edition = 2022
+
+[[table]]
+table = "UHV_2023"
+edition = 2023
+
+[[column]]
+column = "InfUtf"
+tables = ["UHV_1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "InfUtf"
+tables = ["UHV_1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Landskod"
+tables = ["UHV_1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Landskod"
+tables = ["UHV_1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PeOrgnr"
+tables = ["UHV_1997"]
+hold = { follow_up = "#1496", reason = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json. Maintainer-decided 2026-10-13 (#1302): the utrikeshandel person-orgnr starts 1999; follow-up #1496." }
+
+[[column]]
+column = "P1105_Lopnr_PeOrgnr"
+tables = ["UHV_1998"]
+hold = { follow_up = "#1496", reason = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json. Maintainer-decided 2026-10-13 (#1302): the utrikeshandel person-orgnr starts 1999; follow-up #1496." }
+
+[[column]]
+column = "P1105_Lopnr_PeOrgnr"
+tables = ["UHV_1999", "UHV_2000", "UHV_2001", "UHV_2002", "UHV_2003", "UHV_2004", "UHV_2005", "UHV_2006", "UHV_2007", "UHV_2008", "UHV_2009", "UHV_2010", "UHV_2011", "UHV_2012", "UHV_2013", "UHV_2014", "UHV_2015", "UHV_2016", "UHV_2017", "UHV_2018", "UHV_2019", "UHV_2020", "UHV_2021", "UHV_2022", "UHV_2023"]
+mappings = [{ register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat", variable = "scb/utrikeshandel/person-orgnr", representation = "Orgnr" }]
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "SITC5"
+tables = ["UHV_1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SITC5"
+tables = ["UHV_1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SITC5"
+tables = ["UHV_1999"]
+unmap = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SITC5"
+tables = ["UHV_2000"]
+unmap = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SITC5"
+tables = ["UHV_2001"]
+unmap = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SITC5"
+tables = ["UHV_2002"]
+unmap = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SITC5"
+tables = ["UHV_2003"]
+unmap = "Retained physical field for edition 2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SITC5"
+tables = ["UHV_2004"]
+unmap = "Retained physical field for edition 2004; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2007"
+tables = ["UHV_2000"]
+unmap = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2007"
+tables = ["UHV_2001"]
+unmap = "Retained physical field for edition 2001; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2007"
+tables = ["UHV_2002"]
+unmap = "Retained physical field for edition 2002; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2007"
+tables = ["UHV_2003"]
+unmap = "Retained physical field for edition 2003; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2007"
+tables = ["UHV_2004"]
+unmap = "Retained physical field for edition 2004; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2015"
+tables = ["UHV_2010"]
+unmap = "Retained physical field for edition 2010; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2015"
+tables = ["UHV_2011"]
+unmap = "Retained physical field for edition 2011; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2015"
+tables = ["UHV_2012"]
+unmap = "Retained physical field for edition 2012; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2015"
+tables = ["UHV_2013"]
+unmap = "Retained physical field for edition 2013; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2015"
+tables = ["UHV_2014"]
+unmap = "Retained physical field for edition 2014; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2015"
+tables = ["UHV_2015"]
+unmap = "Retained physical field for edition 2015; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SPIN2015"
+tables = ["UHV_2016"]
+unmap = "Retained physical field for edition 2016; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "annankvant"
+tables = ["UHV_1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "annankvant"
+tables = ["UHV_1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "varde"
+tables = ["UHV_1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "varde"
+tables = ["UHV_1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "varde"
+tables = ["UHV_2011", "UHV_2012", "UHV_2013", "UHV_2014", "UHV_2015", "UHV_2016", "UHV_2017", "UHV_2018", "UHV_2019", "UHV_2020", "UHV_2021", "UHV_2022", "UHV_2023"]
+unmap = "The accepted Intrastat export assigns Varde to native19318 (invoiced value) and19317 (statistical value including freight/insurance to the Swedish border, import CIF/export FOB). Both are admitted in the same annual variant. Private UHV table/column metadata does not state which valuation applies. Preserve the held field and both distinct meanings; do not infer equivalence or select one valuation. Exact review: Batch57-ambiguous20-owner-review.json. Maintainer authorizes preserving unsupported mappings as unavailable; no original column, year or source question is removed."
+
+[[column]]
+column = "vikt"
+tables = ["UHV_1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "vikt"
+tables = ["UHV_1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

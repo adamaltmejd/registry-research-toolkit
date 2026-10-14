@@ -1,0 +1,7 @@
+id = "ams-hist-aktso-2"
+register = "arbetsformedlingen/aktso"
+variants = ["arbetsformedlingen/aktso/_default"]
+
+[[table]]
+table = "AMS_HIST_AKTSO_2021_20230726"
+edition = { from = 2021, to = 2023 }

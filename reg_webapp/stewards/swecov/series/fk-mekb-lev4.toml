@@ -1,0 +1,27 @@
+id = "fk-mekb-lev4"
+register = "fk/merkostnadsersattning"
+variants = ["fk/merkostnadsersattning/mottagare"]
+
+[[table]]
+table = "FK_MEKB_lev4"
+edition = { from = 2019, to = 2024 }
+partition = "barn"
+
+[[column]]
+column = "Omfattning"
+hold = { follow_up = "#1554", reason = "Delivered level column with no omfattning variable on fk/merkostnadsersattning; whether it equals Niva needs a MONA value-set check (#1554). Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/merkostnadsersattning/mottagare", variable = "fk/merkostnadsersattning/lopnr", representation = "Lopnr" }]
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "Utbetalningsperiod_fromdat"
+mappings = [{ register_variant = "fk/merkostnadsersattning/mottagare", variable = "fk/merkostnadsersattning/ersattningsperiod-fromdat", representation = "Ersattningsperiod_fromdat" }]
+reason = "SWECOV delivery spelling of the payment period (Utbetalningsperiod_*) for the variant's ersättningsperiod variable; same definition in fk.toml. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "Utbetalningsperiod_tomdat"
+mappings = [{ register_variant = "fk/merkostnadsersattning/mottagare", variable = "fk/merkostnadsersattning/ersattningsperiod-tomdat", representation = "Ersattningsperiod_tomdat" }]
+reason = "SWECOV delivery spelling of the payment period (Utbetalningsperiod_*) for the variant's ersättningsperiod variable; same definition in fk.toml. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."

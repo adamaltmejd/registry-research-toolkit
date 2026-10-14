@@ -1,22 +1,26 @@
-"""SWECOV generator: the committed source policy's validation.
+"""SWECOV holdings accounting: the committed source policy's validation.
 
-`reg_webapp/stewards/swecov/source_policy.toml` is the authored routing every
-generator stage reads; it is checked through `reg_meta_build.swecov_policy` before
-any stage runs. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
+`reg_webapp/stewards/swecov/source_policy.toml` is the authored routing holdings
+accounting reads; it is checked through `reg_meta_build.swecov_policy`. The
+generator reads the steward spec instead (`test_steward_spec.py`).
 """
 
 from __future__ import annotations
 
 import json
 import tomllib
-from typing import TYPE_CHECKING
+from pathlib import Path
 
 import pytest
-from _swecov_fixtures import build_catalog
 from reg_meta_build.swecov_policy import SourcePolicy, SourceRoute, load_source_policy
 
-if TYPE_CHECKING:
-    from pathlib import Path
+SOURCE_POLICY_PATH = (
+    Path(__file__).resolve().parents[2]
+    / "reg_webapp"
+    / "stewards"
+    / "swecov"
+    / "source_policy.toml"
+)
 
 
 @pytest.mark.parametrize(
@@ -44,7 +48,7 @@ def test_source_policy_rejects_unchecked_or_duplicate_decisions(
 ) -> None:
     from pydantic import ValidationError
 
-    raw = tomllib.loads(build_catalog.SOURCE_POLICY_PATH.read_text(encoding="utf-8"))
+    raw = tomllib.loads(SOURCE_POLICY_PATH.read_text(encoding="utf-8"))
     if case == "duplicate_route":
         raw["route"].append(raw["route"][0])
     elif case == "duplicate_flavor":
@@ -84,7 +88,7 @@ def test_source_policy_rejects_unchecked_or_duplicate_decisions(
 
 def test_source_policy_loader_refuses_unknown_sections(tmp_path: Path) -> None:
     path = tmp_path / "policy.toml"
-    path.write_text(build_catalog.SOURCE_POLICY_PATH.read_text() + "\n[[unknown]]\n")
+    path.write_text(SOURCE_POLICY_PATH.read_text() + "\n[[unknown]]\n")
     with pytest.raises(SystemExit, match="invalid SWECOV source policy"):
         load_source_policy(path)
 
@@ -105,7 +109,7 @@ def test_source_policy_loader_refuses_unknown_sections(tmp_path: Path) -> None:
 def test_source_policy_rejects_unsafe_output_and_catalog_slugs(
     tmp_path: Path, section: str, field: str, value: str
 ) -> None:
-    text = build_catalog.SOURCE_POLICY_PATH.read_text(encoding="utf-8")
+    text = SOURCE_POLICY_PATH.read_text(encoding="utf-8")
     raw = tomllib.loads(text)
     old = raw[section][0][field]
     marker = f"[[{section}]]"

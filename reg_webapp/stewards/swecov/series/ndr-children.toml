@@ -1,0 +1,7 @@
+id = "ndr-children"
+register = "ndr/nationella-diabetesregistret"
+variants = ["ndr/nationella-diabetesregistret/_default"]
+
+[[table]]
+table = "NDR_children_2007"
+edition = 2007

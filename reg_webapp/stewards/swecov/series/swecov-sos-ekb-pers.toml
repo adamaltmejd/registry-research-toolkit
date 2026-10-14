@@ -1,0 +1,16 @@
+id = "swecov-sos-ekb-pers"
+register = "sos/ekb"
+variants = ["sos/ekb/ekb-manad"]
+
+[[table]]
+table = "SWECOV_SOS_EKB_PERS"
+edition = { from = 2015, to = 2023 }
+
+[[column]]
+column = "P1105_LopNr_EKB"
+hold = { follow_up = "#1556", reason = "Delivery link key between the EKB household and person files (SoS: pseudonymised EKB LOPNR, ekb_radkoppl); no catalog variable yet (#1556). Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "sos/ekb/ekb-manad", variable = "sos/ekb/personnr", representation = "PNR" }]
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."

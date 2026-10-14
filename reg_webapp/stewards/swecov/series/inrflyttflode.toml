@@ -1,0 +1,135 @@
+id = "inrflyttflode"
+register = "scb/rtb"
+variants = ["scb/rtb/inrikes-flyttningar"]
+
+# route note: RTB_SaBo_InrFlyttFlode extras to flavor
+
+[[table]]
+table = "InrFlyttFlode1998"
+edition = 1998
+
+[[table]]
+table = "InrFlyttFlode1999"
+edition = 1999
+
+[[table]]
+table = "InrFlyttFlode2000"
+edition = 2000
+
+[[table]]
+table = "InrFlyttFlode2001"
+edition = 2001
+
+[[table]]
+table = "InrFlyttFlode2002"
+edition = 2002
+
+[[table]]
+table = "InrFlyttFlode2003"
+edition = 2003
+
+[[table]]
+table = "InrFlyttFlode2004"
+edition = 2004
+
+[[table]]
+table = "InrFlyttFlode2005"
+edition = 2005
+
+[[table]]
+table = "InrFlyttFlode2006"
+edition = 2006
+
+[[table]]
+table = "InrFlyttFlode2007"
+edition = 2007
+
+[[table]]
+table = "InrFlyttFlode2008"
+edition = 2008
+
+[[table]]
+table = "InrFlyttFlode2009"
+edition = 2009
+
+[[table]]
+table = "InrFlyttFlode2010"
+edition = 2010
+
+[[table]]
+table = "InrFlyttFlode2011"
+edition = 2011
+
+[[table]]
+table = "InrFlyttFlode2012"
+edition = 2012
+
+[[table]]
+table = "InrFlyttFlode2013"
+edition = 2013
+
+[[table]]
+table = "InrFlyttFlode2014"
+edition = 2014
+
+[[table]]
+table = "InrFlyttFlode2015"
+edition = 2015
+
+[[table]]
+table = "InrFlyttFlode2016"
+edition = 2016
+
+[[table]]
+table = "InrFlyttFlode2017"
+edition = 2017
+
+[[table]]
+table = "InrFlyttFlode2018"
+edition = 2018
+
+[[table]]
+table = "InrFlyttFlode2019"
+edition = 2019
+
+[[table]]
+table = "InrFlyttFlode2020"
+edition = 2020
+
+[[table]]
+table = "InrFlyttFlode2021"
+edition = 2021
+
+[[table]]
+table = "InrFlyttFlode2022"
+edition = 2022
+
+[[table]]
+table = "InrFlyttFlode2023"
+edition = 2023
+
+[[table]]
+table = "InrFlyttFlode2024"
+edition = 2024
+
+[[column]]
+column = "P1105_LopNr_Fastbeteckn"
+tables = ["InrFlyttFlode1998", "InrFlyttFlode1999", "InrFlyttFlode2000", "InrFlyttFlode2001", "InrFlyttFlode2002", "InrFlyttFlode2003", "InrFlyttFlode2004", "InrFlyttFlode2005", "InrFlyttFlode2006", "InrFlyttFlode2007", "InrFlyttFlode2008", "InrFlyttFlode2009", "InrFlyttFlode2010", "InrFlyttFlode2011", "InrFlyttFlode2012", "InrFlyttFlode2013", "InrFlyttFlode2014"]
+mappings = [{ register_variant = "scb/rtb/inrikes-flyttningar", variable = "scb/rtb/fastighetsbeteckning", representation = "FastBet" }]
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Fastbeteckn"
+tables = ["InrFlyttFlode2015", "InrFlyttFlode2016", "InrFlyttFlode2017", "InrFlyttFlode2018", "InrFlyttFlode2019", "InrFlyttFlode2020", "InrFlyttFlode2021", "InrFlyttFlode2022", "InrFlyttFlode2023", "InrFlyttFlode2024"]
+unmap = "Second spelling of P1105_LopNr_Fastbet in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_Fastbet carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "P1105_LopNr_FastbetecknG"
+tables = ["InrFlyttFlode1998", "InrFlyttFlode1999", "InrFlyttFlode2000", "InrFlyttFlode2001", "InrFlyttFlode2002", "InrFlyttFlode2003", "InrFlyttFlode2004", "InrFlyttFlode2005", "InrFlyttFlode2006", "InrFlyttFlode2007", "InrFlyttFlode2008", "InrFlyttFlode2009", "InrFlyttFlode2010", "InrFlyttFlode2011", "InrFlyttFlode2012", "InrFlyttFlode2013", "InrFlyttFlode2014"]
+mappings = [{ register_variant = "scb/rtb/inrikes-flyttningar", variable = "scb/rtb/fastighetsbeteckning-tidigare", representation = "FastbetG" }]
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_FastbetecknG"
+tables = ["InrFlyttFlode2015", "InrFlyttFlode2016", "InrFlyttFlode2017", "InrFlyttFlode2018", "InrFlyttFlode2019", "InrFlyttFlode2020", "InrFlyttFlode2021", "InrFlyttFlode2022", "InrFlyttFlode2023", "InrFlyttFlode2024"]
+unmap = "Second spelling of P1105_LopNr_FastbetG in the same table; SCB documents both spellings with the same meaning for 2015-2024 and P1105_LopNr_FastbetG carries the mapping; maintainer-accepted 2026-10-12 (#1302 round 3)."

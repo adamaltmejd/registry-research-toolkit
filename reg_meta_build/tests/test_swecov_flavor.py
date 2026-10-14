@@ -1,6 +1,6 @@
 """SWECOV generator: the flavor stage (`cmd_flavor`) and the CLI's default inventory.
 
-`cmd_flavor` projects the enriched holdings named by the committed flavor disposition
+`cmd_flavor` projects the enriched holdings named by the committed `[[flavor]]` entries
 into curated-provider TOMLs plus their FQID slug pins; these tests read those emitted
 files. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
 """
@@ -9,15 +9,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
 from _swecov_fixtures import (
-    POLICY,
+    GENERATOR,
+    SPEC,
+    SPEC_DIR,
     build_catalog,
     column as _column,
-    copied_layout,
+    copied_generator,
     run_flavor,
     run_generator,
     synthetic_enriched as _synthetic_enriched,
@@ -43,9 +46,7 @@ def test_default_csv_uses_newest_full_inventory_or_requires_argument(
     beside the script, and with none there `--csv` becomes a required argument.
     Each candidate inventory names a category of its own, so the normalized
     holdings say which file was read."""
-    generator = copied_layout(
-        tmp_path, build_catalog.SOURCE_POLICY_PATH.read_text(encoding="utf-8")
-    )
+    generator = copied_generator(tmp_path)
     old_name = generator.parent / "SWECOV_variables_2099-01-01.csv"
     older = generator.parent / "SWECOV_variables_full_2026-08-01.csv"
     newest = generator.parent / "SWECOV_variables_full_2026-09-13.csv"
@@ -73,7 +74,7 @@ def _flavor_register(
     tmp_path: Path, columns: list[dict], mapping: dict | None = None
 ) -> dict:
     """`cmd_flavor` with `columns` (and the route `mapping`, if given) as the
-    `Ordered tests` holding (a disposition entry with no table selector, so the
+    `Ordered tests` holding (a `[[flavor]]` entry with no `tables`, so the
     holding's full column list is drawn); returns the register the emitted
     `inera.toml` carries for it."""
     enriched = _synthetic_enriched()
@@ -186,10 +187,10 @@ def test_kalla_column_without_a_graft_register_refuses_before_writing(
     assert not (tmp_path / "input_data" / "swecov" / "providers").exists()
 
 
-def test_disposition_column_lists_keep_kalla_columns_and_flag_sensitive(
+def test_flavor_column_lists_keep_kalla_columns_and_flag_sensitive(
     flavor_providers: dict,
 ) -> None:
-    """The committed population disposition keeps its Källa=RTB columns as
+    """The committed population flavor keeps its Källa=RTB columns as
     steward variables (its route names no graft) and flags FodelseArMan and
     FodelseArManDag `is_sensitive`. Fails if `keep_columns` stops overriding the
     Källa routing or `sensitive_columns` stops reaching the emitted variable
@@ -210,7 +211,7 @@ def test_disposition_column_lists_keep_kalla_columns_and_flag_sensitive(
     ]
 
 
-def test_disposition_column_list_naming_an_absent_column_refuses(
+def test_flavor_column_list_naming_an_absent_column_refuses(
     tmp_path: Path,
 ) -> None:
     """A keep/sensitive name the holding no longer delivers refuses before any
@@ -228,7 +229,7 @@ def test_disposition_column_list_naming_an_absent_column_refuses(
     assert not (tmp_path / "input_data" / "swecov" / "providers").exists()
 
 
-# --- cmd_flavor: the disposition's register/variant emission -----------------
+# --- cmd_flavor: the flavors' register/variant emission ---------------------
 
 
 @pytest.fixture(scope="module")
@@ -266,7 +267,7 @@ def test_a_named_variant_carries_its_own_name(flavor_providers: dict) -> None:
 def test_disjoint_deliveries_of_one_service_are_separate_registers(
     flavor_providers: dict,
 ) -> None:
-    """Inera's two 1177 deliveries are disjoint schemas (see the disposition
+    """Inera's two 1177 deliveries are disjoint schemas (see the scope.toml
     comment), so they are two REGISTERS with a `_default` variant each, under one
     provider named for the service."""
     assert [
@@ -354,7 +355,7 @@ def test_repeated_flavor_generation_is_deterministic(tmp_path: Path) -> None:
     before = {path.name: path.read_bytes() for path in providers_dir.glob("*.toml")}
 
     build_catalog.cmd_flavor(
-        argparse.Namespace(csv=root / "SWECOV_variables_2025-12-11.csv")
+        argparse.Namespace(csv=root / "SWECOV_variables_2025-12-11.csv", spec=SPEC_DIR)
     )
 
     assert {
@@ -362,9 +363,12 @@ def test_repeated_flavor_generation_is_deterministic(tmp_path: Path) -> None:
     } == before
 
 
-def _policy_without_provider(provider: str) -> str:
-    """The committed source policy minus every `[[flavor]]` entry of `provider`."""
-    text = build_catalog.SOURCE_POLICY_PATH.read_text(encoding="utf-8")
+def _spec_without_provider(root: Path, provider: str) -> Path:
+    """A copy of the committed spec whose scope lacks every `[[flavor]]` entry
+    of `provider`."""
+    spec = root / "spec"
+    shutil.copytree(SPEC_DIR, spec)
+    text = (spec / "scope.toml").read_text(encoding="utf-8")
     blocks = text.split("\n[[")
     kept = [
         block
@@ -374,12 +378,13 @@ def _policy_without_provider(provider: str) -> str:
         )
     ]
     assert len(kept) < len(blocks)
-    return "\n[[".join(kept)
+    (spec / "scope.toml").write_text("\n[[".join(kept), encoding="utf-8")
+    return spec
 
 
 def test_removed_provider_refuses_stale_toml_before_writing(tmp_path: Path) -> None:
-    """A provider TOML the current disposition no longer emits blocks the run:
-    the CLI, under a policy without that provider, names the file and writes no
+    """A provider TOML the current spec no longer emits blocks the run:
+    the CLI, under a spec without that provider, names the file and writes no
     provider output at all."""
     root = run_flavor(tmp_path, _synthetic_enriched())
     providers_dir = root / "providers"
@@ -387,10 +392,15 @@ def test_removed_provider_refuses_stale_toml_before_writing(tmp_path: Path) -> N
     assert stale.is_file()
     control = next(path for path in providers_dir.glob("*.toml") if path != stale)
     control.write_text("must remain untouched\n", encoding="utf-8")
-    generator = copied_layout(tmp_path / "layout", _policy_without_provider("swedbank"))
+    spec = _spec_without_provider(tmp_path, "swedbank")
 
     result = run_generator(
-        generator, "--csv", str(root / "SWECOV_variables_2025-12-11.csv"), "flavor"
+        GENERATOR,
+        "--csv",
+        str(root / "SWECOV_variables_2025-12-11.csv"),
+        "--spec",
+        str(spec),
+        "flavor",
     )
 
     assert result.returncode == 1
@@ -402,13 +412,8 @@ def test_removed_provider_refuses_stale_toml_before_writing(tmp_path: Path) -> N
 
 def test_flavor_rejects_stale_declared_table_before_writing(tmp_path: Path) -> None:
     enriched = _synthetic_enriched()
-    entry = next(
-        entry
-        for entry in POLICY.disposition()
-        if (entry[1], entry[3], entry[5]) in POLICY.variant_tables()
-    )
-    table = POLICY.variant_tables()[entry[1], entry[3], entry[5]][0]
-    enriched[entry[0]]["table_columns"].pop(table)
+    flavor = next(flavor for flavor in SPEC.scope.flavors if flavor.tables)
+    enriched[flavor.holding]["table_columns"].pop(flavor.tables[0])
     with pytest.raises(SystemExit, match=r"table\(s\) absent from holding"):
         run_flavor(tmp_path, enriched)
     assert not (tmp_path / "providers").exists()

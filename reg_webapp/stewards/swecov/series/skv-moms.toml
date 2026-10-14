@@ -1,0 +1,7 @@
+id = "skv-moms"
+register = "skatteverket/momsdeklaration"
+variants = ["skatteverket/momsdeklaration/_default"]
+
+[[table]]
+table = "SKV_Moms"
+edition = { from = 2019, to = "2021-05" }

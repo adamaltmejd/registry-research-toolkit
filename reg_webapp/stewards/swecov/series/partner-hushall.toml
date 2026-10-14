@@ -1,0 +1,206 @@
+# Series boundary at 2011, a documented SCB break: The unit changes from family to household: SCB variant 2.1080 'Hushåll', panel_entity_key familjeidentitet-rtb -> lagenhetsnyckel (curation/registers/scb/rtb.toml).
+id = "partner-hushall"
+register = "scb/rtb"
+variants = ["scb/rtb/hushall"]
+
+# route note: HUSHALLSID_YYYY year-pivots as HB
+
+[[table]]
+table = "Partner_2011"
+edition = "2011-12-31"
+
+[[table]]
+table = "Partner_2012"
+edition = "2012-12-31"
+
+[[table]]
+table = "Partner_2013"
+edition = "2013-12-31"
+
+[[table]]
+table = "Partner_2014"
+edition = "2014-12-31"
+
+[[table]]
+table = "Partner_2015"
+edition = "2015-12-31"
+
+[[table]]
+table = "Partner_2016"
+edition = "2016-12-31"
+
+[[table]]
+table = "Partner_2017"
+edition = "2017-12-31"
+
+[[table]]
+table = "Partner_2018"
+edition = "2018-12-31"
+
+[[table]]
+table = "Partner_2019"
+edition = "2019-12-31"
+
+[[table]]
+table = "Partner_2020"
+edition = "2020-12-31"
+
+[[table]]
+table = "Partner_2021"
+edition = "2021-12-31"
+
+[[table]]
+table = "Partner_2022"
+edition = "2022-12-31"
+
+[[table]]
+table = "Partner_2023"
+edition = "2023-12-31"
+
+[[table]]
+table = "Partner_2024"
+edition = "2024-12-31"
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2011"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2011: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2011-12-31 is already catalog-orderable from HushallPerson_2011/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2012"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2012: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2012-12-31 is already catalog-orderable from HushallPerson_2012/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2013"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2013: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2013-12-31 is already catalog-orderable from HushallPerson_2013/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2014"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2014: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2014-12-31 is already catalog-orderable from HushallPerson_2014/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2015"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2015: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2015-12-31 is already catalog-orderable from HushallPerson_2015/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2016"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2016: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2016-12-31 is already catalog-orderable from HushallPerson_2016/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2017"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2017: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2017-12-31 is already catalog-orderable from HushallPerson_2017/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2018"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2018: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2018-12-31 is already catalog-orderable from HushallPerson_2018/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2019"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2019: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2019-12-31 is already catalog-orderable from HushallPerson_2019/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2020"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2020: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2020-12-31 is already catalog-orderable from HushallPerson_2020/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2021"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2021: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2021-12-31 is already catalog-orderable from HushallPerson_2021/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2022"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2022: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2022-12-31 is already catalog-orderable from HushallPerson_2022/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2023"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2023: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2023-12-31 is already catalog-orderable from HushallPerson_2023/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "HushallsStallning"
+tables = ["Partner_2024"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2024: scb/rtb/hushallsstallning (HushallsStallning) on scb/rtb/hushall over 2024-12-31 is already catalog-orderable from HushallPerson_2024/HushallsStallning. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2011"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2011: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2011-12-31 is already catalog-orderable from HushallPerson_2011/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2012"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2012: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2012-12-31 is already catalog-orderable from HushallPerson_2012/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2013"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2013: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2013-12-31 is already catalog-orderable from HushallPerson_2013/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2014"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2014: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2014-12-31 is already catalog-orderable from HushallPerson_2014/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2015"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2015: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2015-12-31 is already catalog-orderable from HushallPerson_2015/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2016"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2016: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2016-12-31 is already catalog-orderable from HushallPerson_2016/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2017"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2017: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2017-12-31 is already catalog-orderable from HushallPerson_2017/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2018"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2018: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2018-12-31 is already catalog-orderable from HushallPerson_2018/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2019"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2019: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2019-12-31 is already catalog-orderable from HushallPerson_2019/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2020"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2020: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2020-12-31 is already catalog-orderable from HushallPerson_2020/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2021"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2021: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2021-12-31 is already catalog-orderable from HushallPerson_2021/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2022"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2022: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2022-12-31 is already catalog-orderable from HushallPerson_2022/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2023"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2023: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2023-12-31 is already catalog-orderable from HushallPerson_2023/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2024"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2024: scb/rtb/personnr (PersonNr) on scb/rtb/hushall over 2024-12-31 is already catalog-orderable from HushallPerson_2024/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr_Partner"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. RTB source policy explicitly identifies annual family status columns and their native family register; original table year and own family-status state fix the December 31 snapshot."

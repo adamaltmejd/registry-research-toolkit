@@ -1,0 +1,7 @@
+id = "swecov-primary-care-vgr-pv"
+register = "vgr/primarvard"
+variants = ["vgr/primarvard/_default"]
+
+[[table]]
+table = "SWECOV_PRIMARY_CARE_VGR_PV"
+edition = { from = 2015, to = 2023 }

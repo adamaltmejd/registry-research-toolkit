@@ -1,0 +1,44 @@
+# Series boundary at 1998, a documented SCB break: SCB variant 2.1524 'Familjer 1990-1997' is succeeded by 2.54 'Familjer från 1998-'; the subject key header changes PNR -> PersonNr (relations.toml, RTB representation edge).
+id = "partner-familjer-1990-1997"
+register = "scb/rtb"
+variants = ["scb/rtb/familjer-1990-1997"]
+
+[[table]]
+table = "Partner_1990"
+edition = "1990-12-31"
+
+[[table]]
+table = "Partner_1991"
+edition = "1991-12-31"
+
+[[table]]
+table = "Partner_1992"
+edition = "1992-12-31"
+
+[[table]]
+table = "Partner_1993"
+edition = "1993-12-31"
+
+[[table]]
+table = "Partner_1994"
+edition = "1994-12-31"
+
+[[table]]
+table = "Partner_1995"
+edition = "1995-12-31"
+
+[[table]]
+table = "Partner_1996"
+edition = "1996-12-31"
+
+[[table]]
+table = "Partner_1997"
+edition = "1997-12-31"
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. RTB source policy explicitly identifies annual family status columns and their native family register; original table year and own family-status state fix the December 31 snapshot."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr_Partner"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. RTB source policy explicitly identifies annual family status columns and their native family register; original table year and own family-status state fix the December 31 snapshot."

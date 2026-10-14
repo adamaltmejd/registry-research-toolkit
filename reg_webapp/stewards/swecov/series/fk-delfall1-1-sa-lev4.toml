@@ -1,0 +1,12 @@
+id = "fk-delfall1-1-sa-lev4"
+register = "fk/sjuk-aktivitetsersattning"
+variants = ["fk/sjuk-aktivitetsersattning/delfall-1-1"]
+
+[[table]]
+table = "FK_DELFALL1_1_SA_lev4"
+edition = { from = 1994, to = 2025 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/sjuk-aktivitetsersattning/delfall-1-1", variable = "fk/sjuk-aktivitetsersattning/lopnr", representation = "Lopnr" }]
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."

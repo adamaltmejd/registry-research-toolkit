@@ -1,0 +1,19 @@
+id = "swecov-sos-ekb-hush"
+register = "sos/ekb"
+variants = ["sos/ekb/ekb-manad"]
+
+[[table]]
+table = "SWECOV_SOS_EKB_HUSH"
+edition = { from = 2015, to = 2023 }
+
+[[column]]
+column = "AR"
+unmap = "Year join column of the household file; sos/ekb/ar is orderable from SWECOV_SOS_EKB_PERS, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
+
+[[column]]
+column = "MANAD"
+unmap = "Month join column of the household file; sos/ekb/manad is orderable from SWECOV_SOS_EKB_PERS, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
+
+[[column]]
+column = "P1105_LopNr_EKB"
+hold = { follow_up = "#1556", reason = "Delivery link key between the EKB household and person files (SoS: pseudonymised EKB LOPNR, ekb_radkoppl); no catalog variable yet (#1556). Maintainer-decided 2026-10-13 (#1302)." }

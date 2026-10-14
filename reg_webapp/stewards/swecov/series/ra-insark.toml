@@ -1,0 +1,22 @@
+id = "ra-insark"
+register = "riksarkivet/inskrivning"
+variants = ["riksarkivet/inskrivning/_default"]
+
+[[table]]
+table = "RA_Insark"
+edition = { from = 1969, to = 1997 }
+
+[[column]]
+column = "LNGD_I_CM"
+mappings = [{ register_variant = "riksarkivet/inskrivning/_default", variable = "riksarkivet/inskrivning/langd", representation = "LNGD" }]
+reason = "SWECOV delivery spelling of the own-register catalog variable riksarkivet/inskrivning/langd (delivery column LNGD); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "MASS_I_KG"
+mappings = [{ register_variant = "riksarkivet/inskrivning/_default", variable = "riksarkivet/inskrivning/kroppsvikt", representation = "MASS" }]
+reason = "SWECOV delivery spelling of the own-register catalog variable riksarkivet/inskrivning/kroppsvikt (delivery column MASS); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+mappings = [{ register_variant = "riksarkivet/inskrivning/_default", variable = "riksarkivet/inskrivning/personnr", representation = "PENR" }]
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."

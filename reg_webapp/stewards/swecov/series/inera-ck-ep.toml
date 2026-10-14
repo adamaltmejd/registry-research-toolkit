@@ -1,0 +1,8 @@
+id = "inera-ck-ep"
+register = "inera/bestallda-prover"
+variants = ["inera/bestallda-prover/_default"]
+
+[[table]]
+table = "Inera_CK_EP"
+edition = { from = 2020, to = 2021 }
+partition = "ck-ep"

@@ -1,0 +1,45 @@
+id = "fdb-ast"
+register = "scb/fdb"
+variants = ["scb/fdb/administrativa"]
+
+# route note: stem:FDB_AST_: 7/7 grounded
+
+[[table]]
+table = "FDB_AST_2015"
+edition = 2015
+
+[[table]]
+table = "FDB_AST_2016"
+edition = 2016
+
+[[table]]
+table = "FDB_AST_2017"
+edition = 2017
+
+[[table]]
+table = "FDB_AST_2018"
+edition = 2018
+
+[[table]]
+table = "FDB_AST_2019"
+edition = 2019
+
+[[table]]
+table = "FDB_AST_2020"
+edition = 2020
+
+[[table]]
+table = "FDB_AST_2021"
+edition = 2021
+
+[[table]]
+table = "FDB_AST_2022"
+edition = 2022
+
+[[table]]
+table = "FDB_AST_2023"
+edition = 2023
+
+[[table]]
+table = "FDB_AST_2024"
+edition = 2024

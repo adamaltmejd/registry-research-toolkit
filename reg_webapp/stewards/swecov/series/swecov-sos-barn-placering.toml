@@ -1,0 +1,26 @@
+id = "swecov-sos-barn-placering"
+variants = []
+
+[[table]]
+table = "SWECOV_SOS_BARN_PLACERING"
+edition = { from = 2008, to = 2021 }
+
+[[column]]
+column = "INSATS_BESLUT_DATUM"
+unmap = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
+
+[[column]]
+column = "INSTYP"
+unmap = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+unmap = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
+
+[[column]]
+column = "PLAC_FORM"
+unmap = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."
+
+[[column]]
+column = "PLAC_START_DATUM"
+unmap = "The processed SWECOV tables combine historical BU deliveries. The supplied workbook documents separate source tables and periods but does not establish one source variant for the combined physical table. Retain every physical column and declared edition without a verified catalog mapping."

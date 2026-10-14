@@ -1,0 +1,12 @@
+id = "fk-bostadstillagg-lev4"
+register = "fk/bostadstillagg"
+variants = ["fk/bostadstillagg/_default"]
+
+[[table]]
+table = "FK_BOSTADSTILLAGG_lev4"
+edition = { from = 2015, to = "2025-06" }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/bostadstillagg/_default", variable = "fk/bostadstillagg/lopnr-personnr", representation = "personnummer" }]
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."

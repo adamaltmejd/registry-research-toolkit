@@ -1,0 +1,7 @@
+id = "gu-ss-fr"
+register = "sabo/patienter"
+variants = ["sabo/patienter/_default"]
+
+[[table]]
+table = "GU_ss_fr"
+edition = { from = 2018, to = 2020 }

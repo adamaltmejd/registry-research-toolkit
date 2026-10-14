@@ -1,0 +1,8 @@
+id = "gbgkom-aldreboende"
+register = "sabo/adresser"
+variants = ["sabo/adresser/_default"]
+
+[[table]]
+table = "GbgKom_Aldreboende"
+edition = { from = 2019, to = 2021 }
+partition = "aldreboende"

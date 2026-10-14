@@ -1,0 +1,25 @@
+id = "hreg-sok"
+register = "scb/hreg"
+variants = ["scb/hreg/sokande-grund-avancerad"]
+
+# route note: stem:Hreg_Sok_: 58% grounded
+
+[[table]]
+table = "Hreg_Sok_2015_2022"
+edition = { from = 2015, to = 2021 }
+
+[[table]]
+table = "Hreg_Sok_2022_2024"
+edition = { from = 2022, to = 2024 }
+
+[[column]]
+column = "kurskodben"
+unmap = "Plain-text label of the code column KursKod in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "linrben"
+unmap = "Plain-text label of the code column LInr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "lprogben"
+unmap = "Plain-text label of the code column LProg in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."

@@ -1,0 +1,56 @@
+id = "ap3"
+register = "scb/grundskola-prov-ak3"
+variants = ["scb/grundskola-prov-ak3/_default"]
+edition_spelling = "vt"
+
+[[table]]
+table = "Äp3_2010"
+edition = 2010
+
+[[table]]
+table = "Äp3_2011"
+edition = 2011
+
+[[table]]
+table = "Äp3_2012"
+edition = 2012
+
+[[table]]
+table = "Äp3_2013"
+edition = 2013
+
+[[table]]
+table = "Äp3_2014"
+edition = 2014
+
+[[table]]
+table = "Äp3_2015"
+edition = 2015
+
+[[table]]
+table = "Äp3_2016"
+edition = 2016
+
+[[table]]
+table = "Äp3_2017"
+edition = 2017
+
+[[table]]
+table = "Äp3_2018"
+edition = 2018
+
+[[table]]
+table = "Äp3_2019"
+edition = 2019
+
+[[table]]
+table = "Äp3_2022"
+edition = 2022
+
+[[table]]
+table = "Äp3_2023"
+edition = 2023
+
+[[table]]
+table = "Äp3_2024"
+edition = 2024

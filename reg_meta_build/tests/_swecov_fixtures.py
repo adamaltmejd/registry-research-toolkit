@@ -8,15 +8,17 @@ no `derived/` artifact of the maintainer's, no network. Loaded by path because
 
 Its public contract is the `cmd_*` entry points, called in-process with an
 `argparse.Namespace`, and the argparse CLI itself (`run_generator`). The authored
-routing those entry points read is `reg_webapp/stewards/swecov/source_policy.toml`,
-loaded here through the public `reg_meta_build.swecov_policy` model; a test that
-needs another routing runs a copied generator layout beside an edited policy
-(`copied_layout`) rather than patching the loaded module.
+decisions those entry points read are the steward spec under
+`reg_webapp/stewards/swecov/` (`scope.toml` + `series/*.toml`), loaded here
+through the public `reg_meta_build.steward_spec` model; a test that needs other
+decisions passes its own spec directory (`--spec`) rather than patching the
+loaded module.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -28,7 +30,7 @@ from pathlib import Path
 
 import pytest
 from reg_meta_build.db import DDL, SCHEMA_VERSION
-from reg_meta_build.swecov_policy import load_source_policy
+from reg_meta_build.steward_spec import load_steward_spec
 
 GENERATOR = (
     Path(__file__).resolve().parents[1] / "input_data" / "swecov" / "build_catalog.py"
@@ -41,9 +43,10 @@ build_catalog = importlib.util.module_from_spec(_spec)
 sys.modules[_spec.name] = build_catalog
 _spec.loader.exec_module(build_catalog)
 
-# The committed routing the loaded generator runs under, read through its public
-# model rather than the generator's own module-level projections of it.
-POLICY = load_source_policy(build_catalog.SOURCE_POLICY_PATH)
+# The committed steward spec the loaded generator runs under, read through its
+# public model.
+SPEC_DIR = build_catalog.SPEC_DIR
+SPEC = load_steward_spec(SPEC_DIR)
 
 
 def column(name: str, **extra: str) -> dict:
@@ -52,18 +55,16 @@ def column(name: str, **extra: str) -> dict:
 
 
 def synthetic_enriched() -> dict[str, dict]:
-    """One synthetic holding per flavor disposition key.
+    """One synthetic holding per `[[flavor]]` holding of the committed scope.
 
-    Each physical table a table selector names gets one column of its own, so
-    every disposition entry draws at least one steward-only variable; keys with
-    no selector get a single-column holding.
+    Each physical table a flavor's `tables` names gets one column of its own, so
+    every flavor draws at least one steward-only variable; a flavor with no
+    `tables` gets a single-column holding.
     """
     tables: dict[str, dict[str, list[str]]] = defaultdict(dict)
-    variant_tables = POLICY.variant_tables()
-    for key, prov_slug, _, reg_key, _, var_key, *_ in POLICY.disposition():
-        selector = variant_tables.get((prov_slug, reg_key, var_key))
-        for table in sorted(selector or ("T",)):
-            tables[key][table] = [f"{table}_kolumn"]
+    for flavor in SPEC.scope.flavors:
+        for table in sorted(flavor.tables or ("T",)):
+            tables[flavor.holding][table] = [f"{table}_kolumn"]
 
     enriched = {
         key: {
@@ -78,15 +79,16 @@ def synthetic_enriched() -> dict[str, dict]:
         column("Covid-19 antikroppar"),
         column("Covid_19_antikroppar"),
     ]
-    # Every column a disposition's keep/sensitive list names, the kept ones with
-    # a register Källa, so the flavor's column lists resolve against the holding.
-    variant_columns = POLICY.variant_columns()
-    for key, prov_slug, _, reg_key, _, var_key, *_ in POLICY.disposition():
-        keep, sensitive = variant_columns.get(
-            (prov_slug, reg_key, var_key), (frozenset(), frozenset())
-        )
-        enriched[key]["columns"] += [column(c, kalla="RTB") for c in sorted(keep)]
-        enriched[key]["columns"] += [column(c) for c in sorted(sensitive - keep)]
+    # Every column a flavor's keep/sensitive list names, the kept ones with a
+    # register Källa, so the flavor's column lists resolve against the holding.
+    for flavor in SPEC.scope.flavors:
+        keep, sensitive = set(flavor.keep_columns), set(flavor.sensitive_columns)
+        enriched[flavor.holding]["columns"] += [
+            column(c, kalla="RTB") for c in sorted(keep)
+        ]
+        enriched[flavor.holding]["columns"] += [
+            column(c) for c in sorted(sensitive - keep)
+        ]
     return enriched
 
 
@@ -164,7 +166,9 @@ def flavored_db_fixture(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return write_flavored_db(tmp_path_factory.mktemp("db") / "reg_meta_swecov.db")
 
 
-def run_flavor(tmp_path: Path, enriched: dict[str, dict]) -> Path:
+def run_flavor(
+    tmp_path: Path, enriched: dict[str, dict], spec: Path = SPEC_DIR
+) -> Path:
     """Run `cmd_flavor` in a synthetic package layout; return its input root
     (`providers/` and, two levels up, `fqid_slugs/swecov/`)."""
     base = tmp_path / "input_data" / "swecov"
@@ -174,37 +178,89 @@ def run_flavor(tmp_path: Path, enriched: dict[str, dict]) -> Path:
         json.dumps(enriched), encoding="utf-8"
     )
     build_catalog.cmd_flavor(
-        argparse.Namespace(csv=base / "SWECOV_variables_2025-12-11.csv")
+        argparse.Namespace(csv=base / "SWECOV_variables_2025-12-11.csv", spec=spec)
     )
     return base
+
+
+DEFAULT_VARIANT = "inera/bestallda-prover/_default"
+
+
+def write_spec(
+    spec_dir: Path,
+    census: Path,
+    series: dict[str, str],
+    *,
+    scope: str = "",
+) -> Path:
+    """A steward spec over the synthetic `census`: `scope.toml` (its
+    `census_sha256` taken from the census bytes, plus `scope`) and one
+    `series/<id>.toml` per `series` entry."""
+    (spec_dir / "series").mkdir(parents=True)
+    sha = hashlib.sha256(census.read_bytes()).hexdigest()
+    (spec_dir / "scope.toml").write_text(
+        f'census_sha256 = "{sha}"\n{scope}', encoding="utf-8"
+    )
+    for series_id, body in series.items():
+        (spec_dir / "series" / f"{series_id}.toml").write_text(body, encoding="utf-8")
+    return spec_dir
+
+
+def one_table_series(
+    table: str,
+    *,
+    edition: str | None = None,
+    variants: tuple[str, ...] = (DEFAULT_VARIANT,),
+    header: str = "",
+    decisions: str = "",
+    series_id: str = "s",
+) -> str:
+    """The body of a series whose one member is `table`, admitting `variants`.
+
+    `edition` is the member's TOML edition value (or a `period_scope = ...`
+    line); by default the table name's trailing year. `header` adds
+    series-level keys (`edition_spelling`); `decisions` appends `[[column]]`
+    blocks."""
+    if edition is None:
+        edition = table[-4:]
+    lines = [f'id = "{series_id}"']
+    if variants:
+        lines.append('register = "{}"'.format("/".join(variants[0].split("/")[:2])))
+    lines.append("variants = [" + ", ".join(f'"{v}"' for v in variants) + "]")
+    if header:
+        lines.append(header.rstrip("\n"))
+    lines += ["", "[[table]]", f'table = "{table}"']
+    lines.append(
+        edition if edition.startswith("period_scope") else f"edition = {edition}"
+    )
+    return "\n".join(lines) + "\n" + (f"\n{decisions}" if decisions else "")
 
 
 def run_inventory(
     tmp_path: Path,
     db: Path,
-    overlay: str,
     table: str,
     columns: list[str],
     *,
     holding: tuple[str, str] = ("Inera/1177", "Ordered tests"),
+    **series: str | tuple[str, ...],
 ) -> Path:
-    """`cmd_inventory` over a synthetic one-table CSV; returns the steward dir.
+    """`cmd_inventory` over a synthetic one-table CSV whose table is the one
+    member of series `s` (`one_table_series(table, **series)`); returns the
+    steward dir, which is also the spec dir the run reads and writes.
 
-    By default the table lands under the `Ordered tests` holding, whose
-    disposition entry names no table selector — so the table NAME decides only
-    its edition, while its columns resolve against the flavored DB
-    (`inera/bestallda-prover`)."""
-    steward_dir = tmp_path / "steward"
-    steward_dir.mkdir()
-    (steward_dir / "inventory_overlay.toml").write_text(overlay, encoding="utf-8")
+    By default the series admits only `inera/bestallda-prover/_default`, so the
+    table's columns resolve against the flavored DB's one register."""
     csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
     csv_path.write_text(
         "Category,Detail,Table\n" + ",".join((*holding, table, *columns)) + "\n",
         encoding="utf-8",
     )
-
+    steward_dir = write_spec(
+        tmp_path / "steward", csv_path, {"s": one_table_series(table, **series)}
+    )
     build_catalog.cmd_inventory(
-        argparse.Namespace(csv=csv_path, db=db, out=steward_dir)
+        argparse.Namespace(csv=csv_path, db=db, spec=steward_dir, out=None)
     )
     return steward_dir
 
@@ -216,15 +272,12 @@ def inventory_worklist(tmp_path: Path) -> dict:
     )
 
 
-def copied_layout(root: Path, policy_text: str) -> Path:
-    """A copy of the generator in its repo layout, beside `policy_text` as the
-    committed `source_policy.toml` it loads; returns the copied generator."""
+def copied_generator(root: Path) -> Path:
+    """A copy of the generator in its repo layout, so its default `--csv` reads
+    beside the copy; returns the copied generator."""
     generator = root / "reg_meta_build" / "input_data" / "swecov" / "build_catalog.py"
     generator.parent.mkdir(parents=True)
     shutil.copyfile(GENERATOR, generator)
-    policy = root / "reg_webapp" / "stewards" / "swecov" / "source_policy.toml"
-    policy.parent.mkdir(parents=True)
-    policy.write_text(policy_text, encoding="utf-8")
     return generator
 
 

@@ -1,0 +1,7 @@
+id = "skv-reducerad-egenavg"
+register = "skatteverket/reducerad-egenavgift"
+variants = ["skatteverket/reducerad-egenavgift/_default"]
+
+[[table]]
+table = "SKV_reducerad_egenavg"
+edition = 2021

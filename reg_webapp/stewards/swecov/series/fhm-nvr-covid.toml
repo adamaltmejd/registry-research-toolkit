@@ -1,0 +1,33 @@
+id = "fhm-nvr-covid"
+register = "fohm/nvr"
+variants = ["fohm/nvr/_default"]
+
+[[table]]
+table = "FHM_NVR_Covid_20240422"
+edition = { from = "2020-12", to = "2024-04" }
+partition = "covid"
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fohm/nvr/_default", variable = "fohm/nvr/personnr", representation = "personnummer" }]
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[column]]
+column = "P1105_Lopnr_PeOrgnr"
+mappings = [{ register_variant = "fohm/nvr/_default", variable = "fohm/nvr/vardgivare", representation = "vardgivare" }]
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[column]]
+column = "product_name"
+mappings = [{ register_variant = "fohm/nvr/_default", variable = "fohm/nvr/vaccin", representation = "vaccin" }]
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[column]]
+column = "vaccination_date"
+mappings = [{ register_variant = "fohm/nvr/_default", variable = "fohm/nvr/vaccinationsdatum", representation = "vaccinationsdatum" }]
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."
+
+[[column]]
+column = "vaccine_type"
+mappings = [{ register_variant = "fohm/nvr/_default", variable = "fohm/nvr/vaccintyp", representation = "vaccintyp" }]
+reason = "FoHM NVR delivery with English physical names, reviewed against the fohm/nvr variable definition (#1293)."

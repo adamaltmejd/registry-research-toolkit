@@ -57,17 +57,27 @@ def load_holdings_retention_policy(
     )
     if len({entry.table for entry in entries}) != len(entries):
         raise ValueError("Duplicate undated holdings table")
+    excluded = {entry["table"] for entry in policy.get("exclude", [])}
+    rows_by_table = retention_row_guards(source, entries, excluded)
+    return entries, rows_by_table, source_sha256
+
+
+def retention_row_guards(
+    source: bytes, entries: tuple[UndatedHolding, ...], excluded: set[str]
+) -> dict[str, list[dict[str, Any]]]:
+    """Check each retained table's ordered census rows against its `rows_sha256`.
+
+    Returns the census rows by table, which warning emission reuses."""
     rows_by_table: dict[str, list[dict[str, Any]]] = {}
     for line, cells in enumerate(csv.reader(io.StringIO(source.decode("utf-8"))), 1):
         if len(cells) >= 3:
             rows_by_table.setdefault(cells[2].strip(), []).append(
                 {"line": line, "cells": cells}
             )
-    excluded = {entry["table"] for entry in policy.get("exclude", [])}
     for entry in entries:
         rows = rows_by_table.get(entry.table)
         if not rows or canonical_sha256(rows) != entry.rows_sha256:
             raise ValueError(f"Undated holdings row guard failed: {entry.table}")
         if entry.table in excluded:
             raise ValueError(f"Retained holding cannot also be excluded: {entry.table}")
-    return entries, rows_by_table, source_sha256
+    return rows_by_table

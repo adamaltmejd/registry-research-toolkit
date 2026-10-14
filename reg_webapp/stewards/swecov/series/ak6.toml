@@ -1,0 +1,51 @@
+id = "ak6"
+register = "scb/grundskola-betyg-ak6"
+variants = ["scb/grundskola-betyg-ak6/_default"]
+
+[[table]]
+table = "Ak6_2013"
+edition = 2013
+
+[[table]]
+table = "Ak6_2014"
+edition = 2014
+
+[[table]]
+table = "Ak6_2015"
+edition = 2015
+
+[[table]]
+table = "Ak6_2016"
+edition = 2016
+
+[[table]]
+table = "Ak6_2017"
+edition = 2017
+
+[[table]]
+table = "Ak6_2018"
+edition = 2018
+
+[[table]]
+table = "Ak6_2019"
+edition = 2019
+
+[[table]]
+table = "Ak6_2020"
+edition = 2020
+
+[[table]]
+table = "Ak6_2021"
+edition = 2021
+
+[[table]]
+table = "Ak6_2022"
+edition = 2022
+
+[[table]]
+table = "Ak6_2023"
+edition = 2023
+
+[[table]]
+table = "Ak6_2024"
+edition = 2024

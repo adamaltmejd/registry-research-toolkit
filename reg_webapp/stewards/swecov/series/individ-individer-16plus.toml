@@ -1,0 +1,86 @@
+# Series boundary at 2010, a documented SCB break: Population frame changes from 16+ (SCB variant 34.1335, individer-16plus) to 15+ (34.153, individer-15plus) in 2010; documented in reg_meta_build/curation/relations.toml, LISA individual-frame variant succession (#376).
+id = "individ-individer-16plus"
+register = "scb/lisa"
+variants = ["scb/lisa/individer-16plus"]
+
+# route note: period:1990-2009: variant validity window
+
+[[table]]
+table = "Individ_1990"
+edition = 1990
+
+[[table]]
+table = "Individ_1991"
+edition = 1991
+
+[[table]]
+table = "Individ_1992"
+edition = 1992
+
+[[table]]
+table = "Individ_1993"
+edition = 1993
+
+[[table]]
+table = "Individ_1994"
+edition = 1994
+
+[[table]]
+table = "Individ_1995"
+edition = 1995
+
+[[table]]
+table = "Individ_1996"
+edition = 1996
+
+[[table]]
+table = "Individ_1997"
+edition = 1997
+
+[[table]]
+table = "Individ_1998"
+edition = 1998
+
+[[table]]
+table = "Individ_1999"
+edition = 1999
+
+[[table]]
+table = "Individ_2000"
+edition = 2000
+
+[[table]]
+table = "Individ_2001"
+edition = 2001
+
+[[table]]
+table = "Individ_2002"
+edition = 2002
+
+[[table]]
+table = "Individ_2003"
+edition = 2003
+
+[[table]]
+table = "Individ_2004"
+edition = 2004
+
+[[table]]
+table = "Individ_2005"
+edition = 2005
+
+[[table]]
+table = "Individ_2006"
+edition = 2006
+
+[[table]]
+table = "Individ_2007"
+edition = 2007
+
+[[table]]
+table = "Individ_2008"
+edition = 2008
+
+[[table]]
+table = "Individ_2009"
+edition = 2009

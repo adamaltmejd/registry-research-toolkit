@@ -1,0 +1,27 @@
+id = "stativ-tot-2"
+register = "scb/stativ"
+variants = ["scb/stativ/_default"]
+
+[[table]]
+table = "Stativ2018_Tot"
+edition = 2018
+
+[[table]]
+table = "Stativ2019_Tot"
+edition = 2019
+
+[[table]]
+table = "Stativ2020_Tot"
+edition = 2020
+
+[[table]]
+table = "Stativ2021_Tot"
+edition = 2021
+
+[[table]]
+table = "Stativ2022_Tot"
+edition = 2022
+
+[[table]]
+table = "Stativ2023_Tot"
+edition = 2023

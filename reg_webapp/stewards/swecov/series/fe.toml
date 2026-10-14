@@ -1,0 +1,687 @@
+id = "fe"
+register = "scb/fek"
+variants = ["scb/fek/fek-slutdata"]
+
+# route note: every FE table (FE1990-FE2023) is FEK fek-slutdata; FE1990-FE2002 via fek.toml errata (maintainer D6, OP-2026-10-13-E)
+
+[[table]]
+table = "FE1990"
+edition = 1990
+
+[[table]]
+table = "FE1991"
+edition = 1991
+
+[[table]]
+table = "FE1992"
+edition = 1992
+
+[[table]]
+table = "FE1993"
+edition = 1993
+
+[[table]]
+table = "FE1994"
+edition = 1994
+
+[[table]]
+table = "FE1995"
+edition = 1995
+
+[[table]]
+table = "FE1996"
+edition = 1996
+
+[[table]]
+table = "FE1997"
+edition = 1997
+
+[[table]]
+table = "FE1998"
+edition = 1998
+
+[[table]]
+table = "FE1999"
+edition = 1999
+
+[[table]]
+table = "FE2000"
+edition = 2000
+
+[[table]]
+table = "FE2001"
+edition = 2001
+
+[[table]]
+table = "FE2002"
+edition = 2002
+
+[[table]]
+table = "FE2003"
+edition = 2003
+
+[[table]]
+table = "FE2004"
+edition = 2004
+
+[[table]]
+table = "FE2005"
+edition = 2005
+
+[[table]]
+table = "FE2006"
+edition = 2006
+
+[[table]]
+table = "FE2007"
+edition = 2007
+
+[[table]]
+table = "FE2008"
+edition = 2008
+
+[[table]]
+table = "FE2009"
+edition = 2009
+
+[[table]]
+table = "FE2010"
+edition = 2010
+
+[[table]]
+table = "FE2011"
+edition = 2011
+
+[[table]]
+table = "FE2012"
+edition = 2012
+
+[[table]]
+table = "FE2013"
+edition = 2013
+
+[[table]]
+table = "FE2014"
+edition = 2014
+
+[[table]]
+table = "FE2015"
+edition = 2015
+
+[[table]]
+table = "FE2016"
+edition = 2016
+
+[[table]]
+table = "FE2017"
+edition = 2017
+
+[[column]]
+column = "AktierOchAndelar"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/aktier-och-andelar", representation = "fgb202" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 66 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Anstallda"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/medelantal-anstallda", representation = "fgr6101" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 67 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "AretsResultat"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/fgb0111", representation = "fgb0111" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 13,72 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "AretsResultat"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/fgb0111", representation = "fgb0111" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "BidragForVerksamheten"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/bidrag-for-verksamheten", representation = "fgr0445" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Bruttoinvesteringar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-bruttoinvesteringar", representation = "fga10" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 75 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Byggnader"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/byggnader", representation = "fgb237" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 76 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "ByggnaderMark"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/byggnader-mark-markanlaggningar", representation = "fgb238" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 77 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "EgetKapital"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-eget-kapital", representation = "fgb370" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 78 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "FinansiellaTillgangar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/finansiella-anlaggningstillgangar", representation = "fgb0104" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 81 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Foradlingsvarde"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/foradlingsvarde", representation = "fhar003_jmf" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 18,82 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Foradlingsvarde"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/foradlingsvarde", representation = "fhar003_jmf" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "ForandringAvLagerOchPagaendeArbete"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/forandring-lager-pagaende-arbete", representation = "fgr509" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 19,83 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "ForandringAvLagerOchPagaendeArbete"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/forandring-lager-pagaende-arbete", representation = "fgr509" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Forbrukningsvarde"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/forbrukningsvarde", representation = "fhar002_jmf" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 20,84 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Forbrukningsvarde"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/forbrukningsvarde", representation = "fhar002_jmf" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "ForskottAvseendeMateriellaAnlaggningstillgangar"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/forskott-anlaggningstillgangar", representation = "fgb0102" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 85 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "ForutbetKostnUpplupnaInt"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/forutbetalda-kostnader-upplupna-intakter", representation = "fgb205" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 86 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "KassaBank"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kassa-och-bank", representation = "fgb200" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 90 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "KassaOchBank"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kassa-och-bank", representation = "fgb200" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 24,91 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "KassaOchBank"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kassa-och-bank", representation = "fgb200" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "KorfristigaSkulder"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kortfristiga-skulder", representation = "fgb0121" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 92 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "KortfristigaFordringar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kortfristiga-fordringar", representation = "fgb0106" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 93 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "KortfristigaPlaceringar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kortfristiga-placeringar", representation = "fgb0107" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 94 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "KostnaderForLonerOchAndraErsattningar"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kostnader-loner-ersattningar", representation = "fgr512" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 25,95 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "KostnaderForLonerOchAndraErsattningar"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kostnader-loner-ersattningar", representation = "fgr512" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "KostnaderForOvrigaSocialaAvgifter"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kostnader-ovriga-sociala-avgifter", representation = "fgr520" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Kundfordringar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kundfordringar", representation = "fgb204" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 98 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "LangfristigaSkulder"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-langfristiga-skulder", representation = "fgb0118" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 100 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Leverantorsskulder"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/leverantorsskulder", representation = "fgb300" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 26,101 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Leverantorsskulder"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/leverantorsskulder", representation = "fgb300" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "Lonekostnader"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kostnader-loner-ersattningar", representation = "fgr512" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 102 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Mark"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/mark", representation = "fgb235" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 103 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "MaskinerInventarier"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/maskiner-och-inventarier", representation = "fgb236" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 104 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "MaskinerOchInventarier"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/maskiner-och-inventarier", representation = "fgb236" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 27,105 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "MaskinerOchInventarier"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/maskiner-och-inventarier", representation = "fgb236" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "MateriellaAnlaggningstillgangar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-materiella-anlaggningstillgangar", representation = "fgb0103" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 106 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "MedelantalAnstallda"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/medelantal-anstallda", representation = "fgr6101" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 28,107 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "MedelantalAnstallda"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/medelantal-anstallda", representation = "fgr6101" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Nettoomsattning"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/nettoomsattning", representation = "fgr400" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 29,108 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Nettoomsattning"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/nettoomsattning", representation = "fgr400" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "NettoomsattningJjusteradForMerchanting"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2008", "FE2009"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/nettoomsattning-justerad-merchanting", representation = "fhar400_jmf" }]
+reason = "FEK long-name delivery column (double-J spelling, SCB delivery report FEK rows 109/177) of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-decided 2026-10-13 (#1302)."
+
+[[column]]
+column = "NettoomsattningJusteradForMerchanting"
+tables = ["FE2007", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/nettoomsattning-justerad-merchanting", representation = "fhar400_jmf" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Ng_5"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/naringsgren", representation = "Ng" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 112 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Omsattning"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/nettoomsattning", representation = "fgr400" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 114 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "OvrKortfristigaFordringar"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/ovriga-kortfristiga-fordringar", representation = "fgb0105" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 117 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "OvrigaKortfristigaPlaceringar"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/ovriga-kortfristiga-placeringar", representation = "fgb203" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 115 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "OvrigaPersonalkostnader"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/ovriga-personalkostnader", representation = "fgr527" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 116 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "OvrigaPersonalkostnader"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/ovriga-personalkostnader", representation = "fgr527" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/fsum901", representation = "fsum901" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 119 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Pensionskostnader"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/pensionskostnader", representation = "fgr524" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Produktionsvarde"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/produktionsvarde", representation = "fhar001_jmf" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 33,121 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Produktionsvarde"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/produktionsvarde", representation = "fhar001_jmf" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "RedovisatResultat"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/redovisat-resultat", representation = "fgr1599" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 34,122 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "RedovisatResultat"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/redovisat-resultat", representation = "fgr1599" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "ResultatEfterFinansiellaPoster"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/resultat-efter-finansiella-poster", representation = "fgr0160" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 35,123 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "ResultatEfterFinansiellaPoster"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/resultat-efter-finansiella-poster", representation = "fgr0160" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "Rorelseresultat"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/rorelseresultat", representation = "fgr0140" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 36,124 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Rorelseresultat"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/rorelseresultat", representation = "fgr0140" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "RorelseresultatForeAvskrivningar"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/rorelseresultat-fore-avskrivningar", representation = "fgr0130" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Skattekostnader"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/skattekostnader", representation = "fgr598" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 39,127 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Skattekostnader"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/skattekostnader", representation = "fgr598" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "Skatteskulder"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/skatteskulder", representation = "fgb301" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 40,128 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Skatteskulder"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/skatteskulder", representation = "fgb301" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SocialaKostnaderOchAndraPersonalkostnader"
+tables = ["FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/sociala-kostnader-personalkostnader", representation = "fgr528" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SummaAktierIKoncernOchIntresseforetag"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/fgb232", representation = "fgb232" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 132 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaAnlTillg"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/anlaggningstillgangar", representation = "fgb2022" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 43,133 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaAnlTillg"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/anlaggningstillgangar", representation = "fgb2022" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaBruttoinvesteringar"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-bruttoinvesteringar", representation = "fga10" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 44,134 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaBruttoinvesteringar"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-bruttoinvesteringar", representation = "fga10" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SummaEgetKapital"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-eget-kapital", representation = "fgb370" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 45,135 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaEgetKapital"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-eget-kapital", representation = "fgb370" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "SummaEgetKapitalOchSkulder"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/eget-kapital-och-skulder", representation = "fgb1399" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 46,136 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaEgetKapitalOchSkulder"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/eget-kapital-och-skulder", representation = "fgb1399" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaKortfristigaSkulder"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kortfristiga-skulder", representation = "fgb0121" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 50,140 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaKortfristigaSkulder"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kortfristiga-skulder", representation = "fgb0121" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kostnader-ravaror-handelsvaror", representation = "fgr500" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 51,141 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kostnader-ravaror-handelsvaror", representation = "fgr500" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SummaLangfristigaSkulder"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-langfristiga-skulder", representation = "fgb0118" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 52,142 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaLangfristigaSkulder"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-langfristiga-skulder", representation = "fgb0118" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaNettoinvesteringar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-nettoinvesteringar", representation = "fga20" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 54,144 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaNettoinvesteringar"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-nettoinvesteringar", representation = "fga20" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SummaObeskattadeReserver"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-obeskattade-reserver", representation = "fgb0115" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 55,145 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaObeskattadeReserver"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-obeskattade-reserver", representation = "fgb0115" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaOmsattningstillgangar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-omsattningstillgangar", representation = "fgb2021" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 56,146 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaOmsattningstillgangar"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-omsattningstillgangar", representation = "fgb2021" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaPersonalkostnader"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-personalkostnader", representation = "fgr0128" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 57,147 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaPersonalkostnader"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-personalkostnader", representation = "fgr0128" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaTillgangar"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-tillgangar", representation = "fgb1299" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 58,148 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaTillgangar"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-tillgangar", representation = "fgb1299" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "Utdelning"
+tables = ["FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/utdelning", representation = "fgb0362" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 61,151 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Utdelning"
+tables = ["FE2003", "FE2004", "FE2005"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/utdelning", representation = "fgb0362" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "Utdelning"
+tables = ["FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/utdelning", representation = "fgb362" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "Varulager"
+tables = ["FE1990", "FE1991", "FE1992", "FE1993", "FE1994", "FE1995", "FE1996", "FE1997", "FE1998", "FE1999", "FE2000", "FE2001", "FE2002"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/varulager", representation = "fgb219" }]
+reason = "Historical FE delivery column of the native FEK variable, extended to this edition by errata.delivered in fek.toml; SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK row(s) 62,152 document the header. FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13; OP-2026-10-13-E)."
+
+[[column]]
+column = "Varulager"
+tables = ["FE2003", "FE2004", "FE2005", "FE2006", "FE2007", "FE2008", "FE2009", "FE2010", "FE2011", "FE2012", "FE2013", "FE2014", "FE2015", "FE2016", "FE2017"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/varulager", representation = "fgb219" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."

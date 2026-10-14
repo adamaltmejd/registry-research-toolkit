@@ -1,0 +1,11 @@
+id = "gravreg-fv1-moderns-diagnoser-lev2"
+register = "graviditetsregistret/graviditetsregistret"
+variants = ["graviditetsregistret/graviditetsregistret/_default"]
+
+[[table]]
+table = "GravReg_Fv1_moderns_diagnoser_lev2"
+edition = { from = 2014, to = 2025 }
+
+[[column]]
+column = "glopnr"
+unmap = "Pregnancy join key of the lev2 aspect table; the GravReg glopnr is orderable from GravReg_Gravniva_lev2, its primary table. Maintainer-decided 2026-09-02 (GravReg lev2 join keys); reason added 2026-10-13."

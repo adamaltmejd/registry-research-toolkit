@@ -1,0 +1,12 @@
+id = "swecov-sos-cancer"
+register = "sos/can"
+variants = ["sos/can/can"]
+
+[[table]]
+table = "SWECOV_SOS_CANCER"
+edition = { from = 2005, to = 2022 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "sos/can/can", variable = "sos/can/personnr", representation = "PNR" }]
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."

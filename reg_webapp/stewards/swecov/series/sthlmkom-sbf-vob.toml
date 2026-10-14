@@ -1,0 +1,8 @@
+id = "sthlmkom-sbf-vob"
+register = "sabo/patienter"
+variants = ["sabo/patienter/_default"]
+
+[[table]]
+table = "SthlmKom_SBF_VOB"
+edition = { from = 2013, to = 2021 }
+partition = "sthlm"

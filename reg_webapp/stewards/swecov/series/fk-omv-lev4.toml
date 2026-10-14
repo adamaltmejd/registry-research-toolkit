@@ -1,0 +1,26 @@
+id = "fk-omv-lev4"
+register = "fk/omvardnadsbidrag"
+variants = ["fk/omvardnadsbidrag/mottagare"]
+
+[[table]]
+table = "FK_OMV_lev4"
+edition = { from = 2019, to = 2025 }
+
+[[column]]
+column = "Omfattning"
+hold = { follow_up = "#1554", reason = "Delivered level column with no omfattning variable on fk/omvardnadsbidrag; whether it equals Niva needs a MONA value-set check (#1554). Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/omvardnadsbidrag/mottagare", variable = "fk/omvardnadsbidrag/lopnr", representation = "Lopnr" }]
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[column]]
+column = "Utbetalningsperiod_fromdat"
+mappings = [{ register_variant = "fk/omvardnadsbidrag/mottagare", variable = "fk/omvardnadsbidrag/ersattningsperiod-fromdat", representation = "Ersattningsperiod_fromdat" }]
+reason = "SWECOV delivery spelling of the payment period (Utbetalningsperiod_*) for the variant's ersättningsperiod variable; same definition in fk.toml. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "Utbetalningsperiod_tomdat"
+mappings = [{ register_variant = "fk/omvardnadsbidrag/mottagare", variable = "fk/omvardnadsbidrag/ersattningsperiod-tomdat", representation = "Ersattningsperiod_tomdat" }]
+reason = "SWECOV delivery spelling of the payment period (Utbetalningsperiod_*) for the variant's ersättningsperiod variable; same definition in fk.toml. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."

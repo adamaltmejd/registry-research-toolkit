@@ -1,0 +1,134 @@
+id = "swecov-sos-sv"
+register = "sos/par"
+variants = ["sos/par/par-sv"]
+
+# route note: DIA1..30/EKOD1.. wide pivots of long-format concepts; SV_comorb derived
+
+[[table]]
+table = "SWECOV_SOS_SV"
+edition = { from = 2005, to = 2023 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "sos/par/par-sv", variable = "sos/par/personnr", representation = "PNR" }]
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "kva_typ1"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ10"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ11"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ12"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ13"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ14"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ15"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ16"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ17"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ18"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ19"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ2"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ20"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ21"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ22"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ23"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ24"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ25"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ26"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ27"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ28"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ29"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ3"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ30"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ4"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ5"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ6"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ7"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ8"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }
+
+[[column]]
+column = "kva_typ9"
+hold = { follow_up = "#1495", reason = "Wide-pivot member of kva_typ: the inventory has no cell shape for N physical columns serving one variable (#1495)." }

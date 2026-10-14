@@ -1,0 +1,7 @@
+id = "rv-hsn-71"
+register = "region-vasterbotten/pandemrix-vaccinationer"
+variants = ["region-vasterbotten/pandemrix-vaccinationer/_default"]
+
+[[table]]
+table = "RV_HSN_71_2023"
+edition = 2023

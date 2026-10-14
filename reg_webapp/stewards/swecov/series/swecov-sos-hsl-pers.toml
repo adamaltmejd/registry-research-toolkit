@@ -1,0 +1,12 @@
+id = "swecov-sos-hsl-pers"
+register = "sos/hsl"
+variants = ["sos/hsl/hsl"]
+
+[[table]]
+table = "SWECOV_SOS_HSL_PERS"
+edition = { from = 2016, to = 2023 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "sos/hsl/hsl", variable = "sos/hsl/personnr", representation = "PNR" }]
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."

@@ -1,0 +1,7 @@
+id = "rjl-vaccinering-pandemrix"
+register = "region-jonkoping/pandemrix-vaccinationer"
+variants = ["region-jonkoping/pandemrix-vaccinationer/_default"]
+
+[[table]]
+table = "RJL_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }

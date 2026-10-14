@@ -1,0 +1,7 @@
+id = "ru-vaccinationsjournaler"
+register = "region-uppsala/pandemrix-vaccinationer"
+variants = ["region-uppsala/pandemrix-vaccinationer/_default"]
+
+[[table]]
+table = "RU_Vaccinationsjournaler"
+edition = { from = 2009, to = 2010 }

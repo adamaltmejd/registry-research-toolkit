@@ -1,41 +1,31 @@
-"""Authored SWECOV source routing shared by generation and holdings accounting."""
+"""Authored SWECOV source routing, read by holdings accounting.
+
+The generator reads the steward spec (`steward_spec.py`) instead; this model
+stays while holdings accounting still reads `source_policy.toml`.
+"""
 
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import (
-    AfterValidator,
     BaseModel,
     ConfigDict,
     Field,
     field_validator,
     model_validator,
 )
-from reg_core_py import parse_fqid
 
-from .inventory import ColumnMapping
-from .slug_grammar import validate_slug
+from .steward_spec import (  # noqa: TC001 (Pydantic resolves them at runtime)
+    FlavorDefinition,
+    ProviderSlug,
+    RegisterCoordinate,
+    VariantCoordinate,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
-
-
-def _register_coordinate(value: str) -> str:
-    if parse_fqid(value).kind != "register":
-        raise ValueError("policy registers must be register FQIDs")
-    return value
-
-
-def _provider_slug(value: str) -> str:
-    validate_slug(value, "provider")
-    return value
-
-
-ProviderSlug = Annotated[str, AfterValidator(_provider_slug)]
-RegisterCoordinate = Annotated[str, AfterValidator(_register_coordinate)]
-VariantCoordinate = Annotated[str, AfterValidator(ColumnMapping._check_variant_coord)]
 
 
 class _PolicyModel(BaseModel):
@@ -87,44 +77,6 @@ class SourceRoute(_PolicyModel):
         return self
 
 
-class FlavorDisposition(_PolicyModel):
-    holding: str = Field(min_length=1)
-    provider: ProviderSlug = Field(min_length=1)
-    provider_name: str = Field(min_length=1)
-    register_key: str = Field(alias="register", min_length=1)
-    register_name: str = Field(min_length=1)
-    variant: str = Field(min_length=1)
-    variant_slug: str = Field(min_length=1)
-    variant_name: str = Field(min_length=1)
-    tables: list[str] | None = None
-    # Exact physical column names. `keep_columns`: Källa-sourced columns the
-    # flavor keeps as the steward's own variables instead of leaving them to the
-    # graft track (a steward table that must stay orderable as one variant).
-    # `sensitive_columns`: flavor variables flagged `is_sensitive`.
-    keep_columns: list[str] = Field(default_factory=list)
-    sensitive_columns: list[str] = Field(default_factory=list)
-    # `year_independent`: the variant's table has physical delivery scope but no
-    # calendar coverage, so its states carry no window (the inventory places the
-    # table at edition `_default`).
-    period_scope: Literal["intervals", "year_independent"] = "intervals"
-
-    @model_validator(mode="after")
-    def _tables(self) -> FlavorDisposition:
-        ColumnMapping._check_variant_coord(
-            f"{self.provider}/{self.register_key}/{self.variant_slug}"
-        )
-        if self.tables is not None and (
-            not self.tables
-            or any(not table.strip() for table in self.tables)
-            or len(set(self.tables)) != len(self.tables)
-        ):
-            raise ValueError("flavor tables must be nonblank and unique")
-        for names in (self.keep_columns, self.sensitive_columns):
-            if any(not name.strip() for name in names) or len(set(names)) != len(names):
-                raise ValueError("flavor column lists must be nonblank and unique")
-        return self
-
-
 class ProviderScope(_PolicyModel):
     holding_prefix: str = Field(min_length=1)
     provider: ProviderSlug = Field(min_length=1)
@@ -154,7 +106,7 @@ class SourcePolicy(_PolicyModel):
         return value
 
     route: list[SourceRoute]
-    flavor: list[FlavorDisposition]
+    flavor: list[FlavorDefinition]
     provider_scope: list[ProviderScope]
     register_scope: list[RegisterScope]
 
@@ -196,68 +148,6 @@ class SourcePolicy(_PolicyModel):
             ):
                 raise ValueError(f"conflicting register name {key!r}")
         return self
-
-    def mapping(self) -> dict[tuple[str, str], dict]:
-        result = {}
-        for entry in self.route:
-            value: dict = {"status": entry.status}
-            if entry.unmapped_reason is not None:
-                value["unmapped_reason"] = entry.unmapped_reason
-            if entry.graft is not None:
-                value["graft"] = entry.graft
-            if entry.note is not None:
-                value["note"] = entry.note
-            if entry.target is not None:
-                value["to"] = entry.target
-            if entry.split:
-                value["to"] = [
-                    (item.selector, item.target, item.note) for item in entry.split
-                ]
-            result[entry.category, entry.detail] = value
-        return result
-
-    def disposition(self) -> list[tuple[str, str, str, str, str, str, str, str]]:
-        return [
-            (
-                entry.holding,
-                entry.provider,
-                entry.provider_name,
-                entry.register_key,
-                entry.register_name,
-                entry.variant,
-                entry.variant_slug,
-                entry.variant_name,
-            )
-            for entry in self.flavor
-        ]
-
-    def variant_tables(self) -> dict[tuple[str, str, str], tuple[str, ...]]:
-        return {
-            (entry.provider, entry.register_key, entry.variant): tuple(entry.tables)
-            for entry in self.flavor
-            if entry.tables is not None
-        }
-
-    def year_independent_variants(self) -> frozenset[tuple[str, str, str]]:
-        """The flavor coordinates whose states carry no calendar window."""
-        return frozenset(
-            (entry.provider, entry.register_key, entry.variant)
-            for entry in self.flavor
-            if entry.period_scope == "year_independent"
-        )
-
-    def variant_columns(
-        self,
-    ) -> dict[tuple[str, str, str], tuple[frozenset[str], frozenset[str]]]:
-        """(keep_columns, sensitive_columns) per flavor coordinate."""
-        return {
-            (entry.provider, entry.register_key, entry.variant): (
-                frozenset(entry.keep_columns),
-                frozenset(entry.sensitive_columns),
-            )
-            for entry in self.flavor
-            if entry.keep_columns or entry.sensitive_columns
-        }
 
 
 def load_source_policy(path: Path) -> SourcePolicy:

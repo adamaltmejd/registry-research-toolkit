@@ -1,0 +1,11 @@
+id = "fodelseuppg"
+register = "scb/rtb"
+variants = ["scb/rtb/folkbokforda-personer"]
+
+[[table]]
+table = "Fodelseuppg_20241231"
+edition = { from = 1990, to = 2024 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+unmap = "Person join key of an auxiliary birth-information holding; scb/rtb/personnr on scb/rtb/folkbokforda-personer is orderable from the RTB tables. Withheld to keep one physical cell per ordered coordinate; the three birth-information fields stay mapped (#1170)."

@@ -1,0 +1,7 @@
+id = "rv-vaccinering-pandemrix"
+register = "region-varmland/pandemrix-vaccinationer"
+variants = ["region-varmland/pandemrix-vaccinationer/_default"]
+
+[[table]]
+table = "RV_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }

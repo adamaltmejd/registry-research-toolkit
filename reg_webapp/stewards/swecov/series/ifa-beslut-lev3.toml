@@ -1,0 +1,7 @@
+id = "ifa-beslut-lev3"
+register = "iaf/beslut"
+variants = ["iaf/beslut/_default"]
+
+[[table]]
+table = "IFA_Beslut_Lev3"
+edition = { from = 2014, to = 2023 }

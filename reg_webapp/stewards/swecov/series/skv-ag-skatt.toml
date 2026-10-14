@@ -1,0 +1,7 @@
+id = "skv-ag-skatt"
+register = "skatteverket/arbetsgivardeklaration"
+variants = ["skatteverket/arbetsgivardeklaration/_default"]
+
+[[table]]
+table = "SKV_ag_skatt"
+edition = { from = 2019, to = 2021 }

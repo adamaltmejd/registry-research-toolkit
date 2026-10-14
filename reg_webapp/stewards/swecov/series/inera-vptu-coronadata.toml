@@ -1,0 +1,8 @@
+id = "inera-vptu-coronadata"
+register = "inera/samtal"
+variants = ["inera/samtal/_default"]
+
+[[table]]
+table = "Inera_VPTU_Coronadata"
+edition = { from = 2019, to = 2023 }
+partition = "vptu-corona"

@@ -1,0 +1,19 @@
+id = "sosalarm"
+register = "sos-alarm/ambulanslarm"
+variants = ["sos-alarm/ambulanslarm/_default"]
+
+[[table]]
+table = "SOSAlarm_2018"
+edition = 2018
+
+[[table]]
+table = "SOSAlarm_2019"
+edition = 2019
+
+[[table]]
+table = "SOSAlarm_2020"
+edition = 2020
+
+[[table]]
+table = "SOSAlarm_2021"
+edition = 2021

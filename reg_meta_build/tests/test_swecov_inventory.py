@@ -1,33 +1,33 @@
 """SWECOV generator: the delivery inventory stage (`cmd_inventory`).
 
 Literal delivery columns resolve against a FLAVORED DB into `[[table.column.mapping]]`
-entries, a bare table year can be re-spelled as the school year it holds, and routing
-decides which holdings are placed at all. Assertions read the emitted
-`inventory.toml` and the `derived/inventory_worklist.json` it leaves. Fixture
-provenance and the generator's boundary: `_swecov_fixtures`.
+entries, a series can re-spell a bare table year as the school year it holds, and
+the scope's dispositions decide which census tables are placed at all. Assertions
+read the emitted `inventory.toml` and the `derived/inventory_worklist.json` it
+leaves. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
 """
 
 from __future__ import annotations
 
 import argparse
-import json
 import sqlite3
 import tomllib
 from typing import TYPE_CHECKING
 
 import pytest
 from _swecov_fixtures import (
-    POLICY,
+    SPEC,
     build_catalog,
     column as _column,
-    copied_layout,
     flavored_db_fixture,  # noqa: F401
     inventory_worklist as _inventory_worklist,
+    one_table_series,
     run_flavor,
-    run_generator,
     run_inventory as _run_inventory,
     synthetic_enriched as _synthetic_enriched,
+    write_spec,
 )
+from reg_meta_build.errors import RegMetaError
 from reg_meta_build.inventory import (
     edition_bounds,
     load_inventory as load_delivery_inventory,
@@ -47,13 +47,7 @@ def test_inventory_maps_every_spelling_of_a_co_delivered_column(
     columns = sorted(
         c["name"] for c in _synthetic_enriched()["Inera/1177/Ordered tests"]["columns"]
     )
-    steward_dir = _run_inventory(
-        tmp_path,
-        flavored_db,
-        '[[edition]]\ntable = "T"\nedition = 2021\n',
-        "T",
-        columns,
-    )
+    steward_dir = _run_inventory(tmp_path, flavored_db, "T", columns, edition="2021")
 
     emitted = tomllib.loads(
         (steward_dir / "inventory.toml").read_text(encoding="utf-8")
@@ -88,9 +82,9 @@ def test_lone_suffixed_column_beside_its_base_is_a_reasoned_pivot_member(
     steward = _run_inventory(
         tmp_path,
         flavored_db,
-        '[[edition]]\ntable = "T"\nedition = 2021\n',
         "T",
         ["T_kolumn", "T_kolumn1", "Okand_kolumn"],
+        edition="2021",
     )
     (table,) = load_delivery_inventory(steward / "inventory.toml").tables
     _, base, member = table.columns
@@ -111,7 +105,7 @@ def test_lone_suffixed_column_beside_its_base_is_a_reasoned_pivot_member(
     ]
 
 
-# --- cmd_inventory: per-register school-year editions ------------------------
+# --- cmd_inventory: a series' school-year edition spelling --------------------
 
 
 def _emitted_editions(steward_dir: Path) -> dict[str, object]:
@@ -119,13 +113,6 @@ def _emitted_editions(steward_dir: Path) -> dict[str, object]:
         (steward_dir / "inventory.toml").read_text(encoding="utf-8")
     )
     return {table["id"]: table["edition"] for table in emitted["table"]}
-
-
-def _stale_entries(tmp_path: Path) -> list[str]:
-    worklist = json.loads(
-        (tmp_path / "derived" / "inventory_worklist.json").read_text(encoding="utf-8")
-    )
-    return worklist["stale_overlay_entries"]
 
 
 @pytest.mark.parametrize(
@@ -145,7 +132,7 @@ def _stale_entries(tmp_path: Path) -> list[str]:
         ("ht", "HT2012", ("2012-07-01", "2012-12-31")),
     ],
 )
-def test_a_school_year_rule_spells_a_table_year_as_the_school_year_it_holds(
+def test_a_series_spelling_spells_a_table_year_as_the_school_year_it_holds(
     tmp_path: Path,
     flavored_db: Path,
     capsys: pytest.CaptureFixture[str],
@@ -153,191 +140,58 @@ def test_a_school_year_rule_spells_a_table_year_as_the_school_year_it_holds(
     edition: object,
     bounds: tuple[str, str],
 ) -> None:
-    """The register's anchor decides which school year the table year `2012`
-    names — and the emitted spelling expands, through the shared period
-    grammar every reader of the inventory uses, to exactly that window."""
+    """The series' `edition_spelling` decides which school year the table
+    edition `2012` names — and the emitted spelling expands, through the shared
+    period grammar every reader of the inventory uses, to exactly that window."""
     steward_dir = _run_inventory(
         tmp_path,
         flavored_db,
-        f'[[school_year]]\nregister = "inera/bestallda-prover"\nanchor = "{anchor}"\n',
         "T2012",
         ["T_kolumn"],
+        header=f'edition_spelling = "{anchor}"',
     )
 
     assert _emitted_editions(steward_dir) == {"T2012": edition}
     (loaded,) = load_delivery_inventory(steward_dir / "inventory.toml").tables
     assert edition_bounds(loaded.edition) == (bounds,)
-    assert (
-        f"  school_year inera/bestallda-prover ({anchor}): 1 tables re-spelled"
-        in capsys.readouterr().out
-    )
+    assert "  edition_spelling s: 1 tables re-spelled" in capsys.readouterr().out
 
 
-def test_a_curated_edition_wins_over_the_school_year_rule(
-    tmp_path: Path, flavored_db: Path, capsys: pytest.CaptureFixture[str]
-) -> None:
-    steward_dir = _run_inventory(
-        tmp_path,
-        flavored_db,
-        '[[school_year]]\nregister = "inera/bestallda-prover"\nanchor = "spring"\n'
-        '[[edition]]\ntable = "T2012"\nedition = 2012\n',
-        "T2012",
-        ["T_kolumn"],
-    )
-
-    assert _emitted_editions(steward_dir) == {"T2012": 2012}
-    assert (
-        "  school_year inera/bestallda-prover (spring): 0 tables re-spelled"
-        in capsys.readouterr().out
-    )
-
-
-def test_a_table_two_school_year_rules_disagree_on_is_refused(
+def test_an_unknown_edition_spelling_is_refused(
     tmp_path: Path, flavored_db: Path
 ) -> None:
-    """Two registers' rules over one table make its school year ambiguous, so
-    no rule applies: the table keeps its calendar year and is named for the
-    maintainer, the way a stale overlay entry is."""
-    steward_dir = _run_inventory(
-        tmp_path,
-        flavored_db,
-        '[[school_year]]\nregister = "inera/bestallda-prover"\nanchor = "spring"\n'
-        '[[school_year]]\nregister = "inera/samtal"\nanchor = "autumn"\n'
-        '[[assign]]\ntable = "T2012"\nregister_variant = '
-        '["inera/bestallda-prover/_default", "inera/samtal/_default"]\n',
-        "T2012",
-        ["T_kolumn"],
-    )
-
-    assert _emitted_editions(steward_dir) == {"T2012": 2012}
-    assert _stale_entries(tmp_path) == [
-        "T2012 (school_year rules disagree across inera/bestallda-prover, inera/samtal)"
-    ]
-
-
-def test_a_school_year_rule_no_table_maps_to_is_refused(
-    tmp_path: Path, flavored_db: Path
-) -> None:
-    steward_dir = _run_inventory(
-        tmp_path,
-        flavored_db,
-        '[[school_year]]\nregister = "scb/grundskola-ak9"\nanchor = "spring"\n',
-        "T2012",
-        ["T_kolumn"],
-    )
-
-    assert _emitted_editions(steward_dir) == {"T2012": 2012}
-    assert _stale_entries(tmp_path) == [
-        "scb/grundskola-ak9 (school_year spring, no emitted table maps to it)"
-    ]
-
-
-def test_an_unknown_school_year_anchor_is_refused(
-    tmp_path: Path, flavored_db: Path
-) -> None:
-    """The anchor set is the grammar: a misspelled one is a curation slip, not
+    """The spelling set is the grammar: a misspelled one is a curation slip, not
     a table year to be re-spelled by guesswork."""
-    with pytest.raises(SystemExit, match="anchor 'winter'"):
+    with pytest.raises(RegMetaError, match="edition_spelling") as refused:
         _run_inventory(
             tmp_path,
             flavored_db,
-            '[[school_year]]\nregister = "inera/bestallda-prover"\nanchor = "winter"\n',
             "T2012",
             ["T_kolumn"],
+            header='edition_spelling = "winter"',
         )
+    assert refused.value.code == "steward_spec_invalid"
 
 
-# --- cmd_inventory: routing ----------------------------------------------------
-
-
-def _policy_with_unmapped_route(category: str, detail: str, reason: str) -> str:
-    """The committed source policy plus one reviewed `unmapped` route."""
-    text = build_catalog.SOURCE_POLICY_PATH.read_text(encoding="utf-8")
-    return (
-        text.rstrip("\n")
-        + "\n\n[[route]]\n"
-        + f"category = {json.dumps(category)}\n"
-        + f"detail = {json.dumps(detail)}\n"
-        + 'status = "unmapped"\n'
-        + f"unmapped_reason = {json.dumps(reason)}\n"
-    )
-
-
-@pytest.mark.parametrize("assigned", [False, True])
-def test_inventory_unmapped_route_retains_holdings_without_inferred_assignment(
-    tmp_path: Path, flavored_db: Path, assigned: bool
-) -> None:
-    """An `unmapped` route keeps its tables and columns in the inventory, each
-    column carrying the route's reason, and never auto-assigns an owner: only an
-    explicit `[[assign]]` places the table, after which its columns map."""
-    reason = "Separate source variants do not establish this combined delivery's owner."
-    generator = copied_layout(
-        tmp_path / "layout",
-        _policy_with_unmapped_route("Inera/1177", "Ordered tests", reason),
-    )
-    steward = tmp_path / "steward"
-    steward.mkdir()
-    (steward / "inventory_overlay.toml").write_text(
-        '[[assign]]\ntable = "T2019"\nregister_variant = "inera/bestallda-prover/_default"\n'
-        if assigned
-        else "",
-        encoding="utf-8",
-    )
-    csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
-    csv_path.write_text(
-        "Category,Detail,Table\nInera/1177,Ordered tests,T2019,T_kolumn,Unknown\n",
-        encoding="utf-8",
-    )
-
-    result = run_generator(
-        generator,
-        "--csv",
-        str(csv_path),
-        "--db",
-        str(flavored_db),
-        "inventory",
-        "--out",
-        str(steward),
-    )
-
-    assert result.returncode == 0, result.stderr
-    table = load_delivery_inventory(steward / "inventory.toml").tables[0]
-    assert table.id == "T2019" and table.edition == "2019"
-    assert [column.name for column in table.columns] == ["T_kolumn", "Unknown"]
-    assert not _inventory_worklist(tmp_path)["assignment_needed"]
-    if assigned:
-        assert len(table.columns[0].mappings) == 1
-    else:
-        assert all(
-            column.mappings == () and column.unmapped_reason == reason
-            for column in table.columns
-        )
+# --- cmd_inventory: scope dispositions ---------------------------------------
 
 
 def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
     tmp_path: Path, flavored_db: Path
 ) -> None:
-    """Undated holdings never get a guessed edition: a retained table is listed
-    apart, and a name whose only period is an 8-digit extract stamp goes to the
-    edition worklist, while the same stamp beside a real year token keeps that
-    year. Fails if the stamp is read as coverage (`Stamp_20241231` placed as
-    2024; the Swedbank_V04_20210520 case, #1170)."""
-    import hashlib
-
-    from reg_meta_build.inventory import load_inventory
+    """A `[[retain_unknown]]` table never gets a guessed edition: it is listed
+    apart in the worklist with its census columns, a `[[lookup]]` table is
+    skipped, and only the series member is emitted. Fails if a retained or
+    lookup table is emitted, or if the retained table's row guard is not
+    checked against the census."""
     from reg_meta_build.source_evidence import canonical_sha256
 
-    steward = tmp_path / "steward"
-    steward.mkdir()
-    (steward / "inventory_overlay.toml").write_text("")
     source = tmp_path / "holdings.csv"
     source.write_text(
         "Category,Detail,Table,V1,V2\n"
         "Inera/1177,Ordered tests,Known_2020,T_kolumn,\n"
         "Inera/1177,Ordered tests,Undated,T_kolumn,Unknown\n"
         "Inera/1177,Ordered tests,Lookup,Code,Name\n"
-        "Inera/1177,Ordered tests,Stamp_20241231,T_kolumn,\n"
-        "Inera/1177,Ordered tests,Known_2024_20241231,T_kolumn,\n"
     )
     rows = [
         {
@@ -345,37 +199,40 @@ def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
             "cells": ["Inera/1177", "Ordered tests", "Undated", "T_kolumn", "Unknown"],
         }
     ]
-    policy = tmp_path / "holdings_policy.toml"
-    policy.write_text(
-        f'source_sha256 = "{hashlib.sha256(source.read_bytes()).hexdigest()}"\n'
-        '[[exclude]]\ntable = "Lookup"\nreason = "Code/name dictionary."\n'
-        '[[retain_unknown]]\ntable = "Undated"\nregister = "inera/bestallda-prover"\n'
-        f'rows_sha256 = "{canonical_sha256(rows)}"\nreason = "No calendar coverage."\n'
+    steward = write_spec(
+        tmp_path / "steward",
+        source,
+        {"s": one_table_series("Known_2020")},
+        scope=(
+            '[[lookup]]\ntable = "Lookup"\nreason = "Code/name dictionary."\n'
+            '[[retain_unknown]]\ntable = "Undated"\nregister = "inera/bestallda-prover"\n'
+            f'rows_sha256 = "{canonical_sha256(rows)}"\nreason = "No calendar coverage."\n'
+        ),
     )
     build_catalog.cmd_inventory(
-        argparse.Namespace(
-            csv=source, db=flavored_db, out=steward, holdings_policy=policy
-        )
+        argparse.Namespace(csv=source, db=flavored_db, spec=steward, out=None)
     )
-    inventory = load_inventory(steward / "inventory.toml")
+    inventory = load_delivery_inventory(steward / "inventory.toml")
     assert {table.id: table.edition for table in inventory.tables} == {
-        "Known_2020": "2020",
-        "Known_2024_20241231": "2024",
+        "Known_2020": "2020"
     }
-    worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
-    assert worklist["edition_needed"] == [
-        {"table": "Stamp_20241231", "tokens": ["2024"]}
-    ]
-    assert worklist["retained_unknown"][0]["table"] == "Undated"
-    assert worklist["retained_unknown"][0]["columns"] == ["T_kolumn", "Unknown"]
+    (retained,) = _inventory_worklist(tmp_path)["retained_unknown"]
+    assert (retained["table"], retained["columns"]) == (
+        "Undated",
+        ["T_kolumn", "Unknown"],
+    )
 
 
 # --- cmd_inventory: a year-independent table (#1538) --------------------------
 
 _INDEPENDENT_HOLDING = ("RTB", "Födelseuppgifter")
-(_INDEPENDENT_TABLE,) = POLICY.variant_tables()[
-    ("swecov", "population", "fodelseland-grupperat")
-]
+_INDEPENDENT_VARIANT = "swecov/population/fodelseland-grupperat"
+(_INDEPENDENT_TABLE,) = next(
+    flavor.tables
+    for flavor in SPEC.scope.flavors
+    if flavor.coordinate == _INDEPENDENT_VARIANT
+)
+_YEAR_INDEPENDENT = 'period_scope = "year_independent"'
 # Three punctuations of one column, co-delivered in the year-independent table:
 # a dated variant would group them as one state with aliases. All three kebab to
 # `birth-country`, so the flavor keys them in sorted physical-name order (space <
@@ -414,14 +271,17 @@ def independent_flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return tmp_path / "flavored" / "reg_meta.db"
 
 
-def _independent_inventory(tmp_path: Path, db: Path, overlay: str, columns) -> Path:
+def _independent_inventory(
+    tmp_path: Path, db: Path, columns: list[str], **series: str
+) -> Path:
     return _run_inventory(
         tmp_path,
         db,
-        overlay,
         _INDEPENDENT_TABLE,
         columns,
         holding=_INDEPENDENT_HOLDING,
+        variants=(_INDEPENDENT_VARIANT,),
+        **series,
     )
 
 
@@ -429,15 +289,15 @@ def test_year_independent_flavor_table_maps_as_year_independent_holdings(
     tmp_path: Path, independent_flavored_db: Path
 ) -> None:
     """`cmd_flavor` emits the year-independent variant's states with no calendar
-    window, each co-delivered spelling as its own variable, and an overlay
-    edition `"_default"` places the table as a year-independent holding whose
+    window, each co-delivered spelling as its own variable, and a series
+    member with `period_scope = "year_independent"` places the table as a year-independent holding whose
     every column maps to its own literal and is served by the catalog (no
     coverage miss). Fails if the flavor dates the states
     0001-01-01..9999-12-31 (the `_default` table then has no year-independent
     owner and is refused), if it groups the twins as aliases (extension refuses
     the provider TOML, `curated_toml_invalid`), if a third colliding spelling
-    reuses a key or keys out of name order, if `cmd_inventory` cannot read
-    `_default` or emits it without its `period_scope`, or if extension writes
+    reuses a key or keys out of name order, if `cmd_inventory` cannot place a
+    year-independent member or emits it without its `period_scope`, or if extension writes
     the state so the catalog does not serve it."""
     from contextlib import closing
 
@@ -448,8 +308,8 @@ def test_year_independent_flavor_table_maps_as_year_independent_holdings(
     steward = _independent_inventory(
         tmp_path,
         independent_flavored_db,
-        f'[[edition]]\ntable = "{table}"\nedition = "_default"\n',
         [f"{table}_kolumn", *_INDEPENDENT_TWINS],
+        edition=_YEAR_INDEPENDENT,
     )
 
     (emitted,) = tomllib.loads(
@@ -507,8 +367,8 @@ def test_range_edition_never_admits_a_year_independent_state(
         _independent_inventory(
             tmp_path,
             independent_flavored_db,
-            f'[[edition]]\ntable = "{table}"\nedition = {{ from = 2019, to = 2020 }}\n',
             [f"{table}_kolumn"],
+            edition="{ from = 2019, to = 2020 }",
         )
     (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
     assert (entry["column"], entry["code"]) == (
@@ -517,28 +377,27 @@ def test_range_edition_never_admits_a_year_independent_state(
     )
 
 
-def test_reviewed_mapping_pins_a_year_independent_edition(
+def test_reviewed_mapping_maps_a_year_independent_member(
     tmp_path: Path, independent_flavored_db: Path
 ) -> None:
-    """A reviewed `[[mapping]]` pinned to edition `"_default"` maps a physical
-    column with no catalog literal to a year-independent representation. Fails
-    if `[[mapping]]` accepts only finite editions, which refuses the overlay as
-    malformed."""
+    """A reviewed mapping decision maps a physical column with no catalog
+    literal, in a year-independent member, to a year-independent
+    representation. Fails if a mapping decision is checked only against finite
+    editions, which refuses the column as stale."""
     table = _INDEPENDENT_TABLE
     variable = "swecov/population/swecov-fodelseland-grupperat-kolumn"
-    overlay = (
-        f'[[edition]]\ntable = "{table}"\nedition = "_default"\n\n'
-        "[[mapping]]\n"
-        f'table = "{table}"\n'
-        'column = "Physical"\n'
-        'edition = "_default"\n'
-        'register_variant = "swecov/population/fodelseland-grupperat"\n'
-        f'variable = "{variable}"\n'
-        f'representation = "{table}_kolumn"\n'
+    decisions = (
+        '[[column]]\ncolumn = "Physical"\n'
+        f'mappings = [{{ register_variant = "{_INDEPENDENT_VARIANT}", '
+        f'variable = "{variable}", representation = "{table}_kolumn" }}]\n'
         'reason = "Exact reviewed source coordinate"\n'
     )
     steward = _independent_inventory(
-        tmp_path, independent_flavored_db, overlay, ["Physical"]
+        tmp_path,
+        independent_flavored_db,
+        ["Physical"],
+        edition=_YEAR_INDEPENDENT,
+        decisions=decisions,
     )
     (emitted,) = load_delivery_inventory(steward / "inventory.toml").tables
     (physical,) = emitted.columns

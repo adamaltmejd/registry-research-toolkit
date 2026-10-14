@@ -1,0 +1,483 @@
+id = "ureg"
+register = "scb/ureg"
+variants = ["scb/ureg/personens-hogsta-utbildning", "scb/ureg/personens-hogsta-utbildning-16-74"]
+
+[[table]]
+table = "UREG1990"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 1990
+
+[[table]]
+table = "UREG1991"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 1991
+
+[[table]]
+table = "UREG1992"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 1992
+
+[[table]]
+table = "UREG1993"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 1993
+
+[[table]]
+table = "UREG1994"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 1994
+
+[[table]]
+table = "UREG1995"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 1995
+
+[[table]]
+table = "UREG1996"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 1996
+
+[[table]]
+table = "UREG1997"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 1997
+
+[[table]]
+table = "UREG1998"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 1998
+
+[[table]]
+table = "UREG1999"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 1999
+
+[[table]]
+table = "UREG2000"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 2000
+
+[[table]]
+table = "UREG2001"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 2001
+
+[[table]]
+table = "UREG2002"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 2002
+
+[[table]]
+table = "UREG2003"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 2003
+
+[[table]]
+table = "UREG2004"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 2004
+
+[[table]]
+table = "UREG2005"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 2005
+
+[[table]]
+table = "UREG2006"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 2006
+
+[[table]]
+table = "UREG2007"
+variants = ["scb/ureg/personens-hogsta-utbildning-16-74"]
+edition = 2007
+
+[[table]]
+table = "UREG2008"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2008
+
+[[table]]
+table = "UREG2009"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2009
+
+[[table]]
+table = "UREG2010"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2010
+
+[[table]]
+table = "UREG2011"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2011
+
+[[table]]
+table = "UREG2012"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2012
+
+[[table]]
+table = "UREG2013"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2013
+
+[[table]]
+table = "UREG2014"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2014
+
+[[table]]
+table = "UREG2015"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2015
+
+[[table]]
+table = "UREG2016"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2016
+
+[[table]]
+table = "UREG2017"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2017
+
+[[table]]
+table = "UREG2018"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2018
+
+[[table]]
+table = "UREG2019"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2019
+
+[[table]]
+table = "UREG2020"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2020
+
+[[table]]
+table = "UREG2021"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2021
+
+[[table]]
+table = "UREG2022"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2022
+
+[[table]]
+table = "UREG2023"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2023
+
+[[table]]
+table = "UREG2024"
+variants = ["scb/ureg/personens-hogsta-utbildning"]
+edition = 2024
+
+[[column]]
+column = "ExamAr"
+tables = ["UREG1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ExamAr"
+tables = ["UREG1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ExamAr"
+tables = ["UREG1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ExamAr"
+tables = ["UREG1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ExamAr"
+tables = ["UREG1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ExamAr"
+tables = ["UREG1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ExamAr"
+tables = ["UREG1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "KallKod"
+tables = ["UREG1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "KallKod"
+tables = ["UREG1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "KallKod"
+tables = ["UREG1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "KallKod"
+tables = ["UREG1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "KallKod"
+tables = ["UREG1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "KallKod"
+tables = ["UREG1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "KallKod"
+tables = ["UREG1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["UREG1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["UREG1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["UREG1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["UREG1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["UREG1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["UREG1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["UREG1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Grp"
+tables = ["UREG1999"]
+unmap = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Inr"
+tables = ["UREG1999"]
+unmap = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva"
+tables = ["UREG1999"]
+unmap = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SUN2000Niva_old"
+tables = ["UREG1999"]
+unmap = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

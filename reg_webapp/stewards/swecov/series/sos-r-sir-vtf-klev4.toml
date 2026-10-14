@@ -1,0 +1,7 @@
+id = "sos-r-sir-vtf-klev4"
+register = "sir/intensivvardsregistret"
+variants = ["sir/intensivvardsregistret/_default"]
+
+[[table]]
+table = "SoS_R_SIR_VTF_KLEV4"
+edition = { from = 2020, to = 2022 }

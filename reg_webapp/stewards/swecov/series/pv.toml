@@ -1,0 +1,12 @@
+id = "pv"
+register = "pliktverket/insark"
+variants = ["pliktverket/insark/_default"]
+
+[[table]]
+table = "PV_1997_2010"
+edition = { from = 1997, to = 2010 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "pliktverket/insark/_default", variable = "pliktverket/insark/personnr", representation = "penr" }]
+reason = "Pseudonymised person key of the INSARK mönstring delivery (pliktverket_variabler.xls, Mönstringsregister row 6: Personnummer); PV_1997_2010 is one INSARK delivery (#1579). Maintainer-approved 2026-10-13 (OP-2026-10-13-E)."

@@ -1,0 +1,27 @@
+id = "fk-mekbbarn-lev4"
+register = "fk/merkostnadsersattning"
+variants = ["fk/merkostnadsersattning/barn"]
+
+[[table]]
+table = "FK_MEKBBARN_lev4"
+edition = { from = 2019, to = 2024 }
+
+[[column]]
+column = "P1105_LopNr_Barn_PersonNr"
+mappings = [{ register_variant = "fk/merkostnadsersattning/barn", variable = "fk/merkostnadsersattning/lopnr-barn", representation = "Lopnr_barn" }]
+reason = "Pseudonymised child key; the variant's only child identifier. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/merkostnadsersattning/barn", variable = "fk/merkostnadsersattning/lopnr", representation = "Lopnr" }]
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "Utbetalningsperiod_fromdat"
+mappings = [{ register_variant = "fk/merkostnadsersattning/barn", variable = "fk/merkostnadsersattning/ersattningsperiod-fromdat", representation = "Ersattningsperiod_fromdat" }]
+reason = "SWECOV delivery spelling of the payment period (Utbetalningsperiod_*) for the variant's ersättningsperiod variable; same definition in fk.toml. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "Utbetalningsperiod_tomdat"
+mappings = [{ register_variant = "fk/merkostnadsersattning/barn", variable = "fk/merkostnadsersattning/ersattningsperiod-tomdat", representation = "Ersattningsperiod_tomdat" }]
+reason = "SWECOV delivery spelling of the payment period (Utbetalningsperiod_*) for the variant's ersättningsperiod variable; same definition in fk.toml. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."

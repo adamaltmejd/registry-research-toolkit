@@ -1,0 +1,33 @@
+id = "hreg-examina"
+register = "scb/hreg"
+variants = ["scb/hreg/grundutbildning-examina"]
+
+# route note: stem:Hreg_Examina_: 33% grounded
+
+[[table]]
+table = "Hreg_Examina_1990_2022"
+edition = { from = 1990, to = 2021 }
+
+[[table]]
+table = "Hreg_Examina_2022_2024"
+edition = { from = 2022, to = 2024 }
+
+[[column]]
+column = "Omr"
+hold = { follow_up = "#1516", reason = "Interim hold: examina 'Utbildningsområde' with no catalog variable shown to be the same (utbildningsomrade is a course resource-allocation area, amnesomrade the 1977-1993 Ämnesområde); follow-up #1516. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "huvomgrpben"
+unmap = "Plain-text label of the code column huvomgrp in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "inrnamn"
+unmap = "Plain-text label of the code column inr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 4)."
+
+[[column]]
+column = "omrben"
+unmap = "Plain-text label of the code column Omr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "tmgrpnamn"
+unmap = "Plain-text label of the code column tmgrp in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 4)."

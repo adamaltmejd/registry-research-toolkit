@@ -1,0 +1,7 @@
+id = "ifa-utbet-lev3"
+register = "iaf/utbetalning"
+variants = ["iaf/utbetalning/_default"]
+
+[[table]]
+table = "IFA_Utbet_Lev3"
+edition = { from = 2015, to = 2023 }

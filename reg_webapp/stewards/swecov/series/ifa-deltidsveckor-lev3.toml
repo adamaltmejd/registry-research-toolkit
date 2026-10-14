@@ -1,0 +1,7 @@
+id = "ifa-deltidsveckor-lev3"
+register = "iaf/deltidsveckor"
+variants = ["iaf/deltidsveckor/_default"]
+
+[[table]]
+table = "IFA_Deltidsveckor_Lev3"
+edition = { from = 2017, to = 2023 }

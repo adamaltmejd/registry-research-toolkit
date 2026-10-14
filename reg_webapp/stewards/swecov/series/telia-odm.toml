@@ -1,0 +1,7 @@
+id = "telia-odm"
+register = "telia/mobilitet"
+variants = ["telia/mobilitet/_default"]
+
+[[table]]
+table = "Telia_ODM"
+edition = { from = "2019-01", to = "2021-05" }

@@ -1,0 +1,9 @@
+id = "distansutb-grund-2"
+register = "scb/utbildningsanalyser"
+variants = ["scb/utbildningsanalyser/distansundervisning-grundskola"]
+
+# route note: stem:Distansutb_grund_: 100%
+
+[[table]]
+table = "Distansutb_grund_VT20"
+edition = "VT2020"

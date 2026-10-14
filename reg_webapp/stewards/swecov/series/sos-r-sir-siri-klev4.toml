@@ -1,0 +1,11 @@
+id = "sos-r-sir-siri-klev4"
+register = "sir/intensivvardsregistret"
+variants = ["sir/intensivvardsregistret/_default"]
+
+[[table]]
+table = "SoS_R_SIR_SIRI_KLEV4"
+edition = { from = 2020, to = 2022 }
+
+[[column]]
+column = "lopnrSiri"
+unmap = "Stay join key of the SIR aspect table; the SIR lopnrsiri is orderable from SoS_R_SIR_VTF_KLEV4, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."

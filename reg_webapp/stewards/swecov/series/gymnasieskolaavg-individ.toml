@@ -1,0 +1,404 @@
+id = "gymnasieskolaavg-individ"
+register = "scb/gymnasieskola-betyg"
+variants = ["scb/gymnasieskola-betyg/slutbetyg"]
+edition_spelling = "spring"
+
+# route note: stem:GymnasieskolaAvg_Individ_: 75% grounded
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1973"
+edition = 1973
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1974"
+edition = 1974
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1975"
+edition = 1975
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1976"
+edition = 1976
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1977"
+edition = 1977
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1978"
+edition = 1978
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1979"
+edition = 1979
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1980"
+edition = 1980
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1981"
+edition = 1981
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1982"
+edition = 1982
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1983"
+edition = 1983
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1984"
+edition = 1984
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1985"
+edition = 1985
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1986"
+edition = 1986
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1987"
+edition = 1987
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1988"
+edition = 1988
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1989"
+edition = 1989
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1990"
+edition = 1990
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1991"
+edition = 1991
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1992"
+edition = 1992
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1993"
+edition = 1993
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1994"
+edition = 1994
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1995"
+edition = 1995
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1996"
+edition = 1996
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1997"
+edition = 1997
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1998"
+edition = 1998
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_1999"
+edition = 1999
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2000"
+edition = 2000
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2001"
+edition = 2001
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2002"
+edition = 2002
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2003"
+edition = 2003
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2004"
+edition = 2004
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2005"
+edition = 2005
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2006"
+edition = 2006
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2007"
+edition = 2007
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2008"
+edition = 2008
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2009"
+edition = 2009
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2010"
+edition = 2010
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2011"
+edition = 2011
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2012"
+edition = 2012
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2013"
+edition = 2013
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2014"
+edition = 2014
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2015"
+edition = 2015
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2016"
+edition = 2016
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2017"
+edition = 2017
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2018"
+edition = 2018
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2019"
+edition = 2019
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2020"
+edition = 2020
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2021"
+edition = 2021
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2022"
+edition = 2022
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2023"
+edition = 2023
+
+[[table]]
+table = "GymnasieskolaAvg_Individ_2024"
+edition = 2024
+
+[[column]]
+column = "AvgAr"
+tables = ["GymnasieskolaAvg_Individ_1990"]
+unmap = "Retained physical field for edition LA1989; the accepted source has only a partial overlapping window, without positive evidence for changing this table's declared period. No complete delivery window supports a mapping across the authored table edition. Retain the source period and physical table edition separately; do not extrapolate. Exact owner/period evidence in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Elevtyp"
+tables = ["GymnasieskolaAvg_Individ_1997"]
+unmap = "Retained physical field for edition LA1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Elevtyp"
+tables = ["GymnasieskolaAvg_Individ_1998"]
+unmap = "Retained physical field for edition LA1997; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Elevtyp"
+tables = ["GymnasieskolaAvg_Individ_1999"]
+unmap = "Retained physical field for edition LA1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Elevtyp"
+tables = ["GymnasieskolaAvg_Individ_2000"]
+unmap = "Retained physical field for edition LA1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Elevtyp"
+tables = ["GymnasieskolaAvg_Individ_2001"]
+unmap = "Retained physical field for edition LA2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Elevtyp"
+tables = ["GymnasieskolaAvg_Individ_2002"]
+unmap = "Retained physical field for edition LA2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Elevtyp"
+tables = ["GymnasieskolaAvg_Individ_2003"]
+unmap = "Retained physical field for edition LA2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Elevtyp"
+tables = ["GymnasieskolaAvg_Individ_2004"]
+unmap = "Retained physical field for edition LA2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1985"]
+unmap = "Retained physical field for edition LA1984; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1986"]
+unmap = "Retained physical field for edition LA1985; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1987"]
+unmap = "Retained physical field for edition LA1986; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1988"]
+unmap = "Retained physical field for edition LA1987; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1989"]
+unmap = "Retained physical field for edition LA1988; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1990"]
+unmap = "Retained physical field for edition LA1989; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1991"]
+unmap = "Retained physical field for edition LA1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1992"]
+unmap = "Retained physical field for edition LA1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1993"]
+unmap = "Retained physical field for edition LA1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1994"]
+unmap = "Retained physical field for edition LA1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1995"]
+unmap = "Retained physical field for edition LA1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "MBetyg"
+tables = ["GymnasieskolaAvg_Individ_1996"]
+unmap = "Retained physical field for edition LA1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1973"]
+unmap = "Retained physical field for edition LA1972; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1974"]
+unmap = "Retained physical field for edition LA1973; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1975"]
+unmap = "Retained physical field for edition LA1974; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1976"]
+unmap = "Retained physical field for edition LA1975; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1977"]
+unmap = "Retained physical field for edition LA1976; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1978"]
+unmap = "Retained physical field for edition LA1977; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1979"]
+unmap = "Retained physical field for edition LA1978; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1980"]
+unmap = "Retained physical field for edition LA1979; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1981"]
+unmap = "Retained physical field for edition LA1980; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1982"]
+unmap = "Retained physical field for edition LA1981; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1983"]
+unmap = "Retained physical field for edition LA1982; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1984"]
+unmap = "Retained physical field for edition LA1983; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1985"]
+unmap = "Retained physical field for edition LA1984; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1986"]
+unmap = "Retained physical field for edition LA1985; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1987"]
+unmap = "Retained physical field for edition LA1986; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1988"]
+unmap = "Retained physical field for edition LA1987; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "avgar"
+tables = ["GymnasieskolaAvg_Individ_1989"]
+unmap = "Retained physical field for edition LA1988; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

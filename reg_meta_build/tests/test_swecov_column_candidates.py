@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING
 import pytest
 from _curation_fixtures import write_lisa_errata
 from _swecov_fixtures import (
+    SPEC_DIR,
     build_catalog,
     flavored_db_fixture,  # noqa: F401
 )
@@ -54,7 +55,7 @@ def _grafts_text(
         page.parent.mkdir(parents=True, exist_ok=True)
         page.write_text(f"# {column}\n", encoding="utf-8")
 
-    build_catalog.cmd_grafts(argparse.Namespace(csv=csv_path, db=db))
+    build_catalog.cmd_grafts(argparse.Namespace(csv=csv_path, db=db, spec=SPEC_DIR))
     return (base / "derived" / "column_candidates.toml").read_text(encoding="utf-8")
 
 
@@ -73,7 +74,10 @@ def _lisa_holding(*columns: str) -> dict[str, dict]:
     return {
         "LISA / Individer": {
             "columns": [{"name": column} for column in columns],
-            "mapping": {"status": "mapped", "to": "scb/lisa/individer-15plus"},
+            "mapping": {
+                "status": "mapped",
+                "to": {"LISA_2019": ["scb/lisa/individer-15plus"]},
+            },
         }
     }
 

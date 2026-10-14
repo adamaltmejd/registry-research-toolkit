@@ -1,0 +1,11 @@
+id = "sabo-p1105-lopnr-personnr"
+register = "swecov/population"
+variants = ["swecov/population/_default"]
+
+[[table]]
+table = "SaBo_P1105_LopNr_PersonNr"
+edition = { from = 2015, to = 2020 }
+
+[[column]]
+column = "P1105_Lopnr_personnr"
+unmap = "Person join key of the SÄBO membership holding; swecov/population/personnr is orderable from Population_PersonNr_20241231, which covers this edition (#1170)."

@@ -1,0 +1,7 @@
+id = "swecov-primary-care-skane"
+register = "region-skane/primarvard"
+variants = ["region-skane/primarvard/_default"]
+
+[[table]]
+table = "SWECOV_PRIMARY_CARE_SKANE"
+edition = { from = 2016, to = 2023 }

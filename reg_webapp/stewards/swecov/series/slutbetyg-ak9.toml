@@ -1,0 +1,254 @@
+id = "slutbetyg-ak9"
+register = "scb/grundskola-ak9"
+variants = ["scb/grundskola-ak9/grundskolan-betyg-ak9"]
+edition_spelling = "spring"
+
+[[table]]
+table = "slutbetyg_Ak9_1990"
+edition = 1990
+
+[[table]]
+table = "slutbetyg_Ak9_1991"
+edition = 1991
+
+[[table]]
+table = "slutbetyg_Ak9_1992"
+edition = 1992
+
+[[table]]
+table = "slutbetyg_Ak9_1993"
+edition = 1993
+
+[[table]]
+table = "slutbetyg_Ak9_1994"
+edition = 1994
+
+[[table]]
+table = "slutbetyg_Ak9_1995"
+edition = 1995
+
+[[table]]
+table = "slutbetyg_Ak9_1996"
+edition = 1996
+
+[[table]]
+table = "slutbetyg_Ak9_1997"
+edition = 1997
+
+[[table]]
+table = "slutbetyg_Ak9_1998"
+edition = 1998
+
+[[table]]
+table = "slutbetyg_Ak9_1999"
+edition = 1999
+
+[[table]]
+table = "slutbetyg_Ak9_2000"
+edition = 2000
+
+[[table]]
+table = "slutbetyg_Ak9_2001"
+edition = 2001
+
+[[table]]
+table = "slutbetyg_Ak9_2002"
+edition = 2002
+
+[[table]]
+table = "slutbetyg_Ak9_2003"
+edition = 2003
+
+[[table]]
+table = "slutbetyg_Ak9_2004"
+edition = 2004
+
+[[table]]
+table = "slutbetyg_Ak9_2005"
+edition = 2005
+
+[[table]]
+table = "slutbetyg_Ak9_2006"
+edition = 2006
+
+[[table]]
+table = "slutbetyg_Ak9_2007"
+edition = 2007
+
+[[table]]
+table = "slutbetyg_Ak9_2008"
+edition = 2008
+
+[[table]]
+table = "slutbetyg_Ak9_2009"
+edition = 2009
+
+[[table]]
+table = "slutbetyg_Ak9_2010"
+edition = 2010
+
+[[table]]
+table = "slutbetyg_Ak9_2011"
+edition = 2011
+
+[[table]]
+table = "slutbetyg_Ak9_2012"
+edition = 2012
+
+[[table]]
+table = "slutbetyg_Ak9_2013"
+edition = 2013
+
+[[table]]
+table = "slutbetyg_Ak9_2014"
+edition = 2014
+
+[[table]]
+table = "slutbetyg_Ak9_2015"
+edition = 2015
+
+[[table]]
+table = "slutbetyg_Ak9_2016"
+edition = 2016
+
+[[table]]
+table = "slutbetyg_Ak9_2017"
+edition = 2017
+
+[[table]]
+table = "slutbetyg_Ak9_2018"
+edition = 2018
+
+[[table]]
+table = "slutbetyg_Ak9_2019"
+edition = 2019
+
+[[table]]
+table = "slutbetyg_Ak9_2020"
+edition = 2020
+
+[[table]]
+table = "slutbetyg_Ak9_2021"
+edition = 2021
+
+[[table]]
+table = "slutbetyg_Ak9_2022"
+edition = 2022
+
+[[table]]
+table = "slutbetyg_Ak9_2023"
+edition = 2023
+
+[[table]]
+table = "slutbetyg_Ak9_2024"
+edition = 2024
+
+[[column]]
+column = "Kommun"
+tables = ["slutbetyg_Ak9_1990"]
+unmap = "Retained physical field for edition LA1989; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["slutbetyg_Ak9_1991"]
+unmap = "Retained physical field for edition LA1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["slutbetyg_Ak9_1992"]
+unmap = "Retained physical field for edition LA1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["slutbetyg_Ak9_1993"]
+unmap = "Retained physical field for edition LA1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["slutbetyg_Ak9_1994"]
+unmap = "Retained physical field for edition LA1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["slutbetyg_Ak9_1995"]
+unmap = "Retained physical field for edition LA1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["slutbetyg_Ak9_1996"]
+unmap = "Retained physical field for edition LA1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["slutbetyg_Ak9_1997"]
+unmap = "Retained physical field for edition LA1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "NO_AMNEN"
+tables = ["slutbetyg_Ak9_2022"]
+unmap = "Retained physical field for edition LA2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "NO_AMNEN"
+tables = ["slutbetyg_Ak9_2023"]
+unmap = "Retained physical field for edition LA2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "NO_AMNEN"
+tables = ["slutbetyg_Ak9_2024"]
+unmap = "Retained physical field for edition LA2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SO"
+tables = ["slutbetyg_Ak9_2022"]
+unmap = "Retained physical field for edition LA2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SO"
+tables = ["slutbetyg_Ak9_2023"]
+unmap = "Retained physical field for edition LA2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SO"
+tables = ["slutbetyg_Ak9_2024"]
+unmap = "Retained physical field for edition LA2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "beht_ehs"
+tables = ["slutbetyg_Ak9_2013"]
+unmap = "Retained physical field for edition LA2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "beht_ehs"
+tables = ["slutbetyg_Ak9_2014"]
+unmap = "Retained physical field for edition LA2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "beht_est"
+tables = ["slutbetyg_Ak9_2013"]
+unmap = "Retained physical field for edition LA2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "beht_est"
+tables = ["slutbetyg_Ak9_2014"]
+unmap = "Retained physical field for edition LA2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "beht_nt"
+tables = ["slutbetyg_Ak9_2013"]
+unmap = "Retained physical field for edition LA2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "beht_nt"
+tables = ["slutbetyg_Ak9_2014"]
+unmap = "Retained physical field for edition LA2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "beht_yrk"
+tables = ["slutbetyg_Ak9_2013"]
+unmap = "Retained physical field for edition LA2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "beht_yrk"
+tables = ["slutbetyg_Ak9_2014"]
+unmap = "Retained physical field for edition LA2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

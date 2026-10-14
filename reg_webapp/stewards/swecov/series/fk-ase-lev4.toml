@@ -1,0 +1,15 @@
+id = "fk-ase-lev4"
+register = "fk/assistansersattning"
+variants = ["fk/assistansersattning/pagaende-beslut-2002-201809", "fk/assistansersattning/pagaende-beslut-201810"]
+
+[[table]]
+table = "FK_ASE_lev4"
+edition = { from = 2015, to = 2024 }
+
+[[column]]
+column = "ERS_MANAD"
+hold = { follow_up = "#1555", reason = "Payment month (ar-manad) of both assigned assistansersättning variants, split at 2018-10; neither variant alone covers the 2015-2024 edition and union coverage is not supported yet (#1555). Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+hold = { follow_up = "#1555", reason = "Recipient key of both assigned assistansersättning variants, split at 2018-10; neither variant alone covers the 2015-2024 edition and union coverage is not supported yet (#1555). Maintainer-decided 2026-10-13 (#1302)." }

@@ -1,0 +1,75 @@
+id = "moms"
+register = "scb/moms"
+variants = ["scb/moms/momsdeklarationsregistret"]
+
+[[table]]
+table = "Moms_2015"
+edition = 2015
+
+[[table]]
+table = "Moms_2016"
+edition = 2016
+
+[[table]]
+table = "Moms_2017"
+edition = 2017
+
+[[table]]
+table = "Moms_2018"
+edition = 2018
+
+[[table]]
+table = "Moms_2019"
+edition = 2019
+
+[[table]]
+table = "Moms_2020"
+edition = 2020
+
+[[table]]
+table = "Moms_2021"
+edition = 2021
+
+[[table]]
+table = "Moms_2022"
+edition = 2022
+
+[[column]]
+column = "Sni2002"
+tables = ["Moms_2015"]
+unmap = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Sni2002"
+tables = ["Moms_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Sni2002"
+tables = ["Moms_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Sni2002"
+tables = ["Moms_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Sni2002"
+tables = ["Moms_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Sni2002"
+tables = ["Moms_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Sni2002"
+tables = ["Moms_2021"]
+unmap = "Retained physical field for edition 2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Sni2002"
+tables = ["Moms_2022"]
+unmap = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

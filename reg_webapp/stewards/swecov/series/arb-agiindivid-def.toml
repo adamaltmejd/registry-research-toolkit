@@ -1,0 +1,361 @@
+id = "arb-agiindivid-def"
+register = "scb/agi"
+variants = ["scb/agi/individuppgifter-agi"]
+
+# route note: ERSATTNINGS_KOD/BELOPP1-4 are wide pivots of the kod+belopp concepts
+
+[[table]]
+table = "Arb_AGIIndivid201901_Def"
+edition = "2019-01"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201902_Def"
+edition = "2019-02"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201903_Def"
+edition = "2019-03"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201904_Def"
+edition = "2019-04"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201905_Def"
+edition = "2019-05"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201906_Def"
+edition = "2019-06"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201907_Def"
+edition = "2019-07"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201908_Def"
+edition = "2019-08"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201909_Def"
+edition = "2019-09"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201910_Def"
+edition = "2019-10"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201911_Def"
+edition = "2019-11"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid201912_Def"
+edition = "2019-12"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202001_Def"
+edition = "2020-01"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202002_Def"
+edition = "2020-02"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202003_Def"
+edition = "2020-03"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202004_Def"
+edition = "2020-04"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202005_Def"
+edition = "2020-05"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202006_Def"
+edition = "2020-06"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202007_Def"
+edition = "2020-07"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202008_Def"
+edition = "2020-08"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202009_Def"
+edition = "2020-09"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202010_Def"
+edition = "2020-10"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202011_Def"
+edition = "2020-11"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202012_Def"
+edition = "2020-12"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202101_Def"
+edition = "2021-01"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202102_Def"
+edition = "2021-02"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202103_Def"
+edition = "2021-03"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202104_Def"
+edition = "2021-04"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202105_Def"
+edition = "2021-05"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202106_Def"
+edition = "2021-06"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202107_Def"
+edition = "2021-07"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202108_Def"
+edition = "2021-08"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202109_Def"
+edition = "2021-09"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202110_Def"
+edition = "2021-10"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202111_Def"
+edition = "2021-11"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202112_Def"
+edition = "2021-12"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202201_Def"
+edition = "2022-01"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202202_Def"
+edition = "2022-02"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202203_Def"
+edition = "2022-03"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202204_Def"
+edition = "2022-04"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202205_Def"
+edition = "2022-05"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202206_Def"
+edition = "2022-06"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202207_Def"
+edition = "2022-07"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202208_Def"
+edition = "2022-08"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202209_Def"
+edition = "2022-09"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202210_Def"
+edition = "2022-10"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202211_Def"
+edition = "2022-11"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202212_Def"
+edition = "2022-12"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202301_Def"
+edition = "2023-01"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202302_Def"
+edition = "2023-02"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202303_Def"
+edition = "2023-03"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202304_Def"
+edition = "2023-04"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202305_Def"
+edition = "2023-05"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202306_Def"
+edition = "2023-06"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202307_Def"
+edition = "2023-07"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202308_Def"
+edition = "2023-08"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202309_Def"
+edition = "2023-09"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202310_Def"
+edition = "2023-10"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202311_Def"
+edition = "2023-11"
+partition = "arb"
+
+[[table]]
+table = "Arb_AGIIndivid202312_Def"
+edition = "2023-12"
+partition = "arb"
+
+[[column]]
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+tables = ["Arb_AGIIndivid201901_Def", "Arb_AGIIndivid201902_Def", "Arb_AGIIndivid201903_Def", "Arb_AGIIndivid201904_Def", "Arb_AGIIndivid201905_Def", "Arb_AGIIndivid201906_Def", "Arb_AGIIndivid201907_Def", "Arb_AGIIndivid201908_Def", "Arb_AGIIndivid201909_Def", "Arb_AGIIndivid201910_Def", "Arb_AGIIndivid201911_Def", "Arb_AGIIndivid201912_Def", "Arb_AGIIndivid202001_Def", "Arb_AGIIndivid202002_Def", "Arb_AGIIndivid202003_Def", "Arb_AGIIndivid202004_Def", "Arb_AGIIndivid202005_Def", "Arb_AGIIndivid202006_Def", "Arb_AGIIndivid202007_Def", "Arb_AGIIndivid202008_Def", "Arb_AGIIndivid202009_Def", "Arb_AGIIndivid202010_Def", "Arb_AGIIndivid202011_Def", "Arb_AGIIndivid202012_Def"]
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/bostadsf-smahus-ul-ag-ag", representation = "BOSTADSF_SMAHUS_UL_AG_AG" }]
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, maintainer-decided 2026-10-12 (#1302 C3)."
+
+[[column]]
+column = "BOSTADSF_SMAHUS_ULAG_AG"
+tables = ["Arb_AGIIndivid202101_Def", "Arb_AGIIndivid202102_Def", "Arb_AGIIndivid202103_Def", "Arb_AGIIndivid202104_Def", "Arb_AGIIndivid202105_Def", "Arb_AGIIndivid202106_Def", "Arb_AGIIndivid202107_Def", "Arb_AGIIndivid202108_Def", "Arb_AGIIndivid202109_Def", "Arb_AGIIndivid202110_Def", "Arb_AGIIndivid202111_Def", "Arb_AGIIndivid202112_Def", "Arb_AGIIndivid202201_Def", "Arb_AGIIndivid202202_Def", "Arb_AGIIndivid202203_Def", "Arb_AGIIndivid202204_Def", "Arb_AGIIndivid202205_Def", "Arb_AGIIndivid202206_Def", "Arb_AGIIndivid202207_Def", "Arb_AGIIndivid202208_Def", "Arb_AGIIndivid202209_Def", "Arb_AGIIndivid202210_Def", "Arb_AGIIndivid202211_Def", "Arb_AGIIndivid202212_Def", "Arb_AGIIndivid202301_Def", "Arb_AGIIndivid202302_Def", "Arb_AGIIndivid202303_Def", "Arb_AGIIndivid202304_Def", "Arb_AGIIndivid202305_Def", "Arb_AGIIndivid202306_Def", "Arb_AGIIndivid202307_Def", "Arb_AGIIndivid202308_Def", "Arb_AGIIndivid202309_Def", "Arb_AGIIndivid202310_Def", "Arb_AGIIndivid202311_Def", "Arb_AGIIndivid202312_Def"]
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/bostadsf-smahus-ul-ag-ag", representation = "BOSTADSF_SMAHUS_UL_AG_AG" }]
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[column]]
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+tables = ["Arb_AGIIndivid201901_Def", "Arb_AGIIndivid201902_Def", "Arb_AGIIndivid201903_Def", "Arb_AGIIndivid201904_Def", "Arb_AGIIndivid201905_Def", "Arb_AGIIndivid201906_Def", "Arb_AGIIndivid201907_Def", "Arb_AGIIndivid201908_Def", "Arb_AGIIndivid201909_Def", "Arb_AGIIndivid201910_Def", "Arb_AGIIndivid201911_Def", "Arb_AGIIndivid201912_Def", "Arb_AGIIndivid202001_Def", "Arb_AGIIndivid202002_Def", "Arb_AGIIndivid202003_Def", "Arb_AGIIndivid202004_Def", "Arb_AGIIndivid202005_Def", "Arb_AGIIndivid202006_Def", "Arb_AGIIndivid202007_Def", "Arb_AGIIndivid202008_Def", "Arb_AGIIndivid202009_Def", "Arb_AGIIndivid202010_Def", "Arb_AGIIndivid202011_Def", "Arb_AGIIndivid202012_Def"]
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/bostadsf-smahus-ul-ag-ea", representation = "BOSTADSF_SMAHUS_UL_AG_EA" }]
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, maintainer-decided 2026-10-12 (#1302 C3)."
+
+[[column]]
+column = "BOSTADSF_SMAHUS_ULAG_EA"
+tables = ["Arb_AGIIndivid202101_Def", "Arb_AGIIndivid202102_Def", "Arb_AGIIndivid202103_Def", "Arb_AGIIndivid202104_Def", "Arb_AGIIndivid202105_Def", "Arb_AGIIndivid202106_Def", "Arb_AGIIndivid202107_Def", "Arb_AGIIndivid202108_Def", "Arb_AGIIndivid202109_Def", "Arb_AGIIndivid202110_Def", "Arb_AGIIndivid202111_Def", "Arb_AGIIndivid202112_Def", "Arb_AGIIndivid202201_Def", "Arb_AGIIndivid202202_Def", "Arb_AGIIndivid202203_Def", "Arb_AGIIndivid202204_Def", "Arb_AGIIndivid202205_Def", "Arb_AGIIndivid202206_Def", "Arb_AGIIndivid202207_Def", "Arb_AGIIndivid202208_Def", "Arb_AGIIndivid202209_Def", "Arb_AGIIndivid202210_Def", "Arb_AGIIndivid202211_Def", "Arb_AGIIndivid202212_Def", "Arb_AGIIndivid202301_Def", "Arb_AGIIndivid202302_Def", "Arb_AGIIndivid202303_Def", "Arb_AGIIndivid202304_Def", "Arb_AGIIndivid202305_Def", "Arb_AGIIndivid202306_Def", "Arb_AGIIndivid202307_Def", "Arb_AGIIndivid202308_Def", "Arb_AGIIndivid202309_Def", "Arb_AGIIndivid202310_Def", "Arb_AGIIndivid202311_Def", "Arb_AGIIndivid202312_Def"]
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/bostadsf-smahus-ul-ag-ea", representation = "BOSTADSF_SMAHUS_UL_AG_EA" }]
+reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
+
+[[column]]
+column = "KONTROLLSTATUS"
+hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
+
+[[column]]
+column = "LANDSKOD_ARBETSLAND_Klartext"
+tables = ["Arb_AGIIndivid202001_Def", "Arb_AGIIndivid202002_Def", "Arb_AGIIndivid202003_Def", "Arb_AGIIndivid202004_Def", "Arb_AGIIndivid202005_Def", "Arb_AGIIndivid202006_Def", "Arb_AGIIndivid202007_Def", "Arb_AGIIndivid202008_Def", "Arb_AGIIndivid202009_Def", "Arb_AGIIndivid202010_Def", "Arb_AGIIndivid202011_Def", "Arb_AGIIndivid202012_Def", "Arb_AGIIndivid202101_Def", "Arb_AGIIndivid202102_Def", "Arb_AGIIndivid202103_Def", "Arb_AGIIndivid202104_Def", "Arb_AGIIndivid202105_Def", "Arb_AGIIndivid202106_Def", "Arb_AGIIndivid202107_Def", "Arb_AGIIndivid202108_Def", "Arb_AGIIndivid202109_Def", "Arb_AGIIndivid202110_Def", "Arb_AGIIndivid202111_Def", "Arb_AGIIndivid202112_Def", "Arb_AGIIndivid202201_Def", "Arb_AGIIndivid202202_Def", "Arb_AGIIndivid202203_Def", "Arb_AGIIndivid202204_Def", "Arb_AGIIndivid202205_Def", "Arb_AGIIndivid202206_Def", "Arb_AGIIndivid202207_Def", "Arb_AGIIndivid202208_Def", "Arb_AGIIndivid202209_Def", "Arb_AGIIndivid202210_Def", "Arb_AGIIndivid202211_Def", "Arb_AGIIndivid202212_Def", "Arb_AGIIndivid202301_Def", "Arb_AGIIndivid202302_Def", "Arb_AGIIndivid202303_Def", "Arb_AGIIndivid202304_Def", "Arb_AGIIndivid202305_Def", "Arb_AGIIndivid202306_Def", "Arb_AGIIndivid202307_Def", "Arb_AGIIndivid202308_Def", "Arb_AGIIndivid202309_Def", "Arb_AGIIndivid202310_Def", "Arb_AGIIndivid202311_Def", "Arb_AGIIndivid202312_Def"]
+hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
+
+[[column]]
+column = "LANDSKOD_MEDBORGARE_Klartext"
+tables = ["Arb_AGIIndivid202001_Def", "Arb_AGIIndivid202002_Def", "Arb_AGIIndivid202003_Def", "Arb_AGIIndivid202004_Def", "Arb_AGIIndivid202005_Def", "Arb_AGIIndivid202006_Def", "Arb_AGIIndivid202007_Def", "Arb_AGIIndivid202008_Def", "Arb_AGIIndivid202009_Def", "Arb_AGIIndivid202010_Def", "Arb_AGIIndivid202011_Def", "Arb_AGIIndivid202012_Def", "Arb_AGIIndivid202101_Def", "Arb_AGIIndivid202102_Def", "Arb_AGIIndivid202103_Def", "Arb_AGIIndivid202104_Def", "Arb_AGIIndivid202105_Def", "Arb_AGIIndivid202106_Def", "Arb_AGIIndivid202107_Def", "Arb_AGIIndivid202108_Def", "Arb_AGIIndivid202109_Def", "Arb_AGIIndivid202110_Def", "Arb_AGIIndivid202111_Def", "Arb_AGIIndivid202112_Def", "Arb_AGIIndivid202201_Def", "Arb_AGIIndivid202202_Def", "Arb_AGIIndivid202203_Def", "Arb_AGIIndivid202204_Def", "Arb_AGIIndivid202205_Def", "Arb_AGIIndivid202206_Def", "Arb_AGIIndivid202207_Def", "Arb_AGIIndivid202208_Def", "Arb_AGIIndivid202209_Def", "Arb_AGIIndivid202210_Def", "Arb_AGIIndivid202211_Def", "Arb_AGIIndivid202212_Def", "Arb_AGIIndivid202301_Def", "Arb_AGIIndivid202302_Def", "Arb_AGIIndivid202303_Def", "Arb_AGIIndivid202304_Def", "Arb_AGIIndivid202305_Def", "Arb_AGIIndivid202306_Def", "Arb_AGIIndivid202307_Def", "Arb_AGIIndivid202308_Def", "Arb_AGIIndivid202309_Def", "Arb_AGIIndivid202310_Def", "Arb_AGIIndivid202311_Def", "Arb_AGIIndivid202312_Def"]
+hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
+
+[[column]]
+column = "LANDSKOD_POSTORT_Klartext"
+tables = ["Arb_AGIIndivid202001_Def", "Arb_AGIIndivid202002_Def", "Arb_AGIIndivid202003_Def", "Arb_AGIIndivid202004_Def", "Arb_AGIIndivid202005_Def", "Arb_AGIIndivid202006_Def", "Arb_AGIIndivid202007_Def", "Arb_AGIIndivid202008_Def", "Arb_AGIIndivid202009_Def", "Arb_AGIIndivid202010_Def", "Arb_AGIIndivid202011_Def", "Arb_AGIIndivid202012_Def", "Arb_AGIIndivid202101_Def", "Arb_AGIIndivid202102_Def", "Arb_AGIIndivid202103_Def", "Arb_AGIIndivid202104_Def", "Arb_AGIIndivid202105_Def", "Arb_AGIIndivid202106_Def", "Arb_AGIIndivid202107_Def", "Arb_AGIIndivid202108_Def", "Arb_AGIIndivid202109_Def", "Arb_AGIIndivid202110_Def", "Arb_AGIIndivid202111_Def", "Arb_AGIIndivid202112_Def", "Arb_AGIIndivid202201_Def", "Arb_AGIIndivid202202_Def", "Arb_AGIIndivid202203_Def", "Arb_AGIIndivid202204_Def", "Arb_AGIIndivid202205_Def", "Arb_AGIIndivid202206_Def", "Arb_AGIIndivid202207_Def", "Arb_AGIIndivid202208_Def", "Arb_AGIIndivid202209_Def", "Arb_AGIIndivid202210_Def", "Arb_AGIIndivid202211_Def", "Arb_AGIIndivid202212_Def", "Arb_AGIIndivid202301_Def", "Arb_AGIIndivid202302_Def", "Arb_AGIIndivid202303_Def", "Arb_AGIIndivid202304_Def", "Arb_AGIIndivid202305_Def", "Arb_AGIIndivid202306_Def", "Arb_AGIIndivid202307_Def", "Arb_AGIIndivid202308_Def", "Arb_AGIIndivid202309_Def", "Arb_AGIIndivid202310_Def", "Arb_AGIIndivid202311_Def", "Arb_AGIIndivid202312_Def"]
+hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
+
+[[column]]
+column = "LANDSKOD_TIN_Klartext"
+tables = ["Arb_AGIIndivid202001_Def", "Arb_AGIIndivid202002_Def", "Arb_AGIIndivid202003_Def", "Arb_AGIIndivid202004_Def", "Arb_AGIIndivid202005_Def", "Arb_AGIIndivid202006_Def", "Arb_AGIIndivid202007_Def", "Arb_AGIIndivid202008_Def", "Arb_AGIIndivid202009_Def", "Arb_AGIIndivid202010_Def", "Arb_AGIIndivid202011_Def", "Arb_AGIIndivid202012_Def", "Arb_AGIIndivid202101_Def", "Arb_AGIIndivid202102_Def", "Arb_AGIIndivid202103_Def", "Arb_AGIIndivid202104_Def", "Arb_AGIIndivid202105_Def", "Arb_AGIIndivid202106_Def", "Arb_AGIIndivid202107_Def", "Arb_AGIIndivid202108_Def", "Arb_AGIIndivid202109_Def", "Arb_AGIIndivid202110_Def", "Arb_AGIIndivid202111_Def", "Arb_AGIIndivid202112_Def", "Arb_AGIIndivid202201_Def", "Arb_AGIIndivid202202_Def", "Arb_AGIIndivid202203_Def", "Arb_AGIIndivid202204_Def", "Arb_AGIIndivid202205_Def", "Arb_AGIIndivid202206_Def", "Arb_AGIIndivid202207_Def", "Arb_AGIIndivid202208_Def", "Arb_AGIIndivid202209_Def", "Arb_AGIIndivid202210_Def", "Arb_AGIIndivid202211_Def", "Arb_AGIIndivid202212_Def", "Arb_AGIIndivid202301_Def", "Arb_AGIIndivid202302_Def", "Arb_AGIIndivid202303_Def", "Arb_AGIIndivid202304_Def", "Arb_AGIIndivid202305_Def", "Arb_AGIIndivid202306_Def", "Arb_AGIIndivid202307_Def", "Arb_AGIIndivid202308_Def", "Arb_AGIIndivid202309_Def", "Arb_AGIIndivid202310_Def", "Arb_AGIIndivid202311_Def", "Arb_AGIIndivid202312_Def"]
+hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
+
+[[column]]
+column = "P1105_LopNr_FARTYGETS_NAMN"
+hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
+
+[[column]]
+column = "P1105_LopNr_FARTYGSSIGNAL"
+hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }

@@ -1,0 +1,11 @@
+id = "scrcr-id2759-rad"
+register = "scrcr/kolorektalcancer"
+variants = ["scrcr/kolorektalcancer/_default"]
+
+[[table]]
+table = "SCRCR_id2759_rad"
+edition = { from = 2017, to = 2024 }
+
+[[column]]
+column = "tum_id"
+unmap = "Tumour join key of the treatment aspect table; the SCRCR tum-id is orderable from SCRCR_id2759_rot. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."

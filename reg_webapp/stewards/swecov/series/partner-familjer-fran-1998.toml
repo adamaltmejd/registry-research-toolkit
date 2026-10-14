@@ -1,0 +1,191 @@
+# Series boundary at 1998, a documented SCB break: SCB variant 2.1524 'Familjer 1990-1997' is succeeded by 2.54 'Familjer från 1998-'; the subject key header changes PNR -> PersonNr (relations.toml, RTB representation edge).
+# Series boundary at 2011, a documented SCB break: The unit changes from family to household: SCB variant 2.1080 'Hushåll', panel_entity_key familjeidentitet-rtb -> lagenhetsnyckel (curation/registers/scb/rtb.toml).
+id = "partner-familjer-fran-1998"
+register = "scb/rtb"
+variants = ["scb/rtb/familjer-fran-1998"]
+
+[[table]]
+table = "Partner_1998"
+edition = "1998-12-31"
+
+[[table]]
+table = "Partner_1999"
+edition = "1999-12-31"
+
+[[table]]
+table = "Partner_2000"
+edition = "2000-12-31"
+
+[[table]]
+table = "Partner_2001"
+edition = "2001-12-31"
+
+[[table]]
+table = "Partner_2002"
+edition = "2002-12-31"
+
+[[table]]
+table = "Partner_2003"
+edition = "2003-12-31"
+
+[[table]]
+table = "Partner_2004"
+edition = "2004-12-31"
+
+[[table]]
+table = "Partner_2005"
+edition = "2005-12-31"
+
+[[table]]
+table = "Partner_2006"
+edition = "2006-12-31"
+
+[[table]]
+table = "Partner_2007"
+edition = "2007-12-31"
+
+[[table]]
+table = "Partner_2008"
+edition = "2008-12-31"
+
+[[table]]
+table = "Partner_2009"
+edition = "2009-12-31"
+
+[[table]]
+table = "Partner_2010"
+edition = "2010-12-31"
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_1998"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_1998: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 1998-12-31 is already catalog-orderable from RTBFamilj1998/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_1999"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_1999: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 1999-12-31 is already catalog-orderable from RTBFamilj1999/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2000"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2000: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 2000-12-31 is already catalog-orderable from RTBFamilj2000/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2001"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2001: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 2001-12-31 is already catalog-orderable from RTBFamilj2001/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2002"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2002: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 2002-12-31 is already catalog-orderable from RTBFamilj2002/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2003"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2003: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 2003-12-31 is already catalog-orderable from RTBFamilj2003/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2004"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2004: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 2004-12-31 is already catalog-orderable from RTBFamilj2004/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2005"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2005: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 2005-12-31 is already catalog-orderable from RTBFamilj2005/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2006"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2006: scb/rtb/familjestallning (Famstall) on scb/rtb/familjer-fran-1998 over 2006-12-31 is already catalog-orderable from RTBFamilj2006/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2007"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2007: scb/rtb/familjestallning (FamStall) on scb/rtb/familjer-fran-1998 over 2007-12-31 is already catalog-orderable from RTBFamilj2007/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2008"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2008: scb/rtb/familjestallning (FamStall) on scb/rtb/familjer-fran-1998 over 2008-12-31 is already catalog-orderable from RTBFamilj2008/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2009"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2009: scb/rtb/familjestallning (FamStall) on scb/rtb/familjer-fran-1998 over 2009-12-31 is already catalog-orderable from RTBFamilj2009/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "Famstall"
+tables = ["Partner_2010"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2010: scb/rtb/familjestallning (FamStall) on scb/rtb/familjer-fran-1998 over 2010-12-31 is already catalog-orderable from RTBFamilj2010/Famstall. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_1998"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_1998: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 1998-12-31 is already catalog-orderable from RTBFamilj1998/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_1999"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_1999: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 1999-12-31 is already catalog-orderable from RTBFamilj1999/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2000"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2000: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2000-12-31 is already catalog-orderable from RTBFamilj2000/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2001"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2001: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2001-12-31 is already catalog-orderable from RTBFamilj2001/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2002"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2002: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2002-12-31 is already catalog-orderable from RTBFamilj2002/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2003"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2003: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2003-12-31 is already catalog-orderable from RTBFamilj2003/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2004"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2004: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2004-12-31 is already catalog-orderable from RTBFamilj2004/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2005"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2005: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2005-12-31 is already catalog-orderable from RTBFamilj2005/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2006"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2006: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2006-12-31 is already catalog-orderable from RTBFamilj2006/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2007"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2007: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2007-12-31 is already catalog-orderable from RTBFamilj2007/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2008"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2008: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2008-12-31 is already catalog-orderable from RTBFamilj2008/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2009"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2009: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2009-12-31 is already catalog-orderable from RTBFamilj2009/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["Partner_2010"]
+unmap = "Known shared field retained physically in auxiliary holding Partner_2010: scb/rtb/personnr (PersonNr) on scb/rtb/familjer-fran-1998 over 2010-12-31 is already catalog-orderable from RTBFamilj2010/P1105_LopNr_PersonNr. Its auxiliary catalog-ordering mapping is withheld to preserve the one-physical-cell ordering contract. Source meaning and both physical fields remain; this does not claim supersession, disjoint populations, or unknown semantics. Exact reviewed pair: Batch57-rtb-duplicate55-proof.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr_Partner"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. RTB source policy explicitly identifies annual family status columns and their native family register; original table year and own family-status state fix the December 31 snapshot."

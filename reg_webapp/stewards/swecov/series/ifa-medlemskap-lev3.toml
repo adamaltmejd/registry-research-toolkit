@@ -1,0 +1,7 @@
+id = "ifa-medlemskap-lev3"
+register = "iaf/medlemskap"
+variants = ["iaf/medlemskap/_default"]
+
+[[table]]
+table = "IFA_Medlemskap_Lev3"
+edition = { from = 1972, to = 2023 }

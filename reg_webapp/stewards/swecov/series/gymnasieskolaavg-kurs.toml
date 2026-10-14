@@ -1,0 +1,158 @@
+id = "gymnasieskolaavg-kurs"
+register = "scb/gymnasieskola-betyg"
+variants = ["scb/gymnasieskola-betyg/kursbetyg"]
+edition_spelling = "spring"
+
+# route note: stem:GymnasieskolaAvg_Kurs_: tie broken semantically
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_1997"
+edition = 1997
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_1998"
+edition = 1998
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_1999"
+edition = 1999
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2000"
+edition = 2000
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2001"
+edition = 2001
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2002"
+edition = 2002
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2003"
+edition = 2003
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2004"
+edition = 2004
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2005"
+edition = 2005
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2006"
+edition = 2006
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2007"
+edition = 2007
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2008"
+edition = 2008
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2009"
+edition = 2009
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2010"
+edition = 2010
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2011"
+edition = 2011
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2012"
+edition = 2012
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2013"
+edition = 2013
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2014"
+edition = 2014
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2015"
+edition = 2015
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2016"
+edition = 2016
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2017"
+edition = 2017
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2018"
+edition = 2018
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2019"
+edition = 2019
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2020"
+edition = 2020
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2021"
+edition = 2021
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2022"
+edition = 2022
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2023"
+edition = 2023
+
+[[table]]
+table = "GymnasieskolaAvg_Kurs_2024"
+edition = 2024
+
+[[column]]
+column = "Poang"
+tables = ["GymnasieskolaAvg_Kurs_1997"]
+unmap = "Retained physical field for edition LA1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Poang"
+tables = ["GymnasieskolaAvg_Kurs_1998"]
+unmap = "Retained physical field for edition LA1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Poang"
+tables = ["GymnasieskolaAvg_Kurs_1999"]
+unmap = "Retained physical field for edition LA1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Poang"
+tables = ["GymnasieskolaAvg_Kurs_2000"]
+unmap = "Retained physical field for edition LA1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Poang"
+tables = ["GymnasieskolaAvg_Kurs_2001"]
+unmap = "Retained physical field for edition LA2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Poang"
+tables = ["GymnasieskolaAvg_Kurs_2002"]
+unmap = "Retained physical field for edition LA2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Poang"
+tables = ["GymnasieskolaAvg_Kurs_2003"]
+unmap = "Retained physical field for edition LA2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Poang"
+tables = ["GymnasieskolaAvg_Kurs_2004"]
+unmap = "Retained physical field for edition LA2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

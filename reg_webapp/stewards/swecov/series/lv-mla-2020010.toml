@@ -1,0 +1,66 @@
+id = "lv-mla-2020010"
+variants = []
+
+[[table]]
+table = "LV_mla_2020010"
+edition = { from = 2020, to = 2024 }
+
+[[column]]
+column = "ATCCode"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "ATCShort"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "DrgName"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "HLGT"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "HLT"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "Outcome"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "PT"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "RcvDate"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "Reporter"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "Rscore"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "SeqNum"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "Serious"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "Soc"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."
+
+[[column]]
+column = "Tto"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained."

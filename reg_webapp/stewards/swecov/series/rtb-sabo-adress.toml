@@ -1,0 +1,27 @@
+id = "rtb-sabo-adress"
+register = "swecov/adress-sarskilt-boende"
+variants = ["swecov/adress-sarskilt-boende/_default"]
+
+[[table]]
+table = "RTB_SaBo_Adress_2015"
+edition = 2015
+
+[[table]]
+table = "RTB_SaBo_Adress_2016"
+edition = 2016
+
+[[table]]
+table = "RTB_SaBo_Adress_2017"
+edition = 2017
+
+[[table]]
+table = "RTB_SaBo_Adress_2018"
+edition = 2018
+
+[[table]]
+table = "RTB_SaBo_Adress_2019"
+edition = 2019
+
+[[table]]
+table = "RTB_SaBo_Adress_2020"
+edition = 2020

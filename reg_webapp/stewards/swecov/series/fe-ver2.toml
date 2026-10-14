@@ -1,0 +1,201 @@
+id = "fe-ver2"
+register = "scb/fek"
+variants = ["scb/fek/fek-slutdata"]
+
+# route note: every FE table (FE1990-FE2023) is FEK fek-slutdata; FE1990-FE2002 via fek.toml errata (maintainer D6, OP-2026-10-13-E)
+
+[[table]]
+table = "FE2018_ver2"
+edition = 2018
+
+[[table]]
+table = "FE2019_ver2"
+edition = 2019
+
+[[table]]
+table = "FE2020_ver2"
+edition = 2020
+
+[[table]]
+table = "FE2022_ver2"
+edition = 2022
+
+[[column]]
+column = "AretsResultat"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/fgb0111", representation = "fgb0111" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "BidragForVerksamheten"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/bidrag-for-verksamheten", representation = "fgr0445" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Foradlingsvarde"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/foradlingsvarde", representation = "fhar003_jmf" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "ForandringAvLagerOchPagaendeArbete"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/forandring-lager-pagaende-arbete", representation = "fgr509" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Forbrukningsvarde"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/forbrukningsvarde", representation = "fhar002_jmf" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "KassaOchBank"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kassa-och-bank", representation = "fgb200" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "KostnaderForLonerOchAndraErsattningar"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/kostnader-loner-ersattningar", representation = "fgr512" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Leverantorsskulder"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/leverantorsskulder", representation = "fgb300" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "MaskinerOchInventarier"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/maskiner-och-inventarier", representation = "fgb236" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "MedelantalAnstallda"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/medelantal-anstallda", representation = "fgr6101" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Nettoomsattning"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/nettoomsattning", representation = "fgr400" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "NettoomsattningJusteradForMerchanting"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/nettoomsattning-justerad-merchanting", representation = "fhar400_jmf" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Produktionsvarde"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/produktionsvarde", representation = "fhar001_jmf" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "RedovisatResultat"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/redovisat-resultat", representation = "fgr1599" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "ResultatEfterFinansiellaPoster"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/resultat-efter-finansiella-poster", representation = "fgr0160" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "Rorelseresultat"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/rorelseresultat", representation = "fgr0140" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "RorelseresultatForeAvskrivningar"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/rorelseresultat-fore-avskrivningar", representation = "fgr0130" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "Skattekostnader"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/skattekostnader", representation = "fgr598" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "Skatteskulder"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/skatteskulder", representation = "fgb301" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SocialaKostnaderOchAndraPersonalkostnader"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/sociala-kostnader-personalkostnader", representation = "fgr528" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SummaAnlTillg"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/anlaggningstillgangar", representation = "fgb2022" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaBruttoinvesteringar"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-bruttoinvesteringar", representation = "fga10" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SummaEgetKapital"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-eget-kapital", representation = "fgb370" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "SummaEgetKapitalOchSkulder"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/eget-kapital-och-skulder", representation = "fgb1399" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaKortfristigaSkulder"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kortfristiga-skulder", representation = "fgb0121" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaKostnaderForRavarorOchHandelsvaror"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-kostnader-ravaror-handelsvaror", representation = "fgr500" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SummaLangfristigaSkulder"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-langfristiga-skulder", representation = "fgb0118" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaNettoinvesteringar"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-nettoinvesteringar", representation = "fga20" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."
+
+[[column]]
+column = "SummaObeskattadeReserver"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-obeskattade-reserver", representation = "fgb0115" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaOmsattningstillgangar"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-omsattningstillgangar", representation = "fgb2021" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaPersonalkostnader"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-personalkostnader", representation = "fgr0128" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SummaTillgangar"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/summa-tillgangar", representation = "fgb1299" }]
+reason = "FEK long-name delivery column of the native catalog variable, replacing the retired pooled 1990-2024 literal; maintainer-decided 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "Utdelning"
+tables = ["FE2018_ver2", "FE2019_ver2", "FE2020_ver2"]
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/utdelning", representation = "fgb362" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column whose state covers the table year; maintainer-accepted rule 2026-10-12 (#1302 D1)."
+
+[[column]]
+column = "Varulager"
+mappings = [{ register_variant = "scb/fek/fek-slutdata", variable = "scb/fek/varulager", representation = "fgb219" }]
+reason = "FEK long-name delivery column of the same-named catalog variable, whose catalog representation is the item-code column; maintainer-accepted rule 2026-10-12 (#1302)."

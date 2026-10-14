@@ -1,0 +1,7 @@
+id = "skv-anstand-tillf-aterk"
+register = "skatteverket/tillfalligt-anstand"
+variants = ["skatteverket/tillfalligt-anstand/aterkallat"]
+
+[[table]]
+table = "SKV_anstand_tillf_aterk"
+edition = { from = "2020-03", to = "2021-05" }

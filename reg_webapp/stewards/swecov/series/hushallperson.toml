@@ -1,0 +1,145 @@
+id = "hushallperson"
+register = "scb/rtb"
+variants = ["scb/rtb/hushall"]
+
+# route note: HUSHALLSID_YYYY year-pivots as HB
+
+[[table]]
+table = "HushallPerson_2011"
+edition = "2011-12-31"
+
+[[table]]
+table = "HushallPerson_2012"
+edition = "2012-12-31"
+
+[[table]]
+table = "HushallPerson_2013"
+edition = "2013-12-31"
+
+[[table]]
+table = "HushallPerson_2014"
+edition = "2014-12-31"
+
+[[table]]
+table = "HushallPerson_2015"
+edition = "2015-12-31"
+
+[[table]]
+table = "HushallPerson_2016"
+edition = "2016-12-31"
+
+[[table]]
+table = "HushallPerson_2017"
+edition = "2017-12-31"
+
+[[table]]
+table = "HushallPerson_2018"
+edition = "2018-12-31"
+
+[[table]]
+table = "HushallPerson_2019"
+edition = "2019-12-31"
+
+[[table]]
+table = "HushallPerson_2020"
+edition = "2020-12-31"
+
+[[table]]
+table = "HushallPerson_2021"
+edition = "2021-12-31"
+
+[[table]]
+table = "HushallPerson_2022"
+edition = "2022-12-31"
+
+[[table]]
+table = "HushallPerson_2023"
+edition = "2023-12-31"
+
+[[table]]
+table = "HushallPerson_2024"
+edition = "2024-12-31"
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2011"
+tables = ["HushallPerson_2011"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2012"
+tables = ["HushallPerson_2012"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2013"
+tables = ["HushallPerson_2013"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2014"
+tables = ["HushallPerson_2014"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2015"
+tables = ["HushallPerson_2015"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2016"
+tables = ["HushallPerson_2016"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2017"
+tables = ["HushallPerson_2017"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2018"
+tables = ["HushallPerson_2018"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2019"
+tables = ["HushallPerson_2019"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2020"
+tables = ["HushallPerson_2020"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2021"
+tables = ["HushallPerson_2021"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2022"
+tables = ["HushallPerson_2022"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2023"
+tables = ["HushallPerson_2023"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_LopNr_Hushallsid_2024"
+tables = ["HushallPerson_2024"]
+mappings = [{ register_variant = "scb/rtb/hushall", variable = "scb/rtb/lopnummer-bostadshushall", representation = "HushallsID" }]
+reason = "P1105 pseudonymised household key of the table's own register: maps to that register's household identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."

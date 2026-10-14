@@ -1,0 +1,22 @@
+id = "aku-rl"
+register = "scb/aku"
+variants = ["scb/aku/aku-januari-2021"]
+
+# route note: stem:AKU_Corona_: 2021–2022 pandemic questions documented in the held master variable list; exact added columns retain unavailable response-code warnings
+# route note: stem:AKU_RL_: 2021-2024 holdings
+
+[[table]]
+table = "AKU_RL_2021"
+edition = 2021
+
+[[table]]
+table = "AKU_RL_2022"
+edition = 2022
+
+[[table]]
+table = "AKU_RL_2023"
+edition = 2023
+
+[[table]]
+table = "AKU_RL_2024"
+edition = 2024

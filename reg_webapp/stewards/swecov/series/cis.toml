@@ -1,0 +1,1000 @@
+id = "cis"
+register = "scb/innovation-foretag"
+variants = ["scb/innovation-foretag/_default"]
+
+# route note: CIS wave drift; unmatched wave items -> flavor graft
+
+[[table]]
+table = "CIS2002"
+edition = 2002
+
+[[table]]
+table = "CIS2004"
+edition = 2004
+
+[[table]]
+table = "CIS2006"
+edition = 2006
+
+[[table]]
+table = "CIS2008"
+edition = 2008
+
+[[table]]
+table = "CIS2010"
+edition = 2010
+
+[[table]]
+table = "CIS2012"
+edition = 2012
+
+[[table]]
+table = "CIS2014"
+edition = 2014
+
+[[table]]
+table = "CIS2016"
+edition = 2016
+
+[[table]]
+table = "CIS2018"
+edition = 2018
+
+[[table]]
+table = "CIS2020"
+edition = 2020
+
+[[column]]
+column = "CLIM_CUST"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/clim-cust-medvetenhet", representation = "CLIM_CUST" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 44667, CVID 827320, literal CLIM_CUST. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "CO"
+tables = ["CIS2002", "CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/innovationssamarbete", representation = "Q12" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "CO21"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO311"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO311"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-sweden", representation = "CO311" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO313"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO313"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-usa", representation = "CO313" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO315"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO315"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-other-countries", representation = "CO315" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO321"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO321"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-sweden", representation = "CO321" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO322"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO322"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-other-europe", representation = "CO322" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO323"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO323"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-usa", representation = "CO323" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO324"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO324"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-china-india", representation = "CO324" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO325"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO325"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-customers-other-countries", representation = "CO325" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO41"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO51"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO61"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO71"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO81"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO81"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-research-sweden", representation = "CO81" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO83"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO83"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-research-usa", representation = "CO83" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO85"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "CO85"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-research-other-countries", representation = "CO85" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "COOP_NO"
+tables = ["CIS2020"]
+unmap = "COOP_NO and COOP_OTH both exist in CIS2020. Source question 39102 names COOP_OTH, and the questionnaire separately includes no cooperation. The meaning of physical COOP_NO is not established."
+
+[[column]]
+column = "Co52"
+tables = ["CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "Co52"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-consultants-other-europe", representation = "CO52" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "Co54"
+tables = ["CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "Co54"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-consultants-china-india", representation = "CO54" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "Co55"
+tables = ["CIS2002", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "EMP"
+tables = ["CIS2002"]
+unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
+
+[[column]]
+column = "ENV_ENDEM"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/env-endem-kort", representation = "ENV_ENDEM" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 44661, CVID 827314, literal ENV_ENDEM. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "ENV_ENGRA"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/env-engra-kort", representation = "ENV_ENGRA" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 44660, CVID 827313, literal ENV_ENGRA. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "EXP_INNO_INN_XRND"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/utgifter-ovrig-innovationsverksamhet", representation = "EXP_INNO_INN_XRND" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 29913, CVID 827137, literal EXP_INNO_INN_XRND. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "FUND_AUT_LOC_REG_RNDINN"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/stod-for-innovationsverksamhet-kommun", representation = "FUND_AUT_LOC_REG_RNDINN" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 29914, CVID 827138, literal FUND_AUT_LOC_REG_RNDINN. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "FUND_DEBT_SUCC"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/finansieringskalla-lanefinansiering", representation = "FUND_DEBT_SUCC" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 39092, CVID 827073, literal FUND_DEBT_SUCC. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "FUND_EQUIT_SUCC"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/finansieringskalla-aktiefinansiering", representation = "FUND_EQUIT_SUCC" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 39090, CVID 827075, literal FUND_EQUIT_SUCC. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "FUND_EU_OTH_RNDINN"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/stod-for-innovationsverksamhet-eu", representation = "FUND_EU_OTH_RNDINN" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 36984, CVID 827140, literal FUND_EU_OTH_RNDINN. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "FUND_GOV_CTL_RNDINN"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/stod-for-innovationsverksamhet-staten", representation = "FUND_GOV_CTL_RNDINN" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 36983, CVID 827139, literal FUND_GOV_CTL_RNDINN. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "GP"
+tables = ["CIS2002", "CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/koncernmarkering", representation = "Q1" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "GP"
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/koncernmarkering", representation = "Q1" }]
+reason = "Exact source-wave company-group marker native4045 Q1; complete current source formation preserves own0/1 domain and covers2006. GP2-actual-formed-native-proof.json; native27731 only later2016–2020, excluded."
+
+[[column]]
+column = "GP"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/koncernmarkering", representation = "A1" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "GP"
+tables = ["CIS2016"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/koncernmarkering", representation = "GP" }]
+reason = "Physical CIS2016 follows its exact 2014 - 2016 questionnaire edition: native RegVerId 11529, VarId 4045, CVID 469440, literal GP. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "HO"
+tables = ["CIS2002"]
+unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
+
+[[column]]
+column = "INITPS"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/processinnovation-utvecklad-av-foretaget", representation = "INITPS" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28056/INITPS. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "INNA_IH_RND"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/inna-egen-fou", representation = "INNA_IH_RND" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 15614, CVID 827134, literal INNA_IH_RND. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "INNA_RND_CONTR_OUT"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/inna-utlagd-fou", representation = "INNA_RND_CONTR_OUT" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 15616, CVID 827133, literal INNA_RND_CONTR_OUT. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "INNO_PCS_ACCT"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-av-stodverksamheter", representation = "INNO_PCS_ACCT" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 15579, CVID 827125, literal INNO_PCS_ACCT. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "INNO_PCS_OPROC_EXTREL"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-metoder-externa-relationer", representation = "INNO_PCS_OPROC_EXTREL" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 20942, CVID 827119, literal INNO_PCS_OPROC_EXTREL. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "INNO_PCS_SLS_SERV"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-metoder-marknadsforing", representation = "INNO_PCS_SLS_SERV" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 20949, CVID 827118, literal INNO_PCS_SLS_SERV. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "INNO_PCS_WR_DEC_HRM"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-metoder-ansvar-beslut", representation = "INNO_PCS_WR_DEC_HRM" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 20941, CVID 827120, literal INNO_PCS_WR_DEC_HRM. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "INOTHGD"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-andra", representation = "INOTHGD" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28054/INOTHGD. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "INOTHPS"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/processinnovation-utvecklad-av-andra", representation = "INOTHPS" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28056/INOTHPS. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "INOTHSV"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-andra", representation = "INOTHSV" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28055/INOTHSV. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "INTOGD"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/varuinnovation-utvecklad-med-andra", representation = "INTOGD" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28054/INTOGD. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "INTOPS"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/processinnovation-utvecklad-med-andra", representation = "INTOPS" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28056/INTOPS. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "INTOSV"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-med-andra", representation = "INTOSV" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28055/INTOSV. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "IPR_OUT_SELL"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/ipr-salt", representation = "IPR_OUT_SELL" }]
+reason = "Physical CIS2020 follows its exact 2018 - 2020 questionnaire edition: native RegVerId 17817, VarId 37078, CVID 827144, literal IPR_OUT_SELL. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
+select_owner = true
+
+[[column]]
+column = "InItGd"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/varuinnovation-utvecklad-av-foretaget", representation = "INITGD" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28054/INITGD. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "InItSv"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/tjansteinnovation-utvecklad-av-foretaget", representation = "INITSV" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.28055/INITSV. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "InPslg"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-av-leveransmetoder", representation = "Q8b" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "InPspd"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-av-produktionsmetoder", representation = "Q8a" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "InPssu"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-av-stodverksamheter", representation = "Q8c" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "Inpdgd"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-av-varor", representation = "Q5a" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "Inpdsv"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/introduktion-av-tjanster", representation = "Q5b" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "LILLAN"
+tables = ["CIS2002"]
+unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
+
+[[column]]
+column = "Mareur"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/geografisk-marknad-eu-efta", representation = "Q2c" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "Marloc"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/geografisk-marknad-regional-lokal", representation = "Q2a" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "Marnat"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/geografisk-marknad-nationellt", representation = "Q2b" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "Maroth"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/geografisk-marknad-ovriga-lander", representation = "Q2d" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "NewFrm"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/produktinnovation-ny-for-foretaget", representation = "Q6b" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "NewMkt"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/produktinnovation-ny-for-marknad", representation = "Q6a" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "PBNOCT"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/innovation-ej-kravd-i-upphandlingsavtal", representation = "PBNOCT" }]
+reason = "Repair obsolete parent/incorrect sibling pointer to exact already accepted native component 257.30131/PBNOCT. Complete own-native original and full2012catalog state proved; physical literal, edition, source fields and coding remain unchanged. Innovation-CIS2012-four-owner-pointers-proof.json."
+
+[[column]]
+column = "Pmos"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/mest-vardefull-samarbetspartner", representation = "Q14" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. PMOS printed-questionnaire/source-wave review (PMOS-three-inventory-rekey-retention-receipt.json)"
+
+[[column]]
+column = "Pmos"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/mest-vardefull-samarbetspartner", representation = "F14" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. PMOS printed-questionnaire/source-wave review (PMOS-three-inventory-rekey-retention-receipt.json)"
+
+[[column]]
+column = "RMAC"
+tables = ["CIS2002", "CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/inna-forvarv-maskiner", representation = "Q10c" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "ROEkX"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/utgifter-forvarv-existerande-kunskap", representation = "Q11d" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "RRDEX"
+tables = ["CIS2002", "CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/inna-utlagd-fou", representation = "Q10b" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "RRdExX"
+tables = ["CIS2002", "CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/utgifter-for-utlagd-fou", representation = "Q11b" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "RRdInX"
+tables = ["CIS2002", "CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/utgifter-for-egen-fou", representation = "Q11a" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "STRAT"
+tables = ["CIS2002"]
+unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
+
+[[column]]
+column = "TurnIn"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-foretaget", representation = "Q7b" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "TurnMar"
+tables = ["CIS2002", "CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad", representation = "Q7a" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "WEIGHT"
+tables = ["CIS2002"]
+unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
+
+[[column]]
+column = "co11"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co11"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-sweden", representation = "CO11" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co12"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co12"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-other-europe", representation = "CO12" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co13"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co13"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-usa", representation = "CO13" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co14"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co14"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-china-india", representation = "CO14" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co15"
+tables = ["CIS2002", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co15"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-other-countries", representation = "CO15" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co21"
+tables = ["CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co21"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-sweden", representation = "CO21" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co22"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co22"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-other-europe", representation = "CO22" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co23"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co23"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-usa", representation = "CO23" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co24"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co24"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-china-india", representation = "CO24" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co25"
+tables = ["CIS2002", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co25"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-other-countries", representation = "CO25" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co312"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co312"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-other-europe", representation = "CO312" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co314"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co314"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-customers-china-india", representation = "CO314" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co41"
+tables = ["CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co41"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-competitors-sweden", representation = "CO41" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co42"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co42"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-competitors-other-europe", representation = "CO42" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co43"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co43"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-competitors-usa", representation = "CO43" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co44"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co44"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-competitors-china-india", representation = "CO44" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co45"
+tables = ["CIS2002", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co45"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-competitors-other-countries", representation = "CO45" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co51"
+tables = ["CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co51"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-consultants-sweden", representation = "CO51" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co52"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co53"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co53"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-consultants-usa", representation = "CO53" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co54"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co55"
+tables = ["CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co55"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-consultants-other-countries", representation = "CO55" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co61"
+tables = ["CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co61"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-universities-sweden", representation = "CO61" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co62"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co62"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-universities-other-europe", representation = "CO62" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co63"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co63"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-universities-usa", representation = "CO63" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co64"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co64"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-universities-china-india", representation = "CO64" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co65"
+tables = ["CIS2002", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co65"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-universities-other-countries", representation = "CO65" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co71"
+tables = ["CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co71"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-research-sweden", representation = "CO71" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co72"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co72"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-research-other-europe", representation = "CO72" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co73"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co73"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-research-usa", representation = "CO73" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co74"
+tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co74"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-research-china-india", representation = "CO74" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co75"
+tables = ["CIS2002", "CIS2008", "CIS2010", "CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co75"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-private-research-other-countries", representation = "CO75" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co82"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co82"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-research-other-europe", representation = "CO82" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co84"
+tables = ["CIS2012"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS questionnaire cooperation-matrix answer whose 2002-2012 wave has no activated catalog matrix yet; follow-up #1571. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "co84"
+tables = ["CIS2014"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-research-china-india", representation = "CO84" }]
+reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "rmar"
+tables = ["CIS2002", "CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/inna-marknadsintroduktion", representation = "Q10f" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "roek"
+tables = ["CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/inna-forvarv-existerande-kunskap", representation = "Q10d" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "rtr"
+tables = ["CIS2002", "CIS2004", "CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/inna-utbildning", representation = "Q10e" }]
+reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
+
+[[column]]
+column = "PeOrgNrHe"
+storage_header = "P1105_LopNr_PeOrgNrHe"

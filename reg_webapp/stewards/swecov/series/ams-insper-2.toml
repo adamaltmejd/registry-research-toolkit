@@ -1,0 +1,7 @@
+id = "ams-insper-2"
+register = "arbetsformedlingen/insper"
+variants = ["arbetsformedlingen/insper/_default"]
+
+[[table]]
+table = "AMS_INSPER_2021_20230726"
+edition = { from = 2021, to = 2023 }

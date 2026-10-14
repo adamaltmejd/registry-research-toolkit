@@ -2306,16 +2306,11 @@ finished output bytes, `import_date`, absolute paths, logs or volatile timings. 
 final artifact SHA-256 separately, outside that database. Replays use the exact semantic
 pins; do not promise unmeasured build durations.
 
-SWECOV source routing lives in the authored `source_policy.toml` beside its inventory
-overlay. Category/detail routes select catalog variants or split selectors; flavor
-entries carry explicit provider/register/variant metadata and any exact table selectors.
-The generator validates this policy once and derives its runtime indexes. Repeated
-selectors, conflicting metadata and unknown fields fail configuration. Physical
-table/column overrides remain in `inventory_overlay.toml`: they have a different scope
-from category routing. Both files stay tracked as generator defaults, not generated
-outputs. The generator neither invents routes nor changes their declarations. The
-runtime uses only compiled holdings; accepted holdings remain private builder inputs and
-never become loose runtime files.
+The SWECOV generator reads only the steward spec (below). `source_policy.toml` and
+`inventory_overlay.toml` stay tracked, and `holdings_policy.toml` stays in the accepted
+candidate, because holdings accounting and the private acceptance still read them; they
+are not generator inputs. The runtime uses only compiled holdings; accepted holdings
+remain private builder inputs and never become loose runtime files.
 
 The complete private input acceptance retains these policies, source documents,
 generated inventory and review evidence in a clean local-only Git repository. Its
@@ -2323,6 +2318,41 @@ manifest covers every payload. Regeneration explicitly selects the accepted cand
 policies; a tracked default policy is not evidence that a later private candidate uses
 identical dispositions. Changed policy or inventory bytes require a fresh acceptance.
 The public prepared sources and builder code remain separately pinned.
+
+### Steward spec
+
+A steward's delivery decisions are authored as `stewards/<id>/scope.toml` plus one
+`series/<series>.toml` per delivery series; `steward_spec.py` holds the schema. A series
+is one register's tables across years: it names the register, the variants its tables
+deliver, each member table's explicit edition (or year-independent scope and partition),
+how a bare-year edition is spelled (`edition_spelling`: annual, or a school-year anchor)
+and its curated column decisions. Membership is the only grouping authority; nothing
+groups tables by name. A column decision selects whole member tables and is exactly one
+of a reviewed mapping, a permanent `unmap`, an interim `hold` (its `follow_up` must
+parse as an issue reference; the build never reads the issue), a `storage_header` or a
+`graft_onto`. The scope holds the census guard (`census_sha256`), the lookup, exclude
+and retain-unknown dispositions, census-holding routes for the enrichment stages and the
+steward-owned flavor registers.
+
+A series boundary is a documented break in the source (a changed population frame, unit
+or subject key, cited in a comment at the top of each split series file), never a change
+of variant set. A table whose admissible variants differ from the rest of its series
+carries its own `variants`, a nonempty subset of the series' variants; a table without
+one takes the series set. A table's own set is what its curated mappings and the
+generator's auto-mapping may use. A family whose tables map to different registers is
+still several series, because a series is single-register. Where the grafts stage cannot
+place a gap-fill column (one with no catalog variable yet) on one variant, a per-column
+`graft_onto` decision names it; like `storage_header`, it never reaches the inventory.
+
+Every census table has exactly one disposition, a series or one scope entry
+(`steward_table_disposition_invalid`). A series admits variants of its own register
+only, a table only a subset of its series' variants, and a curated mapping only a
+variant every table it covers admits (`steward_series_register_mismatch`); since the
+generator maps a table only onto its own admissible variants, auto-mapped columns cannot
+leave the register. Everything else the loader refuses is `steward_spec_invalid`,
+located by file and entry. Flavor content is still drawn from a census holding and table
+selection, not from series membership: an excluded re-delivery still documents its
+columns.
 
 ### Inventory TOML
 
@@ -2453,9 +2483,9 @@ over-admitting) until a maintainer-run, aggregate-only date-span check on MONA
 establishes the span (#1170 tracks the open cases).
 
 Admitted literals of one owner and variant that differ only in case fold to one compiled
-triple, so the generator emits one mapping for them. Precedence: the curated
-`[[mapping]]` spelling, then the literal equal to the physical field, then the spelling
-the compiler stores for that delivery column; with none of these among the twins, or two
+triple, so the generator emits one mapping for them. Precedence: the curated mapping
+decision's spelling, then the literal equal to the physical field, then the spelling the
+compiler stores for that delivery column; with none of these among the twins, or two
 curated twins, the column goes to the worklist. Spellings under different variants or
 owners never fold.
 
@@ -2465,7 +2495,7 @@ their evidence while the maintained primary holding supplies the ordering coordi
 This avoids duplicate logical coordinates without claiming that the auxiliary field's
 meaning is unknown or that one delivery supersedes another.
 
-An exact `[[mapping]]` may declare `select_owner = true` when the physical delivery
+A curated mapping decision may declare `select_owner = true` when the physical delivery
 documents which source question or survey wave owns that column. This selects one
 already-declared owner for that table, edition, variant and literal representation; it
 does not extend dates or merge variables. The selected owner must independently cover

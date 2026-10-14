@@ -1,0 +1,8 @@
+id = "swedbank-v13"
+register = "swedbank/konsumtion"
+variants = ["swedbank/konsumtion/_default"]
+
+[[table]]
+table = "Swedbank_V13"
+edition = 2020
+partition = "v13"
