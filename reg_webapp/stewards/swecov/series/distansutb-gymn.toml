@@ -11,3 +11,7 @@ edition = ["HT2020", "VT2021"]
 [[table]]
 table = "Distansutb_gymn_HT21_VT22"
 edition = ["HT2021", "VT2022"]
+
+[[column]]
+column = "PersonNr"
+storage_header = "P1105_Lopnr_PersonNr"
