@@ -1,0 +1,540 @@
+{
+  "selector": {
+    "register": "scb/innovation-foretag",
+    "register_id": 257,
+    "variant": "_default",
+    "register_variant_id": 553,
+    "edition": "2008 - 2010",
+    "regver_id": 4114,
+    "var_id": 15662,
+    "cvid": 257746
+  },
+  "source_mode": "documented_blank",
+  "answer_facts": {
+    "data_type": "integer",
+    "data_type_evidence": "SWECOV storage catalog/swecov/derived/swecov_column_types.csv: CIS2010 stores every answer column co11…co55 as an integer type.",
+    "is_identifier": false,
+    "is_sensitive": false,
+    "flag_evidence": "SCB UnikaRegisterOchVariabler.txt declares this question's blank-Kolumnnamn row for 2002 - 2004 through 2012 - 2014, which spans this 2008 - 2010 coordinate: KansligVariabel 0, KansligVariabelIbland 0, Identitetsvariabel 0."
+  },
+  "evidence": {
+    "document": "SCB Dokumentation av statistikens framtagning (UF0315, 2008–2010), embedded questionnaire question 15",
+    "url": "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2008-2010.pdf#page=16",
+    "sha256": "bf171ddd280bbdee34b924053771bf37e077ab9632885346f32d9823263b7585",
+    "question": "VariabelReferenstid is “Enkäten Innovationsverksamhet 2008-2010” and the native edition is “2008 - 2010”. The answer meanings come from the wave's own questionnaire, question 15 (“Vilken lokalisering hade företagets samarbetspartner under åren 2008–2010?”), rows a–h by five locations plus Inte aktuell. SWECOV's CIS2010 holdings name the answers co<row><location> by questionnaire position: the maintainer's aggregate MONA check (2026-10-14) found the 4-location waves (CIS2004, CIS2006) carry co11–co14 with no co15, so the location digit is the questionnaire column, and partner rows a–e have the same meaning under positional and later-wave readings. Only rows a–e are declared: co6x/co7x are held (#1571) because their partner meaning is not established for this wave, and no other cell is asserted. SCB's quality declaration Appendix 2 (uf0315_kd_2018_ah_191113.pdf, pp. 23–27) lists this wave's questionnaire items on the same rows but names no co columns for it.",
+    "noted": "2026-10-14"
+  },
+  "question_label": "Typ av samarbetspartner geografiskt fördelat",
+  "axes": [
+    {
+      "key": "partner",
+      "label_en": "Cooperation partner"
+    },
+    {
+      "key": "response",
+      "label_en": "Location or response"
+    }
+  ],
+  "answers": [
+    {
+      "key": "group-enterprises-sweden",
+      "slug": "cis2010-cooperation-group-enterprises-sweden",
+      "columns": [
+        "co11"
+      ],
+      "label_en": "Other group enterprises — Sweden",
+      "definition_en": "Cooperation with other group enterprises in Sweden.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co11": 16
+      }
+    },
+    {
+      "key": "group-enterprises-other-europe",
+      "slug": "cis2010-cooperation-group-enterprises-other-europe",
+      "columns": [
+        "co12"
+      ],
+      "label_en": "Other group enterprises — Other Europe",
+      "definition_en": "Cooperation with other group enterprises elsewhere in Europe.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co12": 16
+      }
+    },
+    {
+      "key": "group-enterprises-usa",
+      "slug": "cis2010-cooperation-group-enterprises-usa",
+      "columns": [
+        "co13"
+      ],
+      "label_en": "Other group enterprises — USA",
+      "definition_en": "Cooperation with other group enterprises in the USA.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co13": 16
+      }
+    },
+    {
+      "key": "group-enterprises-china-india",
+      "slug": "cis2010-cooperation-group-enterprises-china-india",
+      "columns": [
+        "co14"
+      ],
+      "label_en": "Other group enterprises — China or India",
+      "definition_en": "Cooperation with other group enterprises in China or India.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "china_india",
+        "label_en": "China or India"
+      },
+      "source_pages": {
+        "co14": 16
+      }
+    },
+    {
+      "key": "group-enterprises-other-countries",
+      "slug": "cis2010-cooperation-group-enterprises-other-countries",
+      "columns": [
+        "co15"
+      ],
+      "label_en": "Other group enterprises — Other countries",
+      "definition_en": "Cooperation with other group enterprises in other countries.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co15": 16
+      }
+    },
+    {
+      "key": "suppliers-sweden",
+      "slug": "cis2010-cooperation-suppliers-sweden",
+      "columns": [
+        "co21"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — Sweden",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software in Sweden.",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co21": 16
+      }
+    },
+    {
+      "key": "suppliers-other-europe",
+      "slug": "cis2010-cooperation-suppliers-other-europe",
+      "columns": [
+        "co22"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — Other Europe",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software elsewhere in Europe.",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co22": 16
+      }
+    },
+    {
+      "key": "suppliers-usa",
+      "slug": "cis2010-cooperation-suppliers-usa",
+      "columns": [
+        "co23"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — USA",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software in the USA.",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co23": 16
+      }
+    },
+    {
+      "key": "suppliers-china-india",
+      "slug": "cis2010-cooperation-suppliers-china-india",
+      "columns": [
+        "co24"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — China or India",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software in China or India.",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "china_india",
+        "label_en": "China or India"
+      },
+      "source_pages": {
+        "co24": 16
+      }
+    },
+    {
+      "key": "suppliers-other-countries",
+      "slug": "cis2010-cooperation-suppliers-other-countries",
+      "columns": [
+        "co25"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — Other countries",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software in other countries.",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co25": 16
+      }
+    },
+    {
+      "key": "customers-sweden",
+      "slug": "cis2010-cooperation-customers-sweden",
+      "columns": [
+        "co31"
+      ],
+      "label_en": "Clients or customers — Sweden",
+      "definition_en": "Cooperation with clients or customers in Sweden.",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co31": 16
+      }
+    },
+    {
+      "key": "customers-other-europe",
+      "slug": "cis2010-cooperation-customers-other-europe",
+      "columns": [
+        "co32"
+      ],
+      "label_en": "Clients or customers — Other Europe",
+      "definition_en": "Cooperation with clients or customers elsewhere in Europe.",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co32": 16
+      }
+    },
+    {
+      "key": "customers-usa",
+      "slug": "cis2010-cooperation-customers-usa",
+      "columns": [
+        "co33"
+      ],
+      "label_en": "Clients or customers — USA",
+      "definition_en": "Cooperation with clients or customers in the USA.",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co33": 16
+      }
+    },
+    {
+      "key": "customers-china-india",
+      "slug": "cis2010-cooperation-customers-china-india",
+      "columns": [
+        "co34"
+      ],
+      "label_en": "Clients or customers — China or India",
+      "definition_en": "Cooperation with clients or customers in China or India.",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "china_india",
+        "label_en": "China or India"
+      },
+      "source_pages": {
+        "co34": 16
+      }
+    },
+    {
+      "key": "customers-other-countries",
+      "slug": "cis2010-cooperation-customers-other-countries",
+      "columns": [
+        "co35"
+      ],
+      "label_en": "Clients or customers — Other countries",
+      "definition_en": "Cooperation with clients or customers in other countries.",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co35": 16
+      }
+    },
+    {
+      "key": "competitors-sweden",
+      "slug": "cis2010-cooperation-competitors-sweden",
+      "columns": [
+        "co41"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — Sweden",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector in Sweden.",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co41": 16
+      }
+    },
+    {
+      "key": "competitors-other-europe",
+      "slug": "cis2010-cooperation-competitors-other-europe",
+      "columns": [
+        "co42"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — Other Europe",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector elsewhere in Europe.",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co42": 16
+      }
+    },
+    {
+      "key": "competitors-usa",
+      "slug": "cis2010-cooperation-competitors-usa",
+      "columns": [
+        "co43"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — USA",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector in the USA.",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co43": 16
+      }
+    },
+    {
+      "key": "competitors-china-india",
+      "slug": "cis2010-cooperation-competitors-china-india",
+      "columns": [
+        "co44"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — China or India",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector in China or India.",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "china_india",
+        "label_en": "China or India"
+      },
+      "source_pages": {
+        "co44": 16
+      }
+    },
+    {
+      "key": "competitors-other-countries",
+      "slug": "cis2010-cooperation-competitors-other-countries",
+      "columns": [
+        "co45"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — Other countries",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector in other countries.",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co45": 16
+      }
+    },
+    {
+      "key": "consultants-sweden",
+      "slug": "cis2010-cooperation-consultants-sweden",
+      "columns": [
+        "co51"
+      ],
+      "label_en": "Consultants or private laboratories — Sweden",
+      "definition_en": "Cooperation with consultants or private laboratories in Sweden.",
+      "partner": {
+        "key": "consultants",
+        "label_en": "Consultants or private laboratories"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co51": 16
+      }
+    },
+    {
+      "key": "consultants-other-europe",
+      "slug": "cis2010-cooperation-consultants-other-europe",
+      "columns": [
+        "co52"
+      ],
+      "label_en": "Consultants or private laboratories — Other Europe",
+      "definition_en": "Cooperation with consultants or private laboratories elsewhere in Europe.",
+      "partner": {
+        "key": "consultants",
+        "label_en": "Consultants or private laboratories"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co52": 16
+      }
+    },
+    {
+      "key": "consultants-usa",
+      "slug": "cis2010-cooperation-consultants-usa",
+      "columns": [
+        "co53"
+      ],
+      "label_en": "Consultants or private laboratories — USA",
+      "definition_en": "Cooperation with consultants or private laboratories in the USA.",
+      "partner": {
+        "key": "consultants",
+        "label_en": "Consultants or private laboratories"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co53": 16
+      }
+    },
+    {
+      "key": "consultants-china-india",
+      "slug": "cis2010-cooperation-consultants-china-india",
+      "columns": [
+        "co54"
+      ],
+      "label_en": "Consultants or private laboratories — China or India",
+      "definition_en": "Cooperation with consultants or private laboratories in China or India.",
+      "partner": {
+        "key": "consultants",
+        "label_en": "Consultants or private laboratories"
+      },
+      "response": {
+        "key": "china_india",
+        "label_en": "China or India"
+      },
+      "source_pages": {
+        "co54": 16
+      }
+    },
+    {
+      "key": "consultants-other-countries",
+      "slug": "cis2010-cooperation-consultants-other-countries",
+      "columns": [
+        "co55"
+      ],
+      "label_en": "Consultants or private laboratories — Other countries",
+      "definition_en": "Cooperation with consultants or private laboratories in other countries.",
+      "partner": {
+        "key": "consultants",
+        "label_en": "Consultants or private laboratories"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co55": 16
+      }
+    }
+  ]
+}
