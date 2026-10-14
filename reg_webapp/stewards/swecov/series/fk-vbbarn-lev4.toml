@@ -1,4 +1,5 @@
 id = "fk-vbbarn-lev4"
+register = "fk/vardbidrag"
 variants = []
 
 [[table]]
@@ -7,20 +8,20 @@ edition = { from = 2015, to = 2022 }
 
 [[column]]
 column = "P1105_LopNr_Barn_PersonNr"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained."
+hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained."
+hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
 
 [[column]]
 column = "Utbetalningsmanad"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained."
+hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
 
 [[column]]
 column = "Utbetalningsperiod_fromdat"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained."
+hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
 
 [[column]]
 column = "Utbetalningsperiod_tomdat"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained."
+hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
