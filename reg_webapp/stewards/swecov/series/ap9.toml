@@ -1,0 +1,129 @@
+id = "ap9"
+register = "scb/grundskola-prov-ak9"
+variants = ["scb/grundskola-prov-ak9/amne-no", "scb/grundskola-prov-ak9/amne-sv-eng-ma", "scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition_spelling = "vt"
+
+# route note: period:2003-2012: variant validity window
+# route note: period:2013-: variant validity window
+
+[[table]]
+table = "Äp9_2003"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2003
+
+[[table]]
+table = "Äp9_2004"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2004
+
+[[table]]
+table = "Äp9_2005"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2005
+
+[[table]]
+table = "Äp9_2006"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2006
+
+[[table]]
+table = "Äp9_2007"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2007
+
+[[table]]
+table = "Äp9_2008"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2008
+
+[[table]]
+table = "Äp9_2009"
+variants = ["scb/grundskola-prov-ak9/amne-no", "scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2009
+
+[[table]]
+table = "Äp9_2010"
+variants = ["scb/grundskola-prov-ak9/amne-no", "scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2010
+
+[[table]]
+table = "Äp9_2011"
+variants = ["scb/grundskola-prov-ak9/amne-no", "scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2011
+
+[[table]]
+table = "Äp9_2012"
+variants = ["scb/grundskola-prov-ak9/amne-no", "scb/grundskola-prov-ak9/amne-sv-eng-ma"]
+edition = 2012
+
+[[table]]
+table = "Äp9_2013"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2013
+
+[[table]]
+table = "Äp9_2014"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2014
+
+[[table]]
+table = "Äp9_2015"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2015
+
+[[table]]
+table = "Äp9_2016"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2016
+
+[[table]]
+table = "Äp9_2017"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2017
+
+[[table]]
+table = "Äp9_2018"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2018
+
+[[table]]
+table = "Äp9_2019"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2019
+
+[[table]]
+table = "Äp9_2022"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2022
+
+[[table]]
+table = "Äp9_2023"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2023
+
+[[table]]
+table = "Äp9_2024"
+variants = ["scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so"]
+edition = 2024
+
+[[column]]
+column = "SV_SVA"
+tables = ["Äp9_2009"]
+unmap = "Retained physical field for edition VT2009; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SV_SVA"
+tables = ["Äp9_2010"]
+unmap = "Retained physical field for edition VT2010; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SkolKommun"
+tables = ["Äp9_2003", "Äp9_2004", "Äp9_2005", "Äp9_2006", "Äp9_2007", "Äp9_2008", "Äp9_2009", "Äp9_2010", "Äp9_2011", "Äp9_2012"]
+mappings = [{ register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma", variable = "scb/grundskola-prov-ak9/kommun", representation = "Kommun" }]
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "SkolKommun"
+tables = ["Äp9_2013", "Äp9_2014"]
+mappings = [{ register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma-no-so", variable = "scb/grundskola-prov-ak9/kommun", representation = "Kommun" }]
+reason = "SWECOV delivery spelling of the own-register catalog variable scb/grundskola-prov-ak9/kommun (delivery column Kommun); maintainer-accepted 2026-10-12 (#1302 round 3)."

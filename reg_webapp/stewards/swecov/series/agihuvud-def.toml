@@ -1,0 +1,243 @@
+id = "agihuvud-def"
+register = "scb/agi-huvud"
+variants = ["scb/agi-huvud/_default"]
+
+[[table]]
+table = "AGIHuvud201901_Def"
+edition = "2019-01"
+
+[[table]]
+table = "AGIHuvud201902_Def"
+edition = "2019-02"
+
+[[table]]
+table = "AGIHuvud201903_Def"
+edition = "2019-03"
+
+[[table]]
+table = "AGIHuvud201904_Def"
+edition = "2019-04"
+
+[[table]]
+table = "AGIHuvud201905_Def"
+edition = "2019-05"
+
+[[table]]
+table = "AGIHuvud201906_Def"
+edition = "2019-06"
+
+[[table]]
+table = "AGIHuvud201907_Def"
+edition = "2019-07"
+
+[[table]]
+table = "AGIHuvud201908_Def"
+edition = "2019-08"
+
+[[table]]
+table = "AGIHuvud201909_Def"
+edition = "2019-09"
+
+[[table]]
+table = "AGIHuvud201910_Def"
+edition = "2019-10"
+
+[[table]]
+table = "AGIHuvud201911_Def"
+edition = "2019-11"
+
+[[table]]
+table = "AGIHuvud201912_Def"
+edition = "2019-12"
+
+[[table]]
+table = "AGIHuvud202001_Def"
+edition = "2020-01"
+
+[[table]]
+table = "AGIHuvud202002_Def"
+edition = "2020-02"
+
+[[table]]
+table = "AGIHuvud202003_Def"
+edition = "2020-03"
+
+[[table]]
+table = "AGIHuvud202004_Def"
+edition = "2020-04"
+
+[[table]]
+table = "AGIHuvud202005_Def"
+edition = "2020-05"
+
+[[table]]
+table = "AGIHuvud202006_Def"
+edition = "2020-06"
+
+[[table]]
+table = "AGIHuvud202007_Def"
+edition = "2020-07"
+
+[[table]]
+table = "AGIHuvud202008_Def"
+edition = "2020-08"
+
+[[table]]
+table = "AGIHuvud202009_Def"
+edition = "2020-09"
+
+[[table]]
+table = "AGIHuvud202010_Def"
+edition = "2020-10"
+
+[[table]]
+table = "AGIHuvud202011_Def"
+edition = "2020-11"
+
+[[table]]
+table = "AGIHuvud202012_Def"
+edition = "2020-12"
+
+[[table]]
+table = "AGIHuvud202101_Def"
+edition = "2021-01"
+
+[[table]]
+table = "AGIHuvud202102_Def"
+edition = "2021-02"
+
+[[table]]
+table = "AGIHuvud202103_Def"
+edition = "2021-03"
+
+[[table]]
+table = "AGIHuvud202104_Def"
+edition = "2021-04"
+
+[[table]]
+table = "AGIHuvud202105_Def"
+edition = "2021-05"
+
+[[table]]
+table = "AGIHuvud202106_Def"
+edition = "2021-06"
+
+[[table]]
+table = "AGIHuvud202107_Def"
+edition = "2021-07"
+
+[[table]]
+table = "AGIHuvud202108_Def"
+edition = "2021-08"
+
+[[table]]
+table = "AGIHuvud202109_Def"
+edition = "2021-09"
+
+[[table]]
+table = "AGIHuvud202110_Def"
+edition = "2021-10"
+
+[[table]]
+table = "AGIHuvud202111_Def"
+edition = "2021-11"
+
+[[table]]
+table = "AGIHuvud202112_Def"
+edition = "2021-12"
+
+[[table]]
+table = "AGIHuvud202201_Def"
+edition = "2022-01"
+
+[[table]]
+table = "AGIHuvud202202_Def"
+edition = "2022-02"
+
+[[table]]
+table = "AGIHuvud202203_Def"
+edition = "2022-03"
+
+[[table]]
+table = "AGIHuvud202204_Def"
+edition = "2022-04"
+
+[[table]]
+table = "AGIHuvud202205_Def"
+edition = "2022-05"
+
+[[table]]
+table = "AGIHuvud202206_Def"
+edition = "2022-06"
+
+[[table]]
+table = "AGIHuvud202207_Def"
+edition = "2022-07"
+
+[[table]]
+table = "AGIHuvud202208_Def"
+edition = "2022-08"
+
+[[table]]
+table = "AGIHuvud202209_Def"
+edition = "2022-09"
+
+[[table]]
+table = "AGIHuvud202210_Def"
+edition = "2022-10"
+
+[[table]]
+table = "AGIHuvud202211_Def"
+edition = "2022-11"
+
+[[table]]
+table = "AGIHuvud202212_Def"
+edition = "2022-12"
+
+[[table]]
+table = "AGIHuvud202301_Def"
+edition = "2023-01"
+
+[[table]]
+table = "AGIHuvud202302_Def"
+edition = "2023-02"
+
+[[table]]
+table = "AGIHuvud202303_Def"
+edition = "2023-03"
+
+[[table]]
+table = "AGIHuvud202304_Def"
+edition = "2023-04"
+
+[[table]]
+table = "AGIHuvud202305_Def"
+edition = "2023-05"
+
+[[table]]
+table = "AGIHuvud202306_Def"
+edition = "2023-06"
+
+[[table]]
+table = "AGIHuvud202307_Def"
+edition = "2023-07"
+
+[[table]]
+table = "AGIHuvud202308_Def"
+edition = "2023-08"
+
+[[table]]
+table = "AGIHuvud202309_Def"
+edition = "2023-09"
+
+[[table]]
+table = "AGIHuvud202310_Def"
+edition = "2023-10"
+
+[[table]]
+table = "AGIHuvud202311_Def"
+edition = "2023-11"
+
+[[table]]
+table = "AGIHuvud202312_Def"
+edition = "2023-12"

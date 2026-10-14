@@ -1,0 +1,11 @@
+id = "fhm-covidwgs"
+register = "fohm/covidwgs"
+variants = ["fohm/covidwgs/fhm-covidwgs"]
+
+[[table]]
+table = "FHM_CovidWGS"
+edition = { from = 2020, to = 2021 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. All five physical fields match the accepted literal FoHM CovidWGS delivery and its pooled 2020–2021 private source candidate."

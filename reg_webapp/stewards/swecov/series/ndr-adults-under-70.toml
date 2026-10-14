@@ -1,0 +1,8 @@
+id = "ndr-adults-under-70"
+register = "ndr/nationella-diabetesregistret"
+variants = ["ndr/nationella-diabetesregistret/_default"]
+
+[[table]]
+table = "NDR_adults_2010_under_70"
+edition = 2010
+partition = "under70"

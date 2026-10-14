@@ -20,7 +20,9 @@ from _swecov_fixtures import (
     build_catalog,
     flavored_db_fixture,  # noqa: F401
     inventory_worklist as _inventory_worklist,
+    one_table_series,
     run_inventory as _run_inventory,
+    write_spec,
 )
 from reg_meta_build.derive.states import derive_states
 from reg_meta_build.inventory import load_inventory as load_delivery_inventory
@@ -53,7 +55,7 @@ def test_inventory_uses_the_declared_owner_covering_its_exact_year(
                 "valid_to,delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), ?,902,?,?,'InstKod10')",
                 (variable, start, end),
             )
-    steward = _run_inventory(tmp_path, db, "", f"T{year}", ["InstKod10"])
+    steward = _run_inventory(tmp_path, db, f"T{year}", ["InstKod10"])
     table = load_delivery_inventory(steward / "inventory.toml").tables[0]
     assert str(table.columns[0].mappings[0].variable) == (
         f"inera/bestallda-prover/{expected}"
@@ -124,7 +126,7 @@ def test_inventory_refuses_incomplete_ambiguous_or_unknown_owner_scopes(
     db = _owner_db(tmp_path, flavored_db, owners)
 
     with pytest.raises(SystemExit, match="Inventory not replaced"):
-        _run_inventory(tmp_path, db, "", "T2019", ["Column"])
+        _run_inventory(tmp_path, db, "T2019", ["Column"])
 
     assert not (tmp_path / "steward/inventory.toml").exists()
     (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
@@ -140,7 +142,7 @@ def test_inventory_accepts_abutting_delivery_windows_of_the_same_owner(
         {"one": [("2019-01-01", "2019-06-30"), ("2019-07-01", "2019-12-31")]},
     )
 
-    steward = _run_inventory(tmp_path, db, "", "T2019", ["Column"])
+    steward = _run_inventory(tmp_path, db, "T2019", ["Column"])
 
     (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
     assert [(str(m.variable), m.representation) for m in column.mappings] == [
@@ -161,11 +163,7 @@ def test_inventory_does_not_choose_an_owner_from_a_pooled_range(
     )
 
     steward = _run_inventory(
-        tmp_path,
-        db,
-        '[[edition]]\ntable = "T_pooled"\nedition = { from = 2019, to = 2020 }\n',
-        "T_pooled",
-        ["Column"],
+        tmp_path, db, "T_pooled", ["Column"], edition="{ from = 2019, to = 2020 }"
     )
 
     (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
@@ -186,19 +184,19 @@ def test_unavailable_inventory_owner_writes_worklist_without_replacing_inventory
     with sqlite3.connect(db) as conn:
         conn.execute("UPDATE variable_state SET valid_to='2018-12-31'")
         conn.execute("UPDATE variable_alias_window SET valid_to='2018-12-31'")
-    steward = tmp_path / "steward"
-    steward.mkdir()
-    (steward / "inventory_overlay.toml").write_text("")
-    previous = steward / "inventory.toml"
-    previous.write_text("previous inspected inventory")
     csv = tmp_path / "holdings.csv"
     csv.write_text(
         "Category,Detail,Table,V1\nInera/1177,Ordered tests,T2019,T_kolumn\n"
     )
+    steward = write_spec(tmp_path / "steward", csv, {"s": one_table_series("T2019")})
+    previous = steward / "inventory.toml"
+    previous.write_text("previous inspected inventory")
     with pytest.raises(
         SystemExit, match="no_covering|need positive delivery-owner scope"
     ):
-        build_catalog.cmd_inventory(argparse.Namespace(csv=csv, db=db, out=steward))
+        build_catalog.write_inventory(
+            argparse.Namespace(csv=csv, spec=steward, out=steward), db
+        )
     assert previous.read_text() == "previous inspected inventory"
     worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
     assert worklist["mapping_scope_needed"][0]["code"] == "no_covering_delivery_owner"
@@ -214,7 +212,7 @@ def _resolved_records(tmp_path: Path, db: Path, columns: list[str]) -> list[dict
     column that resolves is refused with its records as `candidate_records`, and
     a column that resolves to nothing is emitted unmapped and refuses nothing."""
     try:
-        steward = _run_inventory(tmp_path, db, "", "T2017", columns)
+        steward = _run_inventory(tmp_path, db, "T2017", columns)
     except SystemExit:
         entries = _inventory_worklist(tmp_path)["mapping_scope_needed"]
         assert {entry["code"] for entry in entries} == {"no_covering_delivery_owner"}
@@ -257,7 +255,7 @@ def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(
     # No positive current-column backing in 2020: the spanning source alias
     # must not create a temporal hull into that year.
     with pytest.raises(SystemExit, match="Inventory not replaced"):
-        _run_inventory(tmp_path, db, "", "T2020", ["Earlier"])
+        _run_inventory(tmp_path, db, "T2020", ["Earlier"])
 
     (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
     assert entry["code"] == "no_covering_delivery_owner"
@@ -442,7 +440,7 @@ def test_inventory_emits_one_mapping_for_case_only_twin_spellings(
     twins, otherwise the representative (state) spelling (#1170)."""
     db = _case_twin_db(tmp_path, flavored_db, ("T_kolumn", "T_KOLUMN"))
 
-    steward = _run_inventory(tmp_path, db, "", "T2019", [physical])
+    steward = _run_inventory(tmp_path, db, "T2019", [physical])
 
     (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
     assert [(str(m.variable), m.representation) for m in column.mappings] == [
@@ -453,17 +451,17 @@ def test_inventory_emits_one_mapping_for_case_only_twin_spellings(
 def test_inventory_curated_mapping_wins_among_case_only_twins(
     tmp_path: Path, flavored_db: Path
 ) -> None:
-    """A reviewed `[[mapping]]` spelling outranks the physical literal: the fold
-    never silently replaces a curated representation."""
+    """A reviewed mapping decision's spelling outranks the physical literal:
+    the fold never silently replaces a curated representation."""
     db = _case_twin_db(tmp_path, flavored_db, ("T_kolumn", "T_KOLUMN"))
-    overlay = (
-        '[[mapping]]\ntable = "T2019"\ncolumn = "T_KOLUMN"\nedition = 2019\n'
-        'register_variant = "inera/bestallda-prover/_default"\n'
-        'variable = "inera/bestallda-prover/t-kolumn"\n'
-        'representation = "T_kolumn"\nreason = "reviewed spelling"\n'
+    decisions = (
+        '[[column]]\ncolumn = "T_KOLUMN"\n'
+        'mappings = [{ register_variant = "inera/bestallda-prover/_default", '
+        'variable = "inera/bestallda-prover/t-kolumn", representation = "T_kolumn" }]\n'
+        'reason = "reviewed spelling"\n'
     )
 
-    steward = _run_inventory(tmp_path, db, overlay, "T2019", ["T_KOLUMN"])
+    steward = _run_inventory(tmp_path, db, "T2019", ["T_KOLUMN"], decisions=decisions)
 
     (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
     assert [(str(m.variable), m.representation) for m in column.mappings] == [
@@ -491,10 +489,12 @@ def test_inventory_does_not_fold_case_spellings_across_variants_or_owners(
                 "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 904, 905, '0001-01-01', '9999-12-31', 'varchar', 'T_KOLUMN')"
             )
             table = "T2019"
-            overlay = (
-                '[[assign]]\ntable = "T2019"\nregister_variant = '
-                '["inera/bestallda-prover/_default", "inera/bestallda-prover/andra"]\n'
-            )
+            series = {
+                "variants": (
+                    "inera/bestallda-prover/_default",
+                    "inera/bestallda-prover/andra",
+                )
+            }
             expected = [
                 ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
                 ("inera/bestallda-prover/andra", "t-kolumn", "T_KOLUMN"),
@@ -510,16 +510,13 @@ def test_inventory_does_not_fold_case_spellings_across_variants_or_owners(
                 "VALUES ((SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), 910, 902, '2020-01-01', '2020-12-31', 'varchar', 'T_KOLUMN')"
             )
             table = "T_pooled"
-            overlay = (
-                '[[edition]]\ntable = "T_pooled"\n'
-                "edition = { from = 2019, to = 2020 }\n"
-            )
+            series = {"edition": "{ from = 2019, to = 2020 }"}
             expected = [
                 ("inera/bestallda-prover/_default", "annan", "T_KOLUMN"),
                 ("inera/bestallda-prover/_default", "t-kolumn", "T_kolumn"),
             ]
 
-    steward = _run_inventory(tmp_path, db, overlay, table, ["T_KOLUMN"])
+    steward = _run_inventory(tmp_path, db, table, ["T_KOLUMN"], **series)
 
     (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
     assert (
@@ -539,7 +536,7 @@ def test_inventory_refuses_case_only_twins_without_physical_or_representative(
     db = _case_twin_db(tmp_path, flavored_db, ("T_KOLUMN", "t_KOLUMN"))
 
     with pytest.raises(SystemExit, match="Inventory not replaced"):
-        _run_inventory(tmp_path, db, "", "T2019", ["t_kolumn"])
+        _run_inventory(tmp_path, db, "T2019", ["t_kolumn"])
 
     (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
     assert (entry["column"], entry["code"]) == (

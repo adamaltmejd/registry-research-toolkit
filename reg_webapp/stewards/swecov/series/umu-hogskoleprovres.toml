@@ -1,0 +1,12 @@
+id = "umu-hogskoleprovres"
+register = "umu/hogskoleprovet"
+variants = ["umu/hogskoleprovet/_default"]
+
+[[table]]
+table = "UMU_HogskoleprovRes"
+edition = [{ from = "VT1977", to = "HT2019" }, { from = "HT2020", to = "VT2025" }]
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "umu/hogskoleprovet/_default", variable = "umu/hogskoleprovet/lopnr-personnr", representation = "Personnummer" }]
+reason = "Pseudonymized person key of the primary högskoleprov holding; input_data/UMU/umu.toml identifies P1105_LopNr_PersonNr with the documented field Personnummer; maintainer-decided 2026-10-13 (#1302)."

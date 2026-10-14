@@ -1,0 +1,7 @@
+id = "swecov-primary-care-sthlm"
+register = "region-stockholm/primarvard"
+variants = ["region-stockholm/primarvard/_default"]
+
+[[table]]
+table = "SWECOV_PRIMARY_CARE_STHLM"
+edition = { from = 2015, to = 2023 }

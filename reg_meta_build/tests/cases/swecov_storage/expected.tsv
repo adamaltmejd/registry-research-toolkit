@@ -1,7 +1,0 @@
-kind	register	location	column	curated	storage
-uncurated	scb/sample	curation/registers/scb/sample.toml#/errata.column/1	HELD		CIS2020=smallint
-disagrees	scb/sample	curation/registers/scb/sample.toml#/errata.column/2	MIXED	integer	CIS2018=int, CIS2020=varchar
-narrower	scb/sample	curation/registers/scb/sample.toml#/errata.column/3	WIDE	decimal	CIS2020=int
-unmatched	scb/sample	curation/registers/scb/sample.toml#/errata.column/4	ELSEWHERE		
-disagrees	scb/sample	curation/registers/scb/sample.toml#/errata.delivered/1	Guid	text	CIS2020=uniqueidentifier
-unmatched	scb/sample	curation/registers/scb/sample.toml#/errata.delivered/3	Outside	integer	

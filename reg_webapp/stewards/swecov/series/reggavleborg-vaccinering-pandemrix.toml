@@ -1,0 +1,7 @@
+id = "reggavleborg-vaccinering-pandemrix"
+register = "region-gavleborg/pandemrix-vaccinationer"
+variants = ["region-gavleborg/pandemrix-vaccinationer/_default"]
+
+[[table]]
+table = "RegGavleborg_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }

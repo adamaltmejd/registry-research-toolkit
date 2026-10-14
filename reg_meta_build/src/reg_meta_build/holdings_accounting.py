@@ -2,23 +2,27 @@
 
 from __future__ import annotations
 
-import hashlib
-import tomllib
+import json
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from .holdings_census import census_rows
-from .holdings_policy import UndatedHolding, load_holdings_retention_policy
 from .source_evidence import canonical_sha256
-from .swecov_policy import SourcePolicy
+from .steward_spec import census_guard, scope_locator
 
 if TYPE_CHECKING:
     from pathlib import Path
 
     from .inventory import DeliveryInventory
+    from .steward_spec import StewardSpec, UndatedHolding
 
 DISPOSITIONS = ("dated", "year_independent", "retained_unknown", "excluded", "lookup")
-POLICY_NAMES = ("source_policy.toml", "inventory_overlay.toml", "holdings_policy.toml")
+# A private candidate's `manifest.json` `roles`: each names one manifest member.
+# The census and the storage export (types only) are the steward's raw inputs;
+# the inventory is the generator's output, at a fixed path because every
+# compiled `holding_table.source_ref` locates it.
+CANDIDATE_ROLES = ("census", "storage_export", "inventory")
+INVENTORY_ROLE_PATH = "policy/inventory.toml"
 
 
 @dataclass(frozen=True)
@@ -26,40 +30,26 @@ class HoldingsAccounting:
     columns: dict[str, set[str]]
     counts: dict[str, dict[str, int]]
     sha256: str
-    policy_sha256: str
-    source_name: str
     unknown: tuple[UndatedHolding, ...]
 
 
-def account_holdings(root: Path, inventory: DeliveryInventory) -> HoldingsAccounting:
-    """Require every census table and column to have exactly one disposition."""
-    source_paths = sorted((root / "swecov").glob("SWECOV_variables_full_*.csv"))
-    if len(source_paths) != 1:
-        raise ValueError("Holdings accounting requires exactly one complete census CSV")
-    source = source_paths[0]
-    source_name = source.relative_to(root).as_posix()
-    policies = {
-        name: tomllib.loads((root / "policy" / name).read_text(encoding="utf-8"))
-        for name in POLICY_NAMES
-    }
-    routing = SourcePolicy.model_validate(policies["source_policy.toml"])
-    lookup_routes = {
-        (route.category, route.detail): index
-        for index, route in enumerate(routing.route)
-        if route.status == "lookup"
-    }
+def account_holdings(
+    root: Path, inventory: DeliveryInventory, *, spec: StewardSpec, steward: str
+) -> HoldingsAccounting:
+    """Require every census table and column to have exactly one disposition.
+
+    The census is the candidate's `census` role; lookups, exclusions and
+    retained-unknown tables are the spec's `scope.toml` dispositions, the rest
+    the inventory's tables."""
+    source_name = json.loads((root / "manifest.json").read_text(encoding="utf-8"))[
+        "roles"
+    ]["census"]
+    source = (root / source_name).read_bytes()
+    census_guard(spec.scope, source)
     raw: dict[str, set[str]] = {}
-    lookups: dict[str, set[str]] = {}
-    for category, detail, table, columns in census_rows(source):
+    for _category, _detail, table, columns in census_rows(root / source_name):
         raw.setdefault(table, set()).update(columns)
-        if (category, detail) in lookup_routes:
-            index = lookup_routes[category, detail]
-            lookups.setdefault(table, set()).add(
-                f"policy/source_policy.toml:route[{index}]"
-            )
-    unknown, _, _ = load_holdings_retention_policy(
-        root / "policy/holdings_policy.toml", source
-    )
+    scope = scope_locator(steward)
     claims: dict[str, tuple[str, set[str]]] = {}
 
     def claim(table: str, disposition: str, evidence: set[str]) -> None:
@@ -73,23 +63,14 @@ def account_holdings(root: Path, inventory: DeliveryInventory) -> HoldingsAccoun
             )
         claims[table] = disposition, evidence | {f"{source_name}:table[{table!r}]"}
 
-    for table, refs in lookups.items():
-        claim(table, "lookup", refs)
-    for name in ("inventory_overlay.toml", "holdings_policy.toml"):
-        for index, entry in enumerate(policies[name].get("exclude", [])):
-            # The generator merges both exclusion policies before filtering
-            # lookup routes. Lookup annotations are inert in both files.
-            if entry["table"] in lookups:
-                continue
-            claim(entry["table"], "excluded", {f"policy/{name}:exclude[{index}]"})
-    for index, entry in enumerate(unknown):
-        claim(
-            entry.table,
-            "retained_unknown",
-            {f"policy/holdings_policy.toml:retain_unknown[{index}]"},
-        )
+    for index, entry in enumerate(spec.scope.lookups):
+        claim(entry.table, "lookup", {f"{scope}:lookup[{index}]"})
+    for index, entry in enumerate(spec.scope.excludes):
+        claim(entry.table, "excluded", {f"{scope}:exclude[{index}]"})
+    for index, entry in enumerate(spec.scope.retain_unknown):
+        claim(entry.table, "retained_unknown", {f"{scope}:retain_unknown[{index}]"})
     for index, table in enumerate(inventory.tables):
-        locator = f"policy/inventory.toml:table[{index}]"
+        locator = f"{INVENTORY_ROLE_PATH}:table[{index}]"
         claim(
             table.id,
             "year_independent" if table.period_scope == "year_independent" else "dated",
@@ -121,18 +102,10 @@ def account_holdings(root: Path, inventory: DeliveryInventory) -> HoldingsAccoun
                     "evidence": sorted(refs),
                 }
             )
-    policy_digests = {
-        f"policy/{name}": hashlib.sha256(
-            (root / "policy" / name).read_bytes()
-        ).hexdigest()
-        for name in POLICY_NAMES
-    }
     # Only this canonical count summary and the projection digest enter SQLite.
     return HoldingsAccounting(
         raw,
         counts,
         canonical_sha256(projection),
-        canonical_sha256(policy_digests),
-        source_name,
-        unknown,
+        tuple(spec.scope.retain_unknown),
     )

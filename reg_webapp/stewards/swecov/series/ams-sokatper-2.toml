@@ -1,0 +1,7 @@
+id = "ams-sokatper-2"
+register = "arbetsformedlingen/sokatper"
+variants = ["arbetsformedlingen/sokatper/_default"]
+
+[[table]]
+table = "AMS_SOKATPER_2021_20230726"
+edition = { from = 2021, to = 2023 }

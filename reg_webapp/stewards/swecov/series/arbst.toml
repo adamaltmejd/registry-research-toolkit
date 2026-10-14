@@ -1,0 +1,139 @@
+id = "arbst"
+register = "scb/lisa"
+variants = ["scb/lisa/arbetsstallen"]
+
+[[table]]
+table = "Arbst_1990"
+edition = 1990
+
+[[table]]
+table = "Arbst_1991"
+edition = 1991
+
+[[table]]
+table = "Arbst_1992"
+edition = 1992
+
+[[table]]
+table = "Arbst_1993"
+edition = 1993
+
+[[table]]
+table = "Arbst_1994"
+edition = 1994
+
+[[table]]
+table = "Arbst_1995"
+edition = 1995
+
+[[table]]
+table = "Arbst_1996"
+edition = 1996
+
+[[table]]
+table = "Arbst_1997"
+edition = 1997
+
+[[table]]
+table = "Arbst_1998"
+edition = 1998
+
+[[table]]
+table = "Arbst_1999"
+edition = 1999
+
+[[table]]
+table = "Arbst_2000"
+edition = 2000
+
+[[table]]
+table = "Arbst_2001"
+edition = 2001
+
+[[table]]
+table = "Arbst_2002"
+edition = 2002
+
+[[table]]
+table = "Arbst_2003"
+edition = 2003
+
+[[table]]
+table = "Arbst_2004"
+edition = 2004
+
+[[table]]
+table = "Arbst_2005"
+edition = 2005
+
+[[table]]
+table = "Arbst_2006"
+edition = 2006
+
+[[table]]
+table = "Arbst_2007"
+edition = 2007
+
+[[table]]
+table = "Arbst_2008"
+edition = 2008
+
+[[table]]
+table = "Arbst_2009"
+edition = 2009
+
+[[table]]
+table = "Arbst_2010"
+edition = 2010
+
+[[table]]
+table = "Arbst_2011"
+edition = 2011
+
+[[table]]
+table = "Arbst_2012"
+edition = 2012
+
+[[table]]
+table = "Arbst_2013"
+edition = 2013
+
+[[table]]
+table = "Arbst_2014"
+edition = 2014
+
+[[table]]
+table = "Arbst_2015"
+edition = 2015
+
+[[table]]
+table = "Arbst_2016"
+edition = 2016
+
+[[table]]
+table = "Arbst_2017"
+edition = 2017
+
+[[table]]
+table = "Arbst_2018"
+edition = 2018
+
+[[table]]
+table = "Arbst_2019"
+edition = 2019
+
+[[table]]
+table = "Arbst_2020"
+edition = 2020
+
+[[table]]
+table = "Arbst_2021"
+edition = 2021
+
+[[table]]
+table = "Arbst_2022"
+edition = 2022
+
+[[table]]
+table = "Arbst_2023"
+edition = 2023

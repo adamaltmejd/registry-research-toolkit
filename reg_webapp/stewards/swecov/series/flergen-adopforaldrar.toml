@@ -1,0 +1,9 @@
+id = "flergen-adopforaldrar"
+register = "scb/flergenreg"
+variants = ["scb/flergenreg/folkbokforda-adoptivforaldrar"]
+
+# route note: stem:FlerGen_Adopforaldrar_: 3/3
+
+[[table]]
+table = "FlerGen_Adopforaldrar_20241231"
+edition = { from = 1961, to = 2024 }

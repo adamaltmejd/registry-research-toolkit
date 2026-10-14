@@ -207,9 +207,9 @@ reg_meta release.
 Build fresh if **any** is true:
 
 - 8a rebuilt the main DB (the steward artifact is built on top of it).
-- `git diff <prev reg_meta tag>..HEAD -- reg_meta_build/fqid_slugs/swecov/` is
-  non-empty, or the accepted holdings pins (commit, manifest, overlays, inventory,
-  census, policy) changed.
+- `git diff <prev reg_meta tag>..HEAD -- reg_meta_build/fqid_slugs/swecov/ reg_webapp/stewards/swecov/`
+  is non-empty, or the accepted holdings pins (commit, manifest, providers, inventory,
+  census, storage export) changed.
 - The release is a **major** bump.
 - The immediately-previous release lacks `reg_meta_swecov.db.zst`.
 
@@ -222,6 +222,15 @@ candidate and its pins come from the reviewed acceptance evidence: `accepted_hol
 is the `swecov/` folder of a worktree of `adamaltmejd/registry-catalog-inputs` at
 `holdings_commit` (build-db skill, "Select inputs"). After publishing, tag that commit
 `swecov/accepted-reg_meta-X.Y.Z` in the inputs repository and push the tag.
+
+The candidate pins the global it was generated against (`global_db_sha256`) and the spec
+(`steward_spec_sha256`); `extend-db` refuses a base or committed spec that differs
+(`extend_base_db_mismatch`, `extend_steward_spec_mismatch`). So any release whose global
+bytes change (8a rebuilt the main DB), or whose `reg_webapp/stewards/swecov/` changed,
+must first **regenerate** the inventory against this release's main asset (build-db
+skill, "Private SWECOV extension"), **accept** the fresh candidate in the inputs
+repository, then **extend**. A held candidate from the previous release extends only an
+unchanged global and spec.
 
 ```sh
 set -euo pipefail

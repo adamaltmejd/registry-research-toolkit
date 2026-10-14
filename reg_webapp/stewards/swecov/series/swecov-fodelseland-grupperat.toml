@@ -1,0 +1,7 @@
+id = "swecov-fodelseland-grupperat"
+register = "swecov/population"
+variants = ["swecov/population/fodelseland-grupperat"]
+
+[[table]]
+table = "SWECOV_Fodelseland_grupperat"
+period_scope = "year_independent"

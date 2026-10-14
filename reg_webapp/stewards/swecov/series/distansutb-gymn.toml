@@ -1,0 +1,13 @@
+id = "distansutb-gymn"
+register = "scb/utbildningsanalyser"
+variants = ["scb/utbildningsanalyser/distansundervisning-gymnasieskolan"]
+
+# route note: stem:Distansutb_gymn_: 100%
+
+[[table]]
+table = "Distansutb_gymn_HT20_VT21"
+edition = ["HT2020", "VT2021"]
+
+[[table]]
+table = "Distansutb_gymn_HT21_VT22"
+edition = ["HT2021", "VT2022"]

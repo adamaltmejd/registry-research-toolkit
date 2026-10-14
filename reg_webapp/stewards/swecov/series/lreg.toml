@@ -1,0 +1,1099 @@
+id = "lreg"
+register = "scb/lararreg"
+variants = ["scb/lararreg/tjansteregistret"]
+edition_spelling = "autumn"
+
+[[table]]
+table = "LReg_1989"
+edition = 1989
+
+[[table]]
+table = "LReg_1990"
+edition = 1990
+
+[[table]]
+table = "LReg_1991"
+edition = 1991
+
+[[table]]
+table = "LReg_1992"
+edition = 1992
+
+[[table]]
+table = "LReg_1993"
+edition = 1993
+
+[[table]]
+table = "LReg_1994"
+edition = 1994
+
+[[table]]
+table = "LReg_1995"
+edition = 1995
+
+[[table]]
+table = "LReg_1996"
+edition = 1996
+
+[[table]]
+table = "LReg_1997"
+edition = 1997
+
+[[table]]
+table = "LReg_1998"
+edition = 1998
+
+[[table]]
+table = "LReg_1999"
+edition = 1999
+
+[[table]]
+table = "LReg_2000"
+edition = 2000
+
+[[table]]
+table = "LReg_2001"
+edition = 2001
+
+[[table]]
+table = "LReg_2002"
+edition = 2002
+
+[[table]]
+table = "LReg_2003"
+edition = 2003
+
+[[table]]
+table = "LReg_2004"
+edition = 2004
+
+[[table]]
+table = "LReg_2005"
+edition = 2005
+
+[[table]]
+table = "LReg_2006"
+edition = 2006
+
+[[table]]
+table = "LReg_2007"
+edition = 2007
+
+[[table]]
+table = "LReg_2008"
+edition = 2008
+
+[[table]]
+table = "LReg_2009"
+edition = 2009
+
+[[table]]
+table = "LReg_2010"
+edition = 2010
+
+[[table]]
+table = "LReg_2011"
+edition = 2011
+
+[[table]]
+table = "LReg_2012"
+edition = 2012
+
+[[table]]
+table = "LReg_2013"
+edition = 2013
+
+[[table]]
+table = "LReg_2014"
+edition = 2014
+
+[[table]]
+table = "LReg_2015"
+edition = 2015
+
+[[table]]
+table = "LReg_2016"
+edition = 2016
+
+[[table]]
+table = "LReg_2017"
+edition = 2017
+
+[[table]]
+table = "LReg_2018"
+edition = 2018
+
+[[table]]
+table = "LReg_2019"
+edition = 2019
+
+[[table]]
+table = "LReg_2020"
+edition = 2020
+
+[[table]]
+table = "LReg_2021"
+edition = 2021
+
+[[table]]
+table = "LReg_2022"
+edition = 2022
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2006"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2006 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2007"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2007 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2008"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2008 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2009"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2009 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2010"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2010 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2011"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2011 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2012"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2012 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2013"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2013 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2014"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2014 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2015"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2015 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "ANNANPED"
+tables = ["LReg_2016"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2016 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Anstslag"
+tables = ["LReg_1992"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Anstslag"
+tables = ["LReg_1993"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Anstslag"
+tables = ["LReg_1994"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1989"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1989 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1990"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1990 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1991"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1992"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1993"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1994"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1995"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1995 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1996"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1996 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1997"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1997 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1998"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1998 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Argang"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Behkod"
+tables = ["LReg_1990"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1990 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Behkod"
+tables = ["LReg_1991"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Behkod"
+tables = ["LReg_1992"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Behkod"
+tables = ["LReg_1993"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Behkod"
+tables = ["LReg_1994"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2006"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2006 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2007"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2007 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2008"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2008 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2009"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2009 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "IVPgm"
+tables = ["LReg_2010"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2010 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Inriktning"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Inriktning"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Inriktning"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Inriktning"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Inriktning"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Inriktning"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Inriktning"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "InriktningGY"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "InriktningGY"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "InriktningGY"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "InriktningGY"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "InriktningGY"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "InriktningGY"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "InriktningGY"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Jurform"
+tables = ["LReg_2013"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2013 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Jurform"
+tables = ["LReg_2014"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2014 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "JuridiskForm"
+tables = ["LReg_2013"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2013 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "JuridiskForm"
+tables = ["LReg_2014"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2014 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1989"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1989 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1990"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1990 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1991"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1992"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1993"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1994"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1995"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1995 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1996"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1996 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1997"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1997 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Kommun"
+tables = ["LReg_1998"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1998 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1989"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1989 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1990"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1990 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1991"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1992"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1993"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1994"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1995"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1995 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1996"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1996 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1997"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1997 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Lan"
+tables = ["LReg_1998"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1998 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2006"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2006 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2007"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2007 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2008"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2008 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2009"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2009 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2010"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2010 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2011"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2011 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2012"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2012 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2013"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2013 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2014"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2014 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2015"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2015 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PRTJBL"
+tables = ["LReg_2016"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2016 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "PrTjledig"
+tables = ["LReg_1999", "LReg_2000", "LReg_2001", "LReg_2002", "LReg_2003", "LReg_2004", "LReg_2005", "LReg_2006", "LReg_2007", "LReg_2008", "LReg_2009", "LReg_2010", "LReg_2011", "LReg_2012", "LReg_2013", "LReg_2014", "LReg_2015", "LReg_2016", "LReg_2017", "LReg_2018", "LReg_2019", "LReg_2020", "LReg_2021", "LReg_2022"]
+hold = { follow_up = "#1516", reason = "Interim hold: person-level 'helt tjänstledig' flag; its person-register provenance and equivalence with scb/lararreg/prtjledig are unsettled; follow-up #1516. Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "SFITyp"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "SFITyp"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "SFITyp"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "SFITyp"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "SFITyp"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "SFITyp"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "SFITyp"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Saktar"
+tables = ["LReg_2007"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2007 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1989"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1989 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1990"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1990 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1991"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1992"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1993"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1994"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1995"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1995 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1996"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1996 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1997"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1997 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1998"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1998 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2006"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2006 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2007"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2007 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2008"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2008 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2009"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2009 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2010"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2010 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2011"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2011 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2012"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2012 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2013"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2013 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2014"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2014 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2015"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2015 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAR"
+tables = ["LReg_2016"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2016 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAREXLASYL"
+tables = ["LReg_2013"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2013 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAREXLASYL"
+tables = ["LReg_2014"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2014 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAREXLASYL"
+tables = ["LReg_2015"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2015 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLAREXLASYL"
+tables = ["LReg_2016"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2016 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2006"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2006 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2007"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2007 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2008"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2008 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2009"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2009 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2010"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2010 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2011"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2011 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2012"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2012 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2014"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2014 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2015"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2015 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TJLEDLAR"
+tables = ["LReg_2016"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2016 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Tjledig"
+tables = ["LReg_1989"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1989 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Tjledig"
+tables = ["LReg_1990"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1990 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Tjledig"
+tables = ["LReg_1991"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Tjledig"
+tables = ["LReg_1992"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Tjledig"
+tables = ["LReg_1993"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Tjledig"
+tables = ["LReg_1994"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_1999"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2000"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2001"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2002"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2003"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2004"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2005"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2006"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2006 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2007"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2007 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2008"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2008 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2009"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2009 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "TraningsSar"
+tables = ["LReg_2010"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2010 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "befkod"
+tables = ["LReg_1991"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "befkod"
+tables = ["LReg_1992"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "befkod"
+tables = ["LReg_1993"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "befkod"
+tables = ["LReg_1994"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "RoKod"
+storage_header = "P1105_LopNr_RoKod"

@@ -1,0 +1,112 @@
+id = "stativ-tot"
+register = "scb/stativ"
+variants = ["scb/stativ/_default"]
+
+[[table]]
+table = "Stativ1997_tot"
+edition = 1997
+
+[[table]]
+table = "Stativ1998_tot"
+edition = 1998
+
+[[table]]
+table = "Stativ1999_tot"
+edition = 1999
+
+[[table]]
+table = "Stativ2000_tot"
+edition = 2000
+
+[[table]]
+table = "Stativ2001_tot"
+edition = 2001
+
+[[table]]
+table = "Stativ2002_tot"
+edition = 2002
+
+[[table]]
+table = "Stativ2003_tot"
+edition = 2003
+
+[[table]]
+table = "Stativ2004_tot"
+edition = 2004
+
+[[table]]
+table = "Stativ2005_tot"
+edition = 2005
+
+[[table]]
+table = "Stativ2006_tot"
+edition = 2006
+
+[[table]]
+table = "Stativ2007_tot"
+edition = 2007
+
+[[table]]
+table = "Stativ2008_tot"
+edition = 2008
+
+[[table]]
+table = "Stativ2009_tot"
+edition = 2009
+
+[[table]]
+table = "Stativ2010_tot"
+edition = 2010
+
+[[table]]
+table = "Stativ2011_tot"
+edition = 2011
+
+[[table]]
+table = "Stativ2012_tot"
+edition = 2012
+
+[[table]]
+table = "Stativ2013_tot"
+edition = 2013
+
+[[table]]
+table = "Stativ2014_tot"
+edition = 2014
+
+[[table]]
+table = "Stativ2015_tot"
+edition = 2015
+
+[[table]]
+table = "Stativ2016_tot"
+edition = 2016
+
+[[table]]
+table = "Stativ2017_tot"
+edition = 2017
+
+[[column]]
+column = "AfOppetArblos"
+tables = ["Stativ2014_tot"]
+unmap = "Retained physical field for edition 2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "AfOppetArblos"
+tables = ["Stativ2015_tot"]
+unmap = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "AfProgram"
+tables = ["Stativ2014_tot"]
+unmap = "Retained physical field for edition 2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "AfProgram"
+tables = ["Stativ2015_tot"]
+unmap = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "AfSokKat_grupp"
+tables = ["Stativ2007_tot"]
+unmap = "Retained physical field for edition 2007; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

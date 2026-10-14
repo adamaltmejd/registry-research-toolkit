@@ -1,0 +1,200 @@
+id = "itftg"
+register = "scb/it-anvandning"
+variants = ["scb/it-anvandning/it-anvandning-i-foretag"]
+
+# route note: 2008-2012 waves poorly enumerated in reg_meta
+
+[[table]]
+table = "ITftg_2008"
+edition = 2008
+
+[[table]]
+table = "ITftg_2009"
+edition = 2009
+
+[[table]]
+table = "ITftg_2010"
+edition = 2010
+
+[[table]]
+table = "ITftg_2011"
+edition = 2011
+
+[[table]]
+table = "ITftg_2012"
+edition = 2012
+
+[[column]]
+column = "AWSEU"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal AWSEU with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "AWSHM"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal AWSHM with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "AWSWW"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal AWSWW with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "AXSEU"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal AXSEU with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "AXSHM"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal AXSHM with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "AXSWW"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal AXSWW with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "EMPIUSEPCT"
+tables = ["ITftg_2008"]
+unmap = "The supplied 2008 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "EMPIUSEPCT"
+tables = ["ITftg_2009"]
+unmap = "The supplied 2009 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "EMPIUSEPCT"
+tables = ["ITftg_2010"]
+unmap = "The supplied 2010 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "EMPIUSEPCT"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "EMPIUSEPCT"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal EMPIUSEPCT with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GDIST"
+tables = ["ITftg_2009"]
+unmap = "The supplied 2009 business-survey metadata contain no exact literal GDIST with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GDIST"
+tables = ["ITftg_2010"]
+unmap = "The supplied 2010 business-survey metadata contain no exact literal GDIST with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GDIST"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal GDIST with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GDIST"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal GDIST with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GSOLOTH"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal GSOLOTH with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GUSENRG"
+tables = ["ITftg_2009"]
+unmap = "The supplied 2009 business-survey metadata contain no exact literal GUSENRG with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GUSENRG"
+tables = ["ITftg_2010"]
+unmap = "The supplied 2010 business-survey metadata contain no exact literal GUSENRG with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GUSENRG"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal GUSENRG with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "GUSENRG"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal GUSENRG with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "IGOV2PREU"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal IGOV2PREU with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "IGOV2PREU"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal IGOV2PREU with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "ITERP1"
+tables = ["ITftg_2010"]
+unmap = "The supplied 2010 business-survey metadata contain no exact literal ITERP1 with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "ITERP1"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal ITERP1 with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "PMD"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal PMD with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "SISC"
+tables = ["ITftg_2008"]
+unmap = "The supplied 2008 business-survey metadata contain no exact literal SISC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "SISC"
+tables = ["ITftg_2009"]
+unmap = "The supplied 2009 business-survey metadata contain no exact literal SISC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "SISC"
+tables = ["ITftg_2010"]
+unmap = "The supplied 2010 business-survey metadata contain no exact literal SISC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "SISC"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal SISC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "WEBACC"
+tables = ["ITftg_2008"]
+unmap = "The supplied 2008 business-survey metadata contain no exact literal WEBACC with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "WEBCTM"
+tables = ["ITftg_2008"]
+unmap = "The supplied 2008 business-survey metadata contain no exact literal WEBCTM with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "WEBORD"
+tables = ["ITftg_2008"]
+unmap = "The supplied 2008 business-survey metadata contain no exact literal WEBORD with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "WEBORD"
+tables = ["ITftg_2011"]
+unmap = "The supplied 2011 business-survey metadata contain no exact literal WEBORD with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "WEBORD"
+tables = ["ITftg_2012"]
+unmap = "The supplied 2012 business-survey metadata contain no exact literal WEBORD with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."
+
+[[column]]
+column = "WEBPER"
+tables = ["ITftg_2008"]
+unmap = "The supplied 2008 business-survey metadata contain no exact literal WEBPER with a verified native-question link. Later occurrences of this name do not establish this year’s physical meaning."

@@ -1,0 +1,27 @@
+id = "fk-uhs-lev4"
+register = "fk/underhallsstod"
+variants = ["fk/underhallsstod/utbetalningar-barn"]
+
+[[table]]
+table = "FK_UHS_lev4"
+edition = { from = 2018, to = 2025 }
+
+[[column]]
+column = "P1105_LopNr_Barn_PersonNr"
+mappings = [{ register_variant = "fk/underhallsstod/utbetalningar-barn", variable = "fk/underhallsstod/lopnr-barn", representation = "LOPNR_BARN" }]
+reason = "FK delivery spelling of the own-register catalog variable fk/underhallsstod/lopnr-barn (delivery column LOPNR_BARN); catalog errata #1512, maintainer-decided 2026-10-12 (#1302)."
+
+[[column]]
+column = "P1105_LopNr_Bidragsmottagare_PersonNr"
+mappings = [{ register_variant = "fk/underhallsstod/utbetalningar-barn", variable = "fk/underhallsstod/lopnr-bm", representation = "LOPNR_BM" }]
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."
+
+[[column]]
+column = "Utbetalningsperiod_fromdat"
+mappings = [{ register_variant = "fk/underhallsstod/utbetalningar-barn", variable = "fk/underhallsstod/ersattningperiod-from", representation = "ERSATTNINGPERIOD_FROM" }]
+reason = "SWECOV delivery spelling of the payment period (Utbetalningsperiod_*) for the variant's ersättningsperiod variable; same definition in fk.toml. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "Utbetalningsperiod_tomdat"
+mappings = [{ register_variant = "fk/underhallsstod/utbetalningar-barn", variable = "fk/underhallsstod/ersattningperiod-tom", representation = "ERSATTNINGPERIOD_TOM" }]
+reason = "SWECOV delivery spelling of the payment period (Utbetalningsperiod_*) for the variant's ersättningsperiod variable; same definition in fk.toml. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."

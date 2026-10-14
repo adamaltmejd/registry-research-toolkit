@@ -1,0 +1,359 @@
+id = "gdb-ast"
+register = "scb/gdb"
+variants = ["scb/gdb/adresser-fastigheter"]
+
+[[table]]
+table = "GDB_Ast1990"
+edition = 1990
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1991"
+edition = 1991
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1992"
+edition = 1992
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1993"
+edition = 1993
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1994"
+edition = 1994
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1995"
+edition = 1995
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1996"
+edition = 1996
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1997"
+edition = 1997
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1998"
+edition = 1998
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast1999"
+edition = 1999
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2000"
+edition = 2000
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2001"
+edition = 2001
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2002"
+edition = 2002
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2003"
+edition = 2003
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2004"
+edition = 2004
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2005"
+edition = 2005
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2006"
+edition = 2006
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2007"
+edition = 2007
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2008"
+edition = 2008
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2009"
+edition = 2009
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2010"
+edition = 2010
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2011"
+edition = 2011
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2012"
+edition = 2012
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2013"
+edition = 2013
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2014"
+edition = 2014
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2015"
+edition = 2015
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2016"
+edition = 2016
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2017"
+edition = 2017
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2018"
+edition = 2018
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2019"
+edition = 2019
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2020"
+edition = 2020
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2021"
+edition = 2021
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2022"
+edition = 2022
+partition = "ast"
+
+[[table]]
+table = "GDB_Ast2023"
+edition = 2023
+partition = "ast"
+
+[[column]]
+column = "AstKommun"
+hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
+
+[[column]]
+column = "AstNr"
+hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1999"]
+unmap = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2000"]
+unmap = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2001"]
+unmap = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2002"]
+unmap = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2003"]
+unmap = "Retained physical field for edition 2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2004"]
+unmap = "Retained physical field for edition 2004; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2005"]
+unmap = "Retained physical field for edition 2005; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2006"]
+unmap = "Retained physical field for edition 2006; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2007"]
+unmap = "Retained physical field for edition 2007; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2008"]
+unmap = "Retained physical field for edition 2008; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2009"]
+unmap = "Retained physical field for edition 2009; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2010"]
+unmap = "Retained physical field for edition 2010; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2011"]
+unmap = "Retained physical field for edition 2011; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2012"]
+unmap = "Retained physical field for edition 2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2013"]
+unmap = "Retained physical field for edition 2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2014"]
+unmap = "Retained physical field for edition 2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2015"]
+unmap = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2018"]
+unmap = "Retained physical geocoded extract field for edition 2018. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2019"]
+unmap = "Retained physical geocoded extract field for edition 2019. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2020"]
+unmap = "Retained physical geocoded extract field for edition 2020. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2021"]
+unmap = "Retained physical geocoded extract field for edition 2021. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast2022"]
+unmap = "Retained physical geocoded extract field for edition 2022. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO_2018"
+tables = ["GDB_Ast2023"]
+hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
+
+[[column]]
+column = "P1105_LopNr_CfarNr"
+hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
+
+[[column]]
+column = "P1105_LopNr_PeOrgNr"
+hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }

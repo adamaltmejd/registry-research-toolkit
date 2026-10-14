@@ -1,0 +1,7 @@
+id = "ifa-ersperiod-lev3"
+register = "iaf/ersattningsperiod"
+variants = ["iaf/ersattningsperiod/_default"]
+
+[[table]]
+table = "IFA_Ersperiod_Lev3"
+edition = { from = 1985, to = 2023 }

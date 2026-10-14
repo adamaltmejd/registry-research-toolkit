@@ -1,0 +1,11 @@
+id = "ndr-incidence"
+register = "ndr/nationella-diabetesregistret"
+variants = ["ndr/nationella-diabetesregistret/_default"]
+
+[[table]]
+table = "NDR_incidence"
+edition = { from = 1982, to = 2024 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+unmap = "Person join key of the incidence holding; the NDR personnr is orderable from NDR_children_2007 and NDR_adults_2010. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."

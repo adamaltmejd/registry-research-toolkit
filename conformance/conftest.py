@@ -62,10 +62,14 @@ def pytest_configure(config):
     except RegMetaError as exc:
         raise pytest.UsageError(f"{exc.code}: {exc.message}") from exc
     if holdings_input is not None:
-        from holdings_accounting import admit_holdings_input
+        from holdings_accounting import admit_holdings_input, committed_spec_dir
 
         try:
-            admit_holdings_input(Path(holdings_input), Path(directory))
+            admit_holdings_input(
+                Path(holdings_input),
+                Path(directory),
+                committed_spec_dir(Path(directory)),
+            )
         except ValueError as exc:
             raise pytest.UsageError(str(exc)) from exc
 

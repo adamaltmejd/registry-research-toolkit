@@ -1,0 +1,7 @@
+id = "doda"
+register = "scb/rtb"
+variants = ["scb/rtb/doda"]
+
+[[table]]
+table = "Doda_20241231"
+edition = { from = 1990, to = 2024 }

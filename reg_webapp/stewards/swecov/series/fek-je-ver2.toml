@@ -1,0 +1,13 @@
+id = "fek-je-ver2"
+register = "scb/fek"
+variants = ["scb/fek/fek-slutdata"]
+
+# route note: every FE table (FE1990-FE2023) is FEK fek-slutdata; FE1990-FE2002 via fek.toml errata (maintainer D6, OP-2026-10-13-E)
+
+[[table]]
+table = "FEK_JE2022_ver2"
+edition = 2022
+
+[[column]]
+column = "P1105_LopNr_FENr"
+unmap = "Företagsenhet join key of the FEK juridisk-enhet bridge file (SCB P1105 2025 list, FEK sheet: JEÅÅÅÅ holds only FENr and PeOrgNr); scb/fek/fenr is orderable from FE2022_ver2, same edition, and an order emits this file whole, FENr included. Aux-table join-key rule (maintainer 2026-09-02); maintainer-decided 2026-10-14."

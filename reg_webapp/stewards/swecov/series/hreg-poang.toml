@@ -1,0 +1,13 @@
+id = "hreg-poang"
+register = "scb/hreg"
+variants = ["scb/hreg/grundutbildning-poang"]
+
+# route note: stem:Hreg_Poang_: 65% grounded
+
+[[table]]
+table = "Hreg_Poang_1993_2022"
+edition = { from = "HT1993", to = 2021 }
+
+[[table]]
+table = "Hreg_Poang_2022_2024"
+edition = { from = 2022, to = 2024 }

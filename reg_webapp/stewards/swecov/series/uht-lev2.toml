@@ -1,0 +1,39 @@
+id = "uht-lev2"
+register = "scb/utrikeshandel-tjanster"
+variants = ["scb/utrikeshandel-tjanster/_default"]
+
+[[table]]
+table = "UHT_Lev2_2013"
+edition = 2013
+
+[[table]]
+table = "UHT_Lev2_2014"
+edition = 2014
+
+[[table]]
+table = "UHT_Lev2_2015"
+edition = 2015
+
+[[table]]
+table = "UHT_Lev2_2016"
+edition = 2016
+
+[[table]]
+table = "UHT_Lev2_2017"
+edition = 2017
+
+[[table]]
+table = "UHT_Lev2_2018"
+edition = 2018
+
+[[table]]
+table = "UHT_Lev2_2019"
+edition = 2019
+
+[[table]]
+table = "UHT_Lev2_2020"
+edition = 2020
+
+[[table]]
+table = "UHT_Lev2_2021"
+edition = 2021

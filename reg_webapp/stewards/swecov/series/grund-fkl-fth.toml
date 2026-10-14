@@ -1,0 +1,97 @@
+id = "grund-fkl-fth"
+register = "scb/grundskola-elever"
+variants = ["scb/grundskola-elever/individregister"]
+
+# route note: combined table; förskola/fritidshem-only columns go to flavor graft
+
+[[table]]
+table = "Grund_Fkl_Fth_2008"
+edition = "2008-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2009"
+edition = "2009-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2010"
+edition = "2010-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2011"
+edition = "2011-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2012"
+edition = "2012-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2013"
+edition = "2013-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2014"
+edition = "2014-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2015"
+edition = "2015-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2016"
+edition = "2016-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2017"
+edition = "2017-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2018"
+edition = "2018-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2019"
+edition = "2019-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2020"
+edition = "2020-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2021"
+edition = "2021-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2022"
+edition = "2022-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2023"
+edition = "2023-10-15"
+
+[[table]]
+table = "Grund_Fkl_Fth_2024"
+edition = "2024-10-15"
+
+[[column]]
+column = "AK"
+tables = ["Grund_Fkl_Fth_2008"]
+mappings = [{ register_variant = "scb/grundskola-elever/individregister", variable = "scb/grundskola-elever/arskurs", representation = "Arskurs" }]
+reason = "SCB delivery report, sheet Skolverkets elevreg., row 16, identifies AK as Årskurs for 2008-2016; the owner emits Arskurs at exactly 2008-10-15. Maintainer-approved 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "SKOM"
+tables = ["Grund_Fkl_Fth_2008"]
+mappings = [{ register_variant = "scb/grundskola-elever/individregister", variable = "scb/grundskola-elever/kommun", representation = "Kommun" }]
+reason = "SCB delivery report, sheet Skolverkets elevreg., row 11, identifies SKOM as Skolkommun for 2008-2016; the owner emits Kommun (Kommun för där grundskolan ligger) at exactly 2008-10-15. Maintainer-approved 2026-10-13 (OP-2026-10-13-E)."
+
+[[column]]
+column = "AvdFTH"
+storage_header = "P1105_LopNr_AVDFTH"
+
+[[column]]
+column = "SkolKodFTH"
+storage_header = "P1105_Lopnr_SkolKodFTH"
+
+[[column]]
+column = "SkolenhetsKodFTH"
+storage_header = "P1105_Lopnr_Skolenhetskodfth"

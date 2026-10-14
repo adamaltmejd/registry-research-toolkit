@@ -1,0 +1,274 @@
+id = "aku"
+register = "scb/aku"
+variants = ["scb/aku/aku-april-2005-dec-2020"]
+
+# route note: stem:AKU_: 2015-2020 holdings
+
+[[table]]
+table = "AKU_2015"
+edition = 2015
+
+[[table]]
+table = "AKU_2016"
+edition = 2016
+
+[[table]]
+table = "AKU_2017"
+edition = 2017
+
+[[table]]
+table = "AKU_2018"
+edition = 2018
+
+[[table]]
+table = "AKU_2019"
+edition = 2019
+
+[[table]]
+table = "AKU_2020"
+edition = 2020
+
+[[column]]
+column = "ArLand"
+tables = ["AKU_2015"]
+unmap = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ArLand"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ArVerks3"
+tables = ["AKU_2015"]
+unmap = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ArVerks3"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ArVerks3"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ArVerks3"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ArVerks3"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "ArVerks3"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BISSYK1"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BISSYK1"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BISSYK1"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BISSYK1"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BISSYK1"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK2"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK2"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK2"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK2"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK2"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK3"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK3"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK3"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK3"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK3"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK4"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK4"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK4"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK4"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "BiSSYK4"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK1"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK1"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK1"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK1"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK1"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK2"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK2"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK2"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK2"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK2"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK3"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK3"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK3"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK3"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK3"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK4"
+tables = ["AKU_2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK4"
+tables = ["AKU_2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK4"
+tables = ["AKU_2018"]
+unmap = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK4"
+tables = ["AKU_2019"]
+unmap = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "HUSSYK4"
+tables = ["AKU_2020"]
+unmap = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "UarbLand"
+tables = ["AKU_2017", "AKU_2018"]
+unmap = "The accepted AKU export assigns this same annual field to native3811 and39235, both asking the country of the last job; their operational derivation/routing differs. Both are admitted in the same2017/2018 variant and year. The private column list contains no question/native selector. Preserve the held field and both catalog meanings; leave this exact inventory mapping unavailable. Exact review: Batch57-ambiguous20-owner-review.json. Maintainer authorizes preserving unsupported mappings as unavailable; no original column, year or source question is removed."

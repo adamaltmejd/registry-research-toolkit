@@ -1,0 +1,68 @@
+id = "gymnasieskolaavg-amne"
+variants = []
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1985"
+edition = 1985
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1986"
+edition = 1986
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1987"
+edition = 1987
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1988"
+edition = 1988
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1989"
+edition = 1989
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1990"
+edition = 1990
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1991"
+edition = 1991
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1992"
+edition = 1992
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1993"
+edition = 1993
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1994"
+edition = 1994
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1995"
+edition = 1995
+
+[[table]]
+table = "GymnasieskolaAvg_Amne_1996"
+edition = 1996
+
+[[column]]
+column = "Amneskod_omkodad"
+tables = ["GymnasieskolaAvg_Amne_1985", "GymnasieskolaAvg_Amne_1986", "GymnasieskolaAvg_Amne_1987", "GymnasieskolaAvg_Amne_1988", "GymnasieskolaAvg_Amne_1989"]
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Historical 1985–1996 subject-grade table shape is explicitly ungrounded in the maintained source policy. Neither the final-grade nor course-grade variant establishes this recoded subject delivery. All original fields and period retained; catalog mapping unavailable."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Historical 1985–1996 subject-grade table shape is explicitly ungrounded in the maintained source policy. Neither the final-grade nor course-grade variant establishes this recoded subject delivery. All original fields and period retained; catalog mapping unavailable."
+
+[[column]]
+column = "amneskod"
+tables = ["GymnasieskolaAvg_Amne_1990", "GymnasieskolaAvg_Amne_1991", "GymnasieskolaAvg_Amne_1992", "GymnasieskolaAvg_Amne_1993", "GymnasieskolaAvg_Amne_1994", "GymnasieskolaAvg_Amne_1995", "GymnasieskolaAvg_Amne_1996"]
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Historical 1985–1996 subject-grade table shape is explicitly ungrounded in the maintained source policy. Neither the final-grade nor course-grade variant establishes this recoded subject delivery. All original fields and period retained; catalog mapping unavailable."
+
+[[column]]
+column = "betyg"
+unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Historical 1985–1996 subject-grade table shape is explicitly ungrounded in the maintained source policy. Neither the final-grade nor course-grade variant establishes this recoded subject delivery. All original fields and period retained; catalog mapping unavailable."

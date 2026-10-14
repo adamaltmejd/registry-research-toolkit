@@ -1,0 +1,44 @@
+id = "aku-corona"
+register = "scb/aku"
+variants = ["scb/aku/aku-januari-2021"]
+
+# route note: stem:AKU_Corona_: 2021–2022 pandemic questions documented in the held master variable list; exact added columns retain unavailable response-code warnings
+# route note: stem:AKU_RL_: 2021-2024 holdings
+
+[[table]]
+table = "AKU_Corona_2021"
+edition = 2021
+
+[[table]]
+table = "AKU_Corona_2022"
+edition = 2022
+
+[[column]]
+column = "MVeckAr"
+tables = ["AKU_Corona_2021"]
+unmap = "Known shared person/measurement-period field also held in AKU_RL_2021. Both exact cells resolve to scb/aku/aku-januari-2021 scb/aku/mveckar representation MVeckAr for 2021. The existing inventory ordering contract admits one physical holding for this logical field/period. Preserve the established main-table mapping and retain this Corona auxiliary field physically without a second ordering mapping; no supersession, disjoint-population or semantic-unknown claim. Exact mappings and source periods retained in evidence/corona-duplicate6-review.json."
+
+[[column]]
+column = "MVeckAr"
+tables = ["AKU_Corona_2022"]
+unmap = "Known shared person/measurement-period field also held in AKU_RL_2022. Both exact cells resolve to scb/aku/aku-januari-2021 scb/aku/mveckar representation MVeckAr for 2022. The existing inventory ordering contract admits one physical holding for this logical field/period. Preserve the established main-table mapping and retain this Corona auxiliary field physically without a second ordering mapping; no supersession, disjoint-population or semantic-unknown claim. Exact mappings and source periods retained in evidence/corona-duplicate6-review.json."
+
+[[column]]
+column = "MveckMan"
+tables = ["AKU_Corona_2021"]
+unmap = "Known shared person/measurement-period field also held in AKU_RL_2021. Both exact cells resolve to scb/aku/aku-januari-2021 scb/aku/mveckman representation MVeckMan for 2021. The existing inventory ordering contract admits one physical holding for this logical field/period. Preserve the established main-table mapping and retain this Corona auxiliary field physically without a second ordering mapping; no supersession, disjoint-population or semantic-unknown claim. Exact mappings and source periods retained in evidence/corona-duplicate6-review.json."
+
+[[column]]
+column = "MveckMan"
+tables = ["AKU_Corona_2022"]
+unmap = "Known shared person/measurement-period field also held in AKU_RL_2022. Both exact cells resolve to scb/aku/aku-januari-2021 scb/aku/mveckman representation MVeckMan for 2022. The existing inventory ordering contract admits one physical holding for this logical field/period. Preserve the established main-table mapping and retain this Corona auxiliary field physically without a second ordering mapping; no supersession, disjoint-population or semantic-unknown claim. Exact mappings and source periods retained in evidence/corona-duplicate6-review.json."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+tables = ["AKU_Corona_2021"]
+unmap = "Known shared person/measurement-period field also held in AKU_RL_2021. Both exact cells resolve to scb/aku/aku-januari-2021 scb/aku/personnr representation PersonNr for 2021. The existing inventory ordering contract admits one physical holding for this logical field/period. Preserve the established main-table mapping and retain this Corona auxiliary field physically without a second ordering mapping; no supersession, disjoint-population or semantic-unknown claim. Exact mappings and source periods retained in evidence/corona-duplicate6-review.json."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+tables = ["AKU_Corona_2022"]
+unmap = "Known shared person/measurement-period field also held in AKU_RL_2022. Both exact cells resolve to scb/aku/aku-januari-2021 scb/aku/personnr representation PersonNr for 2022. The existing inventory ordering contract admits one physical holding for this logical field/period. Preserve the established main-table mapping and retain this Corona auxiliary field physically without a second ordering mapping; no supersession, disjoint-population or semantic-unknown claim. Exact mappings and source periods retained in evidence/corona-duplicate6-review.json."

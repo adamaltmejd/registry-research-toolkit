@@ -1,0 +1,7 @@
+id = "ams-insper"
+register = "arbetsformedlingen/insper"
+variants = ["arbetsformedlingen/insper/_default"]
+
+[[table]]
+table = "AMS_INSPER"
+edition = { from = 2015, to = 2020 }

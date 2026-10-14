@@ -2,7 +2,7 @@
   "catalog": "catalog.json",
   "inventory": "inventory.toml",
   "census": "census.csv",
-  "holdings_policy": "holdings_policy.toml",
   "observe_members": true,
-  "fails_if": "a member index is dropped or mis-stored on its way to holding_mapping, the artifact validator cannot rebuild a member from its stored columns, or the one-to-one check compares a year member set by the table's edition instead of each member's own year (the Panel set would then conflict with Hushall2020 over 2020)"
+  "fails_if": "a member index is dropped or mis-stored on its way to holding_mapping, the artifact validator cannot rebuild a member from its stored columns, or the one-to-one check compares a year member set by the table's edition instead of each member's own year (the Panel set would then conflict with Hushall2020 over 2020)",
+  "scope": "scope.toml"
 }

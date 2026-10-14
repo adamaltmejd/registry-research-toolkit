@@ -23,10 +23,15 @@ from _prepared_fixtures import accept_prepared
 from _snapshot_fixtures import copied_builder_checkout, git
 from catalog_manifest import synthetic_manifest
 from reg_meta_build.errors import EXIT_CONFIG
-from reg_meta_build.extend_db import read_private_holdings_input
+from reg_meta_build.extend_db import CANDIDATE_KIND, read_private_holdings_input
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_catalog import ResolvedVariable
+from reg_meta_build.steward_spec import (
+    STEWARDS_DIR,
+    load_steward_spec,
+    steward_spec_sha256,
+)
 
 import reg_meta_build
 
@@ -51,17 +56,31 @@ def _manifest(path: Path) -> dict[str, str]:
 
 
 def _builder_checkout(directory: Path) -> tuple[Path, str]:
+    """A committed builder copy holding the fixture's steward slugs and spec
+    (`scope.toml` only, so the real series never meet the fixture census)."""
     checkout = copied_builder_checkout(directory)
     slugs = checkout / "reg_meta_build/fqid_slugs" / REQUEST["steward"]
     slugs.mkdir(parents=True)
     shutil.copyfile(CASE / "slugs.toml", slugs / "fixture.toml")
-    git(checkout, "add", "--", "reg_meta_build/fqid_slugs")
-    git(checkout, "commit", "-q", "-m", "Pin steward slugs")
+    spec = checkout / STEWARDS_DIR / REQUEST["steward"]
+    spec.mkdir(parents=True)
+    shutil.copyfile(CASE / "scope.toml", spec / "scope.toml")
+    git(checkout, "add", "--", "reg_meta_build/fqid_slugs", STEWARDS_DIR)
+    git(checkout, "commit", "-q", "-m", "Pin steward slugs and spec")
     return checkout / "reg_meta_build/src", git(checkout, "rev-parse", "HEAD")
 
 
-def _accept(root: Path, files: dict[str, Path]) -> tuple[Path, str, str]:
-    """Commit `files` (candidate path -> source) under `root` with its manifest."""
+def _accept(
+    root: Path,
+    files: dict[str, Path],
+    *,
+    spec_sha256: str,
+    global_sha256: str,
+    storage_export: str = REQUEST["storage_export_name"],
+) -> tuple[Path, str, str]:
+    """Commit `files` (candidate path -> source) under `root` with its manifest:
+    the `census` role is REQUEST's name, the `storage_export` role REQUEST's
+    unless overridden, the inventory its fixed path."""
     for destination, source in files.items():
         (root / destination).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, root / destination)
@@ -69,7 +88,14 @@ def _accept(root: Path, files: dict[str, Path]) -> tuple[Path, str, str]:
     manifest.write_text(
         json.dumps(
             {
-                "artifact_kind": "swecov-private-extension-input-candidate",
+                "artifact_kind": CANDIDATE_KIND,
+                "roles": {
+                    "census": REQUEST["census_name"],
+                    "storage_export": storage_export,
+                    "inventory": "policy/inventory.toml",
+                },
+                "steward_spec_sha256": spec_sha256,
+                "global_db_sha256": global_sha256,
                 "files": [
                     {
                         "path": path.relative_to(root).as_posix(),
@@ -87,17 +113,26 @@ def _accept(root: Path, files: dict[str, Path]) -> tuple[Path, str, str]:
     return root, revision, hashlib.sha256(manifest.read_bytes()).hexdigest()
 
 
-def _accepted_candidate(directory: Path, *, inventory: str = "inventory.toml"):
+def _accepted_candidate(
+    directory: Path,
+    base: Path,
+    *,
+    inventory: str = "inventory.toml",
+    spec_sha256: str = steward_spec_sha256(CASE),
+    storage_export: str = REQUEST["storage_export_name"],
+):
+    """The fixture candidate, pinned to `base` and (by default) the committed spec."""
     return _accept(
         directory / "candidate",
         {
             "policy/inventory.toml": CASE / inventory,
-            "policy/source_policy.toml": CASE / "source_policy.toml",
-            "policy/inventory_overlay.toml": CASE / "inventory_overlay.toml",
-            "policy/holdings_policy.toml": CASE / "holdings_policy.toml",
             "providers/fixture.toml": CASE / "provider.toml",
             REQUEST["census_name"]: CASE / "census.csv",
+            REQUEST["storage_export_name"]: CASE / "storage_types.csv",
         },
+        spec_sha256=spec_sha256,
+        global_sha256=hashlib.sha256(base.read_bytes()).hexdigest(),
+        storage_export=storage_export,
     )
 
 
@@ -146,11 +181,11 @@ def strict_builds(tmp_path_factory: pytest.TempPathFactory) -> dict:
         accepted, name="Prepared fixture", email="prepared@example.invalid"
     )
     commit_fixture(accepted, "Add an unrelated folder", "catalog")
-    candidate = _accepted_candidate(accepted)
     base = directory / "base/reg_meta.db"
     write_resolved_catalog(
         _variables(CASE / "base_catalog.json"), base, manifest=synthetic_manifest()
     )
+    candidate = _accepted_candidate(accepted, base)
     original = base.read_bytes()
     builds = []
     for name in ("first", "replay"):
@@ -220,7 +255,9 @@ def test_unaccounted_census_is_rejected_before_output_creation(
 ) -> None:
     directory = strict_builds["directory"]
     candidate = _accepted_candidate(
-        directory / "unaccounted", inventory=REQUEST["unaccounted_inventory"]
+        directory / "unaccounted",
+        strict_builds["base"],
+        inventory=REQUEST["unaccounted_inventory"],
     )
     output = directory / "rejected-output"
     result = _extend(strict_builds["source"], strict_builds["base"], candidate, output)
@@ -228,6 +265,81 @@ def test_unaccounted_census_is_rejected_before_output_creation(
     assert (
         json.loads(result.stdout)["error"]["message"] == EXPECTED["unaccounted_error"]
     )
+    assert not output.exists()
+
+
+def test_strict_extension_refuses_a_candidate_generated_from_another_spec(
+    strict_builds: dict, tmp_path: Path
+) -> None:
+    # The candidate pins a spec that differs from the builder revision's by one
+    # meaning-free comment line; everything else is the published candidate's
+    # twin. Fails if extend-db compiles with a spec other than the one the
+    # inventory was generated from, compares parsed content instead of bytes, or
+    # reads the spec from anywhere but the builder revision.
+    edited = tmp_path / "spec"
+    edited.mkdir()
+    (edited / "scope.toml").write_bytes(
+        (CASE / "scope.toml").read_bytes() + b"# reviewed again\n"
+    )
+    directory = strict_builds["directory"]
+    candidate = _accepted_candidate(
+        directory / "other-spec",
+        strict_builds["base"],
+        spec_sha256=steward_spec_sha256(edited),
+    )
+    output = directory / "other-spec-output"
+    result = _extend(strict_builds["source"], strict_builds["base"], candidate, output)
+    error = json.loads(result.stdout)["error"]
+    assert (result.returncode, error["code"]) == (
+        EXIT_CONFIG,
+        EXPECTED["spec_mismatch_code"],
+    )
+    assert not output.exists()
+
+
+def test_strict_extension_refuses_a_base_the_candidate_was_not_generated_against(
+    strict_builds: dict,
+) -> None:
+    # The candidate's inventory was generated against another global: the same
+    # catalog stamped with another builder commit, so only its bytes differ.
+    # Fails if extend-db compiles an inventory auto-mapped against one catalog
+    # onto another, or checks the base only after copying it.
+    directory = strict_builds["directory"]
+    other = directory / "other-base/reg_meta.db"
+    write_resolved_catalog(
+        _variables(CASE / "base_catalog.json"),
+        other,
+        manifest={**synthetic_manifest(), "builder_commit": "1" * 40},
+    )
+    candidate = _accepted_candidate(directory / "other-base-candidate", other)
+    output = directory / "other-base-output"
+    result = _extend(strict_builds["source"], strict_builds["base"], candidate, output)
+    error = json.loads(result.stdout)["error"]
+    assert (result.returncode, error["code"]) == (
+        EXIT_CONFIG,
+        EXPECTED["base_mismatch_code"],
+    )
+    assert not output.exists()
+
+
+def test_strict_extension_refuses_a_storage_export_role_naming_the_census(
+    strict_builds: dict,
+) -> None:
+    # The published candidate's twin whose storage_export role names the census
+    # member. Fails if extend-db admits a role that only has to name some member,
+    # so the storage export the generator read is never pinned.
+    directory = strict_builds["directory"]
+    candidate = _accepted_candidate(
+        directory / "census-as-storage",
+        strict_builds["base"],
+        storage_export=REQUEST["census_name"],
+    )
+    output = directory / "census-as-storage-output"
+    result = _extend(strict_builds["source"], strict_builds["base"], candidate, output)
+    error = json.loads(result.stdout)["error"]
+    expected = EXPECTED["role_error"]
+    assert (result.returncode, error["code"]) == (EXIT_CONFIG, expected["code"])
+    assert expected["message_contains"] in error["message"]
     assert not output.exists()
 
 
@@ -241,7 +353,7 @@ def test_strict_extension_refuses_a_candidate_drifted_from_its_accepted_commit(
     # requiring the accepted commit's bytes, or if the refusal prints the
     # host-specific checkout path.
     directory = strict_builds["directory"]
-    candidate = _accepted_candidate(directory / "drifted")
+    candidate = _accepted_candidate(directory / "drifted", strict_builds["base"])
     inventory = candidate[0] / "policy/inventory.toml"
     inventory.write_bytes(inventory.read_bytes() + b"\n")
     output = directory / "drifted-output"
@@ -266,16 +378,19 @@ def test_compiling_a_materialized_snapshot_ignores_later_candidate_edits(
     request = json.loads((SNAPSHOT / "request.json").read_text())
     expected = json.loads((SNAPSHOT / "expected.json").read_text())
     source_case = SNAPSHOT / request["source_case"]
+    spec_dir = tmp_path / STEWARDS_DIR / REQUEST["steward"]
+    spec_dir.mkdir(parents=True)
+    shutil.copyfile(source_case / "scope.toml", spec_dir / "scope.toml")
     candidate, commit, digest = _accept(
         tmp_path / "acceptance/candidate",
         {
             "policy/inventory.toml": source_case / "inventory.toml",
-            "policy/holdings_policy.toml": source_case / "holdings_policy.toml",
             REQUEST["census_name"]: source_case / "census.csv",
-            "policy/source_policy.toml": SNAPSHOT / "source_policy.toml",
-            "policy/inventory_overlay.toml": SNAPSHOT / "inventory_overlay.toml",
+            REQUEST["storage_export_name"]: CASE / "storage_types.csv",
             "providers/fixture.toml": SNAPSHOT / "provider.toml",
         },
+        spec_sha256=steward_spec_sha256(spec_dir),
+        global_sha256="0" * 64,
     )
     snapshot = tmp_path / "snapshot"
     snapshot.mkdir()
@@ -296,7 +411,9 @@ def test_compiling_a_materialized_snapshot_ignores_later_candidate_edits(
     )
     inventory.write_bytes(changed)
     with sqlite3.connect(output) as conn:
-        compile_holdings(conn, snapshot, steward="swecov")
+        compile_holdings(
+            conn, snapshot, steward="swecov", spec=load_steward_spec(spec_dir)
+        )
         actual = {
             "physical_ids": [
                 row[0]
@@ -407,6 +524,8 @@ def test_cli_refuses_unpinned_builder_sources(
         "a" * 40,
         "--input-manifest-sha256",
         "b" * 64,
+        "--steward",
+        REQUEST["steward"],
     )
     error = json.loads(result.stdout)["error"]
     assert (result.returncode, error["code"]) == (EXIT_CONFIG, expected["error_code"])

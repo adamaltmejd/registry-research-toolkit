@@ -1,0 +1,7 @@
+id = "swecov-primary-care-vgr-dia"
+register = "vgr/primarvard-diagnoser"
+variants = ["vgr/primarvard-diagnoser/_default"]
+
+[[table]]
+table = "SWECOV_PRIMARY_CARE_VGR_DIA"
+edition = { from = 2015, to = 2023 }

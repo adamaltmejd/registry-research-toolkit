@@ -1,0 +1,12 @@
+id = "swecov-sos-dors"
+register = "sos/dors"
+variants = ["sos/dors/dors"]
+
+[[table]]
+table = "SWECOV_SOS_DORS"
+edition = { from = 2005, to = 2023 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "sos/dors/dors", variable = "sos/dors/personnr", representation = "PNR" }]
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."

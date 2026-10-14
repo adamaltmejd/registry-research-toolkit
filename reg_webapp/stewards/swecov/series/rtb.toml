@@ -1,0 +1,160 @@
+id = "rtb"
+register = "scb/rtb"
+variants = ["scb/rtb/folkbokforda-personer"]
+
+[[table]]
+table = "RTB1990"
+edition = "1990-12-31"
+
+[[table]]
+table = "RTB1991"
+edition = "1991-12-31"
+
+[[table]]
+table = "RTB1992"
+edition = "1992-12-31"
+
+[[table]]
+table = "RTB1993"
+edition = "1993-12-31"
+
+[[table]]
+table = "RTB1994"
+edition = "1994-12-31"
+
+[[table]]
+table = "RTB1995"
+edition = "1995-12-31"
+
+[[table]]
+table = "RTB1996"
+edition = "1996-12-31"
+
+[[table]]
+table = "RTB1997"
+edition = "1997-12-31"
+
+[[table]]
+table = "RTB1998"
+edition = "1998-12-31"
+
+[[table]]
+table = "RTB1999"
+edition = "1999-12-31"
+
+[[table]]
+table = "RTB2000"
+edition = "2000-12-31"
+
+[[table]]
+table = "RTB2001"
+edition = "2001-12-31"
+
+[[table]]
+table = "RTB2002"
+edition = "2002-12-31"
+
+[[table]]
+table = "RTB2003"
+edition = "2003-12-31"
+
+[[table]]
+table = "RTB2004"
+edition = "2004-12-31"
+
+[[table]]
+table = "RTB2005"
+edition = "2005-12-31"
+
+[[table]]
+table = "RTB2006"
+edition = "2006-12-31"
+
+[[table]]
+table = "RTB2007"
+edition = "2007-12-31"
+
+[[table]]
+table = "RTB2008"
+edition = "2008-12-31"
+
+[[table]]
+table = "RTB2009"
+edition = "2009-12-31"
+
+[[table]]
+table = "RTB2010"
+edition = "2010-12-31"
+
+[[table]]
+table = "RTB2011"
+edition = "2011-12-31"
+
+[[table]]
+table = "RTB2012"
+edition = "2012-12-31"
+
+[[table]]
+table = "RTB2013"
+edition = "2013-12-31"
+
+[[table]]
+table = "RTB2014"
+edition = "2014-12-31"
+
+[[table]]
+table = "RTB2015"
+edition = "2015-12-31"
+
+[[table]]
+table = "RTB2016"
+edition = "2016-12-31"
+
+[[table]]
+table = "RTB2017"
+edition = "2017-12-31"
+
+[[table]]
+table = "RTB2018"
+edition = "2018-12-31"
+
+[[table]]
+table = "RTB2019"
+edition = "2019-12-31"
+
+[[table]]
+table = "RTB2020"
+edition = "2020-12-31"
+
+[[table]]
+table = "RTB2021"
+edition = "2021-12-31"
+
+[[table]]
+table = "RTB2022"
+edition = "2022-12-31"
+
+[[table]]
+table = "RTB2023"
+edition = "2023-12-31"
+
+[[table]]
+table = "RTB2024"
+edition = "2024-12-31"
+
+[[column]]
+column = "Medb_Klartext"
+tables = ["RTB1990", "RTB1991", "RTB1992", "RTB1993", "RTB1994", "RTB1995", "RTB1996", "RTB1997"]
+unmap = "Plain-text citizenship label (Medb_Klartext): a text companion, not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "P1105_Lopnr_Fast"
+tables = ["RTB1990", "RTB1991", "RTB1992", "RTB1993", "RTB1994", "RTB1995", "RTB1996", "RTB1997"]
+mappings = [{ register_variant = "scb/rtb/folkbokforda-personer", variable = "scb/rtb/fastlopnr", representation = "FastLopNr" }]
+reason = "P1105 pseudonymised property key of RTB 1990-1997, the catalog's fastlopnr (FastLopNr), whose states end 1997-12-31; from 1998 the key is the property designation (fastighetsbeteckning), so the key space breaks at 1997/1998 (#1302)."
+
+[[column]]
+column = "P1105_Lopnr_Fast"
+tables = ["RTB1998", "RTB1999", "RTB2000", "RTB2001", "RTB2002", "RTB2003", "RTB2004", "RTB2005", "RTB2006", "RTB2007", "RTB2008", "RTB2009", "RTB2010", "RTB2011", "RTB2012", "RTB2013", "RTB2014", "RTB2015", "RTB2016", "RTB2017", "RTB2018", "RTB2019", "RTB2020", "RTB2021", "RTB2022", "RTB2023", "RTB2024"]
+mappings = [{ register_variant = "scb/rtb/folkbokforda-personer", variable = "scb/rtb/fastighetsbeteckning", representation = "Fastbet" }]
+reason = "P1105 pseudonymised property key of the table's own register: maps to that register's property identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."

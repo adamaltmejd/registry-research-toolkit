@@ -16,11 +16,25 @@ from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.resolved_catalog import ResolvedVariable
+from reg_meta_build.steward_spec import (
+    Scope,
+    StewardSpec,
+    load_steward_spec,
+    steward_spec_sha256,
+)
 from reg_meta_build.validate import validate_built_db
 
 from reg_meta_build.fqid_slugs import populate_variable_slugs
 
 CASES = Path(__file__).parent / "cases/holdings"
+CENSUS = "swecov/SWECOV_variables_full_fixture.csv"
+# The candidate manifest roles accounting reads (only the census is located
+# through them; the inventory sits at its fixed path).
+ROLES = {
+    "census": CENSUS,
+    "storage_export": "swecov/derived/storage_types.csv",
+    "inventory": "policy/inventory.toml",
+}
 
 
 @pytest.mark.parametrize(
@@ -41,31 +55,16 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
     (candidate / "policy").mkdir(parents=True)
     (candidate / "swecov").mkdir()
     shutil.copyfile(case / request["inventory"], candidate / "policy/inventory.toml")
-    shutil.copyfile(
-        case / request["holdings_policy"], candidate / "policy/holdings_policy.toml"
-    )
-    shutil.copyfile(
-        case / request["census"], candidate / "swecov/SWECOV_variables_full_fixture.csv"
-    )
-    if "source_policy" in request:
-        shutil.copyfile(
-            case / request["source_policy"], candidate / "policy/source_policy.toml"
-        )
-    else:
-        (candidate / "policy/source_policy.toml").write_text(
-            "non_catalog_categories = {}\nflavor_registers = []\nroute = []\nflavor = []\nprovider_scope = []\nregister_scope = []\n"
-        )
-    if "inventory_overlay" in request:
-        shutil.copyfile(
-            case / request["inventory_overlay"],
-            candidate / "policy/inventory_overlay.toml",
-        )
-    else:
-        (candidate / "policy/inventory_overlay.toml").write_text("")
+    shutil.copyfile(case / request["census"], candidate / CENSUS)
+    (candidate / "manifest.json").write_text(json.dumps({"roles": ROLES}))
+    spec_dir = tmp_path / "stewards/swecov"
+    spec_dir.mkdir(parents=True)
+    shutil.copyfile(case / request["scope"], spec_dir / "scope.toml")
+    spec = load_steward_spec(spec_dir)
     with sqlite3.connect(output) as conn:
         if "error_contains" in expected:
             with pytest.raises(ValueError) as error:
-                compile_holdings(conn, candidate, steward="swecov")
+                compile_holdings(conn, candidate, steward="swecov", spec=spec)
             message = str(error.value)
             assert expected["error_contains"] in message
             for locator in expected.get("error_locators", []):
@@ -74,7 +73,7 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
                 assert f"rejected {expected['rejected_mappings']} mappings" in message
             assert conn.execute("SELECT COUNT(*) FROM holding_table").fetchone()[0] == 0
             return
-        compiled = compile_holdings(conn, candidate, steward="swecov")
+        compiled = compile_holdings(conn, candidate, steward="swecov", spec=spec)
         actual = {
             "warnings": [
                 row[0]
@@ -146,7 +145,7 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
             base_generation_id=manifest["generation_id"],
             holdings_input_commit="e" * 40,
             holdings_manifest_sha256="f" * 64,
-            holdings_policy_sha256=compiled.accounting.policy_sha256,
+            steward_spec_sha256=steward_spec_sha256(spec_dir),
             holdings_accounting_sha256=compiled.accounting.sha256,
             holdings_accounting_counts=json.dumps(
                 compiled.accounting.counts, sort_keys=True, separators=(",", ":")
@@ -178,7 +177,18 @@ def test_malformed_inventory_refusal_names_its_rule_and_location(
     (tmp_path / "policy").mkdir()
     shutil.copyfile(case / "inventory.toml", tmp_path / "policy/inventory.toml")
     with sqlite3.connect(":memory:") as conn, pytest.raises(RegMetaError) as refused:
-        compile_holdings(conn, tmp_path, steward="swecov")
+        # The inventory refuses before the spec is read; any spec stands in.
+        compile_holdings(
+            conn,
+            tmp_path,
+            steward="swecov",
+            spec=StewardSpec(
+                directory=str(tmp_path),
+                scope=Scope(census_sha256="0" * 64),
+                series=(),
+                sha256="0" * 64,
+            ),
+        )
     message = refused.value.message
     assert (refused.value.code, refused.value.exit_code) == (
         error["code"],

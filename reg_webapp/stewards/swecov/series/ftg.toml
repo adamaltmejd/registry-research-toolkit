@@ -1,0 +1,147 @@
+id = "ftg"
+register = "scb/lisa"
+variants = ["scb/lisa/foretag"]
+
+[[table]]
+table = "Ftg_1990"
+edition = 1990
+
+[[table]]
+table = "Ftg_1991"
+edition = 1991
+
+[[table]]
+table = "Ftg_1992"
+edition = 1992
+
+[[table]]
+table = "Ftg_1993"
+edition = 1993
+
+[[table]]
+table = "Ftg_1994"
+edition = 1994
+
+[[table]]
+table = "Ftg_1995"
+edition = 1995
+
+[[table]]
+table = "Ftg_1996"
+edition = 1996
+
+[[table]]
+table = "Ftg_1997"
+edition = 1997
+
+[[table]]
+table = "Ftg_1998"
+edition = 1998
+
+[[table]]
+table = "Ftg_1999"
+edition = 1999
+
+[[table]]
+table = "Ftg_2000"
+edition = 2000
+
+[[table]]
+table = "Ftg_2001"
+edition = 2001
+
+[[table]]
+table = "Ftg_2002"
+edition = 2002
+
+[[table]]
+table = "Ftg_2003"
+edition = 2003
+
+[[table]]
+table = "Ftg_2004"
+edition = 2004
+
+[[table]]
+table = "Ftg_2005"
+edition = 2005
+
+[[table]]
+table = "Ftg_2006"
+edition = 2006
+
+[[table]]
+table = "Ftg_2007"
+edition = 2007
+
+[[table]]
+table = "Ftg_2008"
+edition = 2008
+
+[[table]]
+table = "Ftg_2009"
+edition = 2009
+
+[[table]]
+table = "Ftg_2010"
+edition = 2010
+
+[[table]]
+table = "Ftg_2011"
+edition = 2011
+
+[[table]]
+table = "Ftg_2012"
+edition = 2012
+
+[[table]]
+table = "Ftg_2013"
+edition = 2013
+
+[[table]]
+table = "Ftg_2014"
+edition = 2014
+
+[[table]]
+table = "Ftg_2015"
+edition = 2015
+
+[[table]]
+table = "Ftg_2016"
+edition = 2016
+
+[[table]]
+table = "Ftg_2017"
+edition = 2017
+
+[[table]]
+table = "Ftg_2018"
+edition = 2018
+
+[[table]]
+table = "Ftg_2019"
+edition = 2019
+
+[[table]]
+table = "Ftg_2020"
+edition = 2020
+
+[[table]]
+table = "Ftg_2021"
+edition = 2021
+
+[[table]]
+table = "Ftg_2022"
+edition = 2022
+
+[[table]]
+table = "Ftg_2023"
+edition = 2023
+
+[[column]]
+column = "CfarNr_LISA"
+storage_header = "P1105_LopNr_CfarNr_LISA"
+
+[[column]]
+column = "PeOrgNr_LISA"
+storage_header = "P1105_LopNr_PeOrgNr_LISA"

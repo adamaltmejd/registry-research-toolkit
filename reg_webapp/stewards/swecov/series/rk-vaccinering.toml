@@ -1,0 +1,7 @@
+id = "rk-vaccinering"
+register = "region-kronoberg/pandemrix-vaccinationer"
+variants = ["region-kronoberg/pandemrix-vaccinationer/_default"]
+
+[[table]]
+table = "RK_Vaccinering"
+edition = { from = 2009, to = 2010 }

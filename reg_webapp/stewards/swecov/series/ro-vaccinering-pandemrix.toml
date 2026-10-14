@@ -1,0 +1,7 @@
+id = "ro-vaccinering-pandemrix"
+register = "region-ostergotland/pandemrix-vaccinationer"
+variants = ["region-ostergotland/pandemrix-vaccinationer/_default"]
+
+[[table]]
+table = "RO_Vaccinering_Pandemrix"
+edition = { from = 2009, to = 2010 }

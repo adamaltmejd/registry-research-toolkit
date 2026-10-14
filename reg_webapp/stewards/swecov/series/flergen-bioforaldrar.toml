@@ -1,0 +1,9 @@
+id = "flergen-bioforaldrar"
+register = "scb/flergenreg"
+variants = ["scb/flergenreg/folkbokforda-biologiska"]
+
+# route note: stem:FlerGen_Bioforaldrar_: 3/3; semantic tiebreak
+
+[[table]]
+table = "FlerGen_Bioforaldrar_20241231"
+edition = { from = 1961, to = 2024 }

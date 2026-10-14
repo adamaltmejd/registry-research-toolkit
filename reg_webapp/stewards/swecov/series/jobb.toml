@@ -1,0 +1,356 @@
+id = "jobb"
+register = "scb/rams"
+variants = ["scb/rams/jobbregistret"]
+
+[[table]]
+table = "JOBB1990"
+edition = 1990
+
+[[table]]
+table = "JOBB1991"
+edition = 1991
+
+[[table]]
+table = "JOBB1992"
+edition = 1992
+
+[[table]]
+table = "JOBB1993"
+edition = 1993
+
+[[table]]
+table = "JOBB1994"
+edition = 1994
+
+[[table]]
+table = "JOBB1995"
+edition = 1995
+
+[[table]]
+table = "JOBB1996"
+edition = 1996
+
+[[table]]
+table = "JOBB1997"
+edition = 1997
+
+[[table]]
+table = "JOBB1998"
+edition = 1998
+
+[[table]]
+table = "JOBB1999"
+edition = 1999
+
+[[table]]
+table = "JOBB2000"
+edition = 2000
+
+[[table]]
+table = "JOBB2001"
+edition = 2001
+
+[[table]]
+table = "JOBB2002"
+edition = 2002
+
+[[table]]
+table = "JOBB2003"
+edition = 2003
+
+[[table]]
+table = "JOBB2004"
+edition = 2004
+
+[[table]]
+table = "JOBB2005"
+edition = 2005
+
+[[table]]
+table = "JOBB2006"
+edition = 2006
+
+[[table]]
+table = "JOBB2007"
+edition = 2007
+
+[[table]]
+table = "JOBB2008"
+edition = 2008
+
+[[table]]
+table = "JOBB2009"
+edition = 2009
+
+[[table]]
+table = "JOBB2010"
+edition = 2010
+
+[[table]]
+table = "JOBB2011"
+edition = 2011
+
+[[table]]
+table = "JOBB2012"
+edition = 2012
+
+[[table]]
+table = "JOBB2013"
+edition = 2013
+
+[[table]]
+table = "JOBB2014"
+edition = 2014
+
+[[table]]
+table = "JOBB2015"
+edition = 2015
+
+[[table]]
+table = "JOBB2016"
+edition = 2016
+
+[[table]]
+table = "JOBB2017"
+edition = 2017
+
+[[table]]
+table = "JOBB2018"
+edition = 2018
+
+[[table]]
+table = "JOBB2019"
+edition = 2019
+
+[[table]]
+table = "JOBB2020"
+edition = 2020
+
+[[table]]
+table = "JOBB2021"
+edition = 2021
+
+[[column]]
+column = "AstSni02"
+tables = ["JOBB2009"]
+unmap = "Retained physical field for edition 2009; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "AstSni02"
+tables = ["JOBB2010"]
+unmap = "Retained physical field for edition 2010; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "AstSni92"
+tables = ["JOBB1996"]
+unmap = "Retained physical field for edition 1996; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkApr"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkApr"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkApr"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkAug"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkAug"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkAug"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkDec"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkDec"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkDec"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkFeb"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkFeb"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkFeb"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJan"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJan"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJan"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJuli"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJuli"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJuli"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJuni"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJuni"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkJuni"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkMaj"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkMaj"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkMaj"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkMars"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkMars"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkMars"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkNov"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkNov"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkNov"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkOkt"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkOkt"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkOkt"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkSep"
+tables = ["JOBB2019"]
+unmap = "Retained physical monthly field in annual table JOBB2019, edition 2019. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkSep"
+tables = ["JOBB2020"]
+unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "LonFInkSep"
+tables = ["JOBB2021"]
+unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["JOBB2013"]
+unmap = "Retained physical field for edition 2013; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["JOBB2014"]
+unmap = "Retained physical field for edition 2014; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["JOBB2015"]
+unmap = "Retained physical field for edition 2015; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["JOBB2016"]
+unmap = "Retained physical field for edition 2016; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["JOBB2017"]
+unmap = "Retained physical field for edition 2017; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_PersonNr"
+tables = ["JOBB2018"]
+unmap = "Retained physical field for edition 2018; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."

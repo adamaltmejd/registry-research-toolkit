@@ -1,0 +1,11 @@
+id = "kta-transaktionsmodellen-231208"
+register = "tillvaxtverket/korttidsarbete"
+variants = ["tillvaxtverket/korttidsarbete/transaktioner"]
+
+[[table]]
+table = "KTA_2020_transaktionsmodellen_231208"
+edition = 2020
+
+[[table]]
+table = "KTA_2021_transaktionsmodellen_231208"
+edition = 2021

@@ -1,0 +1,11 @@
+id = "ndr-heredity"
+register = "ndr/nationella-diabetesregistret"
+variants = ["ndr/nationella-diabetesregistret/_default"]
+
+[[table]]
+table = "NDR_heredity"
+edition = { from = 2007, to = 2024 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+unmap = "Person join key of the family-history holding; ndr/nationella-diabetesregistret/personnr is orderable from NDR_children_2007 and NDR_adults_2010, which overlap this edition (#1170)."

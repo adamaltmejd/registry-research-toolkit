@@ -1,0 +1,51 @@
+id = "uht"
+register = "scb/utrikeshandel-tjanster"
+variants = ["scb/utrikeshandel-tjanster/_default"]
+
+[[table]]
+table = "UHT_2004"
+edition = 2004
+
+[[table]]
+table = "UHT_2005"
+edition = 2005
+
+[[table]]
+table = "UHT_2006"
+edition = 2006
+
+[[table]]
+table = "UHT_2007"
+edition = 2007
+
+[[table]]
+table = "UHT_2008"
+edition = 2008
+
+[[table]]
+table = "UHT_2009"
+edition = 2009
+
+[[table]]
+table = "UHT_2010"
+edition = 2010
+
+[[table]]
+table = "UHT_2011"
+edition = 2011
+
+[[table]]
+table = "UHT_2012"
+edition = 2012
+
+[[table]]
+table = "UHT_2022"
+edition = 2022
+
+[[table]]
+table = "UHT_2023"
+edition = 2023
+
+[[table]]
+table = "UHT_2024"
+edition = 2024

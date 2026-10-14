@@ -1,0 +1,29 @@
+id = "iot"
+register = "scb/iot"
+variants = ["scb/iot/individer-och-dodsbon"]
+
+# route note: thin 7-column extract
+
+[[table]]
+table = "IoT2015"
+edition = 2015
+
+[[table]]
+table = "IoT2016"
+edition = 2016
+
+[[table]]
+table = "IoT2017"
+edition = 2017
+
+[[table]]
+table = "IoT2018"
+edition = 2018
+
+[[table]]
+table = "IoT2019"
+edition = 2019
+
+[[table]]
+table = "IoT2020"
+edition = 2020

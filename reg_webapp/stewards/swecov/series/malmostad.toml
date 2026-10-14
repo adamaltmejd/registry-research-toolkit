@@ -1,0 +1,8 @@
+id = "malmostad"
+register = "sabo/patienter"
+variants = ["sabo/patienter/_default"]
+
+[[table]]
+table = "MalmoStad"
+edition = { from = 2007, to = 2020 }
+partition = "malmo"

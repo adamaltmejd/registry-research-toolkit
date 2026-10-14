@@ -26,7 +26,7 @@ STEWARD_GENERATION_KEYS = (
     "base_generation_id",
     "holdings_input_commit",
     "holdings_manifest_sha256",
-    "holdings_policy_sha256",
+    "steward_spec_sha256",
     "holdings_accounting_sha256",
 )
 
@@ -64,11 +64,34 @@ def generation_id(manifest: Mapping[str, str]) -> str:
     # only in those distinct.
     if "derived_from_generation_id" in manifest:
         keys += ("derived_from_generation_id",)
+    if missing := [key for key in keys if key not in manifest]:
+        raise ValueError(
+            f"Artifact manifest lacks identity keys {missing}: it predates this "
+            "builder's generation identity; rebuild (or re-extend) it with this builder"
+        )
     return canonical_sha256({key: manifest[key] for key in keys})
 
 
 def committed_steward_slugs(steward: str, *, revision: str) -> Path:
     """Admit only ordinary tracked slug bytes from the clean builder checkout."""
+    return _committed_directory(
+        f"reg_meta_build/fqid_slugs/{steward}", steward, "slug", revision=revision
+    )
+
+
+def committed_steward_spec(steward: str, *, revision: str) -> Path:
+    """Admit only the tracked steward spec (`reg_webapp/stewards/<id>/`) bytes."""
+    from .steward_spec import STEWARDS_DIR
+
+    return _committed_directory(
+        f"{STEWARDS_DIR}/{steward}", steward, "spec", revision=revision
+    )
+
+
+def _committed_directory(
+    relative: str, steward: str, label: str, *, revision: str
+) -> Path:
+    """A steward directory whose every file is the clean checkout's committed bytes."""
     from .input_snapshot import _git_bytes
     from .slug_grammar import validate_slug
 
@@ -78,10 +101,9 @@ def committed_steward_slugs(steward: str, *, revision: str) -> Path:
         raise ValueError("Builder revision changed during holdings compilation")
     if _git(root, "status", "--porcelain", "--untracked-files=no"):
         raise ValueError("Publishable extension requires a clean builder checkout")
-    directory = root / "reg_meta_build/fqid_slugs" / steward
+    directory = root / relative
     if not directory.is_dir() or directory.is_symlink():
-        raise ValueError("Committed steward slug directory is absent or a symlink")
-    relative = directory.relative_to(root).as_posix()
+        raise ValueError(f"Committed steward {label} directory is absent or a symlink")
     committed = set(
         _git(
             root, "ls-tree", "-r", "--name-only", revision, "--", relative
@@ -94,14 +116,14 @@ def committed_steward_slugs(steward: str, *, revision: str) -> Path:
     }
     if not committed or actual != committed:
         raise ValueError(
-            "Steward slugs contain uncommitted supplements or missing files"
+            f"Steward {label} directory contains uncommitted supplements or missing files"
         )
     for name in sorted(actual):
         path = root / name
         if path.is_symlink() or path.read_bytes() != _git_bytes(
             root, "cat-file", "blob", f"{revision}:{name}"
         ):
-            raise ValueError(f"Steward slug differs from committed bytes: {name}")
+            raise ValueError(f"Steward {label} differs from committed bytes: {name}")
     if _git(root, "rev-parse", "HEAD") != revision:
         raise ValueError("Builder revision changed during holdings compilation")
     return directory

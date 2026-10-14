@@ -1,0 +1,22 @@
+id = "fhm-smi-fall"
+register = "fohm/sminet"
+variants = ["fohm/sminet/_default"]
+
+[[table]]
+table = "FHM_SMI_FALL"
+edition = { from = 2020, to = 2024 }
+
+[[column]]
+column = "Insjukningsdatum"
+mappings = [{ register_variant = "fohm/sminet/_default", variable = "fohm/sminet/insjuknandedatum", representation = "insjuknandedatum" }]
+reason = "SWECOV delivery spelling of the own-register catalog variable fohm/sminet/insjuknandedatum (delivery column insjuknandedatum); maintainer-accepted 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fohm/sminet/_default", variable = "fohm/sminet/personnr", representation = "personnummer" }]
+reason = "P1105 pseudonymised person key of the table's own register: maps to that register's person identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "Region"
+mappings = [{ register_variant = "fohm/sminet/_default", variable = "fohm/sminet/smittskyddsenhet", representation = "smittskyddsenhet" }]
+reason = "SWECOV delivery spelling of the own-register catalog variable fohm/sminet/smittskyddsenhet (delivery column smittskyddsenhet); maintainer-accepted 2026-10-12 (#1302 round 3)."

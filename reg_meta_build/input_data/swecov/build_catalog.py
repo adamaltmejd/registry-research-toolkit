@@ -47,21 +47,20 @@ from itertools import count
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from pydantic import (
-    Field,
-    model_validator,
-)
 from reg_meta_build.holdings_census import census_rows
-from reg_meta_build.inventory import (
-    ColumnMapping,
-    EditionRange,
-    InventoryColumn,
-    edition_bounds,
+from reg_meta_build.steward_spec import (
+    STEWARDS_DIR,
+    YEAR_INDEPENDENT_EDITION,
+    StewardSpec,
+    check_census,
+    edition_bounds_of,
+    load_steward_spec,
 )
-from reg_meta_build.swecov_policy import load_source_policy as _load_source_policy
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+    from reg_meta_build.inventory import ColumnMapping
 
 DEFAULT_CSV = max(
     Path(__file__).parent.glob("SWECOV_variables_full_*.csv"),
@@ -321,15 +320,63 @@ def ground_pair(
 # Evidence notes ride along so the emitted catalog can cite them.
 
 
-SOURCE_POLICY_PATH = (
-    Path(__file__).resolve().parents[3]
-    / "reg_webapp/stewards/swecov/source_policy.toml"
-)
-_POLICY = _load_source_policy(SOURCE_POLICY_PATH)
-NON_CATALOG_CATEGORIES = _POLICY.non_catalog_categories
+# The steward spec every stage reads (reg_meta_build.steward_spec): census
+# dispositions, census-holding routing, flavor definitions and the series. This
+# generator's directory names its steward; the spec directory's name is the
+# steward id every stage writes.
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SPEC_DIR = REPO_ROOT / STEWARDS_DIR / Path(__file__).parent.name
 
 
-MAPPING = _POLICY.mapping()
+def steward_id(spec_dir: Path) -> str:
+    return spec_dir.resolve().name
+
+
+def holding_mapping(
+    spec: StewardSpec, category: str, detail: str, tables: list[str]
+) -> dict:
+    """The routing the enrichment stages read for one census holding.
+
+    `to` maps each of the holding's series tables to its admissible variants:
+    the series, not a table-name selector, says which variant a table delivers.
+    `graft_columns` carries the curated `graft_onto` placements of those series,
+    which the grafts stage reads before `to`. A
+    holding whose tables are all lookups is a lookup; one with no route is
+    residue.
+    """
+    lookups = {entry.table: entry.reason for entry in spec.scope.lookups}
+    if tables and all(table in lookups for table in tables):
+        return {
+            "status": "lookup",
+            "note": "; ".join(sorted({lookups[table] for table in tables})),
+        }
+    route = spec.holding_routes().get((category, detail))
+    if route is None:
+        return {
+            "status": "residue",
+            "note": spec.scope.non_catalog_categories.get(category, ""),
+        }
+    value: dict = {"status": route.status}
+    if route.graft is not None:
+        value["graft"] = route.graft
+    if route.note is not None:
+        value["note"] = route.note
+    if route.status == "mapped":
+        series_of = spec.series_of()
+        held = [series_of[table] for table in sorted(tables) if table in series_of]
+        value["to"] = {
+            table: series_of[table].table_variants()[table]
+            for table in sorted(tables)
+            if table in series_of
+        }
+        grafts = {
+            column: variant
+            for series in held
+            for column, variant in series.graft_targets().items()
+        }
+        if grafts:
+            value["graft_columns"] = dict(sorted(grafts.items()))
+    return value
 
 
 # --- enrich: join delivery documentation onto holdings -----------------------
@@ -761,6 +808,7 @@ def lookup_doc(
 def cmd_enrich(args: argparse.Namespace) -> None:
     base = args.csv.parent
     holdings = parse_inventory(args.csv)
+    spec = _checked_spec(args, holdings)
     print("extracting documentation sources:", file=sys.stderr)
     index = build_doc_index(base)
 
@@ -768,7 +816,7 @@ def cmd_enrich(args: argparse.Namespace) -> None:
     n_cols = n_doc = 0
     per_cat: dict[str, list[int]] = defaultdict(lambda: [0, 0])
     for (cat, det), h in sorted(holdings.items()):
-        mapping = MAPPING.get((cat, det))
+        mapping = holding_mapping(spec, cat, det, h.tables)
         cols = []
         for col in sorted(h.columns):
             rec = lookup_doc(index, cat, det, col)
@@ -796,8 +844,7 @@ def cmd_enrich(args: argparse.Namespace) -> None:
                 t: sorted(cs) for t, cs in sorted(h.table_columns.items())
             },
             "periods": h.period_segments(),
-            "mapping": mapping
-            or {"status": "residue", "note": NON_CATALOG_CATEGORIES.get(cat, "")},
+            "mapping": mapping,
             "columns": cols,
         }
 
@@ -870,14 +917,11 @@ def _load_register_columns(db_path: Path):
 
 
 def _mapping_registers(mapping: dict) -> set[str]:
-    regs: set[str] = set()
-    to = mapping.get("to")
-    if isinstance(to, str):
-        regs.add("/".join(to.split("/")[:2]))
-    elif isinstance(to, list):
-        for _sel, coord, _note in to:
-            if coord:
-                regs.add("/".join(coord.split("/")[:2]))
+    regs = {
+        "/".join(coord.split("/")[:2])
+        for coords in mapping.get("to", {}).values()
+        for coord in coords
+    }
     if mapping.get("graft"):
         regs.add(mapping["graft"])
     return regs
@@ -1017,11 +1061,11 @@ def cmd_globals(args: argparse.Namespace) -> None:
 #
 # `globals` emits gapfill rows keyed only on `regs[0]` (the register), dropping
 # the variant. A `reg_meta_build/curation/registers/scb/<slug>.toml` [[errata.column]] entry mints a variable onto a
-# (register, variant), so this stage recovers the variant: for a `mapped` holding
-# every column → the single variant; for a `split` holding each column → the
-# variant of the table(s) it lives in (selector = table-name stem), and a column
-# whose stem maps to a `None` coordinate is steward FLAVOR (e.g. AKU_Corona_ covid
-# add-ons), excluded from the global set. Also applies the content filters (drop
+# (register, variant), so this stage recovers the variant: each column → the
+# variant its table's series delivers, and a column of a series with no variant
+# is steward FLAVOR, excluded from the global set. A column no series table
+# holds takes its holding's variant when the holding has exactly one for the
+# register. Also applies the content filters (drop
 # the project-specific P<n>_ pseudonym columns, decode/klartext label columns →
 # #373, and rows with no real documentation).
 #
@@ -1033,11 +1077,6 @@ def cmd_globals(args: argparse.Namespace) -> None:
 
 _GRAFT_DROP = re.compile(r"klartext|_txt$|beskrivning|, *text$", re.IGNORECASE)
 _PROJECT_PREFIX = re.compile(r"^P\d+_", re.IGNORECASE)
-# Registers whose delivered columns are a privacy AGGREGATION, not research
-# variables → steward flavor, never global (maintainer call 2026-06-14): GDB's
-# 250m/1000m grid coordinates are Geografidatabasen's pseudonymized location
-# (exact point never delivered), the spatial analogue of a LopNr.
-_FLAVOR_REGISTERS = frozenset(_POLICY.flavor_registers)
 
 
 def _split_key(key: str) -> tuple[str, str]:
@@ -1045,57 +1084,52 @@ def _split_key(key: str) -> tuple[str, str]:
     return (parts[0], parts[1] if len(parts) > 1 else "")
 
 
-def _resolve_graft_variant(
-    mapping: dict, csv_holding, column: str, target_reg: str, kalla: str = ""
-):
+def _resolve_graft_variant(mapping: dict, csv_holding, column: str, target_reg: str):
     """Variant slug for a gapfill column under its holding's mapping, or one of
     the sentinels 'FLAVOR' / 'AMBIGUOUS' / 'UNRESOLVED'. ``target_reg`` is the
-    provider/register the gapfill row was attributed to (a split holding can
-    target several registers)."""
-    to = mapping.get("to")
-    if isinstance(to, str) and to.count("/") == 2:
-        prov, reg, var = to.split("/")
-        return var if f"{prov}/{reg}" == target_reg else "UNRESOLVED"
-    if isinstance(to, list):
-        # FLAVOR by source: a column's `kalla` (delivery source) matching a
-        # selector whose coordinate is None is steward-flavor regardless of which
-        # physical table carries it — covid add-ons (kalla=AKU_Corona) ride the
-        # shared AKU_ tables, so the table-stem check below would miss them.
-        kn = re.sub(r"[^A-Z0-9]", "", (kalla or "").upper())
-        if kn:
-            for sel, coord, _note in to:
-                if coord is None:
-                    stem = re.sub(r"[^A-Z0-9]", "", sel.replace("stem:", "").upper())
-                    # kalla must START WITH the flavor stem (AKUCORONA ⊃ AKU_Corona_);
-                    # NOT the reverse, or a register kalla (HREG) would match a
-                    # longer flavor sub-stem (Hreg_H_ → HREGH).
-                    if len(stem) >= 4 and kn.startswith(stem):
-                        return "FLAVOR"
-        tables = (
-            [t for t, cols in csv_holding.table_columns.items() if column in cols]
-            if csv_holding
-            else []
+    provider/register the gapfill row was attributed to (a holding can target
+    several registers). The column's own tables decide, through the variants
+    their series deliver; a series table with no variant is steward FLAVOR. A
+    curated `graft_onto` placement for the column decides first."""
+    graft = mapping.get("graft_columns", {}).get(column)
+    if graft is not None and "/".join(graft.split("/")[:2]) == target_reg:
+        return graft.split("/")[2]
+    to = mapping.get("to", {})
+    tables = (
+        [t for t, cols in csv_holding.table_columns.items() if column in cols]
+        if csv_holding
+        else []
+    )
+    found: set[str] = set()
+    for t in tables:
+        if t not in to:
+            continue
+        if not to[t]:
+            found.add("FLAVOR")
+        found.update(
+            coord.split("/")[2]
+            for coord in to[t]
+            if "/".join(coord.split("/")[:2]) == target_reg
         )
-        found: set[str] = set()
-        for t in tables:
-            for sel, coord, _note in to:
-                stem = sel.replace("stem:", "")
-                if t.upper().startswith(stem.upper()):
-                    if coord is None:
-                        found.add("FLAVOR")
-                    elif (
-                        coord.count("/") == 2
-                        and "/".join(coord.split("/")[:2]) == target_reg
-                    ):
-                        found.add(coord.split("/")[2])
-                    break
-        variants = {f for f in found if f != "FLAVOR"}
-        if len(variants) == 1:
-            return next(iter(variants))
-        if len(variants) > 1:
+    if not found:
+        # No series table of this holding holds the column (a superseded
+        # re-delivery holds it): the holding's own variant, when it has exactly
+        # one for the register.
+        found = {
+            coord.split("/")[2]
+            for coords in to.values()
+            for coord in coords
+            if "/".join(coord.split("/")[:2]) == target_reg
+        }
+        if len(found) > 1:
             return "AMBIGUOUS"
-        if found == {"FLAVOR"}:
-            return "FLAVOR"
+    variants = {f for f in found if f != "FLAVOR"}
+    if len(variants) == 1:
+        return next(iter(variants))
+    if len(variants) > 1:
+        return "AMBIGUOUS"
+    if found == {"FLAVOR"}:
+        return "FLAVOR"
     return "UNRESOLVED"
 
 
@@ -1253,6 +1287,7 @@ def cmd_grafts(args: argparse.Namespace) -> None:
     ge = json.loads((base / "derived" / "global_enrichment.json").read_text())
     csv_holdings = parse_inventory(args.csv)
     variant_index = load_variant_index(args.db)
+    flavor_registers = frozenset(load_steward_spec(args.spec).scope.flavor_registers)
 
     # Docs cross-reference: a column documented in reg_meta's ingested SCB docs is
     # one SCB itself describes and its machine metadata missed, so the entry says
@@ -1301,16 +1336,17 @@ def cmd_grafts(args: argparse.Namespace) -> None:
         for mapping, csvh, names in by_reg.get(reg, []):
             if col not in names:
                 continue
-            variant = _resolve_graft_variant(
-                mapping, csvh, col, reg, g.get("kalla", "")
-            )
+            variant = _resolve_graft_variant(mapping, csvh, col, reg)
             if variant != "UNRESOLVED":
                 break
         if variant == "UNRESOLVED":
             # Curated mapping didn't place it — fall back to grounding the
             # column's own table(s) (and flavor-only holdings → FLAVOR).
             variant = _ground_fallback(col, reg, csv_holdings, enriched, variant_index)
-        if reg in _FLAVOR_REGISTERS:
+        # A privacy-aggregation register's delivered columns (GDB's grid
+        # coordinates, the spatial analogue of a LopNr) are steward flavor,
+        # never global (maintainer call 2026-06-14).
+        if reg in flavor_registers:
             variant = "FLAVOR"
         row = {
             "register": reg,
@@ -1371,31 +1407,17 @@ def cmd_grafts(args: argparse.Namespace) -> None:
 # quality registers, and SWECOV-constructed RTB extracts. Providers are modeled
 # per real-world source organization (per-org), one provider slug each.
 
-# (enriched-JSON key, provider_slug, provider_name, register_key, register_name,
-#  variant_key, variant_slug, variant_name). Single-variant registers use the
-#  `_default` variant slug (matches the global catalog convention) and repeat the
-#  register name as the variant name; a register named by several entries
-#  (Skatteverket's schemes, Tillväxtverket's delivery models) accretes one
-#  variant per entry, each naming its own delivery — entries share a register
-#  only where they DELIVER that one register's variables, so deliveries with
-#  disjoint schemas are separate registers (crates/DESIGN.md → "The
-#  variant is a coordinate, not an identity level"). Exactly one entry names a
-#  given (provider, register, variant) — a second is fatal in `cmd_flavor`.
-_FLAVOR_DISPOSITION = _POLICY.disposition()
-
-# Table selectors for disposition entries whose holding bundles several physical
-# tables under one (Category, Detail) key: (provider, register, variant) -> the
-# SKV_* table name(s) whose columns that variant draws. Entries absent here draw
-# the holding's full column union (the default for every other flavor provider).
-_FLAVOR_VARIANT_TABLES = _POLICY.variant_tables()
-
-# (provider, register, variant) -> (keep_columns, sensitive_columns): exact
-# physical names from the disposition entry (source_policy.toml, #1302).
-_FLAVOR_VARIANT_COLUMNS = _POLICY.variant_columns()
-
-# (provider, register, variant) whose table has no calendar coverage: its states
-# are emitted year-independent instead of open-dated (#1538).
-_FLAVOR_YEAR_INDEPENDENT = _POLICY.year_independent_variants()
+# The flavor definitions are the scope's `[[flavor]]` entries
+# (reg_meta_build.steward_spec.FlavorDefinition). Single-variant registers use
+# the `_default` variant slug (matches the global catalog convention) and repeat
+# the register name as the variant name; a register named by several entries
+# (Skatteverket's schemes, Tillväxtverket's delivery models) accretes one variant
+# per entry, each naming its own delivery — entries share a register only where
+# they DELIVER that one register's variables, so deliveries with disjoint schemas
+# are separate registers (crates/DESIGN.md → "The variant is a coordinate, not an
+# identity level"). An entry's `tables` selects the physical table(s) whose
+# columns that variant draws when one holding bundles several registers; without
+# it the variant draws the holding's full column union.
 
 
 def _kebab(text: str) -> str:
@@ -1506,10 +1528,10 @@ def _flavor_variables(
     return variables
 
 
-def _source_label(csv_path: Path) -> str:
-    """`swecov-inventory-<YYYY-MM-DD>` from the inventory CSV filename."""
+def _source_label(csv_path: Path, steward: str) -> str:
+    """`<steward>-inventory-<YYYY-MM-DD>` from the inventory CSV filename."""
     m = re.search(r"(\d{4}-\d{2}-\d{2})", csv_path.stem)
-    return f"swecov-inventory-{m.group(1)}" if m else "swecov-inventory"
+    return f"{steward}-inventory-{m.group(1)}" if m else f"{steward}-inventory"
 
 
 def _flavor_provider_toml(
@@ -1585,22 +1607,25 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         raise SystemExit(f"{enriched_path} missing — run `enrich` first")
     enriched = json.loads(enriched_path.read_text())
 
+    spec = load_steward_spec(args.spec)
     providers: dict[str, str] = {}
     # Källa-routed columns of holdings with no graft register: `globals` never scans
     # those holdings, so the columns would land nowhere.
     ungrafted: list[str] = []
     # (provider, register_key) -> register dict; variants keyed for accretion.
     registers: dict[tuple[str, str], dict] = {}
-    for (
-        key,
-        prov_slug,
-        prov_name,
-        reg_key,
-        reg_name,
-        var_key,
-        var_slug,
-        var_name,
-    ) in _FLAVOR_DISPOSITION:
+    for flavor in spec.scope.flavors:
+        key, prov_slug, prov_name = (
+            flavor.holding,
+            flavor.provider,
+            flavor.provider_name,
+        )
+        reg_key, reg_name = flavor.register_key, flavor.register_name
+        var_key, var_slug, var_name = (
+            flavor.variant,
+            flavor.variant_slug,
+            flavor.variant_name,
+        )
         holding = enriched.get(key)
         if holding is None:
             raise SystemExit(
@@ -1628,7 +1653,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
                 f"variant {var_key!r} declared twice on {prov_slug}/{reg_key}"
             )
         columns = holding["columns"]
-        tables = _FLAVOR_VARIANT_TABLES.get((prov_slug, reg_key, var_key))
+        tables = flavor.tables
         if tables is not None:
             # Restrict to the named physical table(s) when one holding bundles
             # several registers (Skatteverket's SKV_* schemes). `table_columns`
@@ -1643,9 +1668,8 @@ def cmd_flavor(args: argparse.Namespace) -> None:
                     f"table(s) absent from holding {key!r}: {missing}"
                 )
             columns = [c for c in columns if c["name"] in table_cols]
-        keep, sensitive = _FLAVOR_VARIANT_COLUMNS.get(
-            (prov_slug, reg_key, var_key), (frozenset(), frozenset())
-        )
+        keep = frozenset(flavor.keep_columns)
+        sensitive = frozenset(flavor.sensitive_columns)
         if absent := sorted((keep | sensitive) - {c["name"] for c in columns}):
             raise SystemExit(
                 f"flavor column list of {(prov_slug, reg_key, var_key)} names "
@@ -1660,7 +1684,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
         )
         if dropped and not _mapping_registers(holding.get("mapping", {})):
             ungrafted.append(f"{key}: {', '.join(dropped)}")
-        independent = (prov_slug, reg_key, var_key) in _FLAVOR_YEAR_INDEPENDENT
+        independent = flavor.period_scope == "year_independent"
         variables = _flavor_variables(
             columns, keep, sensitive, year_independent=independent
         )
@@ -1671,8 +1695,8 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             # disposition entry (route the canonical columns via the graft track).
             raise SystemExit(
                 f"flavor holding {key!r} ({prov_slug}/{reg_key}) yielded 0 "
-                "steward-only variables (all columns carry a Källa). Remove it "
-                "from _FLAVOR_DISPOSITION — its content is canonical, not flavor."
+                "steward-only variables (all columns carry a Källa). Remove its "
+                "[[flavor]] entry — its content is canonical, not flavor."
             )
         reg["_variants"][var_key] = {
             "key": var_key,
@@ -1685,11 +1709,11 @@ def cmd_flavor(args: argparse.Namespace) -> None:
     if ungrafted:
         raise SystemExit(
             "flavor holding columns carry a register Källa, so the flavor leaves "
-            "them to the global graft track, but their route names no `graft` (or "
-            "`target`) register, so `globals` never scans them:\n  "
+            "them to the global graft track, but their holding names no `graft` "
+            "(or mapped series) register, so `globals` never scans them:\n  "
             + "\n  ".join(ungrafted)
-            + '\nAdd `graft = "<provider>/<register>"` to the holding\'s [[route]] '
-            "in reg_webapp/stewards/swecov/source_policy.toml and rerun `enrich`. "
+            + '\nAdd `graft = "<provider>/<register>"` to the holding\'s [[holding]] '
+            "in the steward scope.toml and rerun `enrich`. "
             "No provider output was written."
         )
 
@@ -1708,7 +1732,8 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             f"flavor disposition: {', '.join(unexpected_provider_files)}. Review "
             "and remove obsolete files before rerunning; no provider output was written."
         )
-    source_label = _source_label(args.csv)
+    steward = steward_id(args.spec)
+    source_label = _source_label(args.csv, steward)
     for prov_slug, provider_name in sorted(providers.items()):
         provider_registers = []
         for (candidate_provider, _reg_key), reg in sorted(registers.items()):
@@ -1738,7 +1763,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
     # build time (not committed pre-v1), so they are not emitted here.
     from reg_meta_build.id import mint
 
-    slug_root = base.parents[1] / "fqid_slugs" / "swecov"
+    slug_root = base.parents[1] / "fqid_slugs" / steward
     slug_root.mkdir(parents=True, exist_ok=True)
     by_provider: dict[str, list[str]] = {}
     for (prov_slug, reg_key), reg in sorted(registers.items()):
@@ -1778,29 +1803,6 @@ def cmd_flavor(args: argparse.Namespace) -> None:
 
 
 # --- steward inventory resolution ------------------------------------------
-
-# Map each flavor-disposition enriched key to its provider slug, so flavor
-# holdings (no SCB/SOS `mapping.to`) resolve against their steward provider.
-_STEWARD_DISP_PROVIDER = {entry[0]: entry[1] for entry in _FLAVOR_DISPOSITION}
-
-# Holdings with no SCB/SOS `mapping.to` whose content has since landed under a
-# GLOBAL provider (not steward flavor): FOHM + FK as global thin providers
-# (#422), and the remaining public agencies onboarded by #443 (Umeå
-# Högskoleprovet, Läkemedelsverket, Pliktverket/Riksarkivet enlistment). Their
-# columns resolve against that provider; any miss is a global alias/onboarding
-# gap, never steward flavor. Keyed by an enriched-key PREFIX (the Military
-# enlistment key has a `/Pliktverket` vs `/Riksarkivet` detail tail).
-_STEWARD_RESIDUE_PROVIDER = {
-    entry.holding_prefix: entry.provider for entry in _POLICY.provider_scope
-}
-
-# Holdings whose canonical-SCB content landed on a specific register after the
-# enrich stage ran (so `mapping` doesn't point at it): #444 added AGI's
-# employer-header register and the utrikeshandel-tjänster register. Keyed by
-# exact enriched key → register coord (`provider/register`).
-_STEWARD_HOLDING_REGISTER = {
-    entry.holding: entry.register_key for entry in _POLICY.register_scope
-}
 
 
 def _steward_pivot_base(col: str) -> str | None:
@@ -1849,7 +1851,7 @@ def _steward_load_db(db_path: Path):
     from reg_meta_build.db import register_py_lower
 
     if not db_path.exists():
-        raise SystemExit(f"reg_meta DB not found: {db_path} (pass --db <flavored>)")
+        raise SystemExit(f"mapping DB not found: {db_path}")
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     # Unicode-aware LOWER for the participation test below: SQLite's own is
     # ASCII-only, so a Swedish header (`Ägare`) would not fold — the reason
@@ -1937,20 +1939,6 @@ def _steward_load_db(db_path: Path):
     return by_regcol
 
 
-def _overlay_edition_bounds(edition: object) -> tuple[tuple[str, str], ...]:
-    """Inclusive ISO bounds of a raw overlay edition: a year, a token, a
-    `{ from, to }` range or a list of those. Raises `ValueError` when malformed."""
-
-    def segment(value: object) -> str | EditionRange:
-        if isinstance(value, dict):
-            return EditionRange.model_validate(value)
-        return str(value)
-
-    if isinstance(edition, list):
-        return edition_bounds(tuple(segment(value) for value in edition))
-    return edition_bounds(segment(edition))
-
-
 def _inventory_period_records(
     records: list[dict], edition: object, *, assess_ranges: bool = False
 ) -> tuple[list[dict], str | None]:
@@ -1966,7 +1954,7 @@ def _inventory_period_records(
     from reg_meta_build.inventory import _merge
     from reg_meta_build.inventory_coverage import _covers
 
-    independent = edition == _YEAR_INDEPENDENT_EDITION
+    independent = edition == YEAR_INDEPENDENT_EDITION
     scope = "year_independent" if independent else "intervals"
     # Scope before the unassessed-range return: a range/list still never admits
     # a year-independent state. An emptied list falls through to the refusal.
@@ -1978,7 +1966,7 @@ def _inventory_period_records(
         and not isinstance(edition, (str, int))
     ):
         return records, None
-    bounds = () if independent else _overlay_edition_bounds(edition)
+    bounds = () if independent else edition_bounds_of(edition)
     grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for record in records:
         grouped[(record["coord"], record["vslug"])].append(record)
@@ -2100,30 +2088,7 @@ def _fold_case_twins(
     ], None
 
 
-def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
-    """(register coords `provider/register`, provider slugs) to resolve a
-    holding's columns against. SCB/SOS mappings give register coords; flavor
-    holdings give their steward provider; the residue map routes a no-mapping.to
-    holding to the global provider its content landed under (#422/#443); the
-    holding-register map routes a canonical-on-a-specific-register holding
-    (#444)."""
-    if mapping["status"] == "unmapped":
-        return set(), set()
-    regs = _mapping_registers(mapping)
-    provs: set[str] = set()
-    if reg := _STEWARD_HOLDING_REGISTER.get(key):
-        regs.add(reg)
-    if key in _STEWARD_DISP_PROVIDER:
-        provs.add(_STEWARD_DISP_PROVIDER[key])
-    if mapping["status"] == "flavor":
-        provs.add("swecov")  # SWECOV-constructed columns live under the swecov provider
-    for prefix, prov in _STEWARD_RESIDUE_PROVIDER.items():
-        if key.startswith(prefix):
-            provs.add(prov)
-    return regs, provs
-
-
-# --- inventory: emit the delivery inventory (reality ∩ policy) ---------------
+# --- inventory: emit the delivery inventory (reality ∩ spec) -----------------
 #
 # The physical delivery-topology contract (reg_meta_build/DESIGN.md → Inventory TOML;
 # curation rules in reg_meta_build/DESIGN.md → Holdings curation rules): one
@@ -2131,28 +2096,23 @@ def _steward_scope(key: str, mapping: dict) -> tuple[set[str], set[str]]:
 # columns, and zero-or-more (register_variant, variable, representation) mappings per
 # column. Reality is the holdings CSV (the maintainer's own re-extractable listing of
 # everything on MONA — superseded snapshots included, so it is NEVER hand-edited);
-# policy is the COMMITTED overlay TOML
-# (`reg_webapp/stewards/swecov/inventory_overlay.toml`):
+# every decision is the steward spec (`reg_webapp/stewards/<id>/`, read through
+# `reg_meta_build.steward_spec`):
 #
-#   [[exclude]]  table, reason      — discard a superseded delivery
-#   [[edition]]  table, edition     — explicit edition where the table name
-#                                     yields zero or several period tokens;
-#                                     `"_default"` declares a year-independent
-#                                     table (emitted with that period_scope)
-#   [[mapping]] table, column, edition, register_variant, variable, representation, reason
-#                                   — exact reviewed representation, guarded by
-#                                     physical coordinates and full catalog coverage
-#                                     (`edition` may be `"_default"`)
-#   [[assign]]   table, register_variant (str or list)
-#                                   — variant coordinate(s) where the curated
-#                                     MAPPING cannot place the table (residue
-#                                     providers, grafted holdings)
+#   scope.toml       lookups, exclusions and retained-unknown tables: not emitted
+#   series/*.toml    each member table with its explicit edition (spelled by the
+#                    series' `edition_spelling`) and partition; the series'
+#                    `variants` are the table's admissible coordinates; curated
+#                    column decisions: a reviewed mapping (guarded by the physical
+#                    coordinates and full catalog coverage of the edition), an
+#                    unmap or an interim hold
 #
-# The emitted `inventory.toml` is a local builder input, validated through
-# `reg_meta_build.inventory.load_inventory` — its one-to-one conflicts are the
-# maintainer's supersession worklist, and the build stays red until every
-# conflict has an overlay disposition. Overlay entries naming tables no longer
-# in the CSV are flagged stale.
+# Every other column is auto-mapped by the single-candidate rule against the
+# series' variants. The emitted `inventory.toml` is a local builder input,
+# validated through `reg_meta_build.inventory.load_inventory` — its one-to-one
+# conflicts are the maintainer's supersession worklist, and the build stays red
+# until every conflict has a spec disposition. Spec entries naming tables no
+# longer in the CSV are flagged stale.
 #
 # Every emitted mapping carries an EXPLICIT `representation` (the resolved
 # canonical `delivery_column_name`): exact-triple matching in `order.py` never
@@ -2170,211 +2130,37 @@ _PIVOT_REASON = (
     " columns serving one variable (#1495)."
 )
 
-_DISP_BY_KEY: dict[str, list[tuple[str, str, str, str]]] = defaultdict(list)
-for _entry in _FLAVOR_DISPOSITION:
-    _DISP_BY_KEY[_entry[0]].append((_entry[1], _entry[3], _entry[5], _entry[6]))
-
-
-_SCHOOL_YEAR_ANCHORS = ("spring", "autumn", "vt", "ht")
-
-# The inventory grammar's whole-edition token for a year-independent table
-# (reg_meta_build/DESIGN.md → Inventory TOML): never a finite period.
-_YEAR_INDEPENDENT_EDITION = "_default"
-
-
-class InventoryMappingOverride(ColumnMapping):
-    """One reviewed physical coordinate with a checked catalog representation."""
-
-    representation: str = Field(min_length=1)
-    # A reviewed physical table can select one documented questionnaire wave.
-    select_owner: bool = False
-    table: str = Field(min_length=1)
-    column: str = Field(min_length=1)
-    # The raw `[[edition]]` shape (year, token, `{ from, to }` range or list), so
-    # the override compares equal to the table edition it is pinned to.
-    edition: int | str | dict[str, int | str] | list[int | str | dict[str, int | str]]
-    reason: str = Field(min_length=1)
-
-    @model_validator(mode="after")
-    def _known_edition(self) -> InventoryMappingOverride:
-        # `_default` is the year-independent edition the [[edition]] path admits;
-        # every other edition must parse as a finite period.
-        if self.edition != _YEAR_INDEPENDENT_EDITION:
-            _overlay_edition_bounds(self.edition)
-        return self
-
 
 def _inventory_mapping_records(
-    entry: InventoryMappingOverride,
-    records: list[dict],
-    edition: object,
-    coords: set[str],
+    mapping: ColumnMapping, select_owner: bool, records: list[dict], edition: object
 ) -> tuple[list[dict], str | None]:
-    if entry.edition != edition or entry.register_variant not in coords:
-        return [], "stale_declared_mapping_scope"
+    """The delivered records a reviewed mapping pins, or a stale-target code."""
+    owner = mapping.variable.rsplit("/", 1)[1]
     selected = [
         r
         for r in records
-        if r["coord"] == entry.register_variant
-        and r["col"] == entry.representation
-        and (not entry.select_owner or r["vslug"] == entry.variable.rsplit("/", 1)[1])
+        if r["coord"] == mapping.register_variant
+        and r["col"] == mapping.representation
+        and (not select_owner or r["vslug"] == owner)
     ]
     admitted, issue = _inventory_period_records(selected, edition, assess_ranges=True)
-    owned = [r for r in admitted if r["vslug"] == entry.variable.rsplit("/", 1)[1]]
+    owned = [r for r in admitted if r["vslug"] == owner]
     return owned, "stale_declared_mapping_target" if issue or not owned else None
 
 
-def _load_overlay(path: Path) -> dict:
-    import tomllib
-
-    raw = tomllib.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    try:
-        overlay = {
-            "exclude": {
-                e["table"]: e.get("reason", "") for e in raw.get("exclude", [])
-            },
-            "edition": {e["table"]: e["edition"] for e in raw.get("edition", [])},
-            # Disjoint-partition labels: explicit curated facts, never
-            # inferred — the emitter only copies them onto the [[table]].
-            "partition": {e["table"]: e["label"] for e in raw.get("partition", [])},
-            # Suppress the mapping(s) on ONE physical column: the column stays
-            # inventoried (and still ships whenever its table is ordered), but
-            # another table owns the shared variable — the aux-table join-key
-            # disposition.
-            "unmap": {
-                (e["table"], e["column"]): InventoryColumn.model_validate(
-                    {"name": e["column"], "unmapped_reason": e.get("reason")},
-                    strict=True,
-                ).unmapped_reason
-                for e in raw.get("unmap", [])
-            },
-            # Per-REGISTER school-year rule: which school year a table year
-            # names on this register (see `_school_year_edition`).
-            "school_year": {
-                e["register"]: e["anchor"] for e in raw.get("school_year", [])
-            },
-            "assign": defaultdict(set),
-            "mapping": defaultdict(list),
-        }
-        seen_mapping = set()
-        for e in raw.get("mapping", []):
-            entry = InventoryMappingOverride.model_validate(e, strict=True)
-            key = (entry.table, entry.column, entry.register_variant)
-            if key in seen_mapping:
-                raise ValueError(f"duplicate mapping override {key!r}")
-            seen_mapping.add(key)
-            overlay["mapping"][entry.table, entry.column].append(entry)
-        for e in raw.get("assign", []):
-            rv = e["register_variant"]
-            overlay["assign"][e["table"]].update([rv] if isinstance(rv, str) else rv)
-    except (KeyError, TypeError, ValueError) as exc:
-        raise SystemExit(
-            f"malformed overlay entry in {path}: {exc!r} — every [[exclude]] "
-            "and [[edition]] needs `table` (+ `edition`), every [[partition]] "
-            "needs `table` and `label`, every [[assign]] needs `table` and "
-            "`register_variant`, every [[school_year]] needs `register` and "
-            "`anchor`"
-        ) from exc
-    for register, anchor in overlay["school_year"].items():
-        if anchor not in _SCHOOL_YEAR_ANCHORS:
-            raise SystemExit(
-                f"malformed overlay entry in {path}: [[school_year]] "
-                f"{register} has anchor {anchor!r} — one of "
-                f"{list(_SCHOOL_YEAR_ANCHORS)}"
-            )
-    return overlay
-
-
-def _edition_year(edition: object) -> int | None:
-    """Best-effort year of an edition, for `period:` split selectors."""
-    if isinstance(edition, int):
-        return edition
-    if isinstance(edition, str):
-        m = re.match(r"(?:HT|VT)?((?:19|20)\d{2})", edition)
-        return int(m.group(1)) if m else None
-    if isinstance(edition, dict):
-        return _edition_year(edition.get("from"))
-    if isinstance(edition, list) and edition:
-        return _edition_year(edition[0])
-    return None
-
-
-def _table_edition(table: str, overlay: dict) -> object | None:
-    """One explicit finite edition for a table, or None → edition worklist.
-    Overlay wins; otherwise exactly ONE name-derived period token is trusted
-    (a zero- or multi-token name is period-ambiguous by construction).
-    A name whose only token is an 8-digit date (Doda_20241231) is an extract
-    stamp: the table may hold a cumulative history, so it goes to review."""
-    if table in overlay["edition"]:
-        return overlay["edition"][table]
-    tokens = extract_periods(table)
-    if len(tokens) != 1:
-        return None
-    if _RE_DATE8.search(table) and not extract_periods(_RE_DATE8.sub("", table)):
-        return None
-    tok = tokens[0]
-    return int(tok) if re.fullmatch(r"\d{4}", tok) else tok
-
-
 def _school_year_edition(anchor: str, year: int) -> str:
-    """The school year a bare table year names, under a register's anchor.
+    """The school year a bare table year names, under a series' spelling.
 
     SCB's school registers deliver school years, not calendar years, and a
     SWECOV table named by ONE year holds one school year — which one depends
     on the register (grades set in the spring are labelled by the spring year,
-    an October teacher snapshot by the autumn year), so the anchor is curated
-    per register in the overlay's `[[school_year]]`, never inferred."""
+    an October teacher snapshot by the autumn year), so the spelling is curated
+    per series (`edition_spelling`), never inferred."""
     if anchor == "spring":
         return f"LA{year - 1}"
     if anchor == "autumn":
         return f"LA{year}"
     return f"{anchor.upper()}{year}"  # a single term: VT<Y> / HT<Y>
-
-
-def _table_coords(
-    key: str, mapping: dict, table: str, year: int | None, overlay: dict
-) -> set[str] | None:
-    """Admissible 3-part variant coordinates for a physical table, or None →
-    assignment worklist. Overlay `assign` wins; then the curated MAPPING
-    (mapped → its coordinate; split → stem/period selectors against THIS
-    table); then the flavor disposition (+ `_FLAVOR_VARIANT_TABLES`)."""
-    if table in overlay["assign"]:
-        return set(overlay["assign"][table])
-    status = mapping.get("status")
-    if status == "unmapped":
-        return set()
-    if status == "mapped":
-        return {mapping["to"]}
-    if status == "split":
-        coords: set[str] = set()
-        # Stem selectors nest (AKU_ ⊂ AKU_RL_ ⊂ AKU_Corona_), so the LONGEST
-        # matching stem wins — a table belongs to its most specific selector,
-        # never to every prefix of its name.
-        best_stem: tuple[int, str | None] | None = None
-        for sel, coord, _note in mapping["to"]:
-            if sel.startswith("stem:"):
-                stem = sel[5:]
-                if table.upper().startswith(stem.upper()) and (
-                    best_stem is None or len(stem) > best_stem[0]
-                ):
-                    best_stem = (len(stem), coord)
-            elif sel.startswith("period:") and year is not None:
-                lo, _, hi = sel[7:].partition("-")
-                if int(lo) <= year and (not hi or year <= int(hi)) and coord:
-                    coords.add(coord)
-        # A flavor selector (coord None, e.g. AKU_Corona_) carries no
-        # coordinate — such a table falls through to the assignment worklist
-        # like any other placed-by-hand table.
-        if best_stem is not None and best_stem[1]:
-            coords.add(best_stem[1])
-        return coords or None
-    disp = _DISP_BY_KEY.get(key, [])
-    coords = set()
-    for prov, reg_key, var_key, var_slug in disp:
-        tables = _FLAVOR_VARIANT_TABLES.get((prov, reg_key, var_key))
-        if tables is None or table in tables:
-            coords.add(f"{prov}/{reg_key}/{var_slug}")
-    return coords or None
 
 
 def _toml_str(value: str) -> str:
@@ -2399,86 +2185,132 @@ def _toml_edition(edition: object) -> str:
 
 
 def cmd_inventory(args: argparse.Namespace) -> None:
-    holdings = parse_inventory(args.csv)
-    repo_root = Path(__file__).resolve().parents[3]
-    steward_dir = args.out or (repo_root / "reg_webapp" / "stewards" / "swecov")
-    overlay = _load_overlay(steward_dir / "inventory_overlay.toml")
-    retained_unknown = {}
-    holdings_policy = getattr(args, "holdings_policy", None)
-    if holdings_policy is not None:
-        from reg_meta_build.holdings_policy import load_holdings_retention_policy
+    """Emit `inventory.toml` from the census, the spec and a mapping DB this
+    stage builds itself from the pinned global plus the candidate's providers.
 
-        entries, _, _ = load_holdings_retention_policy(holdings_policy, args.csv)
-        additions = _load_overlay(holdings_policy)
-        overlap = set(overlay["exclude"]) & set(additions["exclude"])
-        if overlap:
-            raise SystemExit(f"Duplicate holdings policy exclusions: {sorted(overlap)}")
-        overlay["exclude"].update(additions["exclude"])
-        unmap_overlap = set(overlay["unmap"]) & set(additions["unmap"])
-        if unmap_overlap:
-            raise SystemExit(
-                f"Duplicate holdings policy unmaps: {sorted(unmap_overlap)}"
-            )
-        overlay["unmap"].update(additions["unmap"])
-        retained_unknown = {entry.table: entry for entry in entries}
-    by_regcol = _steward_load_db(args.db)
-    representative = _representative_spelling(args.db)
+    The candidate manifest pins that pair (`global_db_sha256`) and the spec
+    (`steward_spec_sha256`), so `extend-db` can refuse an inventory auto-mapped
+    against another catalog or decided by another spec. The storage export is a
+    required input, read first: no run skips the storage check (#1594).
+
+    Both printed pins are the inputs generation used, never a later re-read: the
+    global is hashed before the mapping DB is built and `extend-db` refuses a
+    base whose bytes differ from that digest, and the spec digest is taken from
+    the bytes the generation's spec load parsed."""
+    import hashlib
+    from tempfile import TemporaryDirectory
+
+    from reg_meta_build.steward_storage import StorageSchemaError, read_storage_types
+
+    try:
+        storage = read_storage_types(args.storage_csv)
+    except StorageSchemaError as exc:
+        raise SystemExit(f"inventory: {exc}") from exc
+    with args.base_db.open("rb") as base:
+        global_sha = hashlib.file_digest(base, "sha256").hexdigest()
+    with TemporaryDirectory(prefix="steward-mapping-db-") as scratch:
+        mapping_db = _mapping_db(
+            args.base_db,
+            global_sha,
+            args.providers,
+            steward_id(args.spec),
+            Path(scratch),
+        )
+        spec = write_inventory(args, mapping_db)
+    _check_storage_types(args, spec, storage)
+    print("  candidate manifest pins:")
+    print(f'    "steward_spec_sha256": "{spec.sha256}"')
+    print(f'    "global_db_sha256": "{global_sha}"')
+
+
+def _mapping_db(
+    base_db: Path, base_sha256: str, providers: Path, steward: str, scratch: Path
+) -> Path:
+    """The flavored DB the inventory maps against: `extend-db`'s metadata-only
+    diagnostic of `base_db` (refused unless its bytes hash to `base_sha256`) plus
+    `providers`, named by the committed steward slug pins (copied, so its auto
+    slugs never write into the checkout)."""
+    import shutil
+
+    from reg_meta_build.extend_db import extend_db
+
+    slugs = scratch / "slugs"
+    slugs.mkdir()
+    for path in sorted((REPO_ROOT / "reg_meta_build/fqid_slugs" / steward).glob("*.toml")):
+        if not path.name.endswith(".auto.toml"):
+            shutil.copyfile(path, slugs / path.name)
+    result = extend_db(
+        base_db,
+        providers,
+        scratch / "db",
+        steward=steward,
+        slug_dir=slugs,
+        diagnostic=True,
+        base_sha256=base_sha256,
+    )
+    return Path(result["db_path"])
+
+
+def _checked_spec(args: argparse.Namespace, holdings: dict) -> StewardSpec:
+    """The spec at `args.spec`, held to the census at `args.csv`.
+
+    The stages that take their decisions from the census (`ground`, `enrich`,
+    `inventory`) run the census guard and the one-disposition rule here, so an
+    unseriesed table refuses instead of quietly getting no admissible variant.
+    `globals`, `grafts` and `flavor` read `enrich`'s output, already held."""
+    spec = load_steward_spec(args.spec)
+    tables = {table for h in holdings.values() for table in h.table_columns}
+    check_census(spec, args.csv, tables)
+    return spec
+
+
+def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
+    """`inventory`'s emitter over an already-built mapping DB: `args.csv`,
+    `args.spec` and `args.out`. Returns the loaded spec."""
+    holdings = parse_inventory(args.csv)
+    spec = _checked_spec(args, holdings)
+    steward_dir = args.out
+    steward_dir.mkdir(parents=True, exist_ok=True)
+    # A table may appear under several (Category, Detail) keys; its columns merge.
+    census: dict[str, set[str]] = {}
+    for h in holdings.values():
+        for table, cols in h.table_columns.items():
+            census.setdefault(table, set()).update(cols)
+    by_regcol = _steward_load_db(db)
+    representative = _representative_spelling(db)
     # coord -> {UPPER(col): [(coord, vslug, canonical col)]} narrowed per lookup.
     by_coordcol: dict[tuple[str, str], list] = defaultdict(list)
-    # Auto-assign support (maintainer-approved 2026-09-01): a table whose
-    # resolution scope names a register/provider with exactly ONE variant in
-    # the flavored DB leaves no choice — assign it deterministically instead
-    # of worklisting. No name inference involved.
-    reg_variants: dict[str, set[str]] = defaultdict(set)
-    prov_variants: dict[str, set[str]] = defaultdict(set)
     for (_reg, u), recs in by_regcol.items():
         for r in recs:
             by_coordcol[(r["coord"], u)].append(r)
-            reg_variants["/".join(r["coord"].split("/")[:2])].add(r["coord"])
-            prov_variants[r["coord"].split("/")[0]].add(r["coord"])
 
-    # Merge holdings by physical table (a table may appear under several
-    # (Category, Detail) keys); carry every (key, mapping) that lists it.
-    tables: dict[str, dict] = {}
-    all_csv_tables: set[str] = set()
-    n_lookup_tables = 0
-    for (cat, det), h in sorted(holdings.items()):
-        key = _scope_key(cat, det or None)
-        mapping = MAPPING.get((cat, det)) or {"status": "residue"}
-        all_csv_tables.update(h.table_columns)
-        if mapping.get("status") == "lookup":
-            n_lookup_tables += len(h.table_columns)
-            continue
-        for table, cols in h.table_columns.items():
-            entry = tables.setdefault(table, {"columns": set(), "scopes": []})
-            entry["columns"].update(cols)
-            entry["scopes"].append((key, mapping))
+    series_of = spec.series_of()
+    members = {t.table: t for series in spec.series for t in series.tables}
+    table_variants = {
+        table: variants
+        for series in spec.series
+        for table, variants in series.table_variants().items()
+    }
+    decisions = {
+        key: entry
+        for series in spec.series
+        for key, entry in series.decisions().items()
+    }
+    retained_unknown = {entry.table: entry for entry in spec.scope.retain_unknown}
+    excluded = {entry.table for entry in spec.scope.excludes}
+    n_lookup_tables = sum(entry.table in census for entry in spec.scope.lookups)
 
-    # Stale = gone from the CSV entirely; an overlay entry naming a
-    # lookup-skipped table is merely inert, not stale.
-    stale = sorted(
-        t
-        for section in ("exclude", "edition", "partition", "assign")
-        for t in overlay[section]
-        if t not in all_csv_tables
-    ) + sorted(
-        f"{t} (unmap {c!r})" for t, c in overlay["unmap"] if t not in all_csv_tables
-    )
-    excluded = {t: overlay["exclude"][t] for t in overlay["exclude"] if t in tables}
-
+    # Stale = gone from the CSV entirely.
+    stale = sorted(t for t in spec.dispositions() if t not in census)
     worklist: dict[str, list] = {
-        "edition_needed": [],
         "retained_unknown": [],
-        "assignment_needed": [],
-        "stale_overlay_entries": stale,
+        "stale_spec_entries": stale,
         "mapping_scope_needed": [],
         "unresolved": [],
     }
-    for table, column in overlay["mapping"]:
-        if (
-            table not in tables
-            or column not in tables[table]["columns"]
-            or table in excluded
+    for (table, column), entry in decisions.items():
+        if entry.mappings is not None and (
+            table not in census or column not in census[table]
         ):
             worklist["mapping_scope_needed"].append(
                 {
@@ -2487,13 +2319,12 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                     "code": "stale_declared_mapping_physical_coordinate",
                 }
             )
-        if (table, column) in overlay["unmap"]:
-            raise SystemExit(f"mapping override conflicts with unmap: {table}/{column}")
-    n_cols = n_mapped = n_pivot = n_unresolved = n_auto_assigned = n_unmapped = 0
-    # [[school_year]] bookkeeping: tables re-spelled per rule (printed) and the
-    # registers emitted tables land on (a rule reaching none is stale).
+    n_cols = n_mapped = n_pivot = n_unresolved = n_unmapped = 0
+    # Tables re-spelled per series edition_spelling (printed).
     n_school_year: dict[str, int] = defaultdict(int)
-    mapped_registers: set[str] = set()
+    # The header predates the steward spec. It stays verbatim so a regeneration
+    # is byte-identical to the accepted inventory; reword it with the next
+    # accepted candidate.
     lines: list[str] = [
         "# GENERATED by input_data/swecov/build_catalog.py inventory — do not",
         "# hand-edit. Reality is the holdings CSV; policy is the committed",
@@ -2501,94 +2332,33 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         "# Holdings curation rules).",
         "",
         "version = 1",
-        'steward = "swecov"',
+        f"steward = {_toml_str(steward_id(args.spec))}",
     ]
-    for table in sorted(tables, key=str.upper):
-        if table in excluded:
-            continue
-        entry = tables[table]
+    for table in sorted(census, key=str.upper):
         if table in retained_unknown:
-            if table in overlay["edition"] or extract_periods(table):
-                raise SystemExit(f"Unknown holding has an edition declaration: {table}")
             retention = retained_unknown[table]
             worklist["retained_unknown"].append(
                 {
                     "table": table,
-                    "columns": sorted(entry["columns"]),
+                    "columns": sorted(census[table]),
                     "register": retention.register_fqid,
                     "rows_sha256": retention.rows_sha256,
                     "reason": retention.reason,
                 }
             )
             continue
-        edition = _table_edition(table, overlay)
-        if edition is None:
-            worklist["edition_needed"].append(
-                {"table": table, "tokens": extract_periods(table)}
-            )
+        series = series_of.get(table)
+        if series is None:  # a lookup or an exclusion
             continue
-        year = _edition_year(edition)
-        coords: set[str] = set()
-        unassigned = True
-        for key, mapping in entry["scopes"]:
-            got = _table_coords(key, mapping, table, year, overlay)
-            if got is not None:
-                unassigned = False
-                coords.update(got)
-        if unassigned:
-            # Two tiers: REGISTER-scoped candidates first (a holding routed to
-            # a specific register whose only variant leaves no choice), then
-            # provider-scoped — the provider fallback (e.g. the swecov flavor
-            # provider on flavor-status holdings) would otherwise pollute a
-            # unique register-scoped answer.
-            reg_candidates: set[str] = set()
-            candidates: set[str] = set()
-            for key, mapping in entry["scopes"]:
-                regs, provs = _steward_scope(key, mapping)
-                for r in regs:
-                    reg_candidates.update(reg_variants.get(r, ()))
-                for p in provs:
-                    candidates.update(prov_variants.get(p, ()))
-            candidates |= reg_candidates
-            if len(reg_candidates) == 1:
-                candidates = reg_candidates
-            if len(candidates) == 1:
-                coords = candidates
-                n_auto_assigned += 1
-            else:
-                worklist["assignment_needed"].append(
-                    {
-                        "table": table,
-                        "holdings": sorted({k for k, _ in entry["scopes"]}),
-                        "candidate_variants": sorted(candidates),
-                    }
-                )
-                continue
-        route_reasons = {
-            mapping["unmapped_reason"]
-            for _, mapping in entry["scopes"]
-            if mapping.get("status") == "unmapped"
-        }
-        route_reason = "\n\n".join(sorted(route_reasons)) if not coords else None
-        registers = {"/".join(c.split("/")[:2]) for c in coords}
-        mapped_registers |= registers
-        # A bare name-derived YEAR on a school-year register names a school
-        # year; an explicit [[edition]] is already curated and wins.
-        if isinstance(edition, int) and table not in overlay["edition"]:
-            anchors = {overlay["school_year"].get(r) for r in registers}
-            if len(anchors) > 1:
-                # Contradicted rules leave the school year ambiguous: refuse
-                # them all (the table keeps its calendar year) and name the
-                # table in the stale-entry channel.
-                stale.append(
-                    f"{table} (school_year rules disagree across "
-                    f"{', '.join(sorted(registers))})"
-                )
-            elif len(anchors) == 1 and (anchor := next(iter(anchors))) is not None:
-                edition = _school_year_edition(anchor, edition)
-                for register in registers:
-                    n_school_year[register] += 1
-        cols = sorted(entry["columns"])
+        edition = members[table].inventory_edition
+        if isinstance(edition, int) and series.edition_spelling != "annual":
+            edition = _school_year_edition(series.edition_spelling, edition)
+            n_school_year[series.id] += 1
+        # The table maps only onto its own admissible variants, all of the
+        # series' register (`steward_series_register_mismatch` at load), so an
+        # auto-mapped column cannot pull the series into a second register.
+        coords = set(table_variants[table])
+        cols = sorted(census[table])
         base_counts: dict[str, int] = defaultdict(int)
         for c in cols:
             b = _steward_pivot_base(LOPNR_PREFIX.sub("", c))
@@ -2602,45 +2372,45 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                 base_counts[s] += 1
         lines += ["", "[[table]]", f"id = {_toml_str(table)}"]
         lines.append(f"edition = {_toml_edition(edition)}")
-        if edition == _YEAR_INDEPENDENT_EDITION:
+        if edition == YEAR_INDEPENDENT_EDITION:
             lines.append('period_scope = "year_independent"')
-        if table in overlay["partition"]:
-            lines.append(f"partition = {_toml_str(overlay['partition'][table])}")
+        if members[table].partition is not None:
+            lines.append(f"partition = {_toml_str(members[table].partition)}")
         for col in cols:
             n_cols += 1
-            if (table, col) in overlay["unmap"] or (
-                route_reason and (table, col) not in overlay["mapping"]
-            ):
+            decision = decisions.get((table, col))
+            if decision is not None and decision.unmapped_reason is not None:
                 n_unmapped += 1
-                lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
-                if (
-                    reason := overlay["unmap"].get((table, col), route_reason)
-                ) is not None:
-                    lines.append(f"unmapped_reason = {_toml_str(reason)}")
+                lines += [
+                    "",
+                    "[[table.column]]",
+                    f"name = {_toml_str(col)}",
+                    f"unmapped_reason = {_toml_str(decision.unmapped_reason)}",
+                ]
                 continue
             u = LOPNR_PREFIX.sub("", col).upper()
             recs = [r for coord in sorted(coords) for r in by_coordcol[(coord, u)]]
             mapping_issue = None
             curated: set[tuple[str, str, str]] = set()
-            for entry in overlay["mapping"].get((table, col), ()):
+            for mapping in (decision.mappings if decision is not None else None) or ():
                 declared, mapping_issue = _inventory_mapping_records(
-                    entry,
-                    by_coordcol[(entry.register_variant, entry.representation.upper())],
+                    mapping,
+                    decision.select_owner,
+                    by_coordcol[
+                        (mapping.register_variant, mapping.representation.upper())
+                    ],
                     edition,
-                    coords,
                 )
                 if mapping_issue:
                     break
+                owner = mapping.variable.rsplit("/", 1)[1]
                 recs = [
                     r
                     for r in recs
-                    if r["coord"] != entry.register_variant
+                    if r["coord"] != mapping.register_variant
                     or (
-                        r["col"] != entry.representation
-                        or (
-                            not entry.select_owner
-                            and r["vslug"] != entry.variable.rsplit("/", 1)[1]
-                        )
+                        r["col"] != mapping.representation
+                        or (not decision.select_owner and r["vslug"] != owner)
                     )
                 ] + declared
                 curated.update((r["coord"], r["vslug"], r["col"]) for r in declared)
@@ -2720,15 +2490,6 @@ def cmd_inventory(args: argparse.Namespace) -> None:
                     f"representation = {_toml_str(r['col'])}",
                 ]
 
-    # A rule no emitted table's register matches is stale like any other
-    # overlay entry with nothing to apply to. `stale` IS the list
-    # `worklist["stale_overlay_entries"]` holds.
-    stale += [
-        f"{register} (school_year {anchor}, no emitted table maps to it)"
-        for register, anchor in sorted(overlay["school_year"].items())
-        if register not in mapped_registers
-    ]
-
     dest = steward_dir / "inventory.toml"
     wl_path = args.csv.parent / "derived" / "inventory_worklist.json"
     wl_path.parent.mkdir(parents=True, exist_ok=True)
@@ -2742,32 +2503,24 @@ def cmd_inventory(args: argparse.Namespace) -> None:
             f"{wl_path}. Inventory not replaced."
         )
     dest.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    n_excluded = len(excluded & set(census))
     n_tables = (
-        len(tables)
-        - len(excluded)
-        - len(worklist["edition_needed"])
-        - len(worklist["retained_unknown"])
-        - len(worklist["assignment_needed"])
+        len(census) - n_excluded - n_lookup_tables - len(worklist["retained_unknown"])
     )
     print(f"wrote {dest}")
     print(
-        f"  tables: {n_tables} emitted"
-        f" ({len(worklist['edition_needed'])} need edition,"
-        f" {len(worklist['assignment_needed'])} need assignment,"
-        f" {len(excluded)} excluded, {n_lookup_tables} lookup-skipped,"
-        f" {n_auto_assigned} auto-assigned single-variant)"
+        f"  tables: {n_tables} emitted ({n_excluded} excluded,"
+        f" {n_lookup_tables} lookup-skipped,"
+        f" {len(worklist['retained_unknown'])} retained unknown)"
     )
     print(
         f"  columns: {n_cols}  mapped: {n_mapped}  pivot-unmapped: {n_pivot}"
         f"  unresolved: {n_unresolved}  curated-unmapped: {n_unmapped}"
     )
-    for register, anchor in sorted(overlay["school_year"].items()):
-        print(
-            f"  school_year {register} ({anchor}):"
-            f" {n_school_year[register]} tables re-spelled"
-        )
+    for series_id, n in sorted(n_school_year.items()):
+        print(f"  edition_spelling {series_id}: {n} tables re-spelled")
     if stale:
-        print(f"  STALE overlay entries (nothing to apply them to): {len(stale)}")
+        print(f"  STALE spec entries (nothing to apply them to): {len(stale)}")
         for t in stale:
             print(f"    {t}")
     print(f"  wrote worklist to {wl_path}")
@@ -2781,33 +2534,34 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         print(f"\nVALIDATION FAILED — the supersession worklist:\n{exc.message}")
         raise SystemExit(1) from exc
     print(f"  load_inventory: OK ({len(inv.tables)} tables)")
-    _check_storage_types(args, repo_root)
+    return spec
 
 
-def _check_storage_types(args: argparse.Namespace, repo_root: Path) -> None:
-    """Report curated global data types that SWECOV storage disagrees with (#1562).
+def _check_storage_types(
+    args: argparse.Namespace, spec: StewardSpec, storage: dict[tuple[str, str], str]
+) -> None:
+    """Report curated global data types the steward's storage disagrees with (#1562).
 
     The global build never reads the storage schema, so this refresh is where a
     disagreement surfaces. It is a worklist, never an automatic global change.
+    Each series' register is checked against the series' own tables, each table
+    under the headers its `storage_header` decisions select.
     """
     from reg_meta_build.curation_tree import load_register_files
-    from reg_meta_build.swecov_storage import (
-        load_storage_policy,
-        read_storage_types,
+    from reg_meta_build.steward_storage import (
+        storage_policy_from_spec,
         storage_type_findings,
         write_storage_findings,
     )
 
-    storage_csv = args.csv.parent / "derived" / "swecov_column_types.csv"
-    if not storage_csv.is_file():
-        print(f"  WARNING: storage type check skipped: {storage_csv} is missing")
-        return
+    try:
+        policy = storage_policy_from_spec(spec)
+    except ValueError as exc:
+        raise SystemExit(f"inventory: {exc}") from exc
     findings = storage_type_findings(
-        load_register_files(repo_root / "reg_meta_build" / "curation"),
-        load_storage_policy(
-            repo_root / "reg_webapp" / "stewards" / "swecov" / "storage_policy.toml"
-        ),
-        read_storage_types(storage_csv),
+        load_register_files(REPO_ROOT / "reg_meta_build" / "curation"),
+        policy,
+        storage,
     )
     dest = args.csv.parent / "derived" / "storage_type_findings.tsv"
     write_storage_findings(findings, dest)
@@ -2817,7 +2571,7 @@ def _check_storage_types(args: argparse.Namespace, repo_root: Path) -> None:
     }
     line = (
         f"storage type check: {counts['disagrees']} curated types disagree with"
-        f" SWECOV storage, {counts['uncurated']} steward-holdings columns lack a"
+        f" steward storage, {counts['uncurated']} steward-holdings columns lack a"
         f" curated type, {counts['unmatched']} curated entries match no storage"
         f" column, {counts['narrower']} curated types are wider than storage;"
         f" worklist {dest}"
@@ -2861,9 +2615,7 @@ def cmd_errata(args: argparse.Namespace) -> None:
         version_candidates,
     )
 
-    repo_root = Path(__file__).resolve().parents[3]
-    steward_dir = args.out or (repo_root / "reg_webapp" / "stewards" / "swecov")
-    inventory = load_inventory(steward_dir / "inventory.toml")
+    inventory = load_inventory(args.out / "inventory.toml")
     conn = open_built_db(args.db)
     try:
         report = coverage_misses(conn, inventory)
@@ -2910,6 +2662,7 @@ def cmd_normalize(args: argparse.Namespace) -> None:
 def cmd_ground(args: argparse.Namespace) -> None:
     holdings = parse_inventory(args.csv)
     index = load_variant_index(args.db)
+    non_catalog = _checked_spec(args, holdings).scope.non_catalog_categories
     print(f"{len(holdings)} (Category, Detail) pairs; {len(index)} catalog variants\n")
     for universe, label in (
         (True, "IN-UNIVERSE (SCB/SOS)"),
@@ -2917,13 +2670,13 @@ def cmd_ground(args: argparse.Namespace) -> None:
     ):
         print(f"=== {label} ===")
         for (cat, det), h in sorted(holdings.items()):
-            if (cat not in NON_CATALOG_CATEGORIES) is not universe:
+            if (cat not in non_catalog) is not universe:
                 continue
             pair = f"{cat} / {det}" if det else cat
             print(f"\n{pair}  [{len(h.tables)} tables, {len(h.match_columns)} cols]")
             print(f"  periods: {json.dumps(h.period_segments(), ensure_ascii=False)}")
             if not universe:
-                print(f"  residue: {NON_CATALOG_CATEGORIES[cat]}")
+                print(f"  residue: {non_catalog[cat]}")
             for c in ground_pair(h, index):
                 flag = (
                     " <<< unexpected for residue"
@@ -2951,6 +2704,12 @@ def main() -> None:
         ),
     )
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
+    parser.add_argument(
+        "--spec",
+        type=Path,
+        default=SPEC_DIR,
+        help="steward spec directory: scope.toml + series/*.toml (default: %(default)s)",
+    )
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("normalize", help="dump normalized holdings as JSON")
     sub.add_parser("ground", help="propose the register mapping by column overlap")
@@ -2972,20 +2731,33 @@ def main() -> None:
     )
     inventory_p = sub.add_parser(
         "inventory",
-        help="emit the delivery inventory.toml against a FLAVORED --db"
-        " (reality = holdings CSV, policy = committed inventory_overlay.toml)",
+        help="emit the delivery inventory.toml (reality = holdings CSV, policy ="
+        " the --spec steward spec) against a mapping DB built from --base-db plus"
+        " --providers, then check curated types against --storage-csv",
+    )
+    inventory_p.add_argument(
+        "--base-db",
+        type=Path,
+        required=True,
+        help="the global reg_meta.db the candidate pins (global_db_sha256)",
+    )
+    inventory_p.add_argument(
+        "--providers",
+        type=Path,
+        required=True,
+        help="the candidate's providers/ directory (curated-provider TOMLs)",
+    )
+    inventory_p.add_argument(
+        "--storage-csv",
+        type=Path,
+        required=True,
+        help="the steward's storage-schema export (table, column, SQL type)",
     )
     inventory_p.add_argument(
         "--out",
         type=Path,
-        default=None,
-        help="stewards/swecov output dir (default: <repo>/reg_webapp/stewards/swecov)",
-    )
-    inventory_p.add_argument(
-        "--holdings-policy",
-        type=Path,
-        default=None,
-        help="Builder-owned exact lookup exclusions and unknown-edition retentions.",
+        required=True,
+        help="output dir for inventory.toml (the candidate's policy/)",
     )
     errata_p = sub.add_parser(
         "errata",
@@ -2996,9 +2768,8 @@ def main() -> None:
     errata_p.add_argument(
         "--out",
         type=Path,
-        default=None,
-        help="stewards/swecov dir holding inventory.toml"
-        " (default: <repo>/reg_webapp/stewards/swecov)",
+        required=True,
+        help="dir holding the generated inventory.toml (the candidate's policy/)",
     )
     args = parser.parse_args()
     {

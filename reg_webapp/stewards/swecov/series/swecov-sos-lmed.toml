@@ -1,0 +1,43 @@
+id = "swecov-sos-lmed"
+register = "sos/lmed"
+variants = ["sos/lmed/lmed", "sos/lmed/lmed-vara"]
+
+# route note: ATC/FORPDDD live in lmed-vara; SWECOV table is a denormalized join
+
+[[table]]
+table = "SWECOV_SOS_LMED"
+edition = { from = "2005-07", to = 2023 }
+
+[[column]]
+column = "AR"
+hold = { follow_up = "#1556", reason = "Dispensing year (Expedieringsår) added to the SoS delivery; derivable from EDATUM, no LMED catalog variable yet (#1556). Maintainer-decided 2026-10-13 (#1302)." }
+
+[[column]]
+column = "ARBETSPL_PSEUDO"
+mappings = [{ register_variant = "sos/lmed/lmed", variable = "sos/lmed/arbetspl", representation = "ARBETSPL" }]
+reason = "SWECOV delivery spelling (pseudonymised) of the LMED workplace code ARBETSPL. Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "sos/lmed/lmed", variable = "sos/lmed/personnr", representation = "PNR" }]
+reason = "Pseudonymised patient key of the LMED delivery (PNR). Full catalog coverage of the edition (#1302); maintainer-decided 2026-10-13."
+
+[[column]]
+column = "AR"
+graft_onto = "sos/lmed/lmed"
+reason = "Gap-fill graft onto sos/lmed/lmed, the holding's former grafts route target."
+
+[[column]]
+column = "ar"
+graft_onto = "sos/lmed/lmed"
+reason = "Gap-fill graft onto sos/lmed/lmed, the holding's former grafts route target."
+
+[[column]]
+column = "arbetspl_lopnr"
+graft_onto = "sos/lmed/lmed"
+reason = "Gap-fill graft onto sos/lmed/lmed, the holding's former grafts route target."
+
+[[column]]
+column = "lopnr"
+graft_onto = "sos/lmed/lmed"
+reason = "Gap-fill graft onto sos/lmed/lmed, the holding's former grafts route target."

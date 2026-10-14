@@ -1,0 +1,557 @@
+id = "gdb-skolor"
+register = "scb/gdb"
+variants = ["scb/gdb/adresser-fastigheter", "scb/gdb/fastigheter"]
+
+[[table]]
+table = "GDB_Skolor1990"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1990
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1991"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1991
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1992"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1992
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1993"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1993
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1994"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1994
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1995"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1995
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1996"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1996
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1997"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1997
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1998"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1998
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor1999"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 1999
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2000"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2000
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2001"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2001
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2002"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2002
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2003"
+edition = 2003
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2004"
+edition = 2004
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2005"
+edition = 2005
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2006"
+edition = 2006
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2007"
+edition = 2007
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2008"
+edition = 2008
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2009"
+edition = 2009
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2010"
+edition = 2010
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2011"
+edition = 2011
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2012"
+edition = 2012
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2013"
+edition = 2013
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2014"
+edition = 2014
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2015"
+edition = 2015
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2016"
+edition = 2016
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2017"
+edition = 2017
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2018"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2018
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2019"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2019
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2020"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2020
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2021"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2021
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2022"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2022
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2023"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2023
+partition = "skolor"
+
+[[table]]
+table = "GDB_Skolor2024"
+variants = ["scb/gdb/adresser-fastigheter"]
+edition = 2024
+partition = "skolor"
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor1999"]
+unmap = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2000"]
+unmap = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2001"]
+unmap = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2002"]
+unmap = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2003"]
+unmap = "Retained physical field for edition 2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2004"]
+unmap = "Retained physical field for edition 2004; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2005"]
+unmap = "Retained physical field for edition 2005; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2006"]
+unmap = "Retained physical field for edition 2006; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2007"]
+unmap = "Retained physical field for edition 2007; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2008"]
+unmap = "Retained physical field for edition 2008; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2009"]
+unmap = "Retained physical field for edition 2009; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2010"]
+unmap = "Retained physical field for edition 2010; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2011"]
+unmap = "Retained physical field for edition 2011; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2012"]
+unmap = "Retained physical field for edition 2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2013"]
+unmap = "Retained physical field for edition 2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2014"]
+unmap = "Retained physical field for edition 2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2015"]
+unmap = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2016"]
+unmap = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2017"]
+unmap = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2018"]
+unmap = "Retained physical geocoded extract field for edition 2018. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2019"]
+unmap = "Retained physical geocoded extract field for edition 2019. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2020"]
+unmap = "Retained physical geocoded extract field for edition 2020. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2021"]
+unmap = "Retained physical geocoded extract field for edition 2021. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2022"]
+unmap = "Retained physical geocoded extract field for edition 2022. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Skolor2023"]
+unmap = "Retained physical geocoded extract field for edition 2023. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1990"]
+unmap = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1991"]
+unmap = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1992"]
+unmap = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1993"]
+unmap = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1994"]
+unmap = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1995"]
+unmap = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1996"]
+unmap = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1997"]
+unmap = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1998"]
+unmap = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor1999"]
+unmap = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2000"]
+unmap = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2001"]
+unmap = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2002"]
+unmap = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2003"]
+unmap = "Retained physical geocoded extract field for edition 2003. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2004"]
+unmap = "Retained physical geocoded extract field for edition 2004. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2005"]
+unmap = "Retained physical geocoded extract field for edition 2005. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2006"]
+unmap = "Retained physical geocoded extract field for edition 2006. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2007"]
+unmap = "Retained physical geocoded extract field for edition 2007. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2008"]
+unmap = "Retained physical geocoded extract field for edition 2008. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2009"]
+unmap = "Retained physical geocoded extract field for edition 2009. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2010"]
+unmap = "Retained physical geocoded extract field for edition 2010. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2011"]
+unmap = "Retained physical geocoded extract field for edition 2011. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2012"]
+unmap = "Retained physical geocoded extract field for edition 2012. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2013"]
+unmap = "Retained physical geocoded extract field for edition 2013. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2014"]
+unmap = "Retained physical geocoded extract field for edition 2014. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2015"]
+unmap = "Retained physical geocoded extract field for edition 2015. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2016"]
+unmap = "Retained physical geocoded extract field for edition 2016. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2017"]
+unmap = "Retained physical geocoded extract field for edition 2017. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2018"]
+unmap = "Retained physical geocoded extract field for edition 2018. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2019"]
+unmap = "Retained physical geocoded extract field for edition 2019. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2020"]
+unmap = "Retained physical geocoded extract field for edition 2020. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2021"]
+unmap = "Retained physical geocoded extract field for edition 2021. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2022"]
+unmap = "Retained physical geocoded extract field for edition 2022. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2023"]
+unmap = "Retained physical geocoded extract field for edition 2023. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2024"]
+unmap = "Retained physical geocoded extract field for edition 2024. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "P1105_Lopnr_skolenhetskod"
+tables = ["GDB_Skolor2013", "GDB_Skolor2014", "GDB_Skolor2015", "GDB_Skolor2016", "GDB_Skolor2017", "GDB_Skolor2018", "GDB_Skolor2019", "GDB_Skolor2020", "GDB_Skolor2021", "GDB_Skolor2022", "GDB_Skolor2023", "GDB_Skolor2024"]
+hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
+
+[[column]]
+column = "P1105_Lopnr_skolkod"
+tables = ["GDB_Skolor1990", "GDB_Skolor1991", "GDB_Skolor1992", "GDB_Skolor1993", "GDB_Skolor1994", "GDB_Skolor1995", "GDB_Skolor1996", "GDB_Skolor1997", "GDB_Skolor1998", "GDB_Skolor1999", "GDB_Skolor2000", "GDB_Skolor2001", "GDB_Skolor2002", "GDB_Skolor2003", "GDB_Skolor2004", "GDB_Skolor2005", "GDB_Skolor2006", "GDB_Skolor2007", "GDB_Skolor2008", "GDB_Skolor2009", "GDB_Skolor2010", "GDB_Skolor2011", "GDB_Skolor2012", "GDB_Skolor2013"]
+hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
+
+[[column]]
+column = "Skolform"
+hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }

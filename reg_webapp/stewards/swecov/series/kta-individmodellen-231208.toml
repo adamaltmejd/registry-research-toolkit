@@ -1,0 +1,11 @@
+id = "kta-individmodellen-231208"
+register = "tillvaxtverket/korttidsarbete"
+variants = ["tillvaxtverket/korttidsarbete/individer"]
+
+[[table]]
+table = "KTA_2020_individmodellen_231208"
+edition = 2020
+
+[[table]]
+table = "KTA_2021_individmodellen_231208"
+edition = 2021

@@ -1,0 +1,11 @@
+id = "population-personnr"
+register = "swecov/population"
+variants = ["swecov/population/_default"]
+
+[[table]]
+table = "Population_PersonNr_20241231"
+edition = { from = 1990, to = 2024 }
+
+[[column]]
+column = "FodelseArManDag"
+unmap = "Literal source field retained; enriched delivery documentation does not establish a semantic owner."

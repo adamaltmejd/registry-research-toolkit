@@ -1,0 +1,17 @@
+id = "fk-fp-delfall1-lev4"
+register = "fk/foraldrapenning"
+variants = ["fk/foraldrapenning/fp-delfall1"]
+
+[[table]]
+table = "FK_FP_DELFALL1_lev4"
+edition = { from = 2014, to = 2024 }
+
+[[column]]
+column = "P1105_LopNr_Barn_PersonNr"
+mappings = [{ register_variant = "fk/foraldrapenning/fp-delfall1", variable = "fk/foraldrapenning/persid-barn", representation = "PERSID_BARN" }]
+reason = "Pseudonymised child key; the variant's only child identifier. Full catalog coverage of the edition (#1302)."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/foraldrapenning/fp-delfall1", variable = "fk/foraldrapenning/persid", representation = "PERSID" }]
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."

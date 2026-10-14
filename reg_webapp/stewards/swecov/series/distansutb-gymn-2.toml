@@ -1,0 +1,25 @@
+id = "distansutb-gymn-2"
+register = "scb/utbildningsanalyser"
+variants = ["scb/utbildningsanalyser/distansundervisning-gymnasieskolan"]
+
+# route note: stem:Distansutb_gymn_: 100%
+
+[[table]]
+table = "Distansutb_gymn_VT20"
+edition = "VT2020"
+
+[[column]]
+column = "F6HT20b"
+unmap = "Retained physical field for edition VT2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "F6HT20c"
+unmap = "Retained physical field for edition VT2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "F6VT21b"
+unmap = "Retained physical field for edition VT2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "F6VT21c"
+unmap = "Retained physical field for edition VT2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

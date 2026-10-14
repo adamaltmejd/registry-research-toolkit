@@ -1,0 +1,22 @@
+id = "fk-delfall4-1-sjp-lev4"
+register = "fk/sjukpenning"
+variants = ["fk/sjukpenning/delfall-4-1"]
+
+[[table]]
+table = "FK_DELFALL4_1_SJP_lev4"
+edition = { from = 2012, to = 2025 }
+
+[[column]]
+column = "Fullstandig_DIAGNOS_KOD"
+mappings = [{ register_variant = "fk/sjukpenning/delfall-4-1", variable = "fk/sjukpenning/diagnos-kod-fullstandig", representation = "Diagnos_kod_fullstandig" }]
+reason = "FK delivery spelling of the own-register catalog variable fk/sjukpenning/diagnos-kod-fullstandig (delivery column Diagnos_kod_fullstandig); catalog errata #1512, maintainer-decided 2026-10-12 (#1302)."
+
+[[column]]
+column = "Fullstandig_diagnos"
+mappings = [{ register_variant = "fk/sjukpenning/delfall-4-1", variable = "fk/sjukpenning/diagnos-fullstandig", representation = "Diagnos_fullstandig" }]
+reason = "FK delivery spelling of the own-register catalog variable fk/sjukpenning/diagnos-fullstandig (delivery column Diagnos_fullstandig); catalog errata #1512, maintainer-decided 2026-10-12 (#1302)."
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/sjukpenning/delfall-4-1", variable = "fk/sjukpenning/lopnr", representation = "Lopnr" }]
+reason = "Pseudonymised recipient key; the variant's only recipient identifier. Full catalog coverage of the edition (#1302)."

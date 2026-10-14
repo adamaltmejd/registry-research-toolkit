@@ -1,0 +1,143 @@
+id = "kursprov-gymn"
+register = "scb/gymnasieskola-prov"
+variants = ["scb/gymnasieskola-prov/_default"]
+
+[[table]]
+table = "Kursprov_gymn_HT2011"
+edition = "HT2011"
+
+[[table]]
+table = "Kursprov_gymn_HT2012"
+edition = "HT2012"
+
+[[table]]
+table = "Kursprov_gymn_HT2013"
+edition = "HT2013"
+
+[[table]]
+table = "Kursprov_gymn_HT2014"
+edition = "HT2014"
+
+[[table]]
+table = "Kursprov_gymn_HT2015"
+edition = "HT2015"
+
+[[table]]
+table = "Kursprov_gymn_HT2016"
+edition = "HT2016"
+
+[[table]]
+table = "Kursprov_gymn_HT2017"
+edition = "HT2017"
+
+[[table]]
+table = "Kursprov_gymn_HT2018"
+edition = "HT2018"
+
+[[table]]
+table = "Kursprov_gymn_HT2019"
+edition = "HT2019"
+
+[[table]]
+table = "Kursprov_gymn_HT2020"
+edition = "HT2020"
+
+[[table]]
+table = "Kursprov_gymn_HT2021"
+edition = "HT2021"
+
+[[table]]
+table = "Kursprov_gymn_HT2022"
+edition = "HT2022"
+
+[[table]]
+table = "Kursprov_gymn_HT2023"
+edition = "HT2023"
+
+[[table]]
+table = "Kursprov_gymn_HT2024"
+edition = "HT2024"
+
+[[table]]
+table = "Kursprov_gymn_VT2012"
+edition = "VT2012"
+
+[[table]]
+table = "Kursprov_gymn_VT2013"
+edition = "VT2013"
+
+[[table]]
+table = "Kursprov_gymn_VT2014"
+edition = "VT2014"
+
+[[table]]
+table = "Kursprov_gymn_VT2015"
+edition = "VT2015"
+
+[[table]]
+table = "Kursprov_gymn_VT2016"
+edition = "VT2016"
+
+[[table]]
+table = "Kursprov_gymn_VT2017"
+edition = "VT2017"
+
+[[table]]
+table = "Kursprov_gymn_VT2018"
+edition = "VT2018"
+
+[[table]]
+table = "Kursprov_gymn_VT2019"
+edition = "VT2019"
+
+[[table]]
+table = "Kursprov_gymn_VT2022"
+edition = "VT2022"
+
+[[table]]
+table = "Kursprov_gymn_VT2023"
+edition = "VT2023"
+
+[[table]]
+table = "Kursprov_gymn_VT2024"
+edition = "VT2024"
+
+[[column]]
+column = "TERMIN"
+tables = ["Kursprov_gymn_HT2011"]
+unmap = "Retained physical field for edition HT2011; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "TERMIN"
+tables = ["Kursprov_gymn_HT2012"]
+unmap = "Retained physical field for edition HT2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "TERMIN"
+tables = ["Kursprov_gymn_HT2013"]
+unmap = "Retained physical field for edition HT2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "TERMIN"
+tables = ["Kursprov_gymn_HT2014"]
+unmap = "Retained physical field for edition HT2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "TERMIN"
+tables = ["Kursprov_gymn_VT2012"]
+unmap = "Retained physical field for edition VT2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "TERMIN"
+tables = ["Kursprov_gymn_VT2013"]
+unmap = "Retained physical field for edition VT2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "TERMIN"
+tables = ["Kursprov_gymn_VT2014"]
+unmap = "Retained physical field for edition VT2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "TERMIN"
+tables = ["Kursprov_gymn_VT2015"]
+unmap = "Retained physical field for edition VT2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

@@ -1,0 +1,39 @@
+id = "hreg-reg"
+register = "scb/hreg"
+variants = ["scb/hreg/grundutbildning-1977", "scb/hreg/grundutbildning-1993"]
+
+# route note: stem:Hreg_Reg_: 42% grounded
+
+[[table]]
+table = "Hreg_Reg_1990_1993"
+edition = { from = "HT1990", to = "VT1993" }
+
+[[table]]
+table = "Hreg_Reg_1993_2022"
+variants = ["scb/hreg/grundutbildning-1993"]
+edition = { from = "HT1993", to = 2021 }
+
+[[table]]
+table = "Hreg_Reg_2022_2024"
+variants = ["scb/hreg/grundutbildning-1993"]
+edition = { from = 2022, to = 2024 }
+
+[[column]]
+column = "agruppben"
+tables = ["Hreg_Reg_1990_1993"]
+unmap = "Plain-text label of the code column AGrupp in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "grenben"
+tables = ["Hreg_Reg_1990_1993"]
+unmap = "Plain-text label of the code column GrenKod in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "linjeben"
+tables = ["Hreg_Reg_1990_1993"]
+unmap = "Plain-text label of the code column LinjeKod in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "linrben"
+tables = ["Hreg_Reg_1993_2022", "Hreg_Reg_2022_2024"]
+unmap = "Plain-text label of the code column LInr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."

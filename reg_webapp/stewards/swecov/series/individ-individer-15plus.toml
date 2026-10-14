@@ -1,0 +1,70 @@
+# Series boundary at 2010, a documented SCB break: Population frame changes from 16+ (SCB variant 34.1335, individer-16plus) to 15+ (34.153, individer-15plus) in 2010; documented in reg_meta_build/curation/relations.toml, LISA individual-frame variant succession (#376).
+id = "individ-individer-15plus"
+register = "scb/lisa"
+variants = ["scb/lisa/individer-15plus"]
+
+# route note: period:2010-: variant validity window
+
+[[table]]
+table = "Individ_2010"
+edition = 2010
+
+[[table]]
+table = "Individ_2011"
+edition = 2011
+
+[[table]]
+table = "Individ_2012"
+edition = 2012
+
+[[table]]
+table = "Individ_2013"
+edition = 2013
+
+[[table]]
+table = "Individ_2014"
+edition = 2014
+
+[[table]]
+table = "Individ_2015"
+edition = 2015
+
+[[table]]
+table = "Individ_2016"
+edition = 2016
+
+[[table]]
+table = "Individ_2017"
+edition = 2017
+
+[[table]]
+table = "Individ_2018"
+edition = 2018
+
+[[table]]
+table = "Individ_2019"
+edition = 2019
+
+[[table]]
+table = "Individ_2020"
+edition = 2020
+
+[[table]]
+table = "Individ_2021"
+edition = 2021
+
+[[table]]
+table = "Individ_2022"
+edition = 2022
+
+[[table]]
+table = "Individ_2023"
+edition = 2023
+
+[[column]]
+column = "CfarNr_LISA"
+storage_header = "P1105_LopNr_CfarNr_LISA"
+
+[[column]]
+column = "PeOrgNr_LISA"
+storage_header = "P1105_LopNr_PeOrgNr_LISA"

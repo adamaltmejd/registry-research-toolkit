@@ -1,0 +1,29 @@
+id = "ksju-20152"
+register = "scb/ksju"
+variants = ["scb/ksju/sjukfranvaro-sjukloneperioden"]
+
+# route note: ERSDAG/ERSK/FALLK etc. are wide pivots
+
+[[table]]
+table = "KSju_20152"
+edition = "2015-Q2"
+
+[[column]]
+column = "Ksjulan"
+unmap = "Retained physical field for edition 2015-Q2; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "SyssStat"
+unmap = "Retained physical field for edition 2015-Q2; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "fallangd"
+unmap = "Retained physical field for edition 2015-Q2; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "sjukfrom"
+unmap = "Retained physical field for edition 2015-Q2; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+
+[[column]]
+column = "sjuktom"
+unmap = "Retained physical field for edition 2015-Q2; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."

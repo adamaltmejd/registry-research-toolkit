@@ -1,0 +1,12 @@
+id = "fk-vb-lev4"
+register = "fk/vardbidrag"
+variants = ["fk/vardbidrag/_default"]
+
+[[table]]
+table = "FK_VB_lev4"
+edition = { from = 2015, to = 2022 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/vardbidrag/_default", variable = "fk/vardbidrag/lopnr-personnr", representation = "personnummer" }]
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."

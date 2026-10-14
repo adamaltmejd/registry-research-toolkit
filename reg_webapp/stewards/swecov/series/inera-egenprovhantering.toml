@@ -1,0 +1,8 @@
+id = "inera-egenprovhantering"
+register = "inera/bestallda-prover"
+variants = ["inera/bestallda-prover/_default"]
+
+[[table]]
+table = "Inera_EgenProvhantering"
+edition = { from = 2020, to = 2023 }
+partition = "egen-provhantering"

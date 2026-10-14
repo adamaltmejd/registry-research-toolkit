@@ -1,0 +1,7 @@
+id = "sus"
+register = "scb/anst"
+variants = ["scb/anst/sus"]
+
+[[table]]
+table = "SuS_2024"
+edition = 2024

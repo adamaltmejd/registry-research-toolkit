@@ -207,15 +207,16 @@ remain nonpublishable and fail runtime admission.
 
 Identity stays in `import_manifest`, including `generation_id`; a steward also records
 `steward`, `base_db_sha256`, `base_generation_id`, `holdings_input_commit`,
-`holdings_manifest_sha256` and `holdings_policy_sha256`. Generation identity hashes
-canonical semantic inputs and the schema version, not output bytes, timestamps or host
-paths. Builder revision, accepted public pins and curation digest participate; steward
-identity additionally includes its base generation, accepted holdings pins, policy and
-accounting digest. The exact base file digest is byte-level provenance only and does not
-enter generation identity. Publish the final file SHA-256 separately. The builder design
-specifies the digest encoding. Search cursors and `OrderProvenance` use `generation_id`
-instead of `import_date`; HTTP read identities include generation and scope. Import time
-may remain display data.
+`holdings_manifest_sha256` and `steward_spec_sha256` (the committed
+`reg_webapp/stewards/<id>/` spec the holdings were decided by). Generation identity
+hashes canonical semantic inputs and the schema version, not output bytes, timestamps or
+host paths. Builder revision, accepted public pins and curation digest participate;
+steward identity additionally includes its base generation, accepted holdings pins, spec
+and accounting digest. The exact base file digest is byte-level provenance only and does
+not enter generation identity. Publish the final file SHA-256 separately. The builder
+design specifies the digest encoding. Search cursors and `OrderProvenance` use
+`generation_id` instead of `import_date`; HTTP read identities include generation and
+scope. Import time may remain display data.
 
 Read scope defaults to `holdings` on a steward artifact and `reference` on a catalog
 artifact; explicit `holdings` on a catalog artifact errors. The holdings predicate
@@ -290,19 +291,19 @@ in.
 
 This is the complete list of boundaries a test may assert at.
 
-  | Boundary                                 | Oracle (data, not code)                                                                                       |
-  | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                            |
-  | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                            |
-  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB          |
-  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                      |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                                   |
-  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                    |
-  | Curation + SWECOV storage → findings     | `derived/storage_type_findings.tsv`: fixture → `expected.tsv` in `reg_meta_build/tests/cases/swecov_storage/` |
-  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                                  |
-  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, policy and authored mappings       |
-  | Frontend                                 | rendered DOM, the accessibility tree and the codegen'd API types                                              |
-  | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                                    |
+  | Boundary                                 | Oracle (data, not code)                                                                                        |
+  | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+  | Prepared inputs + curation → artifact    | synthetic source fixtures → `validate_built_db` + content snapshot                                             |
+  | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                             |
+  | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB           |
+  | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                       |
+  | Project + artifact → order manifest      | byte-identical `order.json` goldens, cross-adapter identity                                                    |
+  | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                     |
+  | Curation + steward storage → findings    | `derived/storage_type_findings.tsv`: fixture → `expected.tsv` in `reg_meta_build/tests/cases/steward_storage/` |
+  | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                                   |
+  | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, spec and authored mappings          |
+  | Frontend                                 | rendered DOM, the accessibility tree and the codegen'd API types                                               |
+  | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                                     |
 
 Compiled holdings admission, scoped browse/search and selection guards are pinned
 through source-built request/expected corpora in `conformance/cases/`.

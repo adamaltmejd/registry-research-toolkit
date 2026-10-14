@@ -24,17 +24,18 @@ Contents:
 - `build_catalog.py` — the deterministic generator (normalize + ground + emit). Lives
   here next to its inputs, and since 2026-09-02 it is TRACKED (`git add -f`; reversing
   the 2026-06-12 untracked decision): it generates the local inventory input for
-  compiled holdings and defines the `inventory_overlay.toml` semantics. Generated
-  inventory is accepted with provider overlays, policies, and raw census in a clean
-  local-only input candidate; it is not committed or shipped as a runtime file. Category
-  routing and steward flavor definitions live in the adjacent tracked
-  `reg_webapp/stewards/swecov/source_policy.toml`; physical overrides remain in
-  `inventory_overlay.toml`. It still cannot run in CI — its CSV/workbook inputs stay
+  compiled holdings. Generated inventory is accepted with provider overlays, the raw
+  census and the storage-schema export in a clean private input candidate; it is not
+  committed or shipped as a runtime file. Every steward decision (category routing,
+  flavor definitions, table dispositions, column decisions) lives in the tracked steward
+  spec `reg_webapp/stewards/swecov/` (`scope.toml` + `series/*.toml`); the steward id is
+  this directory's name. It still cannot run in CI — its CSV/workbook inputs stay
   confidential and untracked — so regeneration remains maintainer-only:
-  `uv run python build_catalog.py --csv <holdings CSV> --db <logical catalog> inventory --out <scratch policy directory>`
-  from this directory. Select the accepted candidate's policies explicitly; tracked
-  defaults alone do not establish acceptance. `extend-db` consumes the accepted
-  candidate and exact commit/manifest pins to publish one compiled steward DB.
+  `uv run python build_catalog.py --csv <holdings CSV> inventory --base-db <global reg_meta.db> --providers <candidate providers/> --storage-csv <storage-schema export> --out <scratch directory>`
+  from this directory. It prints the `steward_spec_sha256` and `global_db_sha256` pins
+  the candidate manifest records. `extend-db` consumes the accepted candidate and exact
+  commit/manifest pins to publish one compiled steward DB, refusing a candidate whose
+  pins name another spec or global.
 - `SCB/` — master P1105 delivery variable lists (2022, 2023-24, 2025 v5): per-register
   sheets with `Variabelnamn | Beskrivning | År | Källa | Vy`. `Källa` separates
   register-sourced from SWECOV-constructed columns; `Vy` joins to the inventory's table

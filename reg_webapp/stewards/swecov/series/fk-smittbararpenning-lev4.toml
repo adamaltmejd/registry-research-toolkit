@@ -1,0 +1,12 @@
+id = "fk-smittbararpenning-lev4"
+register = "fk/smittbararpenning"
+variants = ["fk/smittbararpenning/_default"]
+
+[[table]]
+table = "FK_SMITTBARARPENNING_lev4"
+edition = { from = 2015, to = 2024 }
+
+[[column]]
+column = "P1105_LopNr_PersonNr"
+mappings = [{ register_variant = "fk/smittbararpenning/_default", variable = "fk/smittbararpenning/lopnr-personnr", representation = "personnummer" }]
+reason = "Pseudonymised recipient key; the register's only recipient identifier (lopnr-personnr). Full catalog coverage of the edition (#1302)."

@@ -1,0 +1,110 @@
+id = "itftg-mikro"
+register = "scb/it-anvandning"
+variants = ["scb/it-anvandning/it-anvandning-i-foretag"]
+
+# route note: 2008-2012 waves poorly enumerated in reg_meta
+
+[[table]]
+table = "ITftg_Mikro_2013"
+edition = 2013
+partition = "mikro"
+
+[[table]]
+table = "ITftg_Mikro_2014"
+edition = 2014
+partition = "mikro"
+
+[[table]]
+table = "ITftg_Mikro_2015"
+edition = 2015
+partition = "mikro"
+
+[[table]]
+table = "ITftg_Mikro_2016"
+edition = 2016
+partition = "mikro"
+
+[[table]]
+table = "ITftg_Mikro_2017"
+edition = 2017
+partition = "mikro"
+
+[[table]]
+table = "ITftg_Mikro_2018"
+edition = 2018
+partition = "mikro"
+
+[[table]]
+table = "ITftg_Mikro_2019"
+edition = 2019
+partition = "mikro"
+
+[[table]]
+table = "ITftg_Mikro_2020"
+edition = 2020
+partition = "mikro"
+
+[[column]]
+column = "FIXBB"
+tables = ["ITftg_Mikro_2016"]
+unmap = "The catalog has no supported delivery for physical FIXBB in 2016. Available question metadata do not establish this exact column’s role for this year."
+
+[[column]]
+column = "FIXBB"
+tables = ["ITftg_Mikro_2017", "ITftg_Mikro_2018"]
+unmap = "Two source questions claim FIXBB in this year: native 15902 describes DSL through the telephone network; native 30783 describes any fixed broadband, including fibre and cable. Both use code 9, but with different meanings (not answered versus should not answer). The physical column’s intended question and code meanings are unresolved."
+
+[[column]]
+column = "GSOLOTH"
+tables = ["ITftg_Mikro_2016"]
+unmap = "The supplied source records do not identify the exact question or native variable represented by physical GSOLOTH in 2016. Similar question wording does not establish the delivery link."
+
+[[column]]
+column = "GSOLOTH"
+tables = ["ITftg_Mikro_2017"]
+unmap = "Reviewed source ambiguity: the 2017 export assigns GSOLOTH to both energy-saving IT solutions (native question 38333) and electronic public procurement in other EU countries (28818). The delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
+
+[[column]]
+column = "GUSENRG"
+tables = ["ITftg_Mikro_2016"]
+unmap = "The supplied source records do not identify the exact question or native variable represented by physical GUSENRG in 2016. Similar question wording does not establish the delivery link."
+
+[[column]]
+column = "INV3R_PAP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "The catalog has no supported delivery for physical INV3R_PAP in 2014. Available question metadata do not establish this exact column’s role for this year."
+
+[[column]]
+column = "INV3R_PAP"
+tables = ["ITftg_Mikro_2017"]
+unmap = "Reviewed source ambiguity: the 2017 export assigns INV3R_PAP to native questions 35491 and 38334 about automatically processable electronic invoices, with different supplier/denominator and reference-year wording. Delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
+
+[[column]]
+column = "INV3R_PMP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "The catalog has no supported delivery for physical INV3R_PMP in 2014. Available question metadata do not establish this exact column’s role for this year."
+
+[[column]]
+column = "INV3R_PMP"
+tables = ["ITftg_Mikro_2017"]
+unmap = "Reviewed source ambiguity: the 2017 export assigns INV3R_PMP to native questions 35490 and 38335 about invoices not automatically processable, with different supplier/denominator and reference-year wording. Delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
+
+[[column]]
+column = "WEBACC"
+tables = ["ITftg_Mikro_2016"]
+unmap = "The supplied source records do not identify the exact question or native variable represented by physical WEBACC in 2016. Similar question wording does not establish the delivery link."
+
+[[column]]
+column = "WEBCTM"
+tables = ["ITftg_Mikro_2016"]
+unmap = "The supplied source records do not identify the exact question or native variable represented by physical WEBCTM in 2016. Similar question wording does not establish the delivery link."
+
+[[column]]
+column = "WEBORD"
+tables = ["ITftg_Mikro_2016"]
+unmap = "The supplied source records do not identify the exact question or native variable represented by physical WEBORD in 2016. Similar question wording does not establish the delivery link."
+
+[[column]]
+column = "WEBPER"
+tables = ["ITftg_Mikro_2016"]
+unmap = "The supplied source records do not identify the exact question or native variable represented by physical WEBPER in 2016. Similar question wording does not establish the delivery link."

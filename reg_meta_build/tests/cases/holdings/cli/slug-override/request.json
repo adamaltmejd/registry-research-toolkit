@@ -3,6 +3,8 @@
     "extend-db",
     "--base-db",
     "absent",
+    "--steward",
+    "swecov",
     "--slug-dir",
     "external"
   ]

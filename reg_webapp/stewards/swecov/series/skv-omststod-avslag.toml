@@ -1,0 +1,7 @@
+id = "skv-omststod-avslag"
+register = "skatteverket/omstallningsstod"
+variants = ["skatteverket/omstallningsstod/avslag"]
+
+[[table]]
+table = "SKV_omststod_avslag"
+edition = { from = 2020, to = 2021 }

@@ -1,0 +1,59 @@
+id = "konkurs"
+register = "scb/konkurser"
+variants = ["scb/konkurser/konkurser-offentliga-ackord"]
+
+[[table]]
+table = "Konkurs_2015"
+edition = 2015
+
+[[table]]
+table = "Konkurs_2016"
+edition = 2016
+
+[[table]]
+table = "Konkurs_2017"
+edition = 2017
+
+[[table]]
+table = "Konkurs_2018"
+edition = 2018
+
+[[table]]
+table = "Konkurs_2019"
+edition = 2019
+
+[[table]]
+table = "Konkurs_2020"
+edition = 2020
+
+[[table]]
+table = "Konkurs_2021"
+edition = 2021
+
+[[table]]
+table = "Konkurs_2022"
+edition = 2022
+
+[[table]]
+table = "Konkurs_2023"
+edition = 2023
+
+[[table]]
+table = "Konkurs_2024"
+edition = 2024
+
+[[column]]
+column = "P1105_Lopnr_PeOrgNr_opnr"
+tables = ["Konkurs_2015", "Konkurs_2016", "Konkurs_2017", "Konkurs_2018", "Konkurs_2019", "Konkurs_2020", "Konkurs_2021"]
+mappings = [{ register_variant = "scb/konkurser/konkurser-offentliga-ackord", variable = "scb/konkurser/person-orgnr", representation = "opnr" }]
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
+
+[[column]]
+column = "P1105_Lopnr_PeOrgNr_opnr"
+tables = ["Konkurs_2022", "Konkurs_2023", "Konkurs_2024"]
+mappings = [{ register_variant = "scb/konkurser/konkurser-offentliga-ackord", variable = "scb/konkurser/person-orgnr", representation = "opnr" }]
+reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable (documented for 2022-2024 by the #1502 errata); maintainer-decided 2026-10-13 (Operator batch on #1502/#1504)."
+
+[[column]]
+column = "PersonNr_opnr"
+storage_header = "P1105_LopNr_PersonNr_opnr"

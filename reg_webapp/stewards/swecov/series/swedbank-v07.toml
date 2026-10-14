@@ -1,0 +1,8 @@
+id = "swedbank-v07"
+register = "swedbank/konsumtion"
+variants = ["swedbank/konsumtion/_default"]
+
+[[table]]
+table = "Swedbank_V07"
+edition = 2020
+partition = "v07"

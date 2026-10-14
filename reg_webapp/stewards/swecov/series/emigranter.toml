@@ -1,0 +1,9 @@
+id = "emigranter"
+register = "scb/rtb"
+variants = ["scb/rtb/utvandringar"]
+
+# route note: stem:emigranter_: 3/3 grounded
+
+[[table]]
+table = "emigranter_20241231"
+edition = { from = 1990, to = 2024 }

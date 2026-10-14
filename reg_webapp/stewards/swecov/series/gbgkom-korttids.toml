@@ -1,0 +1,18 @@
+id = "gbgkom-korttids"
+register = "sabo/adresser"
+variants = ["sabo/adresser/_default"]
+
+[[table]]
+table = "GbgKom_Korttids2019"
+edition = 2019
+partition = "korttids"
+
+[[table]]
+table = "GbgKom_Korttids2020"
+edition = 2020
+partition = "korttids"
+
+[[table]]
+table = "GbgKom_Korttids2021"
+edition = 2021
+partition = "korttids"

@@ -1,0 +1,180 @@
+id = "elevgymn"
+register = "scb/gymnasieskola-elever"
+variants = ["scb/gymnasieskola-elever/_default"]
+
+[[table]]
+table = "ElevGymn00"
+edition = "2000-10-15"
+
+[[table]]
+table = "ElevGymn01"
+edition = "2001-10-15"
+
+[[table]]
+table = "ElevGymn02"
+edition = "2002-10-15"
+
+[[table]]
+table = "ElevGymn03"
+edition = "2003-10-15"
+
+[[table]]
+table = "ElevGymn04"
+edition = "2004-10-15"
+
+[[table]]
+table = "ElevGymn05"
+edition = "2005-10-15"
+
+[[table]]
+table = "ElevGymn06"
+edition = "2006-10-15"
+
+[[table]]
+table = "ElevGymn07"
+edition = "2007-10-15"
+
+[[table]]
+table = "ElevGymn08"
+edition = "2008-10-15"
+
+[[table]]
+table = "ElevGymn09"
+edition = "2009-10-15"
+
+[[table]]
+table = "ElevGymn10"
+edition = "2010-10-15"
+
+[[table]]
+table = "ElevGymn11"
+edition = "2011-10-15"
+
+[[table]]
+table = "ElevGymn12"
+edition = "2012-10-15"
+
+[[table]]
+table = "ElevGymn13"
+edition = "2013-10-15"
+
+[[table]]
+table = "ElevGymn14"
+edition = "2014-10-15"
+
+[[table]]
+table = "ElevGymn15"
+edition = "2015-10-15"
+
+[[table]]
+table = "ElevGymn16"
+edition = "2016-10-15"
+
+[[table]]
+table = "ElevGymn17"
+edition = "2017-10-15"
+
+[[table]]
+table = "ElevGymn18"
+edition = "2018-10-15"
+
+[[table]]
+table = "ElevGymn19"
+edition = "2019-10-15"
+
+[[table]]
+table = "ElevGymn20"
+edition = "2020-10-15"
+
+[[table]]
+table = "ElevGymn21"
+edition = "2021-10-15"
+
+[[table]]
+table = "ElevGymn22"
+edition = "2022-10-15"
+
+[[table]]
+table = "ElevGymn23"
+edition = "2023-10-15"
+
+[[table]]
+table = "ElevGymn24"
+edition = "2024-10-15"
+
+[[table]]
+table = "ElevGymn92"
+edition = "1992-10-15"
+
+[[table]]
+table = "ElevGymn93"
+edition = "1993-10-15"
+
+[[table]]
+table = "ElevGymn94"
+edition = "1994-10-15"
+
+[[table]]
+table = "ElevGymn95"
+edition = "1995-10-15"
+
+[[table]]
+table = "ElevGymn96"
+edition = "1996-10-15"
+
+[[table]]
+table = "ElevGymn97"
+edition = "1997-10-15"
+
+[[table]]
+table = "ElevGymn98"
+edition = "1998-10-15"
+
+[[table]]
+table = "ElevGymn99"
+edition = "1999-10-15"
+
+[[column]]
+column = "P1105_Lopnr_Skolkod"
+tables = ["ElevGymn12"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 2012-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Utb_Form"
+tables = ["ElevGymn95"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1995-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Utb_Form"
+tables = ["ElevGymn96"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1996-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Utb_Form"
+tables = ["ElevGymn97"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1997-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Utb_Form"
+tables = ["ElevGymn98"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1998-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Utbild"
+tables = ["ElevGymn95"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1995-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Utbild"
+tables = ["ElevGymn96"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1996-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Utbild"
+tables = ["ElevGymn97"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1997-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+
+[[column]]
+column = "Utbild"
+tables = ["ElevGymn98"]
+unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1998-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
