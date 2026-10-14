@@ -183,7 +183,10 @@ def test_malformed_inventory_refusal_names_its_rule_and_location(
             tmp_path,
             steward="swecov",
             spec=StewardSpec(
-                directory=str(tmp_path), scope=Scope(census_sha256="0" * 64), series=()
+                directory=str(tmp_path),
+                scope=Scope(census_sha256="0" * 64),
+                series=(),
+                sha256="0" * 64,
             ),
         )
     message = refused.value.message

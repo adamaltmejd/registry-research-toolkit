@@ -431,13 +431,19 @@ def _build_artifact(
             shutil.copyfile(item if item.exists() else fallback, target)
         census = "swecov/SWECOV_variables_full_fixture.csv"
         shutil.copyfile(source / "census.csv", candidate / census)
-        # Accounting reads only the census role; the storage export is not compiled.
+        # Accounting reads only the census role; the storage export is not
+        # compiled, so a header-only export stands in.
+        storage_export = "swecov/derived/storage_types.csv"
+        (candidate / "swecov/derived").mkdir()
+        shutil.copyfile(
+            CASES / "reader/fixture/storage_types.csv", candidate / storage_export
+        )
         (candidate / "manifest.json").write_text(
             json.dumps(
                 {
                     "roles": {
                         "census": census,
-                        "storage_export": "swecov/derived/storage_types.csv",
+                        "storage_export": storage_export,
                         "inventory": INVENTORY_ROLE_PATH,
                     }
                 }

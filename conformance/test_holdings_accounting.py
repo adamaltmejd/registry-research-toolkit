@@ -60,8 +60,21 @@ def test_readable_source_census_matches_compiled_artifact(tmp_path, fixture):
         )
     census = "swecov/SWECOV_variables_full_fixture.csv"
     shutil.copyfile(source / "census.csv", candidate / census)
+    storage_export = "swecov/derived/storage_types.csv"
+    (candidate / "swecov/derived").mkdir()
+    shutil.copyfile(
+        CASES / "reader/fixture/storage_types.csv", candidate / storage_export
+    )
     (candidate / "manifest.json").write_text(
-        json.dumps({"roles": {"census": census, "inventory": "policy/inventory.toml"}})
+        json.dumps(
+            {
+                "roles": {
+                    "census": census,
+                    "storage_export": storage_export,
+                    "inventory": "policy/inventory.toml",
+                }
+            }
+        )
     )
     require_accounting(compare_holdings_input(candidate, directory, spec_dir))
 

@@ -2191,34 +2191,45 @@ def cmd_inventory(args: argparse.Namespace) -> None:
     The candidate manifest pins that pair (`global_db_sha256`) and the spec
     (`steward_spec_sha256`), so `extend-db` can refuse an inventory auto-mapped
     against another catalog or decided by another spec. The storage export is a
-    required input, read first: no run skips the storage check (#1594)."""
+    required input, read first: no run skips the storage check (#1594).
+
+    Both printed pins are the inputs generation used, never a later re-read: the
+    global is hashed before the mapping DB is built and `extend-db` refuses a
+    base whose bytes differ from that digest, and the spec digest is taken from
+    the bytes the generation's spec load parsed."""
     import hashlib
     from tempfile import TemporaryDirectory
 
-    from reg_meta_build.steward_spec import steward_spec_sha256
     from reg_meta_build.steward_storage import StorageSchemaError, read_storage_types
 
     try:
         storage = read_storage_types(args.storage_csv)
     except StorageSchemaError as exc:
         raise SystemExit(f"inventory: {exc}") from exc
+    with args.base_db.open("rb") as base:
+        global_sha = hashlib.file_digest(base, "sha256").hexdigest()
     with TemporaryDirectory(prefix="steward-mapping-db-") as scratch:
         mapping_db = _mapping_db(
-            args.base_db, args.providers, steward_id(args.spec), Path(scratch)
+            args.base_db,
+            global_sha,
+            args.providers,
+            steward_id(args.spec),
+            Path(scratch),
         )
         spec = write_inventory(args, mapping_db)
     _check_storage_types(args, spec, storage)
-    with args.base_db.open("rb") as base:
-        global_sha = hashlib.file_digest(base, "sha256").hexdigest()
     print("  candidate manifest pins:")
-    print(f'    "steward_spec_sha256": "{steward_spec_sha256(args.spec)}"')
+    print(f'    "steward_spec_sha256": "{spec.sha256}"')
     print(f'    "global_db_sha256": "{global_sha}"')
 
 
-def _mapping_db(base_db: Path, providers: Path, steward: str, scratch: Path) -> Path:
+def _mapping_db(
+    base_db: Path, base_sha256: str, providers: Path, steward: str, scratch: Path
+) -> Path:
     """The flavored DB the inventory maps against: `extend-db`'s metadata-only
-    diagnostic of `base_db` plus `providers`, named by the committed steward slug
-    pins (copied, so its auto slugs never write into the checkout)."""
+    diagnostic of `base_db` (refused unless its bytes hash to `base_sha256`) plus
+    `providers`, named by the committed steward slug pins (copied, so its auto
+    slugs never write into the checkout)."""
     import shutil
 
     from reg_meta_build.extend_db import extend_db
@@ -2235,6 +2246,7 @@ def _mapping_db(base_db: Path, providers: Path, steward: str, scratch: Path) -> 
         steward=steward,
         slug_dir=slugs,
         diagnostic=True,
+        base_sha256=base_sha256,
     )
     return Path(result["db_path"])
 
@@ -2520,12 +2532,11 @@ def _check_storage_types(
 
     The global build never reads the storage schema, so this refresh is where a
     disagreement surfaces. It is a worklist, never an automatic global change.
-    Each series' register is checked against the series' own tables, under the
-    headers its `storage_header` decisions name.
+    Each series' register is checked against the series' own tables, each table
+    under the headers its `storage_header` decisions select.
     """
     from reg_meta_build.curation_tree import load_register_files
     from reg_meta_build.steward_storage import (
-        StorageSchemaError,
         storage_policy_from_spec,
         storage_type_findings,
         write_storage_findings,
@@ -2533,7 +2544,7 @@ def _check_storage_types(
 
     try:
         policy = storage_policy_from_spec(spec)
-    except StorageSchemaError as exc:
+    except ValueError as exc:
         raise SystemExit(f"inventory: {exc}") from exc
     findings = storage_type_findings(
         load_register_files(REPO_ROOT / "reg_meta_build" / "curation"),

@@ -12,3 +12,4 @@ edition = 2020
 [[column]]
 column = "Renamed"
 storage_header = "PHYS"
+tables = ["CIS2020"]

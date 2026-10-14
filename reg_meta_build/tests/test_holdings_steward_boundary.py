@@ -71,11 +71,16 @@ def _builder_checkout(directory: Path) -> tuple[Path, str]:
 
 
 def _accept(
-    root: Path, files: dict[str, Path], *, spec_sha256: str, global_sha256: str
+    root: Path,
+    files: dict[str, Path],
+    *,
+    spec_sha256: str,
+    global_sha256: str,
+    storage_export: str = REQUEST["storage_export_name"],
 ) -> tuple[Path, str, str]:
     """Commit `files` (candidate path -> source) under `root` with its manifest:
-    the `census` and `storage_export` roles are REQUEST's names, the inventory
-    its fixed path."""
+    the `census` role is REQUEST's name, the `storage_export` role REQUEST's
+    unless overridden, the inventory its fixed path."""
     for destination, source in files.items():
         (root / destination).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, root / destination)
@@ -86,7 +91,7 @@ def _accept(
                 "artifact_kind": CANDIDATE_KIND,
                 "roles": {
                     "census": REQUEST["census_name"],
-                    "storage_export": REQUEST["storage_export_name"],
+                    "storage_export": storage_export,
                     "inventory": "policy/inventory.toml",
                 },
                 "steward_spec_sha256": spec_sha256,
@@ -114,6 +119,7 @@ def _accepted_candidate(
     *,
     inventory: str = "inventory.toml",
     spec_sha256: str = steward_spec_sha256(CASE),
+    storage_export: str = REQUEST["storage_export_name"],
 ):
     """The fixture candidate, pinned to `base` and (by default) the committed spec."""
     return _accept(
@@ -126,6 +132,7 @@ def _accepted_candidate(
         },
         spec_sha256=spec_sha256,
         global_sha256=hashlib.sha256(base.read_bytes()).hexdigest(),
+        storage_export=storage_export,
     )
 
 
@@ -312,6 +319,27 @@ def test_strict_extension_refuses_a_base_the_candidate_was_not_generated_against
         EXIT_CONFIG,
         EXPECTED["base_mismatch_code"],
     )
+    assert not output.exists()
+
+
+def test_strict_extension_refuses_a_storage_export_role_naming_the_census(
+    strict_builds: dict,
+) -> None:
+    # The published candidate's twin whose storage_export role names the census
+    # member. Fails if extend-db admits a role that only has to name some member,
+    # so the storage export the generator read is never pinned.
+    directory = strict_builds["directory"]
+    candidate = _accepted_candidate(
+        directory / "census-as-storage",
+        strict_builds["base"],
+        storage_export=REQUEST["census_name"],
+    )
+    output = directory / "census-as-storage-output"
+    result = _extend(strict_builds["source"], strict_builds["base"], candidate, output)
+    error = json.loads(result.stdout)["error"]
+    expected = EXPECTED["role_error"]
+    assert (result.returncode, error["code"]) == (EXIT_CONFIG, expected["code"])
+    assert expected["message_contains"] in error["message"]
     assert not output.exists()
 
 

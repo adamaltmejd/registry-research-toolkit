@@ -135,7 +135,6 @@ def _emitted_editions(steward_dir: Path) -> dict[str, object]:
 def test_a_series_spelling_spells_a_table_year_as_the_school_year_it_holds(
     tmp_path: Path,
     flavored_db: Path,
-    capsys: pytest.CaptureFixture[str],
     anchor: str,
     edition: object,
     bounds: tuple[str, str],
@@ -154,7 +153,6 @@ def test_a_series_spelling_spells_a_table_year_as_the_school_year_it_holds(
     assert _emitted_editions(steward_dir) == {"T2012": edition}
     (loaded,) = load_delivery_inventory(steward_dir / "inventory.toml").tables
     assert edition_bounds(loaded.edition) == (bounds,)
-    assert "  edition_spelling s: 1 tables re-spelled" in capsys.readouterr().out
 
 
 def test_an_unknown_edition_spelling_is_refused(

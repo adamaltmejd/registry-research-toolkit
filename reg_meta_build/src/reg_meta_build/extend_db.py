@@ -260,8 +260,13 @@ def extend_db(
     input_commit: str | None = None,
     input_manifest_sha256: str | None = None,
     diagnostic: bool = False,
+    base_sha256: str | None = None,
 ) -> dict[str, Any]:
-    """Build strict accepted holdings or an explicit metadata-only diagnostic."""
+    """Build strict accepted holdings or an explicit metadata-only diagnostic.
+
+    `base_sha256` pins the base bytes a diagnostic caller hashed (the steward
+    generator prints it as the candidate's global pin); an accepted candidate
+    pins them itself."""
     from .db import (
         _insert_core_graph_from_ir,
         _unlink_wal_sidecars,
@@ -369,7 +374,12 @@ def extend_db(
         resolved_providers_dir = resolve_steward_providers_dir(providers_dir, steward)
         with base_db.open("rb") as base_file:
             base_digest = hashlib.file_digest(base_file, "sha256").hexdigest()
-        if candidate_manifest and candidate_manifest["global_db_sha256"] != base_digest:
+        expected_base = (
+            candidate_manifest["global_db_sha256"]
+            if candidate_manifest
+            else base_sha256
+        )
+        if expected_base is not None and expected_base != base_digest:
             # The generator auto-mapped the inventory against this global; another
             # global can change which variable is the single candidate.
             raise RegMetaError(
@@ -377,8 +387,8 @@ def extend_db(
                 code="extend_base_db_mismatch",
                 error_class="configuration",
                 message=(
-                    f"--base-db is {base_digest}; the candidate's inventory was "
-                    f"generated against global {candidate_manifest['global_db_sha256']}."
+                    f"--base-db is {base_digest}; the inventory is pinned to "
+                    f"global {expected_base}."
                 ),
                 remediation=(
                     "Regenerate and accept the candidate against this global DB "
@@ -614,6 +624,7 @@ def read_private_holdings_input(
     """Verify accepted input and optionally materialize its committed bytes for a build."""
     from ._accepted_prepared import read_accepted_manifest
     from .input_snapshot import _git, _git_bytes, _index_tags
+    from .steward_storage import StorageSchemaError, read_storage_types
 
     if materialize_to is not None and (
         not materialize_to.is_dir() or any(materialize_to.iterdir())
@@ -688,6 +699,21 @@ def read_private_holdings_input(
             f"{', '.join(CANDIDATE_ROLES)} naming its members "
             f"(inventory = {INVENTORY_ROLE_PATH})"
         )
+    if len(set(roles.values())) != len(CANDIDATE_ROLES):
+        raise ValueError(
+            "Private input manifest roles must name distinct members: "
+            + ", ".join(f"{role} = {roles[role]}" for role in CANDIDATE_ROLES)
+        )
+    storage_export = selection.root / roles["storage_export"]
+    try:
+        read_storage_types(storage_export)
+    except StorageSchemaError as exc:
+        # Name the member candidate-relative, never by the checkout's path.
+        reason = str(exc).replace(str(storage_export), roles["storage_export"])
+        raise ValueError(
+            "Private input storage_export role is not a storage-schema export: "
+            + reason
+        ) from None
     if not any(
         name.startswith("providers/") and name.endswith(".toml") for name in proofs
     ):

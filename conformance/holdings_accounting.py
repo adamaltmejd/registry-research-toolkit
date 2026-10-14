@@ -20,6 +20,22 @@ from reg_meta_build.db import get_manifest, open_db
 
 DISPOSITIONS = ("dated", "year_independent", "retained_unknown", "excluded", "lookup")
 REPO = Path(__file__).resolve().parents[1]
+# The documented candidate contract, spelled here rather than imported from the
+# builder so the oracle stays independent of the checker it audits.
+CANDIDATE_KIND = "steward-private-extension-input-candidate"
+ROLES = ("census", "storage_export", "inventory")
+INVENTORY = "policy/inventory.toml"
+STORAGE_HEADER = [
+    "table_schema",
+    "table_name",
+    "table_type",
+    "column_name",
+    "data_type",
+    "character_maximum_length",
+    "numeric_precision",
+    "numeric_scale",
+    "ordinal_position",
+]
 
 
 def canonical(value: object) -> str:
@@ -51,6 +67,25 @@ def committed_spec_dir(artifact_dir: Path) -> Path:
     return REPO / "reg_webapp/stewards" / steward
 
 
+def check_roles(root: Path, roles: object, names: set[str]) -> None:
+    """Exactly the three roles, at distinct members, the inventory at its fixed
+    path, and a storage export that opens with the information_schema header."""
+    if (
+        not isinstance(roles, dict)
+        or set(roles) != set(ROLES)
+        or roles["inventory"] != INVENTORY
+        or len(set(roles.values())) != len(ROLES)
+        or not set(roles.values()) <= names
+    ):
+        raise ValueError(
+            "Holdings input roles are not census, storage_export and "
+            f"inventory = {INVENTORY} at distinct members"
+        )
+    with (root / roles["storage_export"]).open(newline="", encoding="utf-8") as rows:
+        if next(csv.reader(rows), None) != STORAGE_HEADER:
+            raise ValueError("Holdings input storage_export is not a storage export")
+
+
 def admit_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> Path:
     """Fail closed on missing, dirty, mismatched or incomplete accepted inputs."""
     try:
@@ -79,6 +114,14 @@ def admit_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> Path
         if status.strip():
             raise ValueError("Holdings input Git tree is not clean")
         accepted = json.loads(candidate.read_text())
+        if accepted["artifact_kind"] != CANDIDATE_KIND:
+            raise ValueError("Holdings input is not a steward extension candidate")
+        if accepted["steward_spec_sha256"] != spec_digest(spec_dir):
+            raise ValueError("Holdings input spec pin does not match the spec")
+        # The base bytes are not available here, so the global pin is held to the
+        # base digest extend-db stamped into the artifact, not re-hashed.
+        if accepted["global_db_sha256"] != manifest["base_db_sha256"]:
+            raise ValueError("Holdings input global pin does not match artifact base")
         members = accepted["files"]
         names = set()
         for member in members:
@@ -94,13 +137,13 @@ def admit_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> Path
                 or file_digest(selected) != member["sha256"]
             ):
                 raise ValueError("Holdings input member does not match its manifest")
-        roles = accepted["roles"]
-        if roles["inventory"] != "policy/inventory.toml":
-            raise ValueError(
-                "Holdings input inventory role is not policy/inventory.toml"
-            )
-        if not {roles["census"], roles["inventory"]}.issubset(names):
-            raise ValueError("Holdings input manifest omits consumed accounting inputs")
+        check_roles(root, accepted["roles"], names)
+        if not any(
+            name.startswith("providers/") and name.endswith(".toml") for name in names
+        ):
+            raise ValueError("Holdings input carries no provider")
+        if any(name.startswith("policy/") and name != INVENTORY for name in names):
+            raise ValueError("Holdings input carries policy copies besides inventory")
         return root
     except KeyError as exc:
         raise ValueError(
@@ -169,6 +212,11 @@ def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> di
     with open_db(db) as conn:
         steward = get_manifest(conn)["steward"]
     roles = json.loads((path / "manifest.json").read_text())["roles"]
+    check_roles(
+        path,
+        roles,
+        {p.relative_to(path).as_posix() for p in path.rglob("*") if p.is_file()},
+    )
     scope = tomllib.loads((spec_dir / "scope.toml").read_text())
     scope_ref = f"stewards/{steward}/scope.toml"
     source = path / roles["census"]

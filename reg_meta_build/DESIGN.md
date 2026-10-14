@@ -217,10 +217,11 @@ Authority depends on the fact and scope, rather than a universal file ordering:
 - The steward refresh (`build_catalog.py inventory`) cross-checks every curated type on
   a register a steward-spec series names against that series' member tables in the
   steward's storage-schema export (folded column names join waves; a column decision's
-  `storage_header` names the physical header where storage spells a column differently)
-  and writes `derived/storage_type_findings.tsv`. The export is a required input: a
-  missing or unreadable `--storage-csv` fails the run, so no refresh skips the check
-  (#1594). Disagreeing storage, uncurated steward holdings and steward holdings or typed
+  `storage_header` names the physical header where storage spells a column differently,
+  in the tables the decision selects only) and writes
+  `derived/storage_type_findings.tsv`. The export is a required input: a missing or
+  unreadable `--storage-csv` fails the run, so no refresh skips the check (#1594).
+  Disagreeing storage, uncurated steward holdings and steward holdings or typed
   delivered columns that match no storage column print a warning in the refresh summary;
   a documented column SWECOV does not hold is no finding. Curation, not the check,
   decides what changes. Storage metadata never establishes per-year availability or row
@@ -2265,7 +2266,8 @@ before placement. Existing input/output separation and atomic placement rules ap
 The accepted candidate (`artifact_kind = "steward-private-extension-input-candidate"`)
 is generic over stewards. Its manifest covers every consumed provider TOML, the
 inventory, the census, the storage-schema export and any review-evidence payload, and
-names three roles: `census`, `storage_export` and `inventory`, the last fixed at
+names three roles at three distinct members: `census`, `storage_export` (which must
+parse as a storage-schema export) and `inventory`, the last fixed at
 `policy/inventory.toml`. It carries no policy copies; extend-db refuses a candidate that
 does. Two pins tie it to what generated it: `steward_spec_sha256` (the spec the
 inventory was decided by) and `global_db_sha256` (the global the inventory was

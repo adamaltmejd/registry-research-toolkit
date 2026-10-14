@@ -51,59 +51,46 @@ class StorageSchemaError(ValueError):
 class StoragePolicyRegister(BaseModel):
     """One register's steward storage tables and physical header spellings.
 
-    ``storage_columns`` maps a curated column to the header the steward's
-    storage holds it under, where the two differ beyond the column fold (FoU's
-    ``v0201`` is stored as ``V201``).
+    ``tables`` maps each member table to its curated columns stored under
+    another header, where the two differ beyond the column fold (FoU's
+    ``v0201`` is stored as ``V201``). A header applies only to the table it is
+    keyed under.
     """
 
     model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
 
-    table_prefixes: list[str] = Field(min_length=1)
-    storage_columns: dict[str, str] = Field(default_factory=dict)
+    tables: dict[str, dict[str, str]] = Field(min_length=1)
 
-    @field_validator("table_prefixes")
+    @field_validator("tables")
     @classmethod
-    def _literal(cls, value: list[str]) -> list[str]:
-        if any(not prefix or prefix != prefix.strip() for prefix in value):
-            raise ValueError("table prefixes must be non-empty literal names")
-        if len(value) != len(set(value)):
-            raise ValueError("table prefixes must be unique")
-        return value
-
-    @field_validator("storage_columns")
-    @classmethod
-    def _headers(cls, value: dict[str, str]) -> dict[str, str]:
-        names = [*value, *value.values()]
-        if any(not name or name != name.strip() for name in names):
-            raise ValueError("storage columns must be non-empty literal names")
-        if len({fold_column(column) for column in value}) != len(value):
-            raise ValueError("storage columns must be unique after the column fold")
+    def _literal(cls, value: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
+        for table, headers in value.items():
+            names = [table, *headers, *headers.values()]
+            if any(not name or name != name.strip() for name in names):
+                raise ValueError("tables and headers must be non-empty literal names")
+            if len({fold_column(column) for column in headers}) != len(headers):
+                raise ValueError(
+                    f"storage columns of {table} must be unique after the column fold"
+                )
         return value
 
 
 def storage_policy_from_spec(spec: StewardSpec) -> dict[str, StoragePolicyRegister]:
-    """`provider/slug` → its series' member tables and `storage_header` spellings.
+    """`provider/slug` → its series' member tables, each with the
+    `storage_header` spellings the decisions select for it.
 
     Each series' register is checked against the series' own tables."""
-    tables: dict[str, set[str]] = defaultdict(set)
-    headers: dict[str, dict[str, str]] = defaultdict(dict)
+    tables: dict[str, dict[str, dict[str, str]]] = defaultdict(dict)
     for series in spec.series:
         if series.register_coord is None:
             continue
-        tables[series.register_coord].update(t.table for t in series.tables)
-        for column, header in series.storage_headers().items():
-            if headers[series.register_coord].setdefault(column, header) != header:
-                raise StorageSchemaError(
-                    f"series of {series.register_coord} name two storage headers "
-                    f"for {column}"
-                )
-    # simplify: exact member ids ride the prefix matcher, so a storage table
-    # whose name extends a member id is checked too; give the check an exact
-    # table set if storage ever holds such a table outside the series.
+        members = tables[series.register_coord]
+        for table in series.tables:
+            members[table.table] = {}
+        for (table, column), header in series.storage_headers().items():
+            members[table][column] = header
     return {
-        register: StoragePolicyRegister(
-            table_prefixes=sorted(members), storage_columns=headers[register]
-        )
+        register: StoragePolicyRegister(tables=dict(sorted(members.items())))
         for register, members in sorted(tables.items())
     }
 
@@ -171,7 +158,7 @@ class StorageFinding:
     widen. ``uncurated``: a steward-holdings column with no curated type that
     storage could type. ``unmatched``: a steward holding or typed
     ``errata.delivered`` column the register's storage tables do not hold, so
-    nothing checked it (a misspelt header, a missing ``storage_columns`` mapping
+    nothing checked it (a misspelt header, a missing ``storage_header`` decision
     or a table outside the prefixes). A documented (``scb-docs``) type is
     compared only where storage holds its column.
     """
@@ -200,15 +187,24 @@ def storage_type_findings(
         selected = policy.get(name)
         if selected is None:
             continue
-        prefixes = tuple(selected.table_prefixes)
+        # simplify: member ids are matched as prefixes, so a storage table whose
+        # name extends a member id is checked too, under the longest member it
+        # extends; give the check an exact table set if storage ever holds such
+        # a table outside the series.
+        members = sorted(selected.tables, key=len, reverse=True)
         headers = {
-            fold_column(column): fold_column(header)
-            for column, header in selected.storage_columns.items()
+            member: {
+                fold_column(column): fold_column(header)
+                for column, header in columns.items()
+            }
+            for member, columns in selected.tables.items()
         }
-        by_column: dict[str, dict[str, str]] = {}
+        # (member, storage column) -> {storage table: SQL type}
+        by_column: dict[tuple[str, str], dict[str, str]] = {}
         for (table, column), sql_type in storage.items():
-            if table.startswith(prefixes):
-                by_column.setdefault(column, {})[table] = sql_type
+            member = next((m for m in members if table.startswith(m)), None)
+            if member is not None:
+                by_column.setdefault((member, column), {})[table] = sql_type
         curated: list[tuple[str, str, str | None, bool]] = [
             (
                 f"{register.source_file}#/errata.column/{index}",
@@ -234,7 +230,14 @@ def storage_type_findings(
             if data_type is None and not holding:
                 continue
             folded = fold_column(column)
-            tables = by_column.get(headers.get(folded, folded))
+            # Each member table is read under its own header for the column.
+            tables = {
+                table: sql_type
+                for member in members
+                for table, sql_type in by_column.get(
+                    (member, headers[member].get(folded, folded)), {}
+                ).items()
+            }
             kind: FindingKind | None
             if not tables:
                 # Only a steward-held column is expected in storage; a column

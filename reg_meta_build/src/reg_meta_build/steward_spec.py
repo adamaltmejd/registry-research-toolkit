@@ -85,20 +85,29 @@ def scope_locator(steward: str) -> str:
     return f"stewards/{steward}/{SCOPE_FILE}"
 
 
+def _spec_paths(directory: Path) -> list[Path]:
+    return [directory / SCOPE_FILE, *sorted((directory / SERIES_DIR).glob("*.toml"))]
+
+
+def _spec_digest(directory: Path, files: dict[Path, bytes]) -> str:
+    return canonical_sha256(
+        {
+            path.relative_to(directory).as_posix(): hashlib.sha256(raw).hexdigest()
+            for path, raw in files.items()
+        }
+    )
+
+
 def steward_spec_sha256(directory: Path) -> str:
     """Digest of the spec files the generator reads: `scope.toml` and `series/*.toml`.
 
     A canonical `{relative path: sha256(bytes)}` object. `steward.json` (branding)
     and prose files are outside it, so editing them never invalidates a candidate.
+    A loaded spec carries the same digest of the bytes it parsed
+    (`StewardSpec.sha256`).
     """
-    paths = [directory / SCOPE_FILE, *sorted((directory / SERIES_DIR).glob("*.toml"))]
-    return canonical_sha256(
-        {
-            path.relative_to(directory).as_posix(): hashlib.sha256(
-                path.read_bytes()
-            ).hexdigest()
-            for path in paths
-        }
+    return _spec_digest(
+        directory, {path: path.read_bytes() for path in _spec_paths(directory)}
     )
 
 
@@ -387,7 +396,7 @@ class SeriesColumn(_SpecModel):
     Exactly one of: `mappings` (a reviewed representation, with `reason`, and
     `select_owner` to pick one documented owner among several), `unmap` (a
     permanent reason), `hold` (interim, with a follow-up), `storage_header`
-    (the header SWECOV storage holds this curated column under) or
+    (the header the steward's storage holds this curated column under) or
     `graft_onto` (with `reason`: the variant the grafts stage places this
     column on as a gap-fill candidate, a column the catalog has no variable
     for yet). `tables` narrows the decision to whole tables of the series; it
@@ -502,12 +511,15 @@ class Series(_SpecModel):
             if entry.graft_onto is not None
         }
 
-    def storage_headers(self) -> dict[str, str]:
-        """Curated column → the header SWECOV storage holds it under."""
+    def storage_headers(self) -> dict[tuple[str, str], str]:
+        """`(table, curated column)` → the header the steward's storage holds it
+        under in that table, for the tables the decision selects."""
+        every = [table.table for table in self.tables]
         return {
-            entry.column: entry.storage_header
+            (table, entry.column): entry.storage_header
             for entry in self.columns
             if entry.storage_header is not None
+            for table in entry.tables or every
         }
 
 
@@ -520,6 +532,8 @@ class StewardSpec(BaseModel):
     directory: str
     scope: Scope
     series: tuple[Series, ...]
+    # `steward_spec_sha256` of the bytes this spec was parsed from.
+    sha256: str
 
     def series_of(self) -> dict[str, Series]:
         """Table → its series."""
@@ -561,11 +575,15 @@ def _spec_error(code: str, message: str) -> RegMetaError:
     )
 
 
-def _read(path: Path) -> dict:
+def _read(path: Path, files: dict[Path, bytes]) -> dict:
+    """Parse `path`, recording the bytes parsed in `files`."""
     try:
-        return tomllib.loads(path.read_text(encoding="utf-8"))
+        raw = path.read_bytes()
+        result = tomllib.loads(raw.decode("utf-8"))
     except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as exc:
         raise _spec_error(SPEC_INVALID, f"{path}: unreadable: {exc}") from exc
+    files[path] = raw
+    return result
 
 
 def _validated[T: BaseModel](model: type[T], path: Path, raw: dict) -> T:
@@ -602,7 +620,7 @@ def _check_series(path: Path, series: Series) -> None:
             )
     admissible = series.table_variants()
     seen: dict[tuple[str, str], int] = {}
-    headers: dict[str, int] = {}
+    headers: dict[tuple[str, str], int] = {}
     grafts: dict[str, int] = {}
     for index, entry in enumerate(series.columns, 1):
         where = f"{path}: series {series.id!r} column[{index}] ({entry.column})"
@@ -645,13 +663,14 @@ def _check_series(path: Path, series: Series) -> None:
             grafts[entry.column] = index
             continue
         if entry.storage_header is not None:
-            if entry.column in headers:
-                raise _spec_error(
-                    SPEC_INVALID,
-                    f"{where}: second storage_header for the column "
-                    f"(first at column[{headers[entry.column]}])",
-                )
-            headers[entry.column] = index
+            for table in entry.tables or every:
+                if (table, entry.column) in headers:
+                    raise _spec_error(
+                        SPEC_INVALID,
+                        f"{where}: second storage_header for table {table} "
+                        f"(first at column[{headers[table, entry.column]}])",
+                    )
+                headers[table, entry.column] = index
             continue
         for table in entry.tables or every:
             if (table, entry.column) in seen:
@@ -666,14 +685,20 @@ def _check_series(path: Path, series: Series) -> None:
 
 def load_steward_spec(directory: Path) -> StewardSpec:
     """Read and check `scope.toml` and every `series/*.toml` under `directory`."""
-    scope_path = directory / SCOPE_FILE
-    scope = _validated(Scope, scope_path, _read(scope_path))
+    scope_path, *series_paths = _spec_paths(directory)
+    files: dict[Path, bytes] = {}
+    scope = _validated(Scope, scope_path, _read(scope_path, files))
     series: list[Series] = []
-    for path in sorted((directory / SERIES_DIR).glob("*.toml")):
-        entry = _validated(Series, path, _read(path))
+    for path in series_paths:
+        entry = _validated(Series, path, _read(path, files))
         _check_series(path, entry)
         series.append(entry)
-    spec = StewardSpec(directory=str(directory), scope=scope, series=tuple(series))
+    spec = StewardSpec(
+        directory=str(directory),
+        scope=scope,
+        series=tuple(series),
+        sha256=_spec_digest(directory, files),
+    )
     for table, places in sorted(spec.dispositions().items()):
         if len(places) > 1:
             raise _spec_error(

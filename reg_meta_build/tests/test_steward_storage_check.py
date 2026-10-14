@@ -32,9 +32,11 @@ def test_storage_check_reports_each_disagreement_kind(tmp_path: Path) -> None:
     table outside the register's series, so it is unmatched, and so is
     Outside, a typed delivered erratum stored only there; DOCONLY, a
     documented column storage does not hold, is no finding. AGREES matches its
-    storage, and Renamed matches the PHYS header the series' storage_header
-    names, so neither is a finding. Fails if the check drops a kind, stops
-    folding the column, ignores the series' tables or header mapping, skips an
+    storage and is no finding. Renamed's storage_header PHYS is selected for
+    CIS2020 only, so its sibling CIS2018 is read under the curated name, whose
+    text type disagrees. Fails if the check drops a kind, stops folding the
+    column, ignores the series' tables or header mapping, applies a header
+    beyond the tables its decision selects (Renamed would then agree), skips an
     unmatched steward-held column or typed delivered erratum silently (as it
     would if typed delivered entries stopped counting as steward-held), stops
     comparing a documented type that storage holds, reports a documented column
