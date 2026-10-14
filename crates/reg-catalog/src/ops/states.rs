@@ -16,6 +16,7 @@ use super::refs::{self, Target};
 use super::show::variant_families;
 use super::values::ScopedSentinel;
 use super::{Params, Server, cursor};
+use crate::held::{HELD_HI, HELD_LO};
 use crate::{Code, Error, Scope, hex};
 
 /// The open-ended `valid_to` sentinel, which has no finite period token.
@@ -216,12 +217,13 @@ fn held(
     emitted: Vec<Emitted>,
     bounds: Option<(&str, &str)>,
 ) -> Result<Vec<Emitted>, Error> {
-    let mut stmt = conn.prepare_cached(
-        "SELECT hp.lo, hp.hi FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
+    let mut stmt = conn.prepare_cached(&format!(
+        "SELECT {HELD_LO}, {HELD_HI} FROM holding_mapping hm \
+         JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE hm.variable_id = ? AND hm.variant_id = ? AND hm.representation_canonical = ? \
-         AND ht.scope = ? ORDER BY hp.lo, hp.hi",
-    )?;
+         AND ht.scope = ? ORDER BY 1, 2",
+    ))?;
     let mut periods: BTreeMap<(i64, String, String), crate::held::Periods> = BTreeMap::new();
     let mut out = Vec::new();
     for e in emitted {

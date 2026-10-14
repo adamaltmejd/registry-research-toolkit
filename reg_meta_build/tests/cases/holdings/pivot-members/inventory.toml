@@ -1,0 +1,79 @@
+version = 1
+steward = "swecov"
+
+# Position members with a gap (no DIA3..DIA9); DIA10 is listed before DIA2 so
+# an order by name, not by index, shows.
+[[table]]
+id = "Wide2018"
+edition = 2018
+[[table.column]]
+name = "DIA1"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/diagnos"
+representation = "DIA"
+member = { position = 1 }
+[[table.column]]
+name = "DIA10"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/diagnos"
+representation = "DIA"
+member = { position = 10 }
+[[table.column]]
+name = "DIA2"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/diagnos"
+representation = "DIA"
+member = { position = 2 }
+
+# Year members serve only their own year: 2020 of this edition is held by no
+# member, so the plain 2020 table below does not overlap the set.
+[[table]]
+id = "Panel"
+edition = { from = 2018, to = 2020 }
+[[table.column]]
+name = "Hushallsid_2018"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/hushall"
+representation = "Hushallsid"
+member = { year = 2018 }
+[[table.column]]
+name = "Hushallsid_2019"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/hushall"
+representation = "Hushallsid"
+member = { year = 2019 }
+
+[[table]]
+id = "Hushall2020"
+edition = 2020
+[[table.column]]
+name = "Hushallsid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/hushall"
+representation = "Hushallsid"
+
+# Month members: a leap February (ends 2020-02-29) and the edition's last month.
+# Neither overlaps Wide2018's 2018 set.
+[[table]]
+id = "Monthly"
+edition = { from = 2019, to = 2020 }
+[[table.column]]
+name = "DIA_202002"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/diagnos"
+representation = "DIA"
+member = { month = "2020-02" }
+[[table.column]]
+name = "DIA_202012"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/diagnos"
+representation = "DIA"
+member = { month = "2020-12" }

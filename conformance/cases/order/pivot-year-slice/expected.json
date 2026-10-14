@@ -1,0 +1,40 @@
+{
+  "entries": [
+    {
+      "source": "Hushall",
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "variant": "annual",
+        "variable": "scb/example/hushall",
+        "representation": "Hushallsid"
+      },
+      "requested_period": "2020",
+      "physical": {
+        "table": "Hushall2020",
+        "column": "Hushallsid",
+        "edition": "2020"
+      }
+    },
+    {
+      "source": "Hushall",
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "variant": "annual",
+        "variable": "scb/example/hushall",
+        "representation": "Hushallsid"
+      },
+      "requested_period": "2019",
+      "physical": {
+        "table": "Panel",
+        "column": "Hushallsid_2019",
+        "edition": "2018..2020",
+        "member": {
+          "year": 2019
+        }
+      }
+    }
+  ],
+  "clips": []
+}

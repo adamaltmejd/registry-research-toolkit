@@ -1,0 +1,131 @@
+version = 1
+steward = "swecov"
+
+# Mixed kinds: one set indexed by position and by year.
+[[table]]
+id = "Mixed"
+edition = 2018
+[[table.column]]
+name = "DIA1"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { position = 1 }
+[[table.column]]
+name = "DIA_2018"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { year = 2018 }
+
+# Two columns claim one index.
+[[table]]
+id = "Duplicate"
+edition = 2018
+[[table.column]]
+name = "DIA1"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { position = 1 }
+[[table.column]]
+name = "DIA01"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { position = 1 }
+
+# Two columns claim one index under spellings of one representation: sets
+# group by the representation's identity fold, as compilation does.
+[[table]]
+id = "Respelled"
+edition = 2018
+[[table.column]]
+name = "DIA1"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { position = 1 }
+[[table.column]]
+name = "dia1"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "dia"
+member = { position = 1 }
+
+# A member column with a second mapping: the reader would order the plain
+# mapping under the member's year. A set of one member is legal.
+[[table]]
+id = "MemberFirst"
+edition = 2018
+[[table.column]]
+name = "DIA_2018"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { year = 2018 }
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "HDIA"
+
+# The same column with its mappings in the other order.
+[[table]]
+id = "MemberSecond"
+edition = 2018
+[[table.column]]
+name = "DIA_2018"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "HDIA"
+[[table.column.mapping]]
+register_variant = "sos/par/sluten"
+variable = "sos/par/diagnos"
+representation = "DIA"
+member = { year = 2018 }
+
+# A year member outside the edition.
+[[table]]
+id = "Panel"
+edition = { from = 2018, to = 2019 }
+[[table.column]]
+name = "Hushallsid_2018"
+[[table.column.mapping]]
+register_variant = "scb/rtb/individer"
+variable = "scb/rtb/hushallsid"
+representation = "Hushallsid"
+member = { year = 2018 }
+[[table.column]]
+name = "Hushallsid_2021"
+[[table.column.mapping]]
+register_variant = "scb/rtb/individer"
+variable = "scb/rtb/hushallsid"
+representation = "Hushallsid"
+member = { year = 2021 }
+
+# A month member in a table whose edition does not cover the month.
+[[table]]
+id = "Jobb2018"
+edition = 2018
+[[table.column]]
+name = "Lon_201812"
+[[table.column.mapping]]
+register_variant = "scb/jobb/jobb"
+variable = "scb/jobb/lon"
+representation = "Lon"
+member = { month = "2018-12" }
+[[table.column]]
+name = "Lon_201901"
+[[table.column.mapping]]
+register_variant = "scb/jobb/jobb"
+variable = "scb/jobb/lon"
+representation = "Lon"
+member = { month = "2019-01" }

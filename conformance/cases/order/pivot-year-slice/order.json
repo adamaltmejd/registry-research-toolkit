@@ -1,0 +1,52 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Hushallsid",
+        "variable": "scb/example/hushall",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Hushallsid",
+        "edition": "2020",
+        "table": "Hushall2020"
+      },
+      "requested_period": "2020",
+      "source": "Hushall"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Hushallsid",
+        "variable": "scb/example/hushall",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Hushallsid_2019",
+        "edition": "2018..2020",
+        "member": {
+          "year": 2019
+        },
+        "table": "Panel"
+      },
+      "requested_period": "2019",
+      "source": "Hushall"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "e3d5fcc91a3287b371185f4f266a0c64542a488e4a48e7a6856392f00eb7a419",
+    "catalog_schema_version": "11.0.0",
+    "mode": "steward_holdings",
+    "project_hash": "834a5f68dcdaf941698ce25a94485c9f8105f260e5c5974f980c03df1e3a64e5",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

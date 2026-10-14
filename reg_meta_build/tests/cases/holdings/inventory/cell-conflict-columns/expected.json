@@ -1,14 +1,19 @@
 {
   "replaces": "reg_meta/tests/test_inventory.py::test_rejects_two_columns_of_one_table_serving_one_cell",
-  "note": "A table's one edition always overlaps itself, so the same triple in two of its columns conflicts over the whole interrupted edition.",
-  "fails_if": "load_inventory skips the across-columns arm of the one-to-one resolution check, or renders an interrupted edition other than as its comma-joined tokens",
+  "note": "A table's one edition always overlaps itself, so the same triple in two of its columns conflicts over the whole interrupted edition. A wide-pivot member set is one location: its members do not conflict with each other, but a plain column of the same representation beside them does.",
+  "fails_if": "load_inventory skips the across-columns arm of the one-to-one resolution check, renders an interrupted edition other than as its comma-joined tokens, treats a member set's members as separate conflicting locations, or lets a plain mapping share a representation with a member set in one table",
   "error": {
     "code": "inventory_cell_conflict",
     "locators": [
       "table"
     ],
     "message_contains": [
-      "table['dbo.LISA_Individ'].column['Kon'] (representation 'Kon') and table['dbo.LISA_Individ'].column['Kon_recode'] (representation 'Kon') both map scb/lisa/individer-15plus scb/lisa/kon over 2005..2010,2015"
+      "table['dbo.LISA_Individ'].column['Kon'] (representation 'Kon') and table['dbo.LISA_Individ'].column['Kon_recode'] (representation 'Kon') both map scb/lisa/individer-15plus scb/lisa/kon over 2005..2010,2015",
+      "table['dbo.PAR_Wide'] member set 'DIA' (representation 'DIA') and table['dbo.PAR_Wide'].column['DIA'] (representation 'DIA') both map sos/par/sluten sos/par/diagnos over 2018\n"
+    ],
+    "message_excludes": [
+      "column['DIA1']",
+      "column['DIA2']"
     ]
   }
 }

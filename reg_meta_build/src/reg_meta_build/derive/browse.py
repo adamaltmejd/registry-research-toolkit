@@ -25,6 +25,10 @@ if TYPE_CHECKING:
     from reg_meta_build.validate import ValidationResult
 
 type Scope = Literal["reference", "holdings"]
+# A held mapping's period bounds over its table's `holding_period` row `hp`: a
+# year/month pivot member holds only its own period (#1495), inside the edition.
+HELD_LO = "COALESCE(hm.member_lo, hp.lo)"
+HELD_HI = "COALESCE(hm.member_hi, hp.hi)"
 # (scope, variable_id, register_variant_id, column, period_scope, state_count,
 # windows as (valid_from, valid_to) in order)
 type BrowseRow = tuple[str, int, int, str | None, str, int, tuple[tuple[str, str], ...]]
@@ -284,7 +288,8 @@ def _held_deliveries(
     physical: dict[tuple[int, int, str, str], list[tuple[str, str]]] = {}
     for row in conn.execute(
         "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, "
-        "ht.scope, hp.lo, hp.hi FROM holding_mapping hm "
+        f"ht.scope, {HELD_LO}, {HELD_HI} "
+        "FROM holding_mapping hm "
         "JOIN variable v USING(variable_id) JOIN register r USING(register_id) "
         "JOIN provider p USING(provider_id) JOIN holding_column hc USING(column_id) "
         "JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) "

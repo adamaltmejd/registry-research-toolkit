@@ -490,17 +490,16 @@ The target layout:
   it, as `search_pin` rows keyed by `fold_search(query)` (`reg-core-py`, the fold the
   reader applies to `q`), and a pin that does not resolve fails that build with the
   file, entry and FQID. Scoped and diagnostic builds store no pins. The manifest's
-  `search_pins_sha256` hashes the stored rows and joins the generation; derive gives an
-  older-minor base an empty table and the empty-pins hash. Pins are build input, not
-  ranking: the reader applies them.
+  `search_pins_sha256` hashes the stored rows and joins the generation; derive keeps the
+  base's table and hash. Pins are build input, not ranking: the reader applies them.
 - `curation/search_synonyms.toml` (#1490) lists directed term → expansions entries for
   concepts that register text names in another word or language. The term and each
   expansion must be one reader query term (`fts_terms`), an expansion may not fold like
   its term, and terms that fold alike share one entry; a two-way pair is two entries. It
   loads and stores like the pins: as folded `search_synonym` `(key, expansion)` rows in
-  a complete build only, hashed by `search_synonyms_sha256` into the generation, and an
-  older-minor base gains an empty table and the empty-rows hash. It ships empty until
-  the maintainer curates it; the reader is to expand each query term into an OR group.
+  a complete build only, hashed by `search_synonyms_sha256` into the generation, and
+  derive keeps them. It ships empty until the maintainer curates it; the reader is to
+  expand each query term into an OR group.
 - `worklists/concept_groups.auto.toml` is generated from a built DB for the worklist
   tool, not curation. Enrichment is register-scoped curation in each register file. The
   concept-group generator treats a matching literal register `[[group]]` as an already
@@ -2069,7 +2068,7 @@ produce review material; they do not approve or apply new curation during a buil
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
-global database built under the current `SCHEMA_VERSION` (10.1.0), adds steward-private
+global database built under the current `SCHEMA_VERSION` (11.0.0), adds steward-private
 providers and their registers, variables and states, then compiles accepted physical
 holdings into the same SQLite artifact. A base built under an older schema is rebuilt,
 never migrated. Rebuild the public base once per schema and reuse it for steward
@@ -2335,13 +2334,28 @@ the slug grammar (`_default`, `class` and period-shaped values are rejected); th
 shards of a delivery, not populations a researcher selects. An unmapped column keeps its
 authored reason where one is given; none is synthesized.
 
+A mapping may carry a wide-pivot `member` index (#1495): `{ position = N }`,
+`{ year = YYYY }` or `{ month = "YYYY-MM" }`. A wide pivot delivers one variable as N
+physical columns (`DIA1..DIA30`, `Hushallsid_<year>`, monthly fields in an annual
+table). Each column keeps its own `[[table.column]]` entry and maps the base
+representation (`DIA`) with its index; the columns are already listed literally, so a
+separate pivot block would list them twice. Members are authored exact names; a name
+suffix never selects one. `holding_mapping` stores the index as `member_position`, or as
+the member's ISO period in `member_lo`/`member_hi`, with a CHECK that allows at most one
+kind. The column is additive for the builder but a **major** schema bump (11.0.0): a
+10.x reader admits any later 10 minor and would order every year or month member
+unfiltered, which is wrong output, so an old reader must refuse the database instead.
+The builder and the reader gate move together, and the change merges only with the
+release that publishes 11.0 assets.
+
 A refusal is a configuration error (exit 10) that names the file and each offending
 `table[...]`, `column[...]` or field, under one code per rule family:
 `inventory_toml_unreadable` (not UTF-8 TOML), `inventory_invalid` (field grammar: types,
 missing or unknown keys, contract version, slug and FQID shape), `inventory_no_tables`,
 `inventory_table_no_columns`, `inventory_duplicate_table`, `inventory_duplicate_column`,
 `inventory_duplicate_mapping`, `inventory_edition_invalid`,
-`inventory_period_scope_invalid`, `inventory_unmapped_reason_invalid` and
+`inventory_period_scope_invalid`, `inventory_unmapped_reason_invalid`,
+`inventory_member_invalid` (a member set's own rules below) and
 `inventory_cell_conflict` (the one-to-one rule below). When several lines fail, the code
 is the first line's.
 
@@ -2368,6 +2382,22 @@ The one-to-one rule holds per cell and partition: overlapping tables conflict un
 they carry distinct curated partition labels; equal labels, or an unlabelled
 whole-population claim, conflict on overlapping cells. The order emits every partition
 as its own file ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest").
+
+**Wide-pivot member sets** (#1495). The columns of one table that map one
+`(register_variant, variable, representation)` with a `member` index are one location,
+the member set; the representation groups by its identity fold, as compilation resolves
+it, so `DIA` and `dia` are one set. Its members never conflict with each other; the set
+conflicts with any other location, including a plain mapping of the same representation
+in that table. Position members serve the same cell, the table's whole edition. Year and
+month members serve disjoint sub-cells: each holds only its own period, and the overlap
+check compares those periods, so a year set beside a plain table of a later year is
+legal. Within a set: one kind and unique indexes; gaps are allowed, because real sets
+have them, and a set may have one member. A year or month member lies inside one segment
+of the table's edition, so a year-independent table takes position members only. A
+member column carries exactly one mapping: the order reader keys a held column by table
+and column, so a second mapping would inherit or drop the member's period. A member
+therefore never also serves another variant. Readers clip a member's held periods with
+`COALESCE(member bounds, holding_period)`.
 
 ### Holdings curation rules
 

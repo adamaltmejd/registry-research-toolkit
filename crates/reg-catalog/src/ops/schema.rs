@@ -21,7 +21,7 @@ use utoipa::ToSchema;
 
 use super::refs::{self, Target, VAR_ID, fqid, invalid_kind};
 use super::{Params, Server, cursor, states};
-use crate::held;
+use crate::held::{self, HELD_HI, HELD_LO};
 use crate::{Code, Error, Scope, hex};
 
 /// `Page<SchemaColumn>`.
@@ -466,13 +466,13 @@ fn held_clip(
 ) -> Result<Vec<Rep>, Error> {
     type Key = (i64, i64, String, String);
     let mut held: BTreeMap<Key, held::Periods> = BTreeMap::new();
-    let mut stmt = conn.prepare(
+    let mut stmt = conn.prepare(&format!(
         "SELECT hm.variable_id, hm.variant_id, hm.representation_canonical, ht.scope, \
-         hp.lo, hp.hi FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
+         {HELD_LO}, {HELD_HI} FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE ht.scope != 'unknown' \
          AND hm.variable_id IN (SELECT variable_id FROM variable WHERE register_id = ?)",
-    )?;
+    ))?;
     let mut rows = stmt.query([register_id])?;
     while let Some(row) = rows.next()? {
         held.entry((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))

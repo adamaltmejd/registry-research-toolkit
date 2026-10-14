@@ -501,11 +501,16 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    subperiod blocks the whole order (`coverage_gap`); a slice nothing serves is
    `mapping_missing`. The materializer never chooses between tables: the inventory's
    one-to-one invariant leaves at most one `(table, column)` per cell instant per
-   partition, so every contribution is wanted whole.
+   partition, so every contribution is wanted whole. A wide-pivot member set
+   ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Holdings resolution
+   invariants") is that one location: every position member serves the table's edition
+   and is emitted, while a year or month member serves only its own period, so it
+   matches and covers only where that period reaches the slice.
 4. **Emission.** Every matching table is emitted whole, every partition included.
    Entries carry the literal physical table and column; the canonical representation is
-   a join key, not an output substitute. Entries keep project order, then table, edition
-   and column.
+   a join key, not an output substitute. Entries keep project order, then table,
+   edition, member index and column, so members order by index (`DIA2` before `DIA10`),
+   not by name.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
 (`steward_mismatch`, `project_empty`, `period_not_orderable`, `variable_unresolved`,
@@ -519,15 +524,16 @@ a header-only manifest.
 artifact kind, project name, schema version, declared reg_meta version and SHA-256 of
 the project's canonical JSON, catalog schema version and `generation_id`), the entries
 (logical coordinate with the canonical representation, the clipped `requested_period`,
-and the physical edition, table, column and optional partition) and the clips. It is
-written here and read offline by the steward-side extract system, so it is
-self-contained. Its bytes are sorted keys, two-space indent, UTF-8 and a trailing
-newline, byte-identical across runs; periods render through the shared grammar. No
-timestamps: the only time-shaped values come from the artifact and the project. Version
-1 stays in definition until the first external reader: shape changes stay in version 1,
-and from that reader on an incompatible change bumps it. `partition` is the only
-optional field; absent means no partition, so an inventory without partitions produces
-the bytes it did before partitions existed.
+and the physical edition, table, column, optional partition and optional `member` index)
+and the clips. It is written here and read offline by the steward-side extract system,
+so it is self-contained. Its bytes are sorted keys, two-space indent, UTF-8 and a
+trailing newline, byte-identical across runs; periods render through the shared grammar.
+No timestamps: the only time-shaped values come from the artifact and the project.
+Version 1 stays in definition until the first external reader: shape changes stay in
+version 1, and from that reader on an incompatible change bumps it. `partition` and
+`member` (`{"position": N}`, `{"year": YYYY}` or `{"month": "YYYY-MM"}`) are the only
+optional fields; absent means none, so an inventory without partitions or pivot members
+produces the bytes it did before either existed.
 
 **Extraction keeps delivery topology.** One output file per ordered variant, partition
 and period unit, named in slug spelling (`lisa_individer-15plus_2019.csv`,

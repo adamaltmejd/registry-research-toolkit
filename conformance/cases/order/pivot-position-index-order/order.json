@@ -1,0 +1,74 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "DIA",
+        "variable": "scb/example/diagnos",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "DIA1",
+        "edition": "2018",
+        "member": {
+          "position": 1
+        },
+        "table": "Wide2018"
+      },
+      "requested_period": "2018",
+      "source": "Diagnoser"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "DIA",
+        "variable": "scb/example/diagnos",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "DIA2",
+        "edition": "2018",
+        "member": {
+          "position": 2
+        },
+        "table": "Wide2018"
+      },
+      "requested_period": "2018",
+      "source": "Diagnoser"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "DIA",
+        "variable": "scb/example/diagnos",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "DIA10",
+        "edition": "2018",
+        "member": {
+          "position": 10
+        },
+        "table": "Wide2018"
+      },
+      "requested_period": "2018",
+      "source": "Diagnoser"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "e3d5fcc91a3287b371185f4f266a0c64542a488e4a48e7a6856392f00eb7a419",
+    "catalog_schema_version": "11.0.0",
+    "mode": "steward_holdings",
+    "project_hash": "bd3f68142ec9f36cddfa1d8925d17df1116a7f70a07b094b4a113f560a592c32",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

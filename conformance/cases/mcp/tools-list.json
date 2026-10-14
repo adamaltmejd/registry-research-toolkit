@@ -5112,6 +5112,17 @@
               "description": "The table's edition, rendered as a period.",
               "type": "string"
             },
+            "member": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/PivotMember",
+                  "description": "The column's wide-pivot member index; absent for a plain column."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
             "partition": {
               "description": "The table's disjoint-partition label; absent when it has none.",
               "type": [
@@ -5129,6 +5140,48 @@
             "column"
           ],
           "type": "object"
+        },
+        "PivotMember": {
+          "description": "A wide-pivot member index (#1495): one of N physical columns that together\ndeliver one representation. A position member serves the table's whole edition;\na year or month member serves only that period, so it is ordered only when the\nslice reaches it. Members order by index, so `DIA2` precedes `DIA10`.",
+          "oneOf": [
+            {
+              "properties": {
+                "position": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "position"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "year": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "year"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "`YYYY-MM`.",
+              "properties": {
+                "month": {
+                  "description": "`YYYY-MM`.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "month"
+              ],
+              "type": "object"
+            }
+          ]
         },
         "Scope": {
           "description": "The read scope; every read takes it.",

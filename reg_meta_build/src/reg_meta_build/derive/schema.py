@@ -13,7 +13,7 @@ import sqlite3
 from itertools import groupby
 from typing import TYPE_CHECKING, Any, Literal
 
-from reg_meta_build.derive.browse import browse_scopes
+from reg_meta_build.derive.browse import HELD_HI, HELD_LO, browse_scopes
 from reg_meta_build.derive.states import named_rows, register_catalog_udfs
 
 if TYPE_CHECKING:
@@ -59,7 +59,7 @@ def scope_predicate(
             raise ValueError("scope bounds must be ISO dates")
         member += (
             " AND ht.scope = 'intervals' AND EXISTS (SELECT 1 FROM holding_period hp "
-            f"WHERE hp.table_id = ht.table_id AND hp.lo <= '{hi}' AND hp.hi >= '{lo}')"
+            f"WHERE hp.table_id = ht.table_id AND {HELD_LO} <= '{hi}' AND {HELD_HI} >= '{lo}')"
         )
     if variant_sql is not None:
         member += f" AND hm.variant_id = {variant_sql}"
@@ -71,7 +71,7 @@ def scope_predicate(
         lo_sql, hi_sql = bounds_sql
         member += (
             " AND (ht.scope = 'year_independent' OR EXISTS (SELECT 1 FROM holding_period hp "
-            f"WHERE hp.table_id = ht.table_id AND hp.lo <= {hi_sql} AND hp.hi >= {lo_sql}))"
+            f"WHERE hp.table_id = ht.table_id AND {HELD_LO} <= {hi_sql} AND {HELD_HI} >= {lo_sql}))"
         )
 
     def correlated(source: str, anchor: str) -> str:
