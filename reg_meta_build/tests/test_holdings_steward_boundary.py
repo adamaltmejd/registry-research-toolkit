@@ -18,6 +18,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from _csv_fixtures import commit_fixture, init_fixture_repo
 from _prepared_fixtures import accept_prepared
 from _snapshot_fixtures import copied_builder_checkout, git
 from catalog_manifest import synthetic_manifest
@@ -134,7 +135,18 @@ def _extend(source: Path, base: Path, candidate: tuple, output: Path):
 def strict_builds(tmp_path_factory: pytest.TempPathFactory) -> dict:
     directory = tmp_path_factory.mktemp("strict-holdings")
     source, builder_revision = _builder_checkout(directory)
-    candidate = _accepted_candidate(directory / "accepted")
+    # The candidate shares its acceptance repository with an unrelated committed
+    # folder, as in the private inputs repository (catalog/ beside swecov/). Fails if
+    # the completeness check lists the whole repository instead of the candidate's
+    # folder.
+    accepted = directory / "accepted"
+    (accepted / "catalog").mkdir(parents=True)
+    (accepted / "catalog/README.md").write_text("Prepared public sources.\n")
+    init_fixture_repo(
+        accepted, name="Prepared fixture", email="prepared@example.invalid"
+    )
+    commit_fixture(accepted, "Add an unrelated folder", "catalog")
+    candidate = _accepted_candidate(accepted)
     base = directory / "base/reg_meta.db"
     write_resolved_catalog(
         _variables(CASE / "base_catalog.json"), base, manifest=synthetic_manifest()

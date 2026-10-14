@@ -580,7 +580,10 @@ def read_private_holdings_input(
         name.removeprefix(selection.relative + "/")
         if selection.relative != "."
         else name
-        for name in _git(selection.repository, "ls-files").splitlines()
+        # Only the candidate's folder: the acceptance repository may hold others.
+        for name in _git(
+            selection.repository, "ls-files", "--", f":(literal){selection.relative}"
+        ).splitlines()
     }
     actual_names = {
         path.relative_to(selection.root).as_posix()
