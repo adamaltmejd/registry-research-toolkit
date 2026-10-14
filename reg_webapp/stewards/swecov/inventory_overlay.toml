@@ -3162,6 +3162,16 @@ column = "P1105_Lopnr_cfarnr"
 reason = "Workplace join key of the näringsgren aspect table; scb/fdb/cfar-nummer is orderable from FDB_AE_2024, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
 
 [[unmap]]
+table = "FEK_JE2022_ver2"
+column = "P1105_LopNr_FENr"
+reason = "Företagsenhet join key of the FEK juridisk-enhet bridge file (SCB P1105 2025 list, FEK sheet: JEÅÅÅÅ holds only FENr and PeOrgNr); scb/fek/fenr is orderable from FE2022_ver2, same edition, and an order emits this file whole, FENr included. Aux-table join-key rule (maintainer 2026-09-02); maintainer-decided 2026-10-14."
+
+[[unmap]]
+table = "FEK_JE2023_ver1"
+column = "P1105_LopNr_FENr"
+reason = "Företagsenhet join key of the FEK juridisk-enhet bridge file (SCB P1105 2025 list, FEK sheet: JEÅÅÅÅ holds only FENr and PeOrgNr); scb/fek/fenr is orderable from FE2023_ver1, same edition, and an order emits this file whole, FENr included. Aux-table join-key rule (maintainer 2026-09-02); maintainer-decided 2026-10-14."
+
+[[unmap]]
 table = "NDR_incidence"
 column = "P1105_LopNr_PersonNr"
 reason = "Person join key of the incidence holding; the NDR personnr is orderable from NDR_children_2007 and NDR_adults_2010. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
