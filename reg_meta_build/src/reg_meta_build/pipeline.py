@@ -1594,8 +1594,13 @@ def _resolve(
             ):
                 support.observe_target(target)
             support.seal()
+            # Evidence only, like a value-source issue: the verdict, and with it the
+            # severity, belongs to the `issue` events routed below (#1588).
             for value in support.diagnostics:
-                event("support_source_issue", value.model_dump(mode="json"))
+                event(
+                    "support_source_issue",
+                    value.model_dump(mode="json", exclude={"severity"}),
+                )
             sessions = stack.enter_context(open_value_bindings(prepared.value_sources))
             diagnostic_coordinates = {
                 source: prepared.records.register_coordinates(source)

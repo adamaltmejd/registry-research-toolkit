@@ -4,13 +4,16 @@
     {
       "table": "issue_refs",
       "where": {
-        "code": ["unknown_support_key", "deferred_out_of_slice_reference"]
+        "code": [
+          "ambiguous_support_target",
+          "unknown_support_key",
+          "deferred_out_of_slice_reference"
+        ]
       },
       "fields": ["code", "severity", "source"],
-      "note": "Three unplaced rows stay errors; only TESTREG's row is deferred.",
+      "note": "The two unplaced rows stay errors; only TESTREG's row is deferred.",
       "rows": [
-        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
-        ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
+        ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
         ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
         [
           "deferred_out_of_slice_reference",
@@ -22,22 +25,20 @@
     {
       "table": "issue_refs",
       "where": {
-        "code": ["unknown_support_key", "deferred_out_of_slice_reference"]
+        "code": [
+          "ambiguous_support_target",
+          "unknown_support_key",
+          "deferred_out_of_slice_reference"
+        ]
       },
       "fields": ["ref"],
-      "note": "Routing splits the one source issue's refs; it drops or adds none.",
+      "note": "Routing splits the source issues' refs; it drops or adds none.",
       "rows": {
         "refs_of": {
           "table": "source_issues",
           "where": {"kind": "support_source_issue"}
         }
       }
-    },
-    {
-      "table": "source_issues",
-      "where": {"kind": "support_source_issue"},
-      "fields": ["severity"],
-      "rows": [["error"]]
     },
     {
       "table": "variables",

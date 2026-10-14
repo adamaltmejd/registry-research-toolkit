@@ -44,14 +44,25 @@
         ]
       },
       "fields": ["code", "severity", "source"],
-      "note": "Every support issue, one row per summary row it cites: incomplete's two rows, shared's one, unlisted's 1997|1999, keyless's blank-column and ABSENT rows. literal, renumbered and conflicting bind every row, so they have none.",
+      "note": "Every support issue, one row per summary row it cites: incomplete's two rows, shared's one, unlisted's 1997|1999, keyless's blank-column, blank-register and ABSENT rows. literal, renumbered and conflicting bind every row, so they have none.",
       "rows": [
         ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
         ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
         ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
         ["ambiguous_support_target", "error", "scb-unikaregisterochvariabler"],
+        ["unknown_support_key", "warning", "scb-unikaregisterochvariabler"],
         ["unknown_support_key", "error", "scb-unikaregisterochvariabler"],
         ["unreferenced_support_record", "warning", "scb-unikaregisterochvariabler"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unknown_support_key"},
+      "fields": ["subject", "severity"],
+      "note": "keyless: the blank-column row is a limitation of the summary source itself, reported once on the source as a warning, never per register. The row with a blank Registernamn is still an error, routed through scoping; with no register to place it in, it stays unscoped.",
+      "rows": [
+        ["scb-unikaregisterochvariabler:None", "warning"],
+        ["('scb-unikaregisterochvariabler:None', None)", "error"]
       ]
     },
     {

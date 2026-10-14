@@ -1,0 +1,27 @@
+{
+  "description": "scb-two-registers, each delivering two native variables under one literal Unika key (variables 101 and 102 as TESTREG's GenericVar VALUE, 201 and 202 as OTHERREG's OtherVar OTHER) in the one 2020 edition. Each register's one summary row names 2020|2020, an edition both candidates carry, so it binds neither: one ambiguous_support_target error per register.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+      {"cvid": 1002, "var_id": 102, "colname": "VALUE"},
+      {
+        "cvid": 2001,
+        "var_id": 201,
+        "colname": "OTHER",
+        "varname": "OtherVar",
+        "register": ["OTHERREG", 2, 20]
+      },
+      {
+        "cvid": 2002,
+        "var_id": 202,
+        "colname": "OTHER",
+        "varname": "OtherVar",
+        "register": ["OTHERREG", 2, 20]
+      }
+    ],
+    "unika": [
+      "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0",
+      "OTHERREG|Testregistret|Individer|Individer|OtherVar|OTHER|2020|2020|0|0|0"
+    ]
+  }
+}

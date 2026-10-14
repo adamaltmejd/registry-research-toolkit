@@ -2,7 +2,7 @@
   "replaces": [
     "test_build_db_scope_selection.py::test_pipeline_routes_real_support_errors_without_dropping_source_event"
   ],
-  "note": "The full build reports both Unika rows as unknown_support_key errors, citing the same refs as the one support source issue.",
-  "fails_if": "a full build treats every register as out of slice: `scope_support_diagnostics` tests `context not in (selected or ())` instead of `selected is not None`, so both Unika summary refs become deferred_out_of_slice_reference warnings rather than two unknown_support_key errors",
-  "sources": "scb-two-registers-unknown-support"
+  "note": "The full build reports both Unika rows as ambiguous_support_target errors, citing the same refs as the support source issues. The source issues are evidence only: the verdict and its severity are the routed issues', which curation can acknowledge, so no raw source event carries a severity (#1588).",
+  "fails_if": "a full build treats every register as out of slice: `scope_support_diagnostics` tests `context not in (selected or ())` instead of `selected is not None`, so both Unika summary refs become deferred_out_of_slice_reference warnings rather than two ambiguous_support_target errors; or the pipeline writes the raw `support_source_issue` event with the diagnostic's severity again, an error no acknowledgement can reach",
+  "sources": "scb-two-registers-ambiguous-support"
 }
