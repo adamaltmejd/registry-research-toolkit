@@ -1,6 +1,6 @@
 {
   "schema_version": "3.0.0",
-  "steward": "lkf",
+  "steward": "swecov-",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "demo",
   "sources": [

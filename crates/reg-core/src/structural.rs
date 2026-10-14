@@ -26,9 +26,9 @@
 
 use serde_json::{Map, Value};
 
-use crate::grammar::{Date, PeriodToken};
+use crate::grammar::{Date, PeriodToken, is_slug};
 use crate::interval::{Interval, gaps, render};
-use crate::project::{ColumnType, IdSubtype, NumericSubtype, SourcePeriod, Steward};
+use crate::project::{ColumnType, IdSubtype, NumericSubtype, SourcePeriod};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 5] = [
@@ -436,13 +436,12 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
     }
     match get(root, "steward") {
         None => {}
-        Some(Value::String(s)) if Steward::parse(s).is_some() => {}
+        Some(Value::String(s)) if is_slug(s) => {}
         Some(Value::String(s)) => issues.error(
-            "invalid_enum_value",
+            "invalid_slug",
             "/steward".into(),
             format!(
-                "steward must be one of {}; got {}",
-                allowed(Steward::ALL.iter().map(|v| v.as_str())),
+                "steward must be a slug (lowercase ASCII kebab-case, not 'class'); got {}",
                 q(s)
             ),
         ),

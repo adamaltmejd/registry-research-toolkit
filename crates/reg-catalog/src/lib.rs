@@ -134,7 +134,7 @@ impl Catalog {
                 .bytes()
                 .all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
             && !self.manifest("import_date").is_empty()
-            && (!self.is_steward() || is_slug(self.manifest("steward")));
+            && (!self.is_steward() || reg_core::is_slug(self.manifest("steward")));
         if publishable {
             Ok(())
         } else {
@@ -317,9 +317,4 @@ fn read_manifest(path: &Path, mmap_size: i64) -> rusqlite::Result<BTreeMap<Strin
     let mut stmt = conn.prepare("SELECT key, value FROM import_manifest")?;
     stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?
         .collect()
-}
-
-/// A steward id is a slug: exactly what parses as a one-segment FQID.
-fn is_slug(value: &str) -> bool {
-    matches!(value.parse(), Ok(reg_core::Fqid::Provider { .. }))
 }
