@@ -2313,6 +2313,6 @@ def _reject_input_repository_destination(
             error_class="configuration",
             message=f"{label} must stay outside the accepted input repository: {path}",
             remediation=(
-                "Choose a scratch/output path outside the catalog-inputs Git checkout."
+                "Choose a scratch/output path outside the accepted input repository checkout."
             ),
         )

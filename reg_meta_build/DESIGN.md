@@ -397,12 +397,18 @@ types and coverage windows separate without altering the source records.
 
 ## Input storage and preparation
 
-Input capture and catalog building are separate operations. The host-local input Git
-repository has no remote. A branch name is not a pin: selection names the exact accepted
-commit and manifest digest. Preparing a candidate never commits it, replaces accepted
-inputs or changes the active catalog.
+Input capture and catalog building are separate operations. The input Git repository is
+the private `adamaltmejd/registry-catalog-inputs` (`catalog/` the public-source
+captures, `swecov/` the SWECOV holdings candidate). It replaced the host-local
+repository without a remote, by the maintainer's 2026-10-14 decision, after the 0.49.0
+SWECOV candidate was lost with its host directory and could not be restored. A build
+checks out a worktree at the pinned commit, since a commit in either folder moves HEAD.
+A branch name is not a pin: selection names the exact accepted commit and manifest
+digest. Preparing a candidate never commits it, replaces accepted inputs or changes the
+active catalog.
 
-Raw archives can remain compressed outside Git. The lossless compact SCB snapshot keeps
+Raw archives can remain compressed outside Git; the original SCB exports are release
+`scb-raw-2026-03` of the inputs repository. The lossless compact SCB snapshot keeps
 original dictionaries, associations and ordering without versioning the wasteful
 expanded CSV representation. Other selected machine-readable artifacts are preserved in
 the input bundle with complete inventory and provenance. Reconstructing from cold

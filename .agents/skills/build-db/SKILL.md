@@ -88,6 +88,17 @@ selected repositories. Record the code revision and curation digest alongside th
 Never substitute a branch name, infer a newer input revision, or rewrite guards to make
 an update pass.
 
+Raw bundles and the SWECOV candidate live in the private repository
+`adamaltmejd/registry-catalog-inputs`: `catalog/` holds the SCB snapshot and input
+bundles, `swecov/` the private holdings candidate. A pin's checks need a clean checkout
+whose HEAD is the pinned commit, and a commit in either folder moves HEAD, so run each
+pinned command against a worktree at its pin
+(`git -C <inputs-checkout> worktree add --detach <dir> <commit>`), never the default
+branch. Paths then sit under that worktree (`<dir>/catalog/bundles/<name>`,
+`<dir>/swecov`). Commits from before the 2026-10-14 move keep their old layout (content
+at the root). Prepared roots stay local acceptance repositories; they are regenerable
+from `catalog/` and the code.
+
 For changed source inputs or provider-format interpretation, capture and prepare a
 separate candidate. Use `prepare-input-bundle --help` for capture; it takes separate SCB
 snapshot pins. Commit and verify the raw candidate before running:
@@ -224,8 +235,9 @@ content change: read the dbdiff.
 
 ## Private SWECOV extension
 
-Extend only the new complete strict base. A private input candidate is a separate
-local-only Git acceptance from the public prepared sources. Pass its exact root through
+Extend only the new complete strict base. A private input candidate is a separate Git
+acceptance from the public prepared sources: the `swecov/` folder of the private inputs
+repository, at its pinned commit (see "Select inputs"). Pass its exact root through
 `extend-db --holdings-input`, with its full `--input-commit` and manifest digest. Select
 that same candidate's `providers/`, `slugs/` and `policy/inventory.toml`; loose overlays
 are refused. Regenerate and accept a fresh candidate when inventory changes.

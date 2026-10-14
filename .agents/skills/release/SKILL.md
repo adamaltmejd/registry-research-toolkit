@@ -218,7 +218,10 @@ checking its base generation and holdings pins still match; else rebuild.
 
 The base is **this release's** main asset, fetched: from the draft `reg_meta/vX.Y.Z` if
 8a rebuilt it, else from `reg_meta/v<prev>` (8d runs after 8c). The private holdings
-candidate and its pins come from the reviewed acceptance evidence:
+candidate and its pins come from the reviewed acceptance evidence: `accepted_holdings`
+is the `swecov/` folder of a worktree of `adamaltmejd/registry-catalog-inputs` at
+`holdings_commit` (build-db skill, "Select inputs"). After publishing, tag that commit
+`swecov/accepted-reg_meta-X.Y.Z` in the inputs repository and push the tag.
 
 ```sh
 set -euo pipefail
