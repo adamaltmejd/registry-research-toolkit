@@ -64,6 +64,11 @@ def generation_id(manifest: Mapping[str, str]) -> str:
     # only in those distinct.
     if "derived_from_generation_id" in manifest:
         keys += ("derived_from_generation_id",)
+    if missing := [key for key in keys if key not in manifest]:
+        raise ValueError(
+            f"Artifact manifest lacks identity keys {missing}: it predates this "
+            "builder's generation identity; rebuild (or re-extend) it with this builder"
+        )
     return canonical_sha256({key: manifest[key] for key in keys})
 
 
