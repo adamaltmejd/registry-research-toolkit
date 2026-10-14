@@ -84,3 +84,11 @@ edition = 2008
 [[table]]
 table = "Individ_2009"
 edition = 2009
+
+[[column]]
+column = "CfarNr_LISA"
+storage_header = "P1105_LopNr_CfarNr_LISA"
+
+[[column]]
+column = "PeOrgNr_LISA"
+storage_header = "P1105_LopNr_PeOrgNr_LISA"
