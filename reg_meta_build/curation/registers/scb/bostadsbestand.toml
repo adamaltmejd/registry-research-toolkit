@@ -105,15 +105,6 @@ slug = "byggnadstyp"
 # register 286
 
 [[acknowledge]]
-code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 282)))"
-fields = ["identifier", "sensitivity", "conditional_sensitivity"]
-refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6093cbace05be7bf482a91d6beb905b1d301a287793e41139e6585cedf6fd2ae\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"2e89fbf6e53d4ddc6db119a5869de9fdf48d198ad62c422c0af55614581a8842\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"21b51a6ffb222c83d85ffbd707617b1f7d9c806bdd6e9385cca8b44793c7ce49\"]}", "{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"6c718328d5a42efabef55cd387b19dcf27eda05d3c966562599b5a76c7440728\"]}"]
-expected_evidence_sha256 = "f50b10fa3cbf0fddf5f460d6a0ab0228034d5021894dde2031aff0aba80fe323"
-reason = "The source summary has no column name for these exact records. Retain the records and their declared flags without attaching them to guessed delivery columns; identifier and sensitivity flags from these rows remain unavailable."
-evidence = "Approved retained-unattached blank-column policy. Complete accepted support census: Batch48-unknown-support-source-census.json; acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; top manifest 650ea1c73e365ca017c21167418e0d02871a37261df88cf57c8d42e5783150aa. Every required coordinate except the column name is supplied, and the blank source value is retained. No flags, column names, epochs or coding domains are inferred. Full original contents and physical multiplicity are pinned; these support rows have no coding references."
-
-[[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/bostadsbestand/smaort"
 refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:282\",\"variant:1159\",\"edition:11186\",\"variable:62\",\"member:855230\"]}"]

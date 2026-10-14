@@ -8,12 +8,15 @@ slug = "people"
 [[variable]]
 native_id = "2.201"
 slug = "value"
+[[variable]]
+native_id = "2.202"
+slug = "value-2"
 
 [[acknowledge]]
-code = "unknown_support_key"
-subject = "('scb-unikaregisterochvariabler:None', ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 1)))"
+code = "ambiguous_support_target"
+subject = "(\"scb-unikaregisterochvariabler:('TESTREG', 'Individer', 'GenericVar', 'VALUE')\", ('scb-registerinformation', ('scb-registerinformation', 'scb', 'register', 'native-int', 1)))"
 fields = ["identifier", "sensitivity", "conditional_sensitivity"]
-refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"b4657752ebc1068fdc97a0d983e29c3d465ebb0471834f7262119337fb66fd4e\"]}"]
-expected_evidence_sha256 = {{evidence_sha256 source=scb-unikaregisterochvariabler key=b4657752ebc1068fdc97a0d983e29c3d465ebb0471834f7262119337fb66fd4e}}
-reason = "The summary row has no column name; its flags stay unattached."
+refs = ["{\"source\":\"scb-unikaregisterochvariabler\",\"semantic_record_key\":[\"summary\",\"dc46965cf7040f3099d6ff2770ced5d901fdc82635d7a40eef8b33deef084d3a\"]}"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-unikaregisterochvariabler key=dc46965cf7040f3099d6ff2770ced5d901fdc82635d7a40eef8b33deef084d3a}}
+reason = "The summary row names two candidate variables; its flags stay unattached."
 evidence = "Synthetic fixture."

@@ -1,12 +1,12 @@
 {
   "status": "diagnostic_complete",
   "result": {
-    "acknowledged": {"unknown_support_key": 1}
+    "acknowledged": {"ambiguous_support_target": 1}
   },
   "projections": [
     {
       "table": "issues",
-      "where": {"code": "unknown_support_key"},
+      "where": {"code": "ambiguous_support_target"},
       "fields": ["severity", "acknowledged_by"],
       "rows": [
         ["warning", "curation/registers/scb/sample.toml#/acknowledge/1"],

@@ -1,31 +1,31 @@
 {
-  "note": "Step 1's entry, unchanged, with its evidence hash authored from scb-two-registers-unknown-support; the build reads a new delivery of the same Unika rows in reverse row order. Every record's content is unchanged, but the export's bytes differ, so the built Unika file has a different revision id and the summary row a different physical row. The subject is content identity (the summary's literal key and its observed register context), the ref is the row's semantic key and the evidence pin drops delivery positions, so the entry still acknowledges register 1's summary issue exactly as in step 1. Register 2's summary issue stays an error.",
+  "note": "Step 1's entry, unchanged, with its evidence hash authored from scb-two-registers-ambiguous-support; the build reads a new delivery of the same Unika rows in reverse row order. Every record's content is unchanged, but the export's bytes differ, so the built Unika file has a different revision id and the summary row a different physical row. The subject is content identity (the summary's literal key and its observed register context), the ref is the row's semantic key and the evidence pin drops delivery positions, so the entry still acknowledges register 1's summary issue exactly as in step 1. Register 2's summary issue stays an error.",
   "fails_if": "scope_support_diagnostics (src/source_support.py) puts the support records' source revision ids back into the routed issue's subject (`repr((issue.subject, context, revisions))`), so the reversed delivery's issue no longer equals the committed subject and the entry is reported stale_curation_entry instead of acknowledging the summary issue",
-  "authored_from": "scb-two-registers-unknown-support",
+  "authored_from": "scb-two-registers-ambiguous-support",
   "sources": {
-    "description": "scb-two-registers-unknown-support, with its two Unika summary rows delivered in reverse order: the same content in a new delivery revision.",
+    "description": "scb-two-registers-ambiguous-support, with its two Unika summary rows delivered in reverse order: the same content in a new delivery revision.",
     "scb": {
       "registerinformation": [
-        {
-          "cvid": 1001,
-          "var_id": 101,
-          "colname": "VALUE"
-        },
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"},
+        {"cvid": 1002, "var_id": 102, "colname": "VALUE"},
         {
           "cvid": 2001,
           "var_id": 201,
           "colname": "OTHER",
           "varname": "OtherVar",
-          "register": [
-            "OTHERREG",
-            2,
-            20
-          ]
+          "register": ["OTHERREG", 2, 20]
+        },
+        {
+          "cvid": 2002,
+          "var_id": 202,
+          "colname": "OTHER",
+          "varname": "OtherVar",
+          "register": ["OTHERREG", 2, 20]
         }
       ],
       "unika": [
-        "OTHERREG|Testregistret|Individer|Individer|OtherVar||2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|GenericVar||2020|2020|0|0|0"
+        "OTHERREG|Testregistret|Individer|Individer|OtherVar|OTHER|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|GenericVar|VALUE|2020|2020|0|0|0"
       ]
     }
   }

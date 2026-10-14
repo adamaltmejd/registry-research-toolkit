@@ -67,6 +67,13 @@ def scope_support_diagnostics(
     scoped = defaultdict(list)
     unresolved = []
     for issue in bindings.diagnostics:
+        if issue.code == "unknown_support_key" and issue.severity == "warning":
+            # Rows whose key lacks only the column name (the blank_column group,
+            # the one warning-severity unknown_support_key) are a limitation of
+            # the support source itself, reported once there (#1589): never split
+            # per register into issues that each need their own acknowledgement.
+            unresolved.append(issue)
+            continue
         groups = defaultdict(list)
         for ref in issue.refs:
             possibilities = set()
@@ -185,6 +192,14 @@ def _key(record: SourceRecord, join: SourceSupportJoin) -> tuple[str | int, ...]
     )
 
 
+def _blank_column_only(record: SourceRecord, join: SourceSupportJoin) -> bool:
+    """Whether a key-less row lacks only its column name."""
+    rest = tuple(name for name in join.keys if name != "column_name")
+    return len(rest) < len(join.keys) and (
+        _key(record, join.model_copy(update={"keys": rest})) is not None
+    )
+
+
 def support_join_key(
     join: SourceSupportJoin,
     *,
@@ -245,7 +260,11 @@ class SupportMatch:
 
 
 type SupportDisposition = Literal[
-    "bound_support", "unreferenced_support", "unknown_key", "ambiguous_target"
+    "bound_support",
+    "unreferenced_support",
+    "blank_column",
+    "unknown_key",
+    "ambiguous_target",
 ]
 # One group of a literal key's support rows: the rows, the single native variable
 # a discriminator chose for them, their disposition and its diagnostic code.
@@ -331,7 +350,16 @@ class SourceSupportBindings:
     ) -> Iterator[_SupportGroup]:
         """Decide one literal key: the join itself, then its declared discriminator."""
         if key is None:
-            yield tuple(records), None, "unknown_key", "unknown_support_key"
+            # Maintainer decision (#1589): a row complete but for its column name is
+            # a known source limitation, one warning; any other missing key part is
+            # still an error, routed per register.
+            groups: dict[bool, list[SourceRecord]] = {True: [], False: []}
+            for record in records:
+                groups[_blank_column_only(record, join)].append(record)
+            if groups[True]:
+                yield tuple(groups[True]), None, "blank_column", "unknown_support_key"
+            if groups[False]:
+                yield tuple(groups[False]), None, "unknown_key", "unknown_support_key"
         elif not targets:
             yield (
                 tuple(records),
@@ -421,7 +449,7 @@ class SourceSupportBindings:
                         ResolutionDiagnostic(
                             code=code,
                             severity="warning"
-                            if disposition == "unreferenced_support"
+                            if disposition in {"unreferenced_support", "blank_column"}
                             else "error",
                             subject=f"{source}:{key!r}",
                             detail=f"Support relationship {join.rule!r} has disposition {disposition!r}; target identities {known!r}. No fields were joined.",

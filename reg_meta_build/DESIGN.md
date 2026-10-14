@@ -1752,25 +1752,32 @@ would if the check had refused the name.
 
 Source-wide support and value-list diagnostics retain their complete raw events and
 physical accounting. Those raw `support_source_issue` and `value_source_issue` events
-are evidence, not verdicts: a support event's `severity` is the diagnostic's own, taken
-before scoping and acknowledgment. Only `issue` events and the counts in `summary.json`
-are the build's verdict. A scoped build routes an issue only through declared source
-joins and positively observed, unambiguous register coordinates. Selected-register
-issues remain errors and use the existing exact acknowledgment mechanism; proven
-unselected register issues become explicit out-of-slice warnings. Unknown or ambiguous
-contexts remain errors, and complete builds never use this slice deferral. Unbound list
-subjects include the source revision, complete descriptor digest, literal lookup tokens
-and physical association count, so an empty target reference cannot become a general
-future acknowledgment. Support and member-list subjects carry content identity only: the
-support row's literal key with its observed register context, or the occurrence's native
-column. Those issues always name their exact source records as refs, and an
-acknowledgment's evidence pin hashes the records' content without delivery positions. A
-new delivery of unchanged rows therefore keeps its acknowledgment, while a changed key
-changes the ref and a changed pinned field stales the entry. Explicit source-diagnostic
-acknowledgments require equality with the positively observed delivery register. An
-ordinary issue is acknowledgeable only when it names source refs that are all present
-among its scope's originals, so a stale case naming an absent record stays an error. No
-support flags, coding domains or missing variable targets are inferred.
+are evidence, not verdicts, so neither carries a `severity`: an error no acknowledgment
+can reach would otherwise sit in the ledger of a publication-ready build (#1588). Only
+`issue` events and the counts in `summary.json` are the build's verdict. A support row
+whose literal join key is complete except for a blank or missing column name (a Unika
+summary row with no column) is a limitation of the support source itself: it is reported
+once, as one source-wide `unknown_support_key` warning naming every such row, never
+routed per register (#1589). Its flags stay unattached, as they always were. A row
+missing any other key part (register, variant or variable name) stays an
+`unknown_support_key` error, routed like any other support issue. A scoped build routes
+an issue only through declared source joins and positively observed, unambiguous
+register coordinates. Selected-register issues remain errors and use the existing exact
+acknowledgment mechanism; proven unselected register issues become explicit out-of-slice
+warnings. Unknown or ambiguous contexts remain errors, and complete builds never use
+this slice deferral. Unbound list subjects include the source revision, complete
+descriptor digest, literal lookup tokens and physical association count, so an empty
+target reference cannot become a general future acknowledgment. Support and member-list
+subjects carry content identity only: the support row's literal key with its observed
+register context, or the occurrence's native column. Those issues always name their
+exact source records as refs, and an acknowledgment's evidence pin hashes the records'
+content without delivery positions. A new delivery of unchanged rows therefore keeps its
+acknowledgment, while a changed key changes the ref and a changed pinned field stales
+the entry. Explicit source-diagnostic acknowledgments require equality with the
+positively observed delivery register. An ordinary issue is acknowledgeable only when it
+names source refs that are all present among its scope's originals, so a stale case
+naming an absent record stays an error. No support flags, coding domains or missing
+variable targets are inferred.
 
 The scoped output is create-only and marked incomplete and nonpublishable in both modes.
 The summary records the register list, `publication_ready` false and `corpus_validation`

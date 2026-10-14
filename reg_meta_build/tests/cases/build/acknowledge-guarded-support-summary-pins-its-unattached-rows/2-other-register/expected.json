@@ -3,7 +3,7 @@
   "projections": [
     {
       "table": "issues",
-      "where": {"code": "unknown_support_key"},
+      "where": {"code": "ambiguous_support_target"},
       "fields": ["severity", "acknowledged_by"],
       "rows": [
         ["error", null],

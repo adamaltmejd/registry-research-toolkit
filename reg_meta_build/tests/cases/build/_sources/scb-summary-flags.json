@@ -1,5 +1,5 @@
 {
-  "description": "One register per support-join claim, each delivering its variables' editions in Registerinformation and summarizing them in Unika (VersionForsta|VersionSista|KansligVariabel|KansligVariabelIbland|Identitetsvariabel). LITREG: one variable (2020, 2021), two rows whose endpoints name none of its editions. AMBREG: two renumbered variables (2003; 2020) under one literal key, rows with a blank endpoint. RENREG: 301 (1997, 2001) and 302 (2003), rows 1997|2001 twice (the second under another Registerrubrik, since a byte-identical repeat is refused) and 2003|2003. BOTHREG: 401 and 402 both (1997, 2001), one row 1997|2001. UNLREG: 501 (1997) and 502 (2003), rows 1997|1999 and 2003|2003. CNFREG: 601 (2003) and 602 (2020), two 2003|2003 rows disagreeing on Identitetsvariabel. SUPREG, SNOREG, SCDREG: one variable (2003), rows 1990|2009 and 2010|2023 with sensitive 1/0, 0/0 and conditionally sensitive 1/0. IDAREG and IDBREG deliver VarID 9001 (IDCOL, OTHERID), which Identifierare.csv declares an identifier, and IDCREG VarID 9002, which it does not; their Unika rows leave Identitetsvariabel blank. UNKREG: a blank-column row and a row for an undelivered ABSENT column.",
+  "description": "One register per support-join claim, each delivering its variables' editions in Registerinformation and summarizing them in Unika (VersionForsta|VersionSista|KansligVariabel|KansligVariabelIbland|Identitetsvariabel). LITREG: one variable (2020, 2021), two rows whose endpoints name none of its editions. AMBREG: two renumbered variables (2003; 2020) under one literal key, rows with a blank endpoint. RENREG: 301 (1997, 2001) and 302 (2003), rows 1997|2001 twice (the second under another Registerrubrik, since a byte-identical repeat is refused) and 2003|2003. BOTHREG: 401 and 402 both (1997, 2001), one row 1997|2001. UNLREG: 501 (1997) and 502 (2003), rows 1997|1999 and 2003|2003. CNFREG: 601 (2003) and 602 (2020), two 2003|2003 rows disagreeing on Identitetsvariabel. SUPREG, SNOREG, SCDREG: one variable (2003), rows 1990|2009 and 2010|2023 with sensitive 1/0, 0/0 and conditionally sensitive 1/0. IDAREG and IDBREG deliver VarID 9001 (IDCOL, OTHERID), which Identifierare.csv declares an identifier, and IDCREG VarID 9002, which it does not; their Unika rows leave Identitetsvariabel blank. UNKREG: a blank-column row and a row for an undelivered ABSENT column; one more Unkvar VALUE row leaves its Registernamn blank.",
   "scb": {
     "registerinformation": [
       {"cvid": 100101, "var_id": 101, "colname": "VALUE", "varname": "Litvar", "year": "2020", "regver_id": 10101, "register": ["LITREG", 1, 10]},
@@ -49,7 +49,8 @@
       "IDCREG|Testregistret|Individer|Individer|Idcvar|IDCOL|2020|2020|0|0|",
       "UNKREG|Testregistret|Individer|Individer|Unkvar|VALUE|2020|2020|0|0|0",
       "UNKREG|Testregistret|Individer|Individer|Unkvar||2020|2020|0|0|0",
-      "UNKREG|Testregistret|Individer|Individer|Unkvar|ABSENT|2020|2020|0|0|0"
+      "UNKREG|Testregistret|Individer|Individer|Unkvar|ABSENT|2020|2020|0|0|0",
+      "|Testregistret|Individer|Individer|Unkvar|VALUE|2020|2020|0|0|0"
     ]
   },
   "files": {

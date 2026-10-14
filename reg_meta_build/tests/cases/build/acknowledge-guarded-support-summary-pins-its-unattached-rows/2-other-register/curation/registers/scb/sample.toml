@@ -8,3 +8,6 @@ slug = "people"
 [[variable]]
 native_id = "1.101"
 slug = "value"
+[[variable]]
+native_id = "1.102"
+slug = "value-2"
