@@ -1,0 +1,440 @@
+{
+  "selector": {
+    "register": "scb/innovation-foretag",
+    "register_id": 257,
+    "variant": "_default",
+    "register_variant_id": 553,
+    "edition": "2002 - 2004",
+    "regver_id": 1209,
+    "var_id": 15662,
+    "cvid": 98939
+  },
+  "source_mode": "documented_blank",
+  "answer_facts": {
+    "data_type": "integer",
+    "data_type_evidence": "SWECOV storage catalog/swecov/derived/swecov_column_types.csv: CIS2004 stores every answer column co11…co54 as an integer type.",
+    "is_identifier": false,
+    "is_sensitive": false,
+    "flag_evidence": "SCB UnikaRegisterOchVariabler.txt declares this question's blank-Kolumnnamn row for 2002 - 2004 through 2012 - 2014, which spans this 2002 - 2004 coordinate: KansligVariabel 0, KansligVariabelIbland 0, Identitetsvariabel 0."
+  },
+  "evidence": {
+    "document": "SCB Dokumentation av statistikens framtagning (UF0315, 2002–2004), embedded questionnaire question 13",
+    "url": "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2002-2004.pdf#page=12",
+    "sha256": "e42b5a88d7f1c1df980398d440ea29fe8e9f9d225249924a0799041240824437",
+    "question": "VariabelRegister_Källa is “Enkäten Innovationsverksamher 2002-2004” (sic) and the native edition is “2002 - 2004”. The answer meanings come from the wave's own questionnaire, question 13 (“Markera vilken typ av samarbetspartner ni hade samt dess lokalisering”), rows a–g by four locations. SWECOV's CIS2004 holdings name the answers co<row><location> by questionnaire position: the maintainer's aggregate MONA check (2026-10-14) found the 4-location waves (CIS2004, CIS2006) carry co11–co14 with no co15, so the location digit is the questionnaire column, and partner rows a–e have the same meaning under positional and later-wave readings. Only rows a–e are declared: co6x/co7x are held (#1571) because their partner meaning is not established for this wave, and no other cell is asserted. SCB's quality declaration Appendix 2 (uf0315_kd_2018_ah_191113.pdf, pp. 23–27) lists this wave's questionnaire items on the same rows but names no co columns for it.",
+    "noted": "2026-10-14"
+  },
+  "question_label": "Typ av samarbetspartner geografiskt fördelat",
+  "axes": [
+    {
+      "key": "partner",
+      "label_en": "Cooperation partner"
+    },
+    {
+      "key": "response",
+      "label_en": "Location or response"
+    }
+  ],
+  "answers": [
+    {
+      "key": "group-enterprises-sweden",
+      "slug": "cis2004-cooperation-group-enterprises-sweden",
+      "columns": [
+        "co11"
+      ],
+      "label_en": "Other group enterprises — Sweden",
+      "definition_en": "Cooperation with other group enterprises in Sweden.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co11": 12
+      }
+    },
+    {
+      "key": "group-enterprises-other-europe",
+      "slug": "cis2004-cooperation-group-enterprises-other-europe",
+      "columns": [
+        "co12"
+      ],
+      "label_en": "Other group enterprises — Other Europe",
+      "definition_en": "Cooperation with other group enterprises elsewhere in Europe.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co12": 12
+      }
+    },
+    {
+      "key": "group-enterprises-usa",
+      "slug": "cis2004-cooperation-group-enterprises-usa",
+      "columns": [
+        "co13"
+      ],
+      "label_en": "Other group enterprises — USA",
+      "definition_en": "Cooperation with other group enterprises in the USA.",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co13": 12
+      }
+    },
+    {
+      "key": "group-enterprises-other-countries",
+      "slug": "cis2004-cooperation-group-enterprises-other-countries",
+      "columns": [
+        "co14"
+      ],
+      "label_en": "Other group enterprises — Other countries",
+      "definition_en": "Cooperation with other group enterprises in other countries (including China and India).",
+      "partner": {
+        "key": "group_enterprises",
+        "label_en": "Other group enterprises"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co14": 12
+      }
+    },
+    {
+      "key": "suppliers-sweden",
+      "slug": "cis2004-cooperation-suppliers-sweden",
+      "columns": [
+        "co21"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — Sweden",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software in Sweden.",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co21": 12
+      }
+    },
+    {
+      "key": "suppliers-other-europe",
+      "slug": "cis2004-cooperation-suppliers-other-europe",
+      "columns": [
+        "co22"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — Other Europe",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software elsewhere in Europe.",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co22": 12
+      }
+    },
+    {
+      "key": "suppliers-usa",
+      "slug": "cis2004-cooperation-suppliers-usa",
+      "columns": [
+        "co23"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — USA",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software in the USA.",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co23": 12
+      }
+    },
+    {
+      "key": "suppliers-other-countries",
+      "slug": "cis2004-cooperation-suppliers-other-countries",
+      "columns": [
+        "co24"
+      ],
+      "label_en": "Suppliers of equipment, materials, components or software — Other countries",
+      "definition_en": "Cooperation with suppliers of equipment, materials, components or software in other countries (including China and India).",
+      "partner": {
+        "key": "suppliers",
+        "label_en": "Suppliers of equipment, materials, components or software"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co24": 12
+      }
+    },
+    {
+      "key": "customers-sweden",
+      "slug": "cis2004-cooperation-customers-sweden",
+      "columns": [
+        "co31"
+      ],
+      "label_en": "Clients or customers — Sweden",
+      "definition_en": "Cooperation with clients or customers in Sweden.",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co31": 12
+      }
+    },
+    {
+      "key": "customers-other-europe",
+      "slug": "cis2004-cooperation-customers-other-europe",
+      "columns": [
+        "co32"
+      ],
+      "label_en": "Clients or customers — Other Europe",
+      "definition_en": "Cooperation with clients or customers elsewhere in Europe.",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co32": 12
+      }
+    },
+    {
+      "key": "customers-usa",
+      "slug": "cis2004-cooperation-customers-usa",
+      "columns": [
+        "co33"
+      ],
+      "label_en": "Clients or customers — USA",
+      "definition_en": "Cooperation with clients or customers in the USA.",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co33": 12
+      }
+    },
+    {
+      "key": "customers-other-countries",
+      "slug": "cis2004-cooperation-customers-other-countries",
+      "columns": [
+        "co34"
+      ],
+      "label_en": "Clients or customers — Other countries",
+      "definition_en": "Cooperation with clients or customers in other countries (including China and India).",
+      "partner": {
+        "key": "customers",
+        "label_en": "Clients or customers"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co34": 12
+      }
+    },
+    {
+      "key": "competitors-sweden",
+      "slug": "cis2004-cooperation-competitors-sweden",
+      "columns": [
+        "co41"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — Sweden",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector in Sweden.",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co41": 12
+      }
+    },
+    {
+      "key": "competitors-other-europe",
+      "slug": "cis2004-cooperation-competitors-other-europe",
+      "columns": [
+        "co42"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — Other Europe",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector elsewhere in Europe.",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co42": 12
+      }
+    },
+    {
+      "key": "competitors-usa",
+      "slug": "cis2004-cooperation-competitors-usa",
+      "columns": [
+        "co43"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — USA",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector in the USA.",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co43": 12
+      }
+    },
+    {
+      "key": "competitors-other-countries",
+      "slug": "cis2004-cooperation-competitors-other-countries",
+      "columns": [
+        "co44"
+      ],
+      "label_en": "Competitors or other enterprises in the same sector — Other countries",
+      "definition_en": "Cooperation with competitors or other enterprises in the same sector in other countries (including China and India).",
+      "partner": {
+        "key": "competitors",
+        "label_en": "Competitors or other enterprises in the same sector"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co44": 12
+      }
+    },
+    {
+      "key": "consultants-labs-private-research-sweden",
+      "slug": "cis2004-cooperation-consultants-labs-private-research-sweden",
+      "columns": [
+        "co51"
+      ],
+      "label_en": "Consultants, private laboratories or private R&D institutes — Sweden",
+      "definition_en": "Cooperation with consultants, private laboratories or private R&D institutes in Sweden.",
+      "partner": {
+        "key": "consultants_labs_private_research",
+        "label_en": "Consultants, private laboratories or private R&D institutes"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co51": 12
+      }
+    },
+    {
+      "key": "consultants-labs-private-research-other-europe",
+      "slug": "cis2004-cooperation-consultants-labs-private-research-other-europe",
+      "columns": [
+        "co52"
+      ],
+      "label_en": "Consultants, private laboratories or private R&D institutes — Other Europe",
+      "definition_en": "Cooperation with consultants, private laboratories or private R&D institutes elsewhere in Europe.",
+      "partner": {
+        "key": "consultants_labs_private_research",
+        "label_en": "Consultants, private laboratories or private R&D institutes"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co52": 12
+      }
+    },
+    {
+      "key": "consultants-labs-private-research-usa",
+      "slug": "cis2004-cooperation-consultants-labs-private-research-usa",
+      "columns": [
+        "co53"
+      ],
+      "label_en": "Consultants, private laboratories or private R&D institutes — USA",
+      "definition_en": "Cooperation with consultants, private laboratories or private R&D institutes in the USA.",
+      "partner": {
+        "key": "consultants_labs_private_research",
+        "label_en": "Consultants, private laboratories or private R&D institutes"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co53": 12
+      }
+    },
+    {
+      "key": "consultants-labs-private-research-other-countries",
+      "slug": "cis2004-cooperation-consultants-labs-private-research-other-countries",
+      "columns": [
+        "co54"
+      ],
+      "label_en": "Consultants, private laboratories or private R&D institutes — Other countries",
+      "definition_en": "Cooperation with consultants, private laboratories or private R&D institutes in other countries (including China and India).",
+      "partner": {
+        "key": "consultants_labs_private_research",
+        "label_en": "Consultants, private laboratories or private R&D institutes"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co54": 12
+      }
+    }
+  ]
+}

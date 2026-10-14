@@ -3,10 +3,10 @@ provider = "scb"
 slug = "innovation-foretag"
 native_id = "257"
 
-# CIS matrix columns CO11..CO85 are activated per wave by [[representation.matrix]]
-# for 2010–2012, 2012–2014 and 2014–2016. They stay absent for 2002–2010: SCB
-# reuses VarId 15662 across alias-less CVIDs there, and no SCB document names
-# those waves' columns (#1571).
+# CIS matrix columns CO11..CO85 are activated per wave by [[representation.matrix]].
+# 2010–2016 declare every answer. 2002–2010 declare only partner rows a–e
+# (co1x–co5x), whose meaning each wave's questionnaire fixes by position; co6x/co7x
+# stay undeclared because no SCB document names those waves' columns (#1571).
 
 # scb/innovation-foretag [[errata.delivered]] candidates were computed 2026-09-12
 # against SCB's raw Registerinformation export; folded duplicate columns
@@ -13181,6 +13181,26 @@ valid_to = "2010-12-31"
 source_editions = ["2008 - 2010"]
 
 # Exact reviewed matrix activations; answer meanings remain in the evidence files.
+
+[[representation.matrix]]
+source_mode = "documented_blank"
+evidence_file = "registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2002 - 2004", regver_id = 1209, var_id = 15662, cvid = 98939 }
+
+[[representation.matrix]]
+source_mode = "documented_blank"
+evidence_file = "registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2004 - 2006", regver_id = 1182, var_id = 15662, cvid = 98933 }
+
+[[representation.matrix]]
+source_mode = "documented_blank"
+evidence_file = "registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2006 - 2008", regver_id = 2675, var_id = 15662, cvid = 158927 }
+
+[[representation.matrix]]
+source_mode = "documented_blank"
+evidence_file = "registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2008 - 2010", regver_id = 4114, var_id = 15662, cvid = 257746 }
 
 [[representation.matrix]]
 source_mode = "documented_blank"

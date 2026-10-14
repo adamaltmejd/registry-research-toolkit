@@ -47,6 +47,7 @@ from itertools import count
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from reg_core_py import fold_identity
 from reg_meta_build.holdings_census import census_rows
 from reg_meta_build.steward_spec import (
     STEWARDS_DIR,
@@ -2404,13 +2405,19 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 if mapping_issue:
                     break
                 owner = mapping.variable.rsplit("/", 1)[1]
+                # select_owner drops every other owner of the physical column,
+                # case twins included: neighbouring waves may spell one cell
+                # `co11` and `CO11`, and both reach `recs` through the folded
+                # lookup. `fold_identity` is the `py_lower` fold (#853, #1571).
                 recs = [
                     r
                     for r in recs
                     if r["coord"] != mapping.register_variant
                     or (
-                        r["col"] != mapping.representation
-                        or (not decision.select_owner and r["vslug"] != owner)
+                        fold_identity(r["col"])
+                        != fold_identity(mapping.representation)
+                        if decision.select_owner
+                        else r["col"] != mapping.representation or r["vslug"] != owner
                     )
                 ] + declared
                 curated.update((r["coord"], r["vslug"], r["col"]) for r in declared)

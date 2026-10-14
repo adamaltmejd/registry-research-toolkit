@@ -268,11 +268,15 @@ def test_mapping_decision_preserves_other_positive_owner_for_ambiguity_check(
 def test_mapping_decision_explicit_owner_selection_preserves_physical_column(
     tmp_path: Path, flavored_db: Path
 ) -> None:
+    """The competing owner spells the column as a case twin (`T_KOLUMN`), as
+    neighbouring CIS waves spell `co11` and `CO11`; the folded lookup reaches
+    both. Fails if owner selection drops only the exact spelling, leaving the
+    twin's owner to make the column ambiguous (#1571)."""
     db = tmp_path / "competing-owner.db"
     shutil.copyfile(flavored_db, db)
     with sqlite3.connect(db) as conn:
         conn.execute(
-            "UPDATE variable_state SET delivery_column_name='T_kolumn' "
+            "UPDATE variable_state SET delivery_column_name='T_KOLUMN' "
             "WHERE variable_id=903"
         )
     decisions = _mapping_decision(column="T_kolumn", select_owner=True)
