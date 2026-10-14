@@ -105,39 +105,39 @@ edition = "VT2024"
 [[column]]
 column = "TERMIN"
 tables = ["Kursprov_gymn_HT2011"]
-unmap = "Retained physical field for edition HT2011; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition HT2011; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "TERMIN"
 tables = ["Kursprov_gymn_HT2012"]
-unmap = "Retained physical field for edition HT2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition HT2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "TERMIN"
 tables = ["Kursprov_gymn_HT2013"]
-unmap = "Retained physical field for edition HT2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition HT2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "TERMIN"
 tables = ["Kursprov_gymn_HT2014"]
-unmap = "Retained physical field for edition HT2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition HT2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "TERMIN"
 tables = ["Kursprov_gymn_VT2012"]
-unmap = "Retained physical field for edition VT2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition VT2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "TERMIN"
 tables = ["Kursprov_gymn_VT2013"]
-unmap = "Retained physical field for edition VT2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition VT2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "TERMIN"
 tables = ["Kursprov_gymn_VT2014"]
-unmap = "Retained physical field for edition VT2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition VT2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "TERMIN"
 tables = ["Kursprov_gymn_VT2015"]
-unmap = "Retained physical field for edition VT2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition VT2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }

@@ -5,3 +5,7 @@ variants = ["scb/anst/sus"]
 [[table]]
 table = "SuS_2024"
 edition = 2024
+
+[[column]]
+column = "Id"
+storage_header = "P1105_LopNr_Id"

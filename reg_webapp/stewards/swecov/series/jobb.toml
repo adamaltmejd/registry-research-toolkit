@@ -133,17 +133,17 @@ edition = 2021
 [[column]]
 column = "AstSni02"
 tables = ["JOBB2009"]
-unmap = "Retained physical field for edition 2009; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2009; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "AstSni02"
 tables = ["JOBB2010"]
-unmap = "Retained physical field for edition 2010; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2010; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "AstSni92"
 tables = ["JOBB1996"]
-unmap = "Retained physical field for edition 1996; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 1996; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "LonFInkApr"
@@ -328,29 +328,29 @@ unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021.
 [[column]]
 column = "P1105_Lopnr_PersonNr"
 tables = ["JOBB2013"]
-unmap = "Retained physical field for edition 2013; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2013; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "P1105_Lopnr_PersonNr"
 tables = ["JOBB2014"]
-unmap = "Retained physical field for edition 2014; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2014; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "P1105_Lopnr_PersonNr"
 tables = ["JOBB2015"]
-unmap = "Retained physical field for edition 2015; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "P1105_Lopnr_PersonNr"
 tables = ["JOBB2016"]
-unmap = "Retained physical field for edition 2016; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "P1105_Lopnr_PersonNr"
 tables = ["JOBB2017"]
-unmap = "Retained physical field for edition 2017; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "P1105_Lopnr_PersonNr"
 tables = ["JOBB2018"]
-unmap = "Retained physical field for edition 2018; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }

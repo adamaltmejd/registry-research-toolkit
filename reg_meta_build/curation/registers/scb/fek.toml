@@ -2243,7 +2243,7 @@ evidence = "SCB Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx, F
 noted = "2026-10-13"
 
 # One-register batch (#1579, D6/OP-2026-10-13-E): the FE1990-2002 errata.delivered occurrences
-# turn off the uncurated rename fold, so these native families need explicit partitions (OP-2026-10-13-K, provisional).
+# turn off the uncurated rename fold, so these native families need explicit partitions (OP-2026-10-13-K; confirmed by the maintainer 2026-10-14, #1590).
 
 [[identity.partition]]
 variable = "168.4080"

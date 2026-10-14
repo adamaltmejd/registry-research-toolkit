@@ -33,9 +33,9 @@ edition = 2021
 [[column]]
 column = "AntalSysC"
 tables = ["RAMS_ASTRA_2019"]
-unmap = "Retained physical field for edition 2019; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "AntalSysS"
 tables = ["RAMS_ASTRA_2019"]
-unmap = "Retained physical field for edition 2019; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json."
+hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
