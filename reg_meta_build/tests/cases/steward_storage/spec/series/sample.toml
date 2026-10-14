@@ -1,0 +1,14 @@
+id = "sample"
+register = "scb/sample"
+
+[[table]]
+table = "CIS2018"
+edition = 2018
+
+[[table]]
+table = "CIS2020"
+edition = 2020
+
+[[column]]
+column = "Renamed"
+storage_header = "PHYS"

@@ -8,7 +8,11 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from .db import catalog_coordinate_ids
-from .holdings_accounting import HoldingsAccounting, account_holdings
+from .holdings_accounting import (
+    INVENTORY_ROLE_PATH,
+    HoldingsAccounting,
+    account_holdings,
+)
 from .inventory import (
     DeliveryInventory,
     InventoryColumn,
@@ -17,9 +21,12 @@ from .inventory import (
     validate_inventory_placements,
 )
 from .source_evidence import canonical_json
+from .steward_spec import scope_locator
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    from .steward_spec import StewardSpec
 
 
 class HoldingsFoldError(ValueError):
@@ -106,15 +113,18 @@ def compile_holdings(
     root: Path,
     *,
     steward: str,
+    spec: StewardSpec,
     accounting: HoldingsAccounting | None = None,
 ) -> CompiledHoldings:
     """Compile facts, reusing accounting only from the same immutable input snapshot."""
     conn.row_factory = sqlite3.Row
-    inventory_path = root / "policy/inventory.toml"
+    inventory_path = root / INVENTORY_ROLE_PATH
     inventory = load_inventory(inventory_path)
     if inventory.steward != steward:
         raise ValueError("Accepted inventory steward does not match selected steward")
-    accounting = accounting or account_holdings(root, inventory)
+    accounting = accounting or account_holdings(
+        root, inventory, spec=spec, steward=steward
+    )
     variables, variants = catalog_coordinate_ids(conn)
     canonical = canonical_inventory(
         conn, inventory, coordinate_ids=(variables, variants)
@@ -143,7 +153,7 @@ def compile_holdings(
                 entry.partition,
                 entry.reason,
             )
-            source_ref = f"policy/holdings_policy.toml:retain_unknown[{index}]"
+            source_ref = f"{scope_locator(steward)}:retain_unknown[{index}]"
             periods = ()
             columns = tuple(
                 InventoryColumn(name=name)

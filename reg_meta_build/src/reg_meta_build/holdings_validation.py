@@ -7,7 +7,7 @@ import re
 from typing import TYPE_CHECKING
 
 from .artifact_identity import GENERATION_KEYS, STEWARD_GENERATION_KEYS, generation_id
-from .holdings_accounting import DISPOSITIONS
+from .holdings_accounting import DISPOSITIONS, INVENTORY_ROLE_PATH
 from .holdings_compile import canonical_inventory
 from .inventory import (
     ColumnMember,
@@ -16,6 +16,7 @@ from .inventory import (
     edition_bounds,
 )
 from .slug_grammar import validate_slug
+from .steward_spec import scope_locator
 
 if TYPE_CHECKING:
     import sqlite3
@@ -101,10 +102,13 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
         if table["partition"] is not None:
             validate_slug(table["partition"], "partition")
         if not re.fullmatch(
-            r"policy/(?:inventory\.toml:table|holdings_policy\.toml:retain_unknown)\[[0-9]+\]",
+            rf"(?:{re.escape(INVENTORY_ROLE_PATH)}:table"
+            rf"|{re.escape(scope_locator(manifest['steward']))}:retain_unknown)\[[0-9]+\]",
             table["source_ref"],
         ):
-            raise ValueError("Holding source_ref must locate an accepted policy record")
+            raise ValueError(
+                "Holding source_ref must locate an inventory table or scope retain_unknown entry"
+            )
         rows = list(
             conn.execute(
                 "SELECT * FROM holding_column WHERE table_id=? ORDER BY column_id",

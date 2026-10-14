@@ -34,20 +34,27 @@ Rules, each refused with a located `RegMetaError`:
 
 `hold.follow_up` must parse as an issue reference. The build never reads the
 issue's state: that would make it depend on the network.
+
+The spec is public and lives at `reg_webapp/stewards/<id>/` (`STEWARDS_DIR`).
+Strict extension reads it at the builder revision, never a copy in the private
+candidate, and pins it by `steward_spec_sha256`.
 """
 
 from __future__ import annotations
 
+import csv
 import hashlib
+import io
 import re
 import tomllib
-from typing import TYPE_CHECKING, Annotated, Literal
+from typing import TYPE_CHECKING, Annotated, Any, Literal
 
 from pydantic import (
     AfterValidator,
     BaseModel,
     ConfigDict,
     Field,
+    JsonValue,
     ValidationError,
     field_validator,
     model_validator,
@@ -55,9 +62,9 @@ from pydantic import (
 from reg_core_py import parse_fqid
 
 from .errors import EXIT_CONFIG, RegMetaError
-from .holdings_policy import UndatedHolding, retention_row_guards
 from .inventory import ColumnMapping, EditionRange, edition_bounds
 from .slug_grammar import validate_slug
+from .source_evidence import canonical_sha256
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -66,9 +73,34 @@ SPEC_INVALID = "steward_spec_invalid"
 SERIES_REGISTER_MISMATCH = "steward_series_register_mismatch"
 TABLE_DISPOSITION_INVALID = "steward_table_disposition_invalid"
 
+# Repo-relative home of every steward's spec directory.
+STEWARDS_DIR = "reg_webapp/stewards"
 SCOPE_FILE = "scope.toml"
 SERIES_DIR = "series"
 YEAR_INDEPENDENT_EDITION = "_default"
+
+
+def scope_locator(steward: str) -> str:
+    """The `scope.toml` prefix of a holdings locator (`stewards/<id>/scope.toml`)."""
+    return f"stewards/{steward}/{SCOPE_FILE}"
+
+
+def steward_spec_sha256(directory: Path) -> str:
+    """Digest of the spec files the generator reads: `scope.toml` and `series/*.toml`.
+
+    A canonical `{relative path: sha256(bytes)}` object. `steward.json` (branding)
+    and prose files are outside it, so editing them never invalidates a candidate.
+    """
+    paths = [directory / SCOPE_FILE, *sorted((directory / SERIES_DIR).glob("*.toml"))]
+    return canonical_sha256(
+        {
+            path.relative_to(directory).as_posix(): hashlib.sha256(
+                path.read_bytes()
+            ).hexdigest()
+            for path in paths
+        }
+    )
+
 
 # How a series spells a bare-year table edition. SCB's school registers deliver
 # school years: a table named by one year holds the school year that year
@@ -212,6 +244,27 @@ class TableDisposition(_SpecModel):
 
     table: LiteralName
     reason: Reason
+
+
+class UndatedHolding(BaseModel):
+    """A held table with no established edition, kept as `unknown` scope.
+
+    `rows_sha256` guards the table's ordered census rows (`retention_row_guards`)."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    table: str = Field(min_length=1)
+    register_fqid: str = Field(alias="register")
+    rows_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    reason: str = Field(min_length=1)
+    edition: JsonValue = None
+    partition: str | None = None
+
+    @field_validator("partition")
+    @classmethod
+    def check_partition(cls, value: str | None) -> str | None:
+        if value is not None:
+            validate_slug(value, "partition")
+        return value
 
 
 class Scope(_SpecModel):
@@ -631,31 +684,58 @@ def load_steward_spec(directory: Path) -> StewardSpec:
     return spec
 
 
+def retention_row_guards(
+    source: bytes, entries: tuple[UndatedHolding, ...], excluded: set[str]
+) -> dict[str, list[dict[str, Any]]]:
+    """Check each retained table's ordered census rows against its `rows_sha256`.
+
+    Returns the census rows by table, which warning emission reuses."""
+    rows_by_table: dict[str, list[dict[str, Any]]] = {}
+    for line, cells in enumerate(csv.reader(io.StringIO(source.decode("utf-8"))), 1):
+        if len(cells) >= 3:
+            rows_by_table.setdefault(cells[2].strip(), []).append(
+                {"line": line, "cells": cells}
+            )
+    for entry in entries:
+        rows = rows_by_table.get(entry.table)
+        if not rows or canonical_sha256(rows) != entry.rows_sha256:
+            raise ValueError(f"Undated holdings row guard failed: {entry.table}")
+        if entry.table in excluded:
+            raise ValueError(f"Retained holding cannot also be excluded: {entry.table}")
+    return rows_by_table
+
+
+def census_guard(scope: Scope, census: bytes) -> None:
+    """Hold the scope's decisions to the census bytes they were reviewed against.
+
+    The bytes must match `census_sha256` and each retained table's rows its row
+    guard; `ValueError` otherwise. Strict accounting calls this directly; the
+    generator through `check_census`."""
+    actual = hashlib.sha256(census).hexdigest()
+    if actual != scope.census_sha256:
+        raise ValueError(
+            f"census_sha256 {scope.census_sha256} does not match the census "
+            f"({actual}); review the decisions against the new census, then "
+            "update census_sha256"
+        )
+    retention_row_guards(
+        census,
+        tuple(scope.retain_unknown),
+        {entry.table for entry in scope.excludes},
+    )
+
+
 def check_census(spec: StewardSpec, census_path: Path, census_tables: set[str]) -> None:
     """Hold the spec to the census it was reviewed against.
 
-    The census bytes must match `census_sha256`, each retained table's rows must
-    match its row guard, and every census table needs exactly one disposition.
-    A spec table the census no longer has is stale, reported by the generator.
+    `census_guard`, and every census table needs exactly one disposition. A
+    spec table the census no longer has is stale, reported by the generator.
     """
-    source = census_path.read_bytes()
-    actual = hashlib.sha256(source).hexdigest()
-    if actual != spec.scope.census_sha256:
-        raise _spec_error(
-            SPEC_INVALID,
-            f"{spec.directory}/{SCOPE_FILE}: census_sha256 {spec.scope.census_sha256} "
-            f"does not match {census_path.name} ({actual}); review the decisions "
-            "against the new census, then update census_sha256",
-        )
     try:
-        retention_row_guards(
-            source,
-            tuple(spec.scope.retain_unknown),
-            {entry.table for entry in spec.scope.excludes},
-        )
+        census_guard(spec.scope, census_path.read_bytes())
     except ValueError as exc:
         raise _spec_error(
-            SPEC_INVALID, f"{spec.directory}/{SCOPE_FILE} [[retain_unknown]]: {exc}"
+            SPEC_INVALID, f"{spec.directory}/{SCOPE_FILE} ({census_path.name}): {exc}"
         ) from exc
     disposed = spec.dispositions()
     missing = sorted(census_tables - set(disposed))

@@ -608,7 +608,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "work.\n\n"
             "Examples:\n"
             "  reg-meta-build --db /tmp/swecov extend-db \\\n"
-            "      --base-db ~/.reg_meta/reg_meta.db \\\n"
+            "      --base-db ~/.reg_meta/reg_meta.db --steward swecov \\\n"
             "      --holdings-input /path/to/accepted-candidate \\\n"
             "      --input-commit SHA --input-manifest-sha256 SHA256"
         ),
@@ -621,13 +621,13 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     extend_db_p.add_argument(
         "--steward",
-        default="swecov",
-        help="Steward slug (default: swecov).",
+        required=True,
+        help="Steward slug; its spec is reg_webapp/stewards/<steward>/ at the builder revision.",
     )
     extend_db_p.add_argument(
         "--holdings-input",
         default=None,
-        help="Accepted private candidate containing provider overlays, policies, inventory and raw census.",
+        help="Accepted private candidate: providers, generated inventory, raw census and storage export.",
     )
     extend_db_p.add_argument("--input-commit", default=None)
     extend_db_p.add_argument("--input-manifest-sha256", default=None)
@@ -2376,7 +2376,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str]] = [
         "Inspect captured LISA and raw SCB source records.",
     ),
     (
-        "extend-db --base-db DB --holdings-input DIR --input-commit SHA --input-manifest-sha256 SHA256 [--steward S]",
+        "extend-db --base-db DB --steward S --holdings-input DIR --input-commit SHA --input-manifest-sha256 SHA256",
         "Compile accepted steward holdings onto a strict schema-9 catalog.",
     ),
     (

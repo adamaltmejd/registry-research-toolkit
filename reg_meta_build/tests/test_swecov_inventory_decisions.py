@@ -198,7 +198,7 @@ def _decision_db(
 
 
 def _refused_mapping(tmp_path: Path, db: Path, decisions: str) -> str:
-    """Run `cmd_inventory` over the decision's physical column; the refusal code."""
+    """Run the `inventory` emitter over the decision's physical column; the refusal code."""
     with pytest.raises(SystemExit, match="Inventory not replaced"):
         _run_inventory(tmp_path, db, "T2019", ["Physical"], decisions=decisions)
     assert not (tmp_path / "steward/inventory.toml").exists()

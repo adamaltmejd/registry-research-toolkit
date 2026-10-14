@@ -2,6 +2,8 @@
   "args": [
     "extend-db",
     "--base-db",
-    "absent"
+    "absent",
+    "--steward",
+    "swecov"
   ]
 }

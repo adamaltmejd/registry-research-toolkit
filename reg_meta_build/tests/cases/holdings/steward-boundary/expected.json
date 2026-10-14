@@ -23,5 +23,7 @@
     {"table": "Annual2018", "column": "Observed", "variant": "fixture/example/annual", "variable": "fixture/example/value", "literal": "Value", "canonical": "Value"},
     {"table": "Annual2019", "column": "Observed", "variant": "fixture/example/annual", "variable": "fixture/example/value", "literal": "Value", "canonical": "Value"}
   ],
+  "spec_mismatch_code": "extend_steward_spec_mismatch",
+  "base_mismatch_code": "extend_base_db_mismatch",
   "unaccounted_error": "Holdings accounting: 1 census tables have no disposition: ['Annual2019']"
 }

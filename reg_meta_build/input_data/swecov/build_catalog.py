@@ -49,6 +49,7 @@ from typing import TYPE_CHECKING
 
 from reg_meta_build.holdings_census import census_rows
 from reg_meta_build.steward_spec import (
+    STEWARDS_DIR,
     YEAR_INDEPENDENT_EDITION,
     StewardSpec,
     check_census,
@@ -320,8 +321,15 @@ def ground_pair(
 
 
 # The steward spec every stage reads (reg_meta_build.steward_spec): census
-# dispositions, census-holding routing, flavor definitions and the series.
-SPEC_DIR = Path(__file__).resolve().parents[3] / "reg_webapp/stewards/swecov"
+# dispositions, census-holding routing, flavor definitions and the series. This
+# generator's directory names its steward; the spec directory's name is the
+# steward id every stage writes.
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SPEC_DIR = REPO_ROOT / STEWARDS_DIR / Path(__file__).parent.name
+
+
+def steward_id(spec_dir: Path) -> str:
+    return spec_dir.resolve().name
 
 
 def holding_mapping(
@@ -1520,10 +1528,10 @@ def _flavor_variables(
     return variables
 
 
-def _source_label(csv_path: Path) -> str:
-    """`swecov-inventory-<YYYY-MM-DD>` from the inventory CSV filename."""
+def _source_label(csv_path: Path, steward: str) -> str:
+    """`<steward>-inventory-<YYYY-MM-DD>` from the inventory CSV filename."""
     m = re.search(r"(\d{4}-\d{2}-\d{2})", csv_path.stem)
-    return f"swecov-inventory-{m.group(1)}" if m else "swecov-inventory"
+    return f"{steward}-inventory-{m.group(1)}" if m else f"{steward}-inventory"
 
 
 def _flavor_provider_toml(
@@ -1724,7 +1732,8 @@ def cmd_flavor(args: argparse.Namespace) -> None:
             f"flavor disposition: {', '.join(unexpected_provider_files)}. Review "
             "and remove obsolete files before rerunning; no provider output was written."
         )
-    source_label = _source_label(args.csv)
+    steward = steward_id(args.spec)
+    source_label = _source_label(args.csv, steward)
     for prov_slug, provider_name in sorted(providers.items()):
         provider_registers = []
         for (candidate_provider, _reg_key), reg in sorted(registers.items()):
@@ -1754,7 +1763,7 @@ def cmd_flavor(args: argparse.Namespace) -> None:
     # build time (not committed pre-v1), so they are not emitted here.
     from reg_meta_build.id import mint
 
-    slug_root = base.parents[1] / "fqid_slugs" / "swecov"
+    slug_root = base.parents[1] / "fqid_slugs" / steward
     slug_root.mkdir(parents=True, exist_ok=True)
     by_provider: dict[str, list[str]] = {}
     for (prov_slug, reg_key), reg in sorted(registers.items()):
@@ -1842,7 +1851,7 @@ def _steward_load_db(db_path: Path):
     from reg_meta_build.db import register_py_lower
 
     if not db_path.exists():
-        raise SystemExit(f"reg_meta DB not found: {db_path} (pass --db <flavored>)")
+        raise SystemExit(f"mapping DB not found: {db_path}")
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     # Unicode-aware LOWER for the participation test below: SQLite's own is
     # ASCII-only, so a Swedish header (`Ägare`) would not fold — the reason
@@ -2087,7 +2096,7 @@ def _fold_case_twins(
 # columns, and zero-or-more (register_variant, variable, representation) mappings per
 # column. Reality is the holdings CSV (the maintainer's own re-extractable listing of
 # everything on MONA — superseded snapshots included, so it is NEVER hand-edited);
-# every decision is the steward spec (`reg_webapp/stewards/swecov/`, read through
+# every decision is the steward spec (`reg_webapp/stewards/<id>/`, read through
 # `reg_meta_build.steward_spec`):
 #
 #   scope.toml       lookups, exclusions and retained-unknown tables: not emitted
@@ -2176,18 +2185,75 @@ def _toml_edition(edition: object) -> str:
 
 
 def cmd_inventory(args: argparse.Namespace) -> None:
+    """Emit `inventory.toml` from the census, the spec and a mapping DB this
+    stage builds itself from the pinned global plus the candidate's providers.
+
+    The candidate manifest pins that pair (`global_db_sha256`) and the spec
+    (`steward_spec_sha256`), so `extend-db` can refuse an inventory auto-mapped
+    against another catalog or decided by another spec. The storage export is a
+    required input, read first: no run skips the storage check (#1594)."""
+    import hashlib
+    from tempfile import TemporaryDirectory
+
+    from reg_meta_build.steward_spec import steward_spec_sha256
+    from reg_meta_build.steward_storage import StorageSchemaError, read_storage_types
+
+    try:
+        storage = read_storage_types(args.storage_csv)
+    except StorageSchemaError as exc:
+        raise SystemExit(f"inventory: {exc}") from exc
+    with TemporaryDirectory(prefix="steward-mapping-db-") as scratch:
+        mapping_db = _mapping_db(
+            args.base_db, args.providers, steward_id(args.spec), Path(scratch)
+        )
+        spec = write_inventory(args, mapping_db)
+    _check_storage_types(args, spec, storage)
+    with args.base_db.open("rb") as base:
+        global_sha = hashlib.file_digest(base, "sha256").hexdigest()
+    print("  candidate manifest pins:")
+    print(f'    "steward_spec_sha256": "{steward_spec_sha256(args.spec)}"')
+    print(f'    "global_db_sha256": "{global_sha}"')
+
+
+def _mapping_db(base_db: Path, providers: Path, steward: str, scratch: Path) -> Path:
+    """The flavored DB the inventory maps against: `extend-db`'s metadata-only
+    diagnostic of `base_db` plus `providers`, named by the committed steward slug
+    pins (copied, so its auto slugs never write into the checkout)."""
+    import shutil
+
+    from reg_meta_build.extend_db import extend_db
+
+    slugs = scratch / "slugs"
+    slugs.mkdir()
+    for path in sorted((REPO_ROOT / "reg_meta_build/fqid_slugs" / steward).glob("*.toml")):
+        if not path.name.endswith(".auto.toml"):
+            shutil.copyfile(path, slugs / path.name)
+    result = extend_db(
+        base_db,
+        providers,
+        scratch / "db",
+        steward=steward,
+        slug_dir=slugs,
+        diagnostic=True,
+    )
+    return Path(result["db_path"])
+
+
+def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
+    """`inventory`'s emitter over an already-built mapping DB: `args.csv`,
+    `args.spec` and `args.out`. Returns the loaded spec."""
     spec = load_steward_spec(args.spec)
     holdings = parse_inventory(args.csv)
-    repo_root = Path(__file__).resolve().parents[3]
-    steward_dir = args.out or args.spec
+    steward_dir = args.out
+    steward_dir.mkdir(parents=True, exist_ok=True)
     # A table may appear under several (Category, Detail) keys; its columns merge.
     census: dict[str, set[str]] = {}
     for h in holdings.values():
         for table, cols in h.table_columns.items():
             census.setdefault(table, set()).update(cols)
     check_census(spec, args.csv, set(census))
-    by_regcol = _steward_load_db(args.db)
-    representative = _representative_spelling(args.db)
+    by_regcol = _steward_load_db(db)
+    representative = _representative_spelling(db)
     # coord -> {UPPER(col): [(coord, vslug, canonical col)]} narrowed per lookup.
     by_coordcol: dict[tuple[str, str], list] = defaultdict(list)
     for (_reg, u), recs in by_regcol.items():
@@ -2242,7 +2308,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         "# Holdings curation rules).",
         "",
         "version = 1",
-        'steward = "swecov"',
+        f"steward = {_toml_str(steward_id(args.spec))}",
     ]
     for table in sorted(census, key=str.upper):
         if table in retained_unknown:
@@ -2444,13 +2510,13 @@ def cmd_inventory(args: argparse.Namespace) -> None:
         print(f"\nVALIDATION FAILED — the supersession worklist:\n{exc.message}")
         raise SystemExit(1) from exc
     print(f"  load_inventory: OK ({len(inv.tables)} tables)")
-    _check_storage_types(args, repo_root, spec)
+    return spec
 
 
 def _check_storage_types(
-    args: argparse.Namespace, repo_root: Path, spec: StewardSpec
+    args: argparse.Namespace, spec: StewardSpec, storage: dict[tuple[str, str], str]
 ) -> None:
-    """Report curated global data types that SWECOV storage disagrees with (#1562).
+    """Report curated global data types the steward's storage disagrees with (#1562).
 
     The global build never reads the storage schema, so this refresh is where a
     disagreement surfaces. It is a worklist, never an automatic global change.
@@ -2458,43 +2524,21 @@ def _check_storage_types(
     headers its `storage_header` decisions name.
     """
     from reg_meta_build.curation_tree import load_register_files
-    from reg_meta_build.swecov_storage import (
-        StoragePolicyRegister,
-        read_storage_types,
+    from reg_meta_build.steward_storage import (
+        StorageSchemaError,
+        storage_policy_from_spec,
         storage_type_findings,
         write_storage_findings,
     )
 
-    storage_csv = args.csv.parent / "derived" / "swecov_column_types.csv"
-    if not storage_csv.is_file():
-        print(f"  WARNING: storage type check skipped: {storage_csv} is missing")
-        return
-    tables: dict[str, set[str]] = defaultdict(set)
-    headers: dict[str, dict[str, str]] = defaultdict(dict)
-    for series in spec.series:
-        if series.register_coord is None:
-            continue
-        tables[series.register_coord].update(t.table for t in series.tables)
-        for column, header in series.storage_headers().items():
-            if headers[series.register_coord].setdefault(column, header) != header:
-                raise SystemExit(
-                    f"series of {series.register_coord} name two storage headers "
-                    f"for {column}"
-                )
-    # simplify: exact member ids ride the prefix matcher, so a storage table
-    # whose name extends a member id is checked too; give the check an exact
-    # table set if storage ever holds such a table outside the series.
-    policy = {
-        register: StoragePolicyRegister(
-            table_prefixes=sorted(members),
-            storage_columns=headers[register],
-        )
-        for register, members in sorted(tables.items())
-    }
+    try:
+        policy = storage_policy_from_spec(spec)
+    except StorageSchemaError as exc:
+        raise SystemExit(f"inventory: {exc}") from exc
     findings = storage_type_findings(
-        load_register_files(repo_root / "reg_meta_build" / "curation"),
+        load_register_files(REPO_ROOT / "reg_meta_build" / "curation"),
         policy,
-        read_storage_types(storage_csv),
+        storage,
     )
     dest = args.csv.parent / "derived" / "storage_type_findings.tsv"
     write_storage_findings(findings, dest)
@@ -2504,7 +2548,7 @@ def _check_storage_types(
     }
     line = (
         f"storage type check: {counts['disagrees']} curated types disagree with"
-        f" SWECOV storage, {counts['uncurated']} steward-holdings columns lack a"
+        f" steward storage, {counts['uncurated']} steward-holdings columns lack a"
         f" curated type, {counts['unmatched']} curated entries match no storage"
         f" column, {counts['narrower']} curated types are wider than storage;"
         f" worklist {dest}"
@@ -2548,9 +2592,7 @@ def cmd_errata(args: argparse.Namespace) -> None:
         version_candidates,
     )
 
-    repo_root = Path(__file__).resolve().parents[3]
-    steward_dir = args.out or (repo_root / "reg_webapp" / "stewards" / "swecov")
-    inventory = load_inventory(steward_dir / "inventory.toml")
+    inventory = load_inventory(args.out / "inventory.toml")
     conn = open_built_db(args.db)
     try:
         report = coverage_misses(conn, inventory)
@@ -2666,14 +2708,33 @@ def main() -> None:
     )
     inventory_p = sub.add_parser(
         "inventory",
-        help="emit the delivery inventory.toml against a FLAVORED --db"
-        " (reality = holdings CSV, policy = the --spec steward spec)",
+        help="emit the delivery inventory.toml (reality = holdings CSV, policy ="
+        " the --spec steward spec) against a mapping DB built from --base-db plus"
+        " --providers, then check curated types against --storage-csv",
+    )
+    inventory_p.add_argument(
+        "--base-db",
+        type=Path,
+        required=True,
+        help="the global reg_meta.db the candidate pins (global_db_sha256)",
+    )
+    inventory_p.add_argument(
+        "--providers",
+        type=Path,
+        required=True,
+        help="the candidate's providers/ directory (curated-provider TOMLs)",
+    )
+    inventory_p.add_argument(
+        "--storage-csv",
+        type=Path,
+        required=True,
+        help="the steward's storage-schema export (table, column, SQL type)",
     )
     inventory_p.add_argument(
         "--out",
         type=Path,
-        default=None,
-        help="output dir for inventory.toml (default: the --spec directory)",
+        required=True,
+        help="output dir for inventory.toml (the candidate's policy/)",
     )
     errata_p = sub.add_parser(
         "errata",
@@ -2684,9 +2745,8 @@ def main() -> None:
     errata_p.add_argument(
         "--out",
         type=Path,
-        default=None,
-        help="stewards/swecov dir holding inventory.toml"
-        " (default: <repo>/reg_webapp/stewards/swecov)",
+        required=True,
+        help="dir holding the generated inventory.toml (the candidate's policy/)",
     )
     args = parser.parse_args()
     {

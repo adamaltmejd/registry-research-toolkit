@@ -245,7 +245,7 @@ def run_inventory(
     holding: tuple[str, str] = ("Inera/1177", "Ordered tests"),
     **series: str | tuple[str, ...],
 ) -> Path:
-    """`cmd_inventory` over a synthetic one-table CSV whose table is the one
+    """`write_inventory` (the `inventory` emitter) over a synthetic one-table CSV whose table is the one
     member of series `s` (`one_table_series(table, **series)`); returns the
     steward dir, which is also the spec dir the run reads and writes.
 
@@ -259,8 +259,8 @@ def run_inventory(
     steward_dir = write_spec(
         tmp_path / "steward", csv_path, {"s": one_table_series(table, **series)}
     )
-    build_catalog.cmd_inventory(
-        argparse.Namespace(csv=csv_path, db=db, spec=steward_dir, out=None)
+    build_catalog.write_inventory(
+        argparse.Namespace(csv=csv_path, spec=steward_dir, out=steward_dir), db
     )
     return steward_dir
 

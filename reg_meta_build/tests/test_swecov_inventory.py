@@ -209,8 +209,8 @@ def test_inventory_retains_guarded_undated_tables_separately_from_lookups(
             f'rows_sha256 = "{canonical_sha256(rows)}"\nreason = "No calendar coverage."\n'
         ),
     )
-    build_catalog.cmd_inventory(
-        argparse.Namespace(csv=source, db=flavored_db, spec=steward, out=None)
+    build_catalog.write_inventory(
+        argparse.Namespace(csv=source, spec=steward, out=steward), flavored_db
     )
     inventory = load_delivery_inventory(steward / "inventory.toml")
     assert {table.id: table.edition for table in inventory.tables} == {

@@ -1,0 +1,8 @@
+{
+  "catalog": "catalog.json",
+  "inventory": "inventory.toml",
+  "census": "census.csv",
+  "scope": "scope.toml",
+  "observe_accounting": true,
+  "behavior": "A scope [[lookup]] table is accounted as a lookup, beside the inventory's dated tables, and is never compiled into holdings."
+}

@@ -238,17 +238,34 @@ content change: read the dbdiff.
 Extend only the new complete strict base. A private input candidate is a separate Git
 acceptance from the public prepared sources: the `swecov/` folder of the private inputs
 repository, at its pinned commit (see "Select inputs"). Pass its exact root through
-`extend-db --holdings-input`, with its full `--input-commit` and manifest digest. Select
-that same candidate's `providers/`, `slugs/` and `policy/inventory.toml`; loose overlays
-are refused. Regenerate and accept a fresh candidate when inventory changes.
+`extend-db --steward swecov --holdings-input`, with its full `--input-commit` and
+manifest digest. extend-db reads that candidate's `providers/`, census, storage export
+and `policy/inventory.toml` (its manifest `roles`), and the steward slugs and spec from
+the builder revision; loose overlays and policy copies are refused.
 
-The builder's `holdings_policy.toml` retains exact undated tables through register
-warnings and identifies genuine lookups. Inventory generation takes it through
-`inventory --holdings-policy`. Require complete raw-table/column accounting across dated
-inventory, retained-unknown evidence and explicit lookup/exclusion dispositions.
-Retained unknown tables do not become annual or year-independent holdings. Authored
-source-validity bounds can also remain unknown; storage sentinels are not observation
-coverage. Keep reader and UI adaptation deferred.
+The candidate pins the global and spec its inventory was generated from, and extend-db
+refuses either mismatch (`extend_base_db_mismatch`, `extend_steward_spec_mismatch`). So
+regenerate and accept a fresh candidate whenever the inventory, the global DB bytes or
+`reg_webapp/stewards/swecov/` change. Generate against the exact global you will extend:
+
+```sh
+uv run python reg_meta_build/input_data/swecov/build_catalog.py \
+    --csv <census CSV> inventory \
+    --base-db <global reg_meta.db> --providers <candidate>/providers \
+    --storage-csv <storage-schema export> --out <scratch dir>
+```
+
+It refuses to run without a readable storage export, and prints the
+`steward_spec_sha256` and `global_db_sha256` values the candidate `manifest.json`
+records beside `artifact_kind = "steward-private-extension-input-candidate"` and the
+`roles` (`census`, `storage_export`, `inventory = "policy/inventory.toml"`).
+
+The spec's `scope.toml` retains exact undated tables through register warnings
+(`retain_unknown`) and identifies genuine lookups. Require complete raw-table/column
+accounting across dated inventory, retained-unknown evidence and explicit
+lookup/exclusion dispositions. Retained unknown tables do not become annual or
+year-independent holdings. Authored source-validity bounds can also remain unknown;
+storage sentinels are not observation coverage. Keep reader and UI adaptation deferred.
 
 ## Report
 

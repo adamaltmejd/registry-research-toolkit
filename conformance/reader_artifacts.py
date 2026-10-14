@@ -20,6 +20,7 @@ from reg_meta_build.data_warnings import DataWarning
 from reg_meta_build.db import SCHEMA_VERSION, open_db
 from reg_meta_build.derive import derive_holdings
 from reg_meta_build.doc_db import DOC_DB_FILENAME, build_doc_db, load_related_documents
+from reg_meta_build.holdings_accounting import INVENTORY_ROLE_PATH
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.materialize import write_resolved_catalog
 from reg_meta_build.pipeline import load_search_pins  # tests skip private _curation
@@ -31,6 +32,10 @@ from reg_meta_build.resolved_catalog import (
 )
 from reg_meta_build.resolved_metadata import ResolvedMetadata
 from reg_meta_build.source_evidence import canonical_json, canonical_sha256
+from reg_meta_build.steward_spec import (
+    load_steward_spec,
+    steward_spec_sha256,
+)
 from reg_meta_build.validate import validate_built_db
 
 import reg_meta_build
@@ -122,9 +127,7 @@ def replicate_filler(case: Path, destination: Path) -> Path:
                 for index in range(request["copies"])
             )
         digest = hashlib.sha256(census.read_bytes()).hexdigest()
-        (destination / "holdings_policy.toml").write_text(
-            f'source_sha256 = "{digest}"\n'
-        )
+        (destination / "scope.toml").write_text(f'census_sha256 = "{digest}"\n')
     return destination
 
 
@@ -415,25 +418,35 @@ def _build_artifact(
     if kind == "steward":
         base_digest = hashlib.file_digest(path.open("rb"), "sha256").hexdigest()
         candidate = directory / "candidate"
+        spec_dir = directory / "steward-spec"
         (candidate / "policy").mkdir(parents=True)
         (candidate / "swecov").mkdir()
-        for filename in (
-            "inventory.toml",
-            "holdings_policy.toml",
-            "source_policy.toml",
-            "inventory_overlay.toml",
+        spec_dir.mkdir(parents=True)
+        for filename, target in (
+            ("inventory.toml", candidate / INVENTORY_ROLE_PATH),
+            ("scope.toml", spec_dir / "scope.toml"),
         ):
             item = source / filename
             fallback = CASES / "reader/fixture" / filename
-            shutil.copyfile(
-                item if item.exists() else fallback, candidate / "policy" / filename
+            shutil.copyfile(item if item.exists() else fallback, target)
+        census = "swecov/SWECOV_variables_full_fixture.csv"
+        shutil.copyfile(source / "census.csv", candidate / census)
+        # Accounting reads only the census role; the storage export is not compiled.
+        (candidate / "manifest.json").write_text(
+            json.dumps(
+                {
+                    "roles": {
+                        "census": census,
+                        "storage_export": "swecov/derived/storage_types.csv",
+                        "inventory": INVENTORY_ROLE_PATH,
+                    }
+                }
             )
-        shutil.copyfile(
-            source / "census.csv",
-            candidate / "swecov/SWECOV_variables_full_fixture.csv",
         )
         with sqlite3.connect(path) as conn:
-            compiled = compile_holdings(conn, candidate, steward="swecov")
+            compiled = compile_holdings(
+                conn, candidate, steward="swecov", spec=load_steward_spec(spec_dir)
+            )
             manifest = dict(conn.execute("SELECT key, value FROM import_manifest"))
             manifest.update(
                 catalog_artifact_kind="steward",
@@ -442,7 +455,7 @@ def _build_artifact(
                 base_generation_id=manifest["generation_id"],
                 holdings_input_commit="e" * 40,
                 holdings_manifest_sha256="f" * 64,
-                holdings_policy_sha256=compiled.accounting.policy_sha256,
+                steward_spec_sha256=steward_spec_sha256(spec_dir),
                 holdings_accounting_sha256=compiled.accounting.sha256,
                 holdings_accounting_counts=canonical_json(compiled.accounting.counts),
             )
@@ -454,6 +467,7 @@ def _build_artifact(
             # As extend-db does once the manifest names the steward.
             derive_holdings(conn)
         shutil.rmtree(candidate)
+        shutil.rmtree(spec_dir)
     validation = validate_built_db(path)
     assert validation.passed, validation.format_report()
     open_db(path).close()

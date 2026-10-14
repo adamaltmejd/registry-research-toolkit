@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
 
 import pytest
-from holdings_accounting import compare_holdings_input
+from holdings_accounting import committed_spec_dir, compare_holdings_input
 from reader_artifacts import BUILDER_CASES, CASES, build_reader_artifact
 
 
@@ -14,7 +15,7 @@ def require_accounting(report):
     for key in (
         "counts_equal",
         "accounting_digest_equal",
-        "policy_digest_equal",
+        "spec_digest_equal",
         "canonical_fold_equal",
         "artifact_unchanged",
     ):
@@ -34,7 +35,7 @@ def require_accounting(report):
         "partitions",
         "retained-unknown",
         "year-independent",
-        "lookup-exclusion-annotations",
+        "lookup",
     ],
 )
 def test_readable_source_census_matches_compiled_artifact(tmp_path, fixture):
@@ -44,19 +45,25 @@ def test_readable_source_census_matches_compiled_artifact(tmp_path, fixture):
         CASES / "reader/fixture" if fixture == "reader" else BUILDER_CASES / fixture
     )
     candidate = tmp_path / "input"
+    spec_dir = tmp_path / "spec"
     (candidate / "policy").mkdir(parents=True)
     (candidate / "swecov").mkdir()
-    for name in ("inventory", "inventory_overlay", "holdings_policy", "source_policy"):
+    spec_dir.mkdir()
+    for name, target in (
+        ("inventory", candidate / "policy/inventory.toml"),
+        ("scope", spec_dir / "scope.toml"),
+    ):
         selected = source / f"{name}.toml"
         shutil.copyfile(
             selected if selected.exists() else CASES / f"reader/fixture/{name}.toml",
-            candidate / f"policy/{name}.toml",
+            target,
         )
-    shutil.copyfile(
-        source / "census.csv",
-        candidate / "swecov/SWECOV_variables_full_fixture.csv",
+    census = "swecov/SWECOV_variables_full_fixture.csv"
+    shutil.copyfile(source / "census.csv", candidate / census)
+    (candidate / "manifest.json").write_text(
+        json.dumps({"roles": {"census": census, "inventory": "policy/inventory.toml"}})
     )
-    require_accounting(compare_holdings_input(candidate, directory))
+    require_accounting(compare_holdings_input(candidate, directory, spec_dir))
 
 
 def test_accepted_input_census_matches_compiled_artifact(artifact_dir, request):
@@ -66,5 +73,9 @@ def test_accepted_input_census_matches_compiled_artifact(artifact_dir, request):
             "Accepted-private-input comparison requires explicit --holdings-input"
         )
     require_accounting(
-        compare_holdings_input(Path(selected).expanduser().resolve(), artifact_dir)
+        compare_holdings_input(
+            Path(selected).expanduser().resolve(),
+            artifact_dir,
+            committed_spec_dir(artifact_dir),
+        )
     )

@@ -19,7 +19,7 @@ from pathlib import Path
 from reg_meta_build.db import get_manifest, open_db
 
 DISPOSITIONS = ("dated", "year_independent", "retained_unknown", "excluded", "lookup")
-POLICY_NAMES = ("source_policy", "inventory_overlay", "holdings_policy")
+REPO = Path(__file__).resolve().parents[1]
 
 
 def canonical(value: object) -> str:
@@ -35,7 +35,23 @@ def file_digest(path: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def admit_holdings_input(path: Path, artifact_dir: Path) -> Path:
+def spec_digest(spec_dir: Path) -> str:
+    """The documented steward-spec digest: `{relative path: sha256}` over
+    `scope.toml` and `series/*.toml`."""
+    paths = [spec_dir / "scope.toml", *sorted((spec_dir / "series").glob("*.toml"))]
+    return digest(
+        {path.relative_to(spec_dir).as_posix(): file_digest(path) for path in paths}
+    )
+
+
+def committed_spec_dir(artifact_dir: Path) -> Path:
+    """The checkout's spec directory for the artifact's steward."""
+    with open_db(artifact_dir / "reg_meta.db") as conn:
+        steward = get_manifest(conn)["steward"]
+    return REPO / "reg_webapp/stewards" / steward
+
+
+def admit_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> Path:
     """Fail closed on missing, dirty, mismatched or incomplete accepted inputs."""
     try:
         root = path.expanduser().resolve(strict=True)
@@ -43,6 +59,8 @@ def admit_holdings_input(path: Path, artifact_dir: Path) -> Path:
             manifest = get_manifest(conn)
         if manifest["catalog_artifact_kind"] != "steward":
             raise ValueError("Holdings input requires a steward artifact")
+        if spec_digest(spec_dir) != manifest["steward_spec_sha256"]:
+            raise ValueError("Steward spec digest does not match artifact")
         candidate = root / "manifest.json"
         if file_digest(candidate) != manifest["holdings_manifest_sha256"]:
             raise ValueError("Holdings input manifest pin does not match artifact")
@@ -60,7 +78,8 @@ def admit_holdings_input(path: Path, artifact_dir: Path) -> Path:
         )
         if status.strip():
             raise ValueError("Holdings input Git tree is not clean")
-        members = json.loads(candidate.read_text())["files"]
+        accepted = json.loads(candidate.read_text())
+        members = accepted["files"]
         names = set()
         for member in members:
             relative = Path(member["path"])
@@ -75,12 +94,12 @@ def admit_holdings_input(path: Path, artifact_dir: Path) -> Path:
                 or file_digest(selected) != member["sha256"]
             ):
                 raise ValueError("Holdings input member does not match its manifest")
-        required = {f"policy/{name}.toml" for name in (*POLICY_NAMES, "inventory")}
-        sources = list((root / "swecov").glob("SWECOV_variables_full_*.csv"))
-        if len(sources) != 1:
-            raise ValueError("Holdings input requires one complete census")
-        required.add(sources[0].relative_to(root).as_posix())
-        if not required.issubset(names):
+        roles = accepted["roles"]
+        if roles["inventory"] != "policy/inventory.toml":
+            raise ValueError(
+                "Holdings input inventory role is not policy/inventory.toml"
+            )
+        if not {roles["census"], roles["inventory"]}.issubset(names):
             raise ValueError("Holdings input manifest omits consumed accounting inputs")
         return root
     except KeyError as exc:
@@ -138,20 +157,23 @@ def edition_periods(edition: object) -> list[tuple[str, str]]:
     return result
 
 
-def compare_holdings_input(path: Path, artifact_dir: Path) -> dict:
-    """Compare table/cell census and all four relations, keeping identifiers private."""
+def compare_holdings_input(path: Path, artifact_dir: Path, spec_dir: Path) -> dict:
+    """Compare table/cell census and all four relations, keeping identifiers private.
+
+    `path` is the accepted candidate (its `manifest.json` roles name the census
+    and inventory); `spec_dir` is the steward spec the artifact was compiled
+    with, whose `scope.toml` holds the lookup, exclusion and retained-unknown
+    dispositions."""
     db = artifact_dir / "reg_meta.db"
     before = file_digest(db)
-    policies = {
-        name: tomllib.loads((path / f"policy/{name}.toml").read_text())
-        for name in (*POLICY_NAMES, "inventory")
-    }
-    sources = list((path / "swecov").glob("SWECOV_variables_full_*.csv"))
-    if len(sources) != 1:
-        raise ValueError("Holdings comparison requires one complete census")
-    source = sources[0]
-    source_name = source.relative_to(path).as_posix()
-    raw, subjects, guards = defaultdict(set), defaultdict(set), defaultdict(list)
+    with open_db(db) as conn:
+        steward = get_manifest(conn)["steward"]
+    roles = json.loads((path / "manifest.json").read_text())["roles"]
+    scope = tomllib.loads((spec_dir / "scope.toml").read_text())
+    scope_ref = f"stewards/{steward}/scope.toml"
+    source = path / roles["census"]
+    source_name = roles["census"]
+    raw, guards = defaultdict(set), defaultdict(list)
     with source.open(newline="", encoding="utf-8") as stream:
         for line, row in enumerate(csv.reader(stream), 1):
             if len(row) >= 3:
@@ -162,22 +184,8 @@ def compare_holdings_input(path: Path, artifact_dir: Path) -> dict:
                 continue
             if len(row) < 3 or not row[0].strip():
                 continue
-            category, detail, table = (cell.strip() for cell in row[:3])
+            table = row[2].strip()
             raw[table].update(cell.strip() for cell in row[3:] if cell.strip())
-            subjects[table].add((category, detail))
-    routes = {
-        (row["category"], row["detail"]): index
-        for index, row in enumerate(policies["source_policy"]["route"])
-        if row["status"] == "lookup"
-    }
-    lookups = {
-        table: {
-            f"policy/source_policy.toml:route[{routes[s]}]"
-            for s in scopes
-            if s in routes
-        }
-        for table, scopes in subjects.items()
-    }
     claims = {}
 
     def claim(table: str, disposition: str, locators: set[str]) -> None:
@@ -187,27 +195,21 @@ def compare_holdings_input(path: Path, artifact_dir: Path) -> dict:
             )
         claims[table] = disposition, locators | {f"{source_name}:table[{table!r}]"}
 
-    for table, refs in lookups.items():
-        if refs:
-            claim(table, "lookup", refs)
-    for name in ("inventory_overlay", "holdings_policy"):
-        for index, row in enumerate(policies[name].get("exclude", [])):
-            if lookups.get(row["table"]):
-                continue
-            claim(row["table"], "excluded", {f"policy/{name}.toml:exclude[{index}]"})
-    retention = policies["holdings_policy"]
-    if file_digest(source) != retention["source_sha256"]:
-        raise ValueError("Holdings retention census digest differs from policy")
-    unknown = retention.get("retain_unknown", [])
+    if file_digest(source) != scope["census_sha256"]:
+        raise ValueError("Holdings census digest differs from the spec's census_sha256")
+    for disposition, key in (("lookup", "lookup"), ("excluded", "exclude")):
+        for index, row in enumerate(scope.get(key, [])):
+            claim(row["table"], disposition, {f"{scope_ref}:{key}[{index}]"})
+    unknown = scope.get("retain_unknown", [])
     for index, row in enumerate(unknown):
         if digest(guards[row["table"]]) != row["rows_sha256"]:
             raise ValueError("Holdings retained-unknown row digest differs from census")
         claim(
             row["table"],
             "retained_unknown",
-            {f"policy/holdings_policy.toml:retain_unknown[{index}]"},
+            {f"{scope_ref}:retain_unknown[{index}]"},
         )
-    inventory = policies["inventory"]["table"]
+    inventory = tomllib.loads((path / roles["inventory"]).read_text())["table"]
     for index, row in enumerate(inventory):
         disposition = (
             "year_independent"
@@ -259,18 +261,18 @@ def compare_holdings_input(path: Path, artifact_dir: Path) -> dict:
         }
         for index, table in enumerate(inventory):
             physical = table["id"]
-            scope = table.get("period_scope", "intervals")
+            period_scope = table.get("period_scope", "intervals")
             expected_tables.append(
                 (
                     physical,
-                    scope,
+                    period_scope,
                     canonical(table["edition"]),
                     table.get("partition"),
                     None,
                     f"policy/inventory.toml:table[{index}]",
                 )
             )
-            if scope == "intervals":
+            if period_scope == "intervals":
                 expected_periods.extend(
                     (physical, lo, hi) for lo, hi in edition_periods(table["edition"])
                 )
@@ -307,7 +309,7 @@ def compare_holdings_input(path: Path, artifact_dir: Path) -> dict:
                     else None,
                     table.get("partition"),
                     table["reason"],
-                    f"policy/holdings_policy.toml:retain_unknown[{index}]",
+                    f"{scope_ref}:retain_unknown[{index}]",
                 )
             )
             expected_columns.extend(
@@ -339,27 +341,17 @@ def compare_holdings_input(path: Path, artifact_dir: Path) -> dict:
                 "SELECT representation_literal,representation_canonical FROM holding_mapping"
             )
         )
-    policy_sha = digest(
-        {
-            f"policy/{name}.toml": file_digest(path / f"policy/{name}.toml")
-            for name in POLICY_NAMES
-        }
-    )
-    exclusion_reasons = Counter(
-        row["reason"]
-        for name in ("inventory_overlay", "holdings_policy")
-        for row in policies[name].get("exclude", [])
-        if not lookups.get(row["table"])
-    )
+    spec_sha = spec_digest(spec_dir)
+    exclusion_reasons = Counter(row["reason"] for row in scope.get("exclude", []))
     return {
         "counts": counts,
         "projection_records": len(projection),
         "accounting_sha256": digest(projection),
-        "policy_sha256": policy_sha,
+        "spec_sha256": spec_sha,
         "counts_equal": counts == json.loads(manifest["holdings_accounting_counts"]),
         "accounting_digest_equal": digest(projection)
         == manifest["holdings_accounting_sha256"],
-        "policy_digest_equal": policy_sha == manifest["holdings_policy_sha256"],
+        "spec_digest_equal": spec_sha == manifest["steward_spec_sha256"],
         "relations": relations,
         "partitioned_tables": sum(bool(table.get("partition")) for table in inventory),
         "range_list_tables": sum(

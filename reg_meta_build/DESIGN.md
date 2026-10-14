@@ -214,15 +214,17 @@ Authority depends on the fact and scope, rather than a universal file ordering:
   erratum without `data_type` takes the documented class alone. A column left untyped is
   withheld with a located `unknown_data_type` error until curation types or acknowledges
   it.
-- The SWECOV refresh (`build_catalog.py inventory`) cross-checks every curated type on a
-  register that `reg_webapp/stewards/swecov/storage_policy.toml` maps to literal
-  storage-table prefixes (folded column names join waves; the policy's `storage_columns`
-  names the physical header where storage spells a column differently) and writes
-  `derived/storage_type_findings.tsv`. Disagreeing storage, uncurated steward holdings
-  and steward holdings or typed delivered columns that match no storage column print a
-  warning in the refresh summary; a documented column SWECOV does not hold is no
-  finding. Curation, not the check, decides what changes. Storage metadata never
-  establishes per-year availability or row content.
+- The steward refresh (`build_catalog.py inventory`) cross-checks every curated type on
+  a register a steward-spec series names against that series' member tables in the
+  steward's storage-schema export (folded column names join waves; a column decision's
+  `storage_header` names the physical header where storage spells a column differently)
+  and writes `derived/storage_type_findings.tsv`. The export is a required input: a
+  missing or unreadable `--storage-csv` fails the run, so no refresh skips the check
+  (#1594). Disagreeing storage, uncurated steward holdings and steward holdings or typed
+  delivered columns that match no storage column print a warning in the refresh summary;
+  a documented column SWECOV does not hold is no finding. Curation, not the check,
+  decides what changes. Storage metadata never establishes per-year availability or row
+  content.
 - Agents can investigate official handbooks separately and author structured curation
   with document/page references. Neither preparation nor a build extracts or interprets
   PDFs or calls an LLM.
@@ -2134,10 +2136,10 @@ over every coded state, while `schema`, `diff` and `coverage` read one register'
 `expanded_state`, `variable_state` and `browse_delivery` rows directly. The extension
 refolds the search indexes over base plus overlay. Structural, mapping and accounting
 gates run before atomic publication of one steward artifact. Strict steward publication
-requires accepted provider overlays, inventory and policy plus committed steward slug
-pins; no skip flag bypasses compilation or accounting. Provider regeneration and input
-acceptance remain separate maintainer operations. Diagnostic output remains explicitly
-nonpublishable and cannot replace the active artifact.
+requires accepted provider overlays and inventory plus the committed steward slug pins
+and spec; no skip flag bypasses compilation or accounting. Provider regeneration and
+input acceptance remain separate maintainer operations. Diagnostic output remains
+explicitly nonpublishable and cannot replace the active artifact.
 
 Panel entity keys must not drift with a reslug (#546). On the global build, compile
 enforces this: every variable needs an authored `[[variable]]` pin, and a variable
@@ -2217,14 +2219,14 @@ evidence is the sole authority for unknown scopes; the former `unknown_holding_e
 
 The accounting gate proves the disjoint union dated ∪ year-independent ∪
 retained-unknown ∪ excluded ∪ lookup equals the raw table/column census from accepted
-inventory, policy, overlay and CSV. A missing, duplicate or contradictory disposition
-fails publication. Runtime relations contain only dated, year-independent and
-retained-unknown facts; exclusions and lookups remain accepted build evidence. Store
-counts and the accounting projection digest in the manifest. Strict gates and existing
-disclosure confinement remain mandatory; no raw individual-level content enters
-artifacts. This compiler is the only mapping, ownership and accounting gate: the runtime
-checks schema, completeness, publishability and steward identity at admission, and never
-rebuilds or rechecks an inventory.
+inventory, the committed spec's scope and the census. A missing, duplicate or
+contradictory disposition fails publication. Runtime relations contain only dated,
+year-independent and retained-unknown facts; exclusions and lookups remain accepted
+build evidence. Store counts and the accounting projection digest in the manifest.
+Strict gates and existing disclosure confinement remain mandatory; no raw
+individual-level content enters artifacts. This compiler is the only mapping, ownership
+and accounting gate: the runtime checks schema, completeness, publishability and steward
+identity at admission, and never rebuilds or rechecks an inventory.
 
 ### Artifact manifest and deterministic generation
 
@@ -2237,7 +2239,7 @@ cursor or order generation discriminator. Publishable `catalog_artifact_kind` is
 by runtime readers. Add `builder_commit` and `generation_id` to publishable artifacts.
 
 A steward also requires `steward`, `base_db_sha256`, `base_generation_id`,
-`holdings_input_commit`, `holdings_manifest_sha256`, `holdings_policy_sha256`,
+`holdings_input_commit`, `holdings_manifest_sha256`, `steward_spec_sha256`,
 `holdings_accounting_counts` and `holdings_accounting_sha256`. These keys are absent on
 a global catalog, whose holdings relations are empty. `base_db_sha256` hashes the exact
 new-schema base file before extension and remains byte-level provenance only.
@@ -2260,64 +2262,77 @@ checkout, including untracked files; committed steward slug directories require 
 exact committed file set and bytes. Recheck tracked source cleanliness and revision
 before placement. Existing input/output separation and atomic placement rules apply.
 
-The accepted candidate's manifest covers every consumed provider TOML, inventory,
-policy, source document and review-evidence payload. Provider and policy directories
-must come from that clean pinned candidate. External provider/policy overrides and
-tracked policy defaults cannot supplement a publishable build. Changed provider bytes
-require fresh acceptance and are covered by `holdings_manifest_sha256`. Verification
-materializes the exact committed manifest members into a temporary build-owned snapshot;
-all provider, inventory, policy and census reads consume that snapshot. Later edits to
-the accepted working tree cannot change the consumed bytes. Steward slug identity is
-covered separately by `builder_commit`; changing tracked slug pins requires public
-review and the existing slug checks, not fresh acceptance merely to copy them privately.
-Census accounting runs on the verified snapshot before copying the base DB. Compilation
-reuses that accounting result; direct compiler calls perform the same gate themselves.
-Diagnostic library extensions may supply metadata warnings and a publication test hook;
-strict extensions reject these unpinned controls. CLI provider and inventory paths are
-derived only from the accepted candidate. All accepted mapping coordinates must still
-resolve under the selected committed pins; incompatibility fails the build rather than
-falling back to a private slug copy.
+The accepted candidate (`artifact_kind = "steward-private-extension-input-candidate"`)
+is generic over stewards. Its manifest covers every consumed provider TOML, the
+inventory, the census, the storage-schema export and any review-evidence payload, and
+names three roles: `census`, `storage_export` and `inventory`, the last fixed at
+`policy/inventory.toml`. It carries no policy copies; extend-db refuses a candidate that
+does. Two pins tie it to what generated it: `steward_spec_sha256` (the spec the
+inventory was decided by) and `global_db_sha256` (the global the inventory was
+auto-mapped against). Extend-db refuses a spec pin that differs from the builder
+revision's committed spec (`extend_steward_spec_mismatch`) and a base whose bytes differ
+from the global pin (`extend_base_db_mismatch`), the latter right after hashing the base
+and before copying it. Provider directories must come from that clean pinned candidate;
+external provider overrides cannot supplement a publishable build. Changed provider
+bytes require fresh acceptance and are covered by `holdings_manifest_sha256`.
+Verification materializes the exact committed manifest members into a temporary
+build-owned snapshot; all provider, inventory and census reads consume that snapshot.
+Later edits to the accepted working tree cannot change the consumed bytes. Steward slug
+and spec identity are covered separately by `builder_commit`: extend-db reads both from
+the builder revision's committed `reg_meta_build/fqid_slugs/<steward>/` and
+`reg_webapp/stewards/<steward>/`, refusing uncommitted or missing files. Changing them
+requires public review and the existing checks, not fresh acceptance merely to copy them
+privately. Census accounting runs on the verified snapshot before copying the base DB.
+Compilation reuses that accounting result; direct compiler calls perform the same gate
+themselves. Diagnostic library extensions may supply metadata warnings and a publication
+test hook; strict extensions reject these unpinned controls. CLI provider and inventory
+paths are derived only from the accepted candidate. All accepted mapping coordinates
+must still resolve under the selected committed pins; incompatibility fails the build
+rather than falling back to a private slug copy.
 
-Define `holdings_policy_sha256` as SHA-256 of a sorted relative-policy-path → SHA-256
-object covering `source_policy.toml`, `inventory_overlay.toml` and
-`holdings_policy.toml` selected from the accepted candidate. Never substitute tracked
-defaults. `holdings_accounting_counts` is canonical JSON giving table/physical-column
-counts for `raw`, `dated`, `year_independent`, `retained_unknown`, `excluded`, `lookup`.
-The accounting digest hashes an array of objects with exactly `table` (exact physical
-identifier), `column` (null for the table-grain record, literal name otherwise),
-`disposition` (`dated`, `year_independent`, `retained_unknown`, `excluded`, `lookup`)
-and `evidence` (sorted relative pinned-input/record locators). Every raw table has
-exactly one table-grain record and every raw column exactly one column-grain record with
-its table's disposition; unmapping does not exclude a held column. Sort records by exact
-table in binary order, null column before named columns in binary order, then
-disposition; sort evidence strings in binary order. Only the digest enters the manifest,
-not private identifiers. Authored retained-unknown register and census-row digest remain
-in the pinned policy evidence located by `source_ref`; they are not new logical
-mappings.
+Define `steward_spec_sha256` as the canonical digest of a sorted spec-relative-path →
+SHA-256 object covering exactly `scope.toml` and `series/*.toml` of the committed spec
+directory; any other file there is outside the digest. `holdings_accounting_counts` is
+canonical JSON giving table/physical-column counts for `raw`, `dated`,
+`year_independent`, `retained_unknown`, `excluded`, `lookup`. The accounting digest
+hashes an array of objects with exactly `table` (exact physical identifier), `column`
+(null for the table-grain record, literal name otherwise), `disposition` (`dated`,
+`year_independent`, `retained_unknown`, `excluded`, `lookup`) and `evidence` (sorted
+relative pinned-input/record locators). Every raw table has exactly one table-grain
+record and every raw column exactly one column-grain record with its table's
+disposition; unmapping does not exclude a held column. Sort records by exact table in
+binary order, null column before named columns in binary order, then disposition; sort
+evidence strings in binary order. Only the digest enters the manifest, not private
+identifiers. Scope evidence is located as
+`stewards/<id>/scope.toml:{lookup,exclude,retain_unknown}[i]`, inventory evidence as
+`policy/inventory.toml:table[i]`. Authored retained-unknown register and census-row
+digest remain in the spec, located by the table's `source_ref`
+(`stewards/<id>/scope.toml:retain_unknown[i]`); they are not new logical mappings.
 
 Canonical digest encoding is UTF-8 JSON with sorted object keys, compact separators,
 `ensure_ascii=false`, no floats and no trailing newline. `generation_id` hashes an
 object containing `schema_version`, `builder_commit`, `catalog_artifact_kind`,
 `prepared_commit`, `prepared_manifest_sha256`, `curation_tree_sha256`; steward adds
 `steward`, `base_generation_id`, `holdings_input_commit`, `holdings_manifest_sha256`,
-`holdings_policy_sha256` and `holdings_accounting_sha256`. Exclude `base_db_sha256` and
-the count summary (covered by accounting digest). Never include `generation_id` itself,
+`steward_spec_sha256` and `holdings_accounting_sha256`. Exclude `base_db_sha256` and the
+count summary (covered by accounting digest). Never include `generation_id` itself,
 finished output bytes, `import_date`, absolute paths, logs or volatile timings. Publish
 final artifact SHA-256 separately, outside that database. Replays use the exact semantic
 pins; do not promise unmeasured build durations.
 
-The SWECOV generator reads only the steward spec (below). `source_policy.toml` and
-`inventory_overlay.toml` stay tracked, and `holdings_policy.toml` stays in the accepted
-candidate, because holdings accounting and the private acceptance still read them; they
-are not generator inputs. The runtime uses only compiled holdings; accepted holdings
-remain private builder inputs and never become loose runtime files.
+The steward generator and holdings accounting both read the committed steward spec
+(below); there are no other policy files. The generator's `inventory` stage builds its
+own mapping DB from the pinned global (`--base-db`) plus the candidate's providers
+(`--providers`) through extend-db's metadata-only diagnostic, reads the storage-schema
+export (`--storage-csv`) before anything else, writes the inventory to `--out` and
+prints the two candidate pins. The runtime uses only compiled holdings; accepted
+holdings remain private builder inputs and never become loose runtime files.
 
-The complete private input acceptance retains these policies, source documents,
-generated inventory and review evidence in a clean local-only Git repository. Its
-manifest covers every payload. Regeneration explicitly selects the accepted candidate's
-policies; a tracked default policy is not evidence that a later private candidate uses
-identical dispositions. Changed policy or inventory bytes require a fresh acceptance.
-The public prepared sources and builder code remain separately pinned.
+The complete private input acceptance retains the census, storage export, generated
+inventory, providers and review evidence in a clean private Git repository. Its manifest
+covers every payload. Changed inventory bytes require a fresh acceptance, and so does a
+changed spec or global: their pins no longer match. The public prepared sources and
+builder code remain separately pinned.
 
 ### Steward spec
 
@@ -2371,11 +2386,11 @@ A table has an opaque exact `id`, an explicit `edition`, a `period_scope` defaul
 the shared period grammar: a token, a `{from, to}` range, or a sorted, nonoverlapping
 list. Year-independent input sets `period_scope = "year_independent"` and the whole
 edition `"_default"`, and its mappings name concrete variants. `_default` is never a
-finite or unknown-scope sentinel. Retained unknown tables come from accepted
-`retain_unknown` policy plus the raw census, not invented finite entries. Partitions use
-the slug grammar (`_default`, `class` and period-shaped values are rejected); they name
-shards of a delivery, not populations a researcher selects. An unmapped column keeps its
-authored reason where one is given; none is synthesized.
+finite or unknown-scope sentinel. Retained unknown tables come from the spec's
+`retain_unknown` entries plus the raw census, not invented finite entries. Partitions
+use the slug grammar (`_default`, `class` and period-shaped values are rejected); they
+name shards of a delivery, not populations a researcher selects. An unmapped column
+keeps its authored reason where one is given; none is synthesized.
 
 A mapping may carry a wide-pivot `member` index (#1495): `{ position = N }`,
 `{ year = YYYY }` or `{ month = "YYYY-MM" }`. A wide pivot delivers one variable as N

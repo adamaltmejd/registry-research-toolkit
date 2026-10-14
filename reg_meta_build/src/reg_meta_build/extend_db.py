@@ -1,7 +1,8 @@
 """Compile accepted steward metadata and physical holdings onto an exact base.
 
-Strict extension consumes pinned provider, inventory and policy inputs with
-committed steward naming. Metadata-only diagnostics are create-only and cannot
+Strict extension consumes a pinned candidate (providers, census, inventory) with
+the committed steward slugs and spec, and refuses a candidate generated from
+another spec or global. Metadata-only diagnostics are create-only and cannot
 be activated as runtime catalogs. The validated global base is never mutated.
 """
 
@@ -9,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import sqlite3
 from contextlib import ExitStack, closing
@@ -21,6 +23,7 @@ from reg_core_py import GrammarError
 
 from .db import DB_FILENAME, get_manifest, open_built_db
 from .errors import EXIT_CONFIG, RegMetaError
+from .holdings_accounting import CANDIDATE_ROLES, INVENTORY_ROLE_PATH
 from .id import mint
 from .ir import (
     IRRegister,
@@ -33,6 +36,9 @@ from .ir import (
 from .slug_grammar import validate_slug
 from .source_evidence import canonical_json
 from .sources.curated import CuratedAdapter
+
+# A private candidate's `manifest.json` `artifact_kind`, for any steward.
+CANDIDATE_KIND = "steward-private-extension-input-candidate"
 
 
 @dataclass(frozen=True)
@@ -291,12 +297,16 @@ def extend_db(
     from .artifact_identity import (
         builder_commit,
         committed_steward_slugs,
+        committed_steward_spec,
         generation_id,
     )
     from .holdings_accounting import account_holdings
     from .holdings_compile import compile_holdings
     from .inventory import load_inventory
+    from .steward_spec import STEWARDS_DIR, load_steward_spec, steward_spec_sha256
 
+    candidate_manifest: dict[str, Any] = {}
+    spec = spec_digest = None
     with ExitStack() as inputs:
         revision = builder_commit() if not diagnostic else None
         if holdings_input is None and not diagnostic:
@@ -325,7 +335,7 @@ def extend_db(
             snapshot = Path(
                 inputs.enter_context(TemporaryDirectory(prefix="reg-meta-holdings-"))
             )
-            read_private_holdings_input(
+            candidate_manifest = read_private_holdings_input(
                 holdings_input,
                 input_commit=input_commit,
                 input_manifest_sha256=input_manifest_sha256,
@@ -333,12 +343,48 @@ def extend_db(
             )
             holdings_input = snapshot
             providers_dir = snapshot / "providers"
+            # The spec is read at the builder revision, never from the candidate;
+            # the candidate pins the spec it was generated from.
+            spec_dir = committed_steward_spec(steward, revision=revision)
+            spec_digest = steward_spec_sha256(spec_dir)
+            if candidate_manifest["steward_spec_sha256"] != spec_digest:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="extend_steward_spec_mismatch",
+                    error_class="configuration",
+                    message=(
+                        f"The candidate was generated from steward spec "
+                        f"{candidate_manifest['steward_spec_sha256']}; the builder "
+                        f"revision's {STEWARDS_DIR}/{steward} is {spec_digest}."
+                    ),
+                    remediation=(
+                        "Regenerate and accept the candidate from the builder "
+                        "revision's spec, or build from the revision it pins."
+                    ),
+                )
+            spec = load_steward_spec(spec_dir)
         else:
             pinned_slug_dir = None
 
         resolved_providers_dir = resolve_steward_providers_dir(providers_dir, steward)
         with base_db.open("rb") as base_file:
             base_digest = hashlib.file_digest(base_file, "sha256").hexdigest()
+        if candidate_manifest and candidate_manifest["global_db_sha256"] != base_digest:
+            # The generator auto-mapped the inventory against this global; another
+            # global can change which variable is the single candidate.
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="extend_base_db_mismatch",
+                error_class="configuration",
+                message=(
+                    f"--base-db is {base_digest}; the candidate's inventory was "
+                    f"generated against global {candidate_manifest['global_db_sha256']}."
+                ),
+                remediation=(
+                    "Regenerate and accept the candidate against this global DB "
+                    "before extending it."
+                ),
+            )
         with closing(open_built_db(base_db)) as source_db:
             if holdings_input is not None:
                 from .holdings_validation import validate_compiled_holdings
@@ -373,7 +419,10 @@ def extend_db(
                 raise ValueError(
                     "Accepted inventory steward does not match selected steward"
                 )
-            accounting = account_holdings(holdings_input, inventory)
+            assert spec is not None
+            accounting = account_holdings(
+                holdings_input, inventory, spec=spec, steward=steward
+            )
 
         db_dir.mkdir(parents=True, exist_ok=True)
         final_path = db_dir / DB_FILENAME
@@ -459,8 +508,13 @@ def extend_db(
                     )
                 assert input_commit is not None and input_manifest_sha256 is not None
                 assert revision is not None
+                assert spec is not None and spec_digest is not None
                 compiled = compile_holdings(
-                    conn, holdings_input, steward=steward, accounting=accounting
+                    conn,
+                    holdings_input,
+                    steward=steward,
+                    spec=spec,
+                    accounting=accounting,
                 )
                 manifest.update(
                     {
@@ -471,7 +525,7 @@ def extend_db(
                         "base_generation_id": manifest["generation_id"],
                         "holdings_input_commit": input_commit,
                         "holdings_manifest_sha256": input_manifest_sha256,
-                        "holdings_policy_sha256": compiled.accounting.policy_sha256,
+                        "steward_spec_sha256": spec_digest,
                         "holdings_accounting_counts": canonical_json(
                             compiled.accounting.counts
                         ),
@@ -571,8 +625,8 @@ def read_private_holdings_input(
         root, expected_sha256=input_manifest_sha256, input_commit=input_commit
     )
     manifest = json.loads(selection.manifest_bytes)
-    if manifest.get("artifact_kind") != "swecov-private-extension-input-candidate":
-        raise ValueError("Not a private SWECOV extension input candidate")
+    if manifest.get("artifact_kind") != CANDIDATE_KIND:
+        raise ValueError(f"Not a {CANDIDATE_KIND}")
     proofs = {proof["path"]: proof for proof in manifest["files"]}
     if len(proofs) != len(manifest["files"]):
         raise ValueError("Private input manifest has duplicate files")
@@ -622,26 +676,32 @@ def read_private_holdings_input(
             snapshot_member.write_bytes(committed)
     if materialize_to is not None:
         (materialize_to / "manifest.json").write_bytes(selection.manifest_bytes)
-    policy_name = "policy/holdings_policy.toml"
-    source_names = [
-        name
-        for name in proofs
-        if name.startswith("swecov/SWECOV_variables_full_") and name.endswith(".csv")
-    ]
-    if policy_name not in proofs or len(source_names) != 1:
-        raise ValueError(
-            "Private input manifest requires one holdings CSV and holdings policy"
-        )
-    required = {
-        "policy/inventory.toml",
-        "policy/source_policy.toml",
-        "policy/inventory_overlay.toml",
-        "policy/holdings_policy.toml",
-    }
-    if not required <= proofs.keys() or not any(
-        name.startswith("providers/") and name.endswith(".toml") for name in proofs
+    roles = manifest.get("roles")
+    if (
+        not isinstance(roles, dict)
+        or roles.keys() != set(CANDIDATE_ROLES)
+        or roles["inventory"] != INVENTORY_ROLE_PATH
+        or not all(isinstance(path, str) and path in proofs for path in roles.values())
     ):
         raise ValueError(
-            "Private input manifest lacks accepted inventory, policies or providers"
+            "Private input manifest requires roles "
+            f"{', '.join(CANDIDATE_ROLES)} naming its members "
+            f"(inventory = {INVENTORY_ROLE_PATH})"
         )
+    if not any(
+        name.startswith("providers/") and name.endswith(".toml") for name in proofs
+    ):
+        raise ValueError("Private input manifest lacks accepted providers")
+    if copies := sorted(
+        name
+        for name in proofs
+        if name.startswith("policy/") and name != INVENTORY_ROLE_PATH
+    ):
+        raise ValueError(
+            "Private input candidate carries policy copies extend-db never reads "
+            f"(the steward spec is read at the builder revision): {', '.join(copies)}"
+        )
+    for key in ("steward_spec_sha256", "global_db_sha256"):
+        if not re.fullmatch(r"[0-9a-f]{64}", str(manifest.get(key, ""))):
+            raise ValueError(f"Private input manifest requires a {key} pin")
     return manifest

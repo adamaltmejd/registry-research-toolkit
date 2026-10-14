@@ -194,8 +194,8 @@ def test_unavailable_inventory_owner_writes_worklist_without_replacing_inventory
     with pytest.raises(
         SystemExit, match="no_covering|need positive delivery-owner scope"
     ):
-        build_catalog.cmd_inventory(
-            argparse.Namespace(csv=csv, db=db, spec=steward, out=None)
+        build_catalog.write_inventory(
+            argparse.Namespace(csv=csv, spec=steward, out=steward), db
         )
     assert previous.read_text() == "previous inspected inventory"
     worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
