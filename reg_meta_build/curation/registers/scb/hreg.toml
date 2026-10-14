@@ -1578,6 +1578,17 @@ evidence = "SWECOV holds omr_yprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 
 noted = "2026-10-12"
 
 [[errata.column]]
+variant = "grundutbildning-examina"
+column = "Omr"
+data_type = "text"
+name = "Utbildningsområde"
+definition = "Utbildningsområde"
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds Omr in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024 (1990-2024). SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, sheet Högskola row 112 (Omr, Utbildningsområde, 1990-VT2022, HREG, Hreg_Examina); Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning row 12380 (Hreg_Examina_1990_2022, Omr char(2)) and Högskola row 169 (code list Hreg_H_omr); Utkast_P1105_Variabellista_uppd2025_v5.xlsx, Högskola row 112 (1990-HT2024). SCB's Registerinformation export carries no row for the column on grundutbildning-examina. Not the course-level scb/hreg/utbildningsomrade: no equivalence is asserted. Maintainer ruling 2026-10-14 (#1516)."
+noted = "2026-10-14"
+
+[[errata.column]]
 variant = "grundutbildning-poang"
 column = "SUN2000Inr3_amnegrupp"
 data_type = "text"
@@ -1741,6 +1752,10 @@ slug = "omr-amnegrupp"
 [[variable]]
 native_id = "47.omr_yprog"
 slug = "omr-yprog"
+
+[[variable]]
+native_id = "47.Omr"
+slug = "utbildningsomrade-examen"
 
 [[variable]]
 native_id = "47.Termin"

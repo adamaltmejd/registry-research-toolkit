@@ -13226,6 +13226,18 @@ expected_diagnostic_sha256 = "814793b67b0e4fc8f5616d84fe061dffc2d6f821ccf98234e6
 # Names and definitions are written from the column name and the catalog's sibling
 # wording, not copied from the delivery list.
 
+[[errata.delivered]]
+variant = "tjansteregistret"
+donor_variant = "personregistret"
+column = "PrTjLedig"
+data_type = "text"
+versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017", "Läsåret 2017/2018", "Läsåret 2018/2019", "Läsåret 2019/2020", "Läsåret 2020/2021", "Läsåret 2021/2022", "Läsåret 2022/2023"]
+expected_evidence_sha256 = "2859ad37a164e06eea81cdc9ef2aa90b713892326106a8d19627d854ca4ab6ed"
+evidence = "SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet PedPers row 41 (PrTjledig: 'J = Personen är helt tjänstledig, har inte rapporterats med aktiv tjänst', Lärarreg., lreg_ÅÅÅÅ(HT), 1999-2022), sheet Postbeskrivning uppd 2023-2024 rows 19067-19804 (LReg_1999..LReg_2022, PrTjledig char(1)); Utkast_P1105_Variabellista_uppd2025_v5.xlsx, sheet PedPers row 38 (2023-2024). Same native family 232.13671 as personregistret PrTjLedig ('Avser hel tjänstledighet hela eller större delen av höstterminen'). Maintainer ruling 2026-10-14 (#1516)."
+noted = "2026-10-14"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 13671
+
 [[errata.column]]
 variant = "tjansteregistret"
 column = "REKTOR"
