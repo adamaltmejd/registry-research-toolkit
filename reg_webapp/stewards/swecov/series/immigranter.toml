@@ -7,4 +7,3 @@ variants = ["scb/rtb/invandringar"]
 [[table]]
 table = "immigranter_20241231"
 edition = { from = 1990, to = 2024 }
-
