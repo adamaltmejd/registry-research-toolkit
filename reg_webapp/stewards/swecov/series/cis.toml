@@ -85,6 +85,11 @@ select_owner = true
 
 [[column]]
 column = "CO31"
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+
+[[column]]
+column = "CO31"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-customers-sweden", representation = "co31" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -110,6 +115,11 @@ tables = ["CIS2010"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-customers-sweden", representation = "co31" }]
 reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
 select_owner = true
+
+[[column]]
+column = "co32"
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
 
 [[column]]
 column = "co32"
@@ -141,6 +151,11 @@ select_owner = true
 
 [[column]]
 column = "co33"
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+
+[[column]]
+column = "co33"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-customers-usa", representation = "co33" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -169,6 +184,11 @@ select_owner = true
 
 [[column]]
 column = "co34"
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+
+[[column]]
+column = "co34"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-customers-other-countries", representation = "co34" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -194,6 +214,11 @@ tables = ["CIS2010"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-customers-china-india", representation = "co34" }]
 reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
 select_owner = true
+
+[[column]]
+column = "co35"
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
 
 [[column]]
 column = "co35"
