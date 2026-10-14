@@ -182,8 +182,8 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     let catalog = &server.catalog;
     // Provenance is checked before anything resolves; no deployment rewrites it.
     let steward = catalog.name();
-    if project.steward.as_str() != steward {
-        let wanted = quote(project.steward.as_str());
+    if project.steward != steward {
+        let wanted = quote(&project.steward);
         return Err(blocked(vec![Blocking::whole(
             "steward_mismatch",
             format!(

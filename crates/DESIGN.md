@@ -475,9 +475,10 @@ reference scope. A `catalog` artifact orders by global fallback: canonical resol
 alone, each slice served by its canonical column under a blank table. It is the same
 pipeline with a different matching arm, so there is no second clip or coverage
 implementation. `provenance.mode` (`steward_holdings` or `global_fallback`) says which.
-The project's `steward` must equal the artifact's steward, or `global`; retargeting is
-not a feature, and a user who means another deployment edits the JSON and uploads it
-again.
+The project's `steward` must equal the artifact's name (`global` or its steward id);
+`reg-core` accepts any slug there and holds no list of stewards, so this comparison is
+the only check that a steward exists. Retargeting is not a feature, and a user who means
+another deployment edits the JSON and uploads it again.
 
 Per binding, in declaration order, over the binding's own period (`Binding.period`, else
 the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):

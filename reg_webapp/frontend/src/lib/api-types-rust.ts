@@ -1063,7 +1063,12 @@ export interface components {
             reg_meta_version: string;
             schema_version: string;
             sources: components["schemas"]["ProjectSource"][];
-            steward: components["schemas"]["ProjectSteward"];
+            /**
+             * @description The deployment the project is ordered from: `global`, or a steward id. Any
+             *     slug (`^[a-z](?:-?[a-z0-9])*$`, not `class`) is accepted; an order compares it
+             *     to the served artifact's steward.
+             */
+            steward: string;
             window?: components["schemas"]["ProjectStudyWindow"];
         };
         /** @description A panel's entity key: one column, or a composite. */
@@ -1115,8 +1120,6 @@ export interface components {
          *     disjoint list of them (an interrupted series).
          */
         ProjectSourcePeriod: components["schemas"]["ProjectPeriodSegment"][] | components["schemas"]["ProjectPeriodSegment"];
-        /** @enum {string} */
-        ProjectSteward: "global" | "ifau" | "swecov";
         /** @description The optional study window, in plain int years. */
         ProjectStudyWindow: {
             /** Format: int64 */

@@ -46,12 +46,12 @@
     "status": 422,
     "json": {
       "/error/code": "order_blocked",
-      "/error/message": "order blocked by 1 finding: steward_mismatch: this project's steward is 'swecov' and this deployment serves the 'global' steward; order the project from the deployment that serves 'swecov'. Its steward is provenance — no deployment rewrites it to match its own",
+      "/error/message": "order blocked by 1 finding: steward_mismatch: this project's steward is 'lkf' and this deployment serves the 'global' steward; order the project from the deployment that serves 'lkf'. Its steward is provenance — no deployment rewrites it to match its own",
       "/error/fields": {
         "findings": [
           {
             "code": "steward_mismatch",
-            "message": "this project's steward is 'swecov' and this deployment serves the 'global' steward; order the project from the deployment that serves 'swecov'. Its steward is provenance — no deployment rewrites it to match its own",
+            "message": "this project's steward is 'lkf' and this deployment serves the 'global' steward; order the project from the deployment that serves 'lkf'. Its steward is provenance — no deployment rewrites it to match its own",
             "source": null,
             "variable": null,
             "period": null

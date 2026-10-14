@@ -140,6 +140,7 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
   invalid_enum_value: { label: "Value outside the allowed set", hint: "error" },
   unexpected_field: { label: "Unexpected field", hint: "error" },
   invalid_fqid: { label: "Malformed FQID", hint: "error" },
+  invalid_slug: { label: "Malformed steward id", hint: "error" },
   fqid_register_variant_mismatch: {
     label: "Column FQID prefix does not match the source's register_variant",
     hint: "error",

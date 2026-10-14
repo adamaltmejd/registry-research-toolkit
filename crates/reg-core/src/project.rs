@@ -131,10 +131,6 @@ macro_rules! str_enum {
 }
 
 str_enum!(
-    /// The deployment a project is ordered from.
-    Steward { Global = "global", Ifau = "ifau", Swecov = "swecov" }
-);
-str_enum!(
     /// A binding's column type.
     ColumnType {
         Id = "id",
@@ -160,7 +156,10 @@ str_enum!(
 #[serde(deny_unknown_fields)]
 pub struct ProjectData {
     pub schema_version: String,
-    pub steward: Steward,
+    /// The deployment the project is ordered from: `global`, or a steward id. Any
+    /// slug (`^[a-z](?:-?[a-z0-9])*$`, not `class`) is accepted; an order compares it
+    /// to the served artifact's steward.
+    pub steward: String,
     pub reg_meta_version: String,
     pub name: String,
     pub sources: Vec<Source>,
@@ -178,7 +177,7 @@ pub struct ProjectData {
 #[serde(deny_unknown_fields)]
 struct Fields {
     schema_version: String,
-    steward: Steward,
+    steward: String,
     reg_meta_version: String,
     name: String,
     sources: Vec<Source>,

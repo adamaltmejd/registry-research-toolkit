@@ -3885,7 +3885,8 @@
             }
           },
           "steward": {
-            "$ref": "#/components/schemas/ProjectSteward"
+            "type": "string",
+            "description": "The deployment the project is ordered from: `global`, or a steward id. Any\nslug (`^[a-z](?:-?[a-z0-9])*$`, not `class`) is accepted; an order compares it\nto the served artifact's steward."
           },
           "window": {
             "$ref": "#/components/schemas/ProjectStudyWindow"
@@ -4089,14 +4090,6 @@
           }
         ],
         "description": "`Source.period` (and a `Binding.period` inside it): one segment, or a sorted,\ndisjoint list of them (an interrupted series)."
-      },
-      "ProjectSteward": {
-        "type": "string",
-        "enum": [
-          "global",
-          "ifau",
-          "swecov"
-        ]
       },
       "ProjectStudyWindow": {
         "type": "object",
