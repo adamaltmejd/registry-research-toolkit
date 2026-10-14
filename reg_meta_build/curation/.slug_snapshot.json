@@ -18476,6 +18476,7 @@
     "scb/2.PostNrG": "postnrg",
     "scb/2.UtdAdr1": "utdadr1",
     "scb/2.UtdAdr1G": "utdadr1g",
+    "scb/2.datinv": "immigrationsdatum",
     "scb/200.145": "identitet",
     "scb/200.16420": "kommentar-uppgiftslamnaren",
     "scb/200.16428": "postort-for-arbetsstallet",

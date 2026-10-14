@@ -52,6 +52,17 @@ source = "steward-holdings"
 evidence = "SWECOV's delivery lists hold the column on this variant (input_data/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
+[[errata.column]]
+variant = "invandringar"
+column = "datinv"
+data_type = "date"
+name = "Datum för immigration"
+definition = "Datum för immigration, ÅÅÅÅMMDD."
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds datinv in immigranter_20241231 (1990-2024), an event table of immigrations: aggregate counts run on MONA by the maintainer (2026-10-14) show about 9% more rows than persons, and the distribution of rows per person equals the distribution of distinct datinv values per person, so each row carries its own immigration date (counts run on the full table). SCB's Registerinformation export carries no row for the column on this variant. Stored as an integer in YYYYMMDD form (maintainer, 2026-10-14); curated as a date like scb/rtb/senaste-invandringsdatum. No equivalence is asserted with scb/rtb/senaste-invandringsdatum (latest immigration) or scb/flergenreg datinv (earliest immigration). Maintainer ruling 2026-10-14 (#1516)."
+noted = "2026-10-14"
+
 [[enrichment.description]]
 register = "scb/rtb"
 variable = "lan"
@@ -162,6 +173,10 @@ columns_ref = "Y-317 2026-09-29: SCB VarId 24852 GFB EFB has two explicitly name
 [[variable]]
 native_id = "2.57.personnr"
 slug = "personnr"
+
+[[variable]]
+native_id = "2.datinv"
+slug = "immigrationsdatum"
 
 
 [[variant]]
