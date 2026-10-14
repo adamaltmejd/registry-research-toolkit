@@ -30,6 +30,11 @@ ViktRev = "Vikt"
 [register."scb/grundskola-elever"]
 table_prefixes = ["Grund_Fkl_Fth_"]
 
+[register."scb/grundskola-elever".storage_columns]
+AvdFTH = "P1105_LopNr_AVDFTH"
+SkolKodFTH = "P1105_Lopnr_SkolKodFTH"
+SkolenhetsKodFTH = "P1105_Lopnr_Skolenhetskodfth"
+
 [register."scb/gymnasieskola-betyg"]
 table_prefixes = ["GymnasieskolaAvg_Individ_", "GymnasieskolaAvg_Kurs_"]
 
