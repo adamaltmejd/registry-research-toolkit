@@ -149,8 +149,9 @@ _PER_VARIANT_FIELDS = frozenset(
 
 @dataclass(frozen=True)
 class ErrataColumn:
-    """One `[[column]]`, resolved to SCB source ids: a column SCB documents
-    nowhere on the variant, with the variable identity to mint for it.
+    """One `[[column]]`, resolved to SCB source ids: a column SCB does not
+    document on the variant in the period it claims, with the variable identity
+    to mint for it.
 
     `versions` are `Registerversionnamn` tokens verbatim, `all_versions = true`
     leaves them None (every edition the variant has — the legacy undated reading
@@ -483,7 +484,8 @@ def resolve_scb_errata(
                 f"{context}: duplicate column entry for {column!r}.",
                 "Each (register, variant, column) may appear once, in ONE of "
                 "[[errata.delivered]] (SCB documents the column elsewhere on the "
-                "variant) or [[errata.column]] (it documents it nowhere).",
+                "variant) or [[errata.column]] (it does not document it in the "
+                "claimed period).",
             )
         seen_columns.add(key)
         if identities.setdefault(loaded.key, loaded.identity) != loaded.identity:
@@ -1199,7 +1201,7 @@ def _overlaps_documenting_edition(
     entry: ErrataColumn,
     context: ErrataVariantContext,
     selected: tuple[ErrataEditionBinding, ...],
-    documented_period_corrected: bool,
+    documented_corrected: bool,
 ) -> bool:
     """Whether the declared column could share a period with a documented one (#1621).
 
@@ -1207,16 +1209,17 @@ def _overlaps_documenting_edition(
     different meaning there, so the entry mints its own variable. It is refused
     when the minted and the documented owner would both claim the one physical
     column in one period. Undated holdings and editions without known bounds
-    cannot be shown disjoint, so they count as overlapping, as does a documented
-    occurrence whose period an `[[errata.occurrence_period]]` entry corrects: its
-    original scope is not the period it is delivered in.
+    cannot be shown disjoint, so they count as overlapping, as does a literal a
+    checked correction touches (an `[[errata.occurrence_period]]` on it, or an
+    `[[errata.field]]` column_name rename to it): the original records no longer
+    show where it is delivered.
     """
+    if documented_corrected:
+        return True
     documented = context.by_column.get(fold_column(entry.column), ())
     if not documented:
         return False
-    if documented_period_corrected or (
-        entry.versions is None and entry.holdings_period is None
-    ):
+    if entry.versions is None and entry.holdings_period is None:
         return True
     if entry.holdings_period is not None:
         start, end = holdings_period_bounds(entry.holdings_period)
@@ -1232,12 +1235,20 @@ def _overlaps_documenting_edition(
             return True
         claimed = ()
         for edition in selected:
-            bounds = coding_scope_bounds(edition.edition_scope)
+            bounds = coding_scope_bounds(
+                edition.edition_period_scope
+                if edition.edition_period_scope.kind != "not_applicable"
+                else edition.edition_scope
+            )
             if bounds is None:
                 return True
             claimed += bounds
     for record in documented:
-        bounds = coding_scope_bounds(record.edition_scope)
+        bounds = coding_scope_bounds(
+            record.edition_period_scope
+            if record.edition_period_scope.kind != "not_applicable"
+            else record.edition_scope
+        )
         if bounds is None or any(
             lo <= other_hi and other_lo <= hi
             for lo, hi in claimed
@@ -1253,7 +1264,7 @@ def convert_column_entry(
     case_id: str,
     context: ErrataVariantContext,
     declared_flags: frozenset[str],
-    documented_period_corrected: bool,
+    documented_corrected: bool,
 ) -> ErrataConversion:
     """Retain supplied facts; the type is the curated ``data_type`` or unknown.
 
@@ -1279,9 +1290,7 @@ def convert_column_entry(
             f"missing column edition conversion bindings: {sorted(missing)!r}"
         )
     selected = tuple(edition for edition in editions if edition.name in names)
-    if _overlaps_documenting_edition(
-        entry, context, selected, documented_period_corrected
-    ):
+    if _overlaps_documenting_edition(entry, context, selected, documented_corrected):
         return ErrataConversion(None, ("column_now_documented",), ())
     references = {ref for edition in selected for ref in edition.support}
     if entry.versions is None:

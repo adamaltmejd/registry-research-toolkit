@@ -1,0 +1,20 @@
+{
+  "note": "Sub-annual editions (#1626 review). Register TEST (1, variant 2) has two 2020 editions, 2020-03-31 (regver 1) and 2020-12-31 (regver 2); Q (var 5) and S (var 6) are documented only in the 2020-12-31 edition. Both editions span the year 2020 as edition scopes but name different dates as edition-period scopes. The Q declaration names only the 2020-03-31 edition, a date SCB documents no Q on, so it mints its own c-q variable with one 2020-03-31 state beside v5's 2020-12-31 state. The S declaration's holdings_period 2020-12-01/2020-12-31 contains the documenting edition's date, so it is refused as column_now_documented and forms no c-s state.",
+  "fails_if": "`scb_errata` compares edition scopes instead of edition-period scopes when deciding whether a declared column overlaps a documenting edition (the Q declaration refused because both 2020 editions span the year), or stops refusing a holdings_period that contains a documenting edition's date (c-s built)",
+  "sources": {
+    "description": "Two sub-annual 2020 editions; Q and S are documented only in the 2020-12-31 one.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "EDITION", "cvid": 1, "var_id": 99, "year": "2020", "versionname": "2020-03-31", "regver_id": 1, "register": ["TEST", 1, 2]},
+        {"colname": "EDITION", "cvid": 2, "var_id": 99, "year": "2020", "versionname": "2020-12-31", "regver_id": 2, "register": ["TEST", 1, 2]},
+        {"colname": "Q", "cvid": 3, "var_id": 5, "year": "2020", "versionname": "2020-12-31", "regver_id": 2, "register": ["TEST", 1, 2]},
+        {"colname": "S", "cvid": 4, "var_id": 6, "year": "2020", "versionname": "2020-12-31", "regver_id": 2, "register": ["TEST", 1, 2]}
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|Q|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|S|2020|2020|0|0|0"
+      ]
+    }
+  }
+}

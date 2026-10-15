@@ -5,7 +5,8 @@
       "where": {"code": "stale_curation_entry"},
       "fields": ["locator"],
       "rows": [
-        ["curation/registers/scb/sample.toml#/representation.parallel/1"]
+        ["curation/registers/scb/sample.toml#/representation.parallel/1"],
+        ["curation/registers/scb/sample.toml#/representation.parallel/2"]
       ]
     },
     {
@@ -13,7 +14,8 @@
       "fields": ["code", "subject"],
       "match": "includes",
       "rows": [
-        ["unresolved_column_representation", "scb/sample/income"]
+        ["unresolved_column_representation", "scb/sample/income"],
+        ["unresolved_column_representation", "scb/sample/outcome"]
       ]
     }
   ]

@@ -640,9 +640,11 @@ own slug, and never joins the documented owner (#1621). It is refused
 edition that documents the literal, under any case/diacritic spelling: the two variables
 would otherwise both claim one physical column in one period. Undated entries and
 editions without known bounds cannot be shown disjoint, so they are refused whenever the
-literal is documented anywhere on the variant. So is a documented row whose period an
-`[[errata.occurrence_period]]` entry corrects, since its original scope is not the
-period it is delivered in. Its identity is `(register, column)`, so two variants of one
+literal is documented anywhere on the variant. So is a literal a checked correction
+touches, an `[[errata.occurrence_period]]` on it or an `[[errata.field]]` `column_name`
+rename to it, since the original records no longer show where it is delivered. Periods
+compare edition-period scopes where an edition has one, so sub-annual editions of one
+year stay disjoint. Its identity is `(register, column)`, so two variants of one
 register use the same variable identity. `source` records the evidence class; it does
 not change the materialized rows.
 
