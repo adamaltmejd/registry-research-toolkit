@@ -2,8 +2,8 @@
   "replaces": [
     "test_curation_support_delivery_boundary.py::test_parallel_columns_are_stale_unless_nested_editions_cover_exactly[nested-metadata-conflict]"
   ],
-  "note": "A parallel window must match its originals' coverage and agreeing metadata.",
-  "fails_if": "`compile_parallel_representations` leaves `operational_definition` out of the fields whose conflict between overlapping nested editions invalidates the entry",
+  "note": "A per-column parallel window reconciles an operational definition its overlapping nested editions disagree on as the single-column path does (#1625): the entry binds, the 2021-2022 First states carry no operational definition, and 2020, covered only by CVID 100, keeps its own. The refusal twin on another field is representation-parallel-columns-stale-when-nested-editions-disagree-on-the-reference-period.",
+  "fails_if": "`compile_parallel_representations` again treats an `operational_definition` conflict between overlapping nested editions of a `column_metadata = \"per_column\"` entry as stale, or a state formed over the disagreeing editions picks one of their operational definitions",
   "sources": {
     "description": "Variable 1: First is pooled 2020-2022 (CVID 100) and again nested 2021-2022 (CVID 103); Second is 2022-2024 (CVID 101). The two First editions state contrary operational definitions.",
     "scb": {

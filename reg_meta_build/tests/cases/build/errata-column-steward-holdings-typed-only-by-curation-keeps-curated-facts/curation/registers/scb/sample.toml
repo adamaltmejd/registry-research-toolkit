@@ -100,6 +100,15 @@ slug = "c-cur"
 [[variable]]
 native_id = "1.BLK"
 slug = "c-documented"
+[[variable]]
+native_id = "1.NOW"
+slug = "c-now"
+[[variable]]
+native_id = "1.V1"
+slug = "c-moved"
+[[variable]]
+native_id = "1.ZED"
+slug = "c-renamed"
 
 [[errata.column]]
 variant = "people"
@@ -136,3 +145,78 @@ is_sensitive = false
 source = "steward-holdings"
 evidence = "held"
 noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "NOW"
+name = "NOW"
+definition = "Documented"
+versions = ["2020", "2022"]
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-15"
+
+[[errata.occurrence_period]]
+variable = "1.5"
+variant = "1.2"
+column = "V1"
+edition = "2022"
+expected_fields = {{expected_fields key=member:104 fields=prose}}
+expected_period_text = {{period_text key=member:104}}
+expected_scope = {{edition_scope key=member:104}}
+expected_period = {{period_scope key=member:104}}
+evidence = "Reviewed: the 2022 row describes the 2020 delivery."
+noted = "2026-10-15"
+edition_scope = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+edition_period_scope = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+
+[[errata.column]]
+variant = "people"
+column = "V1"
+name = "V1"
+definition = "Documented"
+versions = ["2020"]
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "people"
+column = "V2"
+versions = ["2018"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:105}}
+evidence = "accepted delivery"
+noted = "2026-10-15"
+
+[[errata.field]]
+variable = "1.29"
+variant = "1.2"
+column = "OTHERW"
+edition = "2020"
+expected_fields = {{expected_fields key=member:127}}
+expected_period_text = {{period_text key=member:127}}
+expected_scope = {{edition_scope key=member:127}}
+expected_period = {{period_scope key=member:127}}
+evidence = "Reviewed: the 2020 row's column is delivered as ZED."
+noted = "2026-10-15"
+field = "column_name"
+value = "ZED"
+
+[[errata.column]]
+variant = "people"
+column = "ZED"
+name = "ZED"
+definition = "Documented"
+versions = ["2020"]
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-15"

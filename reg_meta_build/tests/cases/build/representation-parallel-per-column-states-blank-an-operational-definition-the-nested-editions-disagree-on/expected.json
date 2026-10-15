@@ -1,0 +1,20 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"variable": "income"},
+      "fields": ["column", "valid_from", "valid_to", "operational_definition"],
+      "rows": [
+        ["First", "2020-01-01", "2020-12-31", "A known quantity operation"],
+        ["First", "2021-01-01", "2021-12-31", null],
+        ["First", "2022-01-01", "2022-12-31", null],
+        ["Second", "2023-01-01", "2024-12-31", null]
+      ]
+    }
+  ]
+}

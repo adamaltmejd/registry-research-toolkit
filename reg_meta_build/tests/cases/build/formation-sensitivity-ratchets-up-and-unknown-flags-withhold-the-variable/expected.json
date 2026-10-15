@@ -4,8 +4,9 @@
     {
       "table": "variables",
       "fields": ["variable", "column", "is_sensitive", "is_identifier"],
-      "note": "Every variable the summary flags fully. A sometimes-sensitive claim (KansligVariabelIbland 1, or a cell that is not 0 or 1) makes the variable sensitive whatever the plain claim says; a plain sensitive claim stays sensitive beside a conditional 0; only a plain 0 with a conditional 0 is built non-sensitive. sxc0 and nosum are absent: their sensitivity is unknown, and it is not defaulted to false.",
+      "note": "Every variable the summary flags fully. A sometimes-sensitive claim (KansligVariabelIbland 1, or a cell that is not 0 or 1) makes the variable sensitive whatever the plain claim says; a plain sensitive claim stays sensitive beside a conditional 0; only a plain 0 with a conditional 0 is built non-sensitive. sxc0 and nosum are absent: their sensitivity is unknown, and it is not defaulted to false. auth has no summary row either; its reviewed [[errata.flags]] entry states both flags (#1621).",
       "rows": [
+        ["auth", "AUTH", 1, 0],
         ["s0c1", "S0C1", 1, 0],
         ["s1c1", "S1C1", 1, 0],
         ["sxc1", "SXC1", 1, 0],
@@ -17,10 +18,19 @@
     {
       "table": "issues",
       "fields": ["code", "severity", "subject", "fields"],
-      "note": "Every issue of the build. The fully flagged variables raise none (the old ratchet tests' `result.diagnostics == ()`). A conditional 0 beside a blank plain cell supplies no sensitivity, so sxc0 is withheld for is_sensitive alone; nosum has no summary row and is withheld for both flags.",
+      "note": "Every issue of the build. The fully flagged variables raise none (the old ratchet tests' `result.diagnostics == ()`). A conditional 0 beside a blank plain cell supplies no sensitivity, so sxc0 is withheld for is_sensitive alone; nosum has no summary row and is withheld for both flags: its [[errata.flags]] entry pins another variable's originals, so it is stale (located below) and authors nothing.",
       "rows": [
+        ["stale_curation_entry", "error", "1.8", []],
         ["unresolved_flag", "error", "scb/sample/sxc0", ["is_sensitive"]],
         ["unresolved_flag", "error", "scb/sample/nosum", ["is_sensitive", "is_identifier"]]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/errata.flags/2"]
       ]
     }
   ]

@@ -1,0 +1,23 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {"variable": ["c-q", "c-s", "v5", "v6"]},
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "note": "c-q holds Q on 2020-03-31, a date SCB documents no Q on, beside v5's 2020-12-31 Q; the refused S declaration forms no c-s state",
+      "rows": [
+        ["c-q", "Q", "2020-03-31", "2020-03-31"],
+        ["v5", "Q", "2020-12-31", "2020-12-31"],
+        ["v6", "S", "2020-12-31", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["detail"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/errata.column/2: column_now_documented"]
+      ]
+    }
+  ]
+}

@@ -820,6 +820,35 @@ class ErrataSupportEntry(_OccurrenceCorrectionEntry):
         return self
 
 
+class ErrataFlagsEntry(_OccurrenceCorrectionEntry):
+    """Author both flags on one checked occurrence SCB leaves unflagged (#1621).
+
+    Flags reconcile over a variable's occurrences, so one stated pair decides
+    them. The guards pin both flags as absent: once SCB states either, the
+    entry goes stale instead of competing with it.
+    """
+
+    edition: str
+    is_sensitive: bool
+    is_identifier: bool
+    expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+
+    @field_validator("expected_fields")
+    @classmethod
+    def _prose_guards(cls, value: list[FieldExpectation]) -> list[FieldExpectation]:
+        flags = {"sensitivity", "identifier"}
+        if not all(
+            item.status == "absent" for item in value if item.name in flags
+        ) or flags - {item.name for item in value}:
+            raise ValueError(
+                "authored flags guard both source flags as absent beside the four prose fields"
+            )
+        _OccurrenceCorrectionEntry._prose_guards(
+            [item for item in value if item.name not in flags]
+        )
+        return value
+
+
 class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
     authority: list[RecordExpectation] = Field(default_factory=list)
     _authority_shapes = field_validator("authority", mode="before")(
@@ -857,6 +886,7 @@ class ErrataCuration(_CurationModel):
     support: list[ErrataSupportEntry] = Field(default_factory=list)
     field: list[ErrataFieldEntry] = Field(default_factory=list)
     occurrence_period: list[ErrataOccurrencePeriodEntry] = Field(default_factory=list)
+    flags: list[ErrataFlagsEntry] = Field(default_factory=list)
     delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
     column: list[ErrataColumnEntry] = Field(default_factory=list)
     version: list[ErrataVersionEntry] = Field(default_factory=list)
@@ -2245,6 +2275,7 @@ def _register_arrays(
         ("errata.support", entry.errata.support),
         ("errata.field", entry.errata.field),
         ("errata.occurrence_period", entry.errata.occurrence_period),
+        ("errata.flags", entry.errata.flags),
         ("errata.delivered", entry.errata.delivered),
         ("errata.column", entry.errata.column),
         ("errata.version", entry.errata.version),
@@ -2446,6 +2477,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     ErrataFieldEntry,
                     ErrataSupportEntry,
                     ErrataOccurrencePeriodEntry,
+                    ErrataFlagsEntry,
                     CodingEntry,
                     ParallelRepresentationEntry,
                     DeliveryMetadataEntry,

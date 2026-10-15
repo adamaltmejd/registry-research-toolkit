@@ -37,6 +37,7 @@ from .curation_tree import (
     ErrataDataTypeEntry,
     ErrataDeliveredEntry,
     ErrataFieldEntry,
+    ErrataFlagsEntry,
     ErrataOccurrencePeriodEntry,
     ErrataSupportEntry,
     _OccurrenceCorrectionEntry,
@@ -1542,6 +1543,9 @@ def compile_parallel_representations(
                 invalid = True
             # Nested editions share a physical window only when their overlapping
             # metadata agrees under the ordinary source reconciliation rules.
+            # Per-column metadata reconciles a differing operational definition
+            # as the single-column path does: the state's stays blank and the
+            # originals keep theirs (#1625).
             # simplify: pairwise edition contributors are small; index intervals
             # if a literal column grows to thousands of overlapping originals.
             for left, right in combinations(members, 2):
@@ -1556,7 +1560,14 @@ def compile_parallel_representations(
                             for item in (left, right)
                         )
                     )
-                    if set(conflicts) & {
+                    if (
+                        set(conflicts)
+                        - (
+                            {"operational_definition"}
+                            if entry.column_metadata == "per_column"
+                            else set()
+                        )
+                    ) & {
                         "name",
                         "description",
                         "definition",
@@ -5550,6 +5561,7 @@ def compile_occurrence_corrections(
             ("support", register.errata.support),
             ("field", register.errata.field),
             ("occurrence_period", register.errata.occurrence_period),
+            ("flags", register.errata.flags),
         )
         if not any(rows for _, rows in entries):
             continue
@@ -5634,6 +5646,11 @@ def compile_occurrence_corrections(
                             projections=projections,
                         )
                         and entry.expected_evidence_sha256
+                        == acknowledgement_evidence_sha256(family)
+                    )
+                if isinstance(entry, ErrataFlagsEntry):
+                    valid = valid and (
+                        entry.expected_evidence_sha256
                         == acknowledgement_evidence_sha256(family)
                     )
                 period_authority: tuple[SourceRecord, ...] = ()
@@ -5774,67 +5791,97 @@ def compile_occurrence_corrections(
                     continue
                 assert location is not None
                 scope, register_key = location
-                effects = tuple(
-                    CheckedFieldChange(
-                        ref=ref,
-                        replacement=FieldExpectation(
-                            name=entry.field, status="value", value=entry.value
-                        ),
-                        when_scope=entry.expected_scope
-                        if entry.field == "name"
-                        and entry.expected_scope.kind == "intervals"
-                        else None,
-                        when_period=entry.expected_period
-                        if entry.field == "name"
-                        and entry.expected_scope.kind == "intervals"
-                        else None,
-                        when=(
-                            FieldExpectation(
-                                name="column_name", status="value", value=entry.column
+                effects = (
+                    tuple(
+                        CheckedFieldChange(
+                            ref=ref,
+                            replacement=FieldExpectation(
+                                name=name, status="value", value=value
                             ),
-                            *(
-                                tuple(
+                            when=(
+                                FieldExpectation(
+                                    name="column_name",
+                                    status="value",
+                                    value=entry.column,
+                                ),
+                                FieldExpectation(name=name, status="absent"),
+                            ),
+                        )
+                        for ref in dict.fromkeys(record_ref(r) for r in selected)
+                        for name, value in (
+                            ("sensitivity", entry.is_sensitive),
+                            ("identifier", entry.is_identifier),
+                        )
+                    )
+                    if isinstance(entry, ErrataFlagsEntry)
+                    else tuple(
+                        CheckedFieldChange(
+                            ref=ref,
+                            replacement=FieldExpectation(
+                                name=entry.field, status="value", value=entry.value
+                            ),
+                            when_scope=entry.expected_scope
+                            if entry.field == "name"
+                            and entry.expected_scope.kind == "intervals"
+                            else None,
+                            when_period=entry.expected_period
+                            if entry.field == "name"
+                            and entry.expected_scope.kind == "intervals"
+                            else None,
+                            when=(
+                                FieldExpectation(
+                                    name="column_name",
+                                    status="value",
+                                    value=entry.column,
+                                ),
+                                *(
+                                    tuple(
+                                        field
+                                        for field in entry.expected_fields
+                                        if field.name != "column_name"
+                                    )
+                                    if entry.field
+                                    in {
+                                        "classification_declared",
+                                        "measurement_unit",
+                                        "name",
+                                        "column_name",
+                                        "representation",
+                                    }
+                                    or entry.expected_records is not None
+                                    else ()
+                                ),
+                            ),
+                        )
+                        if isinstance(entry, ErrataFieldEntry)
+                        else CheckedSourceUse(
+                            ref=ref,
+                            when=(
+                                next(
                                     field
                                     for field in entry.expected_fields
-                                    if field.name != "column_name"
+                                    if field.name == "column_name"
                                 )
-                                if entry.field
-                                in {
-                                    "classification_declared",
-                                    "measurement_unit",
-                                    "name",
-                                    "column_name",
-                                    "representation",
-                                }
-                                or entry.expected_records is not None
-                                else ()
+                                if entry.kind == "nonphysical_projection"
+                                else FieldExpectation(
+                                    name="column_name",
+                                    status="value",
+                                    value=entry.column,
+                                ),
                             ),
-                        ),
+                        )
+                        if isinstance(entry, ErrataSupportEntry)
+                        else CheckedPeriodChange(
+                            ref=ref,
+                            edition_scope=entry.edition_scope,
+                            edition_period_scope=entry.edition_period_scope,
+                        )
+                        # The physical alternatives of one source record share its ref,
+                        # so they get one effect, not one per alternative.
+                        for ref in dict.fromkeys(
+                            record_ref(record) for record in selected
+                        )
                     )
-                    if isinstance(entry, ErrataFieldEntry)
-                    else CheckedSourceUse(
-                        ref=ref,
-                        when=(
-                            next(
-                                field
-                                for field in entry.expected_fields
-                                if field.name == "column_name"
-                            )
-                            if entry.kind == "nonphysical_projection"
-                            else FieldExpectation(
-                                name="column_name", status="value", value=entry.column
-                            ),
-                        ),
-                    )
-                    if isinstance(entry, ErrataSupportEntry)
-                    else CheckedPeriodChange(
-                        ref=ref,
-                        edition_scope=entry.edition_scope,
-                        edition_period_scope=entry.edition_period_scope,
-                    )
-                    # The physical alternatives of one source record share its ref,
-                    # so they get one effect, not one per alternative.
-                    for ref in dict.fromkeys(record_ref(record) for record in selected)
                 )
                 expected_names = set(expected)
                 if isinstance(entry, ErrataSupportEntry):
@@ -6321,6 +6368,22 @@ def compile_errata(
                             context=context,
                             declared_flags=frozenset(row.model_fields_set)
                             & {"is_identifier", "is_sensitive"},
+                            documented_corrected=any(
+                                correction.variant
+                                == f"{register.register_info.native_id}.{variant_id}"
+                                and fold_column(literal) == fold_column(row.column)
+                                for correction, literal in (
+                                    *(
+                                        (period, period.column)
+                                        for period in register.errata.occurrence_period
+                                    ),
+                                    *(
+                                        (field, field.value)
+                                        for field in register.errata.field
+                                        if field.field == "column_name"
+                                    ),
+                                )
+                            ),
                         )
                         blockers, converted = result.blockers, result.case
                 if converted is None:

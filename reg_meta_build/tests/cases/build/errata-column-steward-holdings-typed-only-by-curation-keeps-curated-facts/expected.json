@@ -7,7 +7,9 @@
         "variable": [
           "c-stew",
           "c-cur",
-          "c-documented"
+          "c-documented",
+          "c-moved",
+          "c-renamed"
         ]
       },
       "fields": [
@@ -31,9 +33,86 @@
           "2020-01-01",
           "2020-12-31",
           "integer"
+        ],
+        [
+          "c-documented",
+          "BLK",
+          "2020-01-01",
+          "2020-12-31",
+          "integer"
         ]
       ],
-      "note": "each declaration names only the 2020 edition, so it forms one 2020 state though the register also delivers 2018 and 2022; the stale BLK declaration forms none"
+      "note": "each declaration names only the 2020 edition, so it forms one 2020 state though the register also delivers 2018 and 2022; BLK is documented only in 2022 (as Blk, var 31), so its 2020 declaration mints its own variable; the NOW declaration overlaps a documenting edition and forms none; the V1 declaration claims 2020, where an [[errata.occurrence_period]] entry moves the documented V1 row, so it forms no c-moved state; the ZED declaration claims a literal an [[errata.field]] column_name correction gives v29's 2020 row, so it forms no c-renamed state"
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": [
+          "c-documented",
+          "v31"
+        ]
+      },
+      "fields": [
+        "variable",
+        "column",
+        "valid_from"
+      ],
+      "rows": [
+        [
+          "c-documented",
+          "BLK",
+          "2020-01-01"
+        ],
+        [
+          "v31",
+          "Blk",
+          "2022-01-01"
+        ]
+      ],
+      "note": "the minted variable never merges into the documented owner"
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": [
+          "v5",
+          "v6",
+          "v29"
+        ]
+      },
+      "fields": [
+        "variable",
+        "column",
+        "valid_from"
+      ],
+      "rows": [
+        [
+          "v29",
+          "ADDW",
+          "2022-01-01"
+        ],
+        [
+          "v29",
+          "ZED",
+          "2020-01-01"
+        ],
+        [
+          "v5",
+          "V1",
+          "2020-01-01"
+        ],
+        [
+          "v6",
+          "V2",
+          "2018-01-01"
+        ],
+        [
+          "v6",
+          "V2",
+          "2022-01-01"
+        ]
+      ],
+      "note": "the corrected documented owners keep the periods the refused declarations claimed; the V2 delivered entry precedes the V1 and ZED declarations in compile order"
     },
     {
       "table": "variables",
@@ -82,7 +161,13 @@
       ],
       "rows": [
         [
-          "curation/registers/scb/sample.toml#/errata.column/3: column_now_documented"
+          "curation/registers/scb/sample.toml#/errata.column/4: column_now_documented"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/errata.column/5: column_now_documented"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/errata.column/6: column_now_documented"
         ]
       ]
     }

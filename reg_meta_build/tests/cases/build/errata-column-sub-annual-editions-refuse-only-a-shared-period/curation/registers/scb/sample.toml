@@ -1,0 +1,48 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.99"
+slug = "v99"
+[[variable]]
+native_id = "1.5"
+slug = "v5"
+[[variable]]
+native_id = "1.6"
+slug = "v6"
+[[variable]]
+native_id = "1.Q"
+slug = "c-q"
+[[variable]]
+native_id = "1.S"
+slug = "c-s"
+
+[[errata.column]]
+variant = "people"
+column = "Q"
+name = "Q"
+definition = "Documented"
+versions = ["2020-03-31"]
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-15"
+
+[[errata.column]]
+variant = "people"
+column = "S"
+name = "S"
+definition = "Documented"
+holdings_period = "2020-12-01/2020-12-31"
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-15"

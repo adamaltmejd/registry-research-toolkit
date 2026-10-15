@@ -632,19 +632,31 @@ annotates only the occurrences the entry adds, with the warning field `definitio
 text is curator annotation, excluded from the evidence digest. `[[errata.column]]`
 carries the variable identity (`name` and `definition`), a source and evidence, plus
 either named versions, bounded `holdings_period`, or the legacy undated
-`all_versions = true`; it mints a variable for a column SCB documents nowhere on that
-variant. Its identity is `(register, column)`, so two variants of one register use the
-same variable identity. `source` records the evidence class; it does not change the
-materialized rows.
+`all_versions = true`; it mints a variable for a column SCB does not document on that
+variant in the period the entry claims. A literal SCB documents only in other editions
+may carry a different meaning there, so the entry still mints its own variable, with its
+own slug, and never joins the documented owner (#1621). It is refused
+(`column_now_documented`) when its named editions or its `holdings_period` overlap an
+edition that documents the literal, under any case/diacritic spelling: the two variables
+would otherwise both claim one physical column in one period. Undated entries and
+editions without known bounds cannot be shown disjoint, so they are refused whenever the
+literal is documented anywhere on the variant. So is a literal a checked correction
+touches, an `[[errata.occurrence_period]]` on it or an `[[errata.field]]` `column_name`
+rename to it, since the original records no longer show where it is delivered. Periods
+compare edition-period scopes where an edition has one, so sub-annual editions of one
+year stay disjoint. Its identity is `(register, column)`, so two variants of one
+register use the same variable identity. `source` records the evidence class; it does
+not change the materialized rows.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
-document this column anywhere on this variant? One column/variant omission is exactly
-one kind. Delivered entries clone a real row and therefore cannot describe a column with
-no row on the variant or its explicit sibling donor; column entries mint a row and
-therefore cannot describe a column that already has one. If SCB ships an omitted row,
-the build fails with `scb_errata_now_present`. Retire only the fixed edition from
-`versions`, or delete the entry when that was its last edition; do not edit it to keep a
-failing build green. Git history preserves the upstream-error record.
+document this column, with this meaning, on this variant? One column/variant omission is
+exactly one kind. Delivered entries clone a real row and therefore cannot describe a
+column with no row on the variant or its explicit sibling donor; column entries mint a
+row and therefore cannot describe a column that already has one in the period it claims.
+If SCB ships an omitted row, the build fails with `scb_errata_now_present`. Retire only
+the fixed edition from `versions`, or delete the entry when that was its last edition;
+do not edit it to keep a failing build green. Git history preserves the upstream-error
+record.
 
 SCB omitted-row converters share one immutable, validated `ErrataVariantContext` per
 source variant during compilation. It validates complete native coordinates and edition
@@ -841,6 +853,19 @@ effects and never rewrite the original source records. A finite scoped name corr
 selects exact original source scopes and carries those same scopes into its conditional
 replay effect. A monthly row sharing an annual row's semantic reference cannot inherit
 that name correction.
+
+`[[errata.flags]]` authors `is_sensitive` and `is_identifier` for a variable whose
+source and auxiliary joins state neither, which `unresolved_flag` otherwise withholds
+(#1621). Both values are required; nothing defaults. The entry names one exact
+occurrence (variable, variant, column, edition) with the same original-scope and prose
+guards as `[[errata.field]]`, guards both source flags as absent, and pins the native
+family's originals with `expected_evidence_sha256`; a changed original stales it at its
+locator. It emits two checked field changes on that occurrence. Flags reconcile over all
+of a variable's occurrences and support, so one stated pair decides them, and the
+existing rules still apply: a sensitivity claim from any source only ratchets up, and an
+identifier claim that disagrees reconciles to unknown and withholds the variable again.
+A later auxiliary flag is therefore never silently overridden, and no separate refusal
+is owed. Undeclared variables keep the `unresolved_flag` ratchet.
 
 Field entries may pin duplicate observations with `expected_records`, using complete
 original `RecordExpectation` alternatives. Except for the source-defined attribution
@@ -1394,14 +1419,17 @@ associations remain guarded; missing or contradictory within-column coding is wi
 Windows intersect the existing coding boundaries and cannot bridge a gap. Same-literal
 source editions may have nested bounds only when their exact union covers the declared
 physical window without gaps or widening and their overlapping metadata agrees under the
-existing source reconciliation rules. Their original scopes remain guarded. Each window
-stores its value-set reference, literal native version label and independently checked
-classification links. `alias_window_classification` attaches each declared book and
-nullable conformance JSON to the exact composite physical-window key. Conformance checks
-the entire local domain and its overlap with that book, including nonstandard codes and
-scoped sentinels. The shared state carries no codes or books, and no window inherits a
-sibling's associations. Shared mode carries no override. No codes are unioned, dropped
-or recoded, and no version names are invented.
+existing source reconciliation rules. Under `column_metadata = "per_column"` the one
+exception is the operational definition: overlapping editions that state different ones
+reconcile as the single-column path does, so the state over them carries none and each
+original keeps its own (#1625). Every other field stays strict. Their original scopes
+remain guarded. Each window stores its value-set reference, literal native version label
+and independently checked classification links. `alias_window_classification` attaches
+each declared book and nullable conformance JSON to the exact composite physical-window
+key. Conformance checks the entire local domain and its overlap with that book,
+including nonstandard codes and scoped sentinels. The shared state carries no codes or
+books, and no window inherits a sibling's associations. Shared mode carries no override.
+No codes are unioned, dropped or recoded, and no version names are invented.
 
 Search aliases add discovery spellings without adding states or coverage. An alias
 window makes an already owned spelling orderable only within supported state coverage

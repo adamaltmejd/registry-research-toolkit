@@ -2,10 +2,10 @@
   "replaces": [
     "test_curation_support_delivery_boundary.py::test_parallel_columns_are_stale_unless_nested_editions_cover_exactly[nested-reference-period-conflict]"
   ],
-  "note": "A parallel window must match its originals' coverage and agreeing metadata.",
-  "fails_if": "`compile_parallel_representations` leaves `reference_period` out of the fields whose conflict between overlapping nested editions invalidates the entry",
+  "note": "A parallel window must match its originals' coverage and agreeing metadata. The per_column income entry is refused on a reference-period conflict, every field but the operational definition staying strict there (#1625); the shared outcome entry is refused on an operational-definition conflict, which only per-column metadata reconciles.",
+  "fails_if": "`compile_parallel_representations` leaves `reference_period` out of the fields whose conflict between overlapping nested editions invalidates the entry, or reconciles an `operational_definition` conflict outside `column_metadata = \"per_column\"`",
   "sources": {
-    "description": "Variable 1: First is pooled 2020-2022 (CVID 100) and again nested 2021-2022 (CVID 103); Second is 2022-2024 (CVID 101). The two First editions state contrary reference periods.",
+    "description": "Variable 1: First is pooled 2020-2022 (CVID 100) and again nested 2021-2022 (CVID 103); Second is 2022-2024 (CVID 101). The two First editions state contrary reference periods. Variable 2 repeats the shape with Third, Fourth and contrary operational definitions.",
     "scb": {
       "registerinformation": [
         {
@@ -36,6 +36,35 @@
           "versionname": "2021-2022",
           "regver_id": 113,
           "cells": {"VariabelReferenstid": "A contrary quantity operation"}
+        },
+        {
+          "colname": "Third",
+          "cvid": 200,
+          "var_id": 2,
+          "varname": "Outcome",
+          "year": "2020",
+          "versionname": "2020-2022",
+          "regver_id": 110,
+          "cells": {"VariabelOperationell_definition": "A known quantity operation"}
+        },
+        {
+          "colname": "Fourth",
+          "cvid": 201,
+          "var_id": 2,
+          "varname": "Outcome",
+          "year": "2020",
+          "versionname": "2022-2024",
+          "regver_id": 111
+        },
+        {
+          "colname": "Third",
+          "cvid": 203,
+          "var_id": 2,
+          "varname": "Outcome",
+          "year": "2021",
+          "versionname": "2021-2022",
+          "regver_id": 113,
+          "cells": {"VariabelOperationell_definition": "A contrary quantity operation"}
         }
       ]
     }
