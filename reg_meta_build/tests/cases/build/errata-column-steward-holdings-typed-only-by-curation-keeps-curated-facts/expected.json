@@ -7,7 +7,8 @@
         "variable": [
           "c-stew",
           "c-cur",
-          "c-documented"
+          "c-documented",
+          "c-moved"
         ]
       },
       "fields": [
@@ -40,7 +41,7 @@
           "integer"
         ]
       ],
-      "note": "each declaration names only the 2020 edition, so it forms one 2020 state though the register also delivers 2018 and 2022; BLK is documented only in 2022 (as Blk, var 31), so its 2020 declaration mints its own variable; the NOW declaration overlaps a documenting edition and forms none"
+      "note": "each declaration names only the 2020 edition, so it forms one 2020 state though the register also delivers 2018 and 2022; BLK is documented only in 2022 (as Blk, var 31), so its 2020 declaration mints its own variable; the NOW declaration overlaps a documenting edition and forms none; the V1 declaration claims 2020, where an [[errata.occurrence_period]] entry moves the documented V1 row, so it forms no c-moved state"
     },
     {
       "table": "states",
@@ -117,6 +118,9 @@
       "rows": [
         [
           "curation/registers/scb/sample.toml#/errata.column/4: column_now_documented"
+        ],
+        [
+          "curation/registers/scb/sample.toml#/errata.column/5: column_now_documented"
         ]
       ]
     }

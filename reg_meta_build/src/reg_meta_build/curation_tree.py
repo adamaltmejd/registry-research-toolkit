@@ -2477,6 +2477,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     ErrataFieldEntry,
                     ErrataSupportEntry,
                     ErrataOccurrencePeriodEntry,
+                    ErrataFlagsEntry,
                     CodingEntry,
                     ParallelRepresentationEntry,
                     DeliveryMetadataEntry,

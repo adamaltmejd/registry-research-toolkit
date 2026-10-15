@@ -6368,6 +6368,12 @@ def compile_errata(
                             context=context,
                             declared_flags=frozenset(row.model_fields_set)
                             & {"is_identifier", "is_sensitive"},
+                            documented_period_corrected=any(
+                                period.variant == f"{native_id}.{variant_id}"
+                                and fold_column(period.column)
+                                == fold_column(row.column)
+                                for period in register.errata.occurrence_period
+                            ),
                         )
                         blockers, converted = result.blockers, result.case
                 if converted is None:

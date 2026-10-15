@@ -1199,6 +1199,7 @@ def _overlaps_documenting_edition(
     entry: ErrataColumn,
     context: ErrataVariantContext,
     selected: tuple[ErrataEditionBinding, ...],
+    documented_period_corrected: bool,
 ) -> bool:
     """Whether the declared column could share a period with a documented one (#1621).
 
@@ -1206,12 +1207,16 @@ def _overlaps_documenting_edition(
     different meaning there, so the entry mints its own variable. It is refused
     when the minted and the documented owner would both claim the one physical
     column in one period. Undated holdings and editions without known bounds
-    cannot be shown disjoint, so they count as overlapping.
+    cannot be shown disjoint, so they count as overlapping, as does a documented
+    occurrence whose period an `[[errata.occurrence_period]]` entry corrects: its
+    original scope is not the period it is delivered in.
     """
     documented = context.by_column.get(fold_column(entry.column), ())
     if not documented:
         return False
-    if entry.versions is None and entry.holdings_period is None:
+    if documented_period_corrected or (
+        entry.versions is None and entry.holdings_period is None
+    ):
         return True
     if entry.holdings_period is not None:
         start, end = holdings_period_bounds(entry.holdings_period)
@@ -1248,6 +1253,7 @@ def convert_column_entry(
     case_id: str,
     context: ErrataVariantContext,
     declared_flags: frozenset[str],
+    documented_period_corrected: bool,
 ) -> ErrataConversion:
     """Retain supplied facts; the type is the curated ``data_type`` or unknown.
 
@@ -1273,7 +1279,9 @@ def convert_column_entry(
             f"missing column edition conversion bindings: {sorted(missing)!r}"
         )
     selected = tuple(edition for edition in editions if edition.name in names)
-    if _overlaps_documenting_edition(entry, context, selected):
+    if _overlaps_documenting_edition(
+        entry, context, selected, documented_period_corrected
+    ):
         return ErrataConversion(None, ("column_now_documented",), ())
     references = {ref for edition in selected for ref in edition.support}
     if entry.versions is None:
