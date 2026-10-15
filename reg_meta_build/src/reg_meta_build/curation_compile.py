@@ -1542,6 +1542,9 @@ def compile_parallel_representations(
                 invalid = True
             # Nested editions share a physical window only when their overlapping
             # metadata agrees under the ordinary source reconciliation rules.
+            # Per-column metadata reconciles a differing operational definition
+            # as the single-column path does: the state's stays blank and the
+            # originals keep theirs (#1625).
             # simplify: pairwise edition contributors are small; index intervals
             # if a literal column grows to thousands of overlapping originals.
             for left, right in combinations(members, 2):
@@ -1556,7 +1559,14 @@ def compile_parallel_representations(
                             for item in (left, right)
                         )
                     )
-                    if set(conflicts) & {
+                    if (
+                        set(conflicts)
+                        - (
+                            {"operational_definition"}
+                            if entry.column_metadata == "per_column"
+                            else set()
+                        )
+                    ) & {
                         "name",
                         "description",
                         "definition",
