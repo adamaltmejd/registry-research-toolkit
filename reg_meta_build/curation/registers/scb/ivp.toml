@@ -222,6 +222,11 @@ slug = "vengs"
 native_id = "135.4027.vsni"
 slug = "vsni-4027"
 
+# Pre-2008 Typkod: own variable, never typkod-lonbearbetning (#1621, #1603).
+[[variable]]
+native_id = "135.Typkod"
+slug = "typkod-1996-2007"
+
 # ── #1603 A2: SWECOV IVP_1996–IVP_2001 ──
 
 [[errata.version]]
@@ -364,3 +369,16 @@ valid_to = "2001-12-31"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "750fb3c356dafe3ea8d6bb64d71f70a0fad6644b2ed0e484f68c0dd05c413892"
+
+[[errata.column]]
+variant = "industrins-varuproduktion"
+column = "Typkod"
+data_type = "text"
+name = "IVP, Typkod 1996–2007"
+definition = "Typkod i leveranserna 1996–2007. SCB dokumenterar inte dess innebörd för dessa år. Den har inte innebörden från 2008 (lönbearbetning på KN-nummer): före 2008 redovisades lönbearbetning på varunummer som börjar med 993."
+is_sensitive = false
+is_identifier = false
+versions = ["1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007"]
+source = "steward-holdings"
+evidence = "SWECOV holds Typkod in IVP_1996–IVP_2007; SCB's Registerinformation documents the literal on this variant only from 2008, as typkod-lonbearbetning. NV0119 BS 2012 p. 10 states that before 2008 lönbearbetning was collected on varunummer starting with 993, and SSD IVPKNAr shows 'Lönbearbetning, Leveranser tkr' zero or suppressed 1996–2007, so the pre-2008 column cannot carry the 2008+ meaning; it is minted as its own variable and never joins typkod-lonbearbetning (#1621). Values stay unlabelled: labelling needs a maintainer aggregate check. Flags follow the documented typkod-lonbearbetning (non-sensitive, non-identifier). (#1603; maintainer ruling 2026-10-15)."
+noted = "2026-10-15"
