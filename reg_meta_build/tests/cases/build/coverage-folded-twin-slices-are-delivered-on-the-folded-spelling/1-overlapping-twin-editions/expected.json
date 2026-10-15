@@ -3,12 +3,14 @@
   "projections": [
     {
       "table": "states",
+      "where": {"variable": "kon"},
       "fields": ["variable", "variant", "column", "valid_from", "valid_to"],
       "rows": [
+        ["kon", "people", "Kon", "2018-01-01", "2018-12-31"],
         ["kon", "people", "KON", "2019-01-01", "2020-12-31"],
         ["kon", "people", "KON", "2022-01-01", "2022-12-31"]
       ],
-      "note": "One spelling: Kon's surviving 2019..2020 slice is written on KON beside KON's 2022; the overlapping 2021 is withheld."
+      "note": "One folded spelling: Kon's surviving 2019..2020 slice is written on KON beside KON's 2022; the overlapping 2021 is withheld. The checked 2018 addition keeps its own literal Kon."
     },
     {
       "table": "issues",
@@ -25,6 +27,17 @@
         ["unresolved_column_representation", "error", "scb/sample/kon", "2021-01-01", "2021-12-31"]
       ],
       "note": "The fold and the overlap's own withholding, and no coverage loss."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "scb/sample/kon",
+        "code": "column_spelling_folded",
+        "detail": {"contains": ["most recent spelling (KON)", "identity curation assigns"]}
+      },
+      "fields": ["subject"],
+      "rows": [["scb/sample/kon"]],
+      "note": "The fold names the most recent spelling and the exemption it applied to the checked addition (the old test_checked_column_keeps_its_literal_when_twins_fold)."
     }
   ]
 }
