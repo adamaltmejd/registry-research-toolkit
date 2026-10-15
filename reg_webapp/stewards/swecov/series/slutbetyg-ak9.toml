@@ -146,32 +146,32 @@ edition = 2024
 [[column]]
 column = "NO_AMNEN"
 tables = ["slutbetyg_Ak9_2022"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
 
 [[column]]
 column = "NO_AMNEN"
 tables = ["slutbetyg_Ak9_2023"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
 
 [[column]]
 column = "NO_AMNEN"
 tables = ["slutbetyg_Ak9_2024"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
 
 [[column]]
 column = "SO"
 tables = ["slutbetyg_Ak9_2022"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
 
 [[column]]
 column = "SO"
 tables = ["slutbetyg_Ak9_2023"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
 
 [[column]]
 column = "SO"
 tables = ["slutbetyg_Ak9_2024"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2023; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
 
 [[column]]
 column = "beht_ehs"

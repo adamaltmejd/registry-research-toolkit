@@ -3671,3 +3671,15 @@ valid_to = "2020-12-31"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "96e380583297c9d3bd150d8cc2d4ab2ad4c55027450a988a25907aa837491bb9"
+
+# ── #1603 D2: SWECOV AKU_2015–AKU_2016 ArLand ──
+
+[[errata.delivered]]
+variant = "aku-april-2005-dec-2020"
+column = "ArLand"
+versions = ["2015", "2016"]
+upstream = "omitted-column-in-version"
+native_variable_id = 7627
+expected_evidence_sha256 = "9a3fc2cbf109c60d7e29e2a3cbf56623060b9d686a81b6b272c3e43365313a0b"
+evidence = "SWECOV holds ArLand in AKU_2015 and AKU_2016; SCB documents it on this variant from 2017 as arbetsland-for-ett-ar-sedan-rotgr-2-7, whose operational definition takes rotation group 2 from question ArVerks5e and fills rotation group 7 from HuLand one year earlier. The aggregate check found rotation group 2 substantially non-null, rotation group 7 filled and rotation group 1 empty, consistent with that design; no claim is made about where the design began. (#1603; maintainer decision 2026-10-15, D2; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"
