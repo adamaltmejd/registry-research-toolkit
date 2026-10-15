@@ -44,7 +44,7 @@ if TYPE_CHECKING:
 
 # Overlay families the model accepts but no committed register declares yet. Remove
 # an entry when its first declaration lands.
-_NOT_YET_DECLARED = {"errata.edition_period", "errata.flags"}
+_NOT_YET_DECLARED = {"errata.edition_period"}
 
 # SCB's grouped SNI reporting labels, unbound in eda7462a. Some grouped codes are also
 # valid codes in the detailed books (`01` in SNI2002), so a label rule naming one can
