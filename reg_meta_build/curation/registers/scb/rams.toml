@@ -1016,3 +1016,32 @@ columns = [{ valid_from = "1992-01-01", valid_to = "1992-12-31", column = "AstSn
 expected_evidence_sha256 = "1532beecd5f058e5b1ec59c32e368391a90c9bd0dde3b0d5ff2081670de7705b"
 evidence = "Case-equivalent literal spellings share one exported native question, common nonblank name/definition and compatible identifier metadata. Distinct original members, fields, storage widths, periods and source coding remain exact. No co-delivery, equal observed values or statistical equivalence asserted. Full physical-peer census has no competing native owner. Batch53-case-only-physical-peer-review.json."
 noted = "2026-10-02"
+
+# ── #1603 A2: SWECOV JOBB2013–2018 PersonNr, RAMS_ASTRA_2019 AntalSysC/S ──
+
+[[errata.delivered]]
+variant = "jobbregistret"
+column = "PersonNr"
+versions = ["2013", "2014", "2015", "2016", "2017", "2018"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "a43aacb5bc0efdf127be28fe385ae97d358bc19bdefb75090902ebce9da625bd"
+evidence = "SWECOV holds the person identifier in JOBB2013–JOBB2018; the job register is person-keyed in every year (LISA bakgrundsfakta 1990–2017 p. 168), and SCB documents PersonNr on this variant 1985–2012 and 2019–2021 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "arbetsstallen"
+column = "AntalSysC"
+versions = ["2019"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "1575229fc11cacde71b2f602f8a0242bfd0ea7910c2b6d24a999a192cb9bf25e"
+evidence = "SWECOV holds AntalSysC in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "arbetsstallen"
+column = "AntalSysS"
+versions = ["2019"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "7cc398ec412af75d67a294ad197c59d0efb045da740abefdf7763a7916c7299e"
+evidence = "SWECOV holds AntalSysS in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"

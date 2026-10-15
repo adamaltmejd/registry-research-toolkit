@@ -216,39 +216,47 @@ hold = { follow_up = "#1603", reason = "Retained physical field for edition LA20
 [[column]]
 column = "beht_ehs"
 tables = ["slutbetyg_Ak9_2013"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-ehs", representation = "Beh_EHS" }]
+reason = "Gymnasium eligibility for the EHS programme group: SCB documents it as Beht_EHS through LA2011/12 and as Beh_EHS from LA2012/13, after the 2012/13 split. SWECOV keeps the older spelling for this edition, and the table holds no Beh_EHS column (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "beht_ehs"
 tables = ["slutbetyg_Ak9_2014"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-ehs", representation = "Beh_EHS" }]
+reason = "Gymnasium eligibility for the EHS programme group: SCB documents it as Beht_EHS through LA2011/12 and as Beh_EHS from LA2012/13, after the 2012/13 split. SWECOV keeps the older spelling for this edition, and the table holds no Beh_EHS column (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "beht_est"
 tables = ["slutbetyg_Ak9_2013"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-est", representation = "Beh_EST" }]
+reason = "Gymnasium eligibility for the EST programme group: SCB documents it as Beht_EST through LA2011/12 and as Beh_EST from LA2012/13, after the 2012/13 split. SWECOV keeps the older spelling for this edition, and the table holds no Beh_EST column (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "beht_est"
 tables = ["slutbetyg_Ak9_2014"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-est", representation = "Beh_EST" }]
+reason = "Gymnasium eligibility for the EST programme group: SCB documents it as Beht_EST through LA2011/12 and as Beh_EST from LA2012/13, after the 2012/13 split. SWECOV keeps the older spelling for this edition, and the table holds no Beh_EST column (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "beht_nt"
 tables = ["slutbetyg_Ak9_2013"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-nt", representation = "Beh_NT" }]
+reason = "Gymnasium eligibility for the NT programme group: SCB documents it as Beht_NT through LA2011/12 and as Beh_NT from LA2012/13, after the 2012/13 split. SWECOV keeps the older spelling for this edition, and the table holds no Beh_NT column (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "beht_nt"
 tables = ["slutbetyg_Ak9_2014"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-nt", representation = "Beh_NT" }]
+reason = "Gymnasium eligibility for the NT programme group: SCB documents it as Beht_NT through LA2011/12 and as Beh_NT from LA2012/13, after the 2012/13 split. SWECOV keeps the older spelling for this edition, and the table holds no Beh_NT column (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "beht_yrk"
 tables = ["slutbetyg_Ak9_2013"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-yrk", representation = "Beh_YRK" }]
+reason = "Gymnasium eligibility for the YRK programme group: SCB documents it as Beht_YRK through LA2011/12 and as Beh_YRK from LA2012/13, after the 2012/13 split. SWECOV keeps the older spelling for this edition, and the table holds no Beh_YRK column (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "beht_yrk"
 tables = ["slutbetyg_Ak9_2014"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-yrk", representation = "Beh_YRK" }]
+reason = "Gymnasium eligibility for the YRK programme group: SCB documents it as Beht_YRK through LA2011/12 and as Beh_YRK from LA2012/13, after the 2012/13 split. SWECOV keeps the older spelling for this edition, and the table holds no Beh_YRK column (#1603; maintainer ruling 2026-10-15)."

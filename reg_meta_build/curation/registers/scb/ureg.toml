@@ -8177,3 +8177,472 @@ reason = "Preserve exact source facts and every own code/label/association. The 
 evidence = "Complete native families, full simultaneous physical-peer closure and recursive panel prerequisites with actual auxiliary/identifier support and ordered own bindings. Exact original+diagnostic guards, source-faithful retained-unknown policy. Batch53-SCB-finish-source-proof.json."
 expected_evidence_sha256 = "0e0c3c71e7038e3ce018316f7e44ecd167a791a264e8726a8ee95f983413a524"
 expected_diagnostic_sha256 = "4a49635298eb97812f538c14fa8d2098113ef292947a44ecd1b71f391c43b5ec"
+
+# ── #1603 A2: SWECOV UREG1990–UREG1999 on the 16–74 variant ──
+
+[[errata.version]]
+variant = "personens-hogsta-utbildning-16-74"
+name = "1990"
+evidence = "SWECOV holds UREG1990 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+noted = "2026-10-15"
+
+[[errata.version]]
+variant = "personens-hogsta-utbildning-16-74"
+name = "1991"
+evidence = "SWECOV holds UREG1991 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+noted = "2026-10-15"
+
+[[errata.version]]
+variant = "personens-hogsta-utbildning-16-74"
+name = "1992"
+evidence = "SWECOV holds UREG1992 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+noted = "2026-10-15"
+
+[[errata.version]]
+variant = "personens-hogsta-utbildning-16-74"
+name = "1993"
+evidence = "SWECOV holds UREG1993 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+noted = "2026-10-15"
+
+[[errata.version]]
+variant = "personens-hogsta-utbildning-16-74"
+name = "1994"
+evidence = "SWECOV holds UREG1994 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+noted = "2026-10-15"
+
+[[errata.version]]
+variant = "personens-hogsta-utbildning-16-74"
+name = "1995"
+evidence = "SWECOV holds UREG1995 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+noted = "2026-10-15"
+
+[[errata.version]]
+variant = "personens-hogsta-utbildning-16-74"
+name = "1996"
+evidence = "SWECOV holds UREG1996 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "personens-hogsta-utbildning-16-74"
+column = "SUN2000Niva"
+data_type = "text"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999"]
+upstream = "additional-physical-column-in-version"
+native_variable_id = 66
+expected_evidence_sha256 = "27b97d9bd02fb6afcce71f848e6d73c88ec9a92185a3e4679fc84b8720f4c516"
+evidence = "SWECOV holds the column in UREG1990–UREG1999; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. For 1997–1999 SCB documents only the old-SUN columns (SUNNiva, SUNGrov) of the same native variable; the SUN 2000 column is an additional physical delivery beside them. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "personens-hogsta-utbildning-16-74"
+column = "SUN2000Niva_old"
+data_type = "text"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999"]
+upstream = "additional-physical-column-in-version"
+native_variable_id = 66
+expected_evidence_sha256 = "27b97d9bd02fb6afcce71f848e6d73c88ec9a92185a3e4679fc84b8720f4c516"
+evidence = "SWECOV holds the column in UREG1990–UREG1999; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. For 1997–1999 SCB documents only the old-SUN columns (SUNNiva, SUNGrov) of the same native variable; the SUN 2000 column is an additional physical delivery beside them. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "personens-hogsta-utbildning-16-74"
+column = "ExamAr"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "b4dba649b2f9bc9fabb24ebcfdf29acad74cc618ffc7482ba3e9b384f20f5220"
+evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "personens-hogsta-utbildning-16-74"
+column = "KallKod"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "b5a21d501714595ae00afa5d31d1d1c9a2c34c96f18eae033b82192aa1e17d6a"
+evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "personens-hogsta-utbildning-16-74"
+column = "PersonNr"
+versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "3f9bb279c17afdea8d3171d49f73bd1a07c02249e45cbd182f28fe1a60a09606"
+evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"
+
+# ── #1603 A2: coding of the added windows left unavailable ──
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/examensar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:753\",\"member:30613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:753\",\"member:98971\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:753\",\"member:99005\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:753\",\"member:99039\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:753\",\"member:99073\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:753\",\"member:99107\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:753\",\"member:99141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:753\",\"member:99175\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:753\",\"member:105147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:753\",\"member:105176\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:753\",\"member:152490\"]}"]
+fields = ["coding"]
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "b316b9e30f084c79eb27fd55142abec2e58efd2889e072f69765d0c0fbfd0860"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/examensar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:753\",\"member:30613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:753\",\"member:98971\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:753\",\"member:99005\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:753\",\"member:99039\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:753\",\"member:99073\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:753\",\"member:99107\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:753\",\"member:99141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:753\",\"member:99175\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:753\",\"member:105147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:753\",\"member:105176\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:753\",\"member:152490\"]}"]
+fields = ["coding"]
+valid_from = "1991-01-01"
+valid_to = "1991-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "b316b9e30f084c79eb27fd55142abec2e58efd2889e072f69765d0c0fbfd0860"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/examensar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:753\",\"member:30613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:753\",\"member:98971\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:753\",\"member:99005\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:753\",\"member:99039\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:753\",\"member:99073\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:753\",\"member:99107\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:753\",\"member:99141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:753\",\"member:99175\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:753\",\"member:105147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:753\",\"member:105176\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:753\",\"member:152490\"]}"]
+fields = ["coding"]
+valid_from = "1992-01-01"
+valid_to = "1992-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "b316b9e30f084c79eb27fd55142abec2e58efd2889e072f69765d0c0fbfd0860"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/examensar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:753\",\"member:30613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:753\",\"member:98971\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:753\",\"member:99005\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:753\",\"member:99039\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:753\",\"member:99073\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:753\",\"member:99107\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:753\",\"member:99141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:753\",\"member:99175\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:753\",\"member:105147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:753\",\"member:105176\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:753\",\"member:152490\"]}"]
+fields = ["coding"]
+valid_from = "1993-01-01"
+valid_to = "1993-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "b316b9e30f084c79eb27fd55142abec2e58efd2889e072f69765d0c0fbfd0860"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/examensar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:753\",\"member:30613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:753\",\"member:98971\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:753\",\"member:99005\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:753\",\"member:99039\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:753\",\"member:99073\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:753\",\"member:99107\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:753\",\"member:99141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:753\",\"member:99175\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:753\",\"member:105147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:753\",\"member:105176\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:753\",\"member:152490\"]}"]
+fields = ["coding"]
+valid_from = "1994-01-01"
+valid_to = "1994-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "b316b9e30f084c79eb27fd55142abec2e58efd2889e072f69765d0c0fbfd0860"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/examensar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:753\",\"member:30613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:753\",\"member:98971\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:753\",\"member:99005\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:753\",\"member:99039\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:753\",\"member:99073\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:753\",\"member:99107\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:753\",\"member:99141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:753\",\"member:99175\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:753\",\"member:105147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:753\",\"member:105176\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:753\",\"member:152490\"]}"]
+fields = ["coding"]
+valid_from = "1995-01-01"
+valid_to = "1995-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "b316b9e30f084c79eb27fd55142abec2e58efd2889e072f69765d0c0fbfd0860"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/examensar"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:753\",\"member:30613\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:753\",\"member:98971\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:753\",\"member:99005\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:753\",\"member:99039\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:753\",\"member:99073\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:753\",\"member:99107\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:753\",\"member:99141\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:753\",\"member:99175\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:753\",\"member:105147\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:753\",\"member:105176\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:753\",\"member:152490\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "b316b9e30f084c79eb27fd55142abec2e58efd2889e072f69765d0c0fbfd0860"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/kallkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:763\",\"member:30621\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:763\",\"member:98979\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:763\",\"member:99013\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:763\",\"member:99047\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:763\",\"member:99081\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:763\",\"member:99115\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:763\",\"member:99149\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:763\",\"member:99183\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:763\",\"member:105155\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:763\",\"member:105184\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:763\",\"member:152497\"]}"]
+fields = ["coding"]
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "64dabdd0334d5502f29d4dd40ba73f91a7f6666e8c440e9ecec911dab4138f64"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/kallkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:763\",\"member:30621\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:763\",\"member:98979\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:763\",\"member:99013\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:763\",\"member:99047\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:763\",\"member:99081\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:763\",\"member:99115\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:763\",\"member:99149\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:763\",\"member:99183\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:763\",\"member:105155\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:763\",\"member:105184\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:763\",\"member:152497\"]}"]
+fields = ["coding"]
+valid_from = "1991-01-01"
+valid_to = "1991-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "64dabdd0334d5502f29d4dd40ba73f91a7f6666e8c440e9ecec911dab4138f64"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/kallkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:763\",\"member:30621\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:763\",\"member:98979\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:763\",\"member:99013\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:763\",\"member:99047\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:763\",\"member:99081\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:763\",\"member:99115\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:763\",\"member:99149\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:763\",\"member:99183\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:763\",\"member:105155\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:763\",\"member:105184\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:763\",\"member:152497\"]}"]
+fields = ["coding"]
+valid_from = "1992-01-01"
+valid_to = "1992-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "64dabdd0334d5502f29d4dd40ba73f91a7f6666e8c440e9ecec911dab4138f64"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/kallkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:763\",\"member:30621\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:763\",\"member:98979\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:763\",\"member:99013\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:763\",\"member:99047\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:763\",\"member:99081\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:763\",\"member:99115\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:763\",\"member:99149\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:763\",\"member:99183\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:763\",\"member:105155\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:763\",\"member:105184\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:763\",\"member:152497\"]}"]
+fields = ["coding"]
+valid_from = "1993-01-01"
+valid_to = "1993-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "64dabdd0334d5502f29d4dd40ba73f91a7f6666e8c440e9ecec911dab4138f64"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/kallkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:763\",\"member:30621\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:763\",\"member:98979\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:763\",\"member:99013\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:763\",\"member:99047\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:763\",\"member:99081\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:763\",\"member:99115\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:763\",\"member:99149\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:763\",\"member:99183\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:763\",\"member:105155\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:763\",\"member:105184\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:763\",\"member:152497\"]}"]
+fields = ["coding"]
+valid_from = "1994-01-01"
+valid_to = "1994-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "64dabdd0334d5502f29d4dd40ba73f91a7f6666e8c440e9ecec911dab4138f64"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/kallkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:763\",\"member:30621\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:763\",\"member:98979\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:763\",\"member:99013\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:763\",\"member:99047\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:763\",\"member:99081\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:763\",\"member:99115\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:763\",\"member:99149\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:763\",\"member:99183\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:763\",\"member:105155\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:763\",\"member:105184\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:763\",\"member:152497\"]}"]
+fields = ["coding"]
+valid_from = "1995-01-01"
+valid_to = "1995-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "64dabdd0334d5502f29d4dd40ba73f91a7f6666e8c440e9ecec911dab4138f64"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/kallkod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:763\",\"member:30621\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:763\",\"member:98979\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:763\",\"member:99013\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:763\",\"member:99047\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:763\",\"member:99081\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:763\",\"member:99115\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:763\",\"member:99149\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:763\",\"member:99183\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1350\",\"variable:763\",\"member:105155\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1351\",\"variable:763\",\"member:105184\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:2591\",\"variable:763\",\"member:152497\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "64dabdd0334d5502f29d4dd40ba73f91a7f6666e8c440e9ecec911dab4138f64"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1991-01-01"
+valid_to = "1991-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1992-01-01"
+valid_to = "1992-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1993-01-01"
+valid_to = "1993-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1994-01-01"
+valid_to = "1994-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1995-01-01"
+valid_to = "1995-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1997-01-01"
+valid_to = "1997-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1998-01-01"
+valid_to = "1998-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/sun2000niva"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30632\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98990\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99024\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99058\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99092\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99126\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99160\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99194\"]}"]
+fields = ["coding"]
+valid_from = "1999-01-01"
+valid_to = "1999-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "e84d5cdaf1ea979691fe6310e38e50b539d1c46a14c0140af5e0b614dd873c7e"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1990-01-01"
+valid_to = "1990-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1991-01-01"
+valid_to = "1991-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1992-01-01"
+valid_to = "1992-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1993-01-01"
+valid_to = "1993-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1994-01-01"
+valid_to = "1994-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1995-01-01"
+valid_to = "1995-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1996-01-01"
+valid_to = "1996-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1997-01-01"
+valid_to = "1997-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1998-01-01"
+valid_to = "1998-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ureg/hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1008\",\"variable:66\",\"member:30629\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1212\",\"variable:66\",\"member:98987\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1213\",\"variable:66\",\"member:99021\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1214\",\"variable:66\",\"member:99055\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1215\",\"variable:66\",\"member:99089\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1216\",\"variable:66\",\"member:99123\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1217\",\"variable:66\",\"member:99157\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:24\",\"variant:78\",\"edition:1218\",\"variable:66\",\"member:99191\"]}"]
+fields = ["coding"]
+valid_from = "1999-01-01"
+valid_to = "1999-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "7dfb3a953b4340f73068f8e4aef611719b371819e84fb67d825ee37790d6da8f"

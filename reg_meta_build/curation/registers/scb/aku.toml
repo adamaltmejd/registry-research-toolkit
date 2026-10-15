@@ -3592,3 +3592,82 @@ valid_to = "2020-12-31"
 reason = "The exact accepted source window does not supply a usable stored response domain. Preserve its source quantity, delivery period, physical column and every raw coding association; leave only this effective domain unavailable. Known own domains in other windows remain unchanged. Do not borrow neighboring ordinary response encodings, annual lists or unproved leading-zero conventions. The IVECK2020 finding concerns explicitly curated holding coverage beyond the last supplied own source list, not inferred observations."
 evidence = "Complete accepted AKU34 native families, actual primary/summary/integer-identifier support, canonical books and complete own coding multiplicity. Review: Batch52-AKU-complete-source-role-review.json; Batch52-AKU-peer-own-coding-review.json; Batch52-AKU-physical-peer-collisions.json. Proof: Batch52-AKU-source-proof.json. Exact full-original and bound-coding digest guards; no fabricated domain, role or flag."
 expected_evidence_sha256 = "9284f0f4250324430068be1aefe7ed21e12315e6ea7ebe05fa8679299d14bd65"
+
+# ── #1603 A2: SWECOV AKU_2015–AKU_2020 ArVerks3 ──
+
+[[errata.delivered]]
+variant = "aku-april-2005-dec-2020"
+column = "ArVerks3"
+versions = ["2015", "2016", "2017", "2018", "2019", "2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "491900beed5b6cfe7b05edc5223e53357e0fc5e06ca7eaec72e80853e1c6f225"
+evidence = "SWECOV holds ArVerks3 in AKU_2015–AKU_2020; the question behind it is identical in AKU DO 2012 p. 91 and DO 2015 p. 84, and SCB documents the column on this variant 2008–2012. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-15"
+
+# ── #1603 A2: coding of the added windows left unavailable ──
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/aku/arverks3"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:5906\",\"variable:31265\",\"member:383641\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6099\",\"variable:31265\",\"member:383623\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6100\",\"variable:31265\",\"member:383603\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6101\",\"variable:31265\",\"member:383589\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6106\",\"variable:31265\",\"member:383562\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "96e380583297c9d3bd150d8cc2d4ab2ad4c55027450a988a25907aa837491bb9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/aku/arverks3"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:5906\",\"variable:31265\",\"member:383641\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6099\",\"variable:31265\",\"member:383623\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6100\",\"variable:31265\",\"member:383603\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6101\",\"variable:31265\",\"member:383589\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6106\",\"variable:31265\",\"member:383562\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "96e380583297c9d3bd150d8cc2d4ab2ad4c55027450a988a25907aa837491bb9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/aku/arverks3"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:5906\",\"variable:31265\",\"member:383641\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6099\",\"variable:31265\",\"member:383623\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6100\",\"variable:31265\",\"member:383603\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6101\",\"variable:31265\",\"member:383589\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6106\",\"variable:31265\",\"member:383562\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "96e380583297c9d3bd150d8cc2d4ab2ad4c55027450a988a25907aa837491bb9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/aku/arverks3"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:5906\",\"variable:31265\",\"member:383641\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6099\",\"variable:31265\",\"member:383623\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6100\",\"variable:31265\",\"member:383603\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6101\",\"variable:31265\",\"member:383589\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6106\",\"variable:31265\",\"member:383562\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "96e380583297c9d3bd150d8cc2d4ab2ad4c55027450a988a25907aa837491bb9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/aku/arverks3"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:5906\",\"variable:31265\",\"member:383641\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6099\",\"variable:31265\",\"member:383623\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6100\",\"variable:31265\",\"member:383603\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6101\",\"variable:31265\",\"member:383589\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6106\",\"variable:31265\",\"member:383562\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "96e380583297c9d3bd150d8cc2d4ab2ad4c55027450a988a25907aa837491bb9"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/aku/arverks3"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:5906\",\"variable:31265\",\"member:383641\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6099\",\"variable:31265\",\"member:383623\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6100\",\"variable:31265\",\"member:383603\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6101\",\"variable:31265\",\"member:383589\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:122\",\"variant:142\",\"edition:6106\",\"variable:31265\",\"member:383562\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "96e380583297c9d3bd150d8cc2d4ab2ad4c55027450a988a25907aa837491bb9"
