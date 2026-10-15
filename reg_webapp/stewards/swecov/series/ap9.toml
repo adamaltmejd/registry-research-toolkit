@@ -109,12 +109,14 @@ edition = 2024
 [[column]]
 column = "SV_SVA"
 tables = ["Äp9_2009"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition VT2009; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma", variable = "scb/grundskola-prov-ak9/deltagit-sva", representation = "sva" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column sva; SWECOV holds it as SV_SVA, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "SV_SVA"
 tables = ["Äp9_2010"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition VT2010; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/grundskola-prov-ak9/amne-sv-eng-ma", variable = "scb/grundskola-prov-ak9/deltagit-sva", representation = "sva" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column sva; SWECOV holds it as SV_SVA, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "SkolKommun"

@@ -59,22 +59,26 @@ reason = "SWECOV delivery spelling of the own-register catalog variable scb/fdb/
 [[column]]
 column = "Kommun"
 tables = ["FDB_AE_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/kommun-for-arbetsstalle", representation = "BKommunKod" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column BKommunKod; SWECOV holds it as Kommun, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Kommun"
 tables = ["FDB_AE_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/kommun-for-arbetsstalle", representation = "BKommunKod" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column BKommunKod; SWECOV holds it as Kommun, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Kommun"
 tables = ["FDB_AE_2021"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/kommun-for-arbetsstalle", representation = "BKommunKod" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column BKommunKod; SWECOV holds it as Kommun, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Kommun"
 tables = ["FDB_AE_2022"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/kommun-for-arbetsstalle", representation = "BKommunKod" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column BKommunKod; SWECOV holds it as Kommun, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "aestat"

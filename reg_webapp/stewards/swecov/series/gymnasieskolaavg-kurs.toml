@@ -120,39 +120,47 @@ edition = 2024
 [[column]]
 column = "Poang"
 tables = ["GymnasieskolaAvg_Kurs_1997"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurspoang", representation = "Poäng" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column Poäng; SWECOV holds it as Poang, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Poang"
 tables = ["GymnasieskolaAvg_Kurs_1998"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurspoang", representation = "Poäng" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column Poäng; SWECOV holds it as Poang, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Poang"
 tables = ["GymnasieskolaAvg_Kurs_1999"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurspoang", representation = "Poäng" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column Poäng; SWECOV holds it as Poang, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Poang"
 tables = ["GymnasieskolaAvg_Kurs_2000"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurspoang", representation = "Poäng" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column Poäng; SWECOV holds it as Poang, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Poang"
 tables = ["GymnasieskolaAvg_Kurs_2001"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurspoang", representation = "Poäng" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column Poäng; SWECOV holds it as Poang, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Poang"
 tables = ["GymnasieskolaAvg_Kurs_2002"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurspoang", representation = "Poäng" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column Poäng; SWECOV holds it as Poang, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Poang"
 tables = ["GymnasieskolaAvg_Kurs_2003"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurspoang", representation = "Poäng" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column Poäng; SWECOV holds it as Poang, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "Poang"
 tables = ["GymnasieskolaAvg_Kurs_2004"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition LA2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurspoang", representation = "Poäng" }]
+reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column Poäng; SWECOV holds it as Poang, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
