@@ -8183,43 +8183,43 @@ expected_diagnostic_sha256 = "4a49635298eb97812f538c14fa8d2098113ef292947a44ecd1
 [[errata.version]]
 variant = "personens-hogsta-utbildning-16-74"
 name = "1990"
-evidence = "SWECOV holds UREG1990 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 37 and 100 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "SWECOV holds UREG1990 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
 noted = "2026-10-15"
 
 [[errata.version]]
 variant = "personens-hogsta-utbildning-16-74"
 name = "1991"
-evidence = "SWECOV holds UREG1991 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 37 and 100 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "SWECOV holds UREG1991 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
 noted = "2026-10-15"
 
 [[errata.version]]
 variant = "personens-hogsta-utbildning-16-74"
 name = "1992"
-evidence = "SWECOV holds UREG1992 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 37 and 100 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "SWECOV holds UREG1992 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
 noted = "2026-10-15"
 
 [[errata.version]]
 variant = "personens-hogsta-utbildning-16-74"
 name = "1993"
-evidence = "SWECOV holds UREG1993 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 37 and 100 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "SWECOV holds UREG1993 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
 noted = "2026-10-15"
 
 [[errata.version]]
 variant = "personens-hogsta-utbildning-16-74"
 name = "1994"
-evidence = "SWECOV holds UREG1994 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 37 and 100 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "SWECOV holds UREG1994 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
 noted = "2026-10-15"
 
 [[errata.version]]
 variant = "personens-hogsta-utbildning-16-74"
 name = "1995"
-evidence = "SWECOV holds UREG1995 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 37 and 100 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "SWECOV holds UREG1995 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
 noted = "2026-10-15"
 
 [[errata.version]]
 variant = "personens-hogsta-utbildning-16-74"
 name = "1996"
-evidence = "SWECOV holds UREG1996 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 37 and 100 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+evidence = "SWECOV holds UREG1996 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
 noted = "2026-10-15"
 
 [[errata.delivered]]
@@ -8230,7 +8230,7 @@ versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "199
 upstream = "additional-physical-column-in-version"
 native_variable_id = 66
 expected_evidence_sha256 = "27b97d9bd02fb6afcce71f848e6d73c88ec9a92185a3e4679fc84b8720f4c516"
-evidence = "SWECOV holds the column in UREG1990–UREG1999; LISA bakgrundsfakta 1990–2017 pp. 37 and 100 and UREG DO 2010 p. 24 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. For 1997–1999 SCB documents only the old-SUN columns (SUNNiva, SUNGrov) of the same native variable; the SUN 2000 column is an additional physical delivery beside them. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "SWECOV holds the column in UREG1990–UREG1999; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. For 1997–1999 SCB documents only the old-SUN columns (SUNNiva, SUNGrov) of the same native variable; the SUN 2000 column is an additional physical delivery beside them. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
 noted = "2026-10-15"
 
 [[errata.delivered]]
@@ -8241,7 +8241,7 @@ versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "199
 upstream = "additional-physical-column-in-version"
 native_variable_id = 66
 expected_evidence_sha256 = "27b97d9bd02fb6afcce71f848e6d73c88ec9a92185a3e4679fc84b8720f4c516"
-evidence = "SWECOV holds the column in UREG1990–UREG1999; LISA bakgrundsfakta 1990–2017 pp. 37 and 100 and UREG DO 2010 p. 24 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. For 1997–1999 SCB documents only the old-SUN columns (SUNNiva, SUNGrov) of the same native variable; the SUN 2000 column is an additional physical delivery beside them. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "SWECOV holds the column in UREG1990–UREG1999; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. For 1997–1999 SCB documents only the old-SUN columns (SUNNiva, SUNGrov) of the same native variable; the SUN 2000 column is an additional physical delivery beside them. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
 noted = "2026-10-15"
 
 [[errata.delivered]]
@@ -8250,7 +8250,7 @@ column = "ExamAr"
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "b4dba649b2f9bc9fabb24ebcfdf29acad74cc618ffc7482ba3e9b384f20f5220"
-evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 37 and 100 and UREG DO 2010 p. 24 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
 noted = "2026-10-15"
 
 [[errata.delivered]]
@@ -8259,7 +8259,7 @@ column = "KallKod"
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "b5a21d501714595ae00afa5d31d1d1c9a2c34c96f18eae033b82192aa1e17d6a"
-evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 37 and 100 and UREG DO 2010 p. 24 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
 noted = "2026-10-15"
 
 [[errata.delivered]]
@@ -8268,7 +8268,7 @@ column = "PersonNr"
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "3f9bb279c17afdea8d3171d49f73bd1a07c02249e45cbd182f28fe1a60a09606"
-evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 37 and 100 and UREG DO 2010 p. 24 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "SWECOV holds the column in UREG1990–UREG1996; LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 and UREG DO 2010 p. 38 document the variable, back-coded to SUN 2000, from 1990, with the same definition as the documented 16–74 rows. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
 noted = "2026-10-15"
 
 # ── #1603 A2: coding of the added windows left unavailable ──

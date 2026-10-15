@@ -1025,7 +1025,7 @@ column = "PersonNr"
 versions = ["2013", "2014", "2015", "2016", "2017", "2018"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "a43aacb5bc0efdf127be28fe385ae97d358bc19bdefb75090902ebce9da625bd"
-evidence = "SWECOV holds the person identifier in JOBB2013–JOBB2018; the job register is person-keyed in every year (LISA bakgrundsfakta 1990–2017 p. 159), and SCB documents PersonNr on this variant 1985–2012 and 2019–2021 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "SWECOV holds the person identifier in JOBB2013–JOBB2018; the job register is person-keyed in every year (LISA bakgrundsfakta 1990–2017 p. 168), and SCB documents PersonNr on this variant 1985–2012 and 2019–2021 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
 noted = "2026-10-15"
 
 [[errata.delivered]]
