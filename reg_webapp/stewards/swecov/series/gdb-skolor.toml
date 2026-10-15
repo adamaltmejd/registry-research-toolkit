@@ -4,79 +4,79 @@ variants = ["scb/gdb/adresser-fastigheter", "scb/gdb/fastigheter"]
 
 [[table]]
 table = "GDB_Skolor1990"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1990
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1991"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1991
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1992"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1992
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1993"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1993
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1994"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1994
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1995"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1995
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1996"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1996
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1997"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1997
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1998"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1998
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor1999"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 1999
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor2000"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 2000
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor2001"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 2001
 partition = "skolor"
 
 [[table]]
 table = "GDB_Skolor2002"
-variants = ["scb/gdb/adresser-fastigheter"]
+variants = ["scb/gdb/fastigheter"]
 edition = 2002
 partition = "skolor"
 
@@ -366,71 +366,6 @@ unmap = "Retained physical geocoded extract field for edition 2022. The accepted
 column = "DeSO"
 tables = ["GDB_Skolor2023"]
 unmap = "Retained physical geocoded extract field for edition 2023. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1990"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1991"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1992"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1993"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1994"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1995"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1996"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1997"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1998"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor1999"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor2000"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor2001"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Kommun"
-tables = ["GDB_Skolor2002"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "Kommun"

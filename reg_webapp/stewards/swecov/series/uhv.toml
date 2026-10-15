@@ -129,47 +129,6 @@ mappings = [{ register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat"
 reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
 
 [[column]]
-column = "SITC5"
-tables = ["UHV_1997"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "SITC5"
-tables = ["UHV_1998"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "SITC5"
-tables = ["UHV_1999"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "SITC5"
-tables = ["UHV_2000"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "SITC5"
-tables = ["UHV_2001"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "SITC5"
-tables = ["UHV_2002"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "SITC5"
-tables = ["UHV_2003"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "SITC5"
-tables = ["UHV_2004"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2004; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
 column = "varde"
 tables = ["UHV_2011", "UHV_2012", "UHV_2013", "UHV_2014", "UHV_2015", "UHV_2016", "UHV_2017", "UHV_2018", "UHV_2019", "UHV_2020", "UHV_2021", "UHV_2022", "UHV_2023"]
 unmap = "The accepted Intrastat export assigns Varde to native19318 (invoiced value) and19317 (statistical value including freight/insurance to the Swedish border, import CIF/export FOB). Both are admitted in the same annual variant. Private UHV table/column metadata does not state which valuation applies. Preserve the held field and both distinct meanings; do not infer equivalence or select one valuation. Exact review: Batch57-ambiguous20-owner-review.json. Maintainer authorizes preserving unsupported mappings as unavailable; no original column, year or source question is removed."
-

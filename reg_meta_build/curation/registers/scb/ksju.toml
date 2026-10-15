@@ -1950,3 +1950,234 @@ is_sensitive = true
 is_identifier = false
 evidence = "SCB states neither flag for scb/ksju/helantdagar and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."
 noted = "2026-10-15"
+
+# ── #1603 B8/B9/D1: SWECOV KSju 2015–2023 ──
+
+[[errata.delivered]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "fallangd"
+data_type = "decimal"
+versions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
+upstream = "additional-physical-column-in-version"
+native_variable_id = 8152
+expected_evidence_sha256 = "f49e4cfd75001a580aab81373aa0912f0f4b423c8efd9b07288cccc4c4c94d86"
+evidence = "SWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "Ksjulan"
+versions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "f9deb0b580800f12736785eca61a378b84951f37e5eb891e18fd49cffd19962c"
+evidence = "SWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "SyssStat"
+versions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0997ce1bbbd55341781dd556b12509b0c403b27346da99ead0caae0f27238e47"
+evidence = "SWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"
+
+# ── #1603 B batch: coding of the added windows left unavailable ──
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
