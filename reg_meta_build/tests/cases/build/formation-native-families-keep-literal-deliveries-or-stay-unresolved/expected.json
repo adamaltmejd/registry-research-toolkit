@@ -32,7 +32,7 @@
         ["scb/sample/redefine", "unresolved_native_identity"],
         ["scb/sample/codeliv", "unresolved_native_identity"],
         ["scb/sample/distinct", "unresolved_native_identity"],
-        ["scb/sample/checked", "column_spelling_folded"],
+        ["scb/sample/checked", "source_native_identity_retained"],
         ["scb/sample/units-seq", "delivery_units_vary"],
         ["scb/sample/units-same", "delivery_units_vary"],
         ["scb/sample/units-same", "conflicting_occurrence_facts"],
@@ -44,7 +44,7 @@
         ["scb/sample/ty-conflict", "unknown_data_type"],
         ["scb/sample/ty-conflict", "conflicting_occurrence_facts"]
       ],
-      "note": "Every issue of every leg. Retained quantities report only source_native_identity_retained (the old tests' `[d.code for d in result.diagnostics] == [...]`); grain adds delivery_units_vary because its two units differ. The refusals report unresolved_native_identity; checked reports the fold and not the retained warning; units-seq and units-missing report delivery_units_vary and no conflicting_variable_fact, units-same adds its measurement_unit occurrence conflict; units-columnless's blank member is omitted with no delivery_units_vary; ty-widen reports neither unknown_data_type nor conflicting_occurrence_facts. The old open-ended, pooled, coded and split tests asserted `result.diagnostics == ()`, and the FDB owners `diagnostics == ()`."
+      "note": "Every issue of every leg. Retained quantities report only source_native_identity_retained (the old tests' `[d.code for d in result.diagnostics] == [...]`); grain adds delivery_units_vary because its two units differ. The refusals report unresolved_native_identity; checked reports the retained warning and not the fold, since its delivered addition does not decide the family's policy (#1622); units-seq and units-missing report delivery_units_vary and no conflicting_variable_fact, units-same adds its measurement_unit occurrence conflict; units-columnless's blank member is omitted with no delivery_units_vary; ty-widen reports neither unknown_data_type nor conflicting_occurrence_facts. The old open-ended, pooled, coded and split tests asserted `result.diagnostics == ()`, and the FDB owners `diagnostics == ()`."
     },
     {
       "table": "issues",
@@ -98,17 +98,6 @@
     {
       "table": "issues",
       "where": {
-        "subject": "scb/sample/checked",
-        "code": "column_spelling_folded",
-        "detail": {"contains": ["most recent spelling (x0115)", "identity curation assigns"]}
-      },
-      "fields": ["subject"],
-      "rows": [["scb/sample/checked"]],
-      "note": "test_checked_column_keeps_its_literal_when_twins_fold: the fold names the most recent spelling and the exception it applied to the checked member."
-    },
-    {
-      "table": "issues",
-      "where": {
         "subject": "scb/sample/ty-conflict",
         "code": "unknown_data_type",
         "detail": {"contains": ["Documented Datatyp: date, integer"]}
@@ -143,7 +132,8 @@
         ["dia", "people", "Kön", "2020-01-01", "2020-12-31", 0],
         ["dia", "people", "Kon", "2021-01-01", "2021-12-31", 0],
         ["checked", "people", "X0115", "2002-01-01", "2002-12-31", 0],
-        ["checked", "people", "x0115", "2004-01-01", "2005-12-31", 0],
+        ["checked", "people", "X0115", "2004-01-01", "2004-12-31", 0],
+        ["checked", "people", "x0115", "2005-01-01", "2005-12-31", 0],
         ["gaturest", "people", "GatuRest", "1999-01-01", "1999-12-31", 0],
         ["gaturest", "people", "Gaturest", "2005-01-01", "2005-12-31", 0],
         ["gaturest", "second", "GatuRest", "2010-01-01", "2010-12-31", 0],
@@ -153,7 +143,7 @@
         ["pooled", "people", "POOLED", "2012-01-01", "2014-12-31", 1],
         ["pooled-coded", "people", "POOLED_CODED", "2020-01-01", "2022-12-31", 1]
       ],
-      "note": "Retained quantities keep each literal delivery column (seq, blk, h56 from the spelling-similarity test, case and dia keep their case and diacritic spellings rather than folding). checked: the 2002 addition keeps X0115 while the unchecked twins take the most recent spelling x0115. FDB: both spellings of gaturest keep their literals across both variants, PGaturest is its own owner. pooled and pooled-coded: one state over the pooled range, marked pooled. Day-adjacent years of one column with identical facts are one state (case V0115 2005-2006, checked x0115 2004-2005; #1296 2d)."
+      "note": "Retained quantities keep each literal delivery column (seq, blk, h56 from the spelling-similarity test, case and dia keep their case and diacritic spellings rather than folding). checked: the 2002 addition keeps its own X0115 and the documented twins keep theirs (X0115 2004, x0115 2005), as without the addition (#1622). FDB: both spellings of gaturest keep their literals across both variants, PGaturest is its own owner. pooled and pooled-coded: one state over the pooled range, marked pooled. Day-adjacent years of one column with identical facts are one state (case V0115 2005-2006; #1296 2d)."
     },
     {
       "table": "states",

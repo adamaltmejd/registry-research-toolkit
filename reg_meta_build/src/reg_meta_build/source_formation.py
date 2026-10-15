@@ -659,8 +659,15 @@ def _checked_delivery_metadata(
 def _source_native_identity_supported(
     occurrences: tuple[EffectiveOccurrence, ...],
 ) -> bool:
-    """Keep a complete exported quantity across nonconcurrent column renames."""
-    if not occurrences or any(o.identity_checked for o in occurrences):
+    """Keep a complete exported quantity across nonconcurrent column renames.
+
+    Only the unchecked source occurrences decide it. A checked occurrence (an
+    identity assignment or a curated delivered addition) keeps its own literal
+    either way, so it never moves the family from its documented spellings to the
+    fold (#1622). A family whose members are all checked still never retains.
+    """
+    occurrences = tuple(o for o in occurrences if not o.identity_checked)
+    if not occurrences:
         return False
     if any(
         o.variable_key is None

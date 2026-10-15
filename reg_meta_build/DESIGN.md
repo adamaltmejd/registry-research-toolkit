@@ -893,29 +893,31 @@ columns when every original supplies the same positive exported name and definit
 (after whitespace normalization), physical columns, types and periods are explicit, and
 distinct columns never overlap within a native variant. Literal delivery metadata remain
 separate; this establishes source identity, not statistical equivalence. Explicit
-checked ownership takes precedence. Missing semantic or physical evidence and concurrent
-columns still require curation. Other case or diacritic twins use the shared
-column-identity fallback only when no edition co-delivers both spellings. An accepted
-name alone cannot establish a partition across ambiguous columns. A partition or
-parallel-column family requires checked ownership and complete relevant membership. A
-partition split whose naming pin converted no name (an inactive generated pin in a
-churning zone) is withheld in a diagnostic build as `unresolved_catalog_identity`; a
-strict build stops with `naming_partition_unconverted`. An implicit split suffix binds
-case or diacritic twin literals only when their folded column key matches and no variant
-edition co-delivers them. A one-owner partition may list a spelling that recurs after an
-intervening rename (A→B→A). An explicitly reviewed complete literal map may retain the
-base source-native key when its named quantity and definition agree across deliveries.
-Such a map cannot mix split owners or unassigned literals. It preserves existing naming,
-guards all original fields, parent facts, coding references and complete family
-membership, and does not claim statistical equivalence across units, calculation methods
-or delivery levels. Exact source type spellings `numerisk`, `alfanumerisk` and
-`Character` classify as decimal, text and text during resolution, including already
-accepted prepared records. Original type declarations remain evidence; classification
-never uses substring guessing. Blank column records remain original evidence without
-manufacturing a delivered column; a literal claimed by two native variables in the same
-edition needs a split or `native_variable_id`, never a fold into one owner. Related but
-different variables remain connected through groups; a shared stem or suffix is not
-evidence that they are one variable.
+checked ownership takes precedence. A checked member beside the family, such as a
+curated delivered addition, keeps its own literal and does not decide retention: the
+family is judged on its unchecked originals alone (#1622). Missing semantic or physical
+evidence and concurrent columns still require curation. Other case or diacritic twins
+use the shared column-identity fallback only when no edition co-delivers both spellings.
+An accepted name alone cannot establish a partition across ambiguous columns. A
+partition or parallel-column family requires checked ownership and complete relevant
+membership. A partition split whose naming pin converted no name (an inactive generated
+pin in a churning zone) is withheld in a diagnostic build as
+`unresolved_catalog_identity`; a strict build stops with `naming_partition_unconverted`.
+An implicit split suffix binds case or diacritic twin literals only when their folded
+column key matches and no variant edition co-delivers them. A one-owner partition may
+list a spelling that recurs after an intervening rename (A→B→A). An explicitly reviewed
+complete literal map may retain the base source-native key when its named quantity and
+definition agree across deliveries. Such a map cannot mix split owners or unassigned
+literals. It preserves existing naming, guards all original fields, parent facts, coding
+references and complete family membership, and does not claim statistical equivalence
+across units, calculation methods or delivery levels. Exact source type spellings
+`numerisk`, `alfanumerisk` and `Character` classify as decimal, text and text during
+resolution, including already accepted prepared records. Original type declarations
+remain evidence; classification never uses substring guessing. Blank column records
+remain original evidence without manufacturing a delivered column; a literal claimed by
+two native variables in the same edition needs a split or `native_variable_id`, never a
+fold into one owner. Related but different variables remain connected through groups; a
+shared stem or suffix is not evidence that they are one variable.
 
 Two native identities that take one slug in one FQID scope are both refused with
 `naming_slug_collision`, whichever naming sources assign it (native names, split
