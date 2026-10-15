@@ -100,6 +100,9 @@ slug = "c-cur"
 [[variable]]
 native_id = "1.BLK"
 slug = "c-documented"
+[[variable]]
+native_id = "1.NOW"
+slug = "c-now"
 
 [[errata.column]]
 variant = "people"
@@ -136,3 +139,16 @@ is_sensitive = false
 source = "steward-holdings"
 evidence = "held"
 noted = "2026-09-25"
+
+[[errata.column]]
+variant = "people"
+column = "NOW"
+name = "NOW"
+definition = "Documented"
+versions = ["2020", "2022"]
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-15"

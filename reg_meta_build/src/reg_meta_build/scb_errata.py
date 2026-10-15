@@ -39,6 +39,7 @@ from .source_curation import (
     record_ref,
 )
 from .source_evidence import canonical_sha256
+from .source_intervals import coding_scope_bounds
 from .source_occurrences import source_occurrence
 from .source_periods import source_scopes
 from .source_records import NativeCoordinates, SourceFields, TemporalScope, value_field
@@ -1194,6 +1195,53 @@ def convert_delivered_entry(
     return ErrataConversion(case, (), references, tuple(sorted(relied, key=str)))
 
 
+def _overlaps_documenting_edition(
+    entry: ErrataColumn,
+    context: ErrataVariantContext,
+    selected: tuple[ErrataEditionBinding, ...],
+) -> bool:
+    """Whether the declared column could share a period with a documented one (#1621).
+
+    A literal SCB documents only in other editions of the variant can carry a
+    different meaning there, so the entry mints its own variable. It is refused
+    when the minted and the documented owner would both claim the one physical
+    column in one period. Undated holdings and editions without known bounds
+    cannot be shown disjoint, so they count as overlapping.
+    """
+    documented = context.by_column.get(fold_column(entry.column), ())
+    if not documented:
+        return False
+    if entry.versions is None and entry.holdings_period is None:
+        return True
+    if entry.holdings_period is not None:
+        start, end = holdings_period_bounds(entry.holdings_period)
+        claimed: tuple[tuple[int, int], ...] = (
+            (
+                date.fromisoformat(start).toordinal(),
+                date.fromisoformat(end).toordinal(),
+            ),
+        )
+    else:
+        keys = {edition.key for edition in selected}
+        if any(source_occurrence(record).edition_key in keys for record in documented):
+            return True
+        claimed = ()
+        for edition in selected:
+            bounds = coding_scope_bounds(edition.edition_scope)
+            if bounds is None:
+                return True
+            claimed += bounds
+    for record in documented:
+        bounds = coding_scope_bounds(record.edition_scope)
+        if bounds is None or any(
+            lo <= other_hi and other_lo <= hi
+            for lo, hi in claimed
+            for other_lo, other_hi in bounds
+        ):
+            return True
+    return False
+
+
 def convert_column_entry(
     entry: ErrataColumn,
     *,
@@ -1218,8 +1266,6 @@ def convert_column_entry(
         raise ValueError("declared_flags must name original boolean declaration keys")
     context.require_coordinates(entry.register_id, entry.register_variant_id)
     records, editions = context.records, context.editions
-    if context.by_column.get(fold_column(entry.column)):
-        return ErrataConversion(None, ("column_now_documented",), ())
     names = set(entry.versions or ())
     missing = names - {edition.name for edition in editions}
     if missing or entry.versions == ():
@@ -1227,6 +1273,8 @@ def convert_column_entry(
             f"missing column edition conversion bindings: {sorted(missing)!r}"
         )
     selected = tuple(edition for edition in editions if edition.name in names)
+    if _overlaps_documenting_edition(entry, context, selected):
+        return ErrataConversion(None, ("column_now_documented",), ())
     references = {ref for edition in selected for ref in edition.support}
     if entry.versions is None:
         # This member establishes the native variant coordinate only. It says
@@ -1237,7 +1285,9 @@ def convert_column_entry(
     anchors = context.records_for_refs(references)
     expected = capture_expectations(anchors, fields=("availability",))
     # No column-absent guard: the column was checked against every record of this
-    # variant above (`column_now_documented`), and apply reads the same slice.
+    # variant above (`column_now_documented`); a documenting edition the entry
+    # does not overlap is pinned by the per-edition peer guards below, and apply
+    # reads the same slice.
     guards = []
     for ref in sorted(references, key=str):
         anchor = next(record for record in anchors if record_ref(record) == ref)

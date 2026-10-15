@@ -632,17 +632,24 @@ annotates only the occurrences the entry adds, with the warning field `definitio
 text is curator annotation, excluded from the evidence digest. `[[errata.column]]`
 carries the variable identity (`name` and `definition`), a source and evidence, plus
 either named versions, bounded `holdings_period`, or the legacy undated
-`all_versions = true`; it mints a variable for a column SCB documents nowhere on that
-variant. Its identity is `(register, column)`, so two variants of one register use the
-same variable identity. `source` records the evidence class; it does not change the
-materialized rows.
+`all_versions = true`; it mints a variable for a column SCB does not document on that
+variant in the period the entry claims. A literal SCB documents only in other editions
+may carry a different meaning there, so the entry still mints its own variable, with its
+own slug, and never joins the documented owner (#1621). It is refused
+(`column_now_documented`) when its named editions or its `holdings_period` overlap an
+edition that documents the literal, under any case/diacritic spelling: the two variables
+would otherwise both claim one physical column in one period. Undated entries and
+editions without known bounds cannot be shown disjoint, so they are refused whenever the
+literal is documented anywhere on the variant. Its identity is `(register, column)`, so
+two variants of one register use the same variable identity. `source` records the
+evidence class; it does not change the materialized rows.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
-document this column anywhere on this variant? One column/variant omission is exactly
-one kind. Delivered entries clone a real row and therefore cannot describe a column with
-no row on the variant or its explicit sibling donor; column entries mint a row and
-therefore cannot describe a column that already has one. If SCB ships an omitted row,
-the build fails with `scb_errata_now_present`. Retire only the fixed edition from
+document this column, with this meaning, on this variant? One column/variant omission is
+exactly one kind. Delivered entries clone a real row and therefore cannot describe a
+column with no row on the variant or its explicit sibling donor; column entries mint a
+row and therefore cannot describe a column that already has one. If SCB ships an omitted
+row, the build fails with `scb_errata_now_present`. Retire only the fixed edition from
 `versions`, or delete the entry when that was its last edition; do not edit it to keep a
 failing build green. Git history preserves the upstream-error record.
 

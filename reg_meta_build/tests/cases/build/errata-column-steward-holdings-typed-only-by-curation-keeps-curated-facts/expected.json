@@ -31,9 +31,43 @@
           "2020-01-01",
           "2020-12-31",
           "integer"
+        ],
+        [
+          "c-documented",
+          "BLK",
+          "2020-01-01",
+          "2020-12-31",
+          "integer"
         ]
       ],
-      "note": "each declaration names only the 2020 edition, so it forms one 2020 state though the register also delivers 2018 and 2022; the stale BLK declaration forms none"
+      "note": "each declaration names only the 2020 edition, so it forms one 2020 state though the register also delivers 2018 and 2022; BLK is documented only in 2022 (as Blk, var 31), so its 2020 declaration mints its own variable; the NOW declaration overlaps a documenting edition and forms none"
+    },
+    {
+      "table": "states",
+      "where": {
+        "variable": [
+          "c-documented",
+          "v31"
+        ]
+      },
+      "fields": [
+        "variable",
+        "column",
+        "valid_from"
+      ],
+      "rows": [
+        [
+          "c-documented",
+          "BLK",
+          "2020-01-01"
+        ],
+        [
+          "v31",
+          "Blk",
+          "2022-01-01"
+        ]
+      ],
+      "note": "the minted variable never merges into the documented owner"
     },
     {
       "table": "variables",
@@ -82,7 +116,7 @@
       ],
       "rows": [
         [
-          "curation/registers/scb/sample.toml#/errata.column/3: column_now_documented"
+          "curation/registers/scb/sample.toml#/errata.column/4: column_now_documented"
         ]
       ]
     }
