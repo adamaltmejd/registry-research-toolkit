@@ -29,3 +29,36 @@ slug = "s0cu"
 [[variable]]
 native_id = "1.8"
 slug = "nosum"
+[[variable]]
+native_id = "1.9"
+slug = "auth"
+
+[[errata.flags]]
+variable = "1.9"
+variant = "1.10"
+column = "AUTH"
+edition = "110"
+expected_fields = {{expected_fields key=member:109 fields=name,definition,description,operational_definition,sensitivity,identifier}}
+expected_period_text = {{period_text key=member:109}}
+expected_scope = {{edition_scope key=member:109}}
+expected_period = {{period_scope key=member:109}}
+expected_evidence_sha256 = {{evidence_sha256 key=member:109}}
+is_sensitive = true
+is_identifier = false
+evidence = "Reviewed: a sensitive non-identifier like its siblings."
+noted = "2026-10-15"
+
+[[errata.flags]]
+variable = "1.8"
+variant = "1.10"
+column = "NOSUM"
+edition = "110"
+expected_fields = {{expected_fields key=member:108 fields=name,definition,description,operational_definition,sensitivity,identifier}}
+expected_period_text = {{period_text key=member:108}}
+expected_scope = {{edition_scope key=member:108}}
+expected_period = {{period_scope key=member:108}}
+expected_evidence_sha256 = {{evidence_sha256 key=member:109}}
+is_sensitive = true
+is_identifier = false
+evidence = "Reviewed against originals that have since changed."
+noted = "2026-10-15"

@@ -648,10 +648,11 @@ evidence class; it does not change the materialized rows.
 document this column, with this meaning, on this variant? One column/variant omission is
 exactly one kind. Delivered entries clone a real row and therefore cannot describe a
 column with no row on the variant or its explicit sibling donor; column entries mint a
-row and therefore cannot describe a column that already has one. If SCB ships an omitted
-row, the build fails with `scb_errata_now_present`. Retire only the fixed edition from
-`versions`, or delete the entry when that was its last edition; do not edit it to keep a
-failing build green. Git history preserves the upstream-error record.
+row and therefore cannot describe a column that already has one in the period it claims.
+If SCB ships an omitted row, the build fails with `scb_errata_now_present`. Retire only
+the fixed edition from `versions`, or delete the entry when that was its last edition;
+do not edit it to keep a failing build green. Git history preserves the upstream-error
+record.
 
 SCB omitted-row converters share one immutable, validated `ErrataVariantContext` per
 source variant during compilation. It validates complete native coordinates and edition
@@ -848,6 +849,19 @@ effects and never rewrite the original source records. A finite scoped name corr
 selects exact original source scopes and carries those same scopes into its conditional
 replay effect. A monthly row sharing an annual row's semantic reference cannot inherit
 that name correction.
+
+`[[errata.flags]]` authors `is_sensitive` and `is_identifier` for a variable whose
+source and auxiliary joins state neither, which `unresolved_flag` otherwise withholds
+(#1621). Both values are required; nothing defaults. The entry names one exact
+occurrence (variable, variant, column, edition) with the same original-scope and prose
+guards as `[[errata.field]]`, guards both source flags as absent, and pins the native
+family's originals with `expected_evidence_sha256`; a changed original stales it at its
+locator. It emits two checked field changes on that occurrence. Flags reconcile over all
+of a variable's occurrences and support, so one stated pair decides them, and the
+existing rules still apply: a sensitivity claim from any source only ratchets up, and an
+identifier claim that disagrees reconciles to unknown and withholds the variable again.
+A later auxiliary flag is therefore never silently overridden, and no separate refusal
+is owed. Undeclared variables keep the `unresolved_flag` ratchet.
 
 Field entries may pin duplicate observations with `expected_records`, using complete
 original `RecordExpectation` alternatives. Except for the source-defined attribution
