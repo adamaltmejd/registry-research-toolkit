@@ -37,42 +37,42 @@ edition = 2022
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2015"]
-hold = { follow_up = "#1603", reason = "Stored codes match neither the SNI 2002 nor the SNI 2007 list (maintainer's aggregate check on MONA, reported as a conclusion only); a format check is pending before an owner is set (#1603)." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2016"]
-hold = { follow_up = "#1603", reason = "Stored codes match neither the SNI 2002 nor the SNI 2007 list (maintainer's aggregate check on MONA, reported as a conclusion only); a format check is pending before an owner is set (#1603)." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2017"]
-hold = { follow_up = "#1603", reason = "Stored codes match neither the SNI 2002 nor the SNI 2007 list (maintainer's aggregate check on MONA, reported as a conclusion only); a format check is pending before an owner is set (#1603)." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2018"]
-hold = { follow_up = "#1603", reason = "Stored codes match neither the SNI 2002 nor the SNI 2007 list (maintainer's aggregate check on MONA, reported as a conclusion only); a format check is pending before an owner is set (#1603)." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2019"]
-hold = { follow_up = "#1603", reason = "Stored codes match neither the SNI 2002 nor the SNI 2007 list (maintainer's aggregate check on MONA, reported as a conclusion only); a format check is pending before an owner is set (#1603)." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2020"]
-hold = { follow_up = "#1603", reason = "Stored codes match neither the SNI 2002 nor the SNI 2007 list (maintainer's aggregate check on MONA, reported as a conclusion only); a format check is pending before an owner is set (#1603)." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2021"]
-hold = { follow_up = "#1603", reason = "Stored codes match neither the SNI 2002 nor the SNI 2007 list (maintainer's aggregate check on MONA, reported as a conclusion only); a format check is pending before an owner is set (#1603)." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2022"]
-hold = { follow_up = "#1603", reason = "Stored codes match neither the SNI 2002 nor the SNI 2007 list (maintainer's aggregate check on MONA, reported as a conclusion only); a format check is pending before an owner is set (#1603)." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "IdPers"

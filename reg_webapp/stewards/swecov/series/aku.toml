@@ -31,202 +31,202 @@ edition = 2020
 [[column]]
 column = "BISSYK1"
 tables = ["AKU_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BISSYK1"
 tables = ["AKU_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BISSYK1"
 tables = ["AKU_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BISSYK1"
 tables = ["AKU_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BISSYK1"
 tables = ["AKU_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK2"
 tables = ["AKU_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK2"
 tables = ["AKU_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK2"
 tables = ["AKU_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK2"
 tables = ["AKU_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK2"
 tables = ["AKU_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK3"
 tables = ["AKU_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK3"
 tables = ["AKU_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK3"
 tables = ["AKU_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK3"
 tables = ["AKU_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK3"
 tables = ["AKU_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK4"
 tables = ["AKU_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK4"
 tables = ["AKU_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK4"
 tables = ["AKU_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK4"
 tables = ["AKU_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "BiSSYK4"
 tables = ["AKU_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK1"
 tables = ["AKU_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK1"
 tables = ["AKU_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK1"
 tables = ["AKU_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK1"
 tables = ["AKU_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK1"
 tables = ["AKU_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK2"
 tables = ["AKU_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK2"
 tables = ["AKU_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK2"
 tables = ["AKU_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK2"
 tables = ["AKU_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK2"
 tables = ["AKU_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK3"
 tables = ["AKU_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK3"
 tables = ["AKU_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK3"
 tables = ["AKU_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK3"
 tables = ["AKU_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK3"
 tables = ["AKU_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK4"
 tables = ["AKU_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK4"
 tables = ["AKU_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK4"
 tables = ["AKU_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK4"
 tables = ["AKU_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "HUSSYK4"
 tables = ["AKU_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in every delivered year 2016–2020 (MONA aggregate check, maintainer decision 2026-10-15, AKU empty); there is no value to order (#1603)."
 
 [[column]]
 column = "UarbLand"

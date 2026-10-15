@@ -144,36 +144,6 @@ table = "slutbetyg_Ak9_2024"
 edition = 2024
 
 [[column]]
-column = "NO_AMNEN"
-tables = ["slutbetyg_Ak9_2022"]
-hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
-
-[[column]]
-column = "NO_AMNEN"
-tables = ["slutbetyg_Ak9_2023"]
-hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
-
-[[column]]
-column = "NO_AMNEN"
-tables = ["slutbetyg_Ak9_2024"]
-hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
-
-[[column]]
-column = "SO"
-tables = ["slutbetyg_Ak9_2022"]
-hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
-
-[[column]]
-column = "SO"
-tables = ["slutbetyg_Ak9_2023"]
-hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
-
-[[column]]
-column = "SO"
-tables = ["slutbetyg_Ak9_2024"]
-hold = { follow_up = "#1603", reason = "Fully populated, unlike the documented block grade SCB sets only for pupils repeating year 9 (maintainer's aggregate check on MONA, reported as a conclusion only); owner pending a value check of whether the column is a summary of the subject grades (#1603; maintainer decision 2026-10-15, D6)." }
-
-[[column]]
 column = "beht_ehs"
 tables = ["slutbetyg_Ak9_2013"]
 mappings = [{ register_variant = "scb/grundskola-ak9/grundskolan-betyg-ak9", variable = "scb/grundskola-ak9/beh-ehs", representation = "Beh_EHS" }]
