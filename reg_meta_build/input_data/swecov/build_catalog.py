@@ -2394,14 +2394,19 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
             recs = [r for coord in sorted(coords) for r in by_coordcol[(coord, u)]]
             mapping_issue = None
             curated: set[tuple[str, str, str]] = set()
+            # A year or month member serves only its own period, so its owner
+            # must cover that period, not the table's whole edition.
+            column_edition = edition
             for mapping in (decision.mappings if decision is not None else None) or ():
+                if mapping.member is not None and mapping.member.kind != "position":
+                    column_edition = mapping.member.index
                 declared, mapping_issue = _inventory_mapping_records(
                     mapping,
                     decision.select_owner,
                     by_coordcol[
                         (mapping.register_variant, mapping.representation.upper())
                     ],
-                    edition,
+                    column_edition,
                 )
                 if mapping_issue:
                     break
@@ -2425,8 +2430,9 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 ] + declared
                 curated.update((r["coord"], r["vslug"], r["col"]) for r in declared)
             if any(r.get("member") for r in recs):
-                # A member column carries exactly one mapping: its decision's.
-                recs = [r for r in recs if r.get("member")]
+                # A member column carries only its decision's mappings; a second
+                # curated one stays, so the inventory's one-mapping rule refuses it.
+                recs = [r for r in recs if (r["coord"], r["vslug"], r["col"]) in curated]
             if mapping_issue:
                 worklist["mapping_scope_needed"].append(
                     {
@@ -2463,7 +2469,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 )
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
-            recs, scope_issue = _inventory_period_records(recs, edition)
+            recs, scope_issue = _inventory_period_records(recs, column_edition)
             if not scope_issue:
                 recs, scope_issue = _fold_case_twins(
                     recs, LOPNR_PREFIX.sub("", col), curated, representative

@@ -10,6 +10,7 @@ leaves. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
 from __future__ import annotations
 
 import argparse
+import shutil
 import sqlite3
 import tomllib
 from typing import TYPE_CHECKING
@@ -110,14 +111,30 @@ def test_curated_pivot_members_map_with_their_index(
 ) -> None:
     """A curated decision naming a `member` maps a wide-pivot member with its
     index (#1495): `T_kolumn`, `T_kolumn2` and `Covid_19_antikroppar` as
-    positions 1-3 of `T_kolumn`, `Covid_2021` as the 2021 member of `Covid-19
-    antikroppar`. The member decision is the column's one mapping, so
-    `Covid_19_antikroppar`, a literal the catalog documents under another
-    variable, does not keep that auto-matched mapping. Fails if the generator
-    drops `member` (the `T_kolumn` mappings then conflict), keeps the
-    auto-matched mapping beside a member (a member column with two mappings);
-    `load_inventory` refuses both; or if the spec refuses a curated member."""
+    positions 1-3 of `T_kolumn` in a 2020-2021 table, and `Emp2021` as the 2021
+    member of `Emp`, which the catalog documents only in 2021. The member decision
+    is the column's one mapping, so `Covid_19_antikroppar`, a literal the catalog
+    documents under another variable, does not keep that auto-matched mapping. A
+    year member serves only its year, so `Emp` need not cover 2020. Fails if the
+    generator drops `member` (the `T_kolumn` mappings then conflict), keeps the
+    auto-matched mapping beside a member (a member column with two mappings), both
+    of which `load_inventory` refuses; if it checks a year member's owner against
+    the whole edition (`Emp2021` goes to the scope worklist and the run exits); or
+    if the spec refuses a curated member."""
     variant = "inera/bestallda-prover/_default"
+    db = tmp_path / "candidate.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
+            "VALUES (920,901,'emp','emp','Emp')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state(state_id,variable_id,register_variant_id,"
+            "valid_from,valid_to,delivery_column_name) VALUES ((SELECT "
+            "COALESCE(MAX(state_id), 0) + 1 FROM variable_state),920,902,"
+            "'2021-01-01','2021-12-31','Emp')"
+        )
 
     def member(column: str, variable: str, representation: str, index: str) -> str:
         return (
@@ -132,20 +149,15 @@ def test_curated_pivot_members_map_with_their_index(
         member("T_kolumn", "t-kolumn", "T_kolumn", "position = 1")
         + member("T_kolumn2", "t-kolumn", "T_kolumn", "position = 2")
         + member("Covid_19_antikroppar", "t-kolumn", "T_kolumn", "position = 3")
-        + member(
-            "Covid_2021",
-            "covid-19-antikroppar",
-            "Covid-19 antikroppar",
-            "year = 2021",
-        )
+        + member("Emp2021", "emp", "Emp", "year = 2021")
     )
 
     steward = _run_inventory(
         tmp_path,
-        flavored_db,
+        db,
         "T",
-        ["Covid_19_antikroppar", "Covid_2021", "T_kolumn", "T_kolumn2"],
-        edition="2021",
+        ["Covid_19_antikroppar", "Emp2021", "T_kolumn", "T_kolumn2"],
+        edition="{ from = 2020, to = 2021 }",
         decisions=decisions,
     )
 
@@ -162,14 +174,7 @@ def test_curated_pivot_members_map_with_their_index(
         "Covid_19_antikroppar": [
             ("inera/bestallda-prover/t-kolumn", "T_kolumn", "position", 3)
         ],
-        "Covid_2021": [
-            (
-                "inera/bestallda-prover/covid-19-antikroppar",
-                "Covid-19 antikroppar",
-                "year",
-                2021,
-            )
-        ],
+        "Emp2021": [("inera/bestallda-prover/emp", "Emp", "year", 2021)],
         "T_kolumn": [("inera/bestallda-prover/t-kolumn", "T_kolumn", "position", 1)],
         "T_kolumn2": [("inera/bestallda-prover/t-kolumn", "T_kolumn", "position", 2)],
     }
