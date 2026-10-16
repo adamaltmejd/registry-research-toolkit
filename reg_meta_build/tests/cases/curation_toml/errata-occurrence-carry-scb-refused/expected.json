@@ -1,0 +1,9 @@
+{
+  "loader": "register_files",
+  "fails_if": "the register loader accepts an [[errata.occurrence_carry]] on an SCB register, which states a same-name delivery by named edition with [[errata.delivered]]",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.occurrence_carry]] entry 1",
+    "message_contains": ["[[errata.delivered]]"]
+  }
+}

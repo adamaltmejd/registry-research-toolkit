@@ -1,0 +1,36 @@
+[register]
+provider = "sos"
+slug = "par"
+name = "Patientregistret"
+native_id = "5891427617861710725"
+[[variant]]
+native_id = "5891427617861710725.5623677195158740599"
+slug = "par-ov"
+[[identity.rename]]
+deldatamangd = "PAR_OV"
+variable = "INVARN8"
+name = "target"
+column = "INVARN9"
+[[variable]]
+native_id = "5891427617861710725.INVARN9"
+slug = "new-name"
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.INVARN8"
+variant = "PAR_OV"
+column = "INVARN8"
+expected_fields = [{ name = "name", status = "value", value = "target" }, { name = "definition", status = "absent" }, { name = "description", status = "unknown" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2001" }, { name = "coverage_to", status = "value", value = "2020" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2020" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "1997", end = "2000" }] }
+data_warning = "Carried under the delivered name."
+evidence = "Delivered under the same name in 1997-2000."
+noted = "2026-10-17"
+[[errata.column]]
+variant = "PAR_OV"
+column = "INVARN9"
+name = "Tidig invarn"
+definition = "Held under the renamed column before the documented years."
+holdings_period = "1997-2000"
+source = "steward-holdings"
+evidence = "Held in the steward's tables."
+noted = "2026-10-17"

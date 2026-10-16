@@ -1,0 +1,5 @@
+{
+  "note": "KOD's carry adds a 2005-2014 occurrence beside the documented 2015-2023 one, copying its facts as KOD's checked [[errata.field]] corrects them, so both periods state the corrected description and the code list KOD binds without declaring it; its warning attaches to the carried years only. NAER's carry reaches 2015, the original's own first year, so it is refused as stale and NAER keeps only its documented years.",
+  "fails_if": "`compile_occurrence_corrections` replaces the original's period instead of adding one beside it (KOD loses 2015-2023), copies the uncorrected original or copies coding only for a declared list (the 2005-2014 state has no codes) (the two KOD occurrences disagree on description: conflicting_variable_fact), attaches the carry's warning to the documented years, or admits a carry_scope that overlaps the original's scope (NAER gains 2010-2014 or claims 2015-2016 twice)",
+  "sources": "sos-syc-carry"
+}

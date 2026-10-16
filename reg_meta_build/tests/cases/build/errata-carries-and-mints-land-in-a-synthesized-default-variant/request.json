@@ -1,0 +1,5 @@
+{
+  "note": "Both registers deliver under a synthesized _default variant. SYD's workbook has no Deldatamängder sheet, so the SOS compile places COL (delivered under TOKEN) in _default; COL's carry and LANK's mint, both named by the TOKEN label, land there too. FK remote declares no variant, so its records are not_applicable; the DELKOD mint names _default and anchors to the register's records there.",
+  "fails_if": "a carry or a SOS mint keeps the raw token's variant instead of the default assignment (SYD is withheld as unnamed_delivered_variant, and col and lank have no states), or the thin mint cannot name a synthesized _default (DELKOD's entry is stale: no source records on the named variant)",
+  "sources": "sos-fk-default-variants"
+}

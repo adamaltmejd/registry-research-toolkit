@@ -334,7 +334,10 @@ def resolve_scb_errata(
     )
     version_entries = _entries("version", registers_curation)
     delivered_entries = _entries("delivered", registers_curation)
-    column_entries = _entries("column", registers_curation)
+    column_entries = _entries(
+        "column",
+        tuple(r for r in registers_curation if r.register_info.provider == _PROVIDER),
+    )
     if not version_entries and not delivered_entries and not column_entries:
         return ScbErrata()
     # Register-scoped curation carries each register's and variant's native
@@ -514,6 +517,131 @@ def resolve_scb_errata(
         columns.append(loaded)
 
     return ScbErrata(tuple(versions), tuple(delivered), tuple(columns))
+
+
+@dataclass(frozen=True)
+class ProviderErrataColumn:
+    """One `[[errata.column]]` on a non-SCB register (#1633).
+
+    Such a provider has no named editions, so the entry dates its holding with
+    `holdings_period` only. `variant` is the source's own variant label, as the
+    register's other errata name it (SOS `PAR_OV`; a thin provider
+    `<register native_id>.<variant key>`).
+    """
+
+    register_fqid: str
+    source_file: str
+    index: int
+    variant: str
+    column: str
+    name: str
+    definition: str
+    data_type: str | None
+    classification: str | None
+    is_identifier: bool
+    is_sensitive: bool
+    holdings_period: str
+    source: str
+    provenance: str
+
+    @property
+    def identity(self) -> tuple:
+        """What the minted variable is; entries on two variants must agree."""
+        return (
+            self.column,
+            self.name,
+            self.definition,
+            self.data_type,
+            self.classification,
+            self.is_identifier,
+            self.is_sensitive,
+            self.source,
+        )
+
+
+def resolve_provider_columns(
+    registers_curation: Sequence[RegisterCuration],
+    *,
+    classifications: frozenset[str],
+) -> tuple[ProviderErrataColumn, ...]:
+    """Validate the non-SCB `[[errata.column]]` entries as the SCB loader does,
+    with `holdings_period` the only placement: there are no editions to name."""
+    columns: list[ProviderErrataColumn] = []
+    seen: set[tuple[str, str, str]] = set()
+    identities: dict[tuple[str, str], tuple] = {}
+    registers = sorted(
+        (r for r in registers_curation if r.register_info.provider != _PROVIDER),
+        key=lambda row: row.source_file,
+    )
+    for entry in _entries("column", registers):
+        values = entry.values
+        context = (
+            f"{entry.source_file} [[errata.column]] entry {entry.index} "
+            f"({entry.register_fqid})"
+        )
+        variant = _require_str(values, "variant", context)
+        column = _require_str(values, "column", context)
+        ctx = f"{context}/{variant}/{column}"
+        source = _column_source(values, ctx)
+        evidence = _require_evidence(values, ctx)
+        if "holdings_period" not in values or {"versions", "all_versions"} & set(
+            values
+        ):
+            raise curation_error(
+                _CODE,
+                f"errata {ctx} needs `holdings_period` alone: this provider has "
+                "no named editions.",
+                'Date the holding at dataset grain (`holdings_period = "2005-2023"`).',
+            )
+        _, holdings_period = _column_placement(values, ctx)
+        assert holdings_period is not None
+        classification = _column_classification(values, ctx)
+        if classification is not None and classification not in classifications:
+            raise curation_error(
+                _CODE,
+                f"errata {ctx} names undeclared classification {classification!r}.",
+                "Use an existing classification short_name or declare it in "
+                "reg_meta_build/curation/classifications/.",
+            )
+        loaded = ProviderErrataColumn(
+            register_fqid=entry.register_fqid,
+            source_file=entry.source_file,
+            index=entry.index,
+            variant=variant,
+            column=column,
+            name=_require_str(values, "name", ctx),
+            definition=_require_str(values, "definition", ctx),
+            data_type=_column_data_type(values, ctx),
+            classification=classification,
+            is_identifier=_require_bool(values, "is_identifier", ctx),
+            is_sensitive=_require_bool(values, "is_sensitive", ctx),
+            holdings_period=holdings_period,
+            source=source,
+            provenance=_state_provenance(source, evidence),
+        )
+        key = (entry.register_fqid, variant, fold_column(column))
+        if key in seen:
+            raise curation_error(
+                _CODE,
+                f"{context}: duplicate column entry for {column!r}.",
+                "Each (register, variant, column) may appear once.",
+            )
+        seen.add(key)
+        if (
+            identities.setdefault(
+                (entry.register_fqid, fold_column(column)), loaded.identity
+            )
+            != loaded.identity
+        ):
+            raise curation_error(
+                _CODE,
+                f"errata {ctx} describes a different variable than the other "
+                f"[[errata.column]] entry for column {column!r} in the register.",
+                "A column delivered on two variants of one register is ONE "
+                "variable: give both entries the same facts, or rename one column.",
+            )
+        columns.append(loaded)
+    return tuple(columns)
 
 
 def _named_versions(entry: dict, ctx: str) -> tuple[str, ...]:
@@ -1288,6 +1416,41 @@ def _overlaps_documenting_edition(
     return False
 
 
+def declared_column_fields(
+    entry: ErrataColumn | ProviderErrataColumn, declared_flags: frozenset[str]
+) -> SourceFields:
+    """The facts a `[[errata.column]]` entry states for the variable it mints.
+
+    ``declared_flags`` names the flag keys present in the original TOML; a
+    steward holding states false for an omitted one, any other source leaves it
+    unknown.
+    """
+    return SourceFields(
+        availability=value_field(True),
+        column_name=value_field(entry.column),
+        name=value_field(normalize_text(entry.name)),
+        description=value_field(normalize_text(entry.definition, multiline=True)),
+        data_type=(
+            value_field(entry.data_type) if entry.data_type is not None else None
+        ),
+        classification_declared=value_field(entry.classification)
+        if entry.classification is not None
+        else None,
+        identifier=value_field(entry.is_identifier)
+        if "is_identifier" in declared_flags or entry.source == "steward-holdings"
+        else None,
+        sensitivity=value_field(entry.is_sensitive)
+        if "is_sensitive" in declared_flags or entry.source == "steward-holdings"
+        else None,
+    )
+
+
+def holdings_scope(raw: str) -> TemporalScope:
+    """A `holdings_period` as one pooled range: held somewhere inside it."""
+    start, end = holdings_period_bounds(raw)
+    return TemporalScope(kind="pooled", label=raw, pooled_start=start, pooled_end=end)
+
+
 def convert_column_entry(
     entry: ErrataColumn,
     *,
@@ -1359,24 +1522,7 @@ def convert_column_entry(
     assert register is not None and variant is not None
     variable = (*register, "declared-column", fold_column(entry.column))
     provenance = entry.provenance
-    fields = SourceFields(
-        availability=value_field(True),
-        column_name=value_field(entry.column),
-        name=value_field(normalize_text(entry.name)),
-        description=value_field(normalize_text(entry.definition, multiline=True)),
-        data_type=(
-            value_field(entry.data_type) if entry.data_type is not None else None
-        ),
-        classification_declared=value_field(entry.classification)
-        if entry.classification is not None
-        else None,
-        identifier=value_field(entry.is_identifier)
-        if "is_identifier" in declared_flags or entry.source == "steward-holdings"
-        else None,
-        sensitivity=value_field(entry.is_sensitive)
-        if "is_sensitive" in declared_flags or entry.source == "steward-holdings"
-        else None,
-    )
+    fields = declared_column_fields(entry, declared_flags)
     effects: tuple[OccurrenceEffect, ...] = tuple(
         CuratedOccurrenceAddition(
             occurrence_key=f"{case_id}:{canonical_sha256(list(edition.key))}",
@@ -1409,13 +1555,7 @@ def convert_column_entry(
             ),
         )
     elif entry.holdings_period is not None:
-        start, end = holdings_period_bounds(entry.holdings_period)
-        pooled = TemporalScope(
-            kind="pooled",
-            label=entry.holdings_period,
-            pooled_start=start,
-            pooled_end=end,
-        )
+        pooled = holdings_scope(entry.holdings_period)
         effects = (
             CuratedOccurrenceAddition(
                 occurrence_key=f"{case_id}:holdings",

@@ -656,6 +656,25 @@ Its identity is `(register, column)`, so two variants of one register use the sa
 variable identity. `source` records the evidence class; it does not change the
 materialized rows.
 
+A non-SCB register (SOS, a thin provider) takes `[[errata.column]]` too (#1633). It has
+no named editions, so the entry dates its holding with `holdings_period` alone, and its
+`variant` is the source's own variant label, as that register's other errata name it
+(SOS `PAR_OV`; a thin provider `<register native_id>.<variant key>`, or `_default` for a
+register that declares no variant). The entry anchors on one record of the variant,
+guarded with that record's whole native family, and adds one pooled occurrence in the
+variant the anchor's own occurrence lands in: a SOS workbook without a Deldatamängder
+sheet places every variable in the synthesized `_default`, and the mint follows it. Its
+optional `data_warning` annotates that occurrence, as on the SCB path. A routed token
+(`[[identity.route]]`) is refused as stale: name its destination. Its name is the
+`[[variable]]` entry `<register native_id>.<column>`, which is also a documented SOS or
+thin variable's own source id, so the entry is refused (`column_now_documented`) when
+the register documents the column anywhere, or an `[[identity.rename]]` gives a
+documented variable that column. The `[[variable]]` entry then names the documented
+variable through native naming: a documented column extended outside its documented
+years is an `[[errata.occurrence_carry]]`. The mint takes its slug by naming
+conversion's rules (`accepted_variable_slugs`): a generated pin in a churning zone is
+inactive, and an authored entry overrides a generated one.
+
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column, with this meaning, on this variant? One column/variant omission is
 exactly one kind. Delivered entries clone a real row and therefore cannot describe a
@@ -861,6 +880,46 @@ effects and never rewrite the original source records. A finite scoped name corr
 selects exact original source scopes and carries those same scopes into its conditional
 replay effect. A monthly row sharing an annual row's semantic reference cannot inherit
 that name correction.
+
+`[[errata.occurrence_carry]]` (#1633) is not a period correction.
+`[[errata.occurrence_period]]` corrects how a source's own coverage was read and
+replaces the original period; it needs the source to say so. A carry asserts that the
+provider delivered the same column, with the same meaning, outside the period it
+documents: it keeps the guarded original and adds one occurrence beside it on the same
+native variable, variant and column over a closed `carry_scope`, copying the original's
+facts as its `[[errata.field]]` entries correct them (only those that pass every guard
+of their own), so the two occurrences of one variable agree. The source does not
+document that delivery, so a carry always states a `data_warning`, which annotates only
+the carried years. It takes the same original guards as a SOS period entry, and the
+build refuses it as a located stale entry when:
+
+- `carry_scope` reaches the original's own scope, or the original's scope is unbounded:
+  one occurrence would claim those years twice;
+- `carry_scope` reaches years an earlier carry of the same original already carries
+  (entries apply in file order);
+- an `[[errata.occurrence_period]]` corrects the original's period, which the carry does
+  not follow;
+- an `[[identity.split]]`, `[[identity.rename]]`, `[[identity.partition]]`,
+  `[[identity.unassigned]]` or `[[identity.column_owner]]` names the original's native
+  variable: each re-keys it, and the added occurrence under the unchanged native key
+  would have no owner (revisit if such a variable needs a carry);
+- its variant is a token `[[identity.route]]` sends elsewhere;
+- an `[[errata.data_type]]` or `[[errata.classification_reference]]` corrects the
+  original, which the carry does not replay;
+- a checked `[[errata.field]]` corrects a field value binding reads (`column_name`,
+  `representation`, `value_set_declared`): the copied coding binds from the original's
+  own fields, so the carried years would be coded from the uncorrected pointer;
+- the original's checked corrections disagree (its own value is then withheld, and the
+  carry does not pick one);
+- the original's physical alternatives under its one record key disagree on a field the
+  carry copies.
+
+The carried occurrence lands in the original's variant as the SOS compile places it, the
+synthesized `_default` for a workbook without a Deldatamängder sheet
+(`_sos_variant_key`). The carry copies the original's bound coding, declared or not. It
+is for SOS registers only, which the loader enforces: an SCB register states the same
+fact with `[[errata.delivered]]`, and a thin provider dates its columns by period scope,
+which a carry does not copy (revisit if a thin column needs one).
 
 `[[errata.flags]]` authors `is_sensitive` and `is_identifier` for a variable whose
 source and auxiliary joins state neither, which `unresolved_flag` otherwise withholds

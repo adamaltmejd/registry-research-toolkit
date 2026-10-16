@@ -1,0 +1,5 @@
+{
+  "note": "PAR_OV delivers INVARN8, which [[identity.rename]] re-keys to the new-name variable on column INVARN9. A carry names the native INVARN8. A carry adds its occurrence under the unchanged native key, which the rename leaves unowned, so it is refused as stale at its own entry and new-name keeps its documented 2001-2020 state. An [[errata.column]] mints INVARN9, the column the rename gives the documented variable: its source id would be new-name's own, so the mint is refused as stale (column_now_documented) and new-name keeps its slug.",
+  "fails_if": "`compile_occurrence_corrections` admits a carry on a variable an [[identity.rename]] (or another [[identity.*]] construct) re-keys: the carried 1997-2000 occurrence has no owner, an unresolved_catalog_identity withholds it, and no stale issue names the carry, or admits a mint of the column an [[identity.rename]] gives a documented variable (two identities claim the source id, or new-name gains the minted 1997-2000 holding)",
+  "sources": "sos-par-invarn8"
+}

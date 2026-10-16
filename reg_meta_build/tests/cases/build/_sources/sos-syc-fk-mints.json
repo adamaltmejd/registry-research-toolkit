@@ -1,0 +1,52 @@
+{
+  "description": "SOS SYC (one subset SYC_A, 2005-2023): KOD and NAER are documented only from 2015 to 2023. Authored FK register r (2000-2020), variant v (2010-2018), variable COL. Plus the SCB sample VALUE column.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "VALUE"
+      }
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "SYC",
+      "title": "Syntetiskt bärregister",
+      "subsets": [
+        {
+          "name": "SYC_A",
+          "label": "SYC_A",
+          "data_from": 2005,
+          "data_to": 2023,
+          "aggregation_level": null
+        }
+      ],
+      "variables": [
+        {
+          "name": "KOD",
+          "deldatamangd": "SYC_A",
+          "label": "Kod",
+          "description": "Kod per position",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "NAER",
+          "deldatamangd": "SYC_A",
+          "label": "Naer",
+          "description": "Naer per position",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null
+        }
+      ]
+    }
+  ],
+  "files": {
+    "Forsakringskassan/fk.toml": "[[register]]\nkey = \"r\"\nname = \"R\"\nvalid_from = \"2000-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variant]]\nkey = \"v\"\nname = \"V\"\nvalid_from = \"2010-01-01\"\nvalid_to = \"2018-12-31\"\n[[register.variable]]\nname = \"Col\"\ncolumn = \"COL\"\ndata_type = \"int\"\nvariants = [\"v\"]\nvalid_from = \"2010-01-01\"\nvalid_to = \"2018-12-31\"\n"
+  }
+}

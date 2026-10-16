@@ -1,0 +1,37 @@
+[register]
+provider = "sos"
+slug = "syc"
+name = "Syntetiskt bärregister"
+native_id = {{naming_id kind=register provider=sos register_key=syc}}
+[[variant]]
+slug = "syc-a"
+native_id = {{naming_id kind=register_variant provider=sos register_key=syc member_key=SYC_A}}
+[[variable]]
+slug = "kod"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=KOD}}
+[[variable]]
+slug = "naer"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=NAER}}
+[[variable]]
+slug = "lank"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=LANK}}
+[[errata.column]]
+variant = "SYC_A"
+column = "LANK"
+name = "Länknyckel"
+definition = "Hushållets länknyckel per år."
+is_identifier = true
+holdings_period = "2005-2023"
+data_warning = "Held under a steward-assigned name."
+source = "steward-holdings"
+evidence = "Held in the steward's tables."
+noted = "2026-10-17"
+[[errata.column]]
+variant = "SYC_A"
+column = "KOD"
+name = "Tidig kod"
+definition = "Kod före de dokumenterade åren."
+holdings_period = "2005-2014"
+source = "steward-holdings"
+evidence = "Held only before the documented years."
+noted = "2026-10-17"

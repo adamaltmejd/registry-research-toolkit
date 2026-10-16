@@ -474,6 +474,33 @@ def _effective(
     return SlugEntry(**effective), ordered
 
 
+def accepted_variable_slugs(
+    tree: CurationTree, register: RegisterCuration
+) -> dict[str, tuple[str, tuple[AcceptedNamingEntry, ...]]]:
+    """Each variable source id's tracked slug and the entries that supply it, by
+    the rules `convert_naming` applies: a generated pin in a churning zone is
+    inactive, and an authored entry's fields override a generated one's.
+
+    For a stage that mints its own native identity (`[[errata.column]]`) and so
+    has no source binding to convert through.
+    """
+    states = load_freeze_states(tree.root)
+    grouped: defaultdict[str, list[AcceptedNamingEntry]] = defaultdict(list)
+    for item, _ in _register_naming_entries(tree, register):
+        if item.entry.kind != "variable" or (
+            item.origin == "generated"
+            and freeze_state(states, item.entry.provider or "") == "churning"
+        ):
+            continue
+        grouped[item.entry.source_id].append(item)
+    accepted = {}
+    for source_id, items in grouped.items():
+        effective, ordered = _effective(items)
+        if effective.slug is not None:
+            accepted[source_id] = effective.slug, ordered
+    return accepted
+
+
 def _slug_locator(entries: Iterable[AcceptedNamingEntry], slug: str) -> str | None:
     """The tracked entry whose slug a name took: the authored one over a generated pin."""
     supplying = sorted(

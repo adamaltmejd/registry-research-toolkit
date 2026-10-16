@@ -1,0 +1,3 @@
+[[variable]]
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=LANK}}
+slug = "auto-lank"

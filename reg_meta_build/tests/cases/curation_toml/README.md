@@ -153,6 +153,7 @@ Each loader reads `files/` as the curation root, or the named file inside it.
   | `register_files`          | `load_register_files(files)`: `registers/**/*.toml`                                                                                                                    |
   | `classifications`         | `load_classifications(files)` and its families: `{"classifications": [...], "families": {...}}`                                                                        |
   | `scb_errata`              | `resolve_scb_errata` over the loaded registers and declared classification short names, as the build; each column also projects its `key` (register id, folded column) |
+  | `provider_errata_columns` | `resolve_provider_columns`: the non-SCB `[[errata.column]]` entries, over the loaded registers and declared classification short names, as the build                   |
   | `concept_groups`          | `load_concept_groups(files)`: register `[[group]]` entries                                                                                                             |
   | `classification_groups`   | `load_classification_groups(files)`: `classification_groups.toml`, as the build reads it                                                                               |
   | `worklist_concept_groups` | `load_worklist_concept_groups(files/concept_groups.auto.toml)`                                                                                                         |

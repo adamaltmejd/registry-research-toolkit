@@ -1,0 +1,5 @@
+{
+  "note": "PAR's ATC is split by subset ([[identity.split]]): PAR_OV and PAR_SV go to one owner, PAR_TV to another. A carry names the native ATC on PAR_OV. A carry targets the unsplit native variable, so it is refused as stale at its own entry, and both split owners keep their documented 2001-2020 states.",
+  "fails_if": "`compile_occurrence_corrections` admits a carry on a split native variable (the added occurrence has no split owner: an unlocated unresolved_catalog_identity withholds the catalog, and no stale issue names the carry)",
+  "sources": "sos-par-atc-three-subsets"
+}

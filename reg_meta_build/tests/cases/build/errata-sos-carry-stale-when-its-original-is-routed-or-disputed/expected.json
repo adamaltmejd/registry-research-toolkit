@@ -1,0 +1,112 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "/syc.toml#/errata."
+        }
+      },
+      "fields": [
+        "code",
+        "locator"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.column/1"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/1"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/2"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/3"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/4"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/6"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/7"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/8"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "syc"
+      },
+      "fields": [
+        "variable",
+        "variant",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "alt",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
+        [
+          "datum",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
+        [
+          "dup",
+          "syc-a",
+          "2005-01-01",
+          "2014-12-31"
+        ],
+        [
+          "dup",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
+        [
+          "kod",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
+        [
+          "per",
+          "syc-a",
+          "2010-01-01",
+          "2023-12-31"
+        ],
+        [
+          "rep",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
+        [
+          "rkod",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ]
+      ]
+    }
+  ]
+}

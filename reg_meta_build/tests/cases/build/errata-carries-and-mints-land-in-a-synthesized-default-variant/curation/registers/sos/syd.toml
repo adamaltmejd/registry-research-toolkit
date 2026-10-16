@@ -1,0 +1,34 @@
+[register]
+provider = "sos"
+slug = "syd"
+name = "Variantlöst"
+native_id = {{naming_id kind=register provider=sos register_key=syd}}
+[[variant]]
+slug = "_default"
+native_id = {{naming_id kind=register_variant provider=sos register_key=syd member_key=_default}}
+[[variable]]
+slug = "col"
+native_id = {{naming_id kind=variable provider=sos register_key=syd member_key=COL}}
+[[variable]]
+slug = "lank"
+native_id = {{naming_id kind=variable provider=sos register_key=syd member_key=LANK}}
+[[errata.occurrence_carry]]
+variable = {{naming_id kind=variable provider=sos register_key=syd member_key=COL}}
+variant = "TOKEN"
+column = "COL"
+expected_fields = [{ name = "name", status = "value", value = "Col" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Kod per position" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = {{edition_scope key=variable:COL}}
+expected_period = {{period_scope key=variable:COL}}
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 the provider documents these codes only inside a combined string."
+evidence = "Delivered under the same name in 2005-2014."
+noted = "2026-10-17"
+[[errata.column]]
+variant = "TOKEN"
+column = "LANK"
+name = "Länknyckel"
+definition = "Hushållets länknyckel per år."
+holdings_period = "2005-2023"
+source = "steward-holdings"
+evidence = "Held in the steward's tables."
+noted = "2026-10-17"

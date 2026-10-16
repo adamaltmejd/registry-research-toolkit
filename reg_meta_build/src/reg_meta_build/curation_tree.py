@@ -886,10 +886,42 @@ class ErrataOccurrencePeriodEntry(_OccurrenceCorrectionEntry):
         return self
 
 
+class ErrataOccurrenceCarryEntry(_OccurrenceCorrectionEntry):
+    """A same-name delivery outside the documented scope (#1633).
+
+    `[[errata.occurrence_period]]` corrects how the source's own coverage was read
+    and replaces the original period. A carry keeps the guarded original and adds
+    one occurrence beside it on the same variable, variant and column over
+    `carry_scope`, copying the original's facts. The source does not document that
+    delivery, so the carry always states a `data_warning`.
+    """
+
+    carry_scope: TemporalScope
+    data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")]
+
+    _carry_scope = field_validator("carry_scope", mode="before")(
+        _OccurrenceCorrectionEntry._scope
+    )
+
+    @model_validator(mode="after")
+    def _finite_carry(self) -> ErrataOccurrenceCarryEntry:
+        if (
+            self.carry_scope.kind != "intervals"
+            or not self.carry_scope.intervals
+            or any(interval.end is None for interval in self.carry_scope.intervals)
+            or coding_scope_bounds(self.carry_scope) is None
+        ):
+            raise ValueError("carry_scope must be finite intervals")
+        if self.expected_period.kind != "not_applicable":
+            raise ValueError("a carry copies an original without a period scope")
+        return self
+
+
 class ErrataCuration(_CurationModel):
     support: list[ErrataSupportEntry] = Field(default_factory=list)
     field: list[ErrataFieldEntry] = Field(default_factory=list)
     occurrence_period: list[ErrataOccurrencePeriodEntry] = Field(default_factory=list)
+    occurrence_carry: list[ErrataOccurrenceCarryEntry] = Field(default_factory=list)
     flags: list[ErrataFlagsEntry] = Field(default_factory=list)
     delivered: list[ErrataDeliveredEntry] = Field(default_factory=list)
     column: list[ErrataColumnEntry] = Field(default_factory=list)
@@ -2292,6 +2324,7 @@ def _register_arrays(
         ("errata.support", entry.errata.support),
         ("errata.field", entry.errata.field),
         ("errata.occurrence_period", entry.errata.occurrence_period),
+        ("errata.occurrence_carry", entry.errata.occurrence_carry),
         ("errata.flags", entry.errata.flags),
         ("errata.delivered", entry.errata.delivered),
         ("errata.column", entry.errata.column),
@@ -2494,6 +2527,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     ErrataFieldEntry,
                     ErrataSupportEntry,
                     ErrataOccurrencePeriodEntry,
+                    ErrataOccurrenceCarryEntry,
                     ErrataFlagsEntry,
                     CodingEntry,
                     ParallelRepresentationEntry,
@@ -2521,7 +2555,18 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                     "Supply the native source edition; only SOS can omit that coordinate.",
                 )
             if (
-                isinstance(row, ErrataOccurrencePeriodEntry)
+                isinstance(row, ErrataOccurrenceCarryEntry)
+                and identity.provider != "sos"
+            ):
+                raise curation_error(
+                    _REGISTER_INVALID,
+                    f"{file} [[{table}]] entry {index}: a carry is for SOS registers; an SCB register states a same-name delivery with [[errata.delivered]].",
+                    "Name SCB's delivered editions in [[errata.delivered]]. A thin provider dates its columns by period scope, which a carry does not copy.",
+                )
+            if (
+                isinstance(
+                    row, (ErrataOccurrencePeriodEntry, ErrataOccurrenceCarryEntry)
+                )
                 and identity.provider == "sos"
                 and not {"coverage_from", "coverage_to"}.issubset(
                     {f.name for f in row.expected_fields}
@@ -2529,7 +2574,7 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
             ):
                 raise curation_error(
                     _REGISTER_INVALID,
-                    f"{file} [[{table}]] entry {index}: SOS period corrections require both supplied coverage guards.",
+                    f"{file} [[{table}]] entry {index}: SOS period corrections and carries require both supplied coverage guards.",
                     "Guard coverage_from and coverage_to alongside all four supplied prose fields.",
                 )
             if isinstance(row, IdentitySplitEntry):

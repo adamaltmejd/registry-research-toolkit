@@ -1,0 +1,9 @@
+{
+  "loader": "register_files",
+  "fails_if": "the register loader accepts an [[errata.occurrence_carry]] whose carry_scope has no end, which would claim every later year beside the original's own",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/sos/sample.toml [[errata.occurrence_carry]] entry 1",
+    "message_contains": ["carry_scope must be finite intervals"]
+  }
+}

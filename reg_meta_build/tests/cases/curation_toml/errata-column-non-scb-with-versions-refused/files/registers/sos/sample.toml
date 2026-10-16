@@ -1,0 +1,15 @@
+[register]
+provider = "sos"
+slug = "sample"
+native_id = "1"
+
+[[errata.column]]
+variant = "EKB_HUSH"
+column = "LOPNR_EKB"
+name = "Länknyckel"
+definition = "Hushållets länknyckel per år."
+source = "steward-holdings"
+evidence = "Held in the steward tables."
+noted = "2026-10-17"
+holdings_period = "2005-2023"
+versions = ["2005"]

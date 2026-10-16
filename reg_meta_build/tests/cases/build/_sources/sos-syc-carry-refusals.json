@@ -1,0 +1,112 @@
+{
+  "description": "SOS SYC (one subset SYC_A, 2005-2023): KOD is documented only from 2015 to 2023, and RKOD, delivered under the token TOKEN that curation routes to SYC_A, likewise. DATUM (2015-2023) is delivered as Decimal with a YYYY-MM-DD value set. Plus the SCB sample VALUE column. ALT (2015-2023) has two physical rows under one record key, one typed Decimal and one untyped. DUP and PER (2015-2023) are plain documented columns. REP (2015-2023) points its value set at a code-list sheet.",
+  "scb": {
+    "registerinformation": [
+      {
+        "cvid": 1001,
+        "var_id": 101,
+        "colname": "VALUE"
+      }
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "SYC",
+      "title": "Syntetiskt bärregister",
+      "subsets": [
+        {
+          "name": "SYC_A",
+          "label": "SYC_A",
+          "data_from": 2005,
+          "data_to": 2023,
+          "aggregation_level": null
+        }
+      ],
+      "variables": [
+        {
+          "name": "KOD",
+          "deldatamangd": "SYC_A",
+          "label": "Kod",
+          "description": "Kod per position",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "RKOD",
+          "deldatamangd": "TOKEN",
+          "label": "Rkod",
+          "description": "Routad kod",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "DATUM",
+          "deldatamangd": "SYC_A",
+          "label": "Datum",
+          "description": "Händelsedatum",
+          "data_type": "Decimal",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "ALT",
+          "deldatamangd": "SYC_A",
+          "label": "Alt",
+          "description": "Alternativ kod",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null,
+          "data_type": "Decimal"
+        },
+        {
+          "name": "ALT",
+          "deldatamangd": "SYC_A",
+          "label": "Alt",
+          "description": "Alternativ kod",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "DUP",
+          "deldatamangd": "SYC_A",
+          "label": "Dup",
+          "description": "Dup per position",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "PER",
+          "deldatamangd": "SYC_A",
+          "label": "Per",
+          "description": "Per per position",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null
+        },
+        {
+          "name": "REP",
+          "deldatamangd": "SYC_A",
+          "label": "Rep",
+          "description": "Rep per position",
+          "data_type": "Sträng (text)",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": "Se Kodlista_REP",
+          "external_classification": null
+        }
+      ]
+    }
+  ]
+}
