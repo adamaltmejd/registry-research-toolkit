@@ -314,16 +314,6 @@ tables = ["FTG_FOU_2005"]
 unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order. V0401 is filled in FTG_FOU_2007 and FTG_FOU_2009, which stay held (#1603; aggregate check on MONA, reported as a conclusion only)."
 
 [[column]]
-column = "V0401"
-tables = ["FTG_FOU_2007"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2007; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "V0401"
-tables = ["FTG_FOU_2009"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2009; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
 column = "V0402"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
@@ -1320,21 +1310,6 @@ reason = "SWECOV storage spelling Vikt of the catalog variable scb/fou/viktrev (
 column = "Vikt"
 tables = ["FTG_FOU_2012", "FTG_FOU_2014"]
 hold = { follow_up = "#1509", reason = "2012 and 2014 are off-years of the biennial survey: they are not editions of scb/fou/foretagssektorn in the catalog and SCB publishes no documentation for them, so the weight can be neither placed nor confirmed as the nonresponse-adjusted weight (#1603, #1509; maintainer decision 2026-10-16, 9b: viktrev is extended only to editions where SCB's own documentation confirms the delivered weight is the nonresponse-adjusted N_h/m_h)." }
-
-[[column]]
-column = "v0401"
-tables = ["FTG_FOU_2011"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2011; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "v0401"
-tables = ["FTG_FOU_2013"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "v0401"
-tables = ["FTG_FOU_2015"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
 column = "v0422"

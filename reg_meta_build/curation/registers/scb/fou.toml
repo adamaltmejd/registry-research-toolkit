@@ -7,6 +7,21 @@ native_id = "182"
 # SCB's raw Registerinformation export; folded duplicate columns are merged
 # with their version lists unioned.
 
+# #1603 batch-e B2: V0401 in the 2007-2015 rounds is row 040 column 1 of the FoU form
+# (product group 1's share of FoU operating costs), not either 2003 variable on v0401.
+[[errata.column]]
+variant = "foretagssektorn"
+column = "V0401"
+data_type = "decimal"
+name = "Andel av driftkostnaderna för egen FoU, produktgrupp 1"
+definition = "Produktgrupp 1:s andel (%) av företagets driftkostnader för egen FoU (rad 040, kolumn Driftkostnader, i blankettens tablå om egen FoU fördelad på produktgrupper; driftkostnader = arbetskraftskostnader, konsultarvoden och övriga driftkostnader). Inte samma variabel som 2003 års v0401."
+is_sensitive = false
+is_identifier = false
+versions = ["2007", "2009", "2011", "2013", "2015"]
+source = "steward-holdings"
+evidence = "SWECOV holds V0401/v0401 in FTG_FOU_2007, 2009, 2011, 2013 and 2015. The FoU forms of these rounds have no row 0401; the item is row 040, column 1 (Andel (%), Driftkostnader = rows 200+203+201) of tablå B4 'Utgifter för egen FoU fördelade på produktgrupper' (SCBDOK uf0301_do_2007.pdf PDF pp. 21–24; uf0301_do_2011.pdf PDF p. 18; tablå B5 in uf0301_do_2013.pdf PDF p. 22 and uf0301_do_2015.pdf PDF p. 20; 2009 inferred from the identical 2007 and 2011 forms). SCB's Registerinformation documents the literal v0401 on this variant only in 2003, as two variables (Driftkostnader för forskning; Driftkostnader för FoU avs. produkt 1) whose unit is not confirmed, so the 2007-2015 item is minted as its own variable and never joins them (#1621). Flags follow the documented 2003 v0401 variables (non-sensitive, non-identifier). (#1603, #1509; Operator under maintainer delegation 2026-10-16, batch-e B2)."
+noted = "2026-10-16"
+
 # #1603 batch-e (D1/D2): SWECOV-held FoU rounds outside SCB's documented biennial
 # versions; they carry the firm key (PeorgNr) and, in 2004-2008, the year column (Ar).
 [[errata.version]]
@@ -11965,6 +11980,10 @@ panel_time_key = "period"
 panel_time_grain = "delivery"
 
 # Investeringsenkäten (NV0801)
+
+[[variable]]
+native_id = "182.V0401"
+slug = "andel-driftkostnader-fou-produktgrupp-1"
 
 [[variable]]
 native_id = "182.56"

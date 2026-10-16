@@ -173,23 +173,6 @@ edition = "2024-01-01"
 partition = "ast"
 
 [[column]]
-column = "AstKommun"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "DeSO_2018"
-tables = ["GDB_Ast2023"]
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "P1105_LopNr_CfarNr"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "P1105_LopNr_PeOrgNr"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
 column = "DeSO"
 tables = ["GDB_Ast1990", "GDB_Ast1991", "GDB_Ast1992", "GDB_Ast1993", "GDB_Ast1994", "GDB_Ast1995", "GDB_Ast1996", "GDB_Ast1997", "GDB_Ast1998", "GDB_Ast1999", "GDB_Ast2000", "GDB_Ast2001", "GDB_Ast2002", "GDB_Ast2003", "GDB_Ast2004", "GDB_Ast2005", "GDB_Ast2006", "GDB_Ast2007", "GDB_Ast2008", "GDB_Ast2009", "GDB_Ast2010", "GDB_Ast2011", "GDB_Ast2012", "GDB_Ast2013", "GDB_Ast2014", "GDB_Ast2015", "GDB_Ast2016", "GDB_Ast2017", "GDB_Ast2018", "GDB_Ast2019", "GDB_Ast2020", "GDB_Ast2021", "GDB_Ast2022"]
 mappings = [{ register_variant = "scb/gdb/adresser-fastigheter", variable = "scb/gdb/deso", representation = "DeSO" }]

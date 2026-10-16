@@ -178,10 +178,6 @@ edition = "2025-01-01"
 partition = "ind"
 
 [[column]]
-column = "P1105_Lopnr_PersonNr"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
 column = "DeSO"
 tables = ["GDB_Ind1990", "GDB_Ind1991", "GDB_Ind1992", "GDB_Ind1993", "GDB_Ind1994", "GDB_Ind1995", "GDB_Ind1996", "GDB_Ind1997", "GDB_Ind1998", "GDB_Ind1999", "GDB_Ind2000", "GDB_Ind2001", "GDB_Ind2002", "GDB_Ind2003", "GDB_Ind2004", "GDB_Ind2005", "GDB_Ind2006", "GDB_Ind2007", "GDB_Ind2008", "GDB_Ind2009", "GDB_Ind2010", "GDB_Ind2011", "GDB_Ind2012", "GDB_Ind2013", "GDB_Ind2014", "GDB_Ind2015", "GDB_Ind2016", "GDB_Ind2017", "GDB_Ind2018", "GDB_Ind2019", "GDB_Ind2020", "GDB_Ind2021", "GDB_Ind2022", "GDB_Ind2023"]
 mappings = [{ register_variant = "scb/gdb/adresser-fastigheter", variable = "scb/gdb/deso", representation = "DeSO" }]
