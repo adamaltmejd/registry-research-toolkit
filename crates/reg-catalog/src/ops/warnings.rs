@@ -37,10 +37,10 @@ pub struct DataWarning {
     refs: Vec<SourceRecordRef>,
     withheld_output: Vec<String>,
     /// The curation entry that accepts the issue, by file and position. When
-    /// several entries yield the same warning, the least of them.
+    /// several entries yield the same warning, the first by file, then position.
     acknowledged_by: Option<String>,
-    /// The curation entry the warning annotates, by file and position; the least
-    /// when several yield the same warning.
+    /// The curation entry the warning annotates, by file and position; the first
+    /// by file, then position, when several yield the same warning.
     case_id: Option<String>,
 }
 

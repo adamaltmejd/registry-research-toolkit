@@ -128,15 +128,28 @@ def warning_identity(payload: Mapping[str, object]) -> str:
 def keep_warning(warnings: dict[str, DataWarning], warning: DataWarning) -> None:
     """Add a warning, merging one that differs only in its pointers.
 
-    The merged warning keeps the least pointers, so input order never decides
-    which one the catalog shows.
+    The merged warning keeps the first pointers, so input order never decides
+    which one the catalog shows. A present pointer comes before a missing one, so
+    an acknowledged twin is never dropped for an unacknowledged one.
     """
     kept = warnings.get(warning.warning_id)
-    if kept is None or (warning.acknowledged_by or "", warning.case_id or "") < (
-        kept.acknowledged_by or "",
-        kept.case_id or "",
-    ):
+    if kept is None or _pointer_order(warning) < _pointer_order(kept):
         warnings[warning.warning_id] = warning
+
+
+def _pointer_order(
+    warning: DataWarning,
+) -> tuple[tuple[bool, str, int], tuple[bool, str, int]]:
+    return _pointer_key(warning.acknowledged_by), _pointer_key(warning.case_id)
+
+
+def _pointer_key(pointer: str | None) -> tuple[bool, str, int]:
+    # `file#/kind/N` orders by file and kind, then N as a number, so `/9` precedes
+    # `/10`; a missing pointer sorts last.
+    if pointer is None:
+        return True, "", 0
+    head, _, position = pointer.rpartition("/")
+    return (False, head, int(position)) if position.isdigit() else (False, pointer, -1)
 
 
 # Editorial projection notices do not describe a problem fetching or using data.
