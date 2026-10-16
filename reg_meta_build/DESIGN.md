@@ -1606,7 +1606,8 @@ A `warning_id` hashes the warning with its curation pointers (`acknowledged_by`,
 reordering an unrelated entry must not change the id, nor the reader's `warning_id`
 order (#1606). Warnings that differ only in their pointers are therefore one warning.
 Two `[[acknowledge]]` entries for owners of one shared source record give such twins,
-and the catalog keeps one, naming the least pointer. The build report's issues keep
+and the catalog keeps one, naming the first pointer by file and then by entry position
+as a number; a present pointer precedes a missing one. The build report's issues keep
 every entry.
 
 A written variable whose name is longer than the reader's 200-character search query cap

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections import defaultdict
 from datetime import date
 from hashlib import sha256
@@ -128,15 +129,29 @@ def warning_identity(payload: Mapping[str, object]) -> str:
 def keep_warning(warnings: dict[str, DataWarning], warning: DataWarning) -> None:
     """Add a warning, merging one that differs only in its pointers.
 
-    The merged warning keeps the least pointers, so input order never decides
-    which one the catalog shows.
+    The merged warning keeps the first pointers, so input order never decides
+    which one the catalog shows. A present pointer comes before a missing one, so
+    an acknowledged twin is never dropped for an unacknowledged one.
     """
     kept = warnings.get(warning.warning_id)
-    if kept is None or (warning.acknowledged_by or "", warning.case_id or "") < (
-        kept.acknowledged_by or "",
-        kept.case_id or "",
-    ):
+    if kept is None or _pointer_order(warning) < _pointer_order(kept):
         warnings[warning.warning_id] = warning
+
+
+def _pointer_order(warning: DataWarning) -> tuple[object, ...]:
+    # By file, then by entry position as a number, so `#/acknowledge/9` precedes
+    # `#/acknowledge/10`. re.split keeps text at even and digits at odd indexes,
+    # so two keys never compare a str with an int.
+    return tuple(
+        (
+            pointer is None,
+            [
+                int(p) if i % 2 else p
+                for i, p in enumerate(re.split(r"(\d+)", pointer or ""))
+            ],
+        )
+        for pointer in (warning.acknowledged_by, warning.case_id)
+    )
 
 
 # Editorial projection notices do not describe a problem fetching or using data.

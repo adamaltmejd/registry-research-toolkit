@@ -2390,14 +2390,14 @@
               "string",
               "null"
             ],
-            "description": "The curation entry that accepts the issue, by file and position. When\nseveral entries yield the same warning, the least of them."
+            "description": "The curation entry that accepts the issue, by file and position. When\nseveral entries yield the same warning, the first by file, then position."
           },
           "case_id": {
             "type": [
               "string",
               "null"
             ],
-            "description": "The curation entry the warning annotates, by file and position; the least\nwhen several yield the same warning."
+            "description": "The curation entry the warning annotates, by file and position; the first\nby file, then position, when several yield the same warning."
           },
           "code": {
             "type": "string"
