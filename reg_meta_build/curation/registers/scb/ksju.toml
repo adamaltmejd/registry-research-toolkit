@@ -3,6 +3,22 @@ provider = "scb"
 slug = "ksju"
 native_id = "195"
 
+# #1603 batch-e: BAS, an undocumented flag in the 2023-Q3 and 2023-Q4 KSju tables
+# (Operator under maintainer delegation 2026-10-16: undocumented, but orderable).
+[[errata.column]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "BAS"
+data_type = "text"
+name = "BAS (odokumenterad flagga)"
+definition = "Odokumenterad kolumn: SCB dokumenterar ingen variabel BAS för KSju, och betydelsen är okänd. Kolumnen levereras bara i SWECOV:s tabeller för 2023 kvartal 3 och 4 och innehåller enbart värdet 1 eller saknat värde."
+data_warning = "Undocumented column: SCB documents no BAS variable for KSju, so its meaning is unknown. It is delivered only in the 2023-Q3 and 2023-Q4 tables."
+is_sensitive = true
+is_identifier = false
+versions = ["2023"]
+source = "steward-holdings"
+evidence = "SWECOV holds BAS in KSju_20233 and KSju_20234 (storage varchar(1)). SCB's Registerinformation export and P1105 delivery variable list carry no BAS row for KSju; an aggregate check on MONA, reported as a conclusion only, found the value 1 or null and nothing else. Minted as an undocumented column so it can be ordered, with no code list (maintainer decision 2026-10-16: an undocumented column is orderable, marked undocumented; #1496 stays open for SCB's definition). is_sensitive follows the KSju sick-leave neighbours conservatively. (#1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+noted = "2026-10-16"
+
 # SWECOV existing-register holdings for scb/ksju use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in
 # `evidence`, and holdings lists do not supply a source data type.
@@ -1093,6 +1109,10 @@ slug = "lan-lanf"
 [[variable]]
 native_id = "195.972.foretag"
 slug = "aktuellt-antal-anstallda-foretag"
+
+[[variable]]
+native_id = "195.BAS"
+slug = "bas-odokumenterad-flagga"
 
 [[identity.partition]]
 variable = "195.14"

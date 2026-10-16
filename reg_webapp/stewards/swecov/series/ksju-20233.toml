@@ -7,7 +7,3 @@ variants = ["scb/ksju/sjukfranvaro-sjukloneperioden"]
 [[table]]
 table = "KSju_20233"
 edition = "2023-Q3"
-
-[[column]]
-column = "BAS"
-hold = { follow_up = "#1496", reason = "Undocumented flag delivered only in 2023-Q3 and 2023-Q4: the aggregate check on MONA, reported as a conclusion only found the value 1 or null and nothing else. SCB documents no BAS variable for KSju; held pending SCB's definition (#1496; maintainer decision 2026-10-16)." }
