@@ -1972,12 +1972,12 @@ noted = "2026-10-16"
 [[errata.flags]]
 variable = "195.4027"
 variant = "195.275"
-column = "NG1_2007"
-edition = "1636"
+column = "ng1"
+edition = "1586"
 expected_fields = [{ name = "definition", status = "value", value = "Klassificering av produktionsenhetens näringsgren/bransch." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Näringsgren" }, { name = "operational_definition", status = "absent" }, { name = "sensitivity", status = "absent" }]
-expected_period_text = "2008"
-expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
 expected_evidence_sha256 = "5e2b41a2d1e0d25cada16e8d4938c6a8bc5f55eebd44175a309b4d3c1325b6d0"
 is_sensitive = true
 is_identifier = false
