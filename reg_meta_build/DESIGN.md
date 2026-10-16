@@ -2526,7 +2526,12 @@ of the table's edition, so a year-independent table takes position members only.
 member column carries exactly one mapping: the order reader keys a held column by table
 and column, so a second mapping would inherit or drop the member's period. A member
 therefore never also serves another variant. Readers clip a member's held periods with
-`COALESCE(member bounds, holding_period)`.
+`COALESCE(member bounds, holding_period)`. Two member sets of one table are never
+declared paired: a shared position is the slot key (`kva_typN` beside `opN`), which is
+all an order needs. A steward spec states a member only as a curated mapping decision
+naming its `member`; that decision is the column's one mapping, and the generator emits
+it verbatim. A pivot the generator detects by name but no decision covers stays unmapped
+with an interim reason.
 
 ### Holdings curation rules
 

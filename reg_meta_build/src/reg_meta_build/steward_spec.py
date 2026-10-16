@@ -441,8 +441,6 @@ class SeriesColumn(_SpecModel):
         if self.mappings is not None:
             if not self.mappings or self.reason is None:
                 raise ValueError("a mapping decision names its mappings and a reason")
-            if any(mapping.member is not None for mapping in self.mappings):
-                raise ValueError("a curated mapping cannot name a wide-pivot member")
             _unique(
                 [mapping.register_variant for mapping in self.mappings],
                 "mapping register_variant",
