@@ -380,7 +380,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2002", "2003", "2004", "2005", "2006", "2007"]
 source = "steward-holdings"
-evidence = "SWECOV holds Typkod in IVP_1996–IVP_2007; SCB's Registerinformation documents the literal on this variant only from 2008, as typkod-lonbearbetning. NV0119 BS 2012 p. 10 states that before 2008 lönbearbetning was collected on varunummer starting with 993, and SSD IVPKNAr shows 'Lönbearbetning, Leveranser tkr' zero or suppressed 1996–2007, so the pre-2008 column cannot carry the 2008+ meaning; it is minted as its own variable and never joins typkod-lonbearbetning (#1621). Values stay unlabelled: labelling needs a maintainer aggregate check. Flags follow the documented typkod-lonbearbetning (non-sensitive, non-identifier). (#1603; maintainer ruling 2026-10-15)."
+evidence = "SWECOV holds Typkod in IVP_1996–IVP_2007; SCB's Registerinformation documents the literal on this variant only from 2008, as typkod-lonbearbetning. NV0119 BS 2012 p. 10 states that before 2008 lönbearbetning was collected on varunummer starting with 993, and SSD IVPKNAr shows 'Lönbearbetning, Leveranser tkr' zero or suppressed 1996–2007, so the pre-2008 column cannot carry the 2008+ meaning; it is minted as its own variable and never joins typkod-lonbearbetning (#1621). The coding.documented entry below labels its values (0 ordinary production, 1 lönbearbetning). The name and definition describe the whole 1996–2007 delivery; the variable's versions are 2002–2007 only until #1628 lands, and 1996–2001 stay held on #1628. Flags follow the documented typkod-lonbearbetning (non-sensitive, non-identifier). (#1603; maintainer ruling 2026-10-15)."
 noted = "2026-10-15"
 
 # ── #1603 B6: SWECOV IVP_1996–IVP_2001 ProdVarde ──
