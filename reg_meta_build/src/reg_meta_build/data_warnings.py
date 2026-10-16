@@ -277,6 +277,13 @@ def scope_data_warnings(
     """Attach only positively witnessed ownership; ambiguous evidence stays register-wide."""
     owners = defaultdict(set)
     delivery_witnesses = defaultdict(set)
+    # A curated addition delivers no source record. Its evidence only supports
+    # the edition it joins, and an accepted edition's support is the whole
+    # variant slice, so it claims an issue only when the issue cites all of that
+    # support, as the addition's own issues do (#1628). Grouped by support set
+    # (one accepted edition's additions share it) under its least ref, which any
+    # such issue cites.
+    additions = defaultdict(lambda: defaultdict(lambda: (set(), set())))
     for occurrence in result.corrections.occurrences:
         variable = result.variables.get(occurrence.variable_key)
         if variable is None:
@@ -286,21 +293,30 @@ def scope_data_warnings(
             variable.register_ref.slug,
             variable.slug,
         )
-        for record in occurrence.evidence:
-            for locator in record.locators:
-                ref = (record.source, locator.semantic_record_key)
-                owners[ref].add(coordinate)
-                variant = result.parents.variants.get(occurrence.variant_key)
-                column = occurrence.fields.column_name
-                if (
-                    variant is not None
-                    and column is not None
-                    and column.status == "value"
-                ):
-                    for lo, hi in occurrence_bounds(occurrence) or ():
-                        delivery_witnesses[ref].add(
-                            (variant.slug, column.value, lo, hi)
-                        )
+        variant = result.parents.variants.get(occurrence.variant_key)
+        column = occurrence.fields.column_name
+        witnesses = (
+            {
+                (variant.slug, column.value, lo, hi)
+                for lo, hi in occurrence_bounds(occurrence) or ()
+            }
+            if variant is not None and column is not None and column.status == "value"
+            else set()
+        )
+        refs = {
+            (record.source, locator.semantic_record_key)
+            for record in occurrence.evidence
+            for locator in record.locators
+        }
+        if not occurrence.source_records:
+            if refs:
+                coordinates, witnessed = additions[min(refs)][frozenset(refs)]
+                coordinates.add(coordinate)
+                witnessed |= witnesses
+            continue
+        for ref in refs:
+            owners[ref].add(coordinate)
+            delivery_witnesses[ref] |= witnesses
     registers = {(r.provider, r.slug) for r in result.parents.registers.values()}
     registers.update(
         (v.register_ref.provider, v.register_ref.slug)
@@ -319,10 +335,20 @@ def scope_data_warnings(
         if issue.acknowledged_by is None and issue.code not in QUALITY_CODES:
             continue
         refs = {(r.source, r.semantic_record_key) for r in issue.refs}
-        candidates = set().union(*(owners[r] for r in refs)) if refs else set()
+        claimed = [
+            (support, *claim)
+            for ref in refs
+            if ref in additions
+            for support, claim in additions[ref].items()
+            if support <= refs
+        ]
+        covered = set().union(*(support for support, _, _ in claimed))
+        candidates = set().union(
+            *(owners[r] for r in refs), *(coordinates for _, coordinates, _ in claimed)
+        )
         owner = (
             next(iter(candidates))
-            if len(candidates) == 1 and all(owners[r] for r in refs)
+            if len(candidates) == 1 and all(owners[r] or r in covered for r in refs)
             else None
         )
         register = (
@@ -355,8 +381,10 @@ def scope_data_warnings(
             issue_hi = date.fromisoformat(issue.valid_to).toordinal()
             observed = {
                 (v, c)
-                for r in refs
-                for v, c, lo, hi in delivery_witnesses[r]
+                for v, c, lo, hi in set().union(
+                    *(delivery_witnesses[r] for r in refs),
+                    *(witnessed for _, _, witnessed in claimed),
+                )
                 if lo <= issue_lo and hi >= issue_hi
             }
             if len(witnesses) == 1 and witnesses == observed:
