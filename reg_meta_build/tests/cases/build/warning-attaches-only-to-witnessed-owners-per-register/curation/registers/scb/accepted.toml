@@ -1,0 +1,30 @@
+[register]
+provider = "scb"
+slug = "accepted"
+native_id = "7"
+[[variant]]
+native_id = "7.70"
+slug = "people"
+[[variable]]
+native_id = "7.701"
+slug = "value"
+[[variable]]
+native_id = "7.Held"
+slug = "held"
+
+[[errata.version]]
+variant = "people"
+name = "2020"
+evidence = "omitted edition"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "people"
+column = "Held"
+name = "Held column"
+definition = "Documented"
+data_type = "integer"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-16"
+versions = ["2020"]

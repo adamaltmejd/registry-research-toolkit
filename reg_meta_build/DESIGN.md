@@ -1575,7 +1575,13 @@ SHA-256 digests of the exact original diagnostic text. The completed report ledg
 retains that full text and source facts remain intact, without serializing entire
 value-set diagnostics into public warning payloads. Actual corrected source references
 establish ownership. Ambiguous ownership falls back to the actual resolved register, and
-an owner omitted from the final catalog cannot retain a variable coordinate.
+an owner omitted from the final catalog cannot retain a variable coordinate. A curated
+addition delivers no source record; its evidence only supports the edition it joins, and
+an accepted edition's support is its whole variant slice. It is therefore a candidate
+owner, and a delivery witness, only of an issue that cites all of its evidence, as the
+addition's own issues do. Counting each supporting record would push every warning in
+that variant register-wide (#1628). A native edition's support is one record, so an
+issue citing exactly that record stays ambiguous between the two.
 
 Reviewed identity maps, coding selections/extensions, and missing-column errata can
 carry an explicit `data_warning` summary. Omitted annotations are silent. Only

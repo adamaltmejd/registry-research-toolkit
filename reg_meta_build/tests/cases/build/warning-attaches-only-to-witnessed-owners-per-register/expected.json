@@ -81,6 +81,15 @@
         ["stored", "people", "Stored", "2020-01-01", "2020-12-31", "assumed_storage_type", "warning", "Text storage is assumed; the historical storage type is not documented.", "detail", ["data_type"], [], null, "curation/registers/scb/storage.toml#/errata.column/1"]
       ],
       "note": "storage: the [[errata.column]] data_warning is published as a storage-type assumption on the added column's own 2020 state, never on the delivered anchor VALUE. Its summary is the curated text, its case is the entry, and it cites no source record because the added column has none."
+    },
+    {
+      "table": "warnings",
+      "where": {"register": "accepted"},
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code"],
+      "rows": [
+        ["value", "people", "VALUE", "2022-01-01", "2022-12-31", "missing_coding_period"]
+      ],
+      "note": "accepted: the [[errata.column]] Held joins the accepted edition 2020, whose support is every record of the variant (members 7001 and 7002). The issue about the uncoded 2022 delivery of VALUE cites member 7002 alone, not all of Held's support, so Held neither owns it nor witnesses its delivery: the warning keeps value's variant, column and period instead of going register-wide."
     }
   ]
 }
