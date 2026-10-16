@@ -304,3 +304,42 @@ table = "Soc_AGIIndivid202312_Def"
 edition = "2023-12"
 partition = "soc"
 
+[[column]]
+column = "ERSATTNINGS_BELOPP1"
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/ersattningsbelopp", representation = "ERSATTNINGS_BELOPP", member = { position = 1 } }]
+reason = "SCB documents one Utbetalt ersättningsbelopp (ERSATTNINGS_BELOPP); SWECOV delivers it as four numbered slots, paired with ERSATTNINGS_KOD by position. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ERSATTNINGS_BELOPP2"
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/ersattningsbelopp", representation = "ERSATTNINGS_BELOPP", member = { position = 2 } }]
+reason = "SCB documents one Utbetalt ersättningsbelopp (ERSATTNINGS_BELOPP); SWECOV delivers it as four numbered slots, paired with ERSATTNINGS_KOD by position. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ERSATTNINGS_BELOPP3"
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/ersattningsbelopp", representation = "ERSATTNINGS_BELOPP", member = { position = 3 } }]
+reason = "SCB documents one Utbetalt ersättningsbelopp (ERSATTNINGS_BELOPP); SWECOV delivers it as four numbered slots, paired with ERSATTNINGS_KOD by position. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ERSATTNINGS_BELOPP4"
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/ersattningsbelopp", representation = "ERSATTNINGS_BELOPP", member = { position = 4 } }]
+reason = "SCB documents one Utbetalt ersättningsbelopp (ERSATTNINGS_BELOPP); SWECOV delivers it as four numbered slots, paired with ERSATTNINGS_KOD by position. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ERSATTNINGS_KOD1"
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/ersattningskod", representation = "ERSATTNINGS_KOD", member = { position = 1 } }]
+reason = "SCB documents one Ersättningskod (ERSATTNINGS_KOD); SWECOV delivers it as four numbered slots, paired with ERSATTNINGS_BELOPP by position. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ERSATTNINGS_KOD2"
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/ersattningskod", representation = "ERSATTNINGS_KOD", member = { position = 2 } }]
+reason = "SCB documents one Ersättningskod (ERSATTNINGS_KOD); SWECOV delivers it as four numbered slots, paired with ERSATTNINGS_BELOPP by position. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ERSATTNINGS_KOD3"
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/ersattningskod", representation = "ERSATTNINGS_KOD", member = { position = 3 } }]
+reason = "SCB documents one Ersättningskod (ERSATTNINGS_KOD); SWECOV delivers it as four numbered slots, paired with ERSATTNINGS_BELOPP by position. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ERSATTNINGS_KOD4"
+mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb/agi/ersattningskod", representation = "ERSATTNINGS_KOD", member = { position = 4 } }]
+reason = "SCB documents one Ersättningskod (ERSATTNINGS_KOD); SWECOV delivers it as four numbered slots, paired with ERSATTNINGS_BELOPP by position. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."

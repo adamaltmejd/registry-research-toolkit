@@ -1900,3 +1900,39 @@ reason = "Exact reviewed physical column and accepted native owner; full current
 [[column]]
 column = "PeOrgNrHe"
 storage_header = "P1105_LopNr_PeOrgNrHe"
+
+[[column]]
+column = "emp04"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2004 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp06"
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2006 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp08"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2008 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp10"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2010 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Emp2018"
+tables = ["CIS2018"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2018 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Emp2020"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2020 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."

@@ -104,3 +104,57 @@ column = "aestat"
 tables = ["FDB_AE_2022"]
 mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/arbstalle-status", representation = "AdmStat" }]
 reason = "fdb's workplace status under the pre-2023 SWECOV spelling: the aggregate check on MONA, reported as a conclusion only found exactly the three AdmStat codes (0, 1, 9) SCB documents for fdb from 2019, and none of the AEStat-only codes 2, 7, 8 that the 2016–2018 tables carry. (#1603; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "ng2"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 2 } }]
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ng3"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 3 } }]
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ng4"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 4 } }]
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "ng5"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 5 } }]
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "tidomspct1"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/tidomspct-enligt-leverans", representation = "tidomspct", member = { position = 1 } }]
+reason = "The numbered share slots of tidomspct, the batch-e variable for the delivered TidOmsPct whose SCB meaning (881 or 887) is not established; the same variable FDB_AE_Ng's tidomspct maps to. Its holdings_period must extend to 2015. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "tidomspct2"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/tidomspct-enligt-leverans", representation = "tidomspct", member = { position = 2 } }]
+reason = "The numbered share slots of tidomspct, the batch-e variable for the delivered TidOmsPct whose SCB meaning (881 or 887) is not established; the same variable FDB_AE_Ng's tidomspct maps to. Its holdings_period must extend to 2015. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "tidomspct3"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/tidomspct-enligt-leverans", representation = "tidomspct", member = { position = 3 } }]
+reason = "The numbered share slots of tidomspct, the batch-e variable for the delivered TidOmsPct whose SCB meaning (881 or 887) is not established; the same variable FDB_AE_Ng's tidomspct maps to. Its holdings_period must extend to 2015. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "tidomspct4"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/tidomspct-enligt-leverans", representation = "tidomspct", member = { position = 4 } }]
+reason = "The numbered share slots of tidomspct, the batch-e variable for the delivered TidOmsPct whose SCB meaning (881 or 887) is not established; the same variable FDB_AE_Ng's tidomspct maps to. Its holdings_period must extend to 2015. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "tidomspct5"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/tidomspct-enligt-leverans", representation = "tidomspct", member = { position = 5 } }]
+reason = "The numbered share slots of tidomspct, the batch-e variable for the delivered TidOmsPct whose SCB meaning (881 or 887) is not established; the same variable FDB_AE_Ng's tidomspct maps to. Its holdings_period must extend to 2015. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
