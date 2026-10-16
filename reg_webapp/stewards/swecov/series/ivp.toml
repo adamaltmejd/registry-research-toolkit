@@ -107,3 +107,33 @@ edition = 2020
 [[table]]
 table = "IVP_2021"
 edition = 2021
+
+[[column]]
+column = "Typkod"
+tables = ["IVP_1996"]
+hold = { follow_up = "#1628", reason = "Edition 1996 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
+
+[[column]]
+column = "Typkod"
+tables = ["IVP_1997"]
+hold = { follow_up = "#1628", reason = "Edition 1997 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
+
+[[column]]
+column = "Typkod"
+tables = ["IVP_1998"]
+hold = { follow_up = "#1628", reason = "Edition 1998 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
+
+[[column]]
+column = "Typkod"
+tables = ["IVP_1999"]
+hold = { follow_up = "#1628", reason = "Edition 1999 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
+
+[[column]]
+column = "Typkod"
+tables = ["IVP_2000"]
+hold = { follow_up = "#1628", reason = "Edition 2000 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
+
+[[column]]
+column = "Typkod"
+tables = ["IVP_2001"]
+hold = { follow_up = "#1628", reason = "Edition 2001 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
