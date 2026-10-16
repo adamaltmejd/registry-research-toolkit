@@ -30,18 +30,25 @@ slug = "s0cu"
 native_id = "1.8"
 slug = "nosum"
 [[variable]]
-native_id = "1.9"
+native_id = "1.9.a"
 slug = "auth"
+[[variable]]
+native_id = "1.9.b"
+slug = "auth2"
+[[identity.partition]]
+variable = "1.9"
+columns = { AUTH = "1.9.a", AUTH2 = "1.9.b" }
+columns_ref = "fixture"
 
 [[errata.flags]]
 variable = "1.9"
 variant = "1.10"
 column = "AUTH"
 edition = "110"
-expected_fields = {{expected_fields key=member:109 fields=name,definition,description,operational_definition,sensitivity,identifier}}
-expected_period_text = {{period_text key=member:109}}
-expected_scope = {{edition_scope key=member:109}}
-expected_period = {{period_scope key=member:109}}
+expected_fields = {{expected_fields key=member:109 column=AUTH fields=name,definition,description,operational_definition,sensitivity,identifier}}
+expected_period_text = {{period_text key=member:109 column=AUTH}}
+expected_scope = {{edition_scope key=member:109 column=AUTH}}
+expected_period = {{period_scope key=member:109 column=AUTH}}
 expected_evidence_sha256 = {{evidence_sha256 key=member:109}}
 is_sensitive = true
 is_identifier = false

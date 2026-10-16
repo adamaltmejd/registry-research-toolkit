@@ -18,11 +18,13 @@
     {
       "table": "issues",
       "fields": ["code", "severity", "subject", "fields"],
-      "note": "Every issue of the build. The fully flagged variables raise none (the old ratchet tests' `result.diagnostics == ()`). A conditional 0 beside a blank plain cell supplies no sensitivity, so sxc0 is withheld for is_sensitive alone; nosum has no summary row and is withheld for both flags: its [[errata.flags]] entry pins another variable's originals, so it is stale (located below) and authors nothing.",
+      "note": "Every issue of the build. The fully flagged variables raise none (the old ratchet tests' `result.diagnostics == ()`). A conditional 0 beside a blank plain cell supplies no sensitivity, so sxc0 is withheld for is_sensitive alone; nosum has no summary row and is withheld for both flags: its [[errata.flags]] entry pins another variable's originals, so it is stale (located below) and authors nothing. auth2 is withheld for both flags: AUTH's entry names column AUTH, and the partition gives the member's AUTH2 column to auth2, so the authored pair never reaches it (#1627); the derived same-definition pair between auth and auth2 is withheld with it.",
       "rows": [
         ["stale_curation_entry", "error", "1.8", []],
+        ["unresolved_flag", "error", "scb/sample/auth2", ["is_sensitive", "is_identifier"]],
+        ["unresolved_flag", "error", "scb/sample/nosum", ["is_sensitive", "is_identifier"]],
         ["unresolved_flag", "error", "scb/sample/sxc0", ["is_sensitive"]],
-        ["unresolved_flag", "error", "scb/sample/nosum", ["is_sensitive", "is_identifier"]]
+        ["withheld_catalog_dependency", "error", "same_definition_pair:scb/sample/auth:scb/sample/auth2", ["is_sensitive", "is_identifier"]]
       ]
     },
     {
