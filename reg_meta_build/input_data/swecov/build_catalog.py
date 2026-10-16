@@ -2587,6 +2587,14 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
             rest = [
                 r for r in recs if not r.get("union") and r["coord"] not in union_coords
             ]
+            if union:
+                # The union covers the edition, so an owner on another variant
+                # matters only if it reaches the edition, where it competes; a
+                # historical one (a variant ending before it) is dropped.
+                competing = competing or any(
+                    _overlaps_edition(r, column_edition) for r in rest
+                )
+                rest = []
             recs, scope_issue = (
                 ([], "ambiguous_delivered_owners")
                 if competing

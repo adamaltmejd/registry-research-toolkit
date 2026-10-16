@@ -551,6 +551,8 @@ def test_inventory_refuses_case_only_twins_without_physical_or_representative(
         ("2018-10-01", None, None),
         ("2018-10-01", "alias", None),
         ("2018-10-01", "competing", "ambiguous_delivered_owners"),
+        ("2018-10-01", "historical", None),
+        ("2018-10-01", "current", "ambiguous_delivered_owners"),
         ("2018-11-01", None, "union_mapping_gap"),
         ("2018-06-01", None, "union_mapping_overlap"),
     ],
@@ -570,11 +572,14 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
     spelling of the same owner is dropped (the union still maps), while another
     variable delivering the representation there through 2018 competes with it and
     is refused as ambiguous, even under another physical name (`Physical`, which
-    the physical-column lookup misses). Fails if a partial mapping is still refused alone
-    (the tiled case exits as stale), if the whole-edition owner check later drops
-    the union records (a single-year edition is the one that check assesses), if
-    the leftover spelling sinks the union or the competing owner is admitted, or if the tiling check misses a gap or
-    an overlap (those cases map)."""
+    the physical-column lookup misses). On a third admissible variant the decision
+    does not map, an owner ending in 2001 is irrelevant (the union maps), while one
+    still delivering in 2018 competes and is refused. Fails if a partial mapping
+    is still refused alone (the tiled case exits as stale), if the whole-edition
+    owner check later drops the union records (a single-year edition is the one
+    that check assesses), if the leftover spelling or the historical owner sinks
+    the union, if a competing or current owner is admitted, or if the tiling check
+    misses a gap or an overlap (those cases map)."""
     db = tmp_path / "split.db"
     shutil.copyfile(flavored_db, db)
     with sqlite3.connect(db) as conn:
@@ -611,6 +616,19 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
                     ("LOPNR", "2018-01-01", "2018-06-30"),
                 ],
             )
+        if beside in ("historical", "current"):
+            conn.execute(
+                "INSERT INTO register_variant (register_variant_id, register_id, "
+                "name, slug) VALUES (906, 901, 'Tidig', 'tidig')"
+            )
+            conn.execute(
+                "INSERT INTO variable_state (state_id, variable_id, "
+                "register_variant_id, valid_from, valid_to, data_type, "
+                "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
+                "+ 1 FROM variable_state), 920, 906, '1990-01-01', ?, 'varchar', "
+                "'Lopnr')",
+                ("2001-12-31" if beside == "historical" else "9999-12-31",),
+            )
         if beside == "competing":
             conn.execute(
                 "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
@@ -624,6 +642,16 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
                 "'varchar', 'Lopnr')"
             )
     variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/efter")
+    # A third admissible variant the decision does not map.
+    admissible = (
+        (*variants, "inera/bestallda-prover/tidig")
+        if beside
+        in (
+            "historical",
+            "current",
+        )
+        else variants
+    )
     physical = "Physical" if beside == "competing" else "Lopnr"
     decisions = (
         f'[[column]]\ncolumn = "{physical}"\nmappings = ['
@@ -642,7 +670,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
             "T_split",
             [physical],
             edition="2018",
-            variants=variants,
+            variants=admissible,
             decisions=decisions,
         )
 

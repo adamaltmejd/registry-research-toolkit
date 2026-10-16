@@ -2597,9 +2597,12 @@ A reviewed mapping normally covers the complete edition by itself. A decision wh
 mappings each cover only part of it, because the edition straddles a variant split (one
 variant to 2018-09, its successor from 2018-10), maps once per variant when their owner
 windows, clipped to the edition, tile it with no gap and no overlap (#1555); a gap or an
-overlap refuses into the generator's scope worklist. No window is stored: an order
-reaches each variant through its own states. A column genuinely absent for part of an
-edition is not a union and stays held (#1645).
+overlap refuses into the generator's scope worklist. Another owner that reaches the
+edition competes and is refused as ambiguous: on a union variant unless the decision
+sets `select_owner`, and on any other admissible variant. An owner that does not reach
+the edition is dropped. No window is stored: an order reaches each variant through its
+own states. A column genuinely absent for part of an edition is not a union and stays
+held (#1645).
 
 ## Document database
 
