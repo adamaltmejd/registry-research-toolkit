@@ -3187,6 +3187,233 @@ source = "steward-holdings"
 evidence = "SWECOV holds V601 in FTG_FOU_1999 (storage int). The 1999 form is not available online (SCBDOK 2007 p. 7: paper forms are in SCB's archive). An aggregate check on MONA, reported as a conclusion only, found values that look like an amount, not person-years, which contradicts the v0601 reading, so this is minted as its own variable rather than carried (#1603 batch-e, #1509; Operator under maintainer delegation 2026-10-16)."
 noted = "2026-10-16"
 
+# #1603 batch-e / #1495: FTG_FOU_2017 delivers the product block as v0401_1..8 and
+# v0402_1..8, which SCB does not document; each column is its own variable.
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0401_1"
+data_type = "text"
+name = "v0401_1 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0401, driftkostnader för egen FoU); suffixet _1 kan avse produktgrupp 1, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0401_1 for 2017. Candidate meaning: the v0401 form row (operating costs for own R&D) for product group 1, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0401_1 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0401 = operating costs for own R&D for product group 1, an amount in KSEK in 2003 (native 4372) and a percentage share in 2007-2015; v0411..v0471 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0401_2"
+data_type = "text"
+name = "v0401_2 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0401, driftkostnader för egen FoU); suffixet _2 kan avse produktgrupp 2, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0401_2 for 2017. Candidate meaning: the v0401 form row (operating costs for own R&D) for product group 2, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0401_2 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0401 = operating costs for own R&D for product group 1, an amount in KSEK in 2003 (native 4372) and a percentage share in 2007-2015; v0411..v0471 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0401_3"
+data_type = "text"
+name = "v0401_3 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0401, driftkostnader för egen FoU); suffixet _3 kan avse produktgrupp 3, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0401_3 for 2017. Candidate meaning: the v0401 form row (operating costs for own R&D) for product group 3, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0401_3 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0401 = operating costs for own R&D for product group 1, an amount in KSEK in 2003 (native 4372) and a percentage share in 2007-2015; v0411..v0471 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0401_4"
+data_type = "text"
+name = "v0401_4 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0401, driftkostnader för egen FoU); suffixet _4 kan avse produktgrupp 4, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0401_4 for 2017. Candidate meaning: the v0401 form row (operating costs for own R&D) for product group 4, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0401_4 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0401 = operating costs for own R&D for product group 1, an amount in KSEK in 2003 (native 4372) and a percentage share in 2007-2015; v0411..v0471 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0401_5"
+data_type = "text"
+name = "v0401_5 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0401, driftkostnader för egen FoU); suffixet _5 kan avse produktgrupp 5, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0401_5 for 2017. Candidate meaning: the v0401 form row (operating costs for own R&D) for product group 5, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0401_5 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0401 = operating costs for own R&D for product group 1, an amount in KSEK in 2003 (native 4372) and a percentage share in 2007-2015; v0411..v0471 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0401_6"
+data_type = "text"
+name = "v0401_6 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0401, driftkostnader för egen FoU); suffixet _6 kan avse produktgrupp 6, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0401_6 for 2017. Candidate meaning: the v0401 form row (operating costs for own R&D) for product group 6, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0401_6 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0401 = operating costs for own R&D for product group 1, an amount in KSEK in 2003 (native 4372) and a percentage share in 2007-2015; v0411..v0471 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0401_7"
+data_type = "text"
+name = "v0401_7 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0401, driftkostnader för egen FoU); suffixet _7 kan avse produktgrupp 7, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0401_7 for 2017. Candidate meaning: the v0401 form row (operating costs for own R&D) for product group 7, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0401_7 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0401 = operating costs for own R&D for product group 1, an amount in KSEK in 2003 (native 4372) and a percentage share in 2007-2015; v0411..v0471 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0401_8"
+data_type = "text"
+name = "v0401_8 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0401, driftkostnader för egen FoU); suffixet _8 kan avse produktgrupp 8, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0401_8 for 2017. Candidate meaning: the v0401 form row (operating costs for own R&D) for product group 8, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0401_8 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0401 = operating costs for own R&D for product group 1, an amount in KSEK in 2003 (native 4372) and a percentage share in 2007-2015; v0411..v0471 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0402_1"
+data_type = "text"
+name = "v0402_1 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0402, investeringsutgifter för egen FoU); suffixet _1 kan avse produktgrupp 1, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0402_1 for 2017. Candidate meaning: the v0402 form row (investment expenditure for own R&D) for product group 1, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0402_1 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0402 = investment expenditure for own R&D for product group 1 (native 3425, KSEK in 2003); v0412..v0472 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0402_2"
+data_type = "text"
+name = "v0402_2 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0402, investeringsutgifter för egen FoU); suffixet _2 kan avse produktgrupp 2, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0402_2 for 2017. Candidate meaning: the v0402 form row (investment expenditure for own R&D) for product group 2, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0402_2 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0402 = investment expenditure for own R&D for product group 1 (native 3425, KSEK in 2003); v0412..v0472 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0402_3"
+data_type = "text"
+name = "v0402_3 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0402, investeringsutgifter för egen FoU); suffixet _3 kan avse produktgrupp 3, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0402_3 for 2017. Candidate meaning: the v0402 form row (investment expenditure for own R&D) for product group 3, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0402_3 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0402 = investment expenditure for own R&D for product group 1 (native 3425, KSEK in 2003); v0412..v0472 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0402_4"
+data_type = "text"
+name = "v0402_4 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0402, investeringsutgifter för egen FoU); suffixet _4 kan avse produktgrupp 4, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0402_4 for 2017. Candidate meaning: the v0402 form row (investment expenditure for own R&D) for product group 4, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0402_4 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0402 = investment expenditure for own R&D for product group 1 (native 3425, KSEK in 2003); v0412..v0472 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0402_5"
+data_type = "text"
+name = "v0402_5 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0402, investeringsutgifter för egen FoU); suffixet _5 kan avse produktgrupp 5, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0402_5 for 2017. Candidate meaning: the v0402 form row (investment expenditure for own R&D) for product group 5, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0402_5 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0402 = investment expenditure for own R&D for product group 1 (native 3425, KSEK in 2003); v0412..v0472 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0402_6"
+data_type = "text"
+name = "v0402_6 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0402, investeringsutgifter för egen FoU); suffixet _6 kan avse produktgrupp 6, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0402_6 for 2017. Candidate meaning: the v0402 form row (investment expenditure for own R&D) for product group 6, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0402_6 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0402 = investment expenditure for own R&D for product group 1 (native 3425, KSEK in 2003); v0412..v0472 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0402_7"
+data_type = "text"
+name = "v0402_7 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0402, investeringsutgifter för egen FoU); suffixet _7 kan avse produktgrupp 7, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0402_7 for 2017. Candidate meaning: the v0402 form row (investment expenditure for own R&D) for product group 7, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0402_7 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0402 = investment expenditure for own R&D for product group 1 (native 3425, KSEK in 2003); v0412..v0472 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "v0402_8"
+data_type = "text"
+name = "v0402_8 (enligt leverans)"
+definition = "Odokumenterad kolumn i FTG_FOU_2017. Namnet följer blankettens produktgruppsblock (v0402, investeringsutgifter för egen FoU); suffixet _8 kan avse produktgrupp 8, men vilken storhet och enhet kolumnen innehåller är inte fastställd."
+data_warning = "Undocumented column: SCB documents no v0402_8 for 2017. Candidate meaning: the v0402 form row (investment expenditure for own R&D) for product group 8, by the name's suffix; whether it holds an amount, a share or another variant of that row is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds v0402_8 in FTG_FOU_2017 (storage varchar). SCB's Registerinformation carries no row for it; earlier rounds document the product block per product as separate variables (v0402 = investment expenditure for own R&D for product group 1 (native 3425, KSEK in 2003); v0412..v0472 = product groups 2-8). The 2017 suffix numbering and unit are not documented, so the column is minted as its own variable with the candidate meaning named in data_warning; no candidate is chosen and no unit or code list is carried. Flags follow the documented product-block variables (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+noted = "2026-10-16"
+
 [[errata.delivered]]
 data_warning = "SCB documents no 1999 FoU Företagssektorn round. The meaning is assumed from SCB's 2003 documentation of native 3331 (row 201, övriga driftkostnader for own R&D), which SWECOV delivers under the same spelling V201 from 2005; it is not confirmed for 1999."
 variant = "foretagssektorn"
@@ -17778,6 +18005,70 @@ reason = "The #1603 batch-e same-name carry gives this column edition 2003's mea
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column V001 on foretagssektorn (Operator under maintainer delegation 2026-10-16); the nearest documented edition's code list is deliberately not carried."
 expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+[[variable]]
+native_id = "182.v0401_1"
+slug = "v0401-1-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0401_2"
+slug = "v0401-2-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0401_3"
+slug = "v0401-3-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0401_4"
+slug = "v0401-4-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0401_5"
+slug = "v0401-5-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0401_6"
+slug = "v0401-6-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0401_7"
+slug = "v0401-7-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0401_8"
+slug = "v0401-8-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0402_1"
+slug = "v0402-1-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0402_2"
+slug = "v0402-2-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0402_3"
+slug = "v0402-3-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0402_4"
+slug = "v0402-4-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0402_5"
+slug = "v0402-5-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0402_6"
+slug = "v0402-6-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0402_7"
+slug = "v0402-7-enligt-leverans"
+
+[[variable]]
+native_id = "182.v0402_8"
+slug = "v0402-8-enligt-leverans"
 
 [[acknowledge]]
 code = "missing_coding_period"

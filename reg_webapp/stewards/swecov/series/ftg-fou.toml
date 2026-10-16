@@ -309,3 +309,99 @@ storage_header = "Vikt"
 [[column]]
 column = "v0201"
 storage_header = "V201"
+
+[[column]]
+column = "v0401_1"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-1-enligt-leverans", representation = "v0401_1" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0401 for product group 1) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0401_2"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-2-enligt-leverans", representation = "v0401_2" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0401 for product group 2) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0401_3"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-3-enligt-leverans", representation = "v0401_3" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0401 for product group 3) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0401_4"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-4-enligt-leverans", representation = "v0401_4" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0401 for product group 4) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0401_5"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-5-enligt-leverans", representation = "v0401_5" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0401 for product group 5) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0401_6"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-6-enligt-leverans", representation = "v0401_6" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0401 for product group 6) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0401_7"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-7-enligt-leverans", representation = "v0401_7" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0401 for product group 7) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0401_8"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-8-enligt-leverans", representation = "v0401_8" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0401 for product group 8) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0402_1"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-1-enligt-leverans", representation = "v0402_1" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 1) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0402_2"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-2-enligt-leverans", representation = "v0402_2" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 2) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0402_3"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-3-enligt-leverans", representation = "v0402_3" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 3) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0402_4"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-4-enligt-leverans", representation = "v0402_4" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 4) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0402_5"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-5-enligt-leverans", representation = "v0402_5" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 5) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0402_6"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-6-enligt-leverans", representation = "v0402_6" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 6) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0402_7"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-7-enligt-leverans", representation = "v0402_7" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 7) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "v0402_8"
+tables = ["FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-8-enligt-leverans", representation = "v0402_8" }]
+reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 8) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
