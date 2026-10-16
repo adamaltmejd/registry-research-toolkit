@@ -5583,6 +5583,10 @@ def _support_coding_sha256(
     )
 
 
+# The fields value binding reads to find an occurrence's code lists.
+_CODING_FIELDS = frozenset({"column_name", "representation", "value_set_declared"})
+
+
 def compile_occurrence_corrections(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -5994,6 +5998,13 @@ def compile_occurrence_corrections(
                         )
                         else "the original's checked corrections conflict"
                         if any(len(values) > 1 for values in corrected.values())
+                        # Copied coding binds from the donor's own fields, so a
+                        # corrected list pointer would leave the carried years
+                        # coded differently from the original's.
+                        else "an [[errata.field]] corrects a coding field ("
+                        + ", ".join(sorted(_CODING_FIELDS & corrected.keys()))
+                        + ") the carry's copied coding does not follow"
+                        if _CODING_FIELDS & corrected.keys()
                         else "the original's physical alternatives disagree on "
                         + ", ".join(disagreeing)
                         if (

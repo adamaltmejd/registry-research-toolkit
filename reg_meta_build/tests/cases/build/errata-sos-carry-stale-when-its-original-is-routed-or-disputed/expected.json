@@ -39,6 +39,10 @@
         [
           "stale_curation_entry",
           "curation/registers/sos/syc.toml#/errata.occurrence_carry/7"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/8"
         ]
       ]
     },
@@ -88,6 +92,12 @@
           "per",
           "syc-a",
           "2010-01-01",
+          "2023-12-31"
+        ],
+        [
+          "rep",
+          "syc-a",
+          "2015-01-01",
           "2023-12-31"
         ],
         [

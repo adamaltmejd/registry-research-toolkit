@@ -158,3 +158,28 @@ edition_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2023
 edition_period_scope = {{period_scope key=variable:PER}}
 evidence = "The provider's own note dates the column from 2010."
 noted = "2026-10-17"
+[[variable]]
+slug = "rep"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=REP}}
+[[errata.field]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=REP}}
+variant = "SYC_A"
+column = "REP"
+expected_fields = [{ name = "classification_declared", status = "unknown" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }, { name = "data_type", status = "value", value = "text" }, { name = "name", status = "value", value = "Rep" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Rep per position" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "value", value = "Se Kodlista_REP" }]
+expected_scope = {{edition_scope key=variable:REP}}
+expected_period = {{period_scope key=variable:REP}}
+field = "representation"
+value = "Se Kodlista_rep"
+evidence = "The code-list sheet is spelled in lower case."
+noted = "2026-10-17"
+[[errata.occurrence_carry]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=REP}}
+variant = "SYC_A"
+column = "REP"
+expected_fields = [{ name = "name", status = "value", value = "Rep" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Rep per position" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = {{edition_scope key=variable:REP}}
+expected_period = {{period_scope key=variable:REP}}
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 the provider documents these codes only inside a combined string."
+evidence = "Delivered under the same name in 2005-2014."
+noted = "2026-10-17"

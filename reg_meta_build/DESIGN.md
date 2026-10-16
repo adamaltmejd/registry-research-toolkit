@@ -906,6 +906,9 @@ build refuses it as a located stale entry when:
 - its variant is a token `[[identity.route]]` sends elsewhere;
 - an `[[errata.data_type]]` or `[[errata.classification_reference]]` corrects the
   original, which the carry does not replay;
+- a checked `[[errata.field]]` corrects a field value binding reads (`column_name`,
+  `representation`, `value_set_declared`): the copied coding binds from the original's
+  own fields, so the carried years would be coded from the uncorrected pointer;
 - the original's checked corrections disagree (its own value is then withheld, and the
   carry does not pick one);
 - the original's physical alternatives under its one record key disagree on a field the
