@@ -8,7 +8,8 @@ edition = { from = 2019, to = 2025 }
 
 [[column]]
 column = "Omfattning"
-hold = { follow_up = "#1554", reason = "Delivered level column with no omfattning variable on fk/omvardnadsbidrag; whether it equals Niva needs a MONA value-set check (#1554). Maintainer-decided 2026-10-13 (#1302)." }
+mappings = [{ register_variant = "fk/omvardnadsbidrag/mottagare", variable = "fk/omvardnadsbidrag/niva", representation = "Niva" }]
+reason = "SWECOV delivery spelling of the variant's benefit level Niva (\"Nivå på ...\"). The aggregate check found every delivered value of the form 'Nivå n,nn', on the omvårdnadsbidrag levels, and no other values; no table carries both columns, so the value set is the evidence. (#1554; aggregate check on MONA, reported as a conclusion only)."
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
