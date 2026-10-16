@@ -4,342 +4,177 @@ variants = ["scb/gdb/adresser-fastigheter"]
 
 [[table]]
 table = "GDB_Ast1990"
-edition = 1990
+edition = "1991-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1991"
-edition = 1991
+edition = "1992-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1992"
-edition = 1992
+edition = "1993-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1993"
-edition = 1993
+edition = "1994-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1994"
-edition = 1994
+edition = "1995-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1995"
-edition = 1995
+edition = "1996-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1996"
-edition = 1996
+edition = "1997-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1997"
-edition = 1997
+edition = "1998-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1998"
-edition = 1998
+edition = "1999-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast1999"
-edition = 1999
+edition = "2000-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2000"
-edition = 2000
+edition = "2001-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2001"
-edition = 2001
+edition = "2002-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2002"
-edition = 2002
+edition = "2003-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2003"
-edition = 2003
+edition = "2004-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2004"
-edition = 2004
+edition = "2005-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2005"
-edition = 2005
+edition = "2006-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2006"
-edition = 2006
+edition = "2007-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2007"
-edition = 2007
+edition = "2008-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2008"
-edition = 2008
+edition = "2009-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2009"
-edition = 2009
+edition = "2010-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2010"
-edition = 2010
+edition = "2011-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2011"
-edition = 2011
+edition = "2012-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2012"
-edition = 2012
+edition = "2013-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2013"
-edition = 2013
+edition = "2014-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2014"
-edition = 2014
+edition = "2015-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2015"
-edition = 2015
+edition = "2016-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2016"
-edition = 2016
+edition = "2017-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2017"
-edition = 2017
+edition = "2018-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2018"
-edition = 2018
+edition = "2019-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2019"
-edition = 2019
+edition = "2020-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2020"
-edition = 2020
+edition = "2021-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2021"
-edition = 2021
+edition = "2022-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2022"
-edition = 2022
+edition = "2023-01-01"
 partition = "ast"
 
 [[table]]
 table = "GDB_Ast2023"
-edition = 2023
+edition = "2024-01-01"
 partition = "ast"
 
 [[column]]
 column = "AstKommun"
 hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1990"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1990's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1991"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1991's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1992"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1992's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1993"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1993's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1994"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1994's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1995"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1995's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1996"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1996's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1997"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1997's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1998"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1998's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast1999"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1999's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2000"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2000's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2001"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2001's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2002"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2002's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2003"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2003's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2004"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2004's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2005"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2005's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2006"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2006's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2007"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2007's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2008"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2008's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2009"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2009's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2010"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2010's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2011"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2011's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2012"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2012's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2013"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2013's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2014"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2014's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2015"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2015's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2016"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2016's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2017"]
-hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2017's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2018"]
-unmap = "Retained physical geocoded extract field for edition 2018. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2019"]
-unmap = "Retained physical geocoded extract field for edition 2019. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2020"]
-unmap = "Retained physical geocoded extract field for edition 2020. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2021"]
-unmap = "Retained physical geocoded extract field for edition 2021. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
-
-[[column]]
-column = "DeSO"
-tables = ["GDB_Ast2022"]
-unmap = "Retained physical geocoded extract field for edition 2022. The accepted GDB routing is a closest-catalog-home assignment for a SWECOV extract, not a verbatim GDB delivery. Source ownership is documented only at exact January1 snapshot dates; the physical table does not establish that day as its observation/delivery period. Do not widen source dates or assign an arbitrary snapshot to this annual extract. Known owner and exact point dates retained in evidence/missing-owner904-review.json."
 
 [[column]]
 column = "DeSO_2018"
@@ -353,3 +188,9 @@ hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with n
 [[column]]
 column = "P1105_LopNr_PeOrgNr"
 hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
+
+[[column]]
+column = "DeSO"
+tables = ["GDB_Ast1990", "GDB_Ast1991", "GDB_Ast1992", "GDB_Ast1993", "GDB_Ast1994", "GDB_Ast1995", "GDB_Ast1996", "GDB_Ast1997", "GDB_Ast1998", "GDB_Ast1999", "GDB_Ast2000", "GDB_Ast2001", "GDB_Ast2002", "GDB_Ast2003", "GDB_Ast2004", "GDB_Ast2005", "GDB_Ast2006", "GDB_Ast2007", "GDB_Ast2008", "GDB_Ast2009", "GDB_Ast2010", "GDB_Ast2011", "GDB_Ast2012", "GDB_Ast2013", "GDB_Ast2014", "GDB_Ast2015", "GDB_Ast2016", "GDB_Ast2017", "GDB_Ast2018", "GDB_Ast2019", "GDB_Ast2020", "GDB_Ast2021", "GDB_Ast2022"]
+mappings = [{ register_variant = "scb/gdb/adresser-fastigheter", variable = "scb/gdb/deso", representation = "DeSO" }]
+reason = "GDB year-end rule (maintainer decision 2026-10-16): SWECOV's GDB table for year Y is the status at 31 December Y, which SCB publishes as the annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari), so each table's edition is the 1 January Y+1 version. DeSO maps onto adresser-fastigheter; versions SCB's export omits are added in gdb.toml with a reference-date data warning. The GDB_Ast tables are coded on year Y+1's municipality division (aggregate check on MONA, reported as a conclusion only)."
