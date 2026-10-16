@@ -1019,6 +1019,16 @@ evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Mis
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATG', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'ATG')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:ATG\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2005-01-01"
+valid_to = "2014-12-31"
+reason = "The #1603 batch-e occurrence_carry copies ATG and its source classification declaration into 2005-2014; the same unavailable source dictionary limits it there as in 2015+ (acknowledged above). Preserve source facts and every separate coding limitation."
+evidence = "Mirrors the 2015+ acknowledgement of this exact literal KVÅ reference (user-approved exact39 missing-dictionary limitations, 2026-09-30) for the years the #1603 batch-e carry adds (Operator under maintainer delegation 2026-10-16)."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
 subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATG', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'ATG')"
 refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:ATG\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
 fields = ["classification_declared"]
@@ -1026,6 +1036,16 @@ valid_from = "2015-01-01"
 valid_to = "9999-12-31"
 reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
 evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATG', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'ATG')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:ATG\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2005-01-01"
+valid_to = "2014-12-31"
+reason = "The #1603 batch-e occurrence_carry copies ATG and its source classification declaration into 2005-2014; the same unavailable source dictionary limits it there as in 2015+ (acknowledged above). Preserve source facts and every separate coding limitation."
+evidence = "Mirrors the 2015+ acknowledgement of this exact literal KVÅ reference (user-approved exact39 missing-dictionary limitations, 2026-09-30) for the years the #1603 batch-e carry adds (Operator under maintainer delegation 2026-10-16)."
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
