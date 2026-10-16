@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 from collections import defaultdict
 from datetime import date
 from hashlib import sha256
@@ -138,20 +137,19 @@ def keep_warning(warnings: dict[str, DataWarning], warning: DataWarning) -> None
         warnings[warning.warning_id] = warning
 
 
-def _pointer_order(warning: DataWarning) -> tuple[object, ...]:
-    # By file, then by entry position as a number, so `#/acknowledge/9` precedes
-    # `#/acknowledge/10`. re.split keeps text at even and digits at odd indexes,
-    # so two keys never compare a str with an int.
-    return tuple(
-        (
-            pointer is None,
-            [
-                int(p) if i % 2 else p
-                for i, p in enumerate(re.split(r"(\d+)", pointer or ""))
-            ],
-        )
-        for pointer in (warning.acknowledged_by, warning.case_id)
-    )
+def _pointer_order(
+    warning: DataWarning,
+) -> tuple[tuple[bool, str, int], tuple[bool, str, int]]:
+    return _pointer_key(warning.acknowledged_by), _pointer_key(warning.case_id)
+
+
+def _pointer_key(pointer: str | None) -> tuple[bool, str, int]:
+    # `file#/kind/N` orders by file and kind, then N as a number, so `/9` precedes
+    # `/10`; a missing pointer sorts last.
+    if pointer is None:
+        return True, "", 0
+    head, _, position = pointer.rpartition("/")
+    return (False, head, int(position)) if position.isdigit() else (False, pointer, -1)
 
 
 # Editorial projection notices do not describe a problem fetching or using data.
