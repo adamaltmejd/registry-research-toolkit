@@ -1,6 +1,6 @@
 {
   "note": "Maintainer decision 13. The curation is errata-delivered-blank-row-is-rewritten-and-owned-by-the-split (the allowed twin, built from the reviewed delivery, where the 2021 blank row becomes column A under `a`), with its evidence pin read from that reviewed delivery. This build delivers the documented A row (CVID 20) with another definition. The entry's statement rests on that row, so it goes stale and the 2021 row is not rewritten. The digest covers the entry's documented and target rows' own content, not the delivery revision (maintainer decision 5), so the change to the A row itself is what stales the entry.",
-  "fails_if": "the `[[errata.delivered]]` compile step stops comparing the entry's `expected_evidence_sha256` with the full originals of its documented column and native target rows, so the entry reviewed over A's old definition still rewrites the 2021 blank row as column A",
+  "fails_if": "the `[[errata.delivered]]` compile step stops comparing the entry's `expected_evidence_sha256` with the full originals of its documented column and native target rows, so the entry reviewed over A's old definition still rewrites the 2021 blank row as column A; or it stops printing the digest it computed as a `Current pins: expected_evidence_sha256 = …` line, so a curator has no pin to copy",
   "sources": {
     "description": "errata-delivered-blank-row-is-rewritten-and-owned-by-the-split's delivery after A (CVID 20) changed its definition.",
     "scb": {

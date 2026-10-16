@@ -1,0 +1,52 @@
+{
+  "note": "Step 1's entry with the expected_evidence_sha256 its stale detail printed, pasted literally as a curator copies it. Over step 1's changed delivery it applies: the 2021 blank row becomes column A under `a`, which makes the printed digest an oracle from outside the printer.",
+  "fails_if": "the pin a stale `[[errata.delivered]]` entry prints is not the digest its check accepts (it hashes other records than the documented and target originals, or omits a donor's), so the pasted entry stays stale and the 2021 row is not rewritten",
+  "sources": {
+    "description": "errata-delivered-blank-row-is-rewritten-and-owned-by-the-split's delivery after A (CVID 20) changed its definition.",
+    "scb": {
+      "registerinformation": [
+        {
+          "colname": "A",
+          "cvid": 20,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "vardef": "A changed family label",
+          "register": [
+            "TEST",
+            1,
+            2
+          ]
+        },
+        {
+          "colname": "B",
+          "cvid": 23,
+          "var_id": 5,
+          "year": "2020",
+          "regver_id": 2020,
+          "register": [
+            "TEST",
+            1,
+            3
+          ]
+        },
+        {
+          "colname": "\"\"",
+          "cvid": 22,
+          "var_id": 5,
+          "year": "2021",
+          "regver_id": 2021,
+          "register": [
+            "TEST",
+            1,
+            2
+          ]
+        }
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|A|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|B|2020|2020|0|0|0"
+      ]
+    }
+  }
+}
