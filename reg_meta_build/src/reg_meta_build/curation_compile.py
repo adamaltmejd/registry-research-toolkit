@@ -5613,6 +5613,9 @@ def compile_occurrence_corrections(
                     select_family=lambda key, wanted=wanted: str(key[-1]) in wanted,
                 )
             }
+        # Field entries compile before carries; a carry replays only the ones
+        # that passed every guard here.
+        checked_corrections: list[tuple[ErrataFieldEntry, set[SourceRecordRef]]] = []
         for table, rows in entries:
             for index, entry in enumerate(rows, 1):
                 case_id = f"{register.source_file}#/errata.{table}/{index}"
@@ -5849,6 +5852,8 @@ def compile_occurrence_corrections(
                     continue
                 assert location is not None
                 scope, register_key = location
+                if isinstance(entry, ErrataFieldEntry):
+                    checked_corrections.append((entry, chosen_refs))
                 carry_effects: tuple[CuratedOccurrenceAddition, ...] = ()
                 if isinstance(entry, ErrataOccurrenceCarryEntry):
                     donor = selected[0]
@@ -5856,31 +5861,18 @@ def compile_occurrence_corrections(
                     variant_key = native_variant_key(donor)
                     assert variable_key is not None and variant_key is not None
                     # The carried occurrence states the original's corrected facts:
-                    # copying an original a checked `[[errata.field]]` or
-                    # `[[errata.flags]]` corrects would make the two occurrences of
-                    # one variable disagree.
+                    # copying an original a checked `[[errata.field]]` corrects
+                    # would make the two occurrences of one variable disagree.
+                    # (`[[errata.flags]]` is SCB-only, and so never meets a carry.)
                     corrected: dict[str, set[Any]] = defaultdict(set)
-                    for other in (*register.errata.field, *register.errata.flags):
+                    for other, refs in checked_corrections:
                         if (other.variable, other.variant, other.column) != (
                             entry.variable,
                             entry.variant,
                             entry.column,
-                        ):
+                        ) or record_ref(donor) not in refs:
                             continue
-                        peers = _select_occurrence_correction(register, other, family)
-                        if record_ref(donor) not in {
-                            record_ref(r) for r in peers
-                        } or not _occurrence_correction_matches(other, peers):
-                            continue
-                        if isinstance(other, ErrataFlagsEntry):
-                            for name, value in (
-                                ("identifier", other.is_identifier),
-                                ("sensitivity", other.is_sensitive),
-                            ):
-                                if getattr(donor.fields, name) is None:
-                                    corrected[name].add(value)
-                        else:
-                            corrected[other.field].add(other.value)
+                        corrected[other.field].add(other.value)
                     # simplify: a routed SOS token, competing corrections or a
                     # correction family the carry does not replay refuse the carry
                     # instead of resolving them; route the carry and reuse the
@@ -6274,7 +6266,13 @@ def _compile_provider_columns(
             None,
         )
         blocker = None
-        if not on_variant:
+        if any(
+            route.deldatamangd == entry.variant for route in register.identity.route
+        ):
+            # simplify: a routed token is refused rather than resolved to its
+            # destination; route the mint if a held column needs one.
+            blocker = "the variant is routed ([[identity.route]]); name its destination"
+        elif not on_variant:
             blocker = "no source records on the named variant"
         elif accepted is None:
             blocker = "declared column has no tracked slug"

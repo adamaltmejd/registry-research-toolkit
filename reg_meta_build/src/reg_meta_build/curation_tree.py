@@ -2556,12 +2556,12 @@ def _validate_register_scope(entry: RegisterCuration, file: str) -> None:
                 )
             if (
                 isinstance(row, ErrataOccurrenceCarryEntry)
-                and identity.provider == "scb"
+                and identity.provider != "sos"
             ):
                 raise curation_error(
                     _REGISTER_INVALID,
-                    f"{file} [[{table}]] entry {index}: an SCB register states a same-name delivery with [[errata.delivered]].",
-                    "Name the delivered editions in [[errata.delivered]]; a carry is for providers without named editions.",
+                    f"{file} [[{table}]] entry {index}: a carry is for SOS registers; an SCB register states a same-name delivery with [[errata.delivered]].",
+                    "Name SCB's delivered editions in [[errata.delivered]]. A thin provider dates its columns by period scope, which a carry does not copy.",
                 )
             if (
                 isinstance(

@@ -4,7 +4,7 @@
       "table": "issues",
       "where": {
         "locator": {
-          "contains": "#/errata.occurrence_carry/"
+          "contains": "/syc.toml#/errata."
         }
       },
       "fields": [
@@ -12,6 +12,10 @@
         "locator"
       ],
       "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.column/1"
+        ],
         [
           "stale_curation_entry",
           "curation/registers/sos/syc.toml#/errata.occurrence_carry/1"
