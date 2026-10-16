@@ -32,16 +32,19 @@ would commit: tracked files, uncommitted edits included, and untracked files
 `.gitignore` does not exclude (a new module the code imports), but not ignored junk
 (`.DS_Store`, build output). The native extension sources are the uv `cache-keys` of
 `crates/reg-core-py` (`keyed_cache.NATIVE_SOURCES`, read by
-`reg_meta_build.native_sources`), less their documentation (`native_doc`); since the extension is compiled, every key also holds
-`rustc -V`, run from the repository root.
+`reg_meta_build.native_sources`), less their documentation (`native_doc`). Since the
+extension is compiled, every key also holds the digests of the `reg_core_py` package
+files the project environment imports (`resolve_code.native_digests`, reported by the
+probe): the extension the build loads, not the toolchain `PATH` selects, which need
+not have built it (#1650). An extension rebuilt to the same bytes keeps every key.
 
 Prepare key: the raw bundle commit, `catalog-bundle.json` digest and the bundle's path
 in its repository (the manifest records it); the content of every file in the code
 boundary (`prepare_code_files`: the builder's own static import walk from the
 `prepare-sources` entry point, which the probe runs, less the comparison-only modules
 it reaches (`PREPARE_UNKEYED`), plus `uv.lock`, and the native extension sources
-because a walked module imports `reg_core_py`); the Python, SQLite and Rust toolchain
-versions. A release's version bumps leave it unchanged (`prepare_code`): a walked
+because a walked module imports `reg_core_py`); the Python and SQLite
+versions and the loaded extension. A release's version bumps leave it unchanged (`prepare_code`): a walked
 file's `__version__` value is normalized as the resolve fingerprint does, and
 `uv.lock` and `Cargo.lock` leave out the workspace members' own versions; a
 third-party pin still moves it. A prepare entry is an index record (prepared path and
@@ -58,8 +61,8 @@ record must pass the same lookup check.
 Build key: the raw content of `reg_meta_build/src`, `uv.lock` and the native extension
 sources (a build may record versions); the builder's own `curation_tree_sha256` of the
 selected curation tree; the prepared commit and manifest digest; the mode and the
-`--registers` scopes as a sorted set (the builder selects by set); the Python, SQLite
-and Rust toolchain versions; and for a publishable build the checkout's HEAD, which
+`--registers` scopes as a sorted set (the builder selects by set); the Python and SQLite
+versions and the loaded extension; and for a publishable build the checkout's HEAD, which
 the database records.
 Every build lookup, hit or miss, first runs the admission checks the builder runs
 before it resolves anything (the prepared tree at the pinned commit and, for a
@@ -76,8 +79,8 @@ the static import closure of `pipeline`, the `reg_core_py` package files and the
 Python version, reported by the probe), `uv.lock` (third-party versions, which that
 fingerprint leaves out; `lock_sha256` leaves out the workspace members' own
 versions), the `curation_tree_sha256`, the prepared commit and manifest
-digest, the `--registers` scopes as a sorted set, and the Python, SQLite and
-Rust toolchain versions; never HEAD (`materialize-db` stamps the running commit) and
+digest, the `--registers` scopes as a sorted set, and the Python and SQLite
+versions and the loaded extension; never HEAD (`materialize-db` stamps the running commit) and
 never the mode: `materialize-db` places a bundle of either mode in the requested one,
 so the release flow's strict build reuses its diagnostic candidate's resolution. A
 resolve entry holds the `bundle` a full miss wrote with `build-db --resolved-out`; it
@@ -232,6 +235,8 @@ for package in ("reg_meta_build",):
             f"{root}; check PYTHONPATH and $REG_REAL_SEED_PYTHON"
         )}))
         sys.exit(0)
+from reg_meta_build.resolve_code import native_digests
+facts["reg_core_py"] = native_digests()
 if request.get("curation"):
     from reg_meta_build.curation_compile import tree_sha256
     facts["curation_tree_sha256"] = tree_sha256(Path(request["curation"]))
@@ -325,20 +330,6 @@ def probe(**request) -> dict:
     if error := facts.get("environment_error"):
         sys.exit(f"real-seed-cache: {error}")
     return facts
-
-
-def rustc_version() -> str:
-    """`rustc -V` from the repository root, which picks the toolchain that builds
-    `reg_core_py`."""
-    try:
-        return subprocess.run(
-            ["rustc", "-V"], cwd=ROOT, capture_output=True, text=True, check=True
-        ).stdout.strip()
-    except (OSError, subprocess.CalledProcessError) as exc:
-        sys.exit(
-            f"real-seed-cache: `rustc -V` failed ({exc}); the keys need the Rust "
-            "toolchain that builds reg_core_py on PATH"
-        )
 
 
 def git(directory: Path, *args: str) -> str:
@@ -491,7 +482,7 @@ def prepare_fields(args: argparse.Namespace) -> dict:
         "bundle_manifest_sha256": args.input_manifest_sha256,
         "bundle_path": git(Path(args.input_bundle), "rev-parse", "--show-prefix"),
         "code": prepare_code(facts.pop("prepare_code")),
-        "runtime": {**facts, "rustc": rustc_version()},
+        "runtime": facts,
     }
 
 
@@ -766,7 +757,7 @@ def build_fields(args: argparse.Namespace) -> tuple[dict, dict]:
         "prepared_commit": args.input_commit,
         "prepared_manifest_sha256": args.input_manifest_sha256,
         "curation_tree_sha256": facts.pop("curation_tree_sha256"),
-        "runtime": {**facts, "rustc": rustc_version()},
+        "runtime": facts,
     }
     # No HEAD: `materialize-db` stamps the running builder's commit, so a bundle
     # serves every commit whose resolve code is the same. No mode: it places a
