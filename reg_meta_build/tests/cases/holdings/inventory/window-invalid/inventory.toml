@@ -1,0 +1,123 @@
+version = 1
+steward = "swecov"
+
+# Valid: the key column maps the old variant up to 2016 and the new one from
+# 2018, with no delivery in 2017; the old field maps the old variant only.
+[[table]]
+id = "Good"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/id"
+representation = "Id"
+window = { from = 2015, to = 2016 }
+[[table.column.mapping]]
+register_variant = "scb/example/new"
+variable = "scb/example/id"
+representation = "Id"
+window = { from = 2018, to = 2019 }
+[[table.column]]
+name = "OldField"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/oldfield"
+representation = "OldField"
+window = { from = 2015, to = 2016 }
+
+# A window reaching outside the table's edition.
+[[table]]
+id = "Outside"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "OldField"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/oldfield"
+representation = "OldField"
+window = { from = 2014, to = 2016 }
+
+# A window across the gap of an interrupted edition: not inside one segment.
+[[table]]
+id = "Spanning"
+edition = [2015, 2017]
+[[table.column]]
+name = "OldField"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/oldfield"
+representation = "OldField"
+window = { from = 2015, to = 2017 }
+
+# The key column's windows on two variants overlap in 2017: admitted, as the
+# same mappings without windows are.
+[[table]]
+id = "Overlap"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/id"
+representation = "Id"
+window = { from = 2015, to = 2017 }
+[[table.column.mapping]]
+register_variant = "scb/example/new"
+variable = "scb/example/id"
+representation = "Id"
+window = { from = 2017, to = 2019 }
+
+# A windowed coordinate mapped again in its column, under another representation.
+[[table]]
+id = "Repeated"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/id"
+representation = "Id"
+window = { from = 2015, to = 2016 }
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/id"
+representation = "LopNr"
+
+# An inverted window.
+[[table]]
+id = "Inverted"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "OldField"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/oldfield"
+representation = "OldField"
+window = { from = 2017, to = 2016 }
+
+# A window on a member mapping.
+[[table]]
+id = "Member"
+edition = 2018
+[[table.column]]
+name = "Lon_2018"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/lon"
+representation = "Lon"
+member = { year = 2018 }
+window = 2018
+
+# A window in a year-independent table.
+[[table]]
+id = "Independent"
+edition = "_default"
+period_scope = "year_independent"
+[[table.column]]
+name = "Kon"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/kon"
+representation = "Kon"
+window = 2016

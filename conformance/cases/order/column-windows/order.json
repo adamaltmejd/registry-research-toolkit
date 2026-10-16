@@ -1,0 +1,113 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Id",
+        "variable": "scb/example/id",
+        "variant": "old"
+      },
+      "physical": {
+        "column": "Id",
+        "edition": "2015..2019",
+        "table": "Combined"
+      },
+      "requested_period": "2015..2016",
+      "source": "Old"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Id",
+        "variable": "scb/example/id",
+        "variant": "old"
+      },
+      "physical": {
+        "column": "Id",
+        "edition": "2017..2019",
+        "table": "Later"
+      },
+      "requested_period": "2017..2019",
+      "source": "Old"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "OldField",
+        "variable": "scb/example/oldfield",
+        "variant": "old"
+      },
+      "physical": {
+        "column": "OldField",
+        "edition": "2015..2019",
+        "table": "Combined"
+      },
+      "requested_period": "2015..2016",
+      "source": "Old"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "OldField",
+        "variable": "scb/example/oldfield",
+        "variant": "old"
+      },
+      "physical": {
+        "column": "OldField",
+        "edition": "2017..2019",
+        "table": "Later"
+      },
+      "requested_period": "2017..2019",
+      "source": "Old"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Id",
+        "variable": "scb/example/id",
+        "variant": "new"
+      },
+      "physical": {
+        "column": "Id",
+        "edition": "2015..2019",
+        "table": "Combined"
+      },
+      "requested_period": "2018..2019",
+      "source": "New"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "NewField",
+        "variable": "scb/example/newfield",
+        "variant": "new"
+      },
+      "physical": {
+        "column": "NewField",
+        "edition": "2015..2019",
+        "table": "Combined"
+      },
+      "requested_period": "2018..2019",
+      "source": "New"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "f120a5c8517ff3424fa45b81fd6bd5de63637b799d53edefb45789ac376b3504",
+    "catalog_schema_version": "12.0.0",
+    "mode": "steward_holdings",
+    "project_hash": "2cba8558b2326f545ddb9cacf38996a75622299344c2be544da40bb8f08647c7",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

@@ -20,9 +20,10 @@ pub(crate) struct Narrow<'a> {
 }
 
 /// A held mapping's bounds over its table's `holding_period` row `hp`: a year or
-/// month pivot member holds only its own period, which lies inside the edition.
-pub(crate) const HELD_LO: &str = "COALESCE(hm.member_lo, hp.lo)";
-pub(crate) const HELD_HI: &str = "COALESCE(hm.member_hi, hp.hi)";
+/// month pivot member, or a column window (#1645), holds only its own period, which
+/// lies inside one segment of the edition.
+pub(crate) const HELD_LO: &str = "COALESCE(hm.member_lo, hm.window_lo, hp.lo)";
+pub(crate) const HELD_HI: &str = "COALESCE(hm.member_hi, hm.window_hi, hp.hi)";
 
 fn held(source: &str, anchor: &str, narrow: Narrow) -> String {
     let mut sql = format!(

@@ -546,6 +546,20 @@ def test_inventory_refuses_case_only_twins_without_physical_or_representative(
 
 
 _THIRD_VARIANT = ("historical", "current", "independent")
+# Another variable delivering on `_default` over these dates, in this column.
+_COMPETITOR = {
+    "competing": ("2018-01-01", "2018-12-31", "Lopnr"),
+    "window-outside": ("2018-10-01", "2018-10-31", "Lopnr"),
+    "window-inside": ("2018-09-01", "2018-10-31", "Physical"),
+    "window-inside-renamed": ("2018-09-01", "2018-10-31", "Lopnr"),
+    "plain-beside-window-competing": ("2018-02-01", "2018-03-31", "Lopnr"),
+}
+_NOV_DEC = {"from": "2018-11", "to": "2018-12"}
+# Both variants deliver through 2018; one mapping is plain, the other windowed.
+_MIXED = {
+    "plain-beside-window": (None, _NOV_DEC),
+    "plain-beside-window-competing": (None, _NOV_DEC),
+}
 
 
 @pytest.mark.parametrize(
@@ -558,6 +572,17 @@ _THIRD_VARIANT = ("historical", "current", "independent")
         ("2018-10-01", "independent", None),
         ("2018-10-01", "current", "ambiguous_delivered_owners"),
         ("2018-11-01", None, "union_mapping_gap"),
+        ("2018-11-01", "windows", None),
+        ("2018-11-01", "window-outside", None),
+        ("2018-11-01", "window-inside", "ambiguous_delivered_owners"),
+        ("2018-11-01", "window-inside-renamed", "ambiguous_delivered_owners"),
+        ("2018-01-01", "plain-beside-window", None),
+        (
+            "2018-01-01",
+            "plain-beside-window-competing",
+            "ambiguous_delivered_owners",
+        ),
+        ("2018-11-01", "wide-window", "stale_declared_mapping_target"),
         ("2018-06-01", None, "union_mapping_overlap"),
     ],
 )
@@ -582,9 +607,26 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
     still delivering in 2018 competes and is refused. Fails if a partial mapping
     is still refused alone (the tiled case exits as stale), if the whole-edition
     owner check later drops the union records (a single-year edition is the one
-    that check assesses), if the leftover spelling, the historical owner or the year-independent one sinks
-    the union, if a competing or current owner is admitted, or if the tiling check
-    misses a gap or an overlap (those cases map)."""
+    that check assesses), if the leftover spelling, the historical owner or the
+    year-independent one sinks the union, if a competing or current owner is admitted, or if the tiling check
+    misses a gap or an overlap (those cases map). With a column `window` on each
+    mapping (#1645), the same gap maps: each owner is checked against its own
+    window only, the windows are emitted, and October 2018 is stated as not
+    delivered; a window reaching October, before its owner starts, is refused.
+    Another owner on `_default` competes with its January–September window only
+    there: one delivering in October alone is irrelevant, one reaching September
+    is refused, whether it delivers the physical name or the representation of a
+    renamed column. A plain `_default` mapping beside a windowed `efter` one
+    decides its own variant over the edition: with both variants delivering
+    through 2018, both map and neither owner competes with the other, while
+    another owner of the representation on `_default` in February–March competes
+    with the plain mapping of the renamed column and is refused. Fails if a
+    windowed mapping is checked against the edition or another mapping's window,
+    if its coverage or competitor check is not clipped to its window, if its
+    coverage check is skipped, if its window is not emitted, if the plain mapping
+    beside a window is judged a competitor or dropped, or if the plain mapping's
+    renamed-column competitor check is skipped or clipped to the other mapping's
+    window."""
     db = tmp_path / "split.db"
     shutil.copyfile(flavored_db, db)
     with sqlite3.connect(db) as conn:
@@ -597,7 +639,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
             "name) VALUES (920, 901, 'lopnr', 'lopnr', 'Lopnr')"
         )
         for variant, start, end in (
-            (902, "2002-01-01", "2018-09-30"),
+            (902, "2002-01-01", "9999-12-31" if beside in _MIXED else "2018-09-30"),
             (905, successor_from, "9999-12-31"),
         ):
             conn.execute(
@@ -639,7 +681,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
                 "UPDATE variable_state SET period_scope='year_independent', "
                 "valid_from=NULL, valid_to=NULL WHERE register_variant_id=906"
             )
-        if beside == "competing":
+        if beside in _COMPETITOR:
             conn.execute(
                 "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
                 "name) VALUES (921, 901, 'annan', 'annan', 'Annan')"
@@ -648,8 +690,8 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
                 "INSERT INTO variable_state (state_id, variable_id, "
                 "register_variant_id, valid_from, valid_to, data_type, "
                 "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
-                "+ 1 FROM variable_state), 921, 902, '2018-01-01', '2018-12-31', "
-                "'varchar', 'Lopnr')"
+                "+ 1 FROM variable_state), 921, 902, ?, ?, 'varchar', ?)",
+                _COMPETITOR[beside],
             )
     variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/efter")
     # A third admissible variant the decision does not map.
@@ -658,13 +700,47 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         if beside in _THIRD_VARIANT
         else variants
     )
-    physical = "Physical" if beside == "competing" else "Lopnr"
+    physical = (
+        "Physical"
+        if beside
+        in {
+            "competing",
+            "window-inside",
+            "window-inside-renamed",
+            "plain-beside-window-competing",
+        }
+        else "Lopnr"
+    )
+    windows = (
+        (
+            {"from": "2018-01", "to": "2018-09"},
+            {
+                "from": "2018-10" if beside == "wide-window" else "2018-11",
+                "to": "2018-12",
+            },
+        )
+        if beside
+        in {
+            "windows",
+            "wide-window",
+            "window-outside",
+            "window-inside",
+            "window-inside-renamed",
+        }
+        else _MIXED.get(beside, (None, None))
+    )
     decisions = (
         f'[[column]]\ncolumn = "{physical}"\nmappings = ['
         + ", ".join(
             f'{{ register_variant = "{variant}", '
-            'variable = "inera/bestallda-prover/lopnr", representation = "Lopnr" }'
-            for variant in variants
+            'variable = "inera/bestallda-prover/lopnr", representation = "Lopnr"'
+            + (
+                f', window = {{ from = "{window["from"]}", to = "{window["to"]}" }}'
+                if window
+                else ""
+            )
+            + " }"
+            for variant, window in zip(variants, windows, strict=True)
         )
         + ']\nreason = "one key across the variant split"\n'
     )
@@ -687,7 +763,14 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         assert (entry["column"], entry["code"]) == (physical, refusal)
         return
     (column,) = load_delivery_inventory(run() / "inventory.toml").tables[0].columns
-    assert sorted((m.register_variant, str(m.variable)) for m in column.mappings) == [
-        (variants[0], "inera/bestallda-prover/lopnr"),
-        (variants[1], "inera/bestallda-prover/lopnr"),
+    assert sorted(
+        (
+            m.register_variant,
+            str(m.variable),
+            m.window and {"from": m.window.from_, "to": m.window.to},
+        )
+        for m in column.mappings
+    ) == [
+        (variants[0], "inera/bestallda-prover/lopnr", windows[0]),
+        (variants[1], "inera/bestallda-prover/lopnr", windows[1]),
     ]

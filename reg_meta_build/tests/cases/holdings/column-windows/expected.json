@@ -1,0 +1,171 @@
+{
+  "tables": [
+    {
+      "physical_id": "Combined",
+      "scope": "intervals",
+      "edition": {
+        "from": 2015,
+        "to": 2019
+      },
+      "partition": null,
+      "projection": null,
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Later",
+      "scope": "intervals",
+      "edition": {
+        "from": 2017,
+        "to": 2019
+      },
+      "partition": null,
+      "projection": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Combined",
+      "lo": "2015-01-01",
+      "hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Later",
+      "lo": "2017-01-01",
+      "hi": "2019-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Combined",
+      "name": "Id",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Combined",
+      "name": "Legacy",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Combined",
+      "name": "NewField",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Combined",
+      "name": "OldField",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Later",
+      "name": "Id",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Later",
+      "name": "OldField",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Combined",
+      "name": "Id",
+      "register_variant": "scb/example/new",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "Id",
+      "register_variant": "scb/example/old",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "Legacy",
+      "register_variant": "scb/example/old",
+      "variable": "scb/example/legacy",
+      "representation_literal": "Legacy",
+      "representation_canonical": "Legacy"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "NewField",
+      "register_variant": "scb/example/new",
+      "variable": "scb/example/newfield",
+      "representation_literal": "NewField",
+      "representation_canonical": "NewField"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "OldField",
+      "register_variant": "scb/example/old",
+      "variable": "scb/example/oldfield",
+      "representation_literal": "OldField",
+      "representation_canonical": "OldField"
+    },
+    {
+      "physical_id": "Later",
+      "name": "Id",
+      "register_variant": "scb/example/old",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    },
+    {
+      "physical_id": "Later",
+      "name": "OldField",
+      "register_variant": "scb/example/old",
+      "variable": "scb/example/oldfield",
+      "representation_literal": "OldField",
+      "representation_canonical": "OldField"
+    }
+  ],
+  "windows": [
+    {
+      "physical_id": "Combined",
+      "name": "Id",
+      "variant": "new",
+      "member_lo": null,
+      "window_lo": "2018-01-01",
+      "window_hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "Id",
+      "variant": "old",
+      "member_lo": null,
+      "window_lo": "2015-01-01",
+      "window_hi": "2016-12-31"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "Legacy",
+      "variant": "old",
+      "member_lo": null,
+      "window_lo": "2015-01-01",
+      "window_hi": "2016-12-31"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "NewField",
+      "variant": "new",
+      "member_lo": null,
+      "window_lo": "2018-01-01",
+      "window_hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Combined",
+      "name": "OldField",
+      "variant": "old",
+      "member_lo": null,
+      "window_lo": "2015-01-01",
+      "window_hi": "2016-12-31"
+    }
+  ],
+  "warnings": []
+}
