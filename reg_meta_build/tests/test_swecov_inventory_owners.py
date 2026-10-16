@@ -543,3 +543,79 @@ def test_inventory_refuses_case_only_twins_without_physical_or_representative(
         "t_kolumn",
         "case_twin_without_physical_or_representative_literal",
     )
+
+
+@pytest.mark.parametrize(
+    ("successor_from", "refusal"),
+    [
+        ("2018-10-01", None),
+        ("2018-11-01", "union_mapping_gap"),
+        ("2018-06-01", "union_mapping_overlap"),
+    ],
+)
+def test_inventory_maps_a_column_by_the_union_of_split_variants(
+    tmp_path: Path, flavored_db: Path, successor_from: str, refusal: str | None
+) -> None:
+    """A column whose 2018 edition straddles a variant split (`_default` to
+    2018-09, `efter` from `successor_from`) maps once per variant when the two
+    reviewed mappings, each clipped to the edition, tile it (#1555, the FK
+    assistansersättning shape). A gap or an overlap between them goes to the scope
+    worklist and the run exits. Fails if a partial mapping is still refused alone
+    (the tiled case exits as stale), if the whole-edition owner check later drops
+    the union records (a single-year edition is the one that check assesses), or if the tiling check misses a gap or
+    an overlap (those cases map)."""
+    db = tmp_path / "split.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, "
+            "name, slug) VALUES (905, 901, 'Efter', 'efter')"
+        )
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
+            "name) VALUES (920, 901, 'lopnr', 'lopnr', 'Lopnr')"
+        )
+        for variant, start, end in (
+            (902, "2002-01-01", "2018-09-30"),
+            (905, successor_from, "9999-12-31"),
+        ):
+            conn.execute(
+                "INSERT INTO variable_state (state_id, variable_id, "
+                "register_variant_id, valid_from, valid_to, data_type, "
+                "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
+                "+ 1 FROM variable_state), 920, ?, ?, ?, 'varchar', 'Lopnr')",
+                (variant, start, end),
+            )
+    variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/efter")
+    decisions = (
+        '[[column]]\ncolumn = "Lopnr"\nmappings = ['
+        + ", ".join(
+            f'{{ register_variant = "{variant}", '
+            'variable = "inera/bestallda-prover/lopnr", representation = "Lopnr" }'
+            for variant in variants
+        )
+        + ']\nreason = "one key across the variant split"\n'
+    )
+
+    def run() -> Path:
+        return _run_inventory(
+            tmp_path,
+            db,
+            "T_split",
+            ["Lopnr"],
+            edition="2018",
+            variants=variants,
+            decisions=decisions,
+        )
+
+    if refusal is not None:
+        with pytest.raises(SystemExit, match="Inventory not replaced"):
+            run()
+        (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
+        assert (entry["column"], entry["code"]) == ("Lopnr", refusal)
+        return
+    (column,) = load_delivery_inventory(run() / "inventory.toml").tables[0].columns
+    assert sorted((m.register_variant, str(m.variable)) for m in column.mappings) == [
+        (variants[0], "inera/bestallda-prover/lopnr"),
+        (variants[1], "inera/bestallda-prover/lopnr"),
+    ]
