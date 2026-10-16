@@ -270,6 +270,23 @@
     {
       "table": "issues",
       "where": {
+        "case_id": "curation/registers/scb/warning.toml#/coding.warning/2/period/1"
+      },
+      "fields": [
+        "code",
+        "severity"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "error"
+        ]
+      ],
+      "note": "The reference_period entry (#1639) is guarded by the same digest, so the same drift stales it."
+    },
+    {
+      "table": "issues",
+      "where": {
         "case_id": "curation/registers/scb/warning.toml#/coding.warning/1/period/1"
       },
       "fields": [

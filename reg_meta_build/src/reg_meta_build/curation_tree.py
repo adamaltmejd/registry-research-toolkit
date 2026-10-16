@@ -1651,11 +1651,24 @@ class _CheckedCodingEntry(CodingEntry):
 
 
 class CodingWarningEntry(_CheckedCodingEntry):
-    """Retain source coding unchanged while exposing a guarded source conflict."""
+    """Retain source coding unchanged while exposing a guarded source conflict, or a
+    reviewed reading of the column's time reference (`reference_period`, alone)."""
 
     data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")]
     expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
-    fields: list[Literal["data_type", "coding"]] = Field(min_length=1)
+    fields: list[Literal["data_type", "coding", "reference_period"]] = Field(
+        min_length=1
+    )
+
+    @field_validator("fields")
+    @classmethod
+    def _one_meaning(cls, value: list[str]) -> list[str]:
+        if "reference_period" in value and len(value) > 1:
+            raise ValueError(
+                "a reference_period warning names no other field: a time-reference "
+                "reading and a source conflict are separate warnings"
+            )
+        return value
 
 
 class CodingUncodedEntry(_CheckedCodingEntry):
