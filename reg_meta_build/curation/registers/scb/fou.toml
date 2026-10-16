@@ -3149,7 +3149,7 @@ noted = "2026-10-16"
 variant = "foretagssektorn"
 column = "VIKT"
 data_type = "decimal"
-name = "Vikt enligt leverans (odokumenterad viktmetod)"
+name = "VIKT (enligt leverans)"
 definition = "Vikt i SWECOV:s FoU-tabeller för 1999, 2001, 2003, 2005, 2007, 2012 och 2014. SCB dokumenterar inte vilken vikt som levererats i dessa omgångar; viktmetoden är okänd och kan skilja sig mellan omgångarna. Från 2009 (2011 och 2013–2017 udda år) levereras i stället den bortfallsjusterade vikten ViktRev."
 data_warning = "Undocumented weight: SCB does not document which weight these rounds deliver; the weighting method may differ by round and is not confirmed as the nonresponse-adjusted ViktRev."
 is_sensitive = false
@@ -3163,7 +3163,7 @@ noted = "2026-10-16"
 variant = "foretagssektorn"
 column = "TYPE_INST"
 data_type = "text"
-name = "TYPE_INST (odokumenterad kod)"
+name = "TYPE_INST (enligt leverans)"
 definition = "Odokumenterad kolumn i SWECOV:s FoU-tabeller för 2019 och 2021. SCB dokumenterar ingen variabel eller kodlista för TYPE_INST; möjligen en markering av institut, som enligt SCBDOK 2011 undersöks totalt oavsett storlek, men det är inte bekräftat."
 data_warning = "Undocumented column: SCB documents no TYPE_INST variable or code list for these rounds, so its meaning and codes are unknown."
 is_sensitive = false
@@ -3177,7 +3177,7 @@ noted = "2026-10-16"
 variant = "foretagssektorn"
 column = "V601"
 data_type = "integer"
-name = "V601 1999 (odokumenterad)"
+name = "V601 (enligt leverans)"
 definition = "Odokumenterad kolumn i FTG_FOU_1999. Enligt kodmönstret skulle den motsvara v0601 (FoU-årsverken i Östergötland), men värdena ser ut som ett belopp och inte som årsverken, så betydelsen är inte fastställd."
 data_warning = "Undocumented column: by code pattern it would be FoU person-years in Östergötland (v0601), but its values look like an amount, so its meaning is not established."
 is_sensitive = false
@@ -17762,8 +17762,8 @@ slug = "vikt-enligt-leverans"
 
 [[variable]]
 native_id = "182.TYPE_INST"
-slug = "type-inst-odokumenterad"
+slug = "type-inst-enligt-leverans"
 
 [[variable]]
 native_id = "182.V601"
-slug = "v601-odokumenterad"
+slug = "v601-enligt-leverans"

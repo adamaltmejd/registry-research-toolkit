@@ -9,7 +9,7 @@ native_id = "195"
 variant = "sjukfranvaro-sjukloneperioden"
 column = "BAS"
 data_type = "text"
-name = "BAS (odokumenterad flagga)"
+name = "BAS (enligt leverans)"
 definition = "Odokumenterad kolumn: SCB dokumenterar ingen variabel BAS för KSju, och betydelsen är okänd. Kolumnen levereras bara i SWECOV:s tabeller för 2023 kvartal 3 och 4 och innehåller enbart värdet 1 eller saknat värde."
 data_warning = "Undocumented column: SCB documents no BAS variable for KSju, so its meaning is unknown. It is delivered only in the 2023-Q3 and 2023-Q4 tables."
 is_sensitive = true
@@ -1112,7 +1112,7 @@ slug = "aktuellt-antal-anstallda-foretag"
 
 [[variable]]
 native_id = "195.BAS"
-slug = "bas-odokumenterad-flagga"
+slug = "bas-enligt-leverans"
 
 [[identity.partition]]
 variable = "195.14"
