@@ -2603,10 +2603,6 @@ native_id = "182.V005"
 slug = "v005"  # source: kolumnnamn
 
 [[variable]]
-native_id = "182.V0205"
-slug = "v0205"  # source: kolumnnamn
-
-[[variable]]
 native_id = "182.V0400"
 slug = "v0400"  # source: kolumnnamn
 

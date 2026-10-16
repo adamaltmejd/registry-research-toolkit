@@ -19,7 +19,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2007", "2009", "2011", "2013", "2015"]
 source = "steward-holdings"
-evidence = "SWECOV holds V0401/v0401 in FTG_FOU_2007, 2009, 2011, 2013 and 2015. The FoU forms of these rounds have no row 0401; the item is row 040, column 1 (Andel (%), Driftkostnader = rows 200+203+201) of tablå B4 'Utgifter för egen FoU fördelade på produktgrupper' (SCBDOK uf0301_do_2007.pdf PDF pp. 21–24; uf0301_do_2011.pdf PDF p. 18; tablå B5 in uf0301_do_2013.pdf PDF p. 22 and uf0301_do_2015.pdf PDF p. 20; 2009 inferred from the identical 2007 and 2011 forms). SCB's Registerinformation documents the literal v0401 on this variant only in 2003 (edition 394), as native 4372 Driftkostnader för FoU avs. produkt 1 in 1000-tal kronor (KSEK); its second 2003 claim (native 3335) is withdrawn by errata.support. The 2007-2015 item is a percentage, a unit that contradicts the 2003 amount, so it is minted as its own variable rather than carried from 2003 (same-name rule exception for contradicting evidence; #1621). Flags follow the documented 2003 v0401 variables (non-sensitive, non-identifier). (#1603, #1509; Operator under maintainer delegation 2026-10-16, batch-e B2)."
+evidence = "SWECOV holds V0401/v0401 in FTG_FOU_2007, 2009, 2011, 2013 and 2015. The FoU forms of these rounds have no row 0401; the item is row 040, column 1 (Andel (%), Driftkostnader = rows 200+203+201) of tablå B4 'Utgifter för egen FoU fördelade på produktgrupper' (SCBDOK uf0301_do_2007.pdf PDF pp. 21–24; uf0301_do_2011.pdf PDF p. 18; tablå B5 in uf0301_do_2013.pdf PDF p. 22 and uf0301_do_2015.pdf PDF p. 20; 2009 inferred from the identical 2007 and 2011 forms). SCB's Registerinformation documents the literal v0401 on this variant only in 2003 (edition 394), as native 4372 Driftkostnader för FoU avs. produkt 1 in 1000-tal kronor (KSEK); its second 2003 claim (native 3335) is re-homed to v0205 by errata.field. The 2007-2015 item is a percentage, a unit that contradicts the 2003 amount, so it is minted as its own variable rather than carried from 2003 (same-name rule exception for contradicting evidence; #1621). Flags follow the documented 2003 v0401 variables (non-sensitive, non-identifier). (#1603, #1509; Operator under maintainer delegation 2026-10-16, batch-e B2)."
 noted = "2026-10-16"
 
 # #1603 batch-e (D1/D2): SWECOV-held FoU rounds outside SCB's documented biennial
@@ -3121,27 +3121,83 @@ versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 4372
 expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-evidence = "SWECOV holds V0401 in FTG_FOU_2001. SCB's Registerinformation documents v0401 on this variant only in 2003 (edition 394), as native 4372 Driftkostnader för FoU avs. produkt 1 in 1000-tal kronor (KSEK); the second 2003 claim (native 3335) is withdrawn by the errata.support entry below. The 2007-2015 V0401 is a percentage and is minted separately. Carried under the same-name rule from the nearest documented edition with an assumed-meaning warning; the 2001 form is not available online (SCBDOK 2007 p. 7: paper forms are in SCB's archive), so the unit is not confirmed (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1647)."
+evidence = "SWECOV holds V0401 in FTG_FOU_2001. SCB's Registerinformation documents v0401 on this variant only in 2003 (edition 394), as native 4372 Driftkostnader för FoU avs. produkt 1 in 1000-tal kronor (KSEK); the second 2003 claim (native 3335) is re-homed to v0205 by the errata.field entry below. The 2007-2015 V0401 is a percentage and is minted separately. Carried under the same-name rule from the nearest documented edition with an assumed-meaning warning; the 2001 form is not available online (SCBDOK 2007 p. 7: paper forms are in SCB's archive), so the unit is not confirmed (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1647)."
 noted = "2026-10-16"
 
 # #1603 batch-e: SCB's 2003 export attaches two natives to v0401. Native 4372 (product 1)
 # is the column; native 3335 (research share of the cost block, row "Därav driftkostnader
-# för forskning", i.e. v0205) is withdrawn from v0401. Re-homing 3335 on v0205 has no
-# curation surface yet (see the issue cited in the evidence).
-[[errata.support]]
-kind = "contradictory_question"
+# för forskning") belongs on v0205 and is re-homed there. SWECOV holds V0205 only in
+# FTG_FOU_2003, so the former name-only V0205 mint is retired with it.
+[[errata.field]]
 variable = "182.3335"
 variant = "182.373"
 column = "v0401"
 edition = "394"
-expected_fields = [{ name = "definition", status = "value", value = "Kostnad  för egen forskning (ej utvecklingsverksamhet)" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Driftkostnader för forskning" }, { name = "operational_definition", status = "absent" }]
+expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "v0401" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Kostnad  för egen forskning (ej utvecklingsverksamhet)" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "1000-tal kronor (KSEK)" }, { name = "name", status = "value", value = "Driftkostnader för forskning" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "value", value = "2003" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "absent" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
 expected_period_text = "2003"
 expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
 expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
-evidence = "SCB UF0302 Beskrivning av statistiken 2003 (FoU i företagssektorn, variable list) places 'Därav driftkostnader för forskning: Driftkostnader för grundforskning och tillämpad forskning' in the operating-cost block after Programvarurelaterad FoU (v0204) and before the 2004 budget item (v0206), i.e. column v0205; the product-group item ('FoU-verksamhetens inriktning på produktgrupper') is the separate block v040x/v0401/v0402 per product. SCB's own 2003 metadata names v0411-v0471 'Driftkostnader för FoU avs. produkt 2-8', and native 4372 'Driftkostnader för FoU avs. produkt 1' on v0401 at the same edition is the positive same-question authority. Native 3335's simultaneous v0401 claim contradicts that layout and is withdrawn from v0401; its re-home on v0205 is filed separately. (#1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+field = "column_name"
+value = "v0205"
+evidence = "SCB UF0302 Beskrivning av statistiken 2003 (FoU i företagssektorn, variable list) places 'Därav driftkostnader för forskning: Driftkostnader för grundforskning och tillämpad forskning' in the operating-cost block after Programvarurelaterad FoU (v0204) and before the 2004 budget item (v0206), i.e. column v0205; the product-group item ('FoU-verksamhetens inriktning på produktgrupper') is the separate block v040x/v0401/v0402 per product. SCB's own 2003 metadata names v0411-v0471 'Driftkostnader för FoU avs. produkt 2-8', and native 4372 'Driftkostnader för FoU avs. produkt 1' is the v0401 column at the same edition. Native 3335's v0401 column name contradicts that layout; this corrects its column name to v0205 for this edition only. Name, definition, unit, type and coding are unchanged. (#1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 noted = "2026-10-16"
-authority = { variable = "182.4372", variant = "182.373", column = "v0401", edition = "394", expected_fields = [{ name = "definition", status = "value", value = "Driftkostnader för FoU avs. produkt 1" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Driftkostnader för FoU avs. produkt 1" }, { name = "operational_definition", status = "absent" }], expected_period_text = "2003", expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }, expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }, evidence = "Native 4372 is the product-1 operating-cost column of the v040x/v04x1 product block (SCB UF0302 BS 2003; v0411-v0471 = produkt 2-8).", noted = "2026-10-16" }
-expected_coding_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+# #1603 batch-e: FoU columns with no documented same-name sibling, or with contradicting
+# evidence, become their own explicitly undocumented variables (Operator under maintainer
+# delegation 2026-10-16).
+[[errata.column]]
+variant = "foretagssektorn"
+column = "VIKT"
+data_type = "decimal"
+name = "Vikt enligt leverans (odokumenterad viktmetod)"
+definition = "Vikt i SWECOV:s FoU-tabeller för 1999, 2001, 2003, 2005, 2007, 2012 och 2014. SCB dokumenterar inte vilken vikt som levererats i dessa omgångar; viktmetoden är okänd och kan skilja sig mellan omgångarna. Från 2009 (2011 och 2013–2017 udda år) levereras i stället den bortfallsjusterade vikten ViktRev."
+data_warning = "Undocumented weight: SCB does not document which weight these rounds deliver; the weighting method may differ by round and is not confirmed as the nonresponse-adjusted ViktRev."
+is_sensitive = false
+is_identifier = false
+versions = ["1999", "2001", "2003", "2005", "2007", "2012", "2014"]
+source = "steward-holdings"
+evidence = "SWECOV holds VIKT in FTG_FOU_1999-2007 and Vikt in FTG_FOU_2012/2014 (storage float). SCBDOK documents the nonresponse-adjusted weight N_h/m_h (ViktRev) only from 2009/2011 on; 2003 documents three weights (urvalsvikt, viktU, ViktRev) without saying which VIKT is; SCB publishes no SCBDOK for 2003/2005; SCBDOK 2007 p. 75 is internally inconsistent; 2012/2014 are off-year forecast rounds with no documentation. Minted as its own undocumented variable rather than viktrev (#1603 batch-e, #1509; Operator under maintainer delegation 2026-10-16; supersedes the 9b hold)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "TYPE_INST"
+data_type = "text"
+name = "TYPE_INST (odokumenterad kod)"
+definition = "Odokumenterad kolumn i SWECOV:s FoU-tabeller för 2019 och 2021. SCB dokumenterar ingen variabel eller kodlista för TYPE_INST; möjligen en markering av institut, som enligt SCBDOK 2011 undersöks totalt oavsett storlek, men det är inte bekräftat."
+data_warning = "Undocumented column: SCB documents no TYPE_INST variable or code list for these rounds, so its meaning and codes are unknown."
+is_sensitive = false
+is_identifier = false
+versions = ["2019", "2021"]
+source = "steward-holdings"
+evidence = "SWECOV holds TYPE_INST in FTG_FOU_2019 and FTG_FOU_2021 (storage varchar(4)). Neither SCB's Registerinformation export nor the public UF0301 documentation names it. No code list is asserted (#1603 batch-e, #1509; Operator under maintainer delegation 2026-10-16)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "V601"
+data_type = "integer"
+name = "V601 1999 (odokumenterad)"
+definition = "Odokumenterad kolumn i FTG_FOU_1999. Enligt kodmönstret skulle den motsvara v0601 (FoU-årsverken i Östergötland), men värdena ser ut som ett belopp och inte som årsverken, så betydelsen är inte fastställd."
+data_warning = "Undocumented column: by code pattern it would be FoU person-years in Östergötland (v0601), but its values look like an amount, so its meaning is not established."
+is_sensitive = false
+is_identifier = false
+versions = ["1999"]
+source = "steward-holdings"
+evidence = "SWECOV holds V601 in FTG_FOU_1999 (storage int). The 1999 form is not available online (SCBDOK 2007 p. 7: paper forms are in SCB's archive). An aggregate check on MONA, reported as a conclusion only, found values that look like an amount, not person-years, which contradicts the v0601 reading, so this is minted as its own variable rather than carried (#1603 batch-e, #1509; Operator under maintainer delegation 2026-10-16)."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no 1999 FoU Företagssektorn round. The meaning is assumed from SCB's 2003 documentation of native 3331 (row 201, övriga driftkostnader for own R&D), which SWECOV delivers under the same spelling V201 from 2005; it is not confirmed for 1999."
+variant = "foretagssektorn"
+column = "v0201"
+data_type = "text"
+versions = ["1999"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V201 in FTG_FOU_1999, the same spelling it holds for 2005-2009, where SCBDOK identifies row 201 as övriga driftkostnader for own R&D (native 3331, scb/fou/v0201). The 1999 form is not available online. Carried under the same-name rule from the nearest documented edition with an assumed-meaning warning (#1603 batch-e, #1509; Operator under maintainer delegation 2026-10-16)."
+noted = "2026-10-16"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 3331
 
 # SWECOV existing-register holdings for scb/fou use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in
@@ -7256,17 +7312,6 @@ column = "V005"
 data_type = "text"
 name = "V005"
 definition = "V005"
-holdings_period = "1997-2021"
-source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
-noted = "2026-06-14"
-
-[[errata.column]]
-variant = "foretagssektorn"
-column = "V0205"
-data_type = "integer"
-name = "V0205"
-definition = "V0205"
 holdings_period = "1997-2021"
 source = "steward-holdings"
 evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
@@ -17709,3 +17754,16 @@ slug = "weight"
 [[variable]]
 native_id = "182.SIZE_CLASS"
 slug = "size-class"
+
+
+[[variable]]
+native_id = "182.VIKT"
+slug = "vikt-enligt-leverans"
+
+[[variable]]
+native_id = "182.TYPE_INST"
+slug = "type-inst-odokumenterad"
+
+[[variable]]
+native_id = "182.V601"
+slug = "v601-odokumenterad"
