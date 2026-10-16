@@ -443,7 +443,7 @@
         "co51"
       ],
       "label_en": "Consultants or private laboratories — Sweden",
-      "definition_en": "Cooperation with consultants or private laboratories in Sweden.",
+      "definition_en": "Cooperation with consultants or private laboratories in Sweden. The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -463,7 +463,7 @@
         "co52"
       ],
       "label_en": "Consultants or private laboratories — Other Europe",
-      "definition_en": "Cooperation with consultants or private laboratories elsewhere in Europe.",
+      "definition_en": "Cooperation with consultants or private laboratories elsewhere in Europe. The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -483,7 +483,7 @@
         "co53"
       ],
       "label_en": "Consultants or private laboratories — USA",
-      "definition_en": "Cooperation with consultants or private laboratories in the USA.",
+      "definition_en": "Cooperation with consultants or private laboratories in the USA. The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -503,7 +503,7 @@
         "co54"
       ],
       "label_en": "Consultants or private laboratories — China or India",
-      "definition_en": "Cooperation with consultants or private laboratories in China or India.",
+      "definition_en": "Cooperation with consultants or private laboratories in China or India. The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -523,7 +523,7 @@
         "co55"
       ],
       "label_en": "Consultants or private laboratories — Other countries",
-      "definition_en": "Cooperation with consultants or private laboratories in other countries.",
+      "definition_en": "Cooperation with consultants or private laboratories in other countries. The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
