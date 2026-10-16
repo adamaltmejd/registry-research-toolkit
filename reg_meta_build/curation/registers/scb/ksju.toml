@@ -2006,12 +2006,13 @@ noted = "2026-10-16"
 [[errata.delivered]]
 variant = "sjukfranvaro-sjukloneperioden"
 column = "fallangd"
+measurement_unit = "Dagar"
 data_type = "decimal"
 versions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
 upstream = "additional-physical-column-in-version"
 native_variable_id = 8152
 expected_evidence_sha256 = "f49e4cfd75001a580aab81373aa0912f0f4b423c8efd9b07288cccc4c4c94d86"
-evidence = "SWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+evidence = "SWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
 noted = "2026-10-15"
 
 [[errata.delivered]]
