@@ -11,14 +11,15 @@ upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "095b5bc0417d1710935159535a90d6b769d00dc8fdacb9fb03a2b97b7196514d"
 data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
 evidence = "SWECOV holds Kommun in GDB_Skolor2023 and GDB_Skolor2024, the 2024-01-01 and 2025-01-01 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents Kommun (VarId 36) in every adresser-fastigheter version 2018-01-01..2023-01-01 and none after. (#1603)"
-noted = "2026-09-12"
+noted = "2026-10-16"
 
 # Y-113..Y-120 GDB evidence comes from the SWECOV inventory and SCB's
 # 2026-03-09 Registerinformation export.
-# ── scb/gdb — adresser-fastigheter is documented 2018-01-01..2023-01-01;
-# SWECOV holds GDB_Skolor2024 with Kommun. 2024 starts after the variant's newest
-# documented year, so the era guard admits it; the clone source is 2023-01-01
-# (regver 18792), whose Kommun row (VarId 36, varchar) exists.
+# ── scb/gdb — adresser-fastigheter is documented 2018-01-01..2023-01-01.
+# Under the GDB year-end rule SWECOV's GDB_Skolor2023 and GDB_Skolor2024 hold
+# Kommun for the 2024-01-01 and 2025-01-01 versions. Both start after the
+# variant's newest documented version, so the era guard admits them; that
+# version, 2023-01-01 (regver 18792), has the Kommun row (VarId 36, varchar).
 
 [[errata.version]]
 variant = "adresser-fastigheter"

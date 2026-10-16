@@ -1066,51 +1066,6 @@ evidence = "Complete current affected native families, actual same-register prim
 expected_evidence_sha256 = "11906c4ea081741b5a67fd8a0939591e75d0279ca044690721bc64d8f124c21d"
 
 
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/ksju/naringsgren-ng1-2007"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3776\",\"variable:4027\",\"member:231606\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3777\",\"variable:4027\",\"member:231636\"]}"]
-fields = ["is_sensitive", "is_identifier"]
-reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
-evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
-expected_evidence_sha256 = "bb335df210b461c6afbc6047e5866116686962feb1b61f6d3d5f90923eaeab72"
-
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/ksju/naringsgren-ngs1-2002-2008"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1636\",\"variable:4027\",\"member:116717\"]}"]
-fields = ["is_sensitive", "is_identifier"]
-reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
-evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
-expected_evidence_sha256 = "e16ccab48316e667375b55110ed811ef7a34dc4d62573d7b7c3e2ff47abe1cc3"
-
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/ksju/naringsgren-ngs1-2006"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
-fields = ["is_sensitive", "is_identifier"]
-reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
-evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
-expected_evidence_sha256 = "e61322890c76d99ea7249e1e74b5ca772ad167babb84a2abcbdac7120bfafcf3"
-
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/ksju/naringsgren-ngs1-2007"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:1586\",\"variable:4027\",\"member:114095\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3776\",\"variable:4027\",\"member:231606\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:3777\",\"variable:4027\",\"member:231636\"]}"]
-fields = ["is_sensitive", "is_identifier"]
-reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
-evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
-expected_evidence_sha256 = "e2cfa3e92586ee55942968e228b011222007a79aebde400f2ac15ee8927870d5"
-
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/ksju/naringsgren-sni2-2006"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
-fields = ["is_sensitive", "is_identifier"]
-reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
-evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
-expected_evidence_sha256 = "e61322890c76d99ea7249e1e74b5ca772ad167babb84a2abcbdac7120bfafcf3"
-
 [[variable]]
 native_id = "195.49.astlan"
 slug = "lan-astlan"
@@ -1953,6 +1908,81 @@ noted = "2026-10-15"
 
 # ── #1603 B8/B9/D1: SWECOV KSju 2015–2023 ──
 
+
+[[errata.flags]]
+variable = "195.4027"
+variant = "195.275"
+column = "ngs1"
+edition = "563"
+expected_fields = [{ name = "definition", status = "value", value = "Klassificering av produktionsenhetens näringsgren/bransch." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Näringsgren" }, { name = "operational_definition", status = "absent" }, { name = "sensitivity", status = "absent" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+is_sensitive = true
+is_identifier = false
+evidence = "SCB states neither flag for scb/ksju/naringsgren-ngs1-2006 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+noted = "2026-10-16"
+
+[[errata.flags]]
+variable = "195.4027"
+variant = "195.275"
+column = "Sni2"
+edition = "563"
+expected_fields = [{ name = "definition", status = "value", value = "Klassificering av produktionsenhetens näringsgren/bransch." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Näringsgren" }, { name = "operational_definition", status = "absent" }, { name = "sensitivity", status = "absent" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+is_sensitive = true
+is_identifier = false
+evidence = "SCB states neither flag for scb/ksju/naringsgren-sni2-2006 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+noted = "2026-10-16"
+
+[[errata.flags]]
+variable = "195.4027"
+variant = "195.275"
+column = "NgS1"
+edition = "1586"
+expected_fields = [{ name = "definition", status = "value", value = "Klassificering av produktionsenhetens näringsgren/bransch." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Näringsgren" }, { name = "operational_definition", status = "absent" }, { name = "sensitivity", status = "absent" }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+is_sensitive = true
+is_identifier = false
+evidence = "SCB states neither flag for scb/ksju/naringsgren-ngs1-2007 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+noted = "2026-10-16"
+
+[[errata.flags]]
+variable = "195.4027"
+variant = "195.275"
+column = "NgS1_2002"
+edition = "1636"
+expected_fields = [{ name = "definition", status = "value", value = "Klassificering av produktionsenhetens näringsgren/bransch." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Näringsgren" }, { name = "operational_definition", status = "absent" }, { name = "sensitivity", status = "absent" }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+is_sensitive = true
+is_identifier = false
+evidence = "SCB states neither flag for scb/ksju/naringsgren-ngs1-2002-2008 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+noted = "2026-10-16"
+
+[[errata.flags]]
+variable = "195.4027"
+variant = "195.275"
+column = "NG1_2007"
+edition = "1636"
+expected_fields = [{ name = "definition", status = "value", value = "Klassificering av produktionsenhetens näringsgren/bransch." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Näringsgren" }, { name = "operational_definition", status = "absent" }, { name = "sensitivity", status = "absent" }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+is_sensitive = true
+is_identifier = false
+evidence = "SCB states neither flag for scb/ksju/naringsgren-ng1-2007 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+noted = "2026-10-16"
 [[errata.delivered]]
 variant = "sjukfranvaro-sjukloneperioden"
 column = "fallangd"

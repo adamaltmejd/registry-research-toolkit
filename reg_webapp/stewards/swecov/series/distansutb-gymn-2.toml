@@ -10,19 +10,19 @@ edition = "VT2020"
 
 [[column]]
 column = "F6HT20b"
-hold = { follow_up = "#1603", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
+hold = { follow_up = "#1640", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "F6HT20c"
-hold = { follow_up = "#1603", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
+hold = { follow_up = "#1640", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "F6VT21b"
-hold = { follow_up = "#1603", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
+hold = { follow_up = "#1640", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "F6VT21c"
-hold = { follow_up = "#1603", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
+hold = { follow_up = "#1640", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "PersonNr"
