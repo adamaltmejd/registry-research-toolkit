@@ -1115,6 +1115,30 @@ An explicitly open upper bound differs from an unknown period. Resolution can re
 known start and explicit open end; the writer uses `9999-12-31` as the storage sentinel.
 A literal source year 9999 is not dated evidence.
 
+### Slug curation
+
+Identifier variables take one leaf-slug family across all providers (maintainer rule
+2026-06-25; locked for SCB in #471/#747, extended to other providers in #760):
+
+- A subject person number (personnummer or samordningsnummer) is `personnr`, with a role
+  suffix where the source names one: `personnr-barn`, `personnr-mor`,
+  `personnr-partner`.
+- A column holding a person or an organisation number is `person-orgnr`, never
+  `peorgnr`. An organisation number is `orgnr`; a company-specific one
+  `orgnr-foretaget`.
+- The `lopnr-` prefix (`lopnr-personnr`, `lopnr-orgnr`) marks pseudonymisation and is
+  used only when the provider's metadata explicitly documents the column as
+  pseudonymised or de-identified (`pseudonymiser*`, `avidentifier*`). SCB metadata names
+  the conceptual column and never states this, so SCB slugs never take the prefix.
+- A column the source names as a löpnummer or pseudonummer (FK `Lopnr`, SoS
+  `Pseudonummer`) is not forced into the `personnr` family. It takes its own
+  `lopnr-<role>` slug (`lopnr-barn`, `lopnr-sokande`, `lopnr-hushall-ar`).
+
+No slug or name carries a documentation status. A steward-held column SCB does not
+document takes `<literal>-enligt-leverans` and the name `<literal> (enligt leverans)`;
+the warning, not the slug, says what is undocumented. An identifier key follows the
+forms above and takes no `-enligt-leverans` suffix.
+
 ### Occurrences and coding
 
 Occurrence reconciliation forms exact nonoverlapping column intervals. Conflicting
