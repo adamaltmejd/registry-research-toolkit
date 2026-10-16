@@ -889,7 +889,7 @@ column = "DeSO"
 periods = [["2018-01-01", "2018-01-01"], ["2019-01-01", "2019-01-01"], ["2020-01-01", "2020-01-01"], ["2021-01-01", "2021-01-01"], ["2022-01-01", "2022-01-01"], ["2023-01-01", "2023-01-01"]]
 fields = ["reference_period"]
 data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name. The workplace tables (GDB_Ast) are coded on year Y+1's municipality division."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "034cd01c859f9f85d06034ad4b676462bc3217677cf2e08efa5308766ad07f99"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
 
@@ -900,7 +900,7 @@ column = "Kommun"
 periods = [["2003-01-01", "2003-01-01"], ["2004-01-01", "2004-01-01"], ["2005-01-01", "2005-01-01"], ["2006-01-01", "2006-01-01"], ["2007-01-01", "2007-01-01"]]
 fields = ["reference_period"]
 data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "601412e798d8700d4e6b183114b48db96aa8ccf3b80f076b7019da5dca16172b"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
 
@@ -911,7 +911,7 @@ column = "kommun"
 periods = [["2008-01-01", "2008-01-01"], ["2009-01-01", "2009-01-01"], ["2010-01-01", "2010-01-01"], ["2011-01-01", "2011-01-01"], ["2012-01-01", "2012-01-01"], ["2013-01-01", "2013-01-01"], ["2014-01-01", "2014-01-01"], ["2015-01-01", "2015-01-01"]]
 fields = ["reference_period"]
 data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "89fcc66391c8f2288dc7e76c9d7896208cadb5e7ea716d67bad1a07b5cb76527"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
 
@@ -922,7 +922,7 @@ column = "KOMMUN"
 periods = [["2016-01-01", "2016-01-01"], ["2017-01-01", "2017-01-01"]]
 fields = ["reference_period"]
 data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3faab02e052ce68aecfcd2103967f3d4a402d858a05e5f007c10334d5adfa1a6"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
 
@@ -933,6 +933,6 @@ column = "Kommun"
 periods = [["2018-01-01", "2018-01-01"], ["2019-01-01", "2019-01-01"], ["2020-01-01", "2020-01-01"], ["2021-01-01", "2021-01-01"], ["2022-01-01", "2022-01-01"], ["2023-01-01", "2023-01-01"]]
 fields = ["reference_period"]
 data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "af767eb57c16910f0e869b336baaf03b7dda58ef9fb07d7d9441bac8160c11fb"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
