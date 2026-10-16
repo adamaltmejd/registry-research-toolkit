@@ -8,7 +8,7 @@ native_id = "182"
 # with their version lists unioned.
 
 # #1603 batch-e B2: V0401 in the 2007-2015 rounds is row 040 column 1 of the FoU form
-# (product group 1's share of FoU operating costs), not either 2003 variable on v0401.
+# (product group 1's share of FoU operating costs, %), not the 2003 v0401 amount (KSEK).
 [[errata.column]]
 variant = "foretagssektorn"
 column = "V0401"
@@ -19,7 +19,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2007", "2009", "2011", "2013", "2015"]
 source = "steward-holdings"
-evidence = "SWECOV holds V0401/v0401 in FTG_FOU_2007, 2009, 2011, 2013 and 2015. The FoU forms of these rounds have no row 0401; the item is row 040, column 1 (Andel (%), Driftkostnader = rows 200+203+201) of tablå B4 'Utgifter för egen FoU fördelade på produktgrupper' (SCBDOK uf0301_do_2007.pdf PDF pp. 21–24; uf0301_do_2011.pdf PDF p. 18; tablå B5 in uf0301_do_2013.pdf PDF p. 22 and uf0301_do_2015.pdf PDF p. 20; 2009 inferred from the identical 2007 and 2011 forms). SCB's Registerinformation documents the literal v0401 on this variant only in 2003, as two variables (Driftkostnader för forskning; Driftkostnader för FoU avs. produkt 1) whose unit is not confirmed, so the 2007-2015 item is minted as its own variable and never joins them (#1621). Flags follow the documented 2003 v0401 variables (non-sensitive, non-identifier). (#1603, #1509; Operator under maintainer delegation 2026-10-16, batch-e B2)."
+evidence = "SWECOV holds V0401/v0401 in FTG_FOU_2007, 2009, 2011, 2013 and 2015. The FoU forms of these rounds have no row 0401; the item is row 040, column 1 (Andel (%), Driftkostnader = rows 200+203+201) of tablå B4 'Utgifter för egen FoU fördelade på produktgrupper' (SCBDOK uf0301_do_2007.pdf PDF pp. 21–24; uf0301_do_2011.pdf PDF p. 18; tablå B5 in uf0301_do_2013.pdf PDF p. 22 and uf0301_do_2015.pdf PDF p. 20; 2009 inferred from the identical 2007 and 2011 forms). SCB's Registerinformation documents the literal v0401 on this variant only in 2003 (edition 394), as native 4372 Driftkostnader för FoU avs. produkt 1 in 1000-tal kronor (KSEK); its second 2003 claim (native 3335) is withdrawn by errata.support. The 2007-2015 item is a percentage, a unit that contradicts the 2003 amount, so it is minted as its own variable rather than carried from 2003 (same-name rule exception for contradicting evidence; #1621). Flags follow the documented 2003 v0401 variables (non-sensitive, non-identifier). (#1603, #1509; Operator under maintainer delegation 2026-10-16, batch-e B2)."
 noted = "2026-10-16"
 
 # #1603 batch-e (D1/D2): SWECOV-held FoU rounds outside SCB's documented biennial
@@ -950,6 +950,2198 @@ upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "a33ec552a5dfa8f9e98177e053b9eaaf0837028873c6a45b51b160f6e5bcfa7e"
 evidence = "SWECOV holds v1256 in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2003."
 noted = "2026-09-12"
+
+# ── #1603 batch-e: same-name carries for undocumented FoU rounds (Operator under maintainer delegation 2026-10-16) ──
+# Each entry carries the nearest documented edition's variable into rounds SCB does not document, with a data_warning.
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V001"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3320
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3320 (scb/fou/v001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V011 on FoU Företagssektorn for 1999, 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V011"
+versions = ["1999", "2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3321
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V011 in FTG_FOU_1999, FTG_FOU_2001; the same delivered name is documented on this variant as native 3321 (scb/fou/v011), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V012 on FoU Företagssektorn for 1999, 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V012"
+versions = ["1999", "2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3322
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V012 in FTG_FOU_1999, FTG_FOU_2001; the same delivered name is documented on this variant as native 3322 (scb/fou/v012), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V013 on FoU Företagssektorn for 1999, 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V013"
+versions = ["1999", "2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3323
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V013 in FTG_FOU_1999, FTG_FOU_2001; the same delivered name is documented on this variant as native 3323 (scb/fou/v013), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V014 on FoU Företagssektorn for 1999, 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V014"
+versions = ["1999", "2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3324
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V014 in FTG_FOU_1999, FTG_FOU_2001; the same delivered name is documented on this variant as native 3324 (scb/fou/v014), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V015 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V015"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3325
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V015 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3325 (scb/fou/v015), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V016 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V016"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3326
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V016 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3326 (scb/fou/v016), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V017 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V017"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3328
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V017 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3328 (scb/fou/v017), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0200 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0200"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 2951
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0200 in FTG_FOU_2001; the same delivered name is documented on this variant as native 2951 (scb/fou/arbetskraftskostnader), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0201 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0201"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3331
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0201 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3331 (scb/fou/v0201), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0202 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0202"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3332
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0202 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3332 (scb/fou/v0202), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0203 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0203"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3333
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0203 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3333 (scb/fou/v0203), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0204 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0204"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3334
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0204 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3334 (scb/fou/v0204), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V021 on FoU Företagssektorn for 1999, 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V021"
+versions = ["1999", "2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3338
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V021 in FTG_FOU_1999, FTG_FOU_2001; the same delivered name is documented on this variant as native 3338 (scb/fou/v021), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V022 on FoU Företagssektorn for 1999, 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V022"
+versions = ["1999", "2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3339
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V022 in FTG_FOU_1999, FTG_FOU_2001; the same delivered name is documented on this variant as native 3339 (scb/fou/v022), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V023 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V023"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3340
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V023 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3340 (scb/fou/v023), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V024 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V024"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3341
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V024 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3341 (scb/fou/v024), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V025 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V025"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3342
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V025 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3342 (scb/fou/v025), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V026 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V026"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3343
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V026 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3343 (scb/fou/v026), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V027 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V027"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3344
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V027 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3344 (scb/fou/v027), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0301 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0301"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3346
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0301 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3346 (scb/fou/v0301), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V031 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V031"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3348
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V031 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3348 (scb/fou/v031), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0311 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0311"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3349
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0311 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3349 (scb/fou/v0311), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V032 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V032"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3351
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V032 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3351 (scb/fou/v032), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0321 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0321"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3352
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0321 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3352 (scb/fou/v0321), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V033 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V033"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3354
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V033 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3354 (scb/fou/v033), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V034 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V034"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3355
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V034 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3355 (scb/fou/v034), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V035 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V035"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3356
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V035 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3356 (scb/fou/v035), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V036 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V036"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3357
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V036 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3357 (scb/fou/v036), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V037 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V037"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3358
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V037 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3358 (scb/fou/v037), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0402 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0402"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3425
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0402 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3425 (scb/fou/v0402), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V041 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V041"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3360
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V041 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3360 (scb/fou/v041), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0411 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0411"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3426
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0411 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3426 (scb/fou/v0411), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0412 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0412"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3427
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0412 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3427 (scb/fou/v0412), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V042 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V042"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3361
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V042 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3361 (scb/fou/v042), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0421 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0421"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3429
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0421 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3429 (scb/fou/v0421), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column v0422 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "v0422"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3430
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds v0422 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3430 (scb/fou/v0422), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V043 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V043"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3362
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V043 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3362 (scb/fou/v043), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0431 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0431"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3431
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0431 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3431 (scb/fou/v0431), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0432 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0432"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3432
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0432 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3432 (scb/fou/v0432), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V044 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V044"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3363
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V044 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3363 (scb/fou/v044), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0441 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0441"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3434
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0441 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3434 (scb/fou/v0441), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column v0442 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "v0442"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3435
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds v0442 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3435 (scb/fou/v0442), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V045 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V045"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3364
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V045 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3364 (scb/fou/v045), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0451 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0451"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3437
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0451 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3437 (scb/fou/v0451), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0452 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0452"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3438
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0452 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3438 (scb/fou/v0452), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V046 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V046"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3365
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V046 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3365 (scb/fou/v046), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0461 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0461"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3440
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0461 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3440 (scb/fou/v0461), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0462 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0462"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3640
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0462 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3640 (scb/fou/v0462), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V047 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V047"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3366
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V047 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3366 (scb/fou/v047), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0471 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0471"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3442
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0471 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3442 (scb/fou/v0471), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0472 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0472"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3443
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0472 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3443 (scb/fou/v0472), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0500 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0500"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3445
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0500 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3445 (scb/fou/syfte-framtagning-existerande-produkter), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0501 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0501"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3446
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0501 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3446 (scb/fou/syfte-framtagning-nya-produkter), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0502 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0502"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3447
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0502 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3447 (scb/fou/syfte-forbattring-existerande-produkter), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0503 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0503"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3448
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0503 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3448 (scb/fou/syfte-framtagning-nya-processer), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0504 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0504"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3449
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0504 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3449 (scb/fou/syfte-forbattring-existerande-processer), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0505 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0505"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3450
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0505 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3450 (scb/fou/syfte-allman-kunskapsuppbyggnad), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0506 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0506"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3451
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0506 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3451 (scb/fou/v0506), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0507 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0507"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3452
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0507 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3452 (scb/fou/v0507), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0508 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0508"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3453
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0508 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3453 (scb/fou/v0508), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0509 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0509"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3454
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0509 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3454 (scb/fou/v0509), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V051 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V051"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3368
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V051 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3368 (scb/fou/v051), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0510 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0510"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3455
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0510 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3455 (scb/fou/v0510), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0511 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0511"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3456
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0511 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3456 (scb/fou/v0511), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0512 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0512"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3457
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0512 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3457 (scb/fou/v0512), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0513 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0513"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3458
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0513 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3458 (scb/fou/v0513), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0514 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0514"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3459
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0514 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3459 (scb/fou/v0514), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0515 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0515"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3460
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0515 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3460 (scb/fou/v0515), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0516 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0516"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3461
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0516 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3461 (scb/fou/v0516), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0517 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0517"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3462
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0517 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3462 (scb/fou/v0517), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0518 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0518"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3463
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0518 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3463 (scb/fou/v0518), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0519 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0519"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3464
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0519 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3464 (scb/fou/v0519), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V052 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V052"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3369
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V052 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3369 (scb/fou/v052), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column v0520 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "v0520"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3465
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds v0520 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3465 (scb/fou/v0520), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0521 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0521"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3466
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0521 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3466 (scb/fou/v0521), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0522 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0522"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3467
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0522 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3467 (scb/fou/v0522), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0523 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0523"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3469
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0523 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3469 (scb/fou/v0523), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V053 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V053"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3370
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V053 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3370 (scb/fou/v053), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0531 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0531"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3470
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0531 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3470 (scb/fou/v0531), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0536 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0536"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3471
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0536 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3471 (scb/fou/v0536), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0537 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0537"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3472
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0537 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3472 (scb/fou/v0537), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0538 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0538"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3473
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0538 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3473 (scb/fou/v0538), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0539 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0539"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3474
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0539 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3474 (scb/fou/v0539), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V054 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V054"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3371
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V054 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3371 (scb/fou/v054), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0541 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0541"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3475
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0541 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3475 (scb/fou/v0541), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V055 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V055"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3372
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V055 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3372 (scb/fou/v055), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0551 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0551"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3476
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0551 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3476 (scb/fou/v0551), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0552 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0552"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3477
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0552 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3477 (scb/fou/v0552), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0554 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0554"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3478
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0554 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3478 (scb/fou/v0554), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0555 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0555"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3479
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0555 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3479 (scb/fou/v0555), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0556 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0556"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3480
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0556 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3480 (scb/fou/v0556), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0558 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0558"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3481
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0558 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3481 (scb/fou/v0558), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0559 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0559"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3482
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0559 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3482 (scb/fou/v0559), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V056 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V056"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3373
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V056 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3373 (scb/fou/v056), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0561 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0561"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3483
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0561 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3483 (scb/fou/v0561), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V057 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V057"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3374
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V057 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3374 (scb/fou/v057), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0571 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0571"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3488
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0571 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3488 (scb/fou/v0571), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0572 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0572"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3489
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0572 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3489 (scb/fou/v0572), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0581 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0581"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3490
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0581 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3490 (scb/fou/v0581), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0582 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0582"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3491
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0582 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3491 (scb/fou/v0582), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0591 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0591"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3492
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0591 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3492 (scb/fou/v0591), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0592 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0592"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3493
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0592 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3493 (scb/fou/v0592), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0601 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0601"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3494
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0601 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3494 (scb/fou/v0601), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0602 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0602"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3495
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0602 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3495 (scb/fou/v0602), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V061 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V061"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3376
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V061 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3376 (scb/fou/v061), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0611 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0611"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3496
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0611 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3496 (scb/fou/v0611), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0612 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0612"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3497
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0612 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3497 (scb/fou/v0612), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V062 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V062"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3377
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V062 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3377 (scb/fou/v062), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0621 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0621"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3498
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0621 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3498 (scb/fou/v0621), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0622 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0622"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3499
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0622 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3499 (scb/fou/v0622), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V063 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V063"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3378
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V063 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3378 (scb/fou/v063), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0631 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0631"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3500
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0631 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3500 (scb/fou/v0631), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0632 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0632"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3501
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0632 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3501 (scb/fou/v0632), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V064 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V064"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3379
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V064 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3379 (scb/fou/v064), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0641 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0641"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3502
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0641 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3502 (scb/fou/v0641), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0642 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0642"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3503
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0642 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3503 (scb/fou/v0642), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V065 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V065"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3380
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V065 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3380 (scb/fou/v065), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0651 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0651"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3504
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0651 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3504 (scb/fou/v0651), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0652 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0652"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3505
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0652 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3505 (scb/fou/v0652), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V066 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V066"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3381
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V066 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3381 (scb/fou/v066), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0661 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0661"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3506
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0661 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3506 (scb/fou/v0661), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0662 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0662"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3507
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0662 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3507 (scb/fou/v0662), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V067 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V067"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3382
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V067 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3382 (scb/fou/v067), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0671 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0671"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3508
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0671 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3508 (scb/fou/v0671), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0672 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0672"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3509
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0672 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3509 (scb/fou/v0672), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column v068 on FoU Företagssektorn for 2012, 2014. The meaning is assumed from SCB's 2015 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "v068"
+versions = ["2012", "2014"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3383
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds v068 in FTG_FOU_2012, FTG_FOU_2014; the same delivered name is documented on this variant as native 3383 (scb/fou/v068), nearest in 2015. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0681 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0681"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3510
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0681 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3510 (scb/fou/v0681), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0682 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0682"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3511
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0682 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3511 (scb/fou/v0682), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0691 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0691"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3512
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0691 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3512 (scb/fou/v0691), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0692 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0692"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3513
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0692 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3513 (scb/fou/v0692), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0701 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0701"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3514
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0701 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3514 (scb/fou/v0701), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0702 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0702"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3515
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0702 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3515 (scb/fou/v0702), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0711 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0711"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3516
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0711 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3516 (scb/fou/v0711), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0712 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0712"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3517
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0712 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3517 (scb/fou/v0712), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0721 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0721"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3518
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0721 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3518 (scb/fou/v0721), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0722 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0722"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3519
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0722 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3519 (scb/fou/v0722), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0731 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0731"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3520
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0731 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3520 (scb/fou/v0731), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0732 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0732"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3521
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0732 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3521 (scb/fou/v0732), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0741 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0741"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3522
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0741 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3522 (scb/fou/v0741), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0742 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0742"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3523
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0742 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3523 (scb/fou/v0742), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0751 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0751"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3524
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0751 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3524 (scb/fou/v0751), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0752 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0752"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3525
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0752 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3525 (scb/fou/v0752), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V076 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V076"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3384
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V076 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3384 (scb/fou/v076), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0761 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0761"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3526
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0761 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3526 (scb/fou/v0761), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0762 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0762"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3527
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0762 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3527 (scb/fou/v0762), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V077 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V077"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3385
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V077 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3385 (scb/fou/v077), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0771 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0771"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3528
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0771 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3528 (scb/fou/v0771), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0772 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0772"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3529
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0772 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3529 (scb/fou/v0772), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0781 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0781"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3530
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0781 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3530 (scb/fou/v0781), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V0782 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V0782"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3531
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0782 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3531 (scb/fou/v0782), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V080 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V080"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3386
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V080 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3386 (scb/fou/v080), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V081 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V081"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3387
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V081 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3387 (scb/fou/v081), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V082 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V082"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3388
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V082 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3388 (scb/fou/v082), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V083 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V083"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3389
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V083 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3389 (scb/fou/v083), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V084 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V084"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3390
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V084 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3390 (scb/fou/v084), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V085 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V085"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3391
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V085 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3391 (scb/fou/v085), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V086 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V086"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3392
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V086 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3392 (scb/fou/v086), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V090 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V090"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3394
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V090 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3394 (scb/fou/v090), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V091 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V091"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3395
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V091 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3395 (scb/fou/v091), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V092 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V092"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3396
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V092 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3396 (scb/fou/v092), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V093 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V093"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3397
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V093 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3397 (scb/fou/v093), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V094 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V094"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3398
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V094 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3398 (scb/fou/v094), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V095 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V095"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3399
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V095 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3399 (scb/fou/v095), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V096 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V096"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3400
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V096 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3400 (scb/fou/v096), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V098 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V098"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3401
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V098 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3401 (scb/fou/v098), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1001"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3532
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3532 (scb/fou/v1001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1021 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1021"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3533
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1021 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3533 (scb/fou/v1021), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1022 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1022"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3534
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1022 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3534 (scb/fou/v1022), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1031 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1031"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3535
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1031 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3535 (scb/fou/v1031), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1032 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1032"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3536
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1032 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3536 (scb/fou/v1032), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1041 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1041"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3537
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1041 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3537 (scb/fou/v1041), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1042 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1042"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3538
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1042 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3538 (scb/fou/v1042), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1051 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1051"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3539
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1051 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3539 (scb/fou/v1051), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1052 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1052"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3540
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1052 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3540 (scb/fou/v1052), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1071 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1071"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3541
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1071 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3541 (scb/fou/v1071), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1072 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1072"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3542
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1072 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3542 (scb/fou/v1072), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1081 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1081"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3543
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1081 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3543 (scb/fou/v1081), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1082 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1082"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3544
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1082 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3544 (scb/fou/v1082), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1111 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1111"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3545
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1111 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3545 (scb/fou/v1111), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1112 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1112"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3546
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1112 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3546 (scb/fou/v1112), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1121 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1121"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3547
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1121 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3547 (scb/fou/v1121), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1122 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1122"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3548
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1122 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3548 (scb/fou/v1122), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1181 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1181"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3549
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1181 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3549 (scb/fou/v1181), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1182 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1182"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3550
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1182 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3550 (scb/fou/v1182), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1191 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1191"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3551
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1191 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3551 (scb/fou/v1191), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1192 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1192"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3552
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1192 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3552 (scb/fou/v1192), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1201 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1201"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3553
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1201 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3553 (scb/fou/v1201), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1202 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1202"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3554
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1202 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3554 (scb/fou/v1202), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1221 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1221"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3555
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1221 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3555 (scb/fou/v1221), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1222 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1222"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3556
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1222 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3556 (scb/fou/v1222), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1231 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1231"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3557
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1231 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3557 (scb/fou/v1231), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1232 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1232"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3558
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1232 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3558 (scb/fou/v1232), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1251 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1251"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3559
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1251 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3559 (scb/fou/v1251), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1252 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1252"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3560
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1252 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3560 (scb/fou/v1252), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column V1253 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+variant = "foretagssektorn"
+column = "V1253"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 3565
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V1253 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3565 (scb/fou/v1253), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+noted = "2026-10-16"
+
+# #1603 batch-e: V0401 in FTG_FOU_2001 carries the nearest documented edition (2003,
+# native 4372) under the same-name rule. Needs #1647 (errata.delivered beside the
+# 2007-2015 errata.column on the same column); drop this entry if #1647 has not merged.
+[[errata.delivered]]
+data_warning = "SCB documents no column V0401 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation (FoU operating costs for product 1); the unit is unknown: 2003 documents 1000-tal kronor (KSEK), while the 2007-2015 forms ask for a percentage."
+variant = "foretagssektorn"
+column = "V0401"
+versions = ["2001"]
+upstream = "omitted-column-in-version"
+native_variable_id = 4372
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds V0401 in FTG_FOU_2001. SCB's Registerinformation documents v0401 on this variant only in 2003 (edition 394), as native 4372 Driftkostnader för FoU avs. produkt 1 in 1000-tal kronor (KSEK); the second 2003 claim (native 3335) is withdrawn by the errata.support entry below. The 2007-2015 V0401 is a percentage and is minted separately. Carried under the same-name rule from the nearest documented edition with an assumed-meaning warning; the 2001 form is not available online (SCBDOK 2007 p. 7: paper forms are in SCB's archive), so the unit is not confirmed (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1647)."
+noted = "2026-10-16"
+
+# #1603 batch-e: SCB's 2003 export attaches two natives to v0401. Native 4372 (product 1)
+# is the column; native 3335 (research share of the cost block, row "Därav driftkostnader
+# för forskning", i.e. v0205) is withdrawn from v0401. Re-homing 3335 on v0205 has no
+# curation surface yet (see the issue cited in the evidence).
+[[errata.support]]
+kind = "contradictory_question"
+variable = "182.3335"
+variant = "182.373"
+column = "v0401"
+edition = "394"
+expected_fields = [{ name = "definition", status = "value", value = "Kostnad  för egen forskning (ej utvecklingsverksamhet)" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Driftkostnader för forskning" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+evidence = "SCB UF0302 Beskrivning av statistiken 2003 (FoU i företagssektorn, variable list) places 'Därav driftkostnader för forskning: Driftkostnader för grundforskning och tillämpad forskning' in the operating-cost block after Programvarurelaterad FoU (v0204) and before the 2004 budget item (v0206), i.e. column v0205; the product-group item ('FoU-verksamhetens inriktning på produktgrupper') is the separate block v040x/v0401/v0402 per product. SCB's own 2003 metadata names v0411-v0471 'Driftkostnader för FoU avs. produkt 2-8', and native 4372 'Driftkostnader för FoU avs. produkt 1' on v0401 at the same edition is the positive same-question authority. Native 3335's simultaneous v0401 claim contradicts that layout and is withdrawn from v0401; its re-home on v0205 is filed separately. (#1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+noted = "2026-10-16"
+authority = { variable = "182.4372", variant = "182.373", column = "v0401", edition = "394", expected_fields = [{ name = "definition", status = "value", value = "Driftkostnader för FoU avs. produkt 1" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Driftkostnader för FoU avs. produkt 1" }, { name = "operational_definition", status = "absent" }], expected_period_text = "2003", expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }, expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }, evidence = "Native 4372 is the product-1 operating-cost column of the v040x/v04x1 product block (SCB UF0302 BS 2003; v0411-v0471 = produkt 2-8).", noted = "2026-10-16" }
+expected_coding_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 # SWECOV existing-register holdings for scb/fou use pooled dataset-grain
 # `holdings_period` ranges; each entry preserves its delivery source in
