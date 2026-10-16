@@ -119,6 +119,81 @@ noted = "2026-10-13"
 upstream = "additional-physical-column-in-version"
 native_variable_id = 3402
 
+# ── #1603 C (#1509): FoU weight and row 201 in further SWECOV-held editions ──
+
+[[errata.delivered]]
+variant = "foretagssektorn"
+column = "ViktRev"
+data_type = "decimal"
+versions = ["2009"]
+expected_evidence_sha256 = "82799c779286f5c541e1172aaa3786e4536dcd00d9b40422877c1051d926304d"
+evidence = "SWECOV holds VIKT in FTG_FOU_2009. SCB's SCBDOK for the 2009 business-sector survey (uf0301_do_2009.pdf, part UF0302_DO_2009) states on PDF p. 5 that unit nonresponse is compensated by rak uppräkning within stratum, and on PDF p. 12 gives the estimator N_h/n_h summed over respondents with n_h defined as the number of responding firms in stratum h: the nonresponse-adjusted weight N_h/m_h that SCB documents as ViktRev. (#1603, #1509; maintainer decision 2026-10-16; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-16"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 3402
+
+[[errata.delivered]]
+variant = "foretagssektorn"
+column = "ViktRev"
+data_type = "decimal"
+versions = ["2017"]
+expected_evidence_sha256 = "82799c779286f5c541e1172aaa3786e4536dcd00d9b40422877c1051d926304d"
+evidence = "SWECOV holds Vikt in FTG_FOU_2017. SCB's Statistikens framställning for FoU i Sverige 2017 (uf0301_staf_20191011.pdf) gives on PDF p. 27 estimator (1), N_h/m_h summed over respondents with m_h the number of responding units in stratum h, and on PDF p. 28 states that all business-sector estimates use it: the nonresponse-adjusted weight N_h/m_h that SCB documents as ViktRev. (#1603, #1509; maintainer decision 2026-10-16; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-16"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 3402
+
+[[errata.delivered]]
+variant = "foretagssektorn"
+column = "v0201"
+data_type = "text"
+versions = ["2017"]
+expected_evidence_sha256 = "191accb0b20152560f0142cc9871bf2ea4e65d2603d176478e9e358478e76b70"
+evidence = "SWECOV holds v201 in FTG_FOU_2017, the same spelling it holds for 2011–2015, where SCBDOK identifies row 201 as övriga driftkostnader for own R&D. The 2017 company form (uf0301_staf_20191011.pdf, Bilaga 1, PDF p. 39, section B1) still asks for övriga driftkostnader among the current costs of own R&D in tkr; the web form prints no row numbers. The aggregate check found the column filled with the same kind of amounts as in 2011–2015. (#1603, #1509; maintainer decision 2026-10-16; aggregate check on MONA, reported as a conclusion only; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+noted = "2026-10-16"
+upstream = "additional-physical-column-in-version"
+native_variable_id = 3331
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "SIZE_CLASS"
+data_type = "text"
+name = "Storleksklass, antal anställda"
+definition = "Företagets storleksklass efter antal anställda i de redovisningsgrupper som används för Eurostats FoU-statistik (BERD): 10–49, 50–249 samt 250 anställda eller fler."
+holdings_period = "2019-2021"
+source = "steward-holdings"
+evidence = "SWECOV holds SIZE_CLASS in FTG_FOU_2019 and FTG_FOU_2021. SCB's Statistikens framställning for FoU i Sverige 2021 (uf0301_staf_2021_v2.pdf, PDF p. 28, Tabell 4) reports the business-sector sample by Storleksklass 10-49, 50-249 and 250-, the delivered spellings. The aggregate check found exactly these three classes in each year, with the top class spelled 250+ in 2019 and 250- in 2021. SCB's Registerinformation export carries no row for it on this variant. (#1603, #1509; maintainer decision 2026-10-16; aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-16"
+
+# The delivered top size class is spelled "250+" in 2019 and "250-" in 2021: one
+# entry per year so neither spelling is asserted for the other year.
+
+[[coding.documented]]
+variable = "182.SIZE_CLASS"
+variant = "182.373"
+column = "SIZE_CLASS"
+version_label = "SIZE_CLASS 2019"
+members = [["10-49", "10–49 anställda"], ["50-249", "50–249 anställda"], ["250+", "250 anställda eller fler"]]
+periods = [["2019-01-01", "2019-12-31"]]
+reason = "The aggregate check found exactly the codes 10-49, 50-249 and 250+ in FTG_FOU_2019. SCB reports the business-sector survey in these Eurostat BERD size classes; the 2021 production description lists them as 10-49, 50-249 and 250-, so 250+ in 2019 is the same top class, 250 employees or more, spelled differently. (#1603, #1509; maintainer decision 2026-10-16; aggregate check on MONA, reported as a conclusion only)."
+source = "SCB, Forskning och utveckling i Sverige (UF0301), Statistikens framställning 2021, version 2, p. 28 (Tabell 4)."
+document_url = "https://www.scb.se/contentassets/8e4fb961de804d73886e0eb98a2b9085/uf0301_staf_2021_v2.pdf"
+document_sha256 = "d8aa5563f66fed954f06a1808a5f6a6863544710e955b225d7013c9e6f450110"
+document_pages = [28]
+
+[[coding.documented]]
+variable = "182.SIZE_CLASS"
+variant = "182.373"
+column = "SIZE_CLASS"
+version_label = "SIZE_CLASS 2021"
+members = [["10-49", "10–49 anställda"], ["50-249", "50–249 anställda"], ["250-", "250 anställda eller fler"]]
+periods = [["2021-01-01", "2021-12-31"]]
+reason = "The aggregate check found exactly the codes 10-49, 50-249 and 250- in FTG_FOU_2021, the spellings SCB's 2021 production description uses for the business-sector size classes; 250- is the open top class, 250 employees or more (the same class FTG_FOU_2019 spells 250+). (#1603, #1509; maintainer decision 2026-10-16; aggregate check on MONA, reported as a conclusion only)."
+source = "SCB, Forskning och utveckling i Sverige (UF0301), Statistikens framställning 2021, version 2, p. 28 (Tabell 4)."
+document_url = "https://www.scb.se/contentassets/8e4fb961de804d73886e0eb98a2b9085/uf0301_staf_2021_v2.pdf"
+document_sha256 = "d8aa5563f66fed954f06a1808a5f6a6863544710e955b225d7013c9e6f450110"
+document_pages = [28]
+
 [[errata.column]]
 variant = "foretagssektorn"
 column = "WEIGHT"
