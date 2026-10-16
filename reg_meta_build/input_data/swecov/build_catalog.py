@@ -2120,12 +2120,13 @@ def _fold_case_twins(
 # needs the single-representation proof, and the conflict validator then only
 # conflates genuinely identical cells.
 #
-# simplify: wide-pivot columns (DIA1..30 → concept DIA) are left UNMAPPED — the
-# inventory contract has no cell shape for N physical columns serving one
-# logical variable yet, so mapping all members to one representation would
-# self-conflict inside the table. They stay in the denominator and are counted
-# in the worklist; upgrade trigger: the first real order that needs a pivot
-# concept. Each member carries `_PIVOT_REASON` so the gap is explicit (#1495).
+# A wide-pivot member (DIA1..30 → representation DIA) maps only through a curated
+# decision naming its `member` index (#1495): exact names, never the suffix rule
+# below, which only detects. The decision is the column's one mapping; the
+# inventory's member-set rules check the set.
+# simplify: a detected member with no decision is left UNMAPPED with
+# `_PIVOT_REASON` as an interim hold, so the gap stays explicit; delete the
+# branch once no SWECOV pivot member is left uncurated.
 _PIVOT_REASON = (
     "Wide-pivot member of {base}: the inventory has no cell shape for N physical"
     " columns serving one variable (#1495)."
@@ -2393,17 +2394,24 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
             recs = [r for coord in sorted(coords) for r in by_coordcol[(coord, u)]]
             mapping_issue = None
             curated: set[tuple[str, str, str]] = set()
+            # A year or month member serves only its own period, so its owner
+            # must cover that period, not the table's whole edition.
+            column_edition = edition
             for mapping in (decision.mappings if decision is not None else None) or ():
+                if mapping.member is not None and mapping.member.kind != "position":
+                    column_edition = mapping.member.index
                 declared, mapping_issue = _inventory_mapping_records(
                     mapping,
                     decision.select_owner,
                     by_coordcol[
                         (mapping.register_variant, mapping.representation.upper())
                     ],
-                    edition,
+                    column_edition,
                 )
                 if mapping_issue:
                     break
+                if mapping.member is not None:
+                    declared = [{**r, "member": mapping.member} for r in declared]
                 owner = mapping.variable.rsplit("/", 1)[1]
                 # select_owner drops every other owner of the physical column,
                 # case twins included: neighbouring waves may spell one cell
@@ -2421,6 +2429,10 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     )
                 ] + declared
                 curated.update((r["coord"], r["vslug"], r["col"]) for r in declared)
+            if any(r.get("member") for r in recs):
+                # A member column carries only its decision's mappings; a second
+                # curated one stays, so the inventory's one-mapping rule refuses it.
+                recs = [r for r in recs if (r["coord"], r["vslug"], r["col"]) in curated]
             if mapping_issue:
                 worklist["mapping_scope_needed"].append(
                     {
@@ -2457,7 +2469,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 )
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
-            recs, scope_issue = _inventory_period_records(recs, edition)
+            recs, scope_issue = _inventory_period_records(recs, column_edition)
             if not scope_issue:
                 recs, scope_issue = _fold_case_twins(
                     recs, LOPNR_PREFIX.sub("", col), curated, representative
@@ -2496,6 +2508,10 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     f"variable = {_toml_str(variable_fqid)}",
                     f"representation = {_toml_str(r['col'])}",
                 ]
+                if (member := r.get("member")) is not None:
+                    index = member.index
+                    value = _toml_str(index) if isinstance(index, str) else index
+                    lines.append(f"member = {{ {member.kind} = {value} }}")
 
     dest = steward_dir / "inventory.toml"
     wl_path = args.csv.parent / "derived" / "inventory_worklist.json"

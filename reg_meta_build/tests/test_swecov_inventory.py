@@ -10,6 +10,7 @@ leaves. Fixture provenance and the generator's boundary: `_swecov_fixtures`.
 from __future__ import annotations
 
 import argparse
+import shutil
 import sqlite3
 import tomllib
 from typing import TYPE_CHECKING
@@ -103,6 +104,136 @@ def test_lone_suffixed_column_beside_its_base_is_a_reasoned_pivot_member(
             "register_variants": ["inera/bestallda-prover/_default"],
         }
     ]
+
+
+def test_curated_pivot_members_map_with_their_index(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A curated decision naming a `member` maps a wide-pivot member with its
+    index (#1495): `T_kolumn`, `T_kolumn2` and `Covid_19_antikroppar` as
+    positions 1-3 of `T_kolumn` in a 2020-2021 table, and `Emp2021` as the 2021
+    member of `Emp`, which the catalog documents only in 2021. The member decision
+    is the column's one mapping, so `Covid_19_antikroppar`, a literal the catalog
+    documents under another variable, does not keep that auto-matched mapping. A
+    year member serves only its year, so `Emp` need not cover 2020. Fails if the
+    generator drops `member` (the `T_kolumn` mappings then conflict), keeps the
+    auto-matched mapping beside a member (a member column with two mappings), both
+    of which `load_inventory` refuses; if it checks a year member's owner against
+    the whole edition (`Emp2021` goes to the scope worklist and the run exits); or
+    if the spec refuses a curated member. The `Emp` owner is inserted as DB rows,
+    like the rest of this harness's fixtures; moving them to readable source is
+    #1654."""
+    variant = "inera/bestallda-prover/_default"
+    db = tmp_path / "candidate.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
+            "VALUES (920,901,'emp','emp','Emp')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state(state_id,variable_id,register_variant_id,"
+            "valid_from,valid_to,delivery_column_name) VALUES ((SELECT "
+            "COALESCE(MAX(state_id), 0) + 1 FROM variable_state),920,902,"
+            "'2021-01-01','2021-12-31','Emp')"
+        )
+
+    def member(column: str, variable: str, representation: str, index: str) -> str:
+        return (
+            f'[[column]]\ncolumn = "{column}"\n'
+            f'mappings = [{{ register_variant = "{variant}", '
+            f'variable = "inera/bestallda-prover/{variable}", '
+            f'representation = "{representation}", member = {{ {index} }} }}]\n'
+            'reason = "reviewed pivot member"\n\n'
+        )
+
+    decisions = (
+        member("T_kolumn", "t-kolumn", "T_kolumn", "position = 1")
+        + member("T_kolumn2", "t-kolumn", "T_kolumn", "position = 2")
+        + member("Covid_19_antikroppar", "t-kolumn", "T_kolumn", "position = 3")
+        + member("Emp2021", "emp", "Emp", "year = 2021")
+    )
+
+    steward = _run_inventory(
+        tmp_path,
+        db,
+        "T",
+        ["Covid_19_antikroppar", "Emp2021", "T_kolumn", "T_kolumn2"],
+        edition="{ from = 2020, to = 2021 }",
+        decisions=decisions,
+    )
+
+    (table,) = load_delivery_inventory(steward / "inventory.toml").tables
+    assert {
+        column.name: [
+            (str(m.variable), m.representation, m.member.kind, m.member.index)
+            for m in column.mappings
+            if m.member is not None
+        ]
+        + [str(m.variable) for m in column.mappings if m.member is None]
+        for column in table.columns
+    } == {
+        "Covid_19_antikroppar": [
+            ("inera/bestallda-prover/t-kolumn", "T_kolumn", "position", 3)
+        ],
+        "Emp2021": [("inera/bestallda-prover/emp", "Emp", "year", 2021)],
+        "T_kolumn": [("inera/bestallda-prover/t-kolumn", "T_kolumn", "position", 1)],
+        "T_kolumn2": [("inera/bestallda-prover/t-kolumn", "T_kolumn", "position", 2)],
+    }
+
+
+def test_member_decision_with_two_mappings_is_refused(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A member column carries one mapping, so a member decision naming two is
+    refused when the spec loads, naming the column and the count. The two are the
+    silent-drop shape: year members 2020 and 2021 on two admissible variants whose
+    owners are documented only in their own year. Fails if the refusal goes: the
+    generator then checks both mappings against the last one's period, drops the
+    2020 mapping, and emits the 2021 one without error. The owners are inserted as
+    DB rows, like the rest of this harness's fixtures (#1654)."""
+    db = tmp_path / "candidate.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, "
+            "name, slug) VALUES (905, 901, 'Andra', 'andra')"
+        )
+        conn.execute(
+            "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
+            "VALUES (921,901,'hushall','hushall','Hushall')"
+        )
+        for variant, year in ((902, 2020), (905, 2021)):
+            conn.execute(
+                "INSERT INTO variable_state(state_id,variable_id,register_variant_id,"
+                "valid_from,valid_to,delivery_column_name) VALUES ((SELECT "
+                "COALESCE(MAX(state_id), 0) + 1 FROM variable_state),921,?,?,?,"
+                "'Hushallsid')",
+                (variant, f"{year}-01-01", f"{year}-12-31"),
+            )
+    variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/andra")
+    decisions = (
+        '[[column]]\ncolumn = "Hushallsid"\nmappings = ['
+        + ", ".join(
+            f'{{ register_variant = "{variant}", '
+            'variable = "inera/bestallda-prover/hushall", '
+            f'representation = "Hushallsid", member = {{ year = {year} }} }}'
+            for variant, year in zip(variants, (2020, 2021), strict=True)
+        )
+        + ']\nreason = "reviewed pivot member"\n'
+    )
+
+    with pytest.raises(RegMetaError, match="'Hushallsid' names 2") as refused:
+        _run_inventory(
+            tmp_path,
+            db,
+            "T",
+            ["Hushallsid"],
+            edition="{ from = 2020, to = 2021 }",
+            variants=variants,
+            decisions=decisions,
+        )
+    assert refused.value.code == "steward_spec_invalid"
 
 
 # --- cmd_inventory: a series' school-year edition spelling --------------------

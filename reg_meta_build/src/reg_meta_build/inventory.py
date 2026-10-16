@@ -780,6 +780,10 @@ def _check_member_sets(tables: tuple[InventoryTable, ...]) -> None:
     Sets group by the representation's `fold_identity`, the fold
     `canonical_inventory` resolves through, so `DIA` and `dia` are one set here
     as they are once compiled."""
+    # simplify: two member sets of one table are never declared paired; a shared
+    # position is the only slot key (`kva_typN` beside `opN`). Add a pairing
+    # declaration when a consumer must know two sets are paired, such as an order
+    # that has to keep `kva_typN` and `opN` together.
     problems: list[str] = []
     for table in tables:
         sets: dict[tuple[str, str, str], list[tuple[str, str, ColumnMember]]] = {}
