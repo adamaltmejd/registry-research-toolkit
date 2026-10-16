@@ -84,19 +84,23 @@ reason = "Same SCB variable as the catalog owner: its SCB-documented state for t
 [[column]]
 column = "aestat"
 tables = ["FDB_AE_2019"]
-hold = { follow_up = "#1603", reason = "Edition 2019: scb/fdb documents the workplace status column AEStat through 2018 and AdmStat from 2019; the 2019 AEStat state SCB documents belongs to scb/foretagsreg, outside this table's variant scope. Whether this column is fdb's renamed AdmStat or the foretagsreg column is open (#1603)." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/arbstalle-status", representation = "AdmStat" }]
+reason = "fdb's workplace status under the pre-2023 SWECOV spelling: the aggregate check on MONA, reported as a conclusion only found exactly the three AdmStat codes (0, 1, 9) SCB documents for fdb from 2019, and none of the AEStat-only codes 2, 7, 8 that the 2016–2018 tables carry. (#1603; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "aestat"
 tables = ["FDB_AE_2020"]
-hold = { follow_up = "#1603", reason = "Edition 2020: scb/fdb documents the workplace status column AEStat through 2018 and AdmStat from 2019; the 2019 AEStat state SCB documents belongs to scb/foretagsreg, outside this table's variant scope. Whether this column is fdb's renamed AdmStat or the foretagsreg column is open (#1603)." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/arbstalle-status", representation = "AdmStat" }]
+reason = "fdb's workplace status under the pre-2023 SWECOV spelling: the aggregate check on MONA, reported as a conclusion only found exactly the three AdmStat codes (0, 1, 9) SCB documents for fdb from 2019, and none of the AEStat-only codes 2, 7, 8 that the 2016–2018 tables carry. (#1603; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "aestat"
 tables = ["FDB_AE_2021"]
-hold = { follow_up = "#1603", reason = "Edition 2021: scb/fdb documents the workplace status column AEStat through 2018 and AdmStat from 2019; the 2019 AEStat state SCB documents belongs to scb/foretagsreg, outside this table's variant scope. Whether this column is fdb's renamed AdmStat or the foretagsreg column is open (#1603)." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/arbstalle-status", representation = "AdmStat" }]
+reason = "fdb's workplace status under the pre-2023 SWECOV spelling: the aggregate check on MONA, reported as a conclusion only found exactly the three AdmStat codes (0, 1, 9) SCB documents for fdb from 2019, and none of the AEStat-only codes 2, 7, 8 that the 2016–2018 tables carry. (#1603; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "aestat"
 tables = ["FDB_AE_2022"]
-hold = { follow_up = "#1603", reason = "Edition 2022: scb/fdb documents the workplace status column AEStat through 2018 and AdmStat from 2019; the 2019 AEStat state SCB documents belongs to scb/foretagsreg, outside this table's variant scope. Whether this column is fdb's renamed AdmStat or the foretagsreg column is open (#1603)." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/arbstalle-status", representation = "AdmStat" }]
+reason = "fdb's workplace status under the pre-2023 SWECOV spelling: the aggregate check on MONA, reported as a conclusion only found exactly the three AdmStat codes (0, 1, 9) SCB documents for fdb from 2019, and none of the AEStat-only codes 2, 7, 8 that the 2016–2018 tables carry. (#1603; maintainer decision 2026-10-16)."

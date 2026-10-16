@@ -8,60 +8,60 @@ edition = { from = 2020, to = 2024 }
 
 [[column]]
 column = "ATCCode"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "ATCShort"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "DrgName"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "HLGT"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "HLT"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Outcome"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "P1105_Lopnr_PersonNr"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "PT"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "RcvDate"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Reporter"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Rscore"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "SeqNum"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Serious"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Soc"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Tto"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. The physical adverse-event extract lacks evidence selecting processed cases versus workflow cases. Both source variants share these field names; literal matching cannot establish the delivered view. All original fields and accepted extract period retained." }
+hold = { follow_up = "#1610", reason = "No catalog variant describes this extract. The Läkemedelsverket register is built from the vaccine-scoped field description (2023); SWECOV's LV_mla tables use a different field dictionary (ATC code, drug name, MedDRA levels, seriousness, reporter, time to onset, …) and cover drug reactions generally (aggregate check on MONA, reported as a conclusion only). Mapping needs an 'mla' variant from LV/SWECOV field documentation (#1610; maintainer decision 2026-10-16)." }

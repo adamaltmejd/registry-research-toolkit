@@ -10,7 +10,7 @@ edition = { from = "2005-07", to = 2023 }
 
 [[column]]
 column = "AR"
-hold = { follow_up = "#1556", reason = "Dispensing year (Expedieringsår) added to the SoS delivery; derivable from EDATUM, no LMED catalog variable yet (#1556). Maintainer-decided 2026-10-13 (#1302)." }
+unmap = "Dispensing year added to the SoS delivery: the aggregate check on MONA, reported as a conclusion only found it equal to the year of EDATUM on every row, so it is derivable from EDATUM and carries nothing to order on its own (#1556; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "ARBETSPL_PSEUDO"
