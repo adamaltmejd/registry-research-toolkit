@@ -13428,17 +13428,6 @@ evidence = "SWECOV holds TJLEDLAR in LReg_1999 through LReg_2012, LReg_2014 thro
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column Tjledig on Lärarregistret, Tjänsteregistret for Läsåret 1989/1990 to 1994/1995. The meaning is assumed from SCB's Läsåret 1995/1996 documentation of the same delivered name in this register; it is not confirmed for these editions."
-variant = "tjansteregistret"
-column = "Tjledig"
-versions = ["Läsåret 1989/1990", "Läsåret 1990/1991", "Läsåret 1991/1992", "Läsåret 1992/1993", "Läsåret 1993/1994", "Läsåret 1994/1995"]
-upstream = "omitted-column-in-version"
-native_variable_id = 13671
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-evidence = "SWECOV holds Tjledig in LReg_1989 through LReg_1994; the same delivered name is documented on this variant as native 13671 (scb/lararreg/tjledig), nearest in Läsåret 1995/1996. For these school years SCB documents native 13671 only under the separately owned header Tjl (scb/lararreg/tjl, with Tjltim1-6); this entry does not merge the two. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
-noted = "2026-10-16"
-
-[[errata.delivered]]
 data_warning = "SCB documents no column TraningsSar on Lärarregistret, Tjänsteregistret for Läsåret 1999/2000 to 2010/2011. The meaning is assumed from SCB's Läsåret 2011/2012 documentation of the same delivered name in this register; it is not confirmed for these editions."
 variant = "tjansteregistret"
 column = "TraningsSar"
@@ -15056,78 +15045,6 @@ valid_from = "2016-07-01"
 valid_to = "2017-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2016/2017; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/lararreg/tjledig"
-refs = []
-fields = ["coding"]
-valid_from = "1989-07-01"
-valid_to = "1990-06-30"
-reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1995/1996's meaning for Läsåret 1989/1990; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Tjledig on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/lararreg/tjledig"
-refs = []
-fields = ["coding"]
-valid_from = "1990-07-01"
-valid_to = "1991-06-30"
-reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1995/1996's meaning for Läsåret 1990/1991; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Tjledig on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/lararreg/tjledig"
-refs = []
-fields = ["coding"]
-valid_from = "1991-07-01"
-valid_to = "1992-06-30"
-reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1995/1996's meaning for Läsåret 1991/1992; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Tjledig on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/lararreg/tjledig"
-refs = []
-fields = ["coding"]
-valid_from = "1992-07-01"
-valid_to = "1993-06-30"
-reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1995/1996's meaning for Läsåret 1992/1993; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Tjledig on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/lararreg/tjledig"
-refs = []
-fields = ["coding"]
-valid_from = "1993-07-01"
-valid_to = "1994-06-30"
-reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1995/1996's meaning for Läsåret 1993/1994; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Tjledig on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/lararreg/tjledig"
-refs = []
-fields = ["coding"]
-valid_from = "1994-07-01"
-valid_to = "1995-06-30"
-reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1995/1996's meaning for Läsåret 1994/1995; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Tjledig on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
 expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 

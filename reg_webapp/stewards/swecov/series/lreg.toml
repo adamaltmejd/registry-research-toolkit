@@ -140,100 +140,35 @@ table = "LReg_2022"
 edition = 2022
 
 [[column]]
-column = "Anstslag"
-tables = ["LReg_1992"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Anstslag"
-tables = ["LReg_1993"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Anstslag"
-tables = ["LReg_1994"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Behkod"
-tables = ["LReg_1990"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1990 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Behkod"
-tables = ["LReg_1991"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Behkod"
-tables = ["LReg_1992"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Behkod"
-tables = ["LReg_1993"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Behkod"
-tables = ["LReg_1994"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "InriktningGY"
-tables = ["LReg_1999"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1999 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "InriktningGY"
-tables = ["LReg_2000"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2000 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "InriktningGY"
-tables = ["LReg_2001"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2001 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "InriktningGY"
-tables = ["LReg_2002"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2002 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "InriktningGY"
-tables = ["LReg_2003"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2003 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "InriktningGY"
-tables = ["LReg_2004"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2004 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "InriktningGY"
-tables = ["LReg_2005"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA2005 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "befkod"
-tables = ["LReg_1991"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1991 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "befkod"
-tables = ["LReg_1992"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1992 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "befkod"
-tables = ["LReg_1993"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1993 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "befkod"
-tables = ["LReg_1994"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact LA1994 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
 column = "RoKod"
 storage_header = "P1105_LopNr_RoKod"
+
+[[column]]
+column = "Anstslag"
+tables = ["LReg_1992", "LReg_1993", "LReg_1994"]
+mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/typ-av-anstallning", representation = "Anst" }]
+reason = "SWECOV storage spelling Anstslag of the catalog variable scb/lararreg/typ-av-anstallning, which SCB documents on this variant in these school years under the delivery column Anst (the later spelling Anstslag belongs to the same variable). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Behkod"
+tables = ["LReg_1990", "LReg_1991", "LReg_1992", "LReg_1993", "LReg_1994"]
+mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/pedagogisk-hogskoleexamen", representation = "Beh" }]
+reason = "SWECOV storage spelling Behkod of the catalog variable scb/lararreg/pedagogisk-hogskoleexamen, which SCB documents on this variant in these school years under the delivery column Beh (the later spelling Behkod belongs to the same variable). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "befkod"
+tables = ["LReg_1991", "LReg_1992", "LReg_1993", "LReg_1994"]
+mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/befattningskod-pedagogisk", representation = "Bef" }]
+reason = "SWECOV storage spelling befkod of the catalog variable scb/lararreg/befattningskod-pedagogisk, which SCB documents on this variant in these school years under the delivery column Bef (the later spelling befkod belongs to the same variable). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "InriktningGY"
+tables = ["LReg_1999", "LReg_2000", "LReg_2001", "LReg_2002", "LReg_2003", "LReg_2004", "LReg_2005"]
+mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/inriktning-fristaende-gy", representation = "FriTypGy" }]
+reason = "SWECOV storage spelling InriktningGY of the catalog variable scb/lararreg/inriktning-fristaende-gy, which SCB documents on this variant in these school years under the delivery column FriTypGy (the later spelling InriktningGY belongs to the same variable). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Tjledig"
+tables = ["LReg_1989", "LReg_1990", "LReg_1991", "LReg_1992", "LReg_1993", "LReg_1994"]
+mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/tjl", representation = "Tjl" }]
+reason = "SWECOV storage spelling Tjledig of the catalog variable scb/lararreg/tjl: for these school years SCB documents native family 13671 on this variant only under the delivery column Tjl (the TjLedig column, scb/lararreg/tjledig, starts in Läsåret 1995/1996). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
