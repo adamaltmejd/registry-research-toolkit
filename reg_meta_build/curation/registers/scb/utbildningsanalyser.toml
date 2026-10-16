@@ -8343,3 +8343,45 @@ noted = "2026-10-12"
 [[variable]]
 native_id = "366.PersonNr"
 slug = "personnr-elev"
+
+# ── #1603 / #1640: SWECOV Distansutb_gymn_VT20 second-wave F6 items ──
+
+[[errata.delivered]]
+data_warning = "Second-wave measurement: this item asks about the autumn 2020 / spring 2021 terms but is delivered in the Vårterminen 2020 file. It is not a copy of the Höstterminen 2020 - Vårterminen 2021 item: the respondents only partly overlap and their answers partly differ."
+variant = "distansundervisning-gymnasieskolan"
+column = "F6HT20b"
+versions = ["Vårterminen 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds F6HT20b in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
+noted = "2026-10-17"
+
+[[errata.delivered]]
+data_warning = "Second-wave measurement: this item asks about the autumn 2020 / spring 2021 terms but is delivered in the Vårterminen 2020 file. It is not a copy of the Höstterminen 2020 - Vårterminen 2021 item: the respondents only partly overlap and their answers partly differ."
+variant = "distansundervisning-gymnasieskolan"
+column = "F6HT20c"
+versions = ["Vårterminen 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds F6HT20c in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
+noted = "2026-10-17"
+
+[[errata.delivered]]
+data_warning = "Second-wave measurement: this item asks about the autumn 2020 / spring 2021 terms but is delivered in the Vårterminen 2020 file. It is not a copy of the Höstterminen 2020 - Vårterminen 2021 item: the respondents only partly overlap and their answers partly differ."
+variant = "distansundervisning-gymnasieskolan"
+column = "F6VT21b"
+versions = ["Vårterminen 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds F6VT21b in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
+noted = "2026-10-17"
+
+[[errata.delivered]]
+data_warning = "Second-wave measurement: this item asks about the autumn 2020 / spring 2021 terms but is delivered in the Vårterminen 2020 file. It is not a copy of the Höstterminen 2020 - Vårterminen 2021 item: the respondents only partly overlap and their answers partly differ."
+variant = "distansundervisning-gymnasieskolan"
+column = "F6VT21c"
+versions = ["Vårterminen 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds F6VT21c in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
+noted = "2026-10-17"

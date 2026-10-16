@@ -10,19 +10,23 @@ edition = "VT2020"
 
 [[column]]
 column = "F6HT20b"
-hold = { follow_up = "#1640", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "scb/utbildningsanalyser/distansundervisning-gymnasieskolan", variable = "scb/utbildningsanalyser/undantag-distans-extra-anpassningar-ht", representation = "F6HT20b" }]
+reason = "Second-wave item (#1640): the VT2020 file carries the HT2020/VT2021 item, delivered to this version through errata.delivered with a second-wave data_warning. Mapped under the orderable rule (#1603; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "F6HT20c"
-hold = { follow_up = "#1640", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "scb/utbildningsanalyser/distansundervisning-gymnasieskolan", variable = "scb/utbildningsanalyser/f6ht20c", representation = "F6HT20c" }]
+reason = "Second-wave item (#1640): the VT2020 file carries the HT2020/VT2021 item, delivered to this version through errata.delivered with a second-wave data_warning. Mapped under the orderable rule (#1603; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "F6VT21b"
-hold = { follow_up = "#1640", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "scb/utbildningsanalyser/distansundervisning-gymnasieskolan", variable = "scb/utbildningsanalyser/undantag-distans-extra-anpassningar-vt", representation = "F6VT21b" }]
+reason = "Second-wave item (#1640): the VT2020 file carries the HT2020/VT2021 item, delivered to this version through errata.delivered with a second-wave data_warning. Mapped under the orderable rule (#1603; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "F6VT21c"
-hold = { follow_up = "#1640", reason = "Item of the HT2020/VT2021 round carried in the VT2020 file. The aggregate check on MONA, reported as a conclusion only found it is not a copy of the Distansutb_gymn_HT20_VT21 item: only part of the VT2020 respondents are in that table, and their answers differ in part. It is the same item measured in a second wave, which needs its own representation; the table's edition cannot widen to 2020/21 without colliding with Distansutb_gymn_HT20_VT21 (#1603; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "scb/utbildningsanalyser/distansundervisning-gymnasieskolan", variable = "scb/utbildningsanalyser/f6vt21c", representation = "F6VT21c" }]
+reason = "Second-wave item (#1640): the VT2020 file carries the HT2020/VT2021 item, delivered to this version through errata.delivered with a second-wave data_warning. Mapped under the orderable rule (#1603; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "PersonNr"
