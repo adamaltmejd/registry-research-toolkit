@@ -12425,6 +12425,31 @@ evidence = "SWECOV holds PMD in ITftg_2012. Previously unmapped because the 2012
 noted = "2026-10-16"
 data_warning = "SWECOV:s PMD kan avse bärbara enheter med mobil anslutning till anställda (28819) eller mobil bredbandsanslutning via 3G/4G (25333); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
 
+[[errata.delivered]]
+data_warning = "SCB documents no column EMPIUSEPCT on IT-användning i företag for 2008-2012. The meaning is assumed from SCB's 2013 documentation of native 17675 (andel sysselsatta som använder dator med internetuppkoppling), the nearest edition with the same delivered name; it is not confirmed for these rounds."
+variant = "it-anvandning-i-foretag"
+column = "EMPIUSEPCT"
+versions = ["2008", "2009", "2010", "2011", "2012"]
+upstream = "omitted-column-in-version"
+native_variable_id = 17675
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds EMPIUSEPCT in ITftg_2008 to ITftg_2012; the same delivered name is documented on this variant as native 17675, nearest in 2013. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type (nvarchar) is compatible with the documented data type (text)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "UTVEXF2"
+data_type = "text"
+name = "UTVEXF2 (enligt leverans)"
+definition = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet UTVEXF2 till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 17642, \"Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - övriga\" (som SCB knyter till UTVEXF2 2017); (2) SCB-variabel 17641, \"Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning\" (levererad som UTVEXF 2013–2015). ITftg_Stora_2016 levererar också UTVSUP2, som 2016 redan bär 17642. Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds UTVEXF2 in ITftg_Stora_2016 beside UTVSUP2, which the catalog already places on native 17642 for 2016. SCB attaches UTVEXF2 to 17642 in 2017, while the name continues UTVEXF (17641, 2013-2015), so the same-name carry would give one table two columns for one variable. Contradicting evidence: minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema (varchar); flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s UTVEXF2 i 2016 kan avse andel årsverken i programvaruutveckling - övriga (17642) eller för extern försäljning (17641); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
 column = "UTVEGANV2"
@@ -12552,3 +12577,8 @@ slug = "webctm-enligt-leverans"
 [[variable]]
 native_id = "258.WEBPER"
 slug = "webper-enligt-leverans"
+
+
+[[variable]]
+native_id = "258.UTVEXF2"
+slug = "utvexf2-enligt-leverans"
