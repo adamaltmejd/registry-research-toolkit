@@ -253,7 +253,10 @@
     {
       "table": "issues",
       "where": {
-        "case_id": "curation/registers/scb/warning.toml#/coding.warning/2/period/1"
+        "case_id": "curation/registers/scb/warning.toml#/coding.warning/2/period/1",
+        "detail": {
+          "contains": "Current pins: expected_evidence_sha256 = \"bee154e8153c11790bf28c1cfdd05b6382a96fdf50e7d1c88216f482734520d7\""
+        }
       },
       "fields": [
         "code",
@@ -265,7 +268,7 @@
           "error"
         ]
       ],
-      "note": "The reference_period entry (#1639) is guarded by the same digest, so the same drift stales it."
+      "note": "The reference_period entry (#1639) is guarded by the same digest, so the same drift stales it, and the refusal prints the drifted column's digest to re-pin from."
     },
     {
       "table": "issues",

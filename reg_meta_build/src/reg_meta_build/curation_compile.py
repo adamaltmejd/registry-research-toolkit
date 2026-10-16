@@ -5080,7 +5080,8 @@ def compile_coding_register(
                     if compact_evidence[column][2] != evidence_digest:
                         status, detail = (
                             "stale",
-                            "complete source coding evidence changed",
+                            "complete source coding evidence changed."
+                            + current_pins(compact_evidence[column][2], ()),
                         )
                 if (
                     isinstance(
@@ -5649,11 +5650,13 @@ def compile_occurrence_corrections(
                         and entry.expected_evidence_sha256
                         == acknowledgement_evidence_sha256(family)
                     )
+                family_pin = (
+                    acknowledgement_evidence_sha256(family)
+                    if isinstance(entry, ErrataFlagsEntry) and family
+                    else None
+                )
                 if isinstance(entry, ErrataFlagsEntry):
-                    valid = valid and (
-                        entry.expected_evidence_sha256
-                        == acknowledgement_evidence_sha256(family)
-                    )
+                    valid = valid and entry.expected_evidence_sha256 == family_pin
                 period_authority: tuple[SourceRecord, ...] = ()
                 authority_guards: tuple[PeerGuard, ...] = ()
                 if (
@@ -5784,7 +5787,8 @@ def compile_occurrence_corrections(
                         _family_diagnostic(
                             case_id,
                             entry.variable,
-                            "literal source coordinate has no originals or differs from the guarded prose/scopes",
+                            "literal source coordinate has no originals or differs from the guarded prose/scopes"
+                            + current_pins(family_pin, ()),
                             refs=tuple(record_ref(record) for record in selected),
                             overbroad=overbroad,
                         )
