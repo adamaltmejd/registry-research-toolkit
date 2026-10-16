@@ -21,7 +21,7 @@
     "document": "SCB Dokumentation av statistikens framtagning (UF0315, 2008–2010), embedded questionnaire question 15",
     "url": "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2008-2010.pdf#page=16",
     "sha256": "bf171ddd280bbdee34b924053771bf37e077ab9632885346f32d9823263b7585",
-    "question": "VariabelReferenstid is “Enkäten Innovationsverksamhet 2008-2010” and the native edition is “2008 - 2010”. The answer meanings come from the wave's own questionnaire, question 15 (“Vilken lokalisering hade företagets samarbetspartner under åren 2008–2010?”), rows a–h by five locations plus Inte aktuell. SWECOV's CIS2010 holdings name the answers co<row><location> by questionnaire position: the maintainer's aggregate MONA check (2026-10-14) found the 4-location waves (CIS2004, CIS2006) carry co11–co14 with no co15, so the location digit is the questionnaire column, and partner rows a–e have the same meaning under positional and later-wave readings. Only rows a–e are declared; co6x/co7x stay held (#1571). This questionnaire has eight partner rows (e Konsulter, privata laboratorier; f Privata FoU-institut; g Universitet eller högskolor; h Offentliga forskningsinstitut) while SWECOV's CIS2010 holdings carry seven co row groups (co1x–co7x), so position cannot fix rows 6 and 7. The eighth row comes from splitting the 2002–2004 row e (consultants, private laboratories, private R&D institutes) into e and f, and no SCB document says how the delivery folds eight rows into seven (e.g. e+f merged with co6x = g and co7x = h as in 2002–2004, or one row dropped). The document has no variable register entry or value set for the cooperation matrix. No other cell is asserted. SCB's quality declaration Appendix 2 (uf0315_kd_2018_ah_191113.pdf, pp. 23–27) lists this wave's questionnaire items on the same rows but names no co columns for it.",
+    "question": "VariabelReferenstid is “Enkäten Innovationsverksamhet 2008-2010” and the native edition is “2008 - 2010”. The answer meanings come from the wave's own questionnaire, question 15 (“Vilken lokalisering hade företagets samarbetspartner under åren 2008–2010?”), rows a–h by five locations plus Inte aktuell. SWECOV's CIS2010 holdings name the answers co<row><location> by questionnaire position: the maintainer's aggregate MONA check (2026-10-14) found the 4-location waves (CIS2004, CIS2006) carry co11–co14 with no co15, so the location digit is the questionnaire column, and partner rows a–e have the same meaning under positional and later-wave readings. Rows a–e are declared by position; co6x/co7x are declared with the CIS2006/CIS2008 meaning (universities; public research institutes) under the maintainer's same-name rule, with the caveat in each definition (#1603 batch-e). This questionnaire has eight partner rows (e Konsulter, privata laboratorier; f Privata FoU-institut; g Universitet eller högskolor; h Offentliga forskningsinstitut) while SWECOV's CIS2010 holdings carry seven co row groups (co1x–co7x), so position cannot fix rows 6 and 7. The eighth row comes from splitting the 2002–2004 row e (consultants, private laboratories, private R&D institutes) into e and f, and no SCB document says how the delivery folds eight rows into seven (e.g. e+f merged with co6x = g and co7x = h as in 2002–2004, or one row dropped). The document has no variable register entry or value set for the cooperation matrix. No other cell is asserted. SCB's quality declaration Appendix 2 (uf0315_kd_2018_ah_191113.pdf, pp. 23–27) lists this wave's questionnaire items on the same rows but names no co columns for it.",
     "noted": "2026-10-16"
   },
   "question_label": "Typ av samarbetspartner geografiskt fördelat",
@@ -534,6 +534,206 @@
       },
       "source_pages": {
         "co55": 16
+      }
+    },
+    {
+      "key": "universities-sweden",
+      "slug": "cis2010-cooperation-universities-sweden",
+      "columns": [
+        "co61"
+      ],
+      "label_en": "Universities or higher education institutions — Sweden",
+      "definition_en": "Cooperation with universities or higher education institutions (Sweden). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co61": 16
+      }
+    },
+    {
+      "key": "universities-other-europe",
+      "slug": "cis2010-cooperation-universities-other-europe",
+      "columns": [
+        "co62"
+      ],
+      "label_en": "Universities or higher education institutions — Other Europe",
+      "definition_en": "Cooperation with universities or higher education institutions (Other Europe). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co62": 16
+      }
+    },
+    {
+      "key": "universities-usa",
+      "slug": "cis2010-cooperation-universities-usa",
+      "columns": [
+        "co63"
+      ],
+      "label_en": "Universities or higher education institutions — USA",
+      "definition_en": "Cooperation with universities or higher education institutions (USA). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co63": 16
+      }
+    },
+    {
+      "key": "universities-china-india",
+      "slug": "cis2010-cooperation-universities-china-india",
+      "columns": [
+        "co64"
+      ],
+      "label_en": "Universities or higher education institutions — China or India",
+      "definition_en": "Cooperation with universities or higher education institutions (China or India). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "china_india",
+        "label_en": "China or India"
+      },
+      "source_pages": {
+        "co64": 16
+      }
+    },
+    {
+      "key": "universities-other-countries",
+      "slug": "cis2010-cooperation-universities-other-countries",
+      "columns": [
+        "co65"
+      ],
+      "label_en": "Universities or higher education institutions — Other countries",
+      "definition_en": "Cooperation with universities or higher education institutions (Other countries). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co65": 16
+      }
+    },
+    {
+      "key": "public-research-sweden",
+      "slug": "cis2010-cooperation-public-research-sweden",
+      "columns": [
+        "co71"
+      ],
+      "label_en": "Government or public research institutes — Sweden",
+      "definition_en": "Cooperation with public research institutes (Sweden). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co71": 16
+      }
+    },
+    {
+      "key": "public-research-other-europe",
+      "slug": "cis2010-cooperation-public-research-other-europe",
+      "columns": [
+        "co72"
+      ],
+      "label_en": "Government or public research institutes — Other Europe",
+      "definition_en": "Cooperation with public research institutes (Other Europe). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co72": 16
+      }
+    },
+    {
+      "key": "public-research-usa",
+      "slug": "cis2010-cooperation-public-research-usa",
+      "columns": [
+        "co73"
+      ],
+      "label_en": "Government or public research institutes — USA",
+      "definition_en": "Cooperation with public research institutes (USA). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co73": 16
+      }
+    },
+    {
+      "key": "public-research-china-india",
+      "slug": "cis2010-cooperation-public-research-china-india",
+      "columns": [
+        "co74"
+      ],
+      "label_en": "Government or public research institutes — China or India",
+      "definition_en": "Cooperation with public research institutes (China or India). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "china_india",
+        "label_en": "China or India"
+      },
+      "source_pages": {
+        "co74": 16
+      }
+    },
+    {
+      "key": "public-research-other-countries",
+      "slug": "cis2010-cooperation-public-research-other-countries",
+      "columns": [
+        "co75"
+      ],
+      "label_en": "Government or public research institutes — Other countries",
+      "definition_en": "Cooperation with public research institutes (Other countries). Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4).",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co75": 16
       }
     }
   ]

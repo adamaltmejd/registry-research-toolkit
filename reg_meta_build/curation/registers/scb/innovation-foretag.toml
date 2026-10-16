@@ -9,7 +9,8 @@ native_id = "257"
 # eight partner rows for seven co row groups. 2004–2006 and 2006–2008 declare all
 # seven, read on the 7-category partner list their documentation carries over from
 # 2002–2004, with that caveat in each definition (#1603 batch-e D4). 2008–2010
-# declares only co1x–co5x; its co6x/co7x stay undeclared (#1571).
+# has no such list; its co6x/co7x carry the 2004–2008 meaning under the same-name
+# rule, with an assumed-meaning caveat in each definition (#1603 batch-e D4).
 
 # scb/innovation-foretag [[errata.delivered]] candidates were computed 2026-09-12
 # against SCB's raw Registerinformation export; folded duplicate columns
