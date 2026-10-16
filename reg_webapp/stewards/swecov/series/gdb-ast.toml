@@ -177,10 +177,6 @@ column = "AstKommun"
 hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
 
 [[column]]
-column = "AstNr"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
 column = "DeSO"
 tables = ["GDB_Ast1990"]
 hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1990's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }

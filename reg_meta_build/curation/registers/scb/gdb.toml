@@ -350,3 +350,86 @@ slug = "postnromrade-58"
 [[variable]]
 native_id = "70.58.postnromrade-old"
 slug = "postnromrade-old"
+
+# ── #1494: SWECOV GDB columns SCB does not document (steward-holdings, #1579) ──
+
+[[errata.column]]
+data_warning = "The 2023 workplace tables hold markedly fewer rows than 2018 (aggregate check on MONA); the SCB documentation reviewed does not explain the drop."
+variant = "adresser-fastigheter"
+column = "AstRuta250swX"
+data_type = "text"
+name = "Arbetsställets 250 m-ruta, X (SWEREF 99 TM)"
+definition = "Nordlig koordinat (X) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där arbetsstället ligger. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1990-2023"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+data_warning = "The 2023 workplace tables hold markedly fewer rows than 2018 (aggregate check on MONA); the SCB documentation reviewed does not explain the drop."
+variant = "adresser-fastigheter"
+column = "AstRuta250swY"
+data_type = "text"
+name = "Arbetsställets 250 m-ruta, Y (SWEREF 99 TM)"
+definition = "Östlig koordinat (Y) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där arbetsstället ligger. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1990-2023"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "Ruta250swX"
+data_type = "text"
+name = "Bostadens 250 m-ruta, X (SWEREF 99 TM)"
+definition = "Nordlig koordinat (X) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där personens bostad ligger. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "Ruta250swY"
+data_type = "text"
+name = "Bostadens 250 m-ruta, Y (SWEREF 99 TM)"
+definition = "Östlig koordinat (Y) i SWEREF 99 TM, i meter, för sydvästra hörnet av den 250 m-ruta där personens bostad ligger. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+data_warning = "The 2023 workplace tables hold markedly fewer rows than 2018 (aggregate check on MONA); the SCB documentation reviewed does not explain the drop."
+variant = "adresser-fastigheter"
+column = "AstNr"
+data_type = "text"
+name = "Arbetsställenummer"
+definition = "Femsiffrigt nummer på arbetsstället inom organisationen; inte unikt utan organisationsnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1990-2023"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "Skolform"
+data_type = "text"
+name = "Skolform"
+definition = "Skolform för skolenheten (koderna 11 och 21; kodernas innebörd är inte dokumenterad). SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1990-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"

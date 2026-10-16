@@ -552,6 +552,3 @@ column = "P1105_Lopnr_skolkod"
 tables = ["GDB_Skolor1990", "GDB_Skolor1991", "GDB_Skolor1992", "GDB_Skolor1993", "GDB_Skolor1994", "GDB_Skolor1995", "GDB_Skolor1996", "GDB_Skolor1997", "GDB_Skolor1998", "GDB_Skolor1999", "GDB_Skolor2000", "GDB_Skolor2001", "GDB_Skolor2002", "GDB_Skolor2003", "GDB_Skolor2004", "GDB_Skolor2005", "GDB_Skolor2006", "GDB_Skolor2007", "GDB_Skolor2008", "GDB_Skolor2009", "GDB_Skolor2010", "GDB_Skolor2011", "GDB_Skolor2012", "GDB_Skolor2013"]
 hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
 
-[[column]]
-column = "Skolform"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }

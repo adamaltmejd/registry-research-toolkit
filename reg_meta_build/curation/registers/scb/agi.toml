@@ -899,3 +899,44 @@ list_members = [["0", "Ingen förekomst"], ["1", "Förekomst"]]
 witness = ["2020-01-01", "2020-12-31"]
 reason = "Accepted domain-continuity assumption (2026-09-30): reuse this exact SCB2020 binary domain for checked2021–2023 deliveries. Independent2021 tax specification confirms checkbox meaning but does not prove SCB absence-to0 transformation or2022–2023 stability; those are explicitly assumed. Original source claims and periods remain unchanged."
 source = "SCB2020 löne- och förmånsutb exact column/Förekomst witness; SKV AGD service description2021-01-08 v1.8, PDF SHA25605e3077532c3dc824f1da30be82a756cd2cca816656923a858d5a2e1c0b084b6 pp26–29; https://www7.skatteverket.se/portal-wapi/open/apier-och-oppna-data/utvecklarportalen/v1/getFile/tjanstebeskrivning-agd-inlamning-v1 ; user accepted2026-09-30; extended to the UL_AG pair 2026-10-13 (#1505)."
+
+# ── #1497: SWECOV AGI columns SCB does not document (steward-holdings, #1579) ──
+
+[[errata.column]]
+variant = "individuppgifter-agi"
+column = "KONTROLLSTATUS"
+data_type = "text"
+name = "Kontrollstatus"
+definition = "Status för SCB:s granskning av individuppgiften (koderna KONTROLLERAD, FARDIGBEARBETAD_MAN, FARDIGBEARBETAD_MASK, SKA_ATGARDAS). SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2019-2023"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "individuppgifter-agi"
+column = "P1105_LopNr_FARTYGETS_NAMN"
+data_type = "text"
+name = "Fartygets namn (löpnummer)"
+definition = "Pseudonymiserat löpnummer för fartygets namn; glest ifyllt. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = true
+holdings_period = "2019-2023"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "individuppgifter-agi"
+column = "P1105_LopNr_FARTYGSSIGNAL"
+data_type = "text"
+name = "Fartygssignal (löpnummer)"
+definition = "Pseudonymiserat löpnummer för fartygets signal; glest ifyllt. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = true
+holdings_period = "2019-2023"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+noted = "2026-10-16"

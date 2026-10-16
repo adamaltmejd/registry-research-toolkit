@@ -329,10 +329,6 @@ mappings = [{ register_variant = "scb/agi/individuppgifter-agi", variable = "scb
 reason = "AGI column spelled ULAG where the catalog variable's delivery name is UL_AG; same measure, delivered 2021-2023 per catalog errata #1560 (#1505), maintainer-decided 2026-10-13."
 
 [[column]]
-column = "KONTROLLSTATUS"
-hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
-
-[[column]]
 column = "LANDSKOD_ARBETSLAND_Klartext"
 tables = ["Arb_AGIIndivid202001_Def", "Arb_AGIIndivid202002_Def", "Arb_AGIIndivid202003_Def", "Arb_AGIIndivid202004_Def", "Arb_AGIIndivid202005_Def", "Arb_AGIIndivid202006_Def", "Arb_AGIIndivid202007_Def", "Arb_AGIIndivid202008_Def", "Arb_AGIIndivid202009_Def", "Arb_AGIIndivid202010_Def", "Arb_AGIIndivid202011_Def", "Arb_AGIIndivid202012_Def", "Arb_AGIIndivid202101_Def", "Arb_AGIIndivid202102_Def", "Arb_AGIIndivid202103_Def", "Arb_AGIIndivid202104_Def", "Arb_AGIIndivid202105_Def", "Arb_AGIIndivid202106_Def", "Arb_AGIIndivid202107_Def", "Arb_AGIIndivid202108_Def", "Arb_AGIIndivid202109_Def", "Arb_AGIIndivid202110_Def", "Arb_AGIIndivid202111_Def", "Arb_AGIIndivid202112_Def", "Arb_AGIIndivid202201_Def", "Arb_AGIIndivid202202_Def", "Arb_AGIIndivid202203_Def", "Arb_AGIIndivid202204_Def", "Arb_AGIIndivid202205_Def", "Arb_AGIIndivid202206_Def", "Arb_AGIIndivid202207_Def", "Arb_AGIIndivid202208_Def", "Arb_AGIIndivid202209_Def", "Arb_AGIIndivid202210_Def", "Arb_AGIIndivid202211_Def", "Arb_AGIIndivid202212_Def", "Arb_AGIIndivid202301_Def", "Arb_AGIIndivid202302_Def", "Arb_AGIIndivid202303_Def", "Arb_AGIIndivid202304_Def", "Arb_AGIIndivid202305_Def", "Arb_AGIIndivid202306_Def", "Arb_AGIIndivid202307_Def", "Arb_AGIIndivid202308_Def", "Arb_AGIIndivid202309_Def", "Arb_AGIIndivid202310_Def", "Arb_AGIIndivid202311_Def", "Arb_AGIIndivid202312_Def"]
 unmap = "Plain-text label of the code column LANDSKOD_ARBETSLAND in the same table: the aggregate check found one text per code and the same fill as the code column. Not a separate variable; it ships with the table (#1497; aggregate check on MONA, reported as a conclusion only)."
@@ -352,10 +348,3 @@ column = "LANDSKOD_TIN_Klartext"
 tables = ["Arb_AGIIndivid202001_Def", "Arb_AGIIndivid202002_Def", "Arb_AGIIndivid202003_Def", "Arb_AGIIndivid202004_Def", "Arb_AGIIndivid202005_Def", "Arb_AGIIndivid202006_Def", "Arb_AGIIndivid202007_Def", "Arb_AGIIndivid202008_Def", "Arb_AGIIndivid202009_Def", "Arb_AGIIndivid202010_Def", "Arb_AGIIndivid202011_Def", "Arb_AGIIndivid202012_Def", "Arb_AGIIndivid202101_Def", "Arb_AGIIndivid202102_Def", "Arb_AGIIndivid202103_Def", "Arb_AGIIndivid202104_Def", "Arb_AGIIndivid202105_Def", "Arb_AGIIndivid202106_Def", "Arb_AGIIndivid202107_Def", "Arb_AGIIndivid202108_Def", "Arb_AGIIndivid202109_Def", "Arb_AGIIndivid202110_Def", "Arb_AGIIndivid202111_Def", "Arb_AGIIndivid202112_Def", "Arb_AGIIndivid202201_Def", "Arb_AGIIndivid202202_Def", "Arb_AGIIndivid202203_Def", "Arb_AGIIndivid202204_Def", "Arb_AGIIndivid202205_Def", "Arb_AGIIndivid202206_Def", "Arb_AGIIndivid202207_Def", "Arb_AGIIndivid202208_Def", "Arb_AGIIndivid202209_Def", "Arb_AGIIndivid202210_Def", "Arb_AGIIndivid202211_Def", "Arb_AGIIndivid202212_Def", "Arb_AGIIndivid202301_Def", "Arb_AGIIndivid202302_Def", "Arb_AGIIndivid202303_Def", "Arb_AGIIndivid202304_Def", "Arb_AGIIndivid202305_Def", "Arb_AGIIndivid202306_Def", "Arb_AGIIndivid202307_Def", "Arb_AGIIndivid202308_Def", "Arb_AGIIndivid202309_Def", "Arb_AGIIndivid202310_Def", "Arb_AGIIndivid202311_Def", "Arb_AGIIndivid202312_Def"]
 unmap = "Plain-text label of the code column LANDSKOD_TIN in the same table: the aggregate check found one text per code and the same fill as the code column. Not a separate variable; it ships with the table (#1497; aggregate check on MONA, reported as a conclusion only)."
 
-[[column]]
-column = "P1105_LopNr_FARTYGETS_NAMN"
-hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
-
-[[column]]
-column = "P1105_LopNr_FARTYGSSIGNAL"
-hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }
