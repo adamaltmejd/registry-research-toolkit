@@ -1,27 +1,28 @@
+# Editions are RTB year-end versions: SWECOV's RTB_PostNr_YYYY is read as status 31 December YYYY, like every other scb/rtb series; the postnr carry warns that this date is assumed (Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)).
 id = "rtb-postnr"
 register = "scb/rtb"
 variants = ["scb/rtb/folkbokforda-personer"]
 
 [[table]]
 table = "RTB_PostNr_2015"
-edition = 2015
+edition = "2015-12-31"
 
 [[table]]
 table = "RTB_PostNr_2016"
-edition = 2016
+edition = "2016-12-31"
 
 [[table]]
 table = "RTB_PostNr_2017"
-edition = 2017
+edition = "2017-12-31"
 
 [[table]]
 table = "RTB_PostNr_2018"
-edition = 2018
+edition = "2018-12-31"
 
 [[table]]
 table = "RTB_PostNr_2019"
-edition = 2019
+edition = "2019-12-31"
 
 [[table]]
 table = "RTB_PostNr_2020"
-edition = 2020
+edition = "2020-12-31"

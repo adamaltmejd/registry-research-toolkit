@@ -37,8 +37,10 @@ edition = "1997-12-31"
 
 [[column]]
 column = "P1105_Lopnr_PersonNr"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. RTB source policy explicitly identifies annual family status columns and their native family register; original table year and own family-status state fix the December 31 snapshot."
+mappings = [{ register_variant = "scb/rtb/familjer-1990-1997", variable = "scb/rtb/pnr", representation = "PNR" }]
+reason = "SWECOV storage spelling of the person key SCB documents on Familjer 1990-1997 under the delivery column PNR (scb/rtb/pnr); the header becomes PersonNr from 1998 (relations.toml RTB representation edge). #1603 batch-e; Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
 
 [[column]]
 column = "P1105_Lopnr_PersonNr_Partner"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. RTB source policy explicitly identifies annual family status columns and their native family register; original table year and own family-status state fix the December 31 snapshot."
+mappings = [{ register_variant = "scb/rtb/familjer-1990-1997", variable = "scb/rtb/personnr-partner", representation = "PersonNr_Partner" }]
+reason = "Undocumented partner person key minted on scb/rtb/familjer-1990-1997 (Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md))."
