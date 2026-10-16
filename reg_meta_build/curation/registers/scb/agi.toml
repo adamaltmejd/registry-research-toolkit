@@ -917,10 +917,10 @@ noted = "2026-10-16"
 
 [[errata.column]]
 variant = "individuppgifter-agi"
-column = "P1105_LopNr_FARTYGETS_NAMN"
+column = "FARTYGETS_NAMN"
 data_type = "text"
-name = "Fartygets namn (löpnummer)"
-definition = "Pseudonymiserat löpnummer för fartygets namn; glest ifyllt. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+name = "Fartygets namn"
+definition = "Fartygets namn; glest ifyllt. SWECOV:s leverans har det pseudonymiserat som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
 is_sensitive = false
 is_identifier = true
 holdings_period = "2019-2023"
@@ -930,10 +930,10 @@ noted = "2026-10-16"
 
 [[errata.column]]
 variant = "individuppgifter-agi"
-column = "P1105_LopNr_FARTYGSSIGNAL"
+column = "FARTYGSSIGNAL"
 data_type = "text"
-name = "Fartygssignal (löpnummer)"
-definition = "Pseudonymiserat löpnummer för fartygets signal; glest ifyllt. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+name = "Fartygssignal"
+definition = "Fartygets signal (anropssignal); glest ifyllt. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
 is_sensitive = false
 is_identifier = true
 holdings_period = "2019-2023"
@@ -946,9 +946,9 @@ native_id = "392.KONTROLLSTATUS"
 slug = "kontrollstatus"
 
 [[variable]]
-native_id = "392.P1105_LopNr_FARTYGETS_NAMN"
-slug = "lopnr-fartygets-namn"
+native_id = "392.FARTYGETS_NAMN"
+slug = "fartygets-namn"
 
 [[variable]]
-native_id = "392.P1105_LopNr_FARTYGSSIGNAL"
-slug = "lopnr-fartygssignal"
+native_id = "392.FARTYGSSIGNAL"
+slug = "fartygssignal"

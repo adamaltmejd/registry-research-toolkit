@@ -202,9 +202,21 @@ reason = "GDB year-end rule (maintainer decision 2026-10-16): SWECOV's GDB table
 
 [[column]]
 column = "Kommun"
-tables = ["GDB_Skolor1990", "GDB_Skolor1991", "GDB_Skolor1992", "GDB_Skolor1993", "GDB_Skolor1994", "GDB_Skolor1995", "GDB_Skolor1996", "GDB_Skolor1997", "GDB_Skolor1998", "GDB_Skolor1999", "GDB_Skolor2000", "GDB_Skolor2001", "GDB_Skolor2002", "GDB_Skolor2003", "GDB_Skolor2004", "GDB_Skolor2005", "GDB_Skolor2006", "GDB_Skolor2007", "GDB_Skolor2008", "GDB_Skolor2009", "GDB_Skolor2010", "GDB_Skolor2011", "GDB_Skolor2012", "GDB_Skolor2013", "GDB_Skolor2014", "GDB_Skolor2015", "GDB_Skolor2016"]
+tables = ["GDB_Skolor1990", "GDB_Skolor1991", "GDB_Skolor1992", "GDB_Skolor1993", "GDB_Skolor1994", "GDB_Skolor1995", "GDB_Skolor1996", "GDB_Skolor1997", "GDB_Skolor1998", "GDB_Skolor1999", "GDB_Skolor2000", "GDB_Skolor2001", "GDB_Skolor2002", "GDB_Skolor2003", "GDB_Skolor2004", "GDB_Skolor2005", "GDB_Skolor2006"]
 mappings = [{ register_variant = "scb/gdb/fastigheter", variable = "scb/gdb/kommun", representation = "Kommun" }]
-reason = "GDB year-end rule (maintainer decision 2026-10-16): SWECOV's GDB table for year Y is the status at 31 December Y, which SCB publishes as the annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari), so each table's edition is the 1 January Y+1 version. Tables 1990-2016 are the 1991-2017 versions: SCB documents Kommun on fastigheter from 2003-01-01; 1991-2002 are added in gdb.toml with a reference-date data warning."
+reason = "GDB year-end rule (maintainer decision 2026-10-16): SWECOV's GDB table for year Y is the status at 31 December Y, which SCB publishes as the annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari), so each table's edition is the 1 January Y+1 version. Tables 1990-2016 are the 1991-2017 versions: SCB documents Kommun on fastigheter from 2003-01-01; 1991-2002 are added in gdb.toml with a reference-date data warning. SCB delivers the fastigheter column as Kommun through 2007-01-01, kommun 2008-2015 and KOMMUN 2016-2017; each spelling is its own representation."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2007", "GDB_Skolor2008", "GDB_Skolor2009", "GDB_Skolor2010", "GDB_Skolor2011", "GDB_Skolor2012", "GDB_Skolor2013", "GDB_Skolor2014"]
+mappings = [{ register_variant = "scb/gdb/fastigheter", variable = "scb/gdb/kommun", representation = "kommun" }]
+reason = "GDB year-end rule (maintainer decision 2026-10-16): SWECOV's GDB table for year Y is the status at 31 December Y, which SCB publishes as the annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari), so each table's edition is the 1 January Y+1 version. Tables 1990-2016 are the 1991-2017 versions: SCB documents Kommun on fastigheter from 2003-01-01; 1991-2002 are added in gdb.toml with a reference-date data warning. SCB delivers the fastigheter column as Kommun through 2007-01-01, kommun 2008-2015 and KOMMUN 2016-2017; each spelling is its own representation."
+
+[[column]]
+column = "Kommun"
+tables = ["GDB_Skolor2015", "GDB_Skolor2016"]
+mappings = [{ register_variant = "scb/gdb/fastigheter", variable = "scb/gdb/kommun", representation = "KOMMUN" }]
+reason = "GDB year-end rule (maintainer decision 2026-10-16): SWECOV's GDB table for year Y is the status at 31 December Y, which SCB publishes as the annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari), so each table's edition is the 1 January Y+1 version. Tables 1990-2016 are the 1991-2017 versions: SCB documents Kommun on fastigheter from 2003-01-01; 1991-2002 are added in gdb.toml with a reference-date data warning. SCB delivers the fastigheter column as Kommun through 2007-01-01, kommun 2008-2015 and KOMMUN 2016-2017; each spelling is its own representation."
 
 [[column]]
 column = "Kommun"
