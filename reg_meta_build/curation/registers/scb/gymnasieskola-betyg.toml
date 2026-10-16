@@ -1150,3 +1150,38 @@ valid_to = "2004-06-30"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "5823c4c69aaea187e49d08f2419a1e0a56e6ae492c8958e0bb412e9bf00e312b"
+
+# ── #1610 decision 5a: SWECOV GymnasieskolaAvg_Amne_1993 (school year 1992/93) on kursbetyg ──
+
+[[errata.version]]
+variant = "kursbetyg"
+name = "Läsåret 1992/1993"
+evidence = "SWECOV holds GymnasieskolaAvg_Amne_1993, the long-format subject-grade delivery for school year 1992/93; SCB's Registerinformation export documents kursbetyg for Läsåret 1984/1985–1991/1992 and from 1993/1994 but carries no 1992/1993 version. The aggregate check on MONA (reported as a conclusion only) found the subject-code set and grade scale continuous with the neighbouring years. Named in the variant's own Läsåret convention (#1610; maintainer decision 2026-10-16)."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+variant = "kursbetyg"
+column = "ämneskod"
+versions = ["Läsåret 1992/1993"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"  # placeholder: the strict build reports the digest
+evidence = "SWECOV holds the table for school year 1992/93 (GymnasieskolaAvg_Amne_1993, column amneskod) and the aggregate check found the code set and scale continuous with the neighbouring years; SCB documents ämneskod on this variant 1984/85–1991/92 and 1993/94–1995/96 in the same 6-position book. (#1610; maintainer decision 2026-10-16; aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+variant = "kursbetyg"
+column = "betyg"
+versions = ["Läsåret 1992/1993"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"  # placeholder: the strict build reports the digest
+evidence = "SWECOV holds the table for school year 1992/93 (GymnasieskolaAvg_Amne_1993, column betyg) and the aggregate check found the code set and scale continuous with the neighbouring years; SCB documents betyg on this variant 1984/85–1991/92 and 1993/94–1995/96 on the scale Betyg gymnasieskolans t.o.m. 1996. (#1610; maintainer decision 2026-10-16; aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+variant = "kursbetyg"
+column = "personnr"
+versions = ["Läsåret 1992/1993"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"  # placeholder: the strict build reports the digest
+evidence = "SWECOV holds the table for school year 1992/93 (GymnasieskolaAvg_Amne_1993, column P1105_LopNr_PersonNr) and the aggregate check found the code set and scale continuous with the neighbouring years; SCB documents personnr on this variant 1984/85–1991/92 and 1993/94–1995/96. (#1610; maintainer decision 2026-10-16; aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-16"

@@ -1,6 +1,7 @@
 id = "gymnasieskolaavg-amne"
 register = "scb/gymnasieskola-betyg"
-variants = []
+variants = ["scb/gymnasieskola-betyg/kursbetyg"]
+edition_spelling = "spring"
 
 [[table]]
 table = "GymnasieskolaAvg_Amne_1985"
@@ -53,17 +54,11 @@ edition = 1996
 [[column]]
 column = "Amneskod_omkodad"
 tables = ["GymnasieskolaAvg_Amne_1985", "GymnasieskolaAvg_Amne_1986", "GymnasieskolaAvg_Amne_1987", "GymnasieskolaAvg_Amne_1988", "GymnasieskolaAvg_Amne_1989"]
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Historical 1985–1996 subject-grade table shape is explicitly ungrounded in the maintained source policy. Neither the final-grade nor course-grade variant establishes this recoded subject delivery. All original fields and period retained; catalog mapping unavailable." }
-
-[[column]]
-column = "P1105_LopNr_PersonNr"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Historical 1985–1996 subject-grade table shape is explicitly ungrounded in the maintained source policy. Neither the final-grade nor course-grade variant establishes this recoded subject delivery. All original fields and period retained; catalog mapping unavailable." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurs", representation = "ämneskod" }]
+reason = "Long-format subject grades (one row per leaver and subject), SCB's kursbetyg shape for 1984/85–1995/96, where SCB delivers the subject under ämneskod coded in the book Kurskod Gymnasieskolan Avgångna 1985-1996, 6 pos. Assumption: \"omkodad\" means already coded to that 6-position book, supported by the aggregate check on MONA (reported as a conclusion only), which found the subject codes continuous across the rename to amneskod between the 1989 and 1990 tables (#1610; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "amneskod"
 tables = ["GymnasieskolaAvg_Amne_1990", "GymnasieskolaAvg_Amne_1991", "GymnasieskolaAvg_Amne_1992", "GymnasieskolaAvg_Amne_1993", "GymnasieskolaAvg_Amne_1994", "GymnasieskolaAvg_Amne_1995", "GymnasieskolaAvg_Amne_1996"]
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Historical 1985–1996 subject-grade table shape is explicitly ungrounded in the maintained source policy. Neither the final-grade nor course-grade variant establishes this recoded subject delivery. All original fields and period retained; catalog mapping unavailable." }
-
-[[column]]
-column = "betyg"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Historical 1985–1996 subject-grade table shape is explicitly ungrounded in the maintained source policy. Neither the final-grade nor course-grade variant establishes this recoded subject delivery. All original fields and period retained; catalog mapping unavailable." }
+mappings = [{ register_variant = "scb/gymnasieskola-betyg/kursbetyg", variable = "scb/gymnasieskola-betyg/kurs", representation = "ämneskod" }]
+reason = "ASCII SWECOV spelling of SCB's kursbetyg column ämneskod; the table holds no column under the SCB spelling. The aggregate check on MONA (reported as a conclusion only) found 6-position codes that resolve in Kurskod Gymnasieskolan Avgångna 1985-1996, 6 pos. The 1993 table (school year 1992/93) is covered by the errata.delivered entry in scb/gymnasieskola-betyg (#1610; maintainer decision 2026-10-16)."
