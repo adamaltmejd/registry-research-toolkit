@@ -1,0 +1,22 @@
+[register]
+provider = "fk"
+slug = "remote"
+native_id = {{naming_id kind=register provider=fk register_key=remote}}
+[[variant]]
+slug = "default"
+native_id = {{naming_id kind=register_variant provider=fk register_key=remote member_key=_default}}
+[[variable]]
+slug = "amount"
+native_id = {{naming_id kind=variable provider=fk register_key=remote member_key=AMOUNT}}
+[[variable]]
+slug = "delkod"
+native_id = {{naming_id kind=variable provider=fk register_key=remote member_key=DELKOD}}
+[[errata.column]]
+variant = "_default"
+column = "DELKOD"
+name = "Delkod"
+definition = "Kod per delförmån, en rad per förekomst."
+holdings_period = "2012-2016"
+source = "steward-holdings"
+evidence = "Held in the steward's tables."
+noted = "2026-10-17"

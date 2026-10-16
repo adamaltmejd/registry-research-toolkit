@@ -1,0 +1,29 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["code", "locator"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"register": "syd"},
+      "fields": ["variable", "variant", "valid_from", "valid_to"],
+      "rows": [
+        ["col", "_default", "2005-01-01", "2014-12-31"],
+        ["col", "_default", "2015-01-01", "2023-12-31"],
+        ["lank", "_default", "2005-01-01", "2023-12-31"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"register": "remote"},
+      "fields": ["variable", "variant", "valid_from", "valid_to"],
+      "rows": [
+        ["amount", "default", "2000-01-01", "2020-12-31"],
+        ["delkod", "default", "2012-01-01", "2016-12-31"]
+      ]
+    }
+  ]
+}

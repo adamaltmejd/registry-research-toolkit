@@ -4327,6 +4327,28 @@ def compile_edition_splits(
     )
 
 
+def _sos_places_in_default(
+    register: RegisterCuration, records: tuple[SourceRecord, ...]
+) -> bool:
+    """Whether a SOS register places every variable in the synthesized `_default`
+    variant: its workbook has no Deldatamängder sheet and the curation names no
+    native variant. `records` is the register's whole slice."""
+    return not any(
+        parent.kind == "variant" for record in records for parent in record.parent_facts
+    ) and all(variant.slug == "_default" for variant in register.variant)
+
+
+def _sos_variant_key(record: SourceRecord, places_in_default: bool) -> NativeKey:
+    """The variant a SOS record's occurrence lands in (unrouted records only)."""
+    if places_in_default:
+        register_key = source_register_key(record)
+        assert register_key is not None
+        return (*register_key, "variant", "not-applicable")
+    key = native_variant_key(record)
+    assert key is not None
+    return key
+
+
 def _compile_sos_register(
     register: RegisterCuration, records: tuple[SourceRecord, ...]
 ) -> tuple[
@@ -4354,6 +4376,7 @@ def _compile_sos_register(
     preserve_native_variants = not has_variant_parent and any(
         variant.slug != "_default" for variant in register.variant
     )
+    places_in_default = _sos_places_in_default(register, records)
     for record in records:
         if preserve_native_variants and record.subject.variant.status == "value":
             key = native_variant_key(record)
@@ -4453,10 +4476,8 @@ def _compile_sos_register(
             if ref in source_use_refs:
                 continue
             token = record.subject.variant.name
-            if not has_variant_parent and not preserve_native_variants:
-                register_key = source_register_key(record)
-                assert register_key is not None
-                variant_keys = ((*register_key, "variant", "not-applicable"),)
+            if places_in_default:
+                variant_keys = (_sos_variant_key(record, places_in_default),)
             elif token in routes:
                 variant_keys = tuple(
                     key
@@ -5637,6 +5658,7 @@ def compile_occurrence_corrections(
         carried_by_donor: dict[SourceRecordRef, list[tuple[Any, Any]]] = defaultdict(
             list
         )
+        places_in_default: bool | None = None
         for table, rows in entries:
             for index, entry in enumerate(rows, 1):
                 case_id = f"{register.source_file}#/errata.{table}/{index}"
@@ -5879,8 +5901,21 @@ def compile_occurrence_corrections(
                 if isinstance(entry, ErrataOccurrenceCarryEntry):
                     donor = selected[0]
                     variable_key = native_variable_key(donor)
-                    variant_key = native_variant_key(donor)
-                    assert variable_key is not None and variant_key is not None
+                    assert variable_key is not None
+                    if places_in_default is None:
+                        places_in_default = _sos_places_in_default(
+                            register,
+                            tuple(
+                                record
+                                for _, members in prepared.records.iter_register_slices(
+                                    scope.source, (register_key,)
+                                )
+                                for record in members
+                            ),
+                        )
+                    # The carried occurrence lands where the SOS compile places
+                    # the original, or it would sit under an unnamed token.
+                    variant_key = _sos_variant_key(donor, places_in_default)
                     # The carried occurrence states the original's corrected facts:
                     # copying an original a checked `[[errata.field]]` corrects
                     # would make the two occurrences of one variable disagree.
@@ -6328,11 +6363,18 @@ def _compile_provider_columns(
                 )
                 for record in members
             )
+        # A register without source variants delivers under the synthesized
+        # `_default`, which no record's own label names.
         on_variant = sorted(
             (
                 record
                 for record in records_of[entry.register_fqid]
-                if _variant_label(register, record) == entry.variant
+                if (
+                    "_default"
+                    if record.subject.variant.status == "not_applicable"
+                    else _variant_label(register, record)
+                )
+                == entry.variant
             ),
             key=lambda record: repr(record_ref(record)),
         )
@@ -6372,7 +6414,14 @@ def _compile_provider_columns(
         anchor = on_variant[0]
         ref = record_ref(anchor)
         register_native = source_register_key(anchor)
-        variant_key = native_variant_key(anchor)
+        variant_key = (
+            _sos_variant_key(
+                anchor,
+                _sos_places_in_default(register, records_of[entry.register_fqid]),
+            )
+            if register.register_info.provider == "sos"
+            else native_variant_key(anchor)
+        )
         assert register_native is not None and variant_key is not None
         variable_key = (*register_native, "declared-column", fold_column(entry.column))
         # The anchor's whole native family, so a changed family drops the mint.

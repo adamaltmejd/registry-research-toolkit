@@ -659,18 +659,21 @@ materialized rows.
 A non-SCB register (SOS, a thin provider) takes `[[errata.column]]` too (#1633). It has
 no named editions, so the entry dates its holding with `holdings_period` alone, and its
 `variant` is the source's own variant label, as that register's other errata name it
-(SOS `PAR_OV`; a thin provider `<register native_id>.<variant key>`). The entry anchors
-on one record of the variant, guarded with that record's whole native family, and adds
-one pooled occurrence. Its optional `data_warning` annotates that occurrence, as on the
-SCB path. A routed token (`[[identity.route]]`) is refused as stale: name its
-destination. Its name is the `[[variable]]` entry `<register native_id>.<column>`, which
-is also a documented SOS or thin variable's own source id, so the entry is refused
-(`column_now_documented`) when the register documents the column anywhere, or an
-`[[identity.rename]]` gives a documented variable that column. The `[[variable]]` entry
-then names the documented variable through native naming: a documented column extended
-outside its documented years is an `[[errata.occurrence_carry]]`. The mint takes its
-slug by naming conversion's rules (`accepted_variable_slugs`): a generated pin in a
-churning zone is inactive, and an authored entry overrides a generated one.
+(SOS `PAR_OV`; a thin provider `<register native_id>.<variant key>`, or `_default` for a
+register that declares no variant). The entry anchors on one record of the variant,
+guarded with that record's whole native family, and adds one pooled occurrence in the
+variant the anchor's own occurrence lands in: a SOS workbook without a Deldatamängder
+sheet places every variable in the synthesized `_default`, and the mint follows it. Its
+optional `data_warning` annotates that occurrence, as on the SCB path. A routed token
+(`[[identity.route]]`) is refused as stale: name its destination. Its name is the
+`[[variable]]` entry `<register native_id>.<column>`, which is also a documented SOS or
+thin variable's own source id, so the entry is refused (`column_now_documented`) when
+the register documents the column anywhere, or an `[[identity.rename]]` gives a
+documented variable that column. The `[[variable]]` entry then names the documented
+variable through native naming: a documented column extended outside its documented
+years is an `[[errata.occurrence_carry]]`. The mint takes its slug by naming
+conversion's rules (`accepted_variable_slugs`): a generated pin in a churning zone is
+inactive, and an authored entry overrides a generated one.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column, with this meaning, on this variant? One column/variant omission is
@@ -908,10 +911,12 @@ build refuses it as a located stale entry when:
 - the original's physical alternatives under its one record key disagree on a field the
   carry copies.
 
-The carry copies the original's bound coding, declared or not. It is for SOS registers
-only, which the loader enforces: an SCB register states the same fact with
-`[[errata.delivered]]`, and a thin provider dates its columns by period scope, which a
-carry does not copy (revisit if a thin column needs one).
+The carried occurrence lands in the original's variant as the SOS compile places it, the
+synthesized `_default` for a workbook without a Deldatamängder sheet
+(`_sos_variant_key`). The carry copies the original's bound coding, declared or not. It
+is for SOS registers only, which the loader enforces: an SCB register states the same
+fact with `[[errata.delivered]]`, and a thin provider dates its columns by period scope,
+which a carry does not copy (revisit if a thin column needs one).
 
 `[[errata.flags]]` authors `is_sensitive` and `is_identifier` for a variable whose
 source and auxiliary joins state neither, which `unresolved_flag` otherwise withholds

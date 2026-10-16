@@ -1,0 +1,41 @@
+{
+  "description": "SOS SYD has no Deldatamängder sheet: COL is delivered under TOKEN and documented 2015-2023. FK's thin register remote (2000-2020) declares no variant, so its records sit in the synthesized _default; it documents AMOUNT. Plus the SCB sample VALUE column.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "SYD",
+      "title": "Variantlöst",
+      "subsets": [],
+      "variables": [
+        {
+          "name": "COL",
+          "deldatamangd": "TOKEN",
+          "label": "Col",
+          "description": "Kod per position",
+          "data_type": "Sträng (text)",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null
+        }
+      ]
+    }
+  ],
+  "files": {
+    "Forsakringskassan/fk.toml": [
+      "[[register]]",
+      "key = \"remote\"",
+      "name = \"Remote\"",
+      "valid_from = \"2000-01-01\"",
+      "valid_to = \"2020-12-31\"",
+      "[[register.variable]]",
+      "name = \"Amount\"",
+      "column = \"AMOUNT\"",
+      "data_type = \"int\""
+    ]
+  }
+}
