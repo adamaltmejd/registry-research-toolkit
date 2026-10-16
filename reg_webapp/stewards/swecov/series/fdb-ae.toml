@@ -80,3 +80,23 @@ tables = ["FDB_AE_2022"]
 mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/kommun-for-arbetsstalle", representation = "BKommunKod" }]
 reason = "Same SCB variable as the catalog owner: its SCB-documented state for this edition is delivered under the column BKommunKod; SWECOV holds it as Kommun, and the table holds no column under the SCB spelling (#1603; maintainer ruling 2026-10-15)."
 
+
+[[column]]
+column = "aestat"
+tables = ["FDB_AE_2019"]
+hold = { follow_up = "#1603", reason = "Edition 2019: scb/fdb documents the workplace status column AEStat through 2018 and AdmStat from 2019; the 2019 AEStat state SCB documents belongs to scb/foretagsreg, outside this table's variant scope. Whether this column is fdb's renamed AdmStat or the foretagsreg column is open (#1603)." }
+
+[[column]]
+column = "aestat"
+tables = ["FDB_AE_2020"]
+hold = { follow_up = "#1603", reason = "Edition 2020: scb/fdb documents the workplace status column AEStat through 2018 and AdmStat from 2019; the 2019 AEStat state SCB documents belongs to scb/foretagsreg, outside this table's variant scope. Whether this column is fdb's renamed AdmStat or the foretagsreg column is open (#1603)." }
+
+[[column]]
+column = "aestat"
+tables = ["FDB_AE_2021"]
+hold = { follow_up = "#1603", reason = "Edition 2021: scb/fdb documents the workplace status column AEStat through 2018 and AdmStat from 2019; the 2019 AEStat state SCB documents belongs to scb/foretagsreg, outside this table's variant scope. Whether this column is fdb's renamed AdmStat or the foretagsreg column is open (#1603)." }
+
+[[column]]
+column = "aestat"
+tables = ["FDB_AE_2022"]
+hold = { follow_up = "#1603", reason = "Edition 2022: scb/fdb documents the workplace status column AEStat through 2018 and AdmStat from 2019; the 2019 AEStat state SCB documents belongs to scb/foretagsreg, outside this table's variant scope. Whether this column is fdb's renamed AdmStat or the foretagsreg column is open (#1603)." }

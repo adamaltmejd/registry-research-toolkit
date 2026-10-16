@@ -7,3 +7,15 @@ variants = ["scb/ksju/sjukfranvaro-sjukloneperioden"]
 [[table]]
 table = "KSju_20152"
 edition = "2015-Q2"
+
+[[column]]
+column = "DelAntDagar"
+mappings = [{ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden", variable = "scb/ksju/delantdagar", representation = "DELANTDAGAR" }]
+select_owner = true
+reason = "SCB documents both delantdagar (DELANTDAGAR, to 2015) and delantdagar-2015 (DelAntDagar, from 2015) for 2015. Pinned to the owner this edition had before the #1603 D1 flags made the 2015 sibling state visible; owner choice for the 2015 overlap is open (#1603)."
+
+[[column]]
+column = "HelAntDagar"
+mappings = [{ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden", variable = "scb/ksju/helantdagar-2015", representation = "HelAntDagar" }]
+select_owner = true
+reason = "SCB documents both helantdagar (HELANTDAGAR, to 2015) and helantdagar-2015 (HelAntDagar, from 2015) for 2015. Pinned to the owner this edition had before the #1603 D1 flags made the 2015 sibling state visible; owner choice for the 2015 overlap is open (#1603)."
