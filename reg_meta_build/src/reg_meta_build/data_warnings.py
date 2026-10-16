@@ -535,7 +535,9 @@ def scope_data_warnings(
                         "delivery_column_name": state.delivery_column_name,
                         "valid_from": date.fromordinal(lo).isoformat(),
                         "valid_to": date.fromordinal(hi).isoformat(),
-                        "code": "source_metadata_conflict"
+                        "code": "reference_period_assumption"
+                        if "reference_period" in fields
+                        else "source_metadata_conflict"
                         if annotated[case_id].kind == "source_warning"
                         else "assumed_storage_type"
                         if "data_type" in fields

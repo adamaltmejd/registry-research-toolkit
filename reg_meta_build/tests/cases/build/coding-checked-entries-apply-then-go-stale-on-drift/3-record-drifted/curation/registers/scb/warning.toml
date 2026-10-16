@@ -19,3 +19,14 @@ data_warning = "Conflict"
 expected_evidence_sha256 = {{coding_evidence_sha256 key=member:4300}}
 reason = "Retain both"
 source = "Source rows"
+
+[[coding.warning]]
+variable = "43.5"
+variant = "people"
+column = "VALUE"
+periods = [["2020-01-01", "2020-12-31"]]
+fields = ["reference_period"]
+data_warning = "Status at year end"
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:4300}}
+reason = "Reviewed: the 2020 version describes the status at 31 December"
+source = "Source rows"

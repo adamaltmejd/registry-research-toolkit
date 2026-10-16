@@ -1662,6 +1662,11 @@ This is separate from an acknowledgement: it makes a supported contradiction vis
 without asserting a repair or changing which facts are available. Its consumer warning
 code is `source_metadata_conflict`, with exact affected fields, source references and
 period. Review prose explains the decision; the checked TOML is executable authority.
+The same entry with `fields = ["reference_period"]` instead records a reviewed reading
+of the column's time reference on a documented version (for example, that a year's table
+is the status at 31 December), with the same guards and coding unchanged. It is not a
+conflict, so its code is `reference_period_assumption`, and `reference_period` stands
+alone: one warning carries one meaning (#1639).
 
 Source-event endpoint acknowledgements use the same register-local declarations and
 exact matcher at the global event boundary, after all selected scopes are observed. Both

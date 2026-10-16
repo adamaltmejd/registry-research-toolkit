@@ -672,6 +672,7 @@
         "column",
         "valid_from",
         "valid_to",
+        "code",
         "summary",
         "fields"
       ],
@@ -680,6 +681,17 @@
           "VALUE",
           "2020-01-01",
           "2020-12-31",
+          "reference_period_assumption",
+          "Status at year end",
+          [
+            "reference_period"
+          ]
+        ],
+        [
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31",
+          "source_metadata_conflict",
           "Conflict",
           [
             "data_type",
@@ -687,7 +699,7 @@
           ]
         ]
       ],
-      "note": "warning: the digest-guarded [[coding.warning]] applies to the reviewed sources and publishes its data_warning over its fields; the stale-issue projection above has no row for it."
+      "note": "warning: both digest-guarded [[coding.warning]] entries apply to the reviewed sources and publish their data_warning over their fields; the stale-issue projection above has no row for them. The second names only reference_period (#1639), so it is a reference_period_assumption, not a source conflict, and VALUE's 2020 coding (1 One, state_codes above) is unchanged."
     }
   ]
 }
