@@ -15438,3 +15438,7 @@ slug = "v7002"
 [[variable]]
 native_id = "182.WEIGHT"
 slug = "weight"
+
+[[variable]]
+native_id = "182.SIZE_CLASS"
+slug = "size-class"

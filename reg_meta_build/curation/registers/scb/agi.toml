@@ -940,3 +940,15 @@ holdings_period = "2019-2023"
 source = "steward-holdings"
 evidence = "SWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
 noted = "2026-10-16"
+
+[[variable]]
+native_id = "392.KONTROLLSTATUS"
+slug = "kontrollstatus"
+
+[[variable]]
+native_id = "392.P1105_LopNr_FARTYGETS_NAMN"
+slug = "lopnr-fartygets-namn"
+
+[[variable]]
+native_id = "392.P1105_LopNr_FARTYGSSIGNAL"
+slug = "lopnr-fartygssignal"
