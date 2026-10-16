@@ -1,0 +1,84 @@
+{
+  "note": "Step 1 without its entry 1. The twins' entries move from positions 2 and 3 to 1 and 2. Their warning's content is unchanged, so its id is step 1's (#1606); only its pointer moves.",
+  "fails_if": "`warning_identity` (data_warnings.py) hashes an entry's array position, so deleting an unrelated [[acknowledge]] entry changes the id of a warning whose content did not change (and its place in the reader's warning_id order)",
+  "sources": {
+    "description": "Variable 101 delivers member 1001 in 2020 and member 1002 in 2021, each through First and Second; variable 102 delivers OTHER as member 1003 in 2020 and member 1004 in 2021. Only the 2020 members carry a list (Kön: 1 Man).",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "First",
+          "regver_id": 110,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "Second",
+          "regver_id": 110,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1002,
+          "var_id": 101,
+          "colname": "First",
+          "year": "2021",
+          "regver_id": 121,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1002,
+          "var_id": 101,
+          "colname": "Second",
+          "year": "2021",
+          "regver_id": 121,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1003,
+          "var_id": 102,
+          "colname": "OTHER",
+          "regver_id": 110,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1004,
+          "var_id": 102,
+          "colname": "OTHER",
+          "year": "2021",
+          "regver_id": 121,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        }
+      ],
+      "vardemangder": [
+        "Kön|1|1|Man|1001|5001",
+        "Kön|1|1|Man|1003|5003"
+      ]
+    }
+  }
+}

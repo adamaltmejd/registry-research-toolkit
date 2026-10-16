@@ -1,0 +1,35 @@
+{
+  "projections": [
+    {
+      "table": "warnings",
+      "where": {
+        "register": "sample",
+        "code": "missing_coding_period",
+        "variable": null
+      },
+      "fields": [
+        "warning_id"
+      ],
+      "rows": {
+        "step": "1-three-acks"
+      },
+      "note": "The twin warning's id is step 1's although its entries moved."
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": "sample",
+        "variable": null
+      },
+      "fields": [
+        "acknowledged_by"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/acknowledge/1"
+        ]
+      ],
+      "note": "Only its pointer moved, to entry 1, the least of 1 and 2."
+    }
+  ]
+}

@@ -840,6 +840,7 @@ def _warning_rows(outcome: Outcome, warnings: list[dict]) -> list[dict]:
                 "withheld_output": payload.get("withheld_output"),
                 "acknowledged_by": payload.get("acknowledged_by"),
                 "case_id": payload.get("case_id"),
+                "warning_id": payload["warning_id"],
             }
         )
     return rows
@@ -1258,10 +1259,10 @@ FIELDS: dict[str, frozenset[str]] = {
         "group_members": "group_key register variable column facets",
         "warnings": "register variable variant column valid_from valid_to code "
         "severity detail summary detail_hash_of fields refs withheld_output "
-        "acknowledged_by case_id",
+        "acknowledged_by case_id warning_id",
         "report_warnings": "register variable variant column valid_from valid_to "
         "code severity detail summary detail_hash_of fields refs withheld_output "
-        "acknowledged_by case_id",
+        "acknowledged_by case_id warning_id",
         "search_pins": "query type position entity",
         "search_text": "register variable name definition description "
         "delivery_column_names",

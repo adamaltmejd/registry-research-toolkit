@@ -1,0 +1,84 @@
+{
+  "note": "Variable 101 delivers member 1002 in 2021 through First and Second, which the partition gives to first and second. Its missing 2021 coding is one issue per owner with the same ref, so each is register-wide and both warnings carry the same content; two [[acknowledge]] entries (2 and 3, one reason) accept them. Entry 1 accepts OTHER's own 2021 gap. The merged twin keeps the least pointer, entry 2.",
+  "fails_if": "`warning_identity` (data_warnings.py) hashes `acknowledged_by` or `case_id`, so the twins stay two catalog rows that differ only in their pointer; or `keep_warning` stops merging them into the one with the least pointer",
+  "sources": {
+    "description": "Variable 101 delivers member 1001 in 2020 and member 1002 in 2021, each through First and Second; variable 102 delivers OTHER as member 1003 in 2020 and member 1004 in 2021. Only the 2020 members carry a list (Kön: 1 Man).",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "First",
+          "regver_id": 110,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "Second",
+          "regver_id": 110,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1002,
+          "var_id": 101,
+          "colname": "First",
+          "year": "2021",
+          "regver_id": 121,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1002,
+          "var_id": 101,
+          "colname": "Second",
+          "year": "2021",
+          "regver_id": 121,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1003,
+          "var_id": 102,
+          "colname": "OTHER",
+          "regver_id": 110,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        },
+        {
+          "cvid": 1004,
+          "var_id": 102,
+          "colname": "OTHER",
+          "year": "2021",
+          "regver_id": 121,
+          "register": [
+            "SAMPLE",
+            1,
+            10
+          ]
+        }
+      ],
+      "vardemangder": [
+        "Kön|1|1|Man|1001|5001",
+        "Kön|1|1|Man|1003|5003"
+      ]
+    }
+  }
+}

@@ -106,13 +106,37 @@ class DataWarning(_CatalogModel):
             raise ValueError("data warning bounds are reversed")
         if not all(v.strip() for v in (self.code, self.summary, self.detail)):
             raise ValueError("data warning content must be nonempty")
-        if self.warning_id != canonical_sha256(
+        if self.warning_id != warning_identity(
             self.model_dump(mode="json", exclude={"warning_id"})
         ):
             raise ValueError(
                 "data warning identity does not match its complete content"
             )
         return self
+
+
+def warning_identity(payload: Mapping[str, object]) -> str:
+    """The id of a warning's content, its curation pointers aside (#1606).
+
+    `acknowledged_by` and `case_id` locate an entry by its array position, so
+    deleting or reordering an unrelated entry would move them. Warnings that
+    differ only in those pointers are one warning; see `keep_warning`.
+    """
+    return canonical_sha256({**payload, "acknowledged_by": None, "case_id": None})
+
+
+def keep_warning(warnings: dict[str, DataWarning], warning: DataWarning) -> None:
+    """Add a warning, merging one that differs only in its pointers.
+
+    The merged warning keeps the least pointers, so input order never decides
+    which one the catalog shows.
+    """
+    kept = warnings.get(warning.warning_id)
+    if kept is None or (warning.acknowledged_by or "", warning.case_id or "") < (
+        kept.acknowledged_by or "",
+        kept.case_id or "",
+    ):
+        warnings[warning.warning_id] = warning
 
 
 # Editorial projection notices do not describe a problem fetching or using data.
@@ -242,7 +266,7 @@ def diagnostic_data_warning(
         "case_id": issue.case_id,
     }
     return DataWarning.model_validate_json(
-        json.dumps({"warning_id": canonical_sha256(payload), **payload})
+        json.dumps({"warning_id": warning_identity(payload), **payload})
     )
 
 
@@ -265,7 +289,7 @@ def acknowledged_data_warnings(
             register=(register.provider, register.slug),
             reason=decision.reason,
         )
-        warnings[warning.warning_id] = warning
+        keep_warning(warnings, warning)
     return tuple(warnings[k] for k in sorted(warnings))
 
 
@@ -397,7 +421,7 @@ def scope_data_warnings(
             column=column,
             reason=reviewed_reasons.get(issue.acknowledged_by),
         )
-        warnings[warning.warning_id] = warning
+        keep_warning(warnings, warning)
     assumption_payloads = {}
     assumption_refs = defaultdict(dict)
     annotated = {
@@ -533,7 +557,7 @@ def scope_data_warnings(
             assumption_refs[token][ref] for ref in sorted(assumption_refs[token])
         ]
         warning = DataWarning.model_validate_json(
-            json.dumps({"warning_id": canonical_sha256(payload), **payload})
+            json.dumps({"warning_id": warning_identity(payload), **payload})
         )
-        warnings[warning.warning_id] = warning
+        keep_warning(warnings, warning)
     return tuple(warnings[k] for k in sorted(warnings))
