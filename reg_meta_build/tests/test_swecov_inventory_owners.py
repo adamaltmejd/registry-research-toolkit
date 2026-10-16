@@ -568,8 +568,9 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
     assistansersättning shape). A gap or an overlap between them goes to the scope
     worklist and the run exits. Beside the union on `_default`, a dated `LOPNR`
     spelling of the same owner is dropped (the union still maps), while another
-    variable delivering the column there through 2018 competes with it and is
-    refused as ambiguous. Fails if a partial mapping is still refused alone
+    variable delivering the representation there through 2018 competes with it and
+    is refused as ambiguous, even under another physical name (`Physical`, which
+    the physical-column lookup misses). Fails if a partial mapping is still refused alone
     (the tiled case exits as stale), if the whole-edition owner check later drops
     the union records (a single-year edition is the one that check assesses), if
     the leftover spelling sinks the union or the competing owner is admitted, or if the tiling check misses a gap or
@@ -623,8 +624,9 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
                 "'varchar', 'Lopnr')"
             )
     variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/efter")
+    physical = "Physical" if beside == "competing" else "Lopnr"
     decisions = (
-        '[[column]]\ncolumn = "Lopnr"\nmappings = ['
+        f'[[column]]\ncolumn = "{physical}"\nmappings = ['
         + ", ".join(
             f'{{ register_variant = "{variant}", '
             'variable = "inera/bestallda-prover/lopnr", representation = "Lopnr" }'
@@ -638,7 +640,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
             tmp_path,
             db,
             "T_split",
-            ["Lopnr"],
+            [physical],
             edition="2018",
             variants=variants,
             decisions=decisions,
@@ -648,7 +650,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         with pytest.raises(SystemExit, match="Inventory not replaced"):
             run()
         (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
-        assert (entry["column"], entry["code"]) == ("Lopnr", refusal)
+        assert (entry["column"], entry["code"]) == (physical, refusal)
         return
     (column,) = load_delivery_inventory(run() / "inventory.toml").tables[0].columns
     assert sorted((m.register_variant, str(m.variable)) for m in column.mappings) == [

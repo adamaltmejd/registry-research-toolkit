@@ -2162,16 +2162,20 @@ def _overlaps_edition(record: dict, edition: object) -> bool:
 
 
 def _union_mapping_records(
-    mappings: list[ColumnMapping], by_coordcol: dict, edition: object
+    mappings: list[ColumnMapping],
+    select_owner: bool,
+    by_coordcol: dict,
+    edition: object,
 ) -> tuple[list[tuple[ColumnMapping, list[dict]]], str | None]:
     """The records of reviewed mappings that cover the edition only together (#1555).
 
     A column whose edition straddles a variant split (one variant to 2018-09, its
     successor from 2018-10) maps once per variant. Each mapping's owner windows,
     clipped to the edition, must be nonempty; together they tile the edition with
-    no gap and no overlap. The records are marked `union`: each covers only its own
-    part, so the whole-edition owner check does not apply to them. Ordering clips
-    each variant to its own states.
+    no gap and no overlap. Without `select_owner`, another owner of a mapped
+    representation active in the edition competes with the union. The records are
+    marked `union`: each covers only its own part, so the whole-edition owner check
+    does not apply to them. Ordering clips each variant to its own states.
     """
     from reg_meta_build.inventory import _merge
     from reg_meta_build.inventory_coverage import _covers
@@ -2179,6 +2183,16 @@ def _union_mapping_records(
     if edition == YEAR_INDEPENDENT_EDITION:
         return [], "stale_declared_mapping_target"
     bounds = edition_bounds_of(edition)
+    owners = {(m.register_variant, m.variable.rsplit("/", 1)[1]) for m in mappings}
+    # The physical-column lookup misses these when the representation differs.
+    if not select_owner and any(
+        r["coord"] == mapping.register_variant
+        and (r["coord"], r["vslug"]) not in owners
+        and _overlaps_edition(r, edition)
+        for mapping in mappings
+        for r in by_coordcol[(mapping.register_variant, mapping.representation.upper())]
+    ):
+        return [], "ambiguous_delivered_owners"
     pieces: list[tuple[ColumnMapping, list[dict]]] = []
     clipped: list[tuple[str, str]] = []
     for mapping in mappings:
@@ -2491,7 +2505,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 mapping_issue = "stale_declared_mapping_target"
             elif partial and not mapping_issue:
                 pieces, mapping_issue = _union_mapping_records(
-                    partial, by_coordcol, column_edition
+                    partial, decision.select_owner, by_coordcol, column_edition
                 )
                 adopted += pieces
             for mapping, declared in [] if mapping_issue else adopted:
