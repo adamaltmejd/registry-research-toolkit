@@ -983,7 +983,7 @@ noted = "2026-10-16"
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/agi/ersattningskod"
-refs = []
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:15110\",\"variable:6112\",\"member:706531\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:17968\",\"variable:6112\",\"member:834268\"]}"]
 fields = ["coding"]
 valid_from = "2021-01-01"
 valid_to = "2021-12-31"
@@ -995,7 +995,7 @@ expected_diagnostic_sha256 = "00000000000000000000000000000000000000000000000000
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/agi/ersattningskod"
-refs = []
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:15110\",\"variable:6112\",\"member:706531\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:17968\",\"variable:6112\",\"member:834268\"]}"]
 fields = ["coding"]
 valid_from = "2022-01-01"
 valid_to = "2022-12-31"
@@ -1007,7 +1007,7 @@ expected_diagnostic_sha256 = "00000000000000000000000000000000000000000000000000
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/agi/ersattningskod"
-refs = []
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:15110\",\"variable:6112\",\"member:706531\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:17968\",\"variable:6112\",\"member:834268\"]}"]
 fields = ["coding"]
 valid_from = "2023-01-01"
 valid_to = "2023-12-31"

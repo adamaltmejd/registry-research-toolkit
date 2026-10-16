@@ -17994,17 +17994,6 @@ slug = "type-inst-enligt-leverans"
 [[variable]]
 native_id = "182.V601"
 slug = "v601-enligt-leverans"
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fou/v001"
-refs = []
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "The #1603 batch-e same-name carry gives this column edition 2003's meaning for 2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column V001 on foretagssektorn (Operator under maintainer delegation 2026-10-16); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
-expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[variable]]
 native_id = "182.v0401_1"
@@ -18069,15 +18058,3 @@ slug = "v0402-7-enligt-leverans"
 [[variable]]
 native_id = "182.v0402_8"
 slug = "v0402-8-enligt-leverans"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fou/v1001"
-refs = []
-fields = ["coding"]
-valid_from = "2001-01-01"
-valid_to = "2001-12-31"
-reason = "The #1603 batch-e same-name carry gives this column edition 2003's meaning for 2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column V1001 on foretagssektorn (Operator under maintainer delegation 2026-10-16); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
-expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
