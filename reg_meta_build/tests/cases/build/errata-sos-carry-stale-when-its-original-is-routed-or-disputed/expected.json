@@ -1,0 +1,62 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "#/errata.occurrence_carry/"
+        }
+      },
+      "fields": [
+        "code",
+        "locator"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/1"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/2"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/3"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "syc"
+      },
+      "fields": [
+        "variable",
+        "variant",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "datum",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
+        [
+          "kod",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
+        [
+          "rkod",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ]
+      ]
+    }
+  ]
+}

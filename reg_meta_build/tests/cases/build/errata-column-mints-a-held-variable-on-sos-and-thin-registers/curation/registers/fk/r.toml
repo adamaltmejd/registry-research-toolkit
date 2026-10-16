@@ -1,0 +1,22 @@
+[register]
+provider = "fk"
+slug = "r"
+native_id = "5711326129917387810"
+[[variant]]
+slug = "v"
+native_id = "5711326129917387810.6388728842284641608"
+[[variable]]
+slug = "col"
+native_id = "5711326129917387810.COL"
+[[variable]]
+slug = "delkod"
+native_id = "5711326129917387810.DELKOD"
+[[errata.column]]
+variant = "5711326129917387810.v"
+column = "DELKOD"
+name = "Delkod"
+definition = "Kod per delförmån, en rad per förekomst."
+holdings_period = "2012-2016"
+source = "steward-holdings"
+evidence = "Held in the steward's tables."
+noted = "2026-10-17"

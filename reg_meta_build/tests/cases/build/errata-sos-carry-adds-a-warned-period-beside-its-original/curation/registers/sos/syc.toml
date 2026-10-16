@@ -1,0 +1,47 @@
+[register]
+provider = "sos"
+slug = "syc"
+name = "Syntetiskt bärregister"
+native_id = {{naming_id kind=register provider=sos register_key=syc}}
+[[variant]]
+slug = "syc-a"
+native_id = {{naming_id kind=register_variant provider=sos register_key=syc member_key=SYC_A}}
+[[variable]]
+slug = "kod"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=KOD}}
+[[variable]]
+slug = "naer"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=NAER}}
+[[errata.occurrence_carry]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=KOD}}
+variant = "SYC_A"
+column = "KOD"
+expected_fields = [{ name = "name", status = "value", value = "Kod" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Kod per position" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = {{edition_scope key=variable:KOD}}
+expected_period = {{period_scope key=variable:KOD}}
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 the provider documents these codes only inside a combined string."
+evidence = "Delivered under the same name in 2005-2014."
+noted = "2026-10-16"
+[[errata.occurrence_carry]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=NAER}}
+variant = "SYC_A"
+column = "NAER"
+expected_fields = [{ name = "name", status = "value", value = "Naer" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Naer per position" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = {{edition_scope key=variable:NAER}}
+expected_period = {{period_scope key=variable:NAER}}
+carry_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2016" }] }
+data_warning = "Overlaps its own documented years."
+evidence = "Reaches the original's first year."
+noted = "2026-10-16"
+[[errata.field]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=KOD}}
+variant = "SYC_A"
+column = "KOD"
+expected_fields = [{ name = "name", status = "value", value = "Kod" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Kod per position" }, { name = "operational_definition", status = "absent" }]
+expected_scope = {{edition_scope key=variable:KOD}}
+expected_period = {{period_scope key=variable:KOD}}
+field = "description"
+value = "Rättad kod per position"
+evidence = "Reviewed wording."
+noted = "2026-10-17"

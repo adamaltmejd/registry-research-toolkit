@@ -1,0 +1,5 @@
+{
+  "note": "Two checked [[errata.field]] entries give KOD's original competing descriptions, so the original's description is withheld and KOD's carry is refused as stale rather than publishing one of them for 2005-2014. RKOD's original is delivered under TOKEN, which [[identity.route]] sends to SYC_A; its carry is refused as stale rather than adding an occurrence under the unrouted token, and RKOD keeps its routed 2015-2023 state. DATUM's original is retyped by an [[errata.data_type]] the carry does not replay, so its carry is refused as stale rather than adding 2005-2014 with the uncorrected type.",
+  "fails_if": "`compile_occurrence_corrections` replays the last of competing corrections onto a carry (KOD gains 2005-2014 with one description), emits a carry with the uncorrected type of an original an [[errata.data_type]] retypes (DATUM gains 2005-2014), or emits a carry under a routed token's raw variant (the register is withheld as unnamed_delivered_variant and RKOD loses its routed state)",
+  "sources": "sos-syc-carry-refusals"
+}

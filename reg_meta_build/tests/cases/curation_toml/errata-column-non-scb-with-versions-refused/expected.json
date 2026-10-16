@@ -1,0 +1,10 @@
+{
+  "loader": "provider_errata_columns",
+  "fails_if": "resolve_provider_columns accepts named `versions` on a non-SCB register, which has no named editions to bind them to",
+  "note": "`holdings_period` is present, so only the extra `versions` key refuses: the hardest form.",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/sos/sample.toml [[errata.column]] entry 1 (sos/sample)/EKB_HUSH/LOPNR_EKB",
+    "message_contains": ["`holdings_period` alone"]
+  }
+}

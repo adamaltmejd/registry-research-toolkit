@@ -1,0 +1,153 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "register": "syc"
+      },
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to",
+        "state_name"
+      ],
+      "rows": [
+        [
+          "kod",
+          "syc-a",
+          "KOD",
+          "2005-01-01",
+          "2014-12-31",
+          "Kod"
+        ],
+        [
+          "kod",
+          "syc-a",
+          "KOD",
+          "2015-01-01",
+          "2023-12-31",
+          "Kod"
+        ],
+        [
+          "naer",
+          "syc-a",
+          "NAER",
+          "2015-01-01",
+          "2023-12-31",
+          "Naer"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "syc",
+        "variable": "kod"
+      },
+      "fields": [
+        "valid_from",
+        "description"
+      ],
+      "rows": [
+        [
+          "2005-01-01",
+          "Rättad kod per position"
+        ],
+        [
+          "2015-01-01",
+          "Rättad kod per position"
+        ]
+      ]
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "syc",
+        "variable": "kod"
+      },
+      "fields": [
+        "valid_from",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2005-01-01",
+          "A",
+          "Alfa"
+        ],
+        [
+          "2005-01-01",
+          "B",
+          "Beta"
+        ],
+        [
+          "2015-01-01",
+          "A",
+          "Alfa"
+        ],
+        [
+          "2015-01-01",
+          "B",
+          "Beta"
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": "syc"
+      },
+      "fields": [
+        "variable",
+        "column",
+        "valid_from",
+        "valid_to",
+        "summary",
+        "fields"
+      ],
+      "rows": [
+        [
+          "kod",
+          "KOD",
+          "2005-01-01",
+          "2014-12-31",
+          "Before 2015 the provider documents these codes only inside a combined string.",
+          [
+            "availability"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "/syc.toml#"
+        }
+      },
+      "fields": [
+        "code",
+        "locator"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/2"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "conflicting_variable_fact"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": []
+    }
+  ]
+}

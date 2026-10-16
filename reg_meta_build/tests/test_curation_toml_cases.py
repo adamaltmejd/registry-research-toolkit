@@ -34,7 +34,7 @@ from reg_meta_build.curation_tree import (
 from reg_meta_build.doc_db import load_related_documents
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.relations import load_relations
-from reg_meta_build.scb_errata import resolve_scb_errata
+from reg_meta_build.scb_errata import resolve_provider_columns, resolve_scb_errata
 from reg_meta_build.source_evidence import SourceRevision
 from reg_meta_build.sources.curated_records import read_curated_source
 from reg_meta_build.tags import load_tags
@@ -98,6 +98,18 @@ def _scb_errata(files: Path, args: dict[str, Any]) -> Any:
     }
 
 
+def _provider_errata_columns(files: Path, args: dict[str, Any]) -> Any:
+    # The non-SCB `[[errata.column]]` loader `curation_compile` calls (#1633).
+    return {
+        "columns": resolve_provider_columns(
+            load_register_files(files),
+            classifications=frozenset(
+                book.classification.short_name for book in load_classifications(files)
+            ),
+        )
+    }
+
+
 def _classifications(files: Path, args: dict[str, Any]) -> Any:
     books = load_classifications(files)
     return {"classifications": books, "families": load_classification_families(books)}
@@ -111,6 +123,7 @@ LOADERS: dict[str, Callable[[Path, dict[str, Any]], Any]] = {
     "tags": lambda files, args: load_tags(files / "tags.toml"),
     "lineage": lambda files, args: load_lineage_config(files / "lineage.toml"),
     "scb_errata": _scb_errata,
+    "provider_errata_columns": _provider_errata_columns,
     "concept_groups": lambda files, args: load_concept_groups(files),
     "classification_groups": lambda files, args: load_classification_groups(files),
     "worklist_concept_groups": lambda files, args: load_worklist_concept_groups(

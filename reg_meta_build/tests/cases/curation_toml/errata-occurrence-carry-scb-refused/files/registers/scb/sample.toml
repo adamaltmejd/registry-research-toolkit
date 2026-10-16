@@ -1,0 +1,16 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+
+[[errata.occurrence_carry]]
+variable = "1.DIA"
+variant = "1.10"
+column = "DIA"
+expected_fields = [{ name = "name", status = "value", value = "Name" }, { name = "description", status = "absent" }, { name = "definition", status = "absent" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "absent" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable" }
+data_warning = "Before 2015 the codes were documented only inside a combined string."
+evidence = "Delivered under the same name before 2015."
+noted = "2026-10-17"
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }

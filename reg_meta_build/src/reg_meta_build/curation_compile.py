@@ -38,6 +38,7 @@ from .curation_tree import (
     ErrataDeliveredEntry,
     ErrataFieldEntry,
     ErrataFlagsEntry,
+    ErrataOccurrenceCarryEntry,
     ErrataOccurrencePeriodEntry,
     ErrataSupportEntry,
     _OccurrenceCorrectionEntry,
@@ -64,7 +65,10 @@ from .scb_errata import (
     ErrataVariantContext,
     convert_column_entry,
     convert_delivered_entry,
+    declared_column_fields,
     edition_bindings,
+    holdings_scope,
+    resolve_provider_columns,
     resolve_scb_errata,
 )
 from .slug_grammar import derive_variable_slug
@@ -143,6 +147,7 @@ from .source_records import (
     SourceFields,
     SourceRecord,
     TemporalScope,
+    value_field,
 )
 from .source_value_bindings import (
     bind_code_lists,
@@ -5415,6 +5420,16 @@ def _family_diagnostic(
     )
 
 
+def _variant_label(register: RegisterCuration, record: SourceRecord) -> str | None:
+    """The variant name a register's errata entries use for a record's variant."""
+    variant = record.subject.variant
+    return (
+        f"{register.register_info.native_id}.{variant.native_id}"
+        if variant.native_id is not None
+        else variant.name
+    )
+
+
 def _select_occurrence_correction(
     register: RegisterCuration,
     entry: _OccurrenceCorrectionEntry,
@@ -5423,12 +5438,7 @@ def _select_occurrence_correction(
     return tuple(
         record
         for record in family
-        if (
-            f"{register.register_info.native_id}.{record.subject.variant.native_id}"
-            if record.subject.variant.native_id is not None
-            else record.subject.variant.name
-        )
-        == entry.variant
+        if _variant_label(register, record) == entry.variant
         and _literal_field(record, "column_name")
         == (
             None
@@ -5575,6 +5585,7 @@ def compile_occurrence_corrections(
             ("field", register.errata.field),
             ("occurrence_period", register.errata.occurrence_period),
             ("flags", register.errata.flags),
+            ("occurrence_carry", register.errata.occurrence_carry),
         )
         if not any(rows for _, rows in entries):
             continue
@@ -5620,12 +5631,19 @@ def compile_occurrence_corrections(
                     len(matches) > 1
                     or any(len(refs) > 1 for refs in by_edition.values())
                     or (
-                        isinstance(entry, ErrataOccurrencePeriodEntry)
+                        isinstance(
+                            entry,
+                            (ErrataOccurrencePeriodEntry, ErrataOccurrenceCarryEntry),
+                        )
                         and any(
                             record_ref(record) in chosen_refs
                             and _literal_field(record, "column_name") != entry.column
                             for record in family
                         )
+                    )
+                    or (
+                        isinstance(entry, ErrataOccurrenceCarryEntry)
+                        and len(chosen_refs) > 1
                     )
                 )
                 valid = (
@@ -5636,13 +5654,37 @@ def compile_occurrence_corrections(
                         or entry.edition is not None
                     )
                     and (
-                        not isinstance(entry, ErrataOccurrencePeriodEntry)
+                        not isinstance(
+                            entry,
+                            (ErrataOccurrencePeriodEntry, ErrataOccurrenceCarryEntry),
+                        )
                         or register.register_info.provider != "sos"
                         or {"coverage_from", "coverage_to"}.issubset(expected)
                     )
                     and not overbroad
                     and _occurrence_correction_matches(entry, selected)
                 )
+                # A carry adds a period the original does not claim; one that
+                # reaches the original's own scope would claim that period twice.
+                # An unbounded original cannot be shown disjoint.
+                if isinstance(entry, ErrataOccurrenceCarryEntry) and valid:
+                    carried = scope_bounds(entry.carry_scope) or ()
+                    documented = scope_bounds(selected[0].edition_scope)
+                    if documented is None or any(
+                        lo <= other_hi and other_lo <= hi
+                        for lo, hi in carried
+                        for other_lo, other_hi in documented
+                    ):
+                        statuses["stale"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                entry.variable,
+                                "carry_scope overlaps the original's own scope",
+                                refs=tuple(record_ref(record) for record in selected),
+                            )
+                        )
+                        continue
                 if (
                     isinstance(entry, ErrataFieldEntry)
                     and entry.authority_records is not None
@@ -5807,8 +5849,102 @@ def compile_occurrence_corrections(
                     continue
                 assert location is not None
                 scope, register_key = location
+                carry_effects: tuple[CuratedOccurrenceAddition, ...] = ()
+                if isinstance(entry, ErrataOccurrenceCarryEntry):
+                    donor = selected[0]
+                    variable_key = native_variable_key(donor)
+                    variant_key = native_variant_key(donor)
+                    assert variable_key is not None and variant_key is not None
+                    # The carried occurrence states the original's corrected facts:
+                    # copying an original a checked `[[errata.field]]` or
+                    # `[[errata.flags]]` corrects would make the two occurrences of
+                    # one variable disagree.
+                    corrected: dict[str, set[Any]] = defaultdict(set)
+                    for other in (*register.errata.field, *register.errata.flags):
+                        if (other.variable, other.variant, other.column) != (
+                            entry.variable,
+                            entry.variant,
+                            entry.column,
+                        ):
+                            continue
+                        peers = _select_occurrence_correction(register, other, family)
+                        if record_ref(donor) not in {
+                            record_ref(r) for r in peers
+                        } or not _occurrence_correction_matches(other, peers):
+                            continue
+                        if isinstance(other, ErrataFlagsEntry):
+                            for name, value in (
+                                ("identifier", other.is_identifier),
+                                ("sensitivity", other.is_sensitive),
+                            ):
+                                if getattr(donor.fields, name) is None:
+                                    corrected[name].add(value)
+                        else:
+                            corrected[other.field].add(other.value)
+                    # simplify: a routed SOS token, competing corrections or a
+                    # correction family the carry does not replay refuse the carry
+                    # instead of resolving them; route the carry and reuse the
+                    # checked-effect reconciliation if a carry needs one.
+                    refusal = (
+                        "the original's variant is routed ([[identity.route]])"
+                        if any(
+                            route.deldatamangd == entry.variant
+                            for route in register.identity.route
+                        )
+                        else "the original has an [[errata.data_type]] or "
+                        "[[errata.classification_reference]] the carry does not replay"
+                        if any(
+                            (other.deldatamangd, other.column)
+                            == (entry.variant, entry.column)
+                            and other.variable == entry.variable.rsplit(".", 1)[-1]
+                            for other in (
+                                *register.errata.data_type,
+                                *register.errata.classification_reference,
+                            )
+                        )
+                        else "the original's checked corrections conflict"
+                        if any(len(values) > 1 for values in corrected.values())
+                        else None
+                    )
+                    if refusal is not None:
+                        statuses["stale"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                entry.variable,
+                                refusal,
+                                refs=(record_ref(donor),),
+                            )
+                        )
+                        continue
+                    carry_effects = (
+                        CuratedOccurrenceAddition(
+                            occurrence_key=f"{case_id}:carry",
+                            provider=donor.subject.provider,
+                            variable_key=variable_key,
+                            variant_key=variant_key,
+                            fields=donor.fields.model_copy(
+                                update={
+                                    name: value_field(next(iter(values)))
+                                    for name, values in corrected.items()
+                                }
+                            ),
+                            edition_scope=entry.carry_scope,
+                            edition_period_scope=TemporalScope(kind="not_applicable"),
+                            evidence=(record_ref(donor),),
+                            donor=record_ref(donor),
+                            copied_fields=tuple(
+                                name
+                                for name in SourceFields.model_fields
+                                if name not in corrected
+                            ),
+                            copy_coding=True,
+                        ),
+                    )
                 effects = (
-                    tuple(
+                    carry_effects
+                    if isinstance(entry, ErrataOccurrenceCarryEntry)
+                    else tuple(
                         CheckedFieldChange(
                             ref=ref,
                             replacement=FieldExpectation(
@@ -5906,7 +6042,8 @@ def compile_occurrence_corrections(
                     )
                 entry_guarded_fields = (
                     tuple(SourceFields.model_fields)
-                    if isinstance(entry, ErrataFieldEntry)
+                    if isinstance(entry, ErrataOccurrenceCarryEntry)
+                    or isinstance(entry, ErrataFieldEntry)
                     and entry.expected_records is not None
                     else guarded_fields
                     + tuple(sorted(expected_names - set(guarded_fields)))
@@ -5987,6 +6124,12 @@ def compile_occurrence_corrections(
                             effects=effects,
                             reason=entry.evidence,
                             provenance=f"{case_id}: {entry.evidence}",
+                            data_warning=entry.data_warning
+                            if isinstance(entry, ErrataOccurrenceCarryEntry)
+                            else None,
+                            data_warning_fields=("availability",)
+                            if isinstance(entry, ErrataOccurrenceCarryEntry)
+                            else (),
                         ),
                     )
                 )
@@ -6034,6 +6177,201 @@ def _partition_memberships(
     }
 
 
+def _compile_provider_columns(
+    tree: CurationTree,
+    prepared: PreparedCatalogSources,
+    scopes: tuple[CompiledScope, ...],
+    *,
+    subset: bool,
+) -> tuple[
+    dict[Any, list[CurationCase]],
+    dict[Any, dict[tuple[str | int, ...], NamingDeclaration]],
+    dict[Any, dict[tuple[str | int, ...], str]],
+    list[ResolutionDiagnostic],
+    dict[str, dict[str, list[str]]],
+]:
+    """Mint the variables of non-SCB `[[errata.column]]` entries (#1633).
+
+    The SCB path anchors on native editions; these providers have none, so an
+    entry anchors on one record of its variant and dates the holding as one
+    pooled `holdings_period`, as the SCB `holdings_period` form does. It is
+    refused while the register documents the column anywhere: a documented
+    column is extended with `[[errata.occurrence_carry]]` instead.
+    """
+    cases: dict[Any, list[CurationCase]] = defaultdict(list)
+    naming: dict[Any, dict[tuple[str | int, ...], NamingDeclaration]] = defaultdict(
+        dict
+    )
+    keys: dict[Any, dict[tuple[str | int, ...], str]] = defaultdict(dict)
+    diagnostics: list[ResolutionDiagnostic] = []
+    report: dict[str, dict[str, list[str]]] = {}
+    columns = resolve_provider_columns(
+        tree.registers,
+        classifications=frozenset(
+            c.classification.short_name for c in tree.classifications
+        ),
+    )
+    if not columns:
+        return cases, naming, keys, diagnostics, report
+    locations: dict[str, list[tuple[CompiledScope, Any]]] = defaultdict(list)
+    for scope in scopes:
+        for name, key in _scope_registers(scope):
+            locations[name].append((scope, key))
+    registers = {register.source_file: register for register in tree.registers}
+    records_of: dict[str, tuple[SourceRecord, ...]] = {}
+    for entry in columns:
+        register = registers[entry.source_file]
+        row = register.errata.column[entry.index - 1]
+        case_id = f"{entry.source_file}#/errata.column/{entry.index}"
+        statuses = _family_status(report, entry.register_fqid)
+        statuses["entries_read"].append(case_id)
+        matches = locations.get(entry.register_fqid, ())
+        if len(matches) != 1:
+            status = (
+                "over_broad"
+                if matches
+                else "not_evaluated_in_subset"
+                if subset
+                else "stale"
+            )
+            statuses[status].append(case_id)
+            if status != "not_evaluated_in_subset":
+                diagnostics.append(
+                    _family_diagnostic(
+                        case_id,
+                        case_id,
+                        f"matches {len(matches)} register scopes; expected one",
+                        overbroad=bool(matches),
+                    )
+                )
+            continue
+        scope, register_key = matches[0]
+        if entry.register_fqid not in records_of:
+            records_of[entry.register_fqid] = tuple(
+                record
+                for _, members in prepared.records.iter_register_slices(
+                    scope.source, (register_key,)
+                )
+                for record in members
+            )
+        on_variant = sorted(
+            (
+                record
+                for record in records_of[entry.register_fqid]
+                if _variant_label(register, record) == entry.variant
+            ),
+            key=lambda record: repr(record_ref(record)),
+        )
+        source_id = f"{register.register_info.native_id}.{entry.column}"
+        accepted = next(
+            (
+                item
+                for item, _ in reversed(_register_naming_entries(tree, register))
+                if item.entry.kind == "variable"
+                and item.entry.source_id == source_id
+                and item.entry.slug is not None
+            ),
+            None,
+        )
+        blocker = None
+        if not on_variant:
+            blocker = "no source records on the named variant"
+        elif accepted is None:
+            blocker = "declared column has no tracked slug"
+        elif any(
+            (literal := _literal_field(record, "column_name")) is not None
+            and fold_column(literal) == fold_column(entry.column)
+            for record in records_of[entry.register_fqid]
+        ):
+            # The minted name `<register>.<column>` is the documented variable's
+            # own source id, so a documented column is carried instead.
+            blocker = "column_now_documented"
+        if blocker is not None:
+            statuses["stale"].append(case_id)
+            diagnostics.append(_family_diagnostic(case_id, case_id, blocker))
+            continue
+        assert accepted is not None
+        anchor = on_variant[0]
+        ref = record_ref(anchor)
+        register_native = source_register_key(anchor)
+        variant_key = native_variant_key(anchor)
+        assert register_native is not None and variant_key is not None
+        variable_key = (*register_native, "declared-column", fold_column(entry.column))
+        # The anchor's whole native family, so a changed family drops the mint.
+        family = tuple(
+            record
+            for record in records_of[entry.register_fqid]
+            if record.subject.variable == anchor.subject.variable
+        )
+        guard = PeerGuard(
+            guard_id=f"{case_id}:anchor",
+            source=anchor.source,
+            coordinates=(
+                ("register", anchor.subject.register_name),
+                ("variable", anchor.subject.variable),
+            ),
+            expected_members=tuple(
+                sorted({record_ref(record) for record in family}, key=repr)
+            ),
+        )
+        pooled = holdings_scope(entry.holdings_period)
+        scope_key = (scope.source, scope.register_key)
+        cases[scope_key].append(
+            CurationCase(
+                case_id=case_id,
+                targets=capture_expectations((anchor,), fields=("availability",)),
+                peer_guards=(guard,),
+                decision=OccurrenceCorrectionDecision(
+                    reviewed=True,
+                    effects=(
+                        CuratedOccurrenceAddition(
+                            occurrence_key=f"{case_id}:holdings",
+                            provider=register.register_info.provider,
+                            variable_key=variable_key,
+                            variant_key=variant_key,
+                            fields=declared_column_fields(
+                                entry,
+                                frozenset(row.model_fields_set)
+                                & {"is_identifier", "is_sensitive"},
+                            ),
+                            edition_scope=pooled,
+                            edition_period_scope=pooled,
+                            evidence=(ref,),
+                        ),
+                    ),
+                    reason=entry.provenance,
+                    provenance=entry.provenance,
+                    # As the SCB column path annotates its additions.
+                    data_warning=row.data_warning,
+                    data_warning_fields=("data_type",)
+                    if row.data_warning is not None
+                    else (),
+                ),
+            )
+        )
+        if variable_key not in naming[scope_key]:
+            naming[scope_key][variable_key] = NamingDeclaration(
+                target=NativeNamingTarget(
+                    kind="variable",
+                    provider=register.register_info.provider,
+                    source_key=variable_key,
+                    register_key=register_key,
+                    expectations=capture_expectations(family, fields=()),
+                    peer_guards=(guard,),
+                ),
+                naming=SlugEntry(
+                    kind="variable",
+                    provider=register.register_info.provider,
+                    source_id=source_id,
+                    slug=accepted.entry.slug,
+                ),
+                contributors=(accepted,),
+            )
+            keys[scope_key][variable_key] = entry.column
+        statuses["entries_matched"].append(case_id)
+    return cases, naming, keys, diagnostics, report
+
+
 def compile_errata(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -6058,10 +6396,29 @@ def compile_errata(
         ),
     )
 
+    (
+        cases,
+        naming,
+        keys,
+        diagnostics,
+        report,
+    ) = _compile_provider_columns(tree, prepared, scopes, subset=subset)
     if not loaded and not any(
         register.errata.edition_period for register in tree.registers
     ):
-        return {}, {}, {}, (), {}
+        return (
+            {key: tuple(value) for key, value in cases.items()},
+            {
+                key: tuple(value[k] for k in sorted(value, key=repr))
+                for key, value in naming.items()
+            },
+            {
+                key: tuple(sorted(value.items(), key=lambda item: repr(item[0])))
+                for key, value in keys.items()
+            },
+            tuple(diagnostics),
+            report,
+        )
     locations: dict[int, list[tuple[Any, tuple[str | int, ...]]]] = defaultdict(list)
     for scope in scopes:
         for name, key in _scope_registers(scope):
@@ -6083,13 +6440,6 @@ def compile_errata(
         (entry.register_id, entry.register_variant_id, fold_column(entry.column)): entry
         for entry in loaded.columns
     }
-    cases: dict[Any, list[CurationCase]] = defaultdict(list)
-    naming: dict[Any, dict[tuple[str | int, ...], NamingDeclaration]] = defaultdict(
-        dict
-    )
-    keys: dict[Any, dict[tuple[str | int, ...], str]] = defaultdict(dict)
-    diagnostics: list[ResolutionDiagnostic] = []
-    report: dict[str, dict[str, list[str]]] = {}
     for register in sorted(tree.registers, key=lambda item: item.source_file):
         if register.register_info.provider != "scb" or not (
             register.errata.version

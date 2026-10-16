@@ -1,0 +1,103 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {
+        "register": "syc",
+        "variable": "lank"
+      },
+      "fields": [
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to",
+        "state_name"
+      ],
+      "rows": [
+        [
+          "syc-a",
+          "LANK",
+          "2005-01-01",
+          "2023-12-31",
+          "Länknyckel"
+        ]
+      ]
+    },
+    {
+      "table": "warnings",
+      "where": {
+        "register": "syc",
+        "variable": "lank"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "summary",
+        "fields"
+      ],
+      "rows": [
+        [
+          "2005-01-01",
+          "2023-12-31",
+          "Held under a steward-assigned name.",
+          [
+            "data_type"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "syc",
+        "state_name": "Tidig kod"
+      },
+      "fields": [
+        "variable",
+        "column"
+      ],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "r",
+        "variable": "delkod"
+      },
+      "fields": [
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to",
+        "state_name"
+      ],
+      "rows": [
+        [
+          "v",
+          "DELKOD",
+          "2012-01-01",
+          "2016-12-31",
+          "Delkod"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "#/errata.column/"
+        }
+      },
+      "fields": [
+        "code",
+        "locator"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.column/2"
+        ]
+      ]
+    }
+  ]
+}
