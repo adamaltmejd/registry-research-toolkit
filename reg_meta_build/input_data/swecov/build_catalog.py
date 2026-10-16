@@ -2150,6 +2150,17 @@ def _inventory_mapping_records(
     return owned, "stale_declared_mapping_target" if issue or not owned else None
 
 
+def _overlaps_edition(record: dict, edition: object) -> bool:
+    """Whether a delivered record's window reaches the edition; an undated record
+    counts as reaching it."""
+    if record["valid_from"] is None or record["valid_to"] is None:
+        return True
+    return any(
+        record["valid_from"] <= hi and lo <= record["valid_to"]
+        for lo, hi in edition_bounds_of(edition)
+    )
+
+
 def _union_mapping_records(
     mappings: list[ColumnMapping], by_coordcol: dict, edition: object
 ) -> tuple[list[tuple[ColumnMapping, list[dict]]], str | None]:
@@ -2545,13 +2556,31 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
             # Union records cover only their own part, so they skip the
-            # whole-edition owner check; every other record still takes it.
+            # whole-edition owner check. On a union's variants the union decides:
+            # another owner active in the edition competes with it (ambiguous, as
+            # for any reviewed mapping without select_owner), and the union
+            # owner's other spellings drop. Other variants take the usual check.
             union = [r for r in recs if r.get("union")]
-            rest = [r for r in recs if not r.get("union")]
-            recs, scope_issue = (
-                _inventory_period_records(rest, column_edition) if rest else ([], None)
+            owners = {(r["coord"], r["vslug"]) for r in union}
+            union_coords = {coord for coord, _ in owners}
+            competing = any(
+                r["coord"] in union_coords
+                and (r["coord"], r["vslug"]) not in owners
+                and _overlaps_edition(r, column_edition)
+                for r in recs
+                if not r.get("union")
             )
-            recs += union
+            rest = [
+                r for r in recs if not r.get("union") and r["coord"] not in union_coords
+            ]
+            recs, scope_issue = (
+                ([], "ambiguous_delivered_owners")
+                if competing
+                else _inventory_period_records(rest, column_edition)
+                if rest
+                else ([], None)
+            )
+            recs += [] if scope_issue else union
             if not scope_issue:
                 recs, scope_issue = _fold_case_twins(
                     recs, LOPNR_PREFIX.sub("", col), curated, representative
