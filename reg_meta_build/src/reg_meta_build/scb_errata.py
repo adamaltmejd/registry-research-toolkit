@@ -387,7 +387,6 @@ def resolve_scb_errata(
     delivered: list[ErrataDelivered] = []
     # Keyed without the register: an SCB RegVarID is globally unique (2026-10-08:
     # 597 RegVarIDs in 996,840 Registerinformation rows, each under one RegisterId).
-    seen_columns: set[tuple[int, str]] = set()
     delivered_versions: dict[tuple[int, str], set[str]] = {}
     for entry in delivered_entries:
         register_id, variant_id, context = _resolve_variant(
@@ -423,7 +422,6 @@ def resolve_scb_errata(
                 "Declarations for one (register, variant, column) must select disjoint versions.",
             )
         delivered_versions.setdefault(key, set()).update(named)
-        seen_columns.add(key)
         with located(ctx):
             provenance = _state_provenance(upstream, evidence)
         delivered.append(
@@ -444,6 +442,7 @@ def resolve_scb_errata(
     # will BE one (`ErrataColumn.key`), and a disagreement would silently ship
     # whichever entry the materializer wrote first.
     identities: dict[tuple[int, str], tuple] = {}
+    minted_columns: set[tuple[int, str]] = set()
     for entry in column_entries:
         register_id, variant_id, context = _resolve_variant(
             entry, "column", registers, variants
@@ -478,16 +477,29 @@ def resolve_scb_errata(
             provenance=_state_provenance(source, evidence),
         )
         key = (variant_id, fold_column(column))
-        if key in seen_columns:
+        # A delivered name can carry another meaning in other versions (#1647):
+        # it then mints its own variable there, beside the documented one.
+        shared = delivered_versions.get(key, set())
+        if key in minted_columns or (shared and loaded.versions is None):
             raise curation_error(
                 _CODE,
                 f"{context}: duplicate column entry for {column!r}.",
                 "Each (register, variant, column) may appear once, in ONE of "
                 "[[errata.delivered]] (SCB documents the column elsewhere on the "
                 "variant) or [[errata.column]] (it does not document it in the "
-                "claimed period).",
+                "claimed period); the two may share it only with disjoint named "
+                "`versions`.",
             )
-        seen_columns.add(key)
+        if overlap := shared.intersection(loaded.versions or ()):
+            raise curation_error(
+                _CODE,
+                f"{context}: column {column!r} is in both [[errata.delivered]] "
+                f"and [[errata.column]] for versions {sorted(overlap)!r}.",
+                "One (register, variant, column) may be delivered in some "
+                "versions and minted in others, never both in one version: "
+                "give the two entries disjoint `versions`.",
+            )
+        minted_columns.add(key)
         if identities.setdefault(loaded.key, loaded.identity) != loaded.identity:
             raise curation_error(
                 _CODE,
@@ -889,6 +901,7 @@ def convert_delivered_entry(
     context: ErrataVariantContext,
     donor_context: ErrataVariantContext | None = None,
     curated_type: str | None = None,
+    curated_unit: str | None = None,
     preserve_blank_native_base: bool = False,
     additional_physical_column: bool = False,
 ) -> ErrataConversion:
@@ -897,7 +910,8 @@ def convert_delivered_entry(
     An elsewhere-documented column must identify one source-native variable.
     Its documented type and the entry's optional curated type supply widened type
     evidence (without one, the documented class stands); an additional physical
-    column takes the curated type alone.
+    column takes the curated type alone. A curated unit is the delivery's own
+    stated unit; without one the delivery has none (never the documented one's).
     Proximity in time never proves flags or code membership.
     A compiler-proved simultaneous component keeps the negative native base as
     guarded support and uses the existing independent addition path instead.
@@ -972,6 +986,7 @@ def convert_delivered_entry(
     curated_classes = (
         {kind} if curated_type and (kind := data_type_class(curated_type)) else set()
     )
+    unit = normalize_text(curated_unit) if curated_unit is not None else None
     inferred_type = (
         widen_data_type_classes(curated_classes)
         if additional_physical_column
@@ -1125,6 +1140,15 @@ def convert_delivered_entry(
                             ),
                         )
                     )
+                if unit is not None:
+                    effects.append(
+                        CheckedFieldChange(
+                            ref=ref,
+                            replacement=FieldExpectation(
+                                name="measurement_unit", status="value", value=unit
+                            ),
+                        )
+                    )
             continue
         targets.update(references)
         effects.append(
@@ -1140,6 +1164,7 @@ def convert_delivered_entry(
                     data_type=value_field(inferred_type)
                     if inferred_type is not None
                     else None,
+                    measurement_unit=value_field(unit) if unit is not None else None,
                 ),
                 edition_scope=edition.edition_scope,
                 edition_period_scope=edition.edition_period_scope,
@@ -1202,6 +1227,7 @@ def _overlaps_documenting_edition(
     context: ErrataVariantContext,
     selected: tuple[ErrataEditionBinding, ...],
     documented_corrected: bool,
+    delivered: tuple[ErrataEditionBinding, ...],
 ) -> bool:
     """Whether the declared column could share a period with a documented one (#1621).
 
@@ -1212,12 +1238,14 @@ def _overlaps_documenting_edition(
     cannot be shown disjoint, so they count as overlapping, as does a literal a
     checked correction touches (an `[[errata.occurrence_period]]` on it, or an
     `[[errata.field]]` column_name rename to it): the original records no longer
-    show where it is delivered.
+    show where it is delivered. The editions an `[[errata.delivered]]` entry adds
+    the literal to document it too (#1647): disjoint edition names can still
+    share a period.
     """
     if documented_corrected:
         return True
     documented = context.by_column.get(fold_column(entry.column), ())
-    if not documented:
+    if not documented and not delivered:
         return False
     if entry.versions is None and entry.holdings_period is None:
         return True
@@ -1231,7 +1259,9 @@ def _overlaps_documenting_edition(
         )
     else:
         keys = {edition.key for edition in selected}
-        if any(source_occurrence(record).edition_key in keys for record in documented):
+        if any(
+            source_occurrence(record).edition_key in keys for record in documented
+        ) or any(edition.key in keys for edition in delivered):
             return True
         claimed = ()
         for edition in selected:
@@ -1243,11 +1273,11 @@ def _overlaps_documenting_edition(
             if bounds is None:
                 return True
             claimed += bounds
-    for record in documented:
+    for scoped in (*documented, *delivered):
         bounds = coding_scope_bounds(
-            record.edition_period_scope
-            if record.edition_period_scope.kind != "not_applicable"
-            else record.edition_scope
+            scoped.edition_period_scope
+            if scoped.edition_period_scope.kind != "not_applicable"
+            else scoped.edition_scope
         )
         if bounds is None or any(
             lo <= other_hi and other_lo <= hi
@@ -1265,6 +1295,7 @@ def convert_column_entry(
     context: ErrataVariantContext,
     declared_flags: frozenset[str],
     documented_corrected: bool,
+    delivered_versions: frozenset[str] = frozenset(),
 ) -> ErrataConversion:
     """Retain supplied facts; the type is the curated ``data_type`` or unknown.
 
@@ -1278,6 +1309,8 @@ def convert_column_entry(
     columns use false for missing flags; curated values still win.
     Classification references remain declarations for common binding; canonical
     code memberships are never copied into these occurrences.
+    ``delivered_versions`` names the editions `[[errata.delivered]]` entries add
+    this column to on the variant; the entry must not share a period with them.
     """
     if not declared_flags <= {"is_identifier", "is_sensitive"}:
         raise ValueError("declared_flags must name original boolean declaration keys")
@@ -1290,7 +1323,12 @@ def convert_column_entry(
             f"missing column edition conversion bindings: {sorted(missing)!r}"
         )
     selected = tuple(edition for edition in editions if edition.name in names)
-    if _overlaps_documenting_edition(entry, context, selected, documented_corrected):
+    delivered = tuple(
+        edition for edition in editions if edition.name in delivered_versions
+    )
+    if _overlaps_documenting_edition(
+        entry, context, selected, documented_corrected, delivered
+    ):
         return ErrataConversion(None, ("column_now_documented",), ())
     references = {ref for edition in selected for ref in edition.support}
     if entry.versions is None:

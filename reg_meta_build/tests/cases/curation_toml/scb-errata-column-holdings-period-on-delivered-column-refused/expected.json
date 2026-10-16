@@ -1,0 +1,15 @@
+{
+  "loader": "scb_errata",
+  "fails_if": "resolve_scb_errata lets an [[errata.column]] placed by holdings_period (or all_versions) share a (variant, column) with an [[errata.delivered]] entry, whose disjointness by named version it cannot show at load (#1647)",
+  "note": "Only named `versions` on both sides may share a column. The holdings range here even misses the delivered year, but a dataset-grain range is not compared with version names.",
+  "error": {
+    "code": "scb_errata_invalid",
+    "locator": "curation/registers/scb/lisa.toml [[errata.column]] entry 1 (scb/lisa)/individer-15plus",
+    "message_contains": [
+      "duplicate column entry"
+    ],
+    "remediation_contains": [
+      "disjoint named"
+    ]
+  }
+}

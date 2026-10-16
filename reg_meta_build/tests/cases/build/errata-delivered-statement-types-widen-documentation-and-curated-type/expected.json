@@ -7,19 +7,19 @@
         "valid_from": "2020-01-01",
         "column": ["V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "STMT", "BLK", "ANC"]
       },
-      "fields": ["variable", "column", "data_type"],
+      "fields": ["variable", "column", "data_type", "measurement_unit"],
       "rows": [
-        ["v5", "V1", "integer"],
-        ["v6", "V2", "text"],
-        ["v7", "V3", "integer"],
-        ["v8", "V4", "decimal"],
-        ["v9", "V5", "text"],
-        ["v10", "V6", null],
-        ["v11", "V7", null],
-        ["v12", "V8", null],
-        ["v32", "STMT", "text"],
-        ["v31", "BLK", "integer"],
-        ["v22", "ANC", "integer"]
+        ["v5", "V1", "integer", "Kronor (SEK)"],
+        ["v6", "V2", "text", null],
+        ["v7", "V3", "integer", null],
+        ["v8", "V4", "decimal", null],
+        ["v9", "V5", "text", null],
+        ["v10", "V6", null, null],
+        ["v11", "V7", null, null],
+        ["v12", "V8", null, null],
+        ["v32", "STMT", "text", null],
+        ["v31", "BLK", "integer", "Antal"],
+        ["v22", "ANC", "integer", null]
       ]
     },
     {
@@ -60,6 +60,23 @@
       "table": "issues",
       "where": {"code": ["stale_curation_entry", "overbroad_curation_entry"]},
       "fields": ["case_id"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "where": {"variable": ["v5", "v31"]},
+      "fields": ["variable", "column", "measurement_unit"],
+      "note": "V1's and Blk's documented 2022 rows state the unit their delivery entries author, so each variable keeps its common unit; before #1646 the added or rewritten 2020 state had none and the common unit was lost (#1646's six cases).",
+      "rows": [
+        ["v31", "BLK", "Antal"],
+        ["v31", "Blk", "Antal"],
+        ["v5", "V1", "Kronor (SEK)"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "delivery_units_vary"},
+      "fields": ["subject"],
       "rows": []
     }
   ]

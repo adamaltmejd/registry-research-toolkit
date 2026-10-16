@@ -1,0 +1,25 @@
+{
+  "projections": [
+    {
+      "table": "states",
+      "where": {"variable": ["c-q", "c-r", "v5", "v6"]},
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "note": "c-r holds R in 2022 beside v6's documented 2018 and delivered 2020 states; the refused Q declaration forms no c-q state",
+      "rows": [
+        ["c-r", "R", "2022-01-01", "2022-12-31"],
+        ["v5", "Q", "2018-01-01", "2018-12-31"],
+        ["v5", "Q", "2020-01-01", "2020-12-31"],
+        ["v6", "R", "2018-01-01", "2018-12-31"],
+        ["v6", "R", "2020-01-01", "2020-12-31"]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["detail"],
+      "rows": [
+        ["curation/registers/scb/sample.toml#/errata.column/1: column_now_documented"]
+      ]
+    }
+  ]
+}

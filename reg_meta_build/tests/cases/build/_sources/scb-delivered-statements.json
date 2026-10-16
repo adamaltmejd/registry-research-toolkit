@@ -1,5 +1,5 @@
 {
-  "description": "Register TEST (1, variant 2). Var 99 EDITION delivers 2018, 2020 and 2022, so a 2020 edition exists. Statement columns documented only in 2022 with Datatyp: V1 integer (var 5), V2 integer (6), V3 empty (7), V4 float (8), V5 text (9), V6 'Datum och klockslag' (10), V7 date (11), V8 empty (12). Reused identities: AMB under var 20 (2018) and 21 (2022); ANC under 22 (2018) and 23 (2022, text); MISS under 24 (2018) and 25 (2022). NOW (var 26) is delivered in 2018 and 2020. Additional physical columns: var 27 ADD 2022 (integer) with OTHER and SECOND in 2020 and EARLIER in 2018; var 28 ADDP 2022 with OTHERP 2020; var 29 ADDW 2022 with OTHERW 2020; var 30 ADDN in 2022 and 2020. Var 31 Blk 2022 (integer) plus a literal blank column in 2020 with empty Datatyp. Var 32 STMT varchar 2018, int 2022. No SWECOV storage: cases curate any type a delivery statement needs (#1562). One non-sensitive Unika summary row per named column.",
+  "description": "Register TEST (1, variant 2). Var 99 EDITION delivers 2018, 2020 and 2022, so a 2020 edition exists. Statement columns documented only in 2022 with Datatyp: V1 integer, unit 'Kronor (SEK)' (var 5), V2 integer (6), V3 empty (7), V4 float (8), V5 text (9), V6 'Datum och klockslag' (10), V7 date (11), V8 empty (12). Reused identities: AMB under var 20 (2018) and 21 (2022); ANC under 22 (2018) and 23 (2022, text); MISS under 24 (2018) and 25 (2022). NOW (var 26) is delivered in 2018 and 2020. Additional physical columns: var 27 ADD 2022 (integer) with OTHER and SECOND in 2020 and EARLIER in 2018; var 28 ADDP 2022 with OTHERP 2020; var 29 ADDW 2022 with OTHERW 2020; var 30 ADDN in 2022 and 2020. Var 31 Blk 2022 (integer, unit 'Antal') plus a literal blank column in 2020 with empty Datatyp. Var 32 STMT varchar 2018, int 2022. No SWECOV storage: cases curate any type a delivery statement needs (#1562). One non-sensitive Unika summary row per named column.",
   "scb": {
     "registerinformation": [
       {
@@ -36,7 +36,8 @@
         "year": "2022",
         "regver_id": 2022,
         "register": ["TEST", 1, 2],
-        "data_type": "integer"
+        "data_type": "integer",
+        "unit": "Kronor (SEK)"
       },
       {
         "colname": "V2",
@@ -270,7 +271,8 @@
         "year": "2022",
         "regver_id": 2022,
         "register": ["TEST", 1, 2],
-        "data_type": "integer"
+        "data_type": "integer",
+        "unit": "Antal"
       },
       {
         "colname": "\"\"",

@@ -6368,6 +6368,7 @@ def compile_errata(
                             context=context,
                             donor_context=donor_context,
                             curated_type=row.data_type,
+                            curated_unit=row.measurement_unit,
                             preserve_blank_native_base=component_base_key is not None,
                             additional_physical_column=(
                                 row.upstream == "additional-physical-column-in-version"
@@ -6399,6 +6400,13 @@ def compile_errata(
                                         if field.field == "column_name"
                                     ),
                                 )
+                            ),
+                            delivered_versions=frozenset(
+                                version
+                                for key, claim in delivered.items()
+                                if key[:3]
+                                == (register_id, variant_id, fold_column(row.column))
+                                for version in claim.versions
                             ),
                         )
                         blockers, converted = result.blockers, result.case

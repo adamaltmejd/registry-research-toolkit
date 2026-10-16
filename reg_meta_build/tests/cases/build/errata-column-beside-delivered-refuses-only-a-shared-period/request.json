@@ -1,0 +1,22 @@
+{
+  "note": "An [[errata.column]] entry beside an [[errata.delivered]] entry for one literal (#1647). Register TEST (1, variant 2) has editions 2018, 2020, 2020-06-30 (a sub-annual edition inside 2020) and 2022; Q (var 5) and R (var 6) are documented only in 2018. Both columns are delivered in 2020 by a delivered entry. The R column entry names 2022, a period nothing documents or delivers R in, so it mints its own c-r variable with one 2022 state beside v6's 2018 and 2020 states. The Q column entry names 2020-06-30: a different edition name from the delivered 2020, but a date inside it, so the two variables would both claim Q on that date; it is refused as column_now_documented and forms no c-q state, while v5 keeps its documented 2018 and delivered 2020 states.",
+  "fails_if": "`scb_errata.convert_column_entry` compares only edition names with the delivered entry's versions (c-q built on 2020-06-30), or refuses every column entry beside a delivered one (no c-r state)",
+  "sources": {
+    "description": "Editions 2018, 2020, 2020-06-30 and 2022; Q and R documented only in 2018.",
+    "scb": {
+      "registerinformation": [
+        {"colname": "EDITION", "cvid": 1, "var_id": 99, "year": "2018", "regver_id": 1, "register": ["TEST", 1, 2]},
+        {"colname": "EDITION", "cvid": 2, "var_id": 99, "year": "2020", "regver_id": 2, "register": ["TEST", 1, 2]},
+        {"colname": "EDITION", "cvid": 3, "var_id": 99, "year": "2020", "versionname": "2020-06-30", "regver_id": 3, "register": ["TEST", 1, 2]},
+        {"colname": "EDITION", "cvid": 4, "var_id": 99, "year": "2022", "regver_id": 4, "register": ["TEST", 1, 2]},
+        {"colname": "Q", "cvid": 5, "var_id": 5, "year": "2018", "regver_id": 1, "register": ["TEST", 1, 2], "data_type": "integer"},
+        {"colname": "R", "cvid": 6, "var_id": 6, "year": "2018", "regver_id": 1, "register": ["TEST", 1, 2], "data_type": "integer"}
+      ],
+      "unika": [
+        "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2018|2022|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|Q|2018|2018|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar|R|2018|2018|0|0|0"
+      ]
+    }
+  }
+}

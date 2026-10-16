@@ -1,0 +1,6 @@
+{
+  "loader": "scb_errata",
+  "fails_if": "resolve_scb_errata refuses one (variant, column) declared in [[errata.delivered]] for some named versions and in [[errata.column]] for other, disjoint named versions (#1647)",
+  "note": "The allowed twin of scb-errata-column-also-delivered-refused: one delivered name with two meanings in different rounds (FoU V0401: delivered carry for 2001, minted for 2007-2015). Here the delivered entry names 2009 and the column 2010-2011.",
+  "loads": true
+}
