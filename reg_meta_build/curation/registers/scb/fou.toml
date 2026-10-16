@@ -7,6 +7,62 @@ native_id = "182"
 # SCB's raw Registerinformation export; folded duplicate columns are merged
 # with their version lists unioned.
 
+# #1603 batch-e (D1/D2): SWECOV-held FoU rounds outside SCB's documented biennial
+# versions; they carry the firm key (PeorgNr) and, in 2004-2008, the year column (Ar).
+[[errata.version]]
+variant = "foretagssektorn"
+name = "1997"
+evidence = "SWECOV holds FTG_FOU_1997, an earlier biennial round SCB's Registerinformation export does not document (it documents företagssektorn from 2003). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
+[[errata.version]]
+variant = "foretagssektorn"
+name = "1999"
+evidence = "SWECOV holds FTG_FOU_1999, an earlier biennial round SCB's Registerinformation export does not document (it documents företagssektorn from 2003). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
+[[errata.version]]
+variant = "foretagssektorn"
+name = "2001"
+evidence = "SWECOV holds FTG_FOU_2001, an earlier biennial round SCB's Registerinformation export does not document (it documents företagssektorn from 2003). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
+[[errata.version]]
+variant = "foretagssektorn"
+name = "2004"
+evidence = "SWECOV holds FTG_FOU_2004, an off-year between SCB's biennial rounds; SCB publishes off-year forecast results built from the previous round's answers (SCBDOK 2013 p.6). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
+[[errata.version]]
+variant = "foretagssektorn"
+name = "2006"
+evidence = "SWECOV holds FTG_FOU_2006, an off-year between SCB's biennial rounds; SCB publishes off-year forecast results built from the previous round's answers (SCBDOK 2013 p.6). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
+[[errata.version]]
+variant = "foretagssektorn"
+name = "2008"
+evidence = "SWECOV holds FTG_FOU_2008, an off-year between SCB's biennial rounds; SCB publishes off-year forecast results built from the previous round's answers (SCBDOK 2013 p.6). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
+[[errata.version]]
+variant = "foretagssektorn"
+name = "2010"
+evidence = "SWECOV holds FTG_FOU_2010, an off-year between SCB's biennial rounds; SCB publishes off-year forecast results built from the previous round's answers (SCBDOK 2013 p.6). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
+[[errata.version]]
+variant = "foretagssektorn"
+name = "2012"
+evidence = "SWECOV holds FTG_FOU_2012, an off-year between SCB's biennial rounds; SCB publishes off-year forecast results built from the previous round's answers (SCBDOK 2013 p.6). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
+[[errata.version]]
+variant = "foretagssektorn"
+name = "2014"
+evidence = "SWECOV holds FTG_FOU_2014, an off-year between SCB's biennial rounds; SCB publishes off-year forecast results built from the previous round's answers (SCBDOK 2013 p.6). Each table's other columns already map onto this variant; the version places the table's firm key and year columns (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
+
 [[errata.delivered]]
 variant = "foretagssektorn"
 column = "AnstS"
@@ -19,11 +75,11 @@ noted = "2026-09-12"
 [[errata.delivered]]
 variant = "foretagssektorn"
 column = "Ar"
-versions = ["2015", "2017"]
+versions = ["2004", "2006", "2008", "2015", "2017"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "61d138a55a7c67270cb946a8f59dccb090005ac6f090005be39250008ce91117"
-evidence = "SWECOV holds Ar in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2005."
-noted = "2026-09-12"
+evidence = "SWECOV holds Ar in FTG_FOU_2015, FTG_FOU_2017; SCB's Registerinformation export documents FoU Företagssektorn 2015, 2017 but names only 1/1 distinct column(s) there and carries no row for this column; its only named rows are in 2005. | #1603 batch-e: SWECOV holds AR in FTG_FOU_2004, 2006 and 2008; an aggregate check on MONA, reported as a conclusion only, found it equal to the table year on every row (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
@@ -37,11 +93,11 @@ noted = "2026-09-12"
 [[errata.delivered]]
 variant = "foretagssektorn"
 column = "PeorgNr"
-versions = ["2009", "2011", "2013", "2015", "2017", "2019", "2021"]
+versions = ["1997", "1999", "2001", "2004", "2006", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2017", "2019", "2021"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "65688547ce1c04af2e3cc3320ec33a2bbd2b59dc61671abd22943feb55f44530"
-evidence = "SWECOV holds PeorgNr in ; SCB's Registerinformation export documents FoU Företagssektorn 2009, 2011, 2013, 2015, 2017, 2019, 2021 but names only 0/0/0/1/1/8/8 distinct column(s) there and carries no row for this column; its only named rows are in 2003, 2005, 2007. | SWECOV holds peorgnr in ; SCB's Registerinformation export documents FoU Företagssektorn 2009, 2011, 2013, 2015, 2017, 2019, 2021 but names only 0/0/0/1/1/8/8 distinct column(s) there and carries no row for this column; its only named rows are in 2003, 2005, 2007."
-noted = "2026-09-12"
+evidence = "SWECOV holds PeorgNr in ; SCB's Registerinformation export documents FoU Företagssektorn 2009, 2011, 2013, 2015, 2017, 2019, 2021 but names only 0/0/0/1/1/8/8 distinct column(s) there and carries no row for this column; its only named rows are in 2003, 2005, 2007. | SWECOV holds peorgnr in ; SCB's Registerinformation export documents FoU Företagssektorn 2009, 2011, 2013, 2015, 2017, 2019, 2021 but names only 0/0/0/1/1/8/8 distinct column(s) there and carries no row for this column; its only named rows are in 2003, 2005, 2007. | #1603 batch-e: SWECOV also holds the firm key P1105_LopNr_PeOrgNr in FTG_FOU 1997, 1999, 2001, 2004, 2006, 2008, 2010, 2012 and 2014; the key's meaning (pseudonymised organisation number) does not change by round (maintainer decisions 2026-10-16, #1603 batch-e D1/D2, .durable-scratch/swecov-worklists/batch_e_decisions.md)."
+noted = "2026-10-16"
 
 [[errata.delivered]]
 variant = "foretagssektorn"
