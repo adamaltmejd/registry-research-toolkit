@@ -12450,7 +12450,7 @@ column = "EMPIUSEPCT"
 versions = ["2008", "2009", "2010", "2011", "2012"]
 upstream = "omitted-column-in-version"
 native_variable_id = 17675
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "7eba8238124465deb63cbe9d16c203149c6dff66af9d0c12405f58d3c7ebf0fb"
 evidence = "SWECOV holds EMPIUSEPCT in ITftg_2008 to ITftg_2012; the same delivered name is documented on this variant as native 17675, nearest in 2013. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type (nvarchar) is compatible with the documented data type (text)."
 noted = "2026-10-16"
 

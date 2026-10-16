@@ -312,7 +312,7 @@ column = "Utb_Form"
 versions = ["15 oktober 1995", "15 oktober 1996", "15 oktober 1997", "15 oktober 1998"]
 upstream = "omitted-column-in-version"
 native_variable_id = 35245
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "e2f6bdca54ea8f110fd5e1e44f5bd276b118185883185d75fd3377bdaea8ceec"
 evidence = "SWECOV holds Utb_Form in ElevGymn95 through ElevGymn98; the same delivered name is documented on this variant as native 35245 (scb/gymnasieskola-elever/utb-form), nearest in 15 oktober 1999. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -323,7 +323,7 @@ column = "Utbild"
 versions = ["15 oktober 1995", "15 oktober 1996", "15 oktober 1997", "15 oktober 1998"]
 upstream = "omitted-column-in-version"
 native_variable_id = 16306
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b07950dae271368021acc6905c3642f2f1eb3b08560b5be3f08386f02e336274"
 evidence = "SWECOV holds Utbild in ElevGymn95 through ElevGymn98; the same delivered name is documented on this variant as native 16306 (scb/gymnasieskola-elever/utbild), nearest in 15 oktober 1999. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -338,7 +338,7 @@ valid_from = "1995-10-15"
 valid_to = "1995-10-15"
 reason = "The #1603 batch-e same-name carry gives this column edition 15 oktober 1999's meaning for 15 oktober 1995; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Utb_Form on _default under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -350,7 +350,7 @@ valid_from = "1996-10-15"
 valid_to = "1996-10-15"
 reason = "The #1603 batch-e same-name carry gives this column edition 15 oktober 1999's meaning for 15 oktober 1996; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Utb_Form on _default under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -362,7 +362,7 @@ valid_from = "1997-10-15"
 valid_to = "1997-10-15"
 reason = "The #1603 batch-e same-name carry gives this column edition 15 oktober 1999's meaning for 15 oktober 1997; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Utb_Form on _default under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -374,7 +374,7 @@ valid_from = "1998-10-15"
 valid_to = "1998-10-15"
 reason = "The #1603 batch-e same-name carry gives this column edition 15 oktober 1999's meaning for 15 oktober 1998; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Utb_Form on _default under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -386,7 +386,7 @@ valid_from = "1995-10-15"
 valid_to = "1995-10-15"
 reason = "The #1603 batch-e same-name carry gives this column edition 15 oktober 1999's meaning for 15 oktober 1995; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Utbild on _default under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -398,7 +398,7 @@ valid_from = "1996-10-15"
 valid_to = "1996-10-15"
 reason = "The #1603 batch-e same-name carry gives this column edition 15 oktober 1999's meaning for 15 oktober 1996; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Utbild on _default under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -410,7 +410,7 @@ valid_from = "1997-10-15"
 valid_to = "1997-10-15"
 reason = "The #1603 batch-e same-name carry gives this column edition 15 oktober 1999's meaning for 15 oktober 1997; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Utbild on _default under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -422,5 +422,5 @@ valid_from = "1998-10-15"
 valid_to = "1998-10-15"
 reason = "The #1603 batch-e same-name carry gives this column edition 15 oktober 1999's meaning for 15 oktober 1998; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Utbild on _default under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"

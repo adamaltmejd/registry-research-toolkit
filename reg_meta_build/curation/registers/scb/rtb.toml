@@ -2102,6 +2102,6 @@ column = "postnr"
 versions = ["2015-12-31", "2016-12-31", "2017-12-31", "2018-12-31", "2019-12-31", "2020-12-31"]
 upstream = "omitted-column-in-version"
 native_variable_id = 537
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "d59f9faae996efc1879a46a421566ae48447a41bb77d927964e355a7d9d08d88"
 evidence = "SWECOV holds postnr in RTB_PostNr_2015 through RTB_PostNr_2020; the same delivered name is documented on this variant as native 537 (scb/rtb/postnr), nearest in 1997-12-31. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"

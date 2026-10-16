@@ -13280,7 +13280,7 @@ column = "ANNANPED"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
 upstream = "omitted-column-in-version"
 native_variable_id = 42803
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "6ab390643b73af6d6b355cc3149b12d91caf68ca768c965e4f43f5a3daf3b35e"
 evidence = "SWECOV holds ANNANPED in LReg_1999 through LReg_2016; the same delivered name is documented on this variant as native 42803 (scb/lararreg/annanped), nearest in Läsåret 2017/2018. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13291,7 +13291,7 @@ column = "Argang"
 versions = ["Läsåret 1989/1990", "Läsåret 1990/1991", "Läsåret 1991/1992", "Läsåret 1992/1993", "Läsåret 1993/1994", "Läsåret 1994/1995", "Läsåret 1995/1996", "Läsåret 1996/1997", "Läsåret 1997/1998", "Läsåret 1998/1999", "Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006"]
 upstream = "omitted-column-in-version"
 native_variable_id = 1396
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "db519098c42f1d3a9c9ae9bb4dc52ad51cc0121c4cf116fac5b4c6d285c4604e"
 evidence = "SWECOV holds Argang in LReg_1989 through LReg_2005; the same delivered name is documented on this variant as native 1396 (scb/lararreg/lasar), nearest in Läsåret 2006/2007. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13302,7 +13302,7 @@ column = "IVPgm"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011"]
 upstream = "omitted-column-in-version"
 native_variable_id = 30581
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "80c0cb2908da4c8daf61da6cec18d5f5ad14897681d8962048743ad7a8c4bf7d"
 evidence = "SWECOV holds IVPgm in LReg_1999 through LReg_2010; the same delivered name is documented on this variant as native 30581 (scb/lararreg/ivpgm), nearest in Läsåret 2011/2012. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13313,7 +13313,7 @@ column = "Inriktning"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006"]
 upstream = "omitted-column-in-version"
 native_variable_id = 8190
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "c9468a79afc6838d07f1d2a0b427d15314bf8db949a9abc6f600401250ab1df9"
 evidence = "SWECOV holds Inriktning in LReg_1999 through LReg_2005; the same delivered name is documented on this variant as native 8190 (scb/lararreg/inriktning), nearest in Läsåret 2006/2007. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13324,7 +13324,7 @@ column = "Jurform"
 versions = ["Läsåret 2013/2014", "Läsåret 2014/2015"]
 upstream = "omitted-column-in-version"
 native_variable_id = 34
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "bf48bda65076b53420168115149c6cb7aed59a56da15a9beea0df36975a1476a"
 evidence = "SWECOV holds Jurform in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/jurform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13335,7 +13335,7 @@ column = "JuridiskForm"
 versions = ["Läsåret 2013/2014", "Läsåret 2014/2015"]
 upstream = "omitted-column-in-version"
 native_variable_id = 34
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "b54adf708e43f712fc4f022de5e1d58d7b45374af51618930f493754486c8d79"
 evidence = "SWECOV holds JuridiskForm in LReg_2013 through LReg_2014; the same delivered name is documented on this variant as native 34 (scb/lararreg/juridiskform), nearest in Läsåret 2015/2016. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13346,7 +13346,7 @@ column = "Kommun"
 versions = ["Läsåret 1989/1990", "Läsåret 1990/1991", "Läsåret 1991/1992", "Läsåret 1992/1993", "Läsåret 1993/1994", "Läsåret 1994/1995", "Läsåret 1995/1996", "Läsåret 1996/1997", "Läsåret 1997/1998", "Läsåret 1998/1999"]
 upstream = "omitted-column-in-version"
 native_variable_id = 36
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "d286a4af89bdfa367a7135a17808a2f082e530c21ef135db4eb6748376302c3b"
 evidence = "SWECOV holds Kommun in LReg_1989 through LReg_1998; the same delivered name is documented on this variant as native 36 (scb/lararreg/kommun), nearest in Läsåret 1999/2000. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13357,7 +13357,7 @@ column = "Lan"
 versions = ["Läsåret 1989/1990", "Läsåret 1990/1991", "Läsåret 1991/1992", "Läsåret 1992/1993", "Läsåret 1993/1994", "Läsåret 1994/1995", "Läsåret 1995/1996", "Läsåret 1996/1997", "Läsåret 1997/1998", "Läsåret 1998/1999"]
 upstream = "omitted-column-in-version"
 native_variable_id = 49
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "8dcb46c002becb5122f14454c0e1c85f7d679e6ab2ea7555ad7f4c46a160aabf"
 evidence = "SWECOV holds Lan in LReg_1989 through LReg_1998; the same delivered name is documented on this variant as native 49 (scb/lararreg/lan), nearest in Läsåret 1999/2000. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13368,7 +13368,7 @@ column = "PRTJBL"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
 upstream = "omitted-column-in-version"
 native_variable_id = 37230
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "71674b878b82743e23db0f8341283aea6fcf136675311a6894f071bb1c37857a"
 evidence = "SWECOV holds PRTJBL in LReg_1999 through LReg_2016; the same delivered name is documented on this variant as native 37230 (scb/lararreg/prtjbl), nearest in Läsåret 2017/2018. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13379,7 +13379,7 @@ column = "SFITyp"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006"]
 upstream = "omitted-column-in-version"
 native_variable_id = 8557
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "a15542005e155afe2a55ec05640ab1ee1d3548c6c2425a941f1f69b3597d3c5a"
 evidence = "SWECOV holds SFITyp in LReg_1999 through LReg_2005; the same delivered name is documented on this variant as native 8557 (scb/lararreg/sfityp), nearest in Läsåret 2006/2007. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13390,7 +13390,7 @@ column = "Saktar"
 versions = ["Läsåret 2007/2008"]
 upstream = "omitted-column-in-version"
 native_variable_id = 8770
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "61ca0a25eb36ab2b670a2994fe699fefd6de346d2d22367b2ff10b5a93347ad7"
 evidence = "SWECOV holds Saktar in LReg_2007; the same delivered name is documented on this variant as native 8770 (scb/lararreg/senaste-aktivt-ar), nearest in Läsåret 2006/2007. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13401,7 +13401,7 @@ column = "TJLAR"
 versions = ["Läsåret 1989/1990", "Läsåret 1990/1991", "Läsåret 1991/1992", "Läsåret 1992/1993", "Läsåret 1993/1994", "Läsåret 1994/1995", "Läsåret 1995/1996", "Läsåret 1996/1997", "Läsåret 1997/1998", "Läsåret 1998/1999", "Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
 upstream = "omitted-column-in-version"
 native_variable_id = 37237
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "45c0d0e6e4785aa2e6f54a5446914c76b49ef066268ef4e86d83eed309a4865c"
 evidence = "SWECOV holds TJLAR in LReg_1989 through LReg_2016; the same delivered name is documented on this variant as native 37237 (scb/lararreg/tjanstgorande-larare), nearest in Läsåret 2017/2018. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13412,7 +13412,7 @@ column = "TJLAREXLASYL"
 versions = ["Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
 upstream = "omitted-column-in-version"
 native_variable_id = 37236
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "267df5f716dee7eebd731d762d54e52526f222bfe2c755e76b811aba0529a7b8"
 evidence = "SWECOV holds TJLAREXLASYL in LReg_2013 through LReg_2016; the same delivered name is documented on this variant as native 37236 (scb/lararreg/tjlarexlasyl), nearest in Läsåret 2017/2018. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13423,7 +13423,7 @@ column = "TJLEDLAR"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
 upstream = "omitted-column-in-version"
 native_variable_id = 37235
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "3786a7affa7dc9ef0d5eaa7fa7862b00537f1e6996e0650140bcb840d065cc48"
 evidence = "SWECOV holds TJLEDLAR in LReg_1999 through LReg_2012, LReg_2014 through LReg_2016; the same delivered name is documented on this variant as native 37235 (scb/lararreg/tjledlar), nearest in Läsåret 2017/2018. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13434,7 +13434,7 @@ column = "TraningsSar"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011"]
 upstream = "omitted-column-in-version"
 native_variable_id = 30577
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "cc54a180250e00e30373b8ff7c6e454345c198b50cb0bc527788ff529cc62b9e"
 evidence = "SWECOV holds TraningsSar in LReg_1999 through LReg_2010; the same delivered name is documented on this variant as native 30577 (scb/lararreg/traningssar), nearest in Läsåret 2011/2012. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
@@ -13449,7 +13449,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1999/2000; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13461,7 +13461,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2000/2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13473,7 +13473,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2001/2002; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13485,7 +13485,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2002/2003; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13497,7 +13497,7 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2003/2004; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13509,7 +13509,7 @@ valid_from = "2004-07-01"
 valid_to = "2005-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2004/2005; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13521,7 +13521,7 @@ valid_from = "2005-07-01"
 valid_to = "2006-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2005/2006; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13533,7 +13533,7 @@ valid_from = "2006-07-01"
 valid_to = "2007-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2006/2007; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13545,7 +13545,7 @@ valid_from = "2007-07-01"
 valid_to = "2008-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2007/2008; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13557,7 +13557,7 @@ valid_from = "2008-07-01"
 valid_to = "2009-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2008/2009; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13569,7 +13569,7 @@ valid_from = "2009-07-01"
 valid_to = "2010-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2009/2010; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13581,7 +13581,7 @@ valid_from = "2010-07-01"
 valid_to = "2011-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2010/2011; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13593,7 +13593,7 @@ valid_from = "2011-07-01"
 valid_to = "2012-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2011/2012; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13605,7 +13605,7 @@ valid_from = "2012-07-01"
 valid_to = "2013-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2012/2013; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13617,7 +13617,7 @@ valid_from = "2013-07-01"
 valid_to = "2014-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2013/2014; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13629,7 +13629,7 @@ valid_from = "2014-07-01"
 valid_to = "2015-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2014/2015; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13641,7 +13641,7 @@ valid_from = "2015-07-01"
 valid_to = "2016-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2015/2016; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13653,7 +13653,7 @@ valid_from = "2016-07-01"
 valid_to = "2017-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2016/2017; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ANNANPED on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13665,7 +13665,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 1999/2000; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13677,7 +13677,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2000/2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13689,7 +13689,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2001/2002; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13701,7 +13701,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2002/2003; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13713,7 +13713,7 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2003/2004; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13725,7 +13725,7 @@ valid_from = "2004-07-01"
 valid_to = "2005-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2004/2005; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13737,7 +13737,7 @@ valid_from = "2005-07-01"
 valid_to = "2006-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2005/2006; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13749,7 +13749,7 @@ valid_from = "2006-07-01"
 valid_to = "2007-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2006/2007; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13761,7 +13761,7 @@ valid_from = "2007-07-01"
 valid_to = "2008-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2007/2008; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13773,7 +13773,7 @@ valid_from = "2008-07-01"
 valid_to = "2009-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2008/2009; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13785,7 +13785,7 @@ valid_from = "2009-07-01"
 valid_to = "2010-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2009/2010; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13797,7 +13797,7 @@ valid_from = "2010-07-01"
 valid_to = "2011-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2010/2011; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column IVPgm on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13809,7 +13809,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 1999/2000; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Inriktning on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13821,7 +13821,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2000/2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Inriktning on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13833,7 +13833,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2001/2002; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Inriktning on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13845,7 +13845,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2002/2003; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Inriktning on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13857,7 +13857,7 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2003/2004; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Inriktning on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13869,7 +13869,7 @@ valid_from = "2004-07-01"
 valid_to = "2005-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2004/2005; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Inriktning on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13881,7 +13881,7 @@ valid_from = "2005-07-01"
 valid_to = "2006-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2005/2006; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Inriktning on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13893,7 +13893,7 @@ valid_from = "2013-07-01"
 valid_to = "2014-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2015/2016's meaning for Läsåret 2013/2014; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Jurform on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13905,7 +13905,7 @@ valid_from = "2014-07-01"
 valid_to = "2015-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2015/2016's meaning for Läsåret 2014/2015; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Jurform on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13917,7 +13917,7 @@ valid_from = "1989-07-01"
 valid_to = "1990-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1989/1990; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13929,7 +13929,7 @@ valid_from = "1990-07-01"
 valid_to = "1991-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1990/1991; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13941,7 +13941,7 @@ valid_from = "1991-07-01"
 valid_to = "1992-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1991/1992; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13953,7 +13953,7 @@ valid_from = "1992-07-01"
 valid_to = "1993-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1992/1993; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13965,7 +13965,7 @@ valid_from = "1993-07-01"
 valid_to = "1994-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1993/1994; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13977,7 +13977,7 @@ valid_from = "1994-07-01"
 valid_to = "1995-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1994/1995; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -13989,7 +13989,7 @@ valid_from = "1995-07-01"
 valid_to = "1996-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1995/1996; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14001,7 +14001,7 @@ valid_from = "1996-07-01"
 valid_to = "1997-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1996/1997; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14013,7 +14013,7 @@ valid_from = "1997-07-01"
 valid_to = "1998-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1997/1998; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14025,7 +14025,7 @@ valid_from = "1998-07-01"
 valid_to = "1999-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1998/1999; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Kommun on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "281bff6a57692fadbc0542e908c07bc477ee4ab6f42390226e2c5616279a8025"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14037,7 +14037,7 @@ valid_from = "1989-07-01"
 valid_to = "1990-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1989/1990; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14049,7 +14049,7 @@ valid_from = "1990-07-01"
 valid_to = "1991-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1990/1991; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14061,7 +14061,7 @@ valid_from = "1991-07-01"
 valid_to = "1992-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1991/1992; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14073,7 +14073,7 @@ valid_from = "1992-07-01"
 valid_to = "1993-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1992/1993; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14085,7 +14085,7 @@ valid_from = "1993-07-01"
 valid_to = "1994-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1993/1994; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14097,7 +14097,7 @@ valid_from = "1994-07-01"
 valid_to = "1995-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1994/1995; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14109,7 +14109,7 @@ valid_from = "1995-07-01"
 valid_to = "1996-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1995/1996; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14121,7 +14121,7 @@ valid_from = "1996-07-01"
 valid_to = "1997-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1996/1997; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14133,7 +14133,7 @@ valid_from = "1997-07-01"
 valid_to = "1998-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1997/1998; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14145,7 +14145,7 @@ valid_from = "1998-07-01"
 valid_to = "1999-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 1999/2000's meaning for Läsåret 1998/1999; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Lan on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "28aa72c8ff6410217943d4ddfedea561bf0ee96921a3bd4cc458ae57e313da83"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14157,7 +14157,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1999/2000; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14169,7 +14169,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2000/2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14181,7 +14181,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2001/2002; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14193,7 +14193,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2002/2003; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14205,7 +14205,7 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2003/2004; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14217,7 +14217,7 @@ valid_from = "2004-07-01"
 valid_to = "2005-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2004/2005; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14229,7 +14229,7 @@ valid_from = "2005-07-01"
 valid_to = "2006-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2005/2006; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14241,7 +14241,7 @@ valid_from = "2006-07-01"
 valid_to = "2007-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2006/2007; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14253,7 +14253,7 @@ valid_from = "2007-07-01"
 valid_to = "2008-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2007/2008; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14265,7 +14265,7 @@ valid_from = "2008-07-01"
 valid_to = "2009-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2008/2009; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14277,7 +14277,7 @@ valid_from = "2009-07-01"
 valid_to = "2010-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2009/2010; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14289,7 +14289,7 @@ valid_from = "2010-07-01"
 valid_to = "2011-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2010/2011; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14301,7 +14301,7 @@ valid_from = "2011-07-01"
 valid_to = "2012-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2011/2012; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14313,7 +14313,7 @@ valid_from = "2012-07-01"
 valid_to = "2013-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2012/2013; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14325,7 +14325,7 @@ valid_from = "2013-07-01"
 valid_to = "2014-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2013/2014; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14337,7 +14337,7 @@ valid_from = "2014-07-01"
 valid_to = "2015-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2014/2015; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14349,7 +14349,7 @@ valid_from = "2015-07-01"
 valid_to = "2016-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2015/2016; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14361,7 +14361,7 @@ valid_from = "2016-07-01"
 valid_to = "2017-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2016/2017; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column PRTJBL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14373,7 +14373,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 1999/2000; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column SFITyp on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14385,7 +14385,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2000/2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column SFITyp on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14397,7 +14397,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2001/2002; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column SFITyp on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14409,7 +14409,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2002/2003; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column SFITyp on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14421,7 +14421,7 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2003/2004; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column SFITyp on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14433,7 +14433,7 @@ valid_from = "2004-07-01"
 valid_to = "2005-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2004/2005; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column SFITyp on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14445,7 +14445,7 @@ valid_from = "2005-07-01"
 valid_to = "2006-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2005/2006; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column SFITyp on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14457,7 +14457,7 @@ valid_from = "2007-07-01"
 valid_to = "2008-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2006/2007's meaning for Läsåret 2007/2008; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column Saktar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "09c1a4bf8c64b668e89bb0b699dc404eebc54844079e05fea9640da4cc5b4f27"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14469,7 +14469,7 @@ valid_from = "1989-07-01"
 valid_to = "1990-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1989/1990; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14481,7 +14481,7 @@ valid_from = "1990-07-01"
 valid_to = "1991-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1990/1991; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14493,7 +14493,7 @@ valid_from = "1991-07-01"
 valid_to = "1992-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1991/1992; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14505,7 +14505,7 @@ valid_from = "1992-07-01"
 valid_to = "1993-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1992/1993; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14517,7 +14517,7 @@ valid_from = "1993-07-01"
 valid_to = "1994-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1993/1994; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14529,7 +14529,7 @@ valid_from = "1994-07-01"
 valid_to = "1995-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1994/1995; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14541,7 +14541,7 @@ valid_from = "1995-07-01"
 valid_to = "1996-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1995/1996; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14553,7 +14553,7 @@ valid_from = "1996-07-01"
 valid_to = "1997-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1996/1997; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14565,7 +14565,7 @@ valid_from = "1997-07-01"
 valid_to = "1998-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1997/1998; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14577,7 +14577,7 @@ valid_from = "1998-07-01"
 valid_to = "1999-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1998/1999; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14589,7 +14589,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1999/2000; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14601,7 +14601,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2000/2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14613,7 +14613,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2001/2002; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14625,7 +14625,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2002/2003; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14637,7 +14637,7 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2003/2004; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14649,7 +14649,7 @@ valid_from = "2004-07-01"
 valid_to = "2005-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2004/2005; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14661,7 +14661,7 @@ valid_from = "2005-07-01"
 valid_to = "2006-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2005/2006; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14673,7 +14673,7 @@ valid_from = "2006-07-01"
 valid_to = "2007-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2006/2007; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14685,7 +14685,7 @@ valid_from = "2007-07-01"
 valid_to = "2008-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2007/2008; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14697,7 +14697,7 @@ valid_from = "2008-07-01"
 valid_to = "2009-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2008/2009; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14709,7 +14709,7 @@ valid_from = "2009-07-01"
 valid_to = "2010-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2009/2010; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14721,7 +14721,7 @@ valid_from = "2010-07-01"
 valid_to = "2011-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2010/2011; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14733,7 +14733,7 @@ valid_from = "2011-07-01"
 valid_to = "2012-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2011/2012; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14745,7 +14745,7 @@ valid_from = "2012-07-01"
 valid_to = "2013-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2012/2013; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14757,7 +14757,7 @@ valid_from = "2013-07-01"
 valid_to = "2014-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2013/2014; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14769,7 +14769,7 @@ valid_from = "2014-07-01"
 valid_to = "2015-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2014/2015; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14781,7 +14781,7 @@ valid_from = "2015-07-01"
 valid_to = "2016-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2015/2016; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14793,7 +14793,7 @@ valid_from = "2016-07-01"
 valid_to = "2017-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2016/2017; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14805,7 +14805,7 @@ valid_from = "2013-07-01"
 valid_to = "2014-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2013/2014; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAREXLASYL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14817,7 +14817,7 @@ valid_from = "2014-07-01"
 valid_to = "2015-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2014/2015; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAREXLASYL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14829,7 +14829,7 @@ valid_from = "2015-07-01"
 valid_to = "2016-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2015/2016; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAREXLASYL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14841,7 +14841,7 @@ valid_from = "2016-07-01"
 valid_to = "2017-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2016/2017; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLAREXLASYL on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14853,7 +14853,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 1999/2000; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14865,7 +14865,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2000/2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14877,7 +14877,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2001/2002; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14889,7 +14889,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2002/2003; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14901,7 +14901,7 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2003/2004; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14913,7 +14913,7 @@ valid_from = "2004-07-01"
 valid_to = "2005-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2004/2005; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14925,7 +14925,7 @@ valid_from = "2005-07-01"
 valid_to = "2006-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2005/2006; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14937,7 +14937,7 @@ valid_from = "2006-07-01"
 valid_to = "2007-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2006/2007; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14949,7 +14949,7 @@ valid_from = "2007-07-01"
 valid_to = "2008-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2007/2008; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14961,7 +14961,7 @@ valid_from = "2008-07-01"
 valid_to = "2009-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2008/2009; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14973,7 +14973,7 @@ valid_from = "2009-07-01"
 valid_to = "2010-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2009/2010; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14985,7 +14985,7 @@ valid_from = "2010-07-01"
 valid_to = "2011-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2010/2011; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -14997,7 +14997,7 @@ valid_from = "2011-07-01"
 valid_to = "2012-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2011/2012; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15009,7 +15009,7 @@ valid_from = "2012-07-01"
 valid_to = "2013-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2012/2013; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15021,7 +15021,7 @@ valid_from = "2014-07-01"
 valid_to = "2015-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2014/2015; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15033,7 +15033,7 @@ valid_from = "2015-07-01"
 valid_to = "2016-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2015/2016; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15045,7 +15045,7 @@ valid_from = "2016-07-01"
 valid_to = "2017-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2017/2018's meaning for Läsåret 2016/2017; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TJLEDLAR on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15057,7 +15057,7 @@ valid_from = "1999-07-01"
 valid_to = "2000-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 1999/2000; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15069,7 +15069,7 @@ valid_from = "2000-07-01"
 valid_to = "2001-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2000/2001; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15081,7 +15081,7 @@ valid_from = "2001-07-01"
 valid_to = "2002-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2001/2002; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15093,7 +15093,7 @@ valid_from = "2002-07-01"
 valid_to = "2003-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2002/2003; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15105,7 +15105,7 @@ valid_from = "2003-07-01"
 valid_to = "2004-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2003/2004; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15117,7 +15117,7 @@ valid_from = "2004-07-01"
 valid_to = "2005-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2004/2005; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15129,7 +15129,7 @@ valid_from = "2005-07-01"
 valid_to = "2006-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2005/2006; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15141,7 +15141,7 @@ valid_from = "2006-07-01"
 valid_to = "2007-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2006/2007; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15153,7 +15153,7 @@ valid_from = "2007-07-01"
 valid_to = "2008-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2007/2008; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15165,7 +15165,7 @@ valid_from = "2008-07-01"
 valid_to = "2009-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2008/2009; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15177,7 +15177,7 @@ valid_from = "2009-07-01"
 valid_to = "2010-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2009/2010; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 
 [[acknowledge]]
@@ -15189,5 +15189,5 @@ valid_from = "2010-07-01"
 valid_to = "2011-06-30"
 reason = "The #1603 batch-e same-name carry gives this column edition Läsåret 2011/2012's meaning for Läsåret 2010/2011; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column TraningsSar on tjansteregistret under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "134df97f681761696036acd770b7c4314a3f67a6629506053629533174e17e26"
 expected_diagnostic_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
