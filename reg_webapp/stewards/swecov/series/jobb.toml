@@ -131,16 +131,6 @@ table = "JOBB2021"
 edition = 2021
 
 [[column]]
-column = "AstSni02"
-tables = ["JOBB2009"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2009; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "AstSni02"
-tables = ["JOBB2010"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2010; no complete source window covers it in the table's reviewed variant scope. Matching literal columns exist in other source variants/grains/waves, but the CSV supplies no native-question or delivery association proving those owners apply to this physical table. Do not select another grain solely from a column spelling. Known alternative owners and exact windows retained in evidence/missing-owner904-review.json." }
-
-[[column]]
 column = "AstSni92"
 tables = ["JOBB1996"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/naringsgren-huvud-jobbreg-1996", representation = "AstSni" }]
@@ -325,4 +315,3 @@ unmap = "Retained physical monthly field in annual table JOBB2020, edition 2020.
 column = "LonFInkSep"
 tables = ["JOBB2021"]
 unmap = "Retained physical monthly field in annual table JOBB2021, edition 2021. The accepted catalog documents its month-specific representation and owner, but the current inventory mapping shape cannot attach that column's month separately from the annual table edition. No annual widening or invented monthly equivalence. Known source owners and exact month windows retained in evidence/missing-owner904-review.json."
-

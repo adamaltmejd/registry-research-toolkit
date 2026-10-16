@@ -200,142 +200,142 @@ partition = "skolor"
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1990"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1990's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1991"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1991's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1992"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1992's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1993"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1993's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1994"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1994's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1995"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1995's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1996"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1996's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1997"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1997's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1998"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1998's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor1999"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1999's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2000"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2000's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2001"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2001's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2002"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2002's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2003"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2003's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2004"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2004; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2004's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2005"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2005; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2005's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2006"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2006; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2006's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2007"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2007; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2007's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2008"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2008; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2008's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2009"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2009; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2009's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2010"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2010; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2010's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2011"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2011; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2011's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2012"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2012; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2012's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2013"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2013; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2013's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2014"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2014's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2015"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2015's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2016's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
 tables = ["GDB_Skolor2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2017's DeSO stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "DeSO"
@@ -370,67 +370,67 @@ unmap = "Retained physical geocoded extract field for edition 2023. The accepted
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1990"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1990; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1990's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1991"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1991; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1991's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1992"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1992; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1992's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1993"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1993; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1993's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1994"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1994; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1994's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1995"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1995; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1995's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1996"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1996's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1997"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1997's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1998"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1998's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor1999"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 1999's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor2000"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2000's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor2001"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2001's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"
 tables = ["GDB_Skolor2002"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1603", reason = "Pending GDB snapshot-policy reversal (maintainer decision 2026-10-15). Edition 2002's Kommun stays held until a follow-up maps every GDB DeSO/Kommun table year Y onto the 1 January Y snapshot on fastigheter with a reference-date warning, replacing the exact-snapshot unmaps." }
 
 [[column]]
 column = "Kommun"

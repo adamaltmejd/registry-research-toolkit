@@ -37,42 +37,42 @@ edition = 2022
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2015"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2016"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2016; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2017"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2017; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2018"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2018; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2019"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2019; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2020"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2020; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2021"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2021; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "Sni2002"
 tables = ["Moms_2022"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2022; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
 
 [[column]]
 column = "IdPers"

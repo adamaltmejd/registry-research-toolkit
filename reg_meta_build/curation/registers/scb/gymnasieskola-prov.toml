@@ -240,3 +240,14 @@ slug = "utlbakgr2"
 [[variable]]
 native_id = "342.67.utlsvbakg"
 slug = "utlsvbakg"
+
+# ── #1603 D5: SWECOV Kursprov_gymn HT2011–VT2015 TERMIN ──
+
+[[errata.delivered]]
+variant = "_default"
+column = "TERMIN"
+versions = ["Hösttermin 2011", "Vårtermin 2012", "Hösttermin 2012", "Vårtermin 2013", "Hösttermin 2013", "Vårtermin 2014", "Hösttermin 2014", "Vårtermin 2015"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "48dba7be4b9ea6474d694b4d24f219e323903a2a850453bd4e099ff8dd753d13"
+evidence = "SWECOV holds TERMIN in Kursprov_gymn_HT2011–Kursprov_gymn_VT2015; SCB documents it on this variant from Hösttermin 2015, where the operational definition is the term label of the edition (\"HT15\", \"VT16\"). The aggregate check found every value the bare term label (HT or VT) matching the table's own term, so the column carries the same term label, without the year suffix; it is not an ordinal term number. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"

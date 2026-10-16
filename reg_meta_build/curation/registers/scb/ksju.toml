@@ -461,28 +461,6 @@ unassigned_columns = []
 columns_ref = "Complete accepted own-native time-key family: literal spelling changes retain the same explicitly defined month or sickness-period start-date quantity. Per-column metadata, storage types, original quarter operations and coding remain separate. No query encoding or value equivalence assertion. Proof: Batch48-employment-time-source-proof.json."
 
 [[acknowledge]]
-code = "unresolved_column_representation"
-subject = "scb/ksju/sjukfrom"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26837\",\"member:557178\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26837\",\"member:583675\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26837\",\"member:583676\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26837\",\"member:583677\"]}"]
-fields = ["column_name"]
-valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "This exact annual source window contains Q1–Q3 and Q4 sickness-period operations on different literal spellings, while all supplied edition bounds are annual. Preserve every quarterly original and keep the ambiguous annual representation unavailable. No quarter availability dates or delivery equivalence are inferred."
-evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "d5684f1a82e94c35b5ef731a8cf7a8e865ebc25210045e62cc75ab49bcfba76b"
-
-[[acknowledge]]
-code = "unresolved_column_representation"
-subject = "scb/ksju/sjukfrom"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26837\",\"member:571964\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26837\",\"member:583657\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26837\",\"member:583658\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26837\",\"member:583659\"]}"]
-fields = ["column_name"]
-valid_from = "2018-01-01"
-valid_to = "2018-12-31"
-reason = "This exact annual source window contains Q1–Q3 and Q4 sickness-period operations on different literal spellings, while all supplied edition bounds are annual. Preserve every quarterly original and keep the ambiguous annual representation unavailable. No quarter availability dates or delivery equivalence are inferred."
-evidence = "Complete current affected native families, actual same-register primary/summary/integer-identifier support, maintained production naming and curation compilation, and pinned source books. Full-original/bound-coding guard retains physical multiplicity and all sibling facts. Proof: Batch48-employment-coding-source-proof.json."
-expected_evidence_sha256 = "f5c0bf9f22bf879dc847eefc9b50667d6412a83b90c082b2c2cc752f51c05f41"
-
-[[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ksju/naringsgren-bgr98"
 refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:563\",\"variable:4027\",\"member:21655\"]}"]
@@ -1133,24 +1111,6 @@ reason = "The primary source leaves identifier and sensitivity flags unspecified
 evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
 expected_evidence_sha256 = "e61322890c76d99ea7249e1e74b5ca772ad167babb84a2abcbdac7120bfafcf3"
 
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/ksju/delantdagar-2015"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:8152\",\"member:557199\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12793\",\"variable:8152\",\"member:563050\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12969\",\"variable:8152\",\"member:571925\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:8152\",\"member:571944\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:13382\",\"variable:8152\",\"member:598754\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:14524\",\"variable:8152\",\"member:663525\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:16440\",\"variable:8152\",\"member:803132\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18253\",\"variable:8152\",\"member:846077\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:18751\",\"variable:8152\",\"member:884714\"]}"]
-fields = ["is_sensitive", "is_identifier"]
-reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
-evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
-expected_evidence_sha256 = "1603ed3e9256b8c7fa818efc452e804155c546ad358f98f6e02cbd729b727803"
-
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "scb/ksju/helantdagar"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:8152\",\"member:464742\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12636\",\"variable:8152\",\"member:556983\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12639\",\"variable:8152\",\"member:557119\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12640\",\"variable:8152\",\"member:557132\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:8152\",\"member:557201\"]}"]
-fields = ["is_sensitive", "is_identifier"]
-reason = "The primary source leaves identifier and sensitivity flags unspecified for these exact source-owned records, and complete auxiliary joins supply no matching flag declaration. Preserve all quantity definitions, original fields, periods, physical evidence and existing own response domains. The named semantic role alone does not establish either boolean. Keep the affected quantity and its delivery states unavailable; do not default unknown flags to false."
-evidence = "Complete accepted full native-family and current source-owner review, all primary register originals, actual auxiliary joins, complete panel prerequisites and bound own coding. Exact full-original and bound-coding fingerprint. Proof: Batch51-flags-source-proof.json. Reviewed unavailable-flag policy; no boolean defaults or sensitivity inference."
-expected_evidence_sha256 = "1ef742fbd8578cccf6918d06a3a461014579689dcebd93a059ea27278c4f9f4b"
-
 [[variable]]
 native_id = "195.49.astlan"
 slug = "lan-astlan"
@@ -1390,6 +1350,58 @@ source_editions = ["2006", "2007", "2008"]
 expected_fields = []
 expected_records = [{ ref = { source = "scb-registerinformation", semantic_record_key = ["register:195", "variant:275", "edition:1586", "variable:8152", "member:114097"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "kaldag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Alla kalenderdagar i ett sjukfall." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Dagar" }, { name = "name", status = "value", value = "Antal sjukdagar" }, { name = "operational_definition", status = "value", value = "Uppräknad till kvartalssiffra" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "absent" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }, edition_period_scope = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }, subject = { provider = "scb", register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = 8152, name = "Antal sjukdagar" }, member = { status = "value", native_id = 114097, name = "Antal sjukdagar" }, native = { register_id = 195, register_variant_id = 275, edition_id = 1586, variable_id = 8152, member_id = 114097 } }, parent_facts = [{ kind = "object_type", coordinate = { status = "value", name = "Person" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 1586, name = "2007" }, fields = [{ name = "definition", status = "value", value = "Alla slags fysiska personer. Inkluderar t.ex. anställd, elev, patient, barn." }, { name = "name", status = "value", value = "Person" }] }, { kind = "population", coordinate = { status = "value", name = "Arbetstagare som varit sjuka" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 1586, name = "2007" }, fields = [{ name = "name", status = "value", value = "Arbetstagare som varit sjuka" }, { name = "population_comment", status = "unknown" }, { name = "population_date", status = "value", value = "2007-01-01 - 2007-12-31" }, { name = "population_definition", status = "value", value = "Arbetstagare som är frånvarande p.g.a. sjukdom under den period som arbetsgivaren betalar sjuklön." }] }, { kind = "register", coordinate = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, fields = [{ name = "name", status = "value", value = "Konjunkturstatistik över sjuklöner (KSju)" }, { name = "purpose", status = "value", value = "Undersökningen avser att belysa sjukfrånvaron under sjuklöneperioden, vilket är den sjukfrånvaro som arbetsgivaren betalar sjuklön för. Sjukfrånvaron mäts i form av antal sjukdagar och antal sjukfall." }] }, { kind = "edition", coordinate = { status = "value", native_id = 1586, name = "2007" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 1586, name = "2007" }, fields = [{ name = "description", status = "value", value = "Sjuklöneperioden omfattar 14 dagar." }, { name = "documentation_status", status = "value", value = "Offentlig" }, { name = "first_approved_at", status = "unknown" }, { name = "last_approved_at", status = "value", value = "2013-03-08" }, { name = "measurement_information", status = "value", value = "De undersökta arbetsgivarna lämnar individuppgifter. Uppgifterna samlas in månadsvis och redovisas kvartalsvis. Insamlingen sker via fil från större arbetsgivare, och blankett för mindre arbetsgivare." }, { name = "name", status = "value", value = "2007" }] }, { kind = "variant", coordinate = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, fields = [{ name = "description", status = "value", value = "Syftet är att mäta den sjukfrånvaro som arbetsgivaren betalar sjuklön för." }, { name = "name", status = "value", value = "Sjukfrånvaro under sjuklöneperioden" }] }] }] }, { ref = { source = "scb-registerinformation", semantic_record_key = ["register:195", "variant:275", "edition:1636", "variable:8152", "member:116725"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "kaldag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Alla kalenderdagar i ett sjukfall." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Dagar" }, { name = "name", status = "value", value = "Antal sjukdagar" }, { name = "operational_definition", status = "value", value = "Uppräknad till kvartalssiffra" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "absent" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }, edition_period_scope = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }, subject = { provider = "scb", register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = 8152, name = "Antal sjukdagar" }, member = { status = "value", native_id = 116725, name = "Antal sjukdagar" }, native = { register_id = 195, register_variant_id = 275, edition_id = 1636, variable_id = 8152, member_id = 116725 } }, parent_facts = [{ kind = "edition", coordinate = { status = "value", native_id = 1636, name = "2008" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 1636, name = "2008" }, fields = [{ name = "description", status = "value", value = "Sjuklöneperioden omfattar 14 dagar." }, { name = "documentation_status", status = "value", value = "Offentlig" }, { name = "first_approved_at", status = "unknown" }, { name = "last_approved_at", status = "value", value = "2013-03-08" }, { name = "measurement_information", status = "value", value = "De undersökta arbetsgivarna lämnar individuppgifter. Uppgifterna samlas in månadsvis och redovisas kvartalsvis. Insamlingen sker via fil från större arbetsgivare, och blankett för mindre arbetsgivare." }, { name = "name", status = "value", value = "2008" }] }, { kind = "population", coordinate = { status = "value", name = "Arbetstagare som varit sjuka" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 1636, name = "2008" }, fields = [{ name = "name", status = "value", value = "Arbetstagare som varit sjuka" }, { name = "population_comment", status = "unknown" }, { name = "population_date", status = "value", value = "2008-01-01 - 2008-12-31" }, { name = "population_definition", status = "value", value = "Arbetstagare som är frånvarande p.g.a. sjukdom under den period som arbetsgivaren betalar sjuklön." }] }, { kind = "object_type", coordinate = { status = "value", name = "Person" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 1636, name = "2008" }, fields = [{ name = "definition", status = "value", value = "Alla slags fysiska personer. Inkluderar t.ex. anställd, elev, patient, barn." }, { name = "name", status = "value", value = "Person" }] }, { kind = "register", coordinate = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, fields = [{ name = "name", status = "value", value = "Konjunkturstatistik över sjuklöner (KSju)" }, { name = "purpose", status = "value", value = "Undersökningen avser att belysa sjukfrånvaron under sjuklöneperioden, vilket är den sjukfrånvaro som arbetsgivaren betalar sjuklön för. Sjukfrånvaron mäts i form av antal sjukdagar och antal sjukfall." }] }, { kind = "variant", coordinate = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, fields = [{ name = "description", status = "value", value = "Syftet är att mäta den sjukfrånvaro som arbetsgivaren betalar sjuklön för." }, { name = "name", status = "value", value = "Sjukfrånvaro under sjuklöneperioden" }] }] }] }, { ref = { source = "scb-registerinformation", semantic_record_key = ["register:195", "variant:275", "edition:563", "variable:8152", "member:94513"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "kaldag" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Alla kalenderdagar i ett sjukfall." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Dagar" }, { name = "name", status = "value", value = "Antal sjukdagar" }, { name = "operational_definition", status = "value", value = "Uppräknad till kvartalssiffra" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "absent" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }, edition_period_scope = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }, subject = { provider = "scb", register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = 8152, name = "Antal sjukdagar" }, member = { status = "value", native_id = 94513, name = "Antal sjukdagar" }, native = { register_id = 195, register_variant_id = 275, edition_id = 563, variable_id = 8152, member_id = 94513 } }, parent_facts = [{ kind = "population", coordinate = { status = "value", name = "Arbetstagare som varit sjuka" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 563, name = "2006" }, fields = [{ name = "name", status = "value", value = "Arbetstagare som varit sjuka" }, { name = "population_comment", status = "unknown" }, { name = "population_date", status = "value", value = "2006-01-01 - 2006-12-31" }, { name = "population_definition", status = "value", value = "Arbetstagare som är frånvarande p.g.a. sjukdom under den period som arbetsgivaren betalar sjuklön." }] }, { kind = "object_type", coordinate = { status = "value", name = "Person" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 563, name = "2006" }, fields = [{ name = "definition", status = "value", value = "Alla slags fysiska personer. Inkluderar t.ex. anställd, elev, patient, barn." }, { name = "name", status = "value", value = "Person" }] }, { kind = "edition", coordinate = { status = "value", native_id = 563, name = "2006" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, edition = { status = "value", native_id = 563, name = "2006" }, fields = [{ name = "description", status = "value", value = "Sjuklöneperioden omfattar 14 dagar." }, { name = "documentation_status", status = "value", value = "Offentlig" }, { name = "first_approved_at", status = "value", value = "2008-05-08" }, { name = "last_approved_at", status = "value", value = "2013-03-08" }, { name = "measurement_information", status = "value", value = "De undersökta arbetsgivarna lämnar individuppgifter. Uppgifterna samlas in månadsvis och redovisas kvartalsvis. Insamlingen sker via fil från större arbetsgivare, och blankett för mindre arbetsgivare." }, { name = "name", status = "value", value = "2006" }] }, { kind = "register", coordinate = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, fields = [{ name = "name", status = "value", value = "Konjunkturstatistik över sjuklöner (KSju)" }, { name = "purpose", status = "value", value = "Undersökningen avser att belysa sjukfrånvaron under sjuklöneperioden, vilket är den sjukfrånvaro som arbetsgivaren betalar sjuklön för. Sjukfrånvaron mäts i form av antal sjukdagar och antal sjukfall." }] }, { kind = "variant", coordinate = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, register = { status = "value", native_id = 195, name = "Konjunkturstatistik över sjuklöner (KSju)" }, variant = { status = "value", native_id = 275, name = "Sjukfrånvaro under sjuklöneperioden" }, fields = [{ name = "description", status = "value", value = "Syftet är att mäta den sjukfrånvaro som arbetsgivaren betalar sjuklön för." }, { name = "name", status = "value", value = "Sjukfrånvaro under sjuklöneperioden" }] }] }] }]
 expected_evidence_sha256 = "0663abd91ff344e8c84c9b4424d2b644aa2972608c496db5156e85a72779d4d6"
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+case_aliases = true
+variable = "195.26837"
+variant = "195.275"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SJUKFROM", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SjukFrom", source_editions = ["2015"] }]
+expected_evidence_sha256 = "d5684f1a82e94c35b5ef731a8cf7a8e865ebc25210045e62cc75ab49bcfba76b"
+evidence = "Case-equivalent literal spellings of one exported native variable within one annual edition: SCB exports SJUKFROM for the Q1–Q3 sickness-period members and SjukFrom for the Q4 member, with common nonblank name and definition and data type date. Each member's quarter-specific operational definition, original fields, periods and source coding remain per column. No co-delivery, quarter bounds, equal observed values or statistical equivalence asserted. Replaces the unresolved_column_representation acknowledgement for this window (#1603; maintainer decision 2026-10-15, KSJU S1/D1)."
+noted = "2026-10-15"
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+case_aliases = true
+variable = "195.26837"
+variant = "195.275"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "SjukFrom", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "sjukfrom", source_editions = ["2018"] }]
+expected_evidence_sha256 = "f5c0bf9f22bf879dc847eefc9b50667d6412a83b90c082b2c2cc752f51c05f41"
+evidence = "Case-equivalent literal spellings of one exported native variable within one annual edition: SCB exports SjukFrom for the Q1–Q3 sickness-period members and sjukfrom for the Q4 member, with common nonblank name and definition and data type date. Each member's quarter-specific operational definition, original fields, periods and source coding remain per column. No co-delivery, quarter bounds, equal observed values or statistical equivalence asserted. Replaces the unresolved_column_representation acknowledgement for this window (#1603; maintainer decision 2026-10-15, KSJU S1/D1)."
+noted = "2026-10-15"
+
+[[representation.parallel]]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+case_aliases = true
+variable = "195.26838"
+variant = "195.275"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SJUKTOM", source_editions = ["2015"] }, { valid_from = "2015-01-01", valid_to = "2015-12-31", column = "SjukTom", source_editions = ["2015"] }]
+expected_evidence_sha256 = "b05ad4fa926abe1ec93a0da2342134f66001129c8ee245f299001452f054928d"
+evidence = "Case-equivalent literal spellings of one exported native variable within one annual edition: SCB exports SJUKTOM for the Q1–Q3 sickness-period members and SjukTom for the Q4 member, with common nonblank name and definition and data type date. Each member's quarter-specific operational definition, original fields, periods and source coding remain per column. No co-delivery, quarter bounds, equal observed values or statistical equivalence asserted. Replaces the unresolved_column_representation acknowledgement for this window (#1603; maintainer decision 2026-10-15, KSJU S1/D1)."
+noted = "2026-10-15"
+
+[[representation.parallel]]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+case_aliases = true
+variable = "195.26838"
+variant = "195.275"
+column_metadata = "per_column"
+coding_metadata = "shared"
+columns = [{ valid_from = "2018-01-01", valid_to = "2018-12-31", column = "SjukTom", source_editions = ["2018"] }, { valid_from = "2018-01-01", valid_to = "2018-12-31", column = "sjuktom", source_editions = ["2018"] }]
+expected_evidence_sha256 = "0485971f3fe167e98a7e774943bb311f2e930c7ebc1f76a29c9edb3472a96e31"
+evidence = "Case-equivalent literal spellings of one exported native variable within one annual edition: SCB exports SjukTom for the Q1–Q3 sickness-period members and sjuktom for the Q4 member, with common nonblank name and definition and data type date. Each member's quarter-specific operational definition, original fields, periods and source coding remain per column. No co-delivery, quarter bounds, equal observed values or statistical equivalence asserted. Replaces the unresolved_column_representation acknowledgement for this window (#1603; maintainer decision 2026-10-15, KSJU S1/D1)."
+noted = "2026-10-15"
 
 [[representation.parallel]]
 valid_from = "2006-01-01"
@@ -1909,24 +1921,263 @@ reason = "These exact industry spellings coexist in this source window, but thei
 evidence = "Complete KSJU native4027 family and own bound domains; Batch51-KSJU13-source-proof.json. Approved conservative unavailable representation policy; no industry grouping, width, case or book equivalence is inferred."
 expected_evidence_sha256 = "e16ccab48316e667375b55110ed811ef7a34dc4d62573d7b7c3e2ff47abe1cc3"
 
-[[acknowledge]]
-code = "unresolved_column_representation"
-subject = "scb/ksju/sjuktom"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26838\",\"member:557177\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26838\",\"member:583678\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26838\",\"member:583679\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12641\",\"variable:26838\",\"member:583680\"]}"]
-fields = ["column_name"]
-valid_from = "2015-01-01"
-valid_to = "2015-12-31"
-reason = "The source supplies the same native end-date measurement on these annual literal forms with different quarter-of-sickness assertions. Their edition bounds are annual, so the exact competing physical representation remains unavailable. Retain Sista dagen i sjukfallet and every quarter assertion verbatim; do not infer quarterly tables, dates or equivalence."
-evidence = "Complete own-native KSJU26838 source family and actual parent/support graph; Batch51-KSJU13-source-proof.json. Same conservative ambiguous annual representation policy as native26837."
-expected_evidence_sha256 = "b05ad4fa926abe1ec93a0da2342134f66001129c8ee245f299001452f054928d"
+[[errata.flags]]
+variable = "195.8152"
+variant = "195.275"
+column = "DelAntDagar"
+edition = "12641"
+expected_fields = [{ name = "definition", status = "value", value = "Alla kalenderdagar i ett sjukfall." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Antal sjukdagar" }, { name = "operational_definition", status = "value", value = "Anger antalet deldagar under ett sjukfall." }, { name = "sensitivity", status = "absent" }]
+expected_period_text = "2015"
+expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
+expected_evidence_sha256 = "f49e4cfd75001a580aab81373aa0912f0f4b423c8efd9b07288cccc4c4c94d86"
+is_sensitive = true
+is_identifier = false
+evidence = "SCB states neither flag for scb/ksju/delantdagar-2015 and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."
+noted = "2026-10-15"
+
+[[errata.flags]]
+variable = "195.8152"
+variant = "195.275"
+column = "HELANTDAGAR"
+edition = "11393"
+expected_fields = [{ name = "definition", status = "value", value = "Alla kalenderdagar i ett sjukfall." }, { name = "description", status = "absent" }, { name = "identifier", status = "absent" }, { name = "name", status = "value", value = "Antal sjukdagar" }, { name = "operational_definition", status = "value", value = "Anger antalet heldagar under ett fall." }, { name = "sensitivity", status = "absent" }]
+expected_period_text = "2011 kv2- kv4"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-04-01", end = "2011-12-31" }] }
+expected_evidence_sha256 = "f49e4cfd75001a580aab81373aa0912f0f4b423c8efd9b07288cccc4c4c94d86"
+is_sensitive = true
+is_identifier = false
+evidence = "SCB states neither flag for scb/ksju/helantdagar and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."
+noted = "2026-10-15"
+
+# ── #1603 B8/B9/D1: SWECOV KSju 2015–2023 ──
+
+[[errata.delivered]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "fallangd"
+data_type = "decimal"
+versions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
+upstream = "additional-physical-column-in-version"
+native_variable_id = 8152
+expected_evidence_sha256 = "f49e4cfd75001a580aab81373aa0912f0f4b423c8efd9b07288cccc4c4c94d86"
+evidence = "SWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "Ksjulan"
+versions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "f9deb0b580800f12736785eca61a378b84951f37e5eb891e18fd49cffd19962c"
+evidence = "SWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"
+
+[[errata.delivered]]
+variant = "sjukfranvaro-sjukloneperioden"
+column = "SyssStat"
+versions = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0997ce1bbbd55341781dd556b12509b0c403b27346da99ead0caae0f27238e47"
+evidence = "SWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"
+
+# ── #1603 B batch: coding of the added windows left unavailable ──
 
 [[acknowledge]]
-code = "unresolved_column_representation"
-subject = "scb/ksju/sjuktom"
-refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26838\",\"member:571965\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26838\",\"member:583660\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26838\",\"member:583661\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:12970\",\"variable:26838\",\"member:583662\"]}"]
-fields = ["column_name"]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
 valid_from = "2018-01-01"
 valid_to = "2018-12-31"
-reason = "The source supplies the same native end-date measurement on these annual literal forms with different quarter-of-sickness assertions. Their edition bounds are annual, so the exact competing physical representation remains unavailable. Retain Sista dagen i sjukfallet and every quarter assertion verbatim; do not infer quarterly tables, dates or equivalence."
-evidence = "Complete own-native KSJU26838 source family and actual parent/support graph; Batch51-KSJU13-source-proof.json. Same conservative ambiguous annual representation policy as native26837."
-expected_evidence_sha256 = "0485971f3fe167e98a7e774943bb311f2e930c7ebc1f76a29c9edb3472a96e31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/lan"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:49\",\"member:464881\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "8dd3bceef2a09176339bcb18cf3c7ceaa3c723347ba77d45deaeb4f17217f0f7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2015-01-01"
+valid_to = "2015-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2016-01-01"
+valid_to = "2016-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2017-01-01"
+valid_to = "2017-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2018-01-01"
+valid_to = "2018-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2019-01-01"
+valid_to = "2019-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/ksju/sysselsattningsstatus-november"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:195\",\"variant:275\",\"edition:11393\",\"variable:63\",\"member:464748\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
+evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "dfc34c6ea250e083448fa22e731421f3f0d0c5e5cc9655c119521f26cfa58ea7"

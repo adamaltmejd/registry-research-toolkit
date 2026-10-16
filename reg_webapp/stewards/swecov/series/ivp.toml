@@ -109,92 +109,31 @@ table = "IVP_2021"
 edition = 2021
 
 [[column]]
-column = "ProdVarde"
-tables = ["IVP_1996"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "ProdVarde"
-tables = ["IVP_1997"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "ProdVarde"
-tables = ["IVP_1998"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "ProdVarde"
-tables = ["IVP_1999"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "ProdVarde"
-tables = ["IVP_2000"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "ProdVarde"
-tables = ["IVP_2001"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
 column = "Typkod"
 tables = ["IVP_1996"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1996; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1628", reason = "Edition 1996 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
 
 [[column]]
 column = "Typkod"
 tables = ["IVP_1997"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1628", reason = "Edition 1997 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
 
 [[column]]
 column = "Typkod"
 tables = ["IVP_1998"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1628", reason = "Edition 1998 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
 
 [[column]]
 column = "Typkod"
 tables = ["IVP_1999"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 1999; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1628", reason = "Edition 1999 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
 
 [[column]]
 column = "Typkod"
 tables = ["IVP_2000"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2000; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+hold = { follow_up = "#1628", reason = "Edition 2000 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }
 
 [[column]]
 column = "Typkod"
 tables = ["IVP_2001"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Typkod"
-tables = ["IVP_2002"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2002; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Typkod"
-tables = ["IVP_2003"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2003; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Typkod"
-tables = ["IVP_2004"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2004; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Typkod"
-tables = ["IVP_2005"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2005; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Typkod"
-tables = ["IVP_2006"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2006; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "Typkod"
-tables = ["IVP_2007"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2007; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
+hold = { follow_up = "#1628", reason = "Edition 2001 is an accepted (errata.version) IVP edition. Typkod's own variable typkod-1996-2007 covers the native editions 2002–2007 only: an errata.column over an accepted edition currently detaches every IVP classification warning from its variable (#1628). Extend the column's versions to 1996–2001 once #1628 lands (#1603)." }

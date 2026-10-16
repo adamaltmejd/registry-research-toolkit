@@ -1045,3 +1045,16 @@ upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "7cc398ec412af75d67a294ad197c59d0efb045da740abefdf7763a7916c7299e"
 evidence = "SWECOV holds AntalSysS in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
 noted = "2026-10-15"
+
+# ── #1603 B5: SWECOV JOBB2009–JOBB2010 AstSni02 ──
+
+[[errata.delivered]]
+variant = "jobbregistret"
+column = "AstSni02"
+data_type = "text"
+versions = ["2009", "2010"]
+upstream = "additional-physical-column-in-version"
+native_variable_id = 19054
+expected_evidence_sha256 = "1c75f0222e23e18ab36534e5997e18a1a9a915bfe6a75c2d21aed0089fb8426c"
+evidence = "SWECOV holds AstSni02 in JOBB2009 and JOBB2010; SCB documents the SNI 2002 workplace industry on this variant through 2008 and on the sibling arbetsstallen and individer variants through 2010. The aggregate check found no SNI 2007-only codes; a small share of non-null codes fall outside the SNI 2002 list, so the coding stays SNI 2002 with unexplained residual codes. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-15"

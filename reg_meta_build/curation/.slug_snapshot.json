@@ -13567,6 +13567,7 @@
     "scb/135.56": "person-orgnr",
     "scb/135.59": "prodcomkod",
     "scb/135.KvantText": "kvanttext",
+    "scb/135.Typkod": "typkod-1996-2007",
     "scb/139.145.idnr": "idnr",
     "scb/139.145.reknr": "reknr",
     "scb/139.145.scbid": "identitet",

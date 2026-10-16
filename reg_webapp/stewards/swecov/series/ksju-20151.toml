@@ -9,21 +9,13 @@ table = "KSju_20151"
 edition = "2015-Q1"
 
 [[column]]
-column = "Ksjulan"
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015-Q1; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+column = "DelAntDagar"
+mappings = [{ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden", variable = "scb/ksju/delantdagar", representation = "DELANTDAGAR" }]
+select_owner = true
+reason = "SCB documents both delantdagar (DELANTDAGAR, to 2015) and delantdagar-2015 (DelAntDagar, from 2015) for 2015. Pinned to the owner this edition had before the #1603 D1 flags made the 2015 sibling state visible; owner choice for the 2015 overlap is open (#1603)."
 
 [[column]]
-column = "SyssStat"
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015-Q1; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "fallangd"
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015-Q1; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "sjukfrom"
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015-Q1; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
-
-[[column]]
-column = "sjuktom"
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2015-Q1; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+column = "HelAntDagar"
+mappings = [{ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden", variable = "scb/ksju/helantdagar-2015", representation = "HelAntDagar" }]
+select_owner = true
+reason = "SCB documents both helantdagar (HELANTDAGAR, to 2015) and helantdagar-2015 (HelAntDagar, from 2015) for 2015. Pinned to the owner this edition had before the #1603 D1 flags made the 2015 sibling state visible; owner choice for the 2015 overlap is open (#1603)."
