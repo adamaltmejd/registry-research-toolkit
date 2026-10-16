@@ -1,0 +1,58 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "locator": {
+          "contains": "/par.toml#"
+        }
+      },
+      "fields": [
+        "code",
+        "locator"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/par.toml#/errata.column/1"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/par.toml#/errata.occurrence_carry/1"
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unresolved_catalog_identity"
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {
+        "register": "par"
+      },
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "new-name",
+          "par-ov",
+          "INVARN9",
+          "2001-01-01",
+          "2020-12-31"
+        ]
+      ]
+    }
+  ]
+}

@@ -133,6 +133,7 @@ from .source_naming import (
     NamingSelection,
     NativeNamingTarget,
     _register_naming_entries,
+    accepted_variable_slugs,
     authored_naming_id,
     convert_naming,
     native_provider_keys,
@@ -5899,13 +5900,32 @@ def compile_occurrence_corrections(
                     # checked-effect reconciliation if a carry needs one.
                     carry_bounds = scope_bounds(entry.carry_scope) or ()
                     native_variable = entry.variable.rsplit(".", 1)[-1]
-                    refusal = (
-                        "the original's variable is split ([[identity.split]]); "
-                        "a carry targets the unsplit native variable"
-                        if any(
-                            split.variable == native_variable
-                            for split in register.identity.split
+                    # Every identity construct that can re-key the donor's native
+                    # variable; the carry adds its occurrence under the unchanged
+                    # native key, which such a construct would leave unowned.
+                    reidentified = [
+                        name
+                        for name, rows, key in (
+                            ("split", register.identity.split, native_variable),
+                            ("rename", register.identity.rename, native_variable),
+                            ("partition", register.identity.partition, entry.variable),
+                            (
+                                "unassigned",
+                                register.identity.unassigned,
+                                entry.variable,
+                            ),
+                            (
+                                "column_owner",
+                                register.identity.column_owner,
+                                entry.variable,
+                            ),
                         )
+                        if any(row.variable == key for row in rows)
+                    ]
+                    refusal = (
+                        f"[[identity.{reidentified[0]}]] re-keys the original's "
+                        "variable; a carry targets the unchanged native variable"
+                        if reidentified
                         else "an [[errata.occurrence_period]] corrects the "
                         "original's period, which the carry does not follow"
                         if any(
@@ -6317,16 +6337,7 @@ def _compile_provider_columns(
             key=lambda record: repr(record_ref(record)),
         )
         source_id = f"{register.register_info.native_id}.{entry.column}"
-        accepted = next(
-            (
-                item
-                for item, _ in reversed(_register_naming_entries(tree, register))
-                if item.entry.kind == "variable"
-                and item.entry.source_id == source_id
-                and item.entry.slug is not None
-            ),
-            None,
-        )
+        accepted = accepted_variable_slugs(tree, register).get(source_id)
         blocker = None
         if any(
             route.deldatamangd == entry.variant for route in register.identity.route
@@ -6334,6 +6345,13 @@ def _compile_provider_columns(
             # simplify: a routed token is refused rather than resolved to its
             # destination; route the mint if a held column needs one.
             blocker = "the variant is routed ([[identity.route]]); name its destination"
+        elif any(
+            fold_column(rename.column) == fold_column(entry.column)
+            for rename in register.identity.rename
+        ):
+            # A rename gives a documented variable this column, so its source id
+            # is the mint's own: the column is documented under its new name.
+            blocker = "column_now_documented"
         elif not on_variant:
             blocker = "no source records on the named variant"
         elif accepted is None:
@@ -6423,9 +6441,9 @@ def _compile_provider_columns(
                     kind="variable",
                     provider=register.register_info.provider,
                     source_id=source_id,
-                    slug=accepted.entry.slug,
+                    slug=accepted[0],
                 ),
-                contributors=(accepted,),
+                contributors=accepted[1],
             )
             keys[scope_key][variable_key] = entry.column
         statuses["entries_matched"].append(case_id)
@@ -6514,11 +6532,7 @@ def compile_errata(
         register_id = int(native_id)
         name = f"scb/{register.register_info.slug}"
         statuses = _family_status(report, name)
-        accepted_names = {
-            item.entry.source_id: item
-            for item, _ in reversed(_register_naming_entries(tree, register))
-            if item.entry.kind == "variable"
-        }
+        accepted_names = accepted_variable_slugs(tree, register)
         matches = locations.get(register_id, ())
         records = ()
         if len(matches) == 1:
@@ -6688,8 +6702,7 @@ def compile_errata(
                     blockers = ("no_documented_column_identity",)
                     converted = None
                 elif table == "column" and (
-                    accepted_names.get(f"{register_id}.{row.column}") is None
-                    or accepted_names[f"{register_id}.{row.column}"].entry.slug is None
+                    f"{register_id}.{row.column}" not in accepted_names
                 ):
                     blockers = ("declared column has no tracked slug",)
                     converted = None
@@ -7091,9 +7104,7 @@ def compile_errata(
                         anchor = members[0]
                         ref = record_ref(anchor)
                         source_id = f"{register_id}.{row.column}"
-                        accepted = accepted_names[source_id]
-                        slug = accepted.entry.slug
-                        assert slug is not None
+                        slug, contributors = accepted_names[source_id]
                         naming[scope_key][variable_key] = NamingDeclaration(
                             target=NativeNamingTarget(
                                 kind="variable",
@@ -7116,7 +7127,7 @@ def compile_errata(
                                 source_id=source_id,
                                 slug=slug,
                             ),
-                            contributors=(accepted,),
+                            contributors=contributors,
                         )
                         keys[scope_key][variable_key] = row.column
                 cases[scope_key].append(converted)

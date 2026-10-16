@@ -665,10 +665,12 @@ one pooled occurrence. Its optional `data_warning` annotates that occurrence, as
 SCB path. A routed token (`[[identity.route]]`) is refused as stale: name its
 destination. Its name is the `[[variable]]` entry `<register native_id>.<column>`, which
 is also a documented SOS or thin variable's own source id, so the entry is refused
-(`column_now_documented`) when the register documents the column anywhere, and the
-`[[variable]]` entry then names the documented variable through native naming: a
-documented column extended outside its documented years is an
-`[[errata.occurrence_carry]]`.
+(`column_now_documented`) when the register documents the column anywhere, or an
+`[[identity.rename]]` gives a documented variable that column. The `[[variable]]` entry
+then names the documented variable through native naming: a documented column extended
+outside its documented years is an `[[errata.occurrence_carry]]`. The mint takes its
+slug by naming conversion's rules (`accepted_variable_slugs`): a generated pin in a
+churning zone is inactive, and an authored entry overrides a generated one.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column, with this meaning, on this variant? One column/variant omission is
@@ -894,8 +896,10 @@ build refuses it as a located stale entry when:
   (entries apply in file order);
 - an `[[errata.occurrence_period]]` corrects the original's period, which the carry does
   not follow;
-- an `[[identity.split]]` divides the original's native variable: the added occurrence
-  would have no split owner (revisit if a split variable needs a carry);
+- an `[[identity.split]]`, `[[identity.rename]]`, `[[identity.partition]]`,
+  `[[identity.unassigned]]` or `[[identity.column_owner]]` names the original's native
+  variable: each re-keys it, and the added occurrence under the unchanged native key
+  would have no owner (revisit if such a variable needs a carry);
 - its variant is a token `[[identity.route]]` sends elsewhere;
 - an `[[errata.data_type]]` or `[[errata.classification_reference]]` corrects the
   original, which the carry does not replay;
