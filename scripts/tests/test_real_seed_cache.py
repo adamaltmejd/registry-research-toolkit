@@ -5,8 +5,8 @@ The tool runs as its CLI. Its process boundaries are stubbed: the real-seed
 never reached it; it writes a minimal resolved bundle for `build-db --resolved-out` and
 places one with `materialize-db`), the project-environment probe
 (`$REG_REAL_SEED_PYTHON`, which reports a content digest of the curation tree, a fixed
-resolve-code fingerprint and, on request, a failed admission; the prepare case runs
-the real probe on a copied builder instead) and `rustc` (on `PATH`). The keyed code is
+resolve-code fingerprint, a fixed extension digest and, on request, a failed admission;
+the prepare case runs the real probe on a copied builder instead). The keyed code is
 real source.
 """
 
@@ -91,7 +91,7 @@ PROBE = (
     + """
 import json, os, sys
 request = json.loads(sys.argv[-1])
-facts = {"python": "stub", "sqlite": "stub"}
+facts = {"python": "stub", "sqlite": "stub", "reg_core_py": {"stub": "stub"}}
 if request.get("curation"):
     facts["curation_tree_sha256"] = curation_sha(request["curation"])
 if request.get("resolve_code"):
@@ -112,13 +112,8 @@ def _tool(
 ) -> tuple[int, dict]:
     (tmp_path / "builder.py").write_text(BUILDER)
     (tmp_path / "probe.py").write_text(PROBE)
-    rustc = tmp_path / "bin/rustc"
-    rustc.parent.mkdir(exist_ok=True)
-    rustc.write_text("#!/bin/sh\necho 'rustc stub'\n")
-    rustc.chmod(0o755)
     env = {
         **os.environ,
-        "PATH": f"{rustc.parent}{os.pathsep}{os.environ['PATH']}",
         "XDG_CACHE_HOME": str(tmp_path / "xdg"),
         "REG_REAL_SEED_CACHE": str(tmp_path / "cache"),
         "REG_REAL_SEED_BUILDER": f"{sys.executable} {tmp_path / 'builder.py'}",

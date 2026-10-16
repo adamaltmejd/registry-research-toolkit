@@ -188,18 +188,27 @@ def resolve_code_digests(source_root: Path | None = None) -> dict[str, object]:
     if source_root is None:
         source_root = Path(__file__).resolve().parents[1]
     modules, _ = import_closure(source_root, (RESOLVE_ROOT,), excluded=RESOLVE_EXCLUDED)
-    native_root = Path(reg_core_py.__file__).resolve().parent
     return {
         "python": sys.version,
         "sources": {
             path.relative_to(source_root).as_posix(): source_sha256(path)
             for path in sorted(code_files(modules.values()))
         },
-        "native": {
-            path.relative_to(native_root.parent).as_posix(): _sha256(path)
-            for path in sorted(native_root.rglob("*"))
-            if path.is_file() and "__pycache__" not in path.parts
-        },
+        "native": native_digests(),
+    }
+
+
+def native_digests() -> dict[str, str]:
+    """The imported `reg_core_py` package's file digests, compiled extension included.
+
+    The real-seed cache keys these instead of the selected `rustc`: they name the
+    extension a build actually loads, whichever toolchain compiled it (#1650).
+    """
+    native_root = Path(reg_core_py.__file__).resolve().parent
+    return {
+        path.relative_to(native_root.parent).as_posix(): _sha256(path)
+        for path in sorted(native_root.rglob("*"))
+        if path.is_file() and "__pycache__" not in path.parts
     }
 
 
