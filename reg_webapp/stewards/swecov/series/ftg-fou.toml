@@ -366,7 +366,7 @@ unmap = "The accepted FOU export assigns2003 V0401 to native3335 (own research c
 [[column]]
 column = "V0401"
 tables = ["FTG_FOU_2005"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2005; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order. V0401 is filled in FTG_FOU_2007 and FTG_FOU_2009, which stay held (#1603; aggregate check on MONA, reported as a conclusion only)."
 
 [[column]]
 column = "V0401"
