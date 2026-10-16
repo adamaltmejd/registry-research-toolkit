@@ -5,6 +5,7 @@
       "scope": "intervals",
       "edition": 2018,
       "partition": "north",
+      "projection": null,
       "retain_unknown_reason": null
     },
     {
@@ -12,6 +13,7 @@
       "scope": "intervals",
       "edition": 2018,
       "partition": "south",
+      "projection": null,
       "retain_unknown_reason": null
     }
   ],

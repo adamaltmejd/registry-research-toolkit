@@ -1,0 +1,152 @@
+version = 1
+steward = "swecov"
+
+# Parent holds Dia as positions 1 and 2 and Op as one plain column. Wider holds
+# Dia as positions 1 to 4, and Op as positions 1 and 2: the parent serves neither
+# set, since Dia3 and Dia4 are no position of the parent's and a plain column is
+# not a position set.
+
+[[table]]
+id = "Parent"
+edition = 2018
+[[table.column]]
+name = "Dia1"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 1 }
+[[table.column]]
+name = "Dia2"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 2 }
+[[table.column]]
+name = "Op"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/op"
+representation = "Op"
+
+[[table]]
+id = "Wider"
+edition = 2018
+projection = { of = "Parent", token = "wider" }
+[[table.column]]
+name = "Dia1"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 1 }
+[[table.column]]
+name = "Dia2"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 2 }
+[[table.column]]
+name = "Dia3"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 3 }
+[[table.column]]
+name = "Dia4"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 4 }
+[[table.column]]
+name = "Op1"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/op"
+representation = "Op"
+member = { position = 1 }
+[[table.column]]
+name = "Op2"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/op"
+representation = "Op"
+member = { position = 2 }
+
+# Parent2019 holds Op as positions 1 and 2 and Dia as positions 1 to 3; Plain
+# holds Op as one plain column, which no position serves.
+
+[[table]]
+id = "Parent2019"
+edition = 2019
+[[table.column]]
+name = "Dia1"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 1 }
+[[table.column]]
+name = "Dia2"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 2 }
+[[table.column]]
+name = "Dia3"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 3 }
+[[table.column]]
+name = "Op1"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/op"
+representation = "Op"
+member = { position = 1 }
+[[table.column]]
+name = "Op2"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/op"
+representation = "Op"
+member = { position = 2 }
+
+[[table]]
+id = "Plain"
+edition = 2019
+projection = { of = "Parent2019", token = "plain" }
+[[table.column]]
+name = "Op"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/op"
+representation = "Op"
+
+# Valid: Subset holds Dia as positions 1 and 3, a subset of Parent2019's.
+
+[[table]]
+id = "Subset"
+edition = 2019
+projection = { of = "Parent2019", token = "subset" }
+[[table.column]]
+name = "Dia1"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 1 }
+[[table.column]]
+name = "Dia3"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/dia"
+representation = "Dia"
+member = { position = 3 }

@@ -1,0 +1,36 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "Parent"
+edition = 2018
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+# The token names a file, so it rides the slug grammar.
+[[table]]
+id = "BadToken"
+edition = 2018
+projection = { of = "Parent", token = "Bad Token" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+# A projection is extracted as its own file, so `of` comes with a token.
+[[table]]
+id = "NoToken"
+edition = 2018
+projection = { of = "Parent" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"

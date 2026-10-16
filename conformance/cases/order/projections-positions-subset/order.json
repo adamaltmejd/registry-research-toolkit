@@ -1,0 +1,105 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Person",
+        "variable": "scb/example/person",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Person",
+        "edition": "2021",
+        "table": "Diag"
+      },
+      "requested_period": "2021",
+      "source": "S"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Person",
+        "variable": "scb/example/person",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Person",
+        "edition": "2021",
+        "projection": "diag-narrow",
+        "table": "DiagNarrow"
+      },
+      "requested_period": "2021",
+      "source": "S"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Dia",
+        "variable": "scb/example/dia",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Dia1",
+        "edition": "2021",
+        "member": {
+          "position": 1
+        },
+        "table": "Diag"
+      },
+      "requested_period": "2021",
+      "source": "S"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Dia",
+        "variable": "scb/example/dia",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Dia2",
+        "edition": "2021",
+        "member": {
+          "position": 2
+        },
+        "table": "Diag"
+      },
+      "requested_period": "2021",
+      "source": "S"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Own",
+        "variable": "scb/example/own",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Own",
+        "edition": "2021",
+        "projection": "diag-narrow",
+        "table": "DiagNarrow"
+      },
+      "requested_period": "2021",
+      "source": "S"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "9267d3d0a72310eabe2cdef38b59d95416e9cb1bc33da104448b289bb6cad904",
+    "catalog_schema_version": "12.0.0",
+    "mode": "steward_holdings",
+    "project_hash": "c54321b808396d864679a7d794e98cba55d482008decad665087a09f04f73974",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

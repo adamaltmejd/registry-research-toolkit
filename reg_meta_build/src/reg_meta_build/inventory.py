@@ -21,7 +21,7 @@ This module holds no DB access — it is pure domain code over an authored file.
 from __future__ import annotations
 
 import tomllib
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, NamedTuple
 
 from pydantic import (
     BaseModel,
@@ -62,6 +62,7 @@ _EDITION = "inventory_edition_invalid"
 _PERIOD_SCOPE = "inventory_period_scope_invalid"
 _CELL_CONFLICT = "inventory_cell_conflict"
 _MEMBER = "inventory_member_invalid"
+_PROJECTION = "inventory_projection_invalid"
 
 
 class _InventoryGuardError(ValueError):
@@ -466,6 +467,24 @@ class InventoryColumn(_InventoryModel):
         return self
 
 
+class InventoryProjection(_InventoryModel):
+    """A table's `projection = { of = ..., token = ... }` declaration (#1634).
+
+    `of` names the parent table whose delivery this one projects; `token` is the
+    authored, opaque name of the projection's own extract file, as a partition
+    label names a shard's. It is never derived from the table id, so it rides the
+    partition's slug grammar."""
+
+    of: str = Field(min_length=1)
+    token: str
+
+    @field_validator("token")
+    @classmethod
+    def _check_token(cls, value: str) -> str:
+        validate_slug(value, "projection token")
+        return value
+
+
 class InventoryTable(_InventoryModel):
     """One delivered table: an opaque exact identifier, ONE explicit physical
     edition or explicit year-independent scope, and its physical columns.
@@ -483,21 +502,27 @@ class InventoryTable(_InventoryModel):
     stratum, a reporter stream, a municipality). It is an explicit curated fact,
     never inferred — so a true re-delivery cannot hide behind a partition
     without a reviewable curation line saying so — and it is an inventory/order
-    concept only, never a catalog one."""
+    concept only, never a catalog one.
+
+    `projection` declares the table a projection of another table's delivery
+    (#1634): the same delivery under other columns, at the parent's grain or a
+    finer one, extracted as its own file. A cell both map is one claim the parent
+    serves, not a conflict. Like `partition` it is curated, never inferred, and an
+    inventory/order concept only."""
 
     id: str = Field(min_length=1)
     edition: Edition
     period_scope: Literal["intervals", "year_independent"] = "intervals"
     partition: str | None = None
+    projection: InventoryProjection | None = None
     columns: tuple[InventoryColumn, ...] = Field(alias="column")
 
     @field_validator("partition")
     @classmethod
     def _check_partition(cls, value: str | None) -> str | None:
         """A partition label rides the shared slug grammar, like every other
-        slug-shaped coordinate — it becomes a filename token in
-        `order.extraction_filenames`, so it must be lowercase and
-        period-shape-free (`over70` is legal, `70plus` and `2019` are not)."""
+        slug-shaped coordinate — the order manifest names each shard by it, so
+        it must be lowercase and period-shape-free (`over70` is legal, `70plus` and `2019` are not)."""
         if value is not None:
             validate_slug(value, "partition")
         return value
@@ -580,11 +605,44 @@ class InventoryTable(_InventoryModel):
         return self
 
 
-# One mapping's physical placement, as `_check_one_to_one_resolution` compares
-# them: `(location, representation, served bounds, partition)`. The location is a
-# `(table, column)`, or a table's member set; the served bounds are the table's
-# edition, or a year or month member's own period.
-_Placement = tuple[str, str, tuple[_Interval, ...], str | None]
+class _Placement(NamedTuple):
+    """One mapping's physical placement, as `_check_one_to_one_resolution`
+    compares them. The location is a `(table, column)`, or a table's member set;
+    the served bounds are the table's coalesced edition, or a year or month
+    member's own period; `position` is a position member's index, None for a
+    plain column or a year or month member."""
+
+    location: str
+    representation: str
+    served: tuple[_Interval, ...]
+    partition: str | None
+    table: str
+    position: int | None
+
+
+def _edition_intervals(table: InventoryTable) -> tuple[_Interval, ...]:
+    """A table's edition as coalesced intervals, so one edition compares and
+    covers alike however it is spelled: `[2018, 2019]` is `{ from = 2018, to =
+    2019 }`. Empty for a year-independent table."""
+    if table.period_scope != "intervals":
+        return ()
+    return _merge(list(edition_bounds(table.edition)))
+
+
+def _parent_serves(placement: _Placement, parent: _Placement) -> bool:
+    """Whether a projection's `placement` is a cell its parent's `parent`
+    placement serves (#1634): the representations conflate, both are the same
+    position member or neither is a position member, and the parent serves every
+    instant the projection's does. A position set is served member by member, so
+    a projection's positions must be positions of the parent's set; a plain
+    column, or a year or month member, is served only by the parent's plain
+    column or year or month member. `crates/reg-catalog`'s `PARENT_SERVES` is the
+    same rule at order time."""
+    return (
+        _representations_conflate(placement.representation, parent.representation)
+        and placement.position == parent.position
+        and _overlap(placement.served, parent.served) == placement.served
+    )
 
 
 class DeliveryInventory(_InventoryModel):
@@ -653,11 +711,115 @@ class DeliveryInventory(_InventoryModel):
 
     @field_validator("tables")
     @classmethod
+    def _check_projections(
+        cls, value: tuple[InventoryTable, ...]
+    ) -> tuple[InventoryTable, ...]:
+        """A projection is the same delivery under other columns (#1634), so it
+        names another, unprojected table of the same physical edition (compared
+        by bounds, not spelling) and period scope, maps only variants that table
+        maps, and neither carries a partition: a shard or a different edition is
+        a different delivery, which the one-to-one rule judges as such. Every
+        offending table is reported."""
+        tables = {table.id: table for table in value}
+        problems: list[str] = []
+        for table in value:
+            if table.projection is None:
+                continue
+            parent_id = table.projection.of
+            where = f"table[{table.id!r}] projection of {parent_id!r}"
+            parent = tables.get(parent_id)
+            if parent is None or parent_id == table.id:
+                problems.append(f"{where}: names no other table of this inventory")
+                continue
+            if parent.projection is not None:
+                problems.append(
+                    f"{where}: names a projection; name the table it projects"
+                )
+            if table.partition is not None or parent.partition is not None:
+                problems.append(
+                    f"{where}: a projection and its parent carry no partition"
+                )
+            if table.period_scope != parent.period_scope or _edition_intervals(
+                table
+            ) != _edition_intervals(parent):
+                problems.append(
+                    f"{where}: a projection has its parent's edition and period scope"
+                )
+            variants = {
+                mapping.register_variant
+                for column in parent.columns
+                for mapping in column.mappings
+            }
+            extra = sorted(
+                {
+                    mapping.register_variant
+                    for column in table.columns
+                    for mapping in column.mappings
+                }
+                - variants
+            )
+            if extra:
+                problems.append(
+                    f"{where}: maps variants its parent does not: {', '.join(extra)}"
+                )
+        problems.extend(_placement_name_collisions(value))
+        if problems:
+            raise _InventoryGuardError(
+                _PROJECTION,
+                "a projection must be the same delivery as its parent and name its own file:\n"
+                + "\n".join(f"    {line}" for line in problems),
+            )
+        return value
+
+    @field_validator("tables")
+    @classmethod
     def _check_one_to_one_resolution(
         cls, value: tuple[InventoryTable, ...]
     ) -> tuple[InventoryTable, ...]:
         validate_inventory_placements(value)
         return value
+
+
+def _placement_name_collisions(tables: tuple[InventoryTable, ...]) -> list[str]:
+    """A projection token names the projection's own extract file, beside the
+    variant's partition files, so among tables mapping a common variant over a
+    common period it must differ from every other projection token and every
+    partition label: two placements of one name would write one file name, the
+    later overwriting the earlier. The file name carries the period, so tables of
+    disjoint editions (an annual series of projections) may share a name, while
+    two year-independent tables share the `_default` period. One line per
+    projection and colliding table."""
+    variants = {
+        table.id: {m.register_variant for c in table.columns for m in c.mappings}
+        for table in tables
+    }
+    editions = {table.id: _edition_intervals(table) for table in tables}
+    problems: list[str] = []
+    for table in tables:
+        if table.projection is None:
+            continue
+        token = table.projection.token
+        for other in tables:
+            if other.id == table.id:
+                continue
+            if other.projection is not None and other.projection.token == token:
+                kind = "projection token"
+            elif other.partition == token:
+                kind = "partition label"
+            else:
+                continue
+            if table.period_scope != other.period_scope or (
+                table.period_scope == "intervals"
+                and not _overlap(editions[table.id], editions[other.id])
+            ):
+                continue
+            if shared := sorted(variants[table.id] & variants[other.id]):
+                problems.append(
+                    f"table[{table.id!r}] projection token {token!r}: equals "
+                    f"table[{other.id!r}]'s {kind} under {', '.join(shared)}; each "
+                    "placement of a variant names its own extract file"
+                )
+    return problems
 
 
 def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
@@ -681,6 +843,15 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     the whole population and overlaps every shard. Columns of one table share
     its partition label, so the across-column rule remains unchanged.
 
+    Projection arm (#1634): a projection's mapping the parent serves
+    (`_parent_serves`: the same position, or neither a position, over every
+    instant) does not conflict with the parent; the order then serves the cell
+    from the parent (a key cell from both, each file carrying its own keys). Two
+    projections of one parent do not conflict where the parent serves each
+    one's mapping, since the parent serves that cell. Anywhere else, two columns
+    of one projection included, and against every third table, the rule is
+    unchanged.
+
     Report every conflicting pair with both locations, the coordinate and the
     overlapping period. There is deliberately no auto-pick-latest rule: a file
     date does not prove supersession. Curators remove superseded deliveries so
@@ -701,11 +872,10 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     series with a few dozen editions.
     """
     _check_member_sets(tables)
+    parents = {table.id: table.projection.of for table in tables if table.projection}
     located: dict[tuple[str, str, str], list[_Placement]] = {}
     for table in tables:
-        bounds = (
-            edition_bounds(table.edition) if table.period_scope == "intervals" else ()
-        )
+        bounds = _edition_intervals(table)
         for column in table.columns:
             for mapping in column.mappings:
                 key = (
@@ -721,13 +891,32 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     if (period := mapping.member.bounds()) is not None:
                         served = (period,)
                 located.setdefault(key, []).append(
-                    (location, mapping.representation, served, table.partition)
+                    _Placement(
+                        location,
+                        mapping.representation,
+                        served,
+                        table.partition,
+                        table.id,
+                        mapping.member.position if mapping.member else None,
+                    )
                 )
     conflicts: list[str] = []
     reported: set[tuple[str, ...]] = set()
     for (variant, variable, scope), placements in located.items():
-        for index, (a_location, a_rep, a_bounds, a_part) in enumerate(placements):
-            for b_location, b_rep, b_bounds, b_part in placements[index + 1 :]:
+        # The placements of this coordinate whose table's declared parent serves them.
+        served = {
+            placement
+            for placement in placements
+            if any(
+                other.table == parents.get(placement.table)
+                and _parent_serves(placement, other)
+                for other in placements
+            )
+        }
+        for index, a in enumerate(placements):
+            a_location, a_rep, a_bounds, a_part, a_table, _ = a
+            for b in placements[index + 1 :]:
+                b_location, b_rep, b_bounds, b_part, b_table, _ = b
                 if a_location == b_location:
                     # One location serving one cell IS the invariant; a
                     # repeated triple there is `InventoryColumn`'s error.
@@ -735,6 +924,20 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                 if not _representations_conflate(a_rep, b_rep):
                     continue
                 if _partitions_separate(a_part, b_part):
+                    continue
+                if any(
+                    parents.get(projection.table) == parent.table
+                    and projection in served
+                    for projection, parent in ((a, b), (b, a))
+                ):
+                    continue
+                if (
+                    a_table != b_table
+                    and a_table in parents
+                    and parents[a_table] == parents.get(b_table)
+                    and a in served
+                    and b in served
+                ):
                     continue
                 overlap = _overlap(a_bounds, b_bounds)
                 if not overlap and scope == "intervals":

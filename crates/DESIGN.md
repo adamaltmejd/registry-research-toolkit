@@ -506,12 +506,29 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Holdings resolution
    invariants") is that one location: every position member serves the table's edition
    and is emitted, while a year or month member serves only its own period, so it
-   matches and covers only where that period reaches the slice.
-4. **Emission.** Every matching table is emitted whole, every partition included.
-   Entries carry the literal physical table and column; the canonical representation is
-   a join key, not an output substitute. Entries keep project order, then table,
-   edition, member index and column, so members order by index (`DIA2` before `DIA10`),
-   not by name.
+   matches and covers only where that period reaches the slice. A declared projection's
+   non-key mapping (`holding_table.projection_of`, #1634) is dropped wherever its parent
+   serves it: the parent maps the same canonical triple over that instant, at the same
+   position. A projection's position member is served only by the parent's member of
+   that position, and a plain column or a year or month member only by a parent mapping
+   that is not a position member. This is the inventory's rule
+   ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Projections"), which
+   refuses any other overlap, so the parent alone serves each shared cell and no
+   projection cell is dropped without a parent cell in its place. A key mapping (the
+   variable `is_identifier`, or the bound variant's `panel_entity_key` or
+   `panel_time_key`, a bare slug or a JSON list) is never dropped: each file carries its
+   own row keys. Tables without the declaration are never filtered.
+4. **Emission.** Every matching table is emitted whole, every partition included. A
+   projection's output file (its variant and period unit, below) is emitted when the
+   projection contributes at least one cell its parent does not serve in that file, key
+   or non-key; its shared key cells for that period unit then come along with it. A
+   projection file whose ordered cells its parent all serves is not emitted, its shared
+   keys included, so no file holds only keys its parent's file also holds. A projection
+   file can still lack a key when the order binds no key for that period unit, as any
+   table's file does when only a non-key column is ordered. Entries carry the literal
+   physical table and column; the canonical representation is a join key, not an output
+   substitute. Entries keep project order, then table, edition, member index and column,
+   so members order by index (`DIA2` before `DIA10`), not by name.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
 (`steward_mismatch`, `project_empty`, `period_not_orderable`, `variable_unresolved`,
@@ -525,23 +542,40 @@ a header-only manifest.
 artifact kind, project name, schema version, declared reg_meta version and SHA-256 of
 the project's canonical JSON, catalog schema version and `generation_id`), the entries
 (logical coordinate with the canonical representation, the clipped `requested_period`,
-and the physical edition, table, column, optional partition and optional `member` index)
-and the clips. It is written here and read offline by the steward-side extract system,
-so it is self-contained. Its bytes are sorted keys, two-space indent, UTF-8 and a
-trailing newline, byte-identical across runs; periods render through the shared grammar.
-No timestamps: the only time-shaped values come from the artifact and the project.
-Version 1 stays in definition until the first external reader: shape changes stay in
-version 1, and from that reader on an incompatible change bumps it. `partition` and
-`member` (`{"position": N}`, `{"year": YYYY}` or `{"month": "YYYY-MM"}`) are the only
-optional fields; absent means none, so an inventory without partitions or pivot members
-produces the bytes it did before either existed.
+and the physical edition, table, column, optional partition, optional projection token
+and optional `member` index) and the clips. It is written here and read offline by the
+steward-side extract system, so it is self-contained. Its bytes are sorted keys,
+two-space indent, UTF-8 and a trailing newline, byte-identical across runs; periods
+render through the shared grammar. No timestamps: the only time-shaped values come from
+the artifact and the project. Version 1 stays in definition until the first external
+reader: shape changes stay in version 1, and from that reader on an incompatible change
+bumps it. `partition`, `projection` (the table's token) and `member` (`{"position": N}`,
+`{"year": YYYY}` or `{"month": "YYYY-MM"}`) are the only optional fields; absent means
+none, so an inventory without partitions, projections or pivot members produces the
+bytes it did before any existed. The parent (`projection_of`) is not in the manifest:
+the token is the placement.
 
-**Extraction keeps delivery topology.** One output file per ordered variant, partition
-and period unit, named in slug spelling (`lisa_individer-15plus_2019.csv`,
-`agi_individuppgifter-agi_arb_2021-03.csv` for a partition). What goes in as two tables
-comes out as two files: shard identity (reporter stream, municipality) may exist in no
-column, so a union would destroy information. A multi-period range is one file, since v1
-has no row filter.
+**Extraction keeps delivery topology.** One output file per ordered variant, period unit
+and placement. A period unit is an entry's `requested_period`, the clipped period one
+binding slice serves: a source period range is one unit, while a year or month member
+serves its own period as its own unit. A year or month member always forms its own unit,
+for any table, projection or not, so a source range over a table with a year member
+splits into the range's file and the member's file. The placement is the partition, the
+projection or neither, named in slug spelling (`lisa_individer-15plus_2019.csv`,
+`agi_individuppgifter-agi_arb_2021-03.csv` for a partition,
+`<register>_<variant>_<token>_<period>.csv` for a projection). What goes in as two
+tables comes out as two files: shard identity (reporter stream, municipality) may exist
+in no column, so a union would destroy information, and a projection may have a finer
+grain than its parent. Each file carries its own keys; the user joins a projection file
+to its parent's on the shared key. A multi-period range is one file, since v1 has no row
+filter.
+
+Design limit: sibling projections cannot share a key the parent lacks. Two projections
+of one parent that both map a key the parent does not map (a child id two narrow
+deliveries carry) are two claims on one cell, which the inventory refuses as
+`inventory_cell_conflict`. The parent is the only table a projection's cell defers to,
+so a sibling cannot serve another sibling's key. Revisit when a steward delivers such a
+pair: it needs either a declared shared-key set or a projection chain.
 
 `simplify:` v1 records no row filter and orders the whole matching table. SWECOV's one
 large SQL table per SoS register is the upgrade trigger; it will need period `WHERE`

@@ -1,0 +1,46 @@
+{
+  "note": "CombinedNarrow is a projection of Combined whose Child column serves the annual and the monthly variant; its own cell Extra is annual only. Fails if CombinedNarrow's shared key Child is emitted under the monthly variant, where it contributes no cell of its own (its monthly file would carry keys alone), or dropped under the annual one.",
+  "fixture": "projection-order",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Annual",
+        "register_variant": "scb/example/annual",
+        "period": 2019,
+        "bindings": [
+          {
+            "variable": "scb/example/child",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/example/extra",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      },
+      {
+        "name": "Monthly",
+        "register_variant": "scb/example/monthly",
+        "period": 2019,
+        "bindings": [
+          {
+            "variable": "scb/example/child",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}

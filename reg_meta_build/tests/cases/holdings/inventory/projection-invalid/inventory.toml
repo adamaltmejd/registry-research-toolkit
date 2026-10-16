@@ -1,0 +1,129 @@
+version = 1
+steward = "swecov"
+
+# The parent and one valid projection of it.
+
+[[table]]
+id = "Parent"
+edition = 2018
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Good"
+edition = 2018
+projection = { of = "Parent", token = "good" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+# Each table below breaks exactly one projection rule.
+
+[[table]]
+id = "Orphan"
+edition = 2018
+projection = { of = "Missing", token = "orphan" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Self"
+edition = 2018
+projection = { of = "Self", token = "self" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Chain"
+edition = 2018
+projection = { of = "Good", token = "chain" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Sharded"
+edition = 2018
+projection = { of = "Parent", token = "sharded" }
+partition = "north"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Later"
+edition = 2019
+projection = { of = "Parent", token = "later" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "OtherVariant"
+edition = 2018
+projection = { of = "Parent", token = "other-variant" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/id"
+representation = "Id"
+
+# A projection of a partitioned parent: the shard is a different delivery.
+[[table]]
+id = "OfShard"
+edition = 2018
+projection = { of = "ShardParent", token = "of-shard" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "ShardParent"
+edition = 2018
+partition = "south"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+# Valid: the parent's edition spelled as a one-year range has the same bounds.
+[[table]]
+id = "SpelledRange"
+edition = { from = 2018, to = 2018 }
+projection = { of = "Parent", token = "spelled-range" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"

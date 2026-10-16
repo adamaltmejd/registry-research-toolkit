@@ -1,0 +1,15 @@
+{
+  "note": "A projection's token names its own extract file: it rides the partition's slug grammar and is required beside `of` (field grammar, `inventory_invalid`).",
+  "fails_if": "load_inventory admits a projection token outside the slug grammar, admits a projection declaration without a token, or does not name the `projection.token` slot",
+  "error": {
+    "code": "inventory_invalid",
+    "locators": [
+      "table['BadToken'].projection.token",
+      "table['NoToken'].projection.token"
+    ],
+    "message_contains": [
+      "invalid slug in projection token",
+      "table['NoToken'].projection.token: Field required"
+    ]
+  }
+}

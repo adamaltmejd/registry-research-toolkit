@@ -1,0 +1,34 @@
+{
+  "note": "Narrow is a declared projection of Wide (#1634): both map the key Id, only Narrow maps Extra. Fails if the order drops Narrow's own Id (its file would carry no row key), emits Id from Narrow alone, drops Extra (the cell the parent does not serve), or omits Narrow's projection token.",
+  "fixture": "projection-order",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Example",
+        "register_variant": "scb/example/annual",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/id",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/example/extra",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}

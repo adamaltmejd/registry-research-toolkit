@@ -1,0 +1,213 @@
+version = 1
+steward = "swecov"
+
+# Two projections of Parent with one token, and a projection whose token is the
+# partition label of an annual shard of the same edition: each pair would write
+# one file name.
+
+[[table]]
+id = "Parent"
+edition = 2018
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Dup1"
+edition = 2018
+projection = { of = "Parent", token = "dup" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Dup2"
+edition = 2018
+projection = { of = "Parent", token = "dup" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "North"
+edition = 2018
+partition = "north"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "AsShard"
+edition = 2018
+projection = { of = "Parent", token = "north" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+# Valid: a token equal to a partition label of another variant names another file.
+
+[[table]]
+id = "MonthlyParent"
+edition = 2018
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "MonthlySouth"
+edition = 2018
+projection = { of = "MonthlyParent", token = "south" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "South"
+edition = 2019
+partition = "south"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+# Valid: one token across disjoint editions (an annual series of projections), and
+# a token equal to a partition label of a disjoint edition. The file name carries
+# the period, so neither pair names one file.
+
+[[table]]
+id = "Barn2018"
+edition = 2018
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+[[table]]
+id = "BarnKid2018"
+edition = 2018
+projection = { of = "Barn2018", token = "barn" }
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+[[table]]
+id = "Barn2019"
+edition = 2019
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+[[table]]
+id = "BarnKid2019"
+edition = 2019
+projection = { of = "Barn2019", token = "barn" }
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+[[table]]
+id = "East2019"
+edition = 2019
+partition = "east"
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+[[table]]
+id = "EastKid2018"
+edition = 2018
+projection = { of = "Barn2018", token = "east" }
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+# Two year-independent projections share the `_default` period, so one token names
+# one file; a year-independent projection's token equal to East2019's label names
+# another file (its period is `_default`, not 2019).
+
+[[table]]
+id = "Fixed"
+edition = "_default"
+period_scope = "year_independent"
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+[[table]]
+id = "FixedDup1"
+edition = "_default"
+period_scope = "year_independent"
+projection = { of = "Fixed", token = "fixed" }
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+[[table]]
+id = "FixedDup2"
+edition = "_default"
+period_scope = "year_independent"
+projection = { of = "Fixed", token = "fixed" }
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
+
+[[table]]
+id = "FixedEast"
+edition = "_default"
+period_scope = "year_independent"
+projection = { of = "Fixed", token = "east" }
+[[table.column]]
+name = "Kid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kid"
+representation = "Kid"
