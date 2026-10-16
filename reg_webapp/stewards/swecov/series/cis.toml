@@ -1936,3 +1936,45 @@ column = "Emp2020"
 tables = ["CIS2020"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2020 } }]
 reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp02"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp02-enligt-leverans", representation = "emp02" }]
+reason = "The 2002 - 2004 wave's prior reference-year employee count (2002), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp04"
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp04-enligt-leverans", representation = "emp04" }]
+reason = "The 2004 - 2006 wave's prior reference-year employee count (2004), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp06"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp06-enligt-leverans", representation = "emp06" }]
+reason = "The 2006 - 2008 wave's prior reference-year employee count (2006), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp08"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp08-enligt-leverans", representation = "emp08" }]
+reason = "The 2008 - 2010 wave's prior reference-year employee count (2008), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp2010"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp2010-enligt-leverans", representation = "emp2010" }]
+reason = "The 2010 - 2012 wave's prior reference-year employee count (2010), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Emp2016"
+tables = ["CIS2018"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp2016-enligt-leverans", representation = "Emp2016" }]
+reason = "The 2016 - 2018 wave's prior reference-year employee count (2016), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Emp2018"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp2018-enligt-leverans", representation = "Emp2018" }]
+reason = "The 2018 - 2020 wave's prior reference-year employee count (2018), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
