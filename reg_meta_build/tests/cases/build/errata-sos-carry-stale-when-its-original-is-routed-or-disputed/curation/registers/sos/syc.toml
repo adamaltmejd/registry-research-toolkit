@@ -94,3 +94,17 @@ holdings_period = "2005-2023"
 source = "steward-holdings"
 evidence = "Held under the routed token."
 noted = "2026-10-17"
+[[variable]]
+slug = "alt"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=ALT}}
+[[errata.occurrence_carry]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=ALT}}
+variant = "SYC_A"
+column = "ALT"
+expected_fields = [{ name = "name", status = "value", value = "Alt" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Alternativ kod" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2023" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 the provider documents these codes elsewhere."
+evidence = "Delivered under the same name in 2005-2014."
+noted = "2026-10-17"

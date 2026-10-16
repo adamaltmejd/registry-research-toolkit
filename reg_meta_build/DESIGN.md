@@ -665,8 +665,10 @@ one pooled occurrence. Its optional `data_warning` annotates that occurrence, as
 SCB path. A routed token (`[[identity.route]]`) is refused as stale: name its
 destination. Its name is the `[[variable]]` entry `<register native_id>.<column>`, which
 is also a documented SOS or thin variable's own source id, so the entry is refused
-(`column_now_documented`) when the register documents the column anywhere: a documented
-column extended outside its documented years is an `[[errata.occurrence_carry]]`.
+(`column_now_documented`) when the register documents the column anywhere, and the
+`[[variable]]` entry then names the documented variable through native naming: a
+documented column extended outside its documented years is an
+`[[errata.occurrence_carry]]`.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column, with this meaning, on this variant? One column/variant omission is
@@ -887,14 +889,16 @@ the carried years. It takes the same original guards as a SOS period entry and i
 when `carry_scope` reaches the original's own scope (or the original's scope is
 unbounded): one occurrence would claim those years twice. It is also stale while the
 original's checked corrections disagree (the original's own value is then withheld, and
-the carry does not pick one), while its variant is a token `[[identity.route]]` sends
-elsewhere, or while an `[[errata.data_type]]` or `[[errata.classification_reference]]`
-corrects it, which the carry does not replay. The carry copies the original's bound
-coding, declared or not. It is for SOS registers only, which the loader enforces: an SCB
-register states the same fact with `[[errata.delivered]]`, and a thin provider dates its
-columns by period scope, which a carry does not copy (revisit if a thin column needs
-one). The carry targets the native variable; a variable an `[[identity.split]]` divides
-is not carried (revisit if one needs it).
+the carry does not pick one), while the original's physical alternatives under its one
+record key disagree on a field the carry copies, while its variant is a token
+`[[identity.route]]` sends elsewhere, or while an `[[errata.data_type]]` or
+`[[errata.classification_reference]]` corrects it, which the carry does not replay. The
+carry copies the original's bound coding, declared or not. It is for SOS registers only,
+which the loader enforces: an SCB register states the same fact with
+`[[errata.delivered]]`, and a thin provider dates its columns by period scope, which a
+carry does not copy (revisit if a thin column needs one). The carry targets the native
+variable; a variable an `[[identity.split]]` divides is not carried (revisit if one
+needs it).
 
 `[[errata.flags]]` authors `is_sensitive` and `is_identifier` for a variable whose
 source and auxiliary joins state neither, which `unresolved_flag` otherwise withholds

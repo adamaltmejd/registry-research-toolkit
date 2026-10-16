@@ -3366,11 +3366,25 @@ def compile_deferred_partitions(
 
 
 def _partition_owned_naming_entry(
-    register: RegisterCuration, entry: AcceptedNamingEntry
+    register: RegisterCuration,
+    entry: AcceptedNamingEntry,
+    bound: frozenset[tuple[str, str | None, str]] = frozenset(),
 ) -> bool:
+    """Whether a variable slug entry names an identity another stage owns.
+
+    A non-SCB `[[errata.column]]` claims `<register native_id>.<column>`, which is
+    also the source id of that column once the register documents it. With a
+    native binding in `bound` the column is documented: native naming keeps the
+    entry and the mint goes stale (`column_now_documented`).
+    """
     if entry.entry.kind != "variable":
         return False
     source_id = entry.entry.source_id
+    if (
+        register.register_info.provider != "scb"
+        and (entry.entry.kind, entry.entry.provider, source_id) in bound
+    ):
+        return False
     return (
         len(source_id.split(".")) == 3
         or any(
@@ -3745,6 +3759,9 @@ def compile_native_naming(
         entries = []
         locations = {}
         entry_owners = {}
+        bound = frozenset(
+            (b.kind, b.provider, b.source_id) for b in bindings[scope_key]
+        )
         for register in sorted(tree.registers, key=lambda item: item.source_file):
             name = f"{register.register_info.provider}/{register.register_info.slug}"
             if name not in selected or len(register_scopes[name]) != 1:
@@ -3763,14 +3780,13 @@ def compile_native_naming(
                 },
             )
             for entry, where in _register_naming_entries(tree, register):
-                if _partition_owned_naming_entry(register, entry):
+                if _partition_owned_naming_entry(register, entry, bound):
                     continue
                 ref = f"{entry.revision} {where}"
                 statuses["entries_read"].append(ref)
                 entries.append(entry)
                 locations[entry.entry_id] = ref
                 entry_owners[entry.entry_id] = name
-        bound = {(b.kind, b.provider, b.source_id) for b in bindings[scope_key]}
         supplied = {
             (entry.entry.kind, entry.entry.provider, entry.entry.source_id)
             for entry in entries
@@ -5896,6 +5912,24 @@ def compile_occurrence_corrections(
                         )
                         else "the original's checked corrections conflict"
                         if any(len(values) > 1 for values in corrected.values())
+                        else "the original's physical alternatives disagree on "
+                        + ", ".join(disagreeing)
+                        if (
+                            disagreeing := [
+                                name
+                                for name in SourceFields.model_fields
+                                if name not in corrected
+                                and len(
+                                    {
+                                        None
+                                        if (value := getattr(r.fields, name)) is None
+                                        else (value.status, repr(value.value))
+                                        for r in selected
+                                    }
+                                )
+                                > 1
+                            ]
+                        )
                         else None
                     )
                     if refusal is not None:

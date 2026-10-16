@@ -27,6 +27,10 @@
         [
           "stale_curation_entry",
           "curation/registers/sos/syc.toml#/errata.occurrence_carry/3"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/4"
         ]
       ]
     },
@@ -42,6 +46,12 @@
         "valid_to"
       ],
       "rows": [
+        [
+          "alt",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
         [
           "datum",
           "syc-a",

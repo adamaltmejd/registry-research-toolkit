@@ -1,5 +1,5 @@
 {
-  "description": "SOS SYC (one subset SYC_A, 2005-2023): KOD is documented only from 2015 to 2023, and RKOD, delivered under the token TOKEN that curation routes to SYC_A, likewise. DATUM (2015-2023) is delivered as Decimal with a YYYY-MM-DD value set. Plus the SCB sample VALUE column.",
+  "description": "SOS SYC (one subset SYC_A, 2005-2023): KOD is documented only from 2015 to 2023, and RKOD, delivered under the token TOKEN that curation routes to SYC_A, likewise. DATUM (2015-2023) is delivered as Decimal with a YYYY-MM-DD value set. Plus the SCB sample VALUE column. ALT (2015-2023) has two physical rows under one record key, one typed Decimal and one untyped.",
   "scb": {
     "registerinformation": [
       {
@@ -52,6 +52,27 @@
           "data_from": 2015,
           "data_to": 2023,
           "value_set": "YYYY-MM-DD",
+          "external_classification": null
+        },
+        {
+          "name": "ALT",
+          "deldatamangd": "SYC_A",
+          "label": "Alt",
+          "description": "Alternativ kod",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
+          "external_classification": null,
+          "data_type": "Decimal"
+        },
+        {
+          "name": "ALT",
+          "deldatamangd": "SYC_A",
+          "label": "Alt",
+          "description": "Alternativ kod",
+          "data_from": 2015,
+          "data_to": 2023,
+          "value_set": null,
           "external_classification": null
         }
       ]

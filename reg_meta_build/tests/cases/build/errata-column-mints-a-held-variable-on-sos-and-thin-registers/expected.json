@@ -61,6 +61,27 @@
     {
       "table": "states",
       "where": {
+        "register": "syc",
+        "variable": "kod"
+      },
+      "fields": [
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to"
+      ],
+      "rows": [
+        [
+          "syc-a",
+          "KOD",
+          "2015-01-01",
+          "2023-12-31"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
         "register": "r",
         "variable": "delkod"
       },
@@ -98,6 +119,17 @@
           "curation/registers/sos/syc.toml#/errata.column/2"
         ]
       ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "unresolved_catalog_identity"
+      },
+      "fields": [
+        "code",
+        "subject"
+      ],
+      "rows": []
     }
   ]
 }
