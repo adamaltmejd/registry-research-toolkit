@@ -60,7 +60,7 @@ reason = "Exact reviewed physical column and accepted native owner; full current
 [[column]]
 column = "CO21"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "CO21"
@@ -86,7 +86,7 @@ select_owner = true
 [[column]]
 column = "CO31"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "CO31"
@@ -119,7 +119,7 @@ select_owner = true
 [[column]]
 column = "co32"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co32"
@@ -152,7 +152,7 @@ select_owner = true
 [[column]]
 column = "co33"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co33"
@@ -185,7 +185,7 @@ select_owner = true
 [[column]]
 column = "co34"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co34"
@@ -218,7 +218,7 @@ select_owner = true
 [[column]]
 column = "co35"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co35"
@@ -349,7 +349,7 @@ select_owner = true
 [[column]]
 column = "CO41"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "CO41"
@@ -375,7 +375,7 @@ select_owner = true
 [[column]]
 column = "CO51"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "CO51"
@@ -400,13 +400,37 @@ select_owner = true
 
 [[column]]
 column = "CO61"
-tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "CO61"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-universities-sweden", representation = "co61" }]
+reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO61"
+tables = ["CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "CO71"
-tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "CO71"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-public-research-sweden", representation = "co71" }]
+reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO71"
+tables = ["CIS2006", "CIS2008"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "CO81"
@@ -500,7 +524,7 @@ select_owner = true
 [[column]]
 column = "Co55"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "Co55"
@@ -847,7 +871,7 @@ unmap = "The supplied 2002–2004 source metadata do not establish this physical
 [[column]]
 column = "co11"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co11"
@@ -894,7 +918,7 @@ select_owner = true
 [[column]]
 column = "co12"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co12"
@@ -941,7 +965,7 @@ select_owner = true
 [[column]]
 column = "co13"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co13"
@@ -988,7 +1012,7 @@ select_owner = true
 [[column]]
 column = "co14"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co14"
@@ -1035,7 +1059,7 @@ select_owner = true
 [[column]]
 column = "co15"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co15"
@@ -1089,7 +1113,7 @@ select_owner = true
 [[column]]
 column = "co22"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co22"
@@ -1136,7 +1160,7 @@ select_owner = true
 [[column]]
 column = "co23"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co23"
@@ -1183,7 +1207,7 @@ select_owner = true
 [[column]]
 column = "co24"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co24"
@@ -1230,7 +1254,7 @@ select_owner = true
 [[column]]
 column = "co25"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co25"
@@ -1312,7 +1336,7 @@ select_owner = true
 [[column]]
 column = "co42"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co42"
@@ -1359,7 +1383,7 @@ select_owner = true
 [[column]]
 column = "co43"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co43"
@@ -1406,7 +1430,7 @@ select_owner = true
 [[column]]
 column = "co44"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co44"
@@ -1453,7 +1477,7 @@ select_owner = true
 [[column]]
 column = "co45"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co45"
@@ -1507,7 +1531,7 @@ select_owner = true
 [[column]]
 column = "co52"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co52"
@@ -1533,7 +1557,7 @@ select_owner = true
 [[column]]
 column = "co53"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co53"
@@ -1580,7 +1604,7 @@ select_owner = true
 [[column]]
 column = "co54"
 tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co54"
@@ -1627,7 +1651,7 @@ select_owner = true
 [[column]]
 column = "co61"
 tables = ["CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co61"
@@ -1645,8 +1669,20 @@ select_owner = true
 
 [[column]]
 column = "co62"
-tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "co62"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-universities-other-europe", representation = "co62" }]
+reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co62"
+tables = ["CIS2006", "CIS2008", "CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co62"
@@ -1664,8 +1700,20 @@ select_owner = true
 
 [[column]]
 column = "co63"
-tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "co63"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-universities-usa", representation = "co63" }]
+reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co63"
+tables = ["CIS2006", "CIS2008", "CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co63"
@@ -1683,8 +1731,20 @@ select_owner = true
 
 [[column]]
 column = "co64"
-tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "co64"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-universities-other-countries", representation = "co64" }]
+reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co64"
+tables = ["CIS2006", "CIS2008", "CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co64"
@@ -1702,8 +1762,13 @@ select_owner = true
 
 [[column]]
 column = "co65"
-tables = ["CIS2002", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "co65"
+tables = ["CIS2008", "CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co65"
@@ -1722,7 +1787,7 @@ select_owner = true
 [[column]]
 column = "co71"
 tables = ["CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co71"
@@ -1740,8 +1805,20 @@ select_owner = true
 
 [[column]]
 column = "co72"
-tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "co72"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-public-research-other-europe", representation = "co72" }]
+reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co72"
+tables = ["CIS2006", "CIS2008", "CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co72"
@@ -1759,8 +1836,20 @@ select_owner = true
 
 [[column]]
 column = "co73"
-tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "co73"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-public-research-usa", representation = "co73" }]
+reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co73"
+tables = ["CIS2006", "CIS2008", "CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co73"
@@ -1778,8 +1867,20 @@ select_owner = true
 
 [[column]]
 column = "co74"
-tables = ["CIS2002", "CIS2004", "CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "co74"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-public-research-other-countries", representation = "co74" }]
+reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co74"
+tables = ["CIS2006", "CIS2008", "CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co74"
@@ -1797,8 +1898,13 @@ select_owner = true
 
 [[column]]
 column = "co75"
-tables = ["CIS2002", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate, and the co6x/co7x partner rows of 2002-2010 are not named by any SCB document; follow-up #1571. Maintainer-decided 2026-10-14." }
+tables = ["CIS2002"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+
+[[column]]
+column = "co75"
+tables = ["CIS2008", "CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
 
 [[column]]
 column = "co75"

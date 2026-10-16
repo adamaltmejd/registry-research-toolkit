@@ -304,6 +304,3 @@ table = "Soc_AGIIndivid202312_Def"
 edition = "2023-12"
 partition = "soc"
 
-[[column]]
-column = "KONTROLLSTATUS"
-hold = { follow_up = "#1497", reason = "SWECOV-side AGI column with no SCB AGI catalog variable; unorderable until a flavor variable or alias models it (#1497)." }

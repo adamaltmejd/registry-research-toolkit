@@ -428,6 +428,15 @@ noted = "2026-10-15"
 
 [[errata.delivered]]
 variant = "varu-landfordelat-intrastat"
+column = "Orgnr"
+versions = ["1997", "1998"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "36541330e94c56067eed5cb8e5877fdbd32907c2d7bb95d9a71873cbb85e6df2"
+evidence = "SWECOV holds the pseudonymised organisation key in UHV_1997 and UHV_1998. The aggregate check found it filled on almost every row with a number of distinct firms in line with 1999–2001, where SCB documents the column on this variant; HA0201 DO 2011 pp. 4 and 18 describe the same statistics before 1999. (#1603, #1496; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; aggregate check on MONA, reported as a conclusion only)."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+variant = "varu-landfordelat-intrastat"
 column = "SPIN2007"
 versions = ["2000", "2001", "2002", "2003", "2004"]
 upstream = "omitted-column-in-version"

@@ -10,4 +10,4 @@ edition = "2023-Q4"
 
 [[column]]
 column = "BAS"
-hold = { follow_up = "#1496", reason = "Retained physical field for edition 2023-Q4; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json. BAS replaces SyssStat in these quarters and has no catalog variable (likely SCB's BAS labour-market status, unverified; follow-up #1496). Maintainer-decided 2026-10-13 (#1302)." }
+hold = { follow_up = "#1496", reason = "Undocumented flag delivered only in 2023-Q3 and 2023-Q4: the aggregate check on MONA, reported as a conclusion only found the value 1 or null and nothing else. SCB documents no BAS variable for KSju; held pending SCB's definition (#1496; maintainer decision 2026-10-16)." }

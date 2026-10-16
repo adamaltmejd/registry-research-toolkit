@@ -114,17 +114,7 @@ edition = 2023
 
 [[column]]
 column = "P1105_Lopnr_PeOrgnr"
-tables = ["UHV_1997"]
-hold = { follow_up = "#1496", reason = "Retained physical field for edition 1997; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json. Maintainer-decided 2026-10-13 (#1302): the utrikeshandel person-orgnr starts 1999; follow-up #1496." }
-
-[[column]]
-column = "P1105_Lopnr_PeOrgnr"
-tables = ["UHV_1998"]
-hold = { follow_up = "#1496", reason = "Retained physical field for edition 1998; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json. Maintainer-decided 2026-10-13 (#1302): the utrikeshandel person-orgnr starts 1999; follow-up #1496." }
-
-[[column]]
-column = "P1105_Lopnr_PeOrgnr"
-tables = ["UHV_1999", "UHV_2000", "UHV_2001", "UHV_2002", "UHV_2003", "UHV_2004", "UHV_2005", "UHV_2006", "UHV_2007", "UHV_2008", "UHV_2009", "UHV_2010", "UHV_2011", "UHV_2012", "UHV_2013", "UHV_2014", "UHV_2015", "UHV_2016", "UHV_2017", "UHV_2018", "UHV_2019", "UHV_2020", "UHV_2021", "UHV_2022", "UHV_2023"]
+tables = ["UHV_1997", "UHV_1998", "UHV_1999", "UHV_2000", "UHV_2001", "UHV_2002", "UHV_2003", "UHV_2004", "UHV_2005", "UHV_2006", "UHV_2007", "UHV_2008", "UHV_2009", "UHV_2010", "UHV_2011", "UHV_2012", "UHV_2013", "UHV_2014", "UHV_2015", "UHV_2016", "UHV_2017", "UHV_2018", "UHV_2019", "UHV_2020", "UHV_2021", "UHV_2022", "UHV_2023"]
 mappings = [{ register_variant = "scb/utrikeshandel/varu-landfordelat-intrastat", variable = "scb/utrikeshandel/person-orgnr", representation = "Orgnr" }]
 reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable; maintainer-accepted 2026-10-12 (#1302 round 3, linkage keys)."
 

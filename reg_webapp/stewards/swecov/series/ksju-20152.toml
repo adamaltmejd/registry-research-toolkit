@@ -10,12 +10,12 @@ edition = "2015-Q2"
 
 [[column]]
 column = "DelAntDagar"
-mappings = [{ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden", variable = "scb/ksju/delantdagar", representation = "DELANTDAGAR" }]
+mappings = [{ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden", variable = "scb/ksju/delantdagar-2015", representation = "DelAntDagar" }]
 select_owner = true
-reason = "SCB documents both delantdagar (DELANTDAGAR, to 2015) and delantdagar-2015 (DelAntDagar, from 2015) for 2015. Pinned to the owner this edition had before the #1603 D1 flags made the 2015 sibling state visible; owner choice for the 2015 overlap is open (#1603)."
+reason = "SCB documents both the delantdagar and delantdagar-2015 owners for 2015. The 2015 values are continuous with 2016+ (aggregate check on MONA, reported as a conclusion only), and the register's identity.partition assigns the CamelCase spelling to delantdagar-2015 (DelAntDagar), so 2015 joins the 2015– series. (#1603; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "HelAntDagar"
 mappings = [{ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden", variable = "scb/ksju/helantdagar-2015", representation = "HelAntDagar" }]
 select_owner = true
-reason = "SCB documents both helantdagar (HELANTDAGAR, to 2015) and helantdagar-2015 (HelAntDagar, from 2015) for 2015. Pinned to the owner this edition had before the #1603 D1 flags made the 2015 sibling state visible; owner choice for the 2015 overlap is open (#1603)."
+reason = "SCB documents both the helantdagar and helantdagar-2015 owners for 2015. The 2015 values are continuous with 2016+ (aggregate check on MONA, reported as a conclusion only), and the register's identity.partition assigns the CamelCase spelling to helantdagar-2015 (HelAntDagar), so 2015 joins the 2015– series. (#1603; maintainer decision 2026-10-16)."

@@ -4,188 +4,176 @@ variants = ["scb/gdb/adresser-fastigheter"]
 
 [[table]]
 table = "GDB_Ast_250m_1990"
-edition = 1990
+edition = "1991-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1991"
-edition = 1991
+edition = "1992-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1992"
-edition = 1992
+edition = "1993-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1993"
-edition = 1993
+edition = "1994-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1994"
-edition = 1994
+edition = "1995-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1995"
-edition = 1995
+edition = "1996-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1996"
-edition = 1996
+edition = "1997-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1997"
-edition = 1997
+edition = "1998-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1998"
-edition = 1998
+edition = "1999-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_1999"
-edition = 1999
+edition = "2000-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2000"
-edition = 2000
+edition = "2001-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2001"
-edition = 2001
+edition = "2002-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2002"
-edition = 2002
+edition = "2003-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2003"
-edition = 2003
+edition = "2004-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2004"
-edition = 2004
+edition = "2005-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2005"
-edition = 2005
+edition = "2006-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2006"
-edition = 2006
+edition = "2007-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2007"
-edition = 2007
+edition = "2008-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2008"
-edition = 2008
+edition = "2009-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2009"
-edition = 2009
+edition = "2010-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2010"
-edition = 2010
+edition = "2011-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2011"
-edition = 2011
+edition = "2012-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2012"
-edition = 2012
+edition = "2013-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2013"
-edition = 2013
+edition = "2014-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2014"
-edition = 2014
+edition = "2015-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2015"
-edition = 2015
+edition = "2016-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2016"
-edition = 2016
+edition = "2017-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2017"
-edition = 2017
+edition = "2018-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2018"
-edition = 2018
+edition = "2019-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2019"
-edition = 2019
+edition = "2020-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2020"
-edition = 2020
+edition = "2021-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2021"
-edition = 2021
+edition = "2022-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2022"
-edition = 2022
+edition = "2023-01-01"
 partition = "ast-250m"
 
 [[table]]
 table = "GDB_Ast_250m_2023"
-edition = 2023
+edition = "2024-01-01"
 partition = "ast-250m"
 
 [[column]]
 column = "AstKommun"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "AstNr"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "AstRuta250swX"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "AstRuta250swY"
 hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
 
 [[column]]

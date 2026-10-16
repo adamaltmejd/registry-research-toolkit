@@ -21,8 +21,8 @@
     "document": "SCB Dokumentation av statistikens framtagning (UF0315, 2004–2006), embedded questionnaire question 13",
     "url": "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2004-2006.pdf#page=13",
     "sha256": "25dd4b7f5efbf979e60cf326f23b760768463114160c17475ac695ded9c092ae",
-    "question": "VariabelReferenstid is “Enkäten Innovationsverksamhet 2004-2006” and the native edition is “2004 - 2006”. The answer meanings come from the wave's own questionnaire, question 13 (“Markera vilken typ av samarbetspartner ni hade samt dess lokalisering”), rows a–h by four locations. SWECOV's CIS2006 holdings name the answers co<row><location> by questionnaire position: the maintainer's aggregate MONA check (2026-10-14) found the 4-location waves (CIS2004, CIS2006) carry co11–co14 with no co15, so the location digit is the questionnaire column, and partner rows a–e have the same meaning under positional and later-wave readings. Only rows a–e are declared: co6x/co7x are held (#1571) because their partner meaning is not established for this wave, and no other cell is asserted. SCB's quality declaration Appendix 2 (uf0315_kd_2018_ah_191113.pdf, pp. 23–27) lists this wave's questionnaire items on the same rows but names no co columns for it.",
-    "noted": "2026-10-14"
+    "question": "VariabelReferenstid is “Enkäten Innovationsverksamhet 2004-2006” and the native edition is “2004 - 2006”. The answer meanings come from the wave's own questionnaire, question 13 (“Markera vilken typ av samarbetspartner ni hade samt dess lokalisering”), rows a–h by four locations. SWECOV's CIS2006 holdings name the answers co<row><location> by questionnaire position: the maintainer's aggregate MONA check (2026-10-14) found the 4-location waves (CIS2004, CIS2006) carry co11–co14 with no co15, so the location digit is the questionnaire column, and partner rows a–e have the same meaning under positional and later-wave readings. Only rows a–e are declared; co6x/co7x stay held (#1571). This questionnaire has eight partner rows (e Konsulter, privata laboratorier; f Privata FoU-institut; g Universitet eller högskolor; h Offentliga forskningsinstitut) while SWECOV's CIS2006 holdings carry seven co row groups (co1x–co7x), so position cannot fix rows 6 and 7. The eighth row comes from splitting the 2002–2004 row e (consultants, private laboratories, private R&D institutes) into e and f, and no SCB document says how the delivery folds eight rows into seven (e.g. e+f merged with co6x = g and co7x = h as in 2002–2004, or one row dropped). The document's variable register names no value set for the matrix variable “Typ av samarbetspartner geografiskt fördelat”: its 8-alternative set belongs to “Mest värdefulla samarbetspartner”, and the 7-alternative “Typ av samarbetspartner” set (p. 66) is carried over verbatim from the 2002–2004 documentation. No other cell is asserted. SCB's quality declaration Appendix 2 (uf0315_kd_2018_ah_191113.pdf, pp. 23–27) lists this wave's questionnaire items on the same rows but names no co columns for it.",
+    "noted": "2026-10-16"
   },
   "question_label": "Typ av samarbetspartner geografiskt fördelat",
   "axes": [
@@ -363,7 +363,7 @@
         "co51"
       ],
       "label_en": "Consultants or private laboratories — Sweden",
-      "definition_en": "Cooperation with consultants or private laboratories in Sweden.",
+      "definition_en": "Cooperation with consultants or private laboratories in Sweden. The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -383,7 +383,7 @@
         "co52"
       ],
       "label_en": "Consultants or private laboratories — Other Europe",
-      "definition_en": "Cooperation with consultants or private laboratories elsewhere in Europe.",
+      "definition_en": "Cooperation with consultants or private laboratories elsewhere in Europe. The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -403,7 +403,7 @@
         "co53"
       ],
       "label_en": "Consultants or private laboratories — USA",
-      "definition_en": "Cooperation with consultants or private laboratories in the USA.",
+      "definition_en": "Cooperation with consultants or private laboratories in the USA. The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -423,7 +423,7 @@
         "co54"
       ],
       "label_en": "Consultants or private laboratories — Other countries",
-      "definition_en": "Cooperation with consultants or private laboratories in other countries (including China and India).",
+      "definition_en": "Cooperation with consultants or private laboratories in other countries (including China and India). The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"

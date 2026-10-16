@@ -16,4 +16,4 @@ unmap = "Month join column of the household file; sos/ekb/manad is orderable fro
 
 [[column]]
 column = "P1105_LopNr_EKB"
-hold = { follow_up = "#1556", reason = "Delivery link key between the EKB household and person files (SoS: pseudonymised EKB LOPNR, ekb_radkoppl); no catalog variable yet (#1556). Maintainer-decided 2026-10-13 (#1302)." }
+hold = { follow_up = "#1633", reason = "Household-year link key between the EKB household and person files: the aggregate check on MONA, reported as a conclusion only found it unique per household and year in the household file, with every person-file key present there. It needs its own sos/ekb variable, which a non-SCB register cannot mint yet (#1633; #1556; maintainer decision 2026-10-16)." }

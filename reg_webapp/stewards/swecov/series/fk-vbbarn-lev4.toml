@@ -8,20 +8,20 @@ edition = { from = 2015, to = 2022 }
 
 [[column]]
 column = "P1105_LopNr_Barn_PersonNr"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
+hold = { follow_up = "#1634", reason = "The table's grain is recipient × child × month (aggregate check on MONA, reported as a conclusion only), which is exactly fk/vardbidrag/_default's own panel key, so the columns belong on _default. FK_VB_lev4 already claims the recipient-key cell there, and the inventory refuses a second unlabelled table on the same cell; VBBARN is a projection of the same delivery, not a partition. Map once projection tables are supported (#1634; #1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
+hold = { follow_up = "#1634", reason = "The table's grain is recipient × child × month (aggregate check on MONA, reported as a conclusion only), which is exactly fk/vardbidrag/_default's own panel key, so the columns belong on _default. FK_VB_lev4 already claims the recipient-key cell there, and the inventory refuses a second unlabelled table on the same cell; VBBARN is a projection of the same delivery, not a partition. Map once projection tables are supported (#1634; #1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Utbetalningsmanad"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
+hold = { follow_up = "#1634", reason = "The table's grain is recipient × child × month (aggregate check on MONA, reported as a conclusion only), which is exactly fk/vardbidrag/_default's own panel key, so the columns belong on _default. FK_VB_lev4 already claims the recipient-key cell there, and the inventory refuses a second unlabelled table on the same cell; VBBARN is a projection of the same delivery, not a partition. Map once projection tables are supported (#1634; #1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Utbetalningsperiod_fromdat"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
+hold = { follow_up = "#1634", reason = "The table's grain is recipient × child × month (aggregate check on MONA, reported as a conclusion only), which is exactly fk/vardbidrag/_default's own panel key, so the columns belong on _default. FK_VB_lev4 already claims the recipient-key cell there, and the inventory refuses a second unlabelled table on the same cell; VBBARN is a projection of the same delivery, not a partition. Map once projection tables are supported (#1634; #1610; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "Utbetalningsperiod_tomdat"
-hold = { follow_up = "#1610", reason = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. Child-linkage holding has a different row grain from the accepted recipient Vardbidrag delivery. Maintainer source disposition explicitly withholds assignment until a supported child variant exists. All original physical fields and period retained." }
+hold = { follow_up = "#1634", reason = "The table's grain is recipient × child × month (aggregate check on MONA, reported as a conclusion only), which is exactly fk/vardbidrag/_default's own panel key, so the columns belong on _default. FK_VB_lev4 already claims the recipient-key cell there, and the inventory refuses a second unlabelled table on the same cell; VBBARN is a projection of the same delivery, not a partition. Map once projection tables are supported (#1634; #1610; maintainer decision 2026-10-16)." }

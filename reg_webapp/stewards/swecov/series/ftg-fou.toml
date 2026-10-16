@@ -147,9 +147,9 @@ tables = ["FTG_FOU_2014"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
-column = "SIZE_CLASS"
-tables = ["FTG_FOU_2019", "FTG_FOU_2021"]
-hold = { follow_up = "#1509", reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)." }
+column = "Period"
+tables = ["FTG_FOU_2017"]
+unmap = "Empty in FTG_FOU_2017: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "STRAT"
@@ -171,7 +171,12 @@ hold = { follow_up = "#1509", reason = "Delivered column with no catalog codeboo
 [[column]]
 column = "TYPE_SECT"
 tables = ["FTG_FOU_2019", "FTG_FOU_2021"]
-hold = { follow_up = "#1509", reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)." }
+unmap = "Constant in FTG_FOU_2019 and FTG_FOU_2021: the aggregate check found the single value Företagssektorn on every row, so the column carries no information beyond the table itself (#1603, #1509; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "UtsOmg"
+tables = ["FTG_FOU_2017"]
+unmap = "Empty in FTG_FOU_2017: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "V001"
@@ -366,7 +371,7 @@ unmap = "The accepted FOU export assigns2003 V0401 to native3335 (own research c
 [[column]]
 column = "V0401"
 tables = ["FTG_FOU_2005"]
-hold = { follow_up = "#1603", reason = "Retained physical field for edition 2005; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order. V0401 is filled in FTG_FOU_2007 and FTG_FOU_2009, which stay held (#1603; aggregate check on MONA, reported as a conclusion only)."
 
 [[column]]
 column = "V0401"
@@ -384,6 +389,11 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0402"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V041"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
@@ -394,9 +404,19 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0411"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V0412"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+
+[[column]]
+column = "V0412"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "V042"
@@ -409,6 +429,11 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0421"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V043"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
@@ -419,9 +444,19 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0431"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V0432"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+
+[[column]]
+column = "V0432"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "V044"
@@ -434,6 +469,11 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0441"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V045"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
@@ -444,9 +484,19 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0451"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V0452"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+
+[[column]]
+column = "V0452"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "V046"
@@ -459,9 +509,19 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0461"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V0462"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+
+[[column]]
+column = "V0462"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "V047"
@@ -474,9 +534,19 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0471"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V0472"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+
+[[column]]
+column = "V0472"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "V0500"
@@ -564,6 +634,11 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0515"
+tables = ["FTG_FOU_2003"]
+unmap = "Empty in FTG_FOU_2003: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V0516"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
@@ -579,6 +654,11 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V0518"
+tables = ["FTG_FOU_2003"]
+unmap = "Empty in FTG_FOU_2003: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V0519"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
@@ -592,6 +672,11 @@ hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001
 column = "V0521"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+
+[[column]]
+column = "V0521"
+tables = ["FTG_FOU_2003"]
+unmap = "Empty in FTG_FOU_2003: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "V0522"
@@ -1114,6 +1199,11 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V1112"
+tables = ["FTG_FOU_2003"]
+unmap = "Empty in FTG_FOU_2003: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V1121"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
@@ -1154,6 +1244,11 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V1202"
+tables = ["FTG_FOU_2003"]
+unmap = "Empty in FTG_FOU_2003: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V1221"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
@@ -1189,9 +1284,54 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "V1683"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "V1693"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "V1703"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "V1713"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "V1723"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "V1733"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "V1743"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "V1753"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "V1763"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "V201"
 tables = ["FTG_FOU_1999"]
-hold = { follow_up = "#1509", reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)." }
+hold = { follow_up = "#1509", reason = "From 2005 V201 is row 201 of the FoU form (övriga driftkostnader, scb/fou/v0201), but the 1999 form has not yet been checked, and 1999 is not an edition of scb/fou/foretagssektorn in the catalog (#1603, #1509; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "V201"
@@ -1202,23 +1342,44 @@ reason = "SWECOV storage spelling V201 of the catalog variable scb/fou/v0201 (de
 [[column]]
 column = "V601"
 tables = ["FTG_FOU_1999"]
-hold = { follow_up = "#1509", reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)." }
+hold = { follow_up = "#1509", reason = "By code pattern V601 would be FoU-årsverken in Östergötland (scb/fou/v0601), but the aggregate check found values that look like an amount, not person-years, so the meaning is not established (#1603, #1509; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)." }
 
 [[column]]
 column = "VIKT"
-tables = ["FTG_FOU_1999", "FTG_FOU_2001", "FTG_FOU_2003", "FTG_FOU_2005", "FTG_FOU_2007", "FTG_FOU_2009"]
-hold = { follow_up = "#1509", reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)." }
+tables = ["FTG_FOU_1999", "FTG_FOU_2001"]
+hold = { follow_up = "#1509", reason = "1999 and 2001 are not editions of scb/fou/foretagssektorn in the catalog (SCB documents the variant from 2003), so viktrev cannot be extended to these tables; SCB's documentation for these rounds was not checked for the weight definition (#1603, #1509; maintainer decision 2026-10-16, 9b: viktrev is extended only to editions where SCB's own documentation confirms the delivered weight is the nonresponse-adjusted N_h/m_h)." }
 
 [[column]]
-column = "Vikt"
-tables = ["FTG_FOU_2011", "FTG_FOU_2013", "FTG_FOU_2015"]
+column = "VIKT"
+tables = ["FTG_FOU_2003"]
+hold = { follow_up = "#1509", reason = "SCB publishes no production documentation (SCBDOK) for the 2003 round on scb.se/uf0301, and SCB documents three weights on this variant in 2003 (urvalsvikt, viktU, ViktRev), so nothing settles which weight VIKT is (#1603, #1509; maintainer decision 2026-10-16, 9b: viktrev is extended only to editions where SCB's own documentation confirms the delivered weight is the nonresponse-adjusted N_h/m_h)." }
+
+[[column]]
+column = "VIKT"
+tables = ["FTG_FOU_2005"]
+hold = { follow_up = "#1509", reason = "SCB publishes no SCBDOK for the 2005 round on scb.se/uf0301; Beskrivning av statistiken 2005 (uf0301_bs_2005.doc, section 2.2.4) defers nonresponse handling to the survey documentation and does not define the weight (#1603, #1509; maintainer decision 2026-10-16, 9b: viktrev is extended only to editions where SCB's own documentation confirms the delivered weight is the nonresponse-adjusted N_h/m_h)." }
+
+[[column]]
+column = "VIKT"
+tables = ["FTG_FOU_2007"]
+hold = { follow_up = "#1509", reason = "SCBDOK 2007 (uf0301_do_2007.pdf, PDF p. 76) defines n_h in its estimator as the number of firms in the sample, and its section 0.12 compensates unit nonresponse first by imputation from the previous survey and only second by rak uppräkning; it does not establish that the delivered VIKT is the nonresponse-adjusted weight rather than the design weight (#1603, #1509; maintainer decision 2026-10-16, 9b: viktrev is extended only to editions where SCB's own documentation confirms the delivered weight is the nonresponse-adjusted N_h/m_h)." }
+
+[[column]]
+column = "VIKT"
+tables = ["FTG_FOU_2009"]
 mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/viktrev", representation = "ViktRev" }]
-reason = "SWECOV storage spelling Vikt of the catalog variable scb/fou/viktrev (delivery column ViktRev); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+reason = "SWECOV storage spelling VIKT of the catalog variable scb/fou/viktrev (delivery column ViktRev); SCBDOK 2009 confirms the nonresponse-adjusted weight N_h/m_h; catalog errata of #1603 batch C (#1509), maintainer decision 2026-10-16."
 
 [[column]]
 column = "Vikt"
-tables = ["FTG_FOU_2012", "FTG_FOU_2014", "FTG_FOU_2017"]
-hold = { follow_up = "#1509", reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)." }
+tables = ["FTG_FOU_2011", "FTG_FOU_2013", "FTG_FOU_2015", "FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/viktrev", representation = "ViktRev" }]
+reason = "SWECOV storage spelling Vikt of the catalog variable scb/fou/viktrev (delivery column ViktRev); catalog errata #1560 (#1509), maintainer-decided 2026-10-13; 2017 added by the #1603 batch C errata (UF0301 Statistikens framställning 2017 confirms N_h/m_h), maintainer decision 2026-10-16."
+
+[[column]]
+column = "Vikt"
+tables = ["FTG_FOU_2012", "FTG_FOU_2014"]
+hold = { follow_up = "#1509", reason = "2012 and 2014 are off-years of the biennial survey: they are not editions of scb/fou/foretagssektorn in the catalog and SCB publishes no documentation for them, so the weight can be neither placed nor confirmed as the nonresponse-adjusted weight (#1603, #1509; maintainer decision 2026-10-16, 9b: viktrev is extended only to editions where SCB's own documentation confirms the delivered weight is the nonresponse-adjusted N_h/m_h)." }
 
 [[column]]
 column = "v0401"
@@ -1241,14 +1402,29 @@ tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "v0422"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "v0442"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
+column = "v0442"
+tables = ["FTG_FOU_2005"]
+unmap = "Empty in FTG_FOU_2005: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
+
+[[column]]
 column = "v0520"
 tables = ["FTG_FOU_2001"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2001; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
+
+[[column]]
+column = "v0520"
+tables = ["FTG_FOU_2003"]
+unmap = "Empty in FTG_FOU_2003: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "v068"
@@ -1261,15 +1437,20 @@ tables = ["FTG_FOU_2014"]
 hold = { follow_up = "#1603", reason = "Retained physical field for edition 2014; complete accepted same-register literal histories do not establish an owner for the table's reviewed delivery period and variant scope. Known columns/definitions in other years do not prove this historical or later holding's semantic ownership. No invented alias, backdated/extended source availability or borrowed domain. All known source owners and exact periods retained in evidence/missing-owner904-review.json." }
 
 [[column]]
-column = "v201"
-tables = ["FTG_FOU_2011", "FTG_FOU_2013", "FTG_FOU_2015"]
-mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0201", representation = "v0201" }]
-reason = "SWECOV storage spelling v201 of the catalog variable scb/fou/v0201 (delivery column v0201); catalog errata #1560 (#1509), maintainer-decided 2026-10-13."
+column = "v1643"
+tables = ["FTG_FOU_2011"]
+unmap = "Empty in FTG_FOU_2011: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "v201"
-tables = ["FTG_FOU_2017"]
-hold = { follow_up = "#1509", reason = "Delivered column with no catalog codebook entry for this survey year; unorderable until SCB's codebook is obtained (#1509)." }
+tables = ["FTG_FOU_2011", "FTG_FOU_2013", "FTG_FOU_2015", "FTG_FOU_2017"]
+mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0201", representation = "v0201" }]
+reason = "SWECOV storage spelling v201 of the catalog variable scb/fou/v0201 (delivery column v0201); catalog errata #1560 (#1509), maintainer-decided 2026-10-13; 2017 added by the #1603 batch C errata, maintainer decision 2026-10-16."
+
+[[column]]
+column = "v7000"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in FTG_FOU_2015: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "ViktRev"

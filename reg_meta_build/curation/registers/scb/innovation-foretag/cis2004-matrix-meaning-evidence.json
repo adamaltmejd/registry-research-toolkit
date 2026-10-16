@@ -12,7 +12,7 @@
   "source_mode": "documented_blank",
   "answer_facts": {
     "data_type": "integer",
-    "data_type_evidence": "SWECOV storage catalog/swecov/derived/swecov_column_types.csv: CIS2004 stores every answer column co11…co54 as an integer type.",
+    "data_type_evidence": "SWECOV storage catalog/swecov/derived/swecov_column_types.csv: CIS2004 stores every answer column co11…co54 as an integer type. co61…co74 carry the same 0/1 answer codes as co11…co54 in the maintainer's aggregate MONA check (2026-10-16).",
     "is_identifier": false,
     "is_sensitive": false,
     "flag_evidence": "SCB UnikaRegisterOchVariabler.txt declares this question's blank-Kolumnnamn row for 2002 - 2004 through 2012 - 2014, which spans this 2002 - 2004 coordinate: KansligVariabel 0, KansligVariabelIbland 0, Identitetsvariabel 0."
@@ -21,8 +21,8 @@
     "document": "SCB Dokumentation av statistikens framtagning (UF0315, 2002–2004), embedded questionnaire question 13",
     "url": "https://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2002-2004.pdf#page=12",
     "sha256": "e42b5a88d7f1c1df980398d440ea29fe8e9f9d225249924a0799041240824437",
-    "question": "VariabelRegister_Källa is “Enkäten Innovationsverksamher 2002-2004” (sic) and the native edition is “2002 - 2004”. The answer meanings come from the wave's own questionnaire, question 13 (“Markera vilken typ av samarbetspartner ni hade samt dess lokalisering”), rows a–g by four locations. SWECOV's CIS2004 holdings name the answers co<row><location> by questionnaire position: the maintainer's aggregate MONA check (2026-10-14) found the 4-location waves (CIS2004, CIS2006) carry co11–co14 with no co15, so the location digit is the questionnaire column, and partner rows a–e have the same meaning under positional and later-wave readings. Only rows a–e are declared: co6x/co7x are held (#1571) because their partner meaning is not established for this wave, and no other cell is asserted. SCB's quality declaration Appendix 2 (uf0315_kd_2018_ah_191113.pdf, pp. 23–27) lists this wave's questionnaire items on the same rows but names no co columns for it.",
-    "noted": "2026-10-14"
+    "question": "VariabelRegister_Källa is “Enkäten Innovationsverksamher 2002-2004” (sic) and the native edition is “2002 - 2004”. The answer meanings come from the wave's own questionnaire, question 13 (“Markera vilken typ av samarbetspartner ni hade samt dess lokalisering”), rows a–g by four locations. SWECOV's CIS2004 holdings name the answers co<row><location> by questionnaire position: the maintainer's aggregate MONA check (2026-10-14) found the 4-location waves (CIS2004, CIS2006) carry co11–co14 with no co15, so the location digit is the questionnaire column, and partner rows a–e have the same meaning under positional and later-wave readings. All seven partner rows are declared. Rows f (co6x, “Universitet eller högskolor”) and g (co7x, “Statliga eller offentliga forskningsinstitut”) are fixed by the same position: the questionnaire has exactly seven partner rows for SWECOV's seven co row groups, question 14 asks for a letter “(a–g ovan)”, the document's own value set “Typ av samarbetspartner” (p. 65) lists the same seven categories (e konsulter, privata laboratorier, privata FoU-institut; f Universitet eller högskolor; g Offentliga forskningsinstitut), and the maintainer's aggregate MONA check (2026-10-16) found co6x/co7x answered and block-filled like rows a–e (#1571, decision 10). No other cell is asserted. SCB's quality declaration Appendix 2 (uf0315_kd_2018_ah_191113.pdf, pp. 23–27) lists this wave's questionnaire items on the same rows, aligning Q13f with universities (CIS2012 CO6x) and Q13g with public research institutes (CIS2012 CO8x), but names no co columns for it.",
+    "noted": "2026-10-16"
   },
   "question_label": "Typ av samarbetspartner geografiskt fördelat",
   "axes": [
@@ -434,6 +434,166 @@
       },
       "source_pages": {
         "co54": 12
+      }
+    },
+    {
+      "key": "universities-sweden",
+      "slug": "cis2004-cooperation-universities-sweden",
+      "columns": [
+        "co61"
+      ],
+      "label_en": "Universities or higher education institutions — Sweden",
+      "definition_en": "Cooperation with universities or higher education institutions in Sweden.",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co61": 12
+      }
+    },
+    {
+      "key": "universities-other-europe",
+      "slug": "cis2004-cooperation-universities-other-europe",
+      "columns": [
+        "co62"
+      ],
+      "label_en": "Universities or higher education institutions — Other Europe",
+      "definition_en": "Cooperation with universities or higher education institutions elsewhere in Europe.",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co62": 12
+      }
+    },
+    {
+      "key": "universities-usa",
+      "slug": "cis2004-cooperation-universities-usa",
+      "columns": [
+        "co63"
+      ],
+      "label_en": "Universities or higher education institutions — USA",
+      "definition_en": "Cooperation with universities or higher education institutions in the USA.",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co63": 12
+      }
+    },
+    {
+      "key": "universities-other-countries",
+      "slug": "cis2004-cooperation-universities-other-countries",
+      "columns": [
+        "co64"
+      ],
+      "label_en": "Universities or higher education institutions — Other countries",
+      "definition_en": "Cooperation with universities or higher education institutions in other countries (including China and India).",
+      "partner": {
+        "key": "universities",
+        "label_en": "Universities or higher education institutions"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co64": 12
+      }
+    },
+    {
+      "key": "public-research-sweden",
+      "slug": "cis2004-cooperation-public-research-sweden",
+      "columns": [
+        "co71"
+      ],
+      "label_en": "Government or public research institutes — Sweden",
+      "definition_en": "Cooperation with government or public research institutes in Sweden.",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "sweden",
+        "label_en": "Sweden"
+      },
+      "source_pages": {
+        "co71": 12
+      }
+    },
+    {
+      "key": "public-research-other-europe",
+      "slug": "cis2004-cooperation-public-research-other-europe",
+      "columns": [
+        "co72"
+      ],
+      "label_en": "Government or public research institutes — Other Europe",
+      "definition_en": "Cooperation with government or public research institutes elsewhere in Europe.",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "other_europe",
+        "label_en": "Other Europe"
+      },
+      "source_pages": {
+        "co72": 12
+      }
+    },
+    {
+      "key": "public-research-usa",
+      "slug": "cis2004-cooperation-public-research-usa",
+      "columns": [
+        "co73"
+      ],
+      "label_en": "Government or public research institutes — USA",
+      "definition_en": "Cooperation with government or public research institutes in the USA.",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "usa",
+        "label_en": "USA"
+      },
+      "source_pages": {
+        "co73": 12
+      }
+    },
+    {
+      "key": "public-research-other-countries",
+      "slug": "cis2004-cooperation-public-research-other-countries",
+      "columns": [
+        "co74"
+      ],
+      "label_en": "Government or public research institutes — Other countries",
+      "definition_en": "Cooperation with government or public research institutes in other countries (including China and India).",
+      "partner": {
+        "key": "public_research",
+        "label_en": "Government or public research institutes"
+      },
+      "response": {
+        "key": "other_countries",
+        "label_en": "Other countries"
+      },
+      "source_pages": {
+        "co74": 12
       }
     }
   ]
