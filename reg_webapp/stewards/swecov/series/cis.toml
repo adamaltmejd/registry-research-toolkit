@@ -412,8 +412,17 @@ select_owner = true
 
 [[column]]
 column = "CO61"
-tables = ["CIS2006", "CIS2008"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-universities-sweden", representation = "co61" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO61"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-sweden", representation = "co61" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "CO71"
@@ -429,8 +438,17 @@ select_owner = true
 
 [[column]]
 column = "CO71"
-tables = ["CIS2006", "CIS2008"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-public-research-sweden", representation = "co71" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO71"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-sweden", representation = "co71" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "CO81"
@@ -1651,7 +1669,7 @@ select_owner = true
 [[column]]
 column = "co61"
 tables = ["CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co61"
@@ -1681,8 +1699,22 @@ select_owner = true
 
 [[column]]
 column = "co62"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-universities-other-europe", representation = "co62" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co62"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-other-europe", representation = "co62" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co62"
+tables = ["CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co62"
@@ -1712,8 +1744,22 @@ select_owner = true
 
 [[column]]
 column = "co63"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-universities-usa", representation = "co63" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co63"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-usa", representation = "co63" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co63"
+tables = ["CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co63"
@@ -1743,8 +1789,22 @@ select_owner = true
 
 [[column]]
 column = "co64"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-universities-other-countries", representation = "co64" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co64"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-china-india", representation = "co64" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co64"
+tables = ["CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co64"
@@ -1767,8 +1827,15 @@ hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix ans
 
 [[column]]
 column = "co65"
-tables = ["CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-other-countries", representation = "co65" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co65"
+tables = ["CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co65"
@@ -1787,7 +1854,7 @@ select_owner = true
 [[column]]
 column = "co71"
 tables = ["CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co71"
@@ -1817,8 +1884,22 @@ select_owner = true
 
 [[column]]
 column = "co72"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-public-research-other-europe", representation = "co72" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co72"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-other-europe", representation = "co72" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co72"
+tables = ["CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co72"
@@ -1848,8 +1929,22 @@ select_owner = true
 
 [[column]]
 column = "co73"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-public-research-usa", representation = "co73" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co73"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-usa", representation = "co73" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co73"
+tables = ["CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co73"
@@ -1879,8 +1974,22 @@ select_owner = true
 
 [[column]]
 column = "co74"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-public-research-other-countries", representation = "co74" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co74"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-china-india", representation = "co74" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co74"
+tables = ["CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co74"
@@ -1903,8 +2012,15 @@ hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix ans
 
 [[column]]
 column = "co75"
-tables = ["CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-other-countries", representation = "co75" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co75"
+tables = ["CIS2010"]
+hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2008-2010 questionnaire has eight partner rows (a-h; private R&D institutes split from consultants) but the table carries seven co row groups, and SCB's 2008-2010 documentation prints no partner code list that would say how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16 (CIS2006/2008 mapped in #1603 batch-e D4; CIS2010 kept held)." }
 
 [[column]]
 column = "co75"

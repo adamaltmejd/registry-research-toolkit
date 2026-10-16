@@ -5,10 +5,11 @@ native_id = "257"
 
 # CIS matrix columns CO11..CO85 are activated per wave by [[representation.matrix]].
 # 2010–2016 declare every answer. 2002–2004 declares all seven partner rows, whose
-# meaning its seven-row questionnaire fixes by position. 2004–2010 declare only
-# partner rows a–e (co1x–co5x): those questionnaires have eight partner rows for
-# seven co row groups, so co6x/co7x stay undeclared until an SCB document says how
-# the delivery folds them (#1571).
+# meaning its seven-row questionnaire fixes by position. 2004–2010 questionnaires have
+# eight partner rows for seven co row groups. 2004–2006 and 2006–2008 declare all
+# seven, read on the 7-category partner list their documentation carries over from
+# 2002–2004, with that caveat in each definition (#1603 batch-e D4). 2008–2010
+# declares only co1x–co5x; its co6x/co7x stay undeclared (#1571).
 
 # scb/innovation-foretag [[errata.delivered]] candidates were computed 2026-09-12
 # against SCB's raw Registerinformation export; folded duplicate columns
