@@ -47,9 +47,9 @@ partition = "stora"
 [[column]]
 column = "INV3R_PAP"
 tables = ["ITftg_Stora_2017"]
-hold = { follow_up = "#1603", reason = "Two documented SCB owners in this edition (35491 and 38334); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held until a document settles the owner or the Operator rules otherwise." }
+hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (35491 and 38334); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
 
 [[column]]
 column = "INV3R_PMP"
 tables = ["ITftg_Stora_2017"]
-hold = { follow_up = "#1603", reason = "Two documented SCB owners in this edition (35490 and 38335); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held until a document settles the owner or the Operator rules otherwise." }
+hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (35490 and 38335); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }

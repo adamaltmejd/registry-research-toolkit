@@ -24,8 +24,8 @@ unmap = "Workplace join key of the näringsgren aspect table; scb/fdb/cfar-numme
 
 [[column]]
 column = "RangOrdning"
-hold = { follow_up = "#1603", reason = "Two documented SCB owners in this edition (ng-rangordning 880 and ngs-rangordning 885); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held until a document settles the owner or the Operator rules otherwise." }
+hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (ng-rangordning 880 and ngs-rangordning 885); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
 
 [[column]]
 column = "tidomspct"
-hold = { follow_up = "#1603", reason = "Two documented SCB owners in this edition (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held until a document settles the owner or the Operator rules otherwise." }
+hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
