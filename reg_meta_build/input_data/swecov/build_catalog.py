@@ -2151,8 +2151,11 @@ def _inventory_mapping_records(
 
 
 def _overlaps_edition(record: dict, edition: object) -> bool:
-    """Whether a delivered record's window reaches the edition; an undated record
-    counts as reaching it."""
+    """Whether a delivered record's window reaches a finite edition; an undated
+    record counts as reaching it. A year-independent state never does: a finite
+    edition admits only dated ones (`_inventory_period_records`)."""
+    if record["period_scope"] != "intervals":
+        return False
     if record["valid_from"] is None or record["valid_to"] is None:
         return True
     return any(

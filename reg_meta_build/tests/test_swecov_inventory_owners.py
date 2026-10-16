@@ -545,6 +545,9 @@ def test_inventory_refuses_case_only_twins_without_physical_or_representative(
     )
 
 
+_THIRD_VARIANT = ("historical", "current", "independent")
+
+
 @pytest.mark.parametrize(
     ("successor_from", "beside", "refusal"),
     [
@@ -552,6 +555,7 @@ def test_inventory_refuses_case_only_twins_without_physical_or_representative(
         ("2018-10-01", "alias", None),
         ("2018-10-01", "competing", "ambiguous_delivered_owners"),
         ("2018-10-01", "historical", None),
+        ("2018-10-01", "independent", None),
         ("2018-10-01", "current", "ambiguous_delivered_owners"),
         ("2018-11-01", None, "union_mapping_gap"),
         ("2018-06-01", None, "union_mapping_overlap"),
@@ -573,11 +577,12 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
     variable delivering the representation there through 2018 competes with it and
     is refused as ambiguous, even under another physical name (`Physical`, which
     the physical-column lookup misses). On a third admissible variant the decision
-    does not map, an owner ending in 2001 is irrelevant (the union maps), while one
+    does not map, an owner ending in 2001 or holding only a
+    year-independent state is irrelevant (the union maps), while one
     still delivering in 2018 competes and is refused. Fails if a partial mapping
     is still refused alone (the tiled case exits as stale), if the whole-edition
     owner check later drops the union records (a single-year edition is the one
-    that check assesses), if the leftover spelling or the historical owner sinks
+    that check assesses), if the leftover spelling, the historical owner or the year-independent one sinks
     the union, if a competing or current owner is admitted, or if the tiling check
     misses a gap or an overlap (those cases map)."""
     db = tmp_path / "split.db"
@@ -616,7 +621,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
                     ("LOPNR", "2018-01-01", "2018-06-30"),
                 ],
             )
-        if beside in ("historical", "current"):
+        if beside in _THIRD_VARIANT:
             conn.execute(
                 "INSERT INTO register_variant (register_variant_id, register_id, "
                 "name, slug) VALUES (906, 901, 'Tidig', 'tidig')"
@@ -628,6 +633,11 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
                 "+ 1 FROM variable_state), 920, 906, '1990-01-01', ?, 'varchar', "
                 "'Lopnr')",
                 ("2001-12-31" if beside == "historical" else "9999-12-31",),
+            )
+        if beside == "independent":
+            conn.execute(
+                "UPDATE variable_state SET period_scope='year_independent', "
+                "valid_from=NULL, valid_to=NULL WHERE register_variant_id=906"
             )
         if beside == "competing":
             conn.execute(
@@ -645,11 +655,7 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
     # A third admissible variant the decision does not map.
     admissible = (
         (*variants, "inera/bestallda-prover/tidig")
-        if beside
-        in (
-            "historical",
-            "current",
-        )
+        if beside in _THIRD_VARIANT
         else variants
     )
     physical = "Physical" if beside == "competing" else "Lopnr"
