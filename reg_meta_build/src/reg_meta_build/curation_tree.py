@@ -379,6 +379,10 @@ class ErrataDeliveredEntry(_CurationModel):
     # storage evidence had: widened with documented Datatyp, or alone for an
     # additional physical column. Absent leaves only the documented type.
     data_type: CatalogDataType | None = None
+    # The delivery's unit, stated by the curator from the entry's evidence. It is
+    # never inherited from the documented column (#1646): without it, the delivery
+    # has no unit and the variable keeps no common unit.
+    measurement_unit: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     # Full originals of the documented column and the rows the entry rewrites or
     # keeps beside its additions; a drifted definition makes the entry stale.
     expected_evidence_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")

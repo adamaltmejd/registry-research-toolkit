@@ -6368,6 +6368,7 @@ def compile_errata(
                             context=context,
                             donor_context=donor_context,
                             curated_type=row.data_type,
+                            curated_unit=row.measurement_unit,
                             preserve_blank_native_base=component_base_key is not None,
                             additional_physical_column=(
                                 row.upstream == "additional-physical-column-in-version"
