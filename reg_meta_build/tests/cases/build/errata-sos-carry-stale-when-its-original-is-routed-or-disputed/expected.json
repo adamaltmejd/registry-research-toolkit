@@ -31,6 +31,14 @@
         [
           "stale_curation_entry",
           "curation/registers/sos/syc.toml#/errata.occurrence_carry/4"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/6"
+        ],
+        [
+          "stale_curation_entry",
+          "curation/registers/sos/syc.toml#/errata.occurrence_carry/7"
         ]
       ]
     },
@@ -59,9 +67,27 @@
           "2023-12-31"
         ],
         [
+          "dup",
+          "syc-a",
+          "2005-01-01",
+          "2014-12-31"
+        ],
+        [
+          "dup",
+          "syc-a",
+          "2015-01-01",
+          "2023-12-31"
+        ],
+        [
           "kod",
           "syc-a",
           "2015-01-01",
+          "2023-12-31"
+        ],
+        [
+          "per",
+          "syc-a",
+          "2010-01-01",
           "2023-12-31"
         ],
         [

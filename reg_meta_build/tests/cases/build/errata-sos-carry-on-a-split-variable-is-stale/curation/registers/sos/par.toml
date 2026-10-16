@@ -1,0 +1,35 @@
+[register]
+provider = "sos"
+slug = "par"
+name = "Patientregistret"
+native_id = "5891427617861710725"
+[[variant]]
+native_id = "5891427617861710725.5623677195158740599"
+slug = "par-ov"
+[[variant]]
+native_id = "5891427617861710725.6299896919770839454"
+slug = "par-sv"
+[[variant]]
+native_id = "5891427617861710725.6508659120530331974"
+slug = "par-tv"
+[[identity.split]]
+variable = "ATC"
+by = "deldatamangd"
+parts = [{ deldatamangd = "PAR_TV", owner = "5891427617861710725.ATC.other" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.ATC.shared" }, { deldatamangd = "PAR_OV", owner = "5891427617861710725.ATC.shared" }]
+[[variable]]
+native_id = "5891427617861710725.ATC.shared"
+slug = "shared"
+[[variable]]
+native_id = "5891427617861710725.ATC.other"
+slug = "other"
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.ATC"
+variant = "PAR_OV"
+column = "ATC"
+expected_fields = [{ name = "name", status = "value", value = "ATC" }, { name = "definition", status = "absent" }, { name = "description", status = "unknown" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2001" }, { name = "coverage_to", status = "value", value = "2020" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2020" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "1997", end = "2000" }] }
+data_warning = "Carried ATC."
+evidence = "probe"
+noted = "2026-10-17"

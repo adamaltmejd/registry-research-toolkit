@@ -108,3 +108,53 @@ carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" 
 data_warning = "Before 2015 the provider documents these codes elsewhere."
 evidence = "Delivered under the same name in 2005-2014."
 noted = "2026-10-17"
+[[variable]]
+slug = "dup"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=DUP}}
+[[variable]]
+slug = "per"
+native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=PER}}
+[[errata.occurrence_carry]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=DUP}}
+variant = "SYC_A"
+column = "DUP"
+expected_fields = [{ name = "name", status = "value", value = "Dup" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dup per position" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = {{edition_scope key=variable:DUP}}
+expected_period = {{period_scope key=variable:DUP}}
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 the provider documents these codes elsewhere."
+evidence = "Delivered under the same name."
+noted = "2026-10-17"
+[[errata.occurrence_carry]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=DUP}}
+variant = "SYC_A"
+column = "DUP"
+expected_fields = [{ name = "name", status = "value", value = "Dup" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dup per position" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = {{edition_scope key=variable:DUP}}
+expected_period = {{period_scope key=variable:DUP}}
+carry_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2012" }] }
+data_warning = "Before 2015 the provider documents these codes elsewhere."
+evidence = "Delivered under the same name."
+noted = "2026-10-17"
+[[errata.occurrence_carry]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=PER}}
+variant = "SYC_A"
+column = "PER"
+expected_fields = [{ name = "name", status = "value", value = "Per" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Per per position" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = {{edition_scope key=variable:PER}}
+expected_period = {{period_scope key=variable:PER}}
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2012" }] }
+data_warning = "Before 2015 the provider documents these codes elsewhere."
+evidence = "Delivered under the same name."
+noted = "2026-10-17"
+[[errata.occurrence_period]]
+variable = {{naming_id kind=variable provider=sos register_key=syc member_key=PER}}
+variant = "SYC_A"
+column = "PER"
+expected_fields = [{ name = "name", status = "value", value = "Per" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Per per position" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "value", value = "2023" }]
+expected_scope = {{edition_scope key=variable:PER}}
+expected_period = {{period_scope key=variable:PER}}
+edition_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2023" }] }
+edition_period_scope = {{period_scope key=variable:PER}}
+evidence = "The provider's own note dates the column from 2010."
+noted = "2026-10-17"

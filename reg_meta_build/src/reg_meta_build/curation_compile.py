@@ -5632,6 +5632,10 @@ def compile_occurrence_corrections(
         # Field entries compile before carries; a carry replays only the ones
         # that passed every guard here.
         checked_corrections: list[tuple[ErrataFieldEntry, set[SourceRecordRef]]] = []
+        # Years each original already has carried, so two carries never claim one.
+        carried_by_donor: dict[SourceRecordRef, list[tuple[Any, Any]]] = defaultdict(
+            list
+        )
         for table, rows in entries:
             for index, entry in enumerate(rows, 1):
                 case_id = f"{register.source_file}#/errata.{table}/{index}"
@@ -5893,8 +5897,31 @@ def compile_occurrence_corrections(
                     # correction family the carry does not replay refuse the carry
                     # instead of resolving them; route the carry and reuse the
                     # checked-effect reconciliation if a carry needs one.
+                    carry_bounds = scope_bounds(entry.carry_scope) or ()
+                    native_variable = entry.variable.rsplit(".", 1)[-1]
                     refusal = (
-                        "the original's variant is routed ([[identity.route]])"
+                        "the original's variable is split ([[identity.split]]); "
+                        "a carry targets the unsplit native variable"
+                        if any(
+                            split.variable == native_variable
+                            for split in register.identity.split
+                        )
+                        else "an [[errata.occurrence_period]] corrects the "
+                        "original's period, which the carry does not follow"
+                        if any(
+                            (other.variable, other.variant, other.column)
+                            == (entry.variable, entry.variant, entry.column)
+                            for other in register.errata.occurrence_period
+                        )
+                        else "carry_scope overlaps another carry of the same original"
+                        if any(
+                            lo <= other_hi and other_lo <= hi
+                            for lo, hi in carry_bounds
+                            for other_lo, other_hi in carried_by_donor[
+                                record_ref(donor)
+                            ]
+                        )
+                        else "the original's variant is routed ([[identity.route]])"
                         if any(
                             route.deldatamangd == entry.variant
                             for route in register.identity.route
@@ -5943,6 +5970,7 @@ def compile_occurrence_corrections(
                             )
                         )
                         continue
+                    carried_by_donor[record_ref(donor)].extend(carry_bounds)
                     carry_effects = (
                         CuratedOccurrenceAddition(
                             occurrence_key=f"{case_id}:carry",

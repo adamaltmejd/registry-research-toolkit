@@ -885,20 +885,29 @@ native variable, variant and column over a closed `carry_scope`, copying the ori
 facts as its `[[errata.field]]` entries correct them (only those that pass every guard
 of their own), so the two occurrences of one variable agree. The source does not
 document that delivery, so a carry always states a `data_warning`, which annotates only
-the carried years. It takes the same original guards as a SOS period entry and is stale
-when `carry_scope` reaches the original's own scope (or the original's scope is
-unbounded): one occurrence would claim those years twice. It is also stale while the
-original's checked corrections disagree (the original's own value is then withheld, and
-the carry does not pick one), while the original's physical alternatives under its one
-record key disagree on a field the carry copies, while its variant is a token
-`[[identity.route]]` sends elsewhere, or while an `[[errata.data_type]]` or
-`[[errata.classification_reference]]` corrects it, which the carry does not replay. The
-carry copies the original's bound coding, declared or not. It is for SOS registers only,
-which the loader enforces: an SCB register states the same fact with
+the carried years. It takes the same original guards as a SOS period entry, and the
+build refuses it as a located stale entry when:
+
+- `carry_scope` reaches the original's own scope, or the original's scope is unbounded:
+  one occurrence would claim those years twice;
+- `carry_scope` reaches years an earlier carry of the same original already carries
+  (entries apply in file order);
+- an `[[errata.occurrence_period]]` corrects the original's period, which the carry does
+  not follow;
+- an `[[identity.split]]` divides the original's native variable: the added occurrence
+  would have no split owner (revisit if a split variable needs a carry);
+- its variant is a token `[[identity.route]]` sends elsewhere;
+- an `[[errata.data_type]]` or `[[errata.classification_reference]]` corrects the
+  original, which the carry does not replay;
+- the original's checked corrections disagree (its own value is then withheld, and the
+  carry does not pick one);
+- the original's physical alternatives under its one record key disagree on a field the
+  carry copies.
+
+The carry copies the original's bound coding, declared or not. It is for SOS registers
+only, which the loader enforces: an SCB register states the same fact with
 `[[errata.delivered]]`, and a thin provider dates its columns by period scope, which a
-carry does not copy (revisit if a thin column needs one). The carry targets the native
-variable; a variable an `[[identity.split]]` divides is not carried (revisit if one
-needs it).
+carry does not copy (revisit if a thin column needs one).
 
 `[[errata.flags]]` authors `is_sensitive` and `is_identifier` for a variable whose
 source and auxiliary joins state neither, which `unresolved_flag` otherwise withholds
