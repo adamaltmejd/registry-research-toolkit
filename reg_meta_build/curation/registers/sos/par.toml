@@ -593,6 +593,38 @@ data_warning = "Before 2015 Socialstyrelsen reported action codes only inside th
 evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents ATG as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, action codes exist only inside OP (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; Operator decision under maintainer delegation 2026-10-16/17."
 noted = "2026-10-17"
 
+# #1603 batch-e (#1633): kva_typ is the stem of SWECOV's kva_typ1..30 position
+# columns on PAR_OV and PAR_SV. SoS documents no such field, so it is minted, one
+# entry per subset with identical facts, so both share one variable.
+
+[[variable]]
+native_id = "5891427617861710725.kva_typ"
+slug = "kva-typ-enligt-leverans"
+
+[[errata.column]]
+variant = "PAR_OV"
+column = "kva_typ"
+data_type = "text"
+name = "kva_typ (enligt leverans)"
+definition = "Typ av KVÅ-åtgärdskod per position (antagen betydelse)."
+holdings_period = "2005-2023"
+data_warning = "Socialstyrelsen documents no such field. The meaning, the type of the KVÅ procedure code at each position, is a candidate reading of the delivered column."
+source = "steward-holdings"
+evidence = "SWECOV's SWECOV_SOS_OV table (edition 2005-2023) holds kva_typ1..30 beside the op1..30 action-code positions; the SoS PAR metadata documents no kva_typ field. data_type from SWECOV's storage type (text). #1603 batch-e; Operator decision under maintainer delegation 2026-10-16/17."
+noted = "2026-10-17"
+
+[[errata.column]]
+variant = "PAR_SV"
+column = "kva_typ"
+data_type = "text"
+name = "kva_typ (enligt leverans)"
+definition = "Typ av KVÅ-åtgärdskod per position (antagen betydelse)."
+holdings_period = "2005-2023"
+data_warning = "Socialstyrelsen documents no such field. The meaning, the type of the KVÅ procedure code at each position, is a candidate reading of the delivered column."
+source = "steward-holdings"
+evidence = "SWECOV's SWECOV_SOS_SV table (edition 2005-2023) holds kva_typ1..30 beside the op1..30 action-code positions; the SoS PAR metadata documents no kva_typ field. data_type from SWECOV's storage type (text). #1603 batch-e; Operator decision under maintainer delegation 2026-10-16/17."
+noted = "2026-10-17"
+
 [[errata.field]]
 variable = "5891427617861710725.DIA_ANT"
 variant = "PAR_OV"
