@@ -1,0 +1,122 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variant": [
+        "old"
+      ],
+      "/data/items/*/valid_from": [
+        "2015-01-01"
+      ],
+      "/data/items/*/valid_to": [
+        "2016-12-31"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/children/*/fqid": [
+        "scb/example/id",
+        "scb/example/legacy",
+        "scb/example/newfield",
+        "scb/example/oldfield"
+      ],
+      "/data/children/*/deliveries": [
+        [
+          {
+            "variant": "new",
+            "column": "Id",
+            "period_scope": "intervals",
+            "coverage": {
+              "coverage_from": "2018-01-01",
+              "coverage_to": "2019-12-31",
+              "open_ended": false,
+              "state_count": 1
+            },
+            "windows": [
+              {
+                "valid_from": "2018-01-01",
+                "valid_to": "2019-12-31"
+              }
+            ]
+          },
+          {
+            "variant": "old",
+            "column": "Id",
+            "period_scope": "intervals",
+            "coverage": {
+              "coverage_from": "2015-01-01",
+              "coverage_to": "2019-12-31",
+              "open_ended": false,
+              "state_count": 1
+            },
+            "windows": [
+              {
+                "valid_from": "2015-01-01",
+                "valid_to": "2019-12-31"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "variant": "old",
+            "column": "Legacy",
+            "period_scope": "intervals",
+            "coverage": {
+              "coverage_from": "2015-01-01",
+              "coverage_to": "2016-12-31",
+              "open_ended": false,
+              "state_count": 1
+            },
+            "windows": [
+              {
+                "valid_from": "2015-01-01",
+                "valid_to": "2016-12-31"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "variant": "new",
+            "column": "NewField",
+            "period_scope": "intervals",
+            "coverage": {
+              "coverage_from": "2018-01-01",
+              "coverage_to": "2019-12-31",
+              "open_ended": false,
+              "state_count": 1
+            },
+            "windows": [
+              {
+                "valid_from": "2018-01-01",
+                "valid_to": "2019-12-31"
+              }
+            ]
+          }
+        ],
+        [
+          {
+            "variant": "old",
+            "column": "OldField",
+            "period_scope": "intervals",
+            "coverage": {
+              "coverage_from": "2015-01-01",
+              "coverage_to": "2019-12-31",
+              "open_ended": false,
+              "state_count": 1
+            },
+            "windows": [
+              {
+                "valid_from": "2015-01-01",
+                "valid_to": "2019-12-31"
+              }
+            ]
+          }
+        ]
+      ]
+    }
+  }
+]

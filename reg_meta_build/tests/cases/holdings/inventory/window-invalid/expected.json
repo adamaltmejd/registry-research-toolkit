@@ -1,0 +1,28 @@
+{
+  "note": "One table per column-window rule (#1645); the refusal lists every broken window and leaves Good and Overlap alone. Good: the key column's two disjoint windows on two variants, with no delivery between them, and a field windowed on one variant. Overlap: two variants' windows of one column overlap, which the same mappings without windows may too.",
+  "fails_if": "a window reaching outside its table's edition or across the gap of an interrupted edition, a windowed coordinate mapped again in its column, an inverted window, a window on a member, or a window in a year-independent table stops being refused under inventory_window_invalid, or a valid set of disjoint windows with a gap, or overlapping windows of one column on two variants, is refused",
+  "error": {
+    "code": "inventory_window_invalid",
+    "locators": [
+      "table",
+      "table['Outside'].column['OldField']",
+      "table['Spanning'].column['OldField']",
+      "table['Repeated'].column['Id']",
+      "table['Inverted'].column['OldField']",
+      "table['Member'].column['Lon_2018']",
+      "table['Independent'].column['Kon']"
+    ],
+    "message_contains": [
+      "table['Outside'].column['OldField']: scb/example/old scb/example/oldfield window 2014..2016 lies outside the table's edition 2015..2019",
+      "table['Spanning'].column['OldField']: scb/example/old scb/example/oldfield window 2015..2017 lies outside the table's edition 2015,2017",
+      "table['Repeated'].column['Id']: scb/example/old scb/example/id has a window and another mapping in this column",
+      "table['Inverted'].column['OldField']: scb/example/old scb/example/oldfield window: edition range 'from' is after 'to'",
+      "table['Member'].column['Lon_2018']: scb/example/old scb/example/lon states a window and a member",
+      "table['Independent'].column['Kon']: scb/example/old scb/example/kon states a window in a year-independent table"
+    ],
+    "message_excludes": [
+      "table['Good']",
+      "table['Overlap']"
+    ]
+  }
+}

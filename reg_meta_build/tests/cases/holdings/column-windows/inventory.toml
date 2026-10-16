@@ -1,0 +1,61 @@
+version = 1
+steward = "swecov"
+
+# `Combined` unions two deliveries of one table (#1645): the old field set up to
+# 2016 under the `old` variant, the new field set from 2018 under `new`, nothing
+# in 2017. The key column `Id` maps once per window. `Later` delivers the old
+# field set from 2017; without the windows, `Combined`'s old `Id` and `OldField`
+# would serve 2017..2019 too and conflict with it. `Legacy` is delivered by no
+# other table, so outside its window it is not held at all.
+[[table]]
+id = "Combined"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/id"
+representation = "Id"
+window = { from = 2015, to = 2016 }
+[[table.column.mapping]]
+register_variant = "scb/example/new"
+variable = "scb/example/id"
+representation = "Id"
+window = { from = 2018, to = 2019 }
+[[table.column]]
+name = "Legacy"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/legacy"
+representation = "Legacy"
+window = { from = 2015, to = 2016 }
+[[table.column]]
+name = "NewField"
+[[table.column.mapping]]
+register_variant = "scb/example/new"
+variable = "scb/example/newfield"
+representation = "NewField"
+window = { from = 2018, to = 2019 }
+[[table.column]]
+name = "OldField"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/oldfield"
+representation = "OldField"
+window = { from = 2015, to = 2016 }
+
+[[table]]
+id = "Later"
+edition = { from = 2017, to = 2019 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/id"
+representation = "Id"
+[[table.column]]
+name = "OldField"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/oldfield"
+representation = "OldField"

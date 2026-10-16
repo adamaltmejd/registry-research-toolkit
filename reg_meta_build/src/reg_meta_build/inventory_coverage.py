@@ -26,15 +26,18 @@ ONE line naming the held editions, the catalog's windows and that surface.
 
 Reading rules, each deliberate:
 
-* Coverage is judged PER PHYSICAL COLUMN of a table: covered iff ANY of its
-  mappings covers the edition. One physical column serving several variants stays
-  orderable as long as one of them delivers it.
+* Coverage is judged PER PHYSICAL COLUMN of a table and served period: covered
+  iff ANY of its mappings serving that period covers it. One physical column
+  serving several variants stays orderable as long as one of them delivers it;
+  a column whose variants hold their own windows is judged per window.
 * Only a table whose edition is ONE period token is assessed. An integer is
   normalized to its annual token by the inventory loader, and sub-annual / LA
   tokens retain their exact bounds. A range or list is a multi-period table: its
   dates describe the records in the file, not every column's availability, so it
   is counted and reported as not assessed and contributes no inferred correction.
-* An assessed mapping's basis is the table's full single-period `edition_bounds`.
+* An assessed mapping's basis is the table's full single-period `edition_bounds`,
+  or the period the mapping serves inside it: a column window (#1645) or a year or
+  month member (#1495). That is the basis the generator's owner check judges it on.
   A miss describes the curator's coverage worklist; it does not alter the compiled
   physical holdings or determine whether a later researcher request is covered.
 * `variable_state` and `variable_alias_window` are read as a FLAT UNION keyed by
@@ -284,7 +287,7 @@ def coverage_misses(
     for table in assessed_tables:
         if table.period_scope == "year_independent":
             for column in table.columns:
-                placed = _placements(column, pair_ids, windows)
+                placed = _placements(column, pair_ids, windows, ())
                 unresolved += len(column.mappings) - len(placed)
                 if not placed:
                     continue
@@ -312,19 +315,25 @@ def coverage_misses(
             continue
         bounds = edition_bounds(table.edition)
         for column in table.columns:
-            placed = _placements(column, pair_ids, windows)
+            placed = _placements(column, pair_ids, windows, bounds)
             unresolved += len(column.mappings) - len(placed)
             # An unmapped column admits nothing: it stays out of the
             # denominator because it is never ordered, so it cannot contradict the
             # catalog.
             if not placed:
                 continue
-            for edition in bounds:
+            # Mappings serving one period are alternatives (ANY covers it); a
+            # windowed mapping serves its own period, so it is judged alone there.
+            by_period: defaultdict[_Interval, list[_Placement]] = defaultdict(list)
+            for place in placed:
+                for period in place.served:
+                    by_period[period].append(place)
+            for edition, group in sorted(by_period.items()):
                 pairs += 1
-                if any(_covers(edition, place.windows) for place in placed):
+                if any(_covers(edition, place.windows) for place in group):
                     continue
                 missed_pairs += 1
-                for place in placed:
+                for place in group:
                     accumulated[place.key].record(
                         edition,
                         place.windows,
@@ -665,18 +674,24 @@ def _load_versions(conn: sqlite3.Connection, variants: set[int]) -> _Versions:
 class _Placement:
     """One resolved mapping of one physical column, with everything that does not
     depend on the edition already derived: the errata group the mapping lands in,
-    the windows its coverage is judged against, the variable whose provenance
+    the period it serves in its table (`ColumnMapping.served`: its window, its
+    year or month member, else the edition), the windows its coverage is judged
+    against, the variable whose provenance
     determines whether a source row exists, and the variant whose documented
     versions an omitted row would name."""
 
     key: tuple[str, str, str]
+    served: tuple[_Interval, ...]
     windows: tuple[_Interval, ...]
     variable_id: int
     variant_id: int
 
 
 def _placements(
-    column: InventoryColumn, pair_ids: dict[_Coord, _PairIds], windows: _Windows
+    column: InventoryColumn,
+    pair_ids: dict[_Coord, _PairIds],
+    windows: _Windows,
+    bounds: tuple[_Interval, ...],
 ) -> list[_Placement]:
     """`column`'s mappings that name a coordinate this catalog has, each resolved
     ONCE: the edition loop then only compares."""
@@ -689,6 +704,7 @@ def _placements(
         placed.append(
             _Placement(
                 key=(register, variant, mapping.representation),
+                served=mapping.served(bounds),
                 windows=windows.for_mapping(pair, mapping.representation),
                 variable_id=pair[0],
                 variant_id=pair[1],

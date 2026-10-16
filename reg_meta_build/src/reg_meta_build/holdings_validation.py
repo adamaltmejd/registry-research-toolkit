@@ -149,6 +149,9 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
                         "variable": f"{prefix}/{mapping['variable_slug']}",
                         "representation": mapping["representation_literal"],
                         "member": member,
+                        "window": None
+                        if mapping["window_lo"] is None
+                        else {"from": mapping["window_lo"], "to": mapping["window_hi"]},
                     }
                 )
                 stored_canonical.append(mapping["representation_canonical"])

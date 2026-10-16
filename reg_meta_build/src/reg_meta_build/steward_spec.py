@@ -30,7 +30,9 @@ Rules, each refused with a located `RegMetaError`:
   series or one scope disposition (lookup, exclude, retain_unknown).
 - `steward_spec_invalid`: everything else, including a column decision naming
   a table outside its series and two decisions for one column of one table.
-  Decisions select whole tables, never part of an edition.
+  Decisions select whole tables. A mapping narrows to part of a table's
+  edition only by its own `window` (#1645), which the inventory judges; the
+  generator checks the owner's coverage against that window.
 
 `hold.follow_up` must parse as an issue reference. The build never reads the
 issue's state: that would make it depend on the network.

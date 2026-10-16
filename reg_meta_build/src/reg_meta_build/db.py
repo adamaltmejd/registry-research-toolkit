@@ -1809,11 +1809,22 @@ CREATE TABLE holding_mapping (
     -- Inclusive upper ISO bound of an authored year/month member; never the table edition.
     member_hi TEXT CHECK (member_hi IS NULL
         OR member_hi GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+    -- Inclusive lower ISO bound of an authored column window (#1645); never the table
+    -- edition or a member period.
+    window_lo TEXT CHECK (window_lo IS NULL
+        OR window_lo GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
+    -- Inclusive upper ISO bound of an authored column window; never the table edition.
+    window_hi TEXT CHECK (window_hi IS NULL
+        OR window_hi GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'),
     PRIMARY KEY (column_id, variant_id, variable_id, representation_canonical),
     -- At most one member kind: a position, or a year/month period, or neither.
     CHECK ((member_lo IS NULL) = (member_hi IS NULL)),
     CHECK (member_lo IS NULL OR member_lo <= member_hi),
-    CHECK (member_position IS NULL OR member_lo IS NULL)
+    CHECK (member_position IS NULL OR member_lo IS NULL),
+    -- A window is a plain mapping's own period, never a member's.
+    CHECK ((window_lo IS NULL) = (window_hi IS NULL)),
+    CHECK (window_lo IS NULL OR window_lo <= window_hi),
+    CHECK (window_lo IS NULL OR (member_position IS NULL AND member_lo IS NULL))
 );
 
 -- Candidate logical-to-physical index; verify order with plan 02 EXPLAIN QUERY PLAN.

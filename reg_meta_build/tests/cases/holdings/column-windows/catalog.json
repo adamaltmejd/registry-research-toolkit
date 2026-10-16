@@ -1,0 +1,139 @@
+[
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "id",
+    "provider_key": "47",
+    "name": "Id",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": true,
+    "states": [
+      {
+        "variant": {
+          "slug": "old",
+          "name": "Old"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Id",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "new",
+          "name": "New"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Id",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "legacy",
+    "provider_key": "50",
+    "name": "Legacy",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "old",
+          "name": "Old"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "Legacy",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "newfield",
+    "provider_key": "48",
+    "name": "NewField",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "new",
+          "name": "New"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "NewField",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "oldfield",
+    "provider_key": "49",
+    "name": "OldField",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "old",
+          "name": "Old"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "OldField",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  }
+]
