@@ -120,7 +120,9 @@ def test_curated_pivot_members_map_with_their_index(
     auto-matched mapping beside a member (a member column with two mappings), both
     of which `load_inventory` refuses; if it checks a year member's owner against
     the whole edition (`Emp2021` goes to the scope worklist and the run exits); or
-    if the spec refuses a curated member."""
+    if the spec refuses a curated member. The `Emp` owner is inserted as DB rows,
+    like the rest of this harness's fixtures; moving them to readable source is
+    #1654."""
     variant = "inera/bestallda-prover/_default"
     db = tmp_path / "candidate.db"
     shutil.copyfile(flavored_db, db)
@@ -178,6 +180,37 @@ def test_curated_pivot_members_map_with_their_index(
         "T_kolumn": [("inera/bestallda-prover/t-kolumn", "T_kolumn", "position", 1)],
         "T_kolumn2": [("inera/bestallda-prover/t-kolumn", "T_kolumn", "position", 2)],
     }
+
+
+def test_member_decision_with_two_mappings_is_refused(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A member column carries one mapping, so a member decision naming two (here
+    the 2020 and 2021 year members of one column) is refused when the spec loads,
+    naming the column and the count. Fails if the refusal goes: the generator
+    then checks each mapping against the last one's period, drops the other, and
+    emits one mapping without error."""
+    mapping = (
+        '{{ register_variant = "inera/bestallda-prover/_default", '
+        'variable = "inera/bestallda-prover/t-kolumn", representation = "T_kolumn", '
+        "member = {{ year = {year} }} }}"
+    )
+    decisions = (
+        '[[column]]\ncolumn = "T_kolumn"\nmappings = ['
+        + ", ".join(mapping.format(year=year) for year in (2020, 2021))
+        + ']\nreason = "reviewed pivot member"\n'
+    )
+
+    with pytest.raises(RegMetaError, match="'T_kolumn' names 2") as refused:
+        _run_inventory(
+            tmp_path,
+            flavored_db,
+            "T",
+            ["T_kolumn"],
+            edition="{ from = 2020, to = 2021 }",
+            decisions=decisions,
+        )
+    assert refused.value.code == "steward_spec_invalid"
 
 
 # --- cmd_inventory: a series' school-year edition spelling --------------------
