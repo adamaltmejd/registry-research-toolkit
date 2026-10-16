@@ -539,6 +539,60 @@ value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillstånd
 evidence = "Hard line breaks only. Original rows row:15 and row:88 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 noted = "2026-09-30"
 
+# #1603 batch-e (#1633): SWECOV's PAR_OV/PAR_SV tables deliver the per-position DIA
+# and ATG codes for 2005-2014 too, under the same names. SoS documents them only from
+# 2015, so each carry adds a warned 2005-2014 occurrence beside the documented one.
+# Guards copy the original prepared records; the DIA/PAR_OV description fix above is
+# replayed onto the carried years.
+
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.DIA"
+variant = "PAR_OV"
+column = "DIA"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet\när orsakat av eller relaterat\ntill läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }, { name = "name", status = "value", value = "Diagnoskod eller ATC-kod vid skada eller förgiftning" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported diagnosis codes only inside the DIAGNOS string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented DIA."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents DIA as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, diagnosis codes exist only inside DIAGNOS (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; Operator decision under maintainer delegation 2026-10-16/17."
+noted = "2026-10-17"
+
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.DIA"
+variant = "PAR_SV"
+column = "DIA"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }, { name = "name", status = "value", value = "Diagnoskod eller ATC-kod vid skada eller förgiftning" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported diagnosis codes only inside the DIAGNOS string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented DIA."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents DIA as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, diagnosis codes exist only inside DIAGNOS (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; Operator decision under maintainer delegation 2026-10-16/17."
+noted = "2026-10-17"
+
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.ATG"
+variant = "PAR_OV"
+column = "ATG"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Åtgärd som utförts under vårdkontakten. Vid läkemedelstillförsel kan värdet vara en ATC-kod som anger läkemedlet i fråga" }, { name = "name", status = "value", value = "Åtgärdskod eller ATC-kod som avser läkemedelstillförsel" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported action codes only inside the OP string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented ATG."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents ATG as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, action codes exist only inside OP (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; Operator decision under maintainer delegation 2026-10-16/17."
+noted = "2026-10-17"
+
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.ATG"
+variant = "PAR_SV"
+column = "ATG"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Åtgärd som utförts under vårdkontakten. Vid läkemedelstillförsel kan värdet vara en ATC-kod som anger läkemedlet i fråga" }, { name = "name", status = "value", value = "Åtgärdskod eller ATC-kod som avser läkemedelstillförsel" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported action codes only inside the OP string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented ATG."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents ATG as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, action codes exist only inside OP (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; Operator decision under maintainer delegation 2026-10-16/17."
+noted = "2026-10-17"
+
 [[errata.field]]
 variable = "5891427617861710725.DIA_ANT"
 variant = "PAR_OV"
