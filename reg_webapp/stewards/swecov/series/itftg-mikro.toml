@@ -43,3 +43,13 @@ partition = "mikro"
 table = "ITftg_Mikro_2020"
 edition = 2020
 partition = "mikro"
+
+[[column]]
+column = "INV3R_PAP"
+tables = ["ITftg_Mikro_2017"]
+unmap = "Reviewed source ambiguity: the 2017 export assigns INV3R_PAP to native questions 35491 and 38334 about automatically processable electronic invoices, with different supplier/denominator and reference-year wording. Delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
+
+[[column]]
+column = "INV3R_PMP"
+tables = ["ITftg_Mikro_2017"]
+unmap = "Reviewed source ambiguity: the 2017 export assigns INV3R_PMP to native questions 35490 and 38335 about invoices not automatically processable, with different supplier/denominator and reference-year wording. Delivery metadata cannot select an owner. Physical holdings and both source-native questions are retained; inventory mapping is unavailable. Maintainer approved 2026-10-01."
