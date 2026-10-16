@@ -43,6 +43,24 @@
     {
       "table": "issues",
       "where": {
+        "case_id": "curation/registers/scb/pdfnowindow.toml#/coding.documented/1/period/1",
+        "detail": {
+          "contains": "the column's occurrence windows are 2020-01-01..2020-12-31."
+        }
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry"
+        ]
+      ],
+      "note": "pdfnowindow names 2019, which VALUE does not deliver: the refusal lists the windows VALUE does deliver, so a curator sees which window would be covered without a gap."
+    },
+    {
+      "table": "issues",
+      "where": {
         "code": "conflicting_coding_choices"
       },
       "fields": [

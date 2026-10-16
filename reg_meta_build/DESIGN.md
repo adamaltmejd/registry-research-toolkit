@@ -1657,16 +1657,20 @@ error. Unguarded entries retain exact issue matching.
 A `[[coding.warning]]` declaration records a reviewed source metadata conflict while
 retaining its type and response domain unchanged. It uses the coding compiler's exact
 column, finite window, full source-evidence digest and original coding expectations.
-Changed evidence is an error; a warning is emitted only for applicable guarded cases.
-This is separate from an acknowledgement: it makes a supported contradiction visible
-without asserting a repair or changing which facts are available. Its consumer warning
-code is `source_metadata_conflict`, with exact affected fields, source references and
-period. Review prose explains the decision; the checked TOML is executable authority.
-The same entry with `fields = ["reference_period"]` instead records a reviewed reading
-of the column's time reference on a documented version (for example, that a year's table
-is the status at 31 December), with the same guards and coding unchanged. It is not a
-conflict, so its code is `reference_period_assumption`, and `reference_period` stands
-alone: one warning carries one meaning (#1639).
+Like every coding entry's window, it must be covered by the column's source occurrence
+windows without a gap, not merely overlap them: a version delivered as a single day (for
+example 1 January) matches only a window naming that day. An uncovered window is stale,
+and its refusal lists the column's occurrence windows. Changed evidence is an error; a
+warning is emitted only for applicable guarded cases. This is separate from an
+acknowledgement: it makes a supported contradiction visible without asserting a repair
+or changing which facts are available. Its consumer warning code is
+`source_metadata_conflict`, with exact affected fields, source references and period.
+Review prose explains the decision; the checked TOML is executable authority. The same
+entry with `fields = ["reference_period"]` instead records a reviewed reading of the
+column's time reference on a documented version (for example, that a year's table is the
+status at 31 December), with the same guards and coding unchanged. It is not a conflict,
+so its code is `reference_period_assumption`, and `reference_period` stands alone: one
+warning carries one meaning (#1639).
 
 Source-event endpoint acknowledgements use the same register-local declarations and
 exact matcher at the global event boundary, after all selected scopes are observed. Both

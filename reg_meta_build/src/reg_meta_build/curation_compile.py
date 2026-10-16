@@ -4981,7 +4981,7 @@ def compile_coding_register(
             claims = coding.get(column, ())
             for period_index, (start, end) in enumerate(periods, 1):
                 case_id = f"{ref}/period/{period_index}"
-                source_windows = (
+                source_windows = tuple(
                     (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
                     for column_scope in column_scopes.get(column, ())
                     for lo, hi in (coding_scope_bounds(column_scope) or ())
@@ -5200,7 +5200,18 @@ def compile_coding_register(
                             + toml_inline(current.model_dump(mode="json")),
                         )
                 if not used:
-                    status, detail = "stale", "period has no column occurrence"
+                    status, detail = (
+                        "stale",
+                        "period has no column occurrence covering it without a gap; "
+                        "the column's occurrence windows are "
+                        + (
+                            ", ".join(
+                                f"{lo}..{hi}" for lo, hi in sorted(set(source_windows))
+                            )
+                            or "none"
+                        )
+                        + ".",
+                    )
                 if status != "matched":
                     diagnostics.append(
                         ResolutionDiagnostic(
