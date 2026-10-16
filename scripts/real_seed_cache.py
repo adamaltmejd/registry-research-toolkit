@@ -140,11 +140,14 @@ from keyed_cache import (
 
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = ".real-seed-cache"
-# Build entries kept: a main-tip baseline and one candidate (~1.4 GB each).
+# Entries kept per kind, most recently used first: room for the main-tip baseline and
+# several candidates, so one session's builds never evict an entry another session is
+# still queued to compare against (two evicted a needed baseline). At ~1.4 GB per build
+# and ~0.4 GB per resolve bundle that is ~15 GB at most.
 # simplify: evicts by entry count, not bytes; switch to a byte budget if entries grow
 # well past the catalog size. Prepare records (a few KB) are dropped only when they no
 # longer hold; prune them by age if the directory passes a few hundred.
-KEEP = 2
+KEEP = 8
 EXIT_CONFIG = 10  # reg-meta-build's exit for a diagnostic completion
 EXIT_AWAITING = 3
 EXIT_PROBE = 4

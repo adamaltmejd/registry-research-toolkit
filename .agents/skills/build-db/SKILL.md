@@ -46,14 +46,14 @@ without running anything, and diffing two keys shows why a lookup missed.
 Cached entries are shared and read-only. Use them in place as dbdiff or comparison
 inputs; never activate, release or modify them. Copy a database before writing to it.
 The cache lives under `$REG_REAL_SEED_CACHE`, else
-`${XDG_CACHE_HOME:-~/.cache}/reg-meta-real-seed`. It keeps the two most recently used
+`${XDG_CACHE_HOME:-~/.cache}/reg-meta-real-seed`. It keeps the eight most recently used
 build entries (about 1.4 GB each) and any entry used in the last 6 hours.
 
 A build also has a resolve key: the builder's own resolve-code fingerprint, `uv.lock`,
 the curation digest, the prepared pins, mode, registers and runtime, but not HEAD. The
 fingerprint and the key leave out the workspace's own version numbers, so a release bump
 commit still reuses its candidate's bundle. A full miss stores the resolve bundle beside
-the build entry (about 0.3–0.4 GB at real scale, two kept). A later build miss whose
+the build entry (about 0.3–0.4 GB at real scale, eight kept). A later build miss whose
 resolve key hits, such as one after a schema-, derive-, writer- or validator-only
 change, runs only `materialize-db` from that bundle, and its result says
 `"phased": true`. If `materialize-db` refuses the bundle, the cache drops it and builds
