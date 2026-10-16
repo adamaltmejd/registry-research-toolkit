@@ -860,12 +860,15 @@ source and auxiliary joins state neither, which `unresolved_flag` otherwise with
 occurrence (variable, variant, column, edition) with the same original-scope and prose
 guards as `[[errata.field]]`, guards both source flags as absent, and pins the native
 family's originals with `expected_evidence_sha256`; a changed original stales it at its
-locator. It emits two checked field changes on that occurrence. Flags reconcile over all
-of a variable's occurrences and support, so one stated pair decides them, and the
-existing rules still apply: a sensitivity claim from any source only ratchets up, and an
-identifier claim that disagrees reconciles to unknown and withholds the variable again.
-A later auxiliary flag is therefore never silently overridden, and no separate refusal
-is owed. Undeclared variables keep the `unresolved_flag` ratchet.
+locator. It emits two checked field changes on that occurrence. The column decides which
+owner it reaches: when a member's columns are split among owners, the entry decides only
+the owner of the column it names, so each split owner needs its own entry, and a sibling
+column's flags are never inferred (#1627). Flags reconcile over all of a variable's
+occurrences and support, so one stated pair decides them, and the existing rules still
+apply: a sensitivity claim from any source only ratchets up, and an identifier claim
+that disagrees reconciles to unknown and withholds the variable again. A later auxiliary
+flag is therefore never silently overridden, and no separate refusal is owed. Undeclared
+variables keep the `unresolved_flag` ratchet.
 
 Field entries may pin duplicate observations with `expected_records`, using complete
 original `RecordExpectation` alternatives. Except for the source-defined attribution
