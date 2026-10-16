@@ -1227,6 +1227,7 @@ def _overlaps_documenting_edition(
     context: ErrataVariantContext,
     selected: tuple[ErrataEditionBinding, ...],
     documented_corrected: bool,
+    delivered: tuple[ErrataEditionBinding, ...],
 ) -> bool:
     """Whether the declared column could share a period with a documented one (#1621).
 
@@ -1237,12 +1238,14 @@ def _overlaps_documenting_edition(
     cannot be shown disjoint, so they count as overlapping, as does a literal a
     checked correction touches (an `[[errata.occurrence_period]]` on it, or an
     `[[errata.field]]` column_name rename to it): the original records no longer
-    show where it is delivered.
+    show where it is delivered. The editions an `[[errata.delivered]]` entry adds
+    the literal to document it too (#1647): disjoint edition names can still
+    share a period.
     """
     if documented_corrected:
         return True
     documented = context.by_column.get(fold_column(entry.column), ())
-    if not documented:
+    if not documented and not delivered:
         return False
     if entry.versions is None and entry.holdings_period is None:
         return True
@@ -1256,7 +1259,9 @@ def _overlaps_documenting_edition(
         )
     else:
         keys = {edition.key for edition in selected}
-        if any(source_occurrence(record).edition_key in keys for record in documented):
+        if any(
+            source_occurrence(record).edition_key in keys for record in documented
+        ) or any(edition.key in keys for edition in delivered):
             return True
         claimed = ()
         for edition in selected:
@@ -1268,11 +1273,11 @@ def _overlaps_documenting_edition(
             if bounds is None:
                 return True
             claimed += bounds
-    for record in documented:
+    for scoped in (*documented, *delivered):
         bounds = coding_scope_bounds(
-            record.edition_period_scope
-            if record.edition_period_scope.kind != "not_applicable"
-            else record.edition_scope
+            scoped.edition_period_scope
+            if scoped.edition_period_scope.kind != "not_applicable"
+            else scoped.edition_scope
         )
         if bounds is None or any(
             lo <= other_hi and other_lo <= hi
@@ -1290,6 +1295,7 @@ def convert_column_entry(
     context: ErrataVariantContext,
     declared_flags: frozenset[str],
     documented_corrected: bool,
+    delivered_versions: frozenset[str] = frozenset(),
 ) -> ErrataConversion:
     """Retain supplied facts; the type is the curated ``data_type`` or unknown.
 
@@ -1303,6 +1309,8 @@ def convert_column_entry(
     columns use false for missing flags; curated values still win.
     Classification references remain declarations for common binding; canonical
     code memberships are never copied into these occurrences.
+    ``delivered_versions`` names the editions `[[errata.delivered]]` entries add
+    this column to on the variant; the entry must not share a period with them.
     """
     if not declared_flags <= {"is_identifier", "is_sensitive"}:
         raise ValueError("declared_flags must name original boolean declaration keys")
@@ -1315,7 +1323,12 @@ def convert_column_entry(
             f"missing column edition conversion bindings: {sorted(missing)!r}"
         )
     selected = tuple(edition for edition in editions if edition.name in names)
-    if _overlaps_documenting_edition(entry, context, selected, documented_corrected):
+    delivered = tuple(
+        edition for edition in editions if edition.name in delivered_versions
+    )
+    if _overlaps_documenting_edition(
+        entry, context, selected, documented_corrected, delivered
+    ):
         return ErrataConversion(None, ("column_now_documented",), ())
     references = {ref for edition in selected for ref in edition.support}
     if entry.versions is None:

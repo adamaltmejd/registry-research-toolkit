@@ -1,0 +1,64 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.99"
+slug = "v99"
+[[variable]]
+native_id = "1.5"
+slug = "v5"
+[[variable]]
+native_id = "1.6"
+slug = "v6"
+[[variable]]
+native_id = "1.Q"
+slug = "c-q"
+[[variable]]
+native_id = "1.R"
+slug = "c-r"
+
+[[errata.delivered]]
+variant = "people"
+column = "Q"
+versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:5}}
+evidence = "accepted delivery"
+noted = "2026-10-16"
+
+[[errata.delivered]]
+variant = "people"
+column = "R"
+versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:6}}
+evidence = "accepted delivery"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "people"
+column = "Q"
+name = "Q"
+definition = "Held"
+versions = ["2020-06-30"]
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "people"
+column = "R"
+name = "R"
+definition = "Held"
+versions = ["2022"]
+data_type = "integer"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-16"

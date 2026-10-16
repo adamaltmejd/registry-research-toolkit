@@ -6401,6 +6401,13 @@ def compile_errata(
                                     ),
                                 )
                             ),
+                            delivered_versions=frozenset(
+                                version
+                                for key, claim in delivered.items()
+                                if key[:3]
+                                == (register_id, variant_id, fold_column(row.column))
+                                for version in claim.versions
+                            ),
                         )
                         blockers, converted = result.blockers, result.case
                 if converted is None:

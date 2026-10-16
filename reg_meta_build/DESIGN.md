@@ -647,11 +647,13 @@ variant. So is a literal a checked correction touches, an `[[errata.occurrence_p
 on it or an `[[errata.field]]` `column_name` rename to it, since the original records no
 longer show where it is delivered. Periods compare edition-period scopes where an
 edition has one, so sub-annual editions of one year stay disjoint. A column entry and a
-`[[errata.delivered]]` entry may share one (register, variant, column) only with
-disjoint named `versions` (#1647): a delivered literal can carry another meaning in
-other editions; undated or `holdings_period` column entries beside a delivered one are
-refused. Its identity is `(register, column)`, so two variants of one register use the
-same variable identity. `source` records the evidence class; it does not change the
+`[[errata.delivered]]` entry may share one (register, variant, column) only with named
+`versions` (#1647): a delivered literal can carry another meaning in other editions. The
+delivered editions then count as documenting ones, so the column entry is refused
+(`column_now_documented`) when a period overlaps, even under a different edition name;
+undated or `holdings_period` column entries beside a delivered one are refused at load.
+Its identity is `(register, column)`, so two variants of one register use the same
+variable identity. `source` records the evidence class; it does not change the
 materialized rows.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
@@ -1398,7 +1400,9 @@ currencies or supplied absence leave that summary empty and emit a data warning 
 some positive unit is known. The builder never converts values or transfers a donor's
 unit to a delivery. Contradictory units within the same physical column interval remain
 errors. Blank-column originals stay raw evidence and do not supply a physical unit
-window. Unit-only curation permissions are therefore unnecessary and rejected.
+window. Unit-only curation permissions are therefore unnecessary and rejected. An
+`[[errata.delivered]]` entry may state its own delivery's unit (#1646): a delivery fact
+the curator authors from the entry's evidence, not a permission and not inheritance.
 
 A checked `representation.delivery_metadata` decision permits only its explicitly listed
 text fields (`name`, `description`) to vary for one exact reviewed owner. Compilation
