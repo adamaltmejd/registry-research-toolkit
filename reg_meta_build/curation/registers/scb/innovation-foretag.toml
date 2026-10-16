@@ -12,6 +12,508 @@ native_id = "257"
 # has no such list; its co6x/co7x carry the 2004–2008 meaning under the same-name
 # rule, with an assumed-meaning caveat in each definition (#1603 batch-e D4).
 
+# #1603 batch-e: CIS2002 (2000-2002) cooperation matrix. SCB documents no 2000-2002 edition,
+# so the matrix cannot be activated (#1571); each delivered cell is its own variable. The partner
+# row carries the CIS2004 meaning and location column 1 is read as Sweden, both assumed; columns
+# 2-5 are undocumented (CIS2002 has five location columns, 2004/2006 four). Operator under
+# maintainer delegation 2026-10-16.
+
+[[errata.version]]
+variant = "_default"
+name = "2000 - 2002"
+evidence = "SWECOV holds CIS2002, the 2000-2002 innovation survey delivery; SCB's Registerinformation export documents innovation-foretag only from 2002 - 2004, so this round has no native edition. Added so the CIS2002 cooperation-matrix cells can be declared (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co11"
+data_type = "decimal"
+name = "Samarbete om innovation med andra företag inom koncernen, Sverige (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 1 (Andra företag inom koncernen) i Sverige under 2000–2002, enligt leverans. Betydelsen är antagen: partnerraden följer 2002–2004 års enkät (fråga 13) och platskolumn 1 antas vara Sverige som i alla dokumenterade omgångar; SCB dokumenterar ingen enkät för 2000–2002."
+data_warning = "The partner (row 1, other group enterprises) is assumed from the CIS2004 questionnaire, and location column 1 is assumed to be Sweden as in every documented wave; SCB documents no 2000-2002 questionnaire for this delivery."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co11 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning and location column 1 is read as Sweden. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co12"
+data_type = "decimal"
+name = "Samarbete om innovation med andra företag inom koncernen, platskolumn 2 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 1 (Andra företag inom koncernen) under 2000–2002, platskolumn 2, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 2 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 1, other group enterprises) is assumed from the CIS2004 questionnaire; the location of column 2 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co12 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 2 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co13"
+data_type = "decimal"
+name = "Samarbete om innovation med andra företag inom koncernen, platskolumn 3 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 1 (Andra företag inom koncernen) under 2000–2002, platskolumn 3, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 3 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 1, other group enterprises) is assumed from the CIS2004 questionnaire; the location of column 3 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co13 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 3 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co14"
+data_type = "decimal"
+name = "Samarbete om innovation med andra företag inom koncernen, platskolumn 4 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 1 (Andra företag inom koncernen) under 2000–2002, platskolumn 4, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 4 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 1, other group enterprises) is assumed from the CIS2004 questionnaire; the location of column 4 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co14 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 4 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co15"
+data_type = "decimal"
+name = "Samarbete om innovation med andra företag inom koncernen, platskolumn 5 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 1 (Andra företag inom koncernen) under 2000–2002, platskolumn 5, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 5 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 1, other group enterprises) is assumed from the CIS2004 questionnaire; the location of column 5 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co15 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 5 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "CO21"
+data_type = "decimal"
+name = "Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, Sverige (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 2 (Leverantörer av utrustning, material, komponenter eller programvara) i Sverige under 2000–2002, enligt leverans. Betydelsen är antagen: partnerraden följer 2002–2004 års enkät (fråga 13) och platskolumn 1 antas vara Sverige som i alla dokumenterade omgångar; SCB dokumenterar ingen enkät för 2000–2002."
+data_warning = "The partner (row 2, suppliers of equipment, materials, components or software) is assumed from the CIS2004 questionnaire, and location column 1 is assumed to be Sweden as in every documented wave; SCB documents no 2000-2002 questionnaire for this delivery."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds CO21 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning and location column 1 is read as Sweden. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co22"
+data_type = "decimal"
+name = "Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, platskolumn 2 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 2 (Leverantörer av utrustning, material, komponenter eller programvara) under 2000–2002, platskolumn 2, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 2 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 2, suppliers of equipment, materials, components or software) is assumed from the CIS2004 questionnaire; the location of column 2 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co22 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 2 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co23"
+data_type = "decimal"
+name = "Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, platskolumn 3 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 2 (Leverantörer av utrustning, material, komponenter eller programvara) under 2000–2002, platskolumn 3, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 3 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 2, suppliers of equipment, materials, components or software) is assumed from the CIS2004 questionnaire; the location of column 3 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co23 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 3 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co24"
+data_type = "decimal"
+name = "Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, platskolumn 4 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 2 (Leverantörer av utrustning, material, komponenter eller programvara) under 2000–2002, platskolumn 4, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 4 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 2, suppliers of equipment, materials, components or software) is assumed from the CIS2004 questionnaire; the location of column 4 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co24 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 4 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co25"
+data_type = "decimal"
+name = "Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, platskolumn 5 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 2 (Leverantörer av utrustning, material, komponenter eller programvara) under 2000–2002, platskolumn 5, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 5 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 2, suppliers of equipment, materials, components or software) is assumed from the CIS2004 questionnaire; the location of column 5 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co25 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 5 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "CO31"
+data_type = "decimal"
+name = "Samarbete om innovation med kunder, Sverige (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 3 (Kunder) i Sverige under 2000–2002, enligt leverans. Betydelsen är antagen: partnerraden följer 2002–2004 års enkät (fråga 13) och platskolumn 1 antas vara Sverige som i alla dokumenterade omgångar; SCB dokumenterar ingen enkät för 2000–2002."
+data_warning = "The partner (row 3, clients or customers) is assumed from the CIS2004 questionnaire, and location column 1 is assumed to be Sweden as in every documented wave; SCB documents no 2000-2002 questionnaire for this delivery."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds CO31 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning and location column 1 is read as Sweden. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co32"
+data_type = "decimal"
+name = "Samarbete om innovation med kunder, platskolumn 2 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 3 (Kunder) under 2000–2002, platskolumn 2, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 2 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 3, clients or customers) is assumed from the CIS2004 questionnaire; the location of column 2 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co32 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 2 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co33"
+data_type = "decimal"
+name = "Samarbete om innovation med kunder, platskolumn 3 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 3 (Kunder) under 2000–2002, platskolumn 3, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 3 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 3, clients or customers) is assumed from the CIS2004 questionnaire; the location of column 3 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co33 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 3 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co34"
+data_type = "decimal"
+name = "Samarbete om innovation med kunder, platskolumn 4 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 3 (Kunder) under 2000–2002, platskolumn 4, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 4 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 3, clients or customers) is assumed from the CIS2004 questionnaire; the location of column 4 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co34 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 4 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co35"
+data_type = "decimal"
+name = "Samarbete om innovation med kunder, platskolumn 5 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 3 (Kunder) under 2000–2002, platskolumn 5, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 5 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 3, clients or customers) is assumed from the CIS2004 questionnaire; the location of column 5 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co35 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 5 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "CO41"
+data_type = "decimal"
+name = "Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, Sverige (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 4 (Konkurrenter eller andra företag inom samma bransch) i Sverige under 2000–2002, enligt leverans. Betydelsen är antagen: partnerraden följer 2002–2004 års enkät (fråga 13) och platskolumn 1 antas vara Sverige som i alla dokumenterade omgångar; SCB dokumenterar ingen enkät för 2000–2002."
+data_warning = "The partner (row 4, competitors or other enterprises in the same sector) is assumed from the CIS2004 questionnaire, and location column 1 is assumed to be Sweden as in every documented wave; SCB documents no 2000-2002 questionnaire for this delivery."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds CO41 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning and location column 1 is read as Sweden. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co42"
+data_type = "decimal"
+name = "Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, platskolumn 2 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 4 (Konkurrenter eller andra företag inom samma bransch) under 2000–2002, platskolumn 2, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 2 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 4, competitors or other enterprises in the same sector) is assumed from the CIS2004 questionnaire; the location of column 2 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co42 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 2 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co43"
+data_type = "decimal"
+name = "Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, platskolumn 3 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 4 (Konkurrenter eller andra företag inom samma bransch) under 2000–2002, platskolumn 3, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 3 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 4, competitors or other enterprises in the same sector) is assumed from the CIS2004 questionnaire; the location of column 3 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co43 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 3 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co44"
+data_type = "decimal"
+name = "Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, platskolumn 4 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 4 (Konkurrenter eller andra företag inom samma bransch) under 2000–2002, platskolumn 4, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 4 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 4, competitors or other enterprises in the same sector) is assumed from the CIS2004 questionnaire; the location of column 4 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co44 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 4 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co45"
+data_type = "decimal"
+name = "Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, platskolumn 5 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 4 (Konkurrenter eller andra företag inom samma bransch) under 2000–2002, platskolumn 5, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 5 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 4, competitors or other enterprises in the same sector) is assumed from the CIS2004 questionnaire; the location of column 5 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co45 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 5 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "CO51"
+data_type = "decimal"
+name = "Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, Sverige (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 5 (Konsulter, privata laboratorier eller privata FoU-institut) i Sverige under 2000–2002, enligt leverans. Betydelsen är antagen: partnerraden följer 2002–2004 års enkät (fråga 13) och platskolumn 1 antas vara Sverige som i alla dokumenterade omgångar; SCB dokumenterar ingen enkät för 2000–2002."
+data_warning = "The partner (row 5, consultants, private laboratories or private r&d institutes) is assumed from the CIS2004 questionnaire, and location column 1 is assumed to be Sweden as in every documented wave; SCB documents no 2000-2002 questionnaire for this delivery."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds CO51 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning and location column 1 is read as Sweden. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co52"
+data_type = "decimal"
+name = "Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, platskolumn 2 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 5 (Konsulter, privata laboratorier eller privata FoU-institut) under 2000–2002, platskolumn 2, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 2 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 5, consultants, private laboratories or private r&d institutes) is assumed from the CIS2004 questionnaire; the location of column 2 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co52 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 2 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co53"
+data_type = "decimal"
+name = "Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, platskolumn 3 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 5 (Konsulter, privata laboratorier eller privata FoU-institut) under 2000–2002, platskolumn 3, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 3 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 5, consultants, private laboratories or private r&d institutes) is assumed from the CIS2004 questionnaire; the location of column 3 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co53 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 3 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co54"
+data_type = "decimal"
+name = "Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, platskolumn 4 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 5 (Konsulter, privata laboratorier eller privata FoU-institut) under 2000–2002, platskolumn 4, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 4 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 5, consultants, private laboratories or private r&d institutes) is assumed from the CIS2004 questionnaire; the location of column 4 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co54 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 4 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "Co55"
+data_type = "decimal"
+name = "Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, platskolumn 5 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 5 (Konsulter, privata laboratorier eller privata FoU-institut) under 2000–2002, platskolumn 5, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 5 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 5, consultants, private laboratories or private r&d institutes) is assumed from the CIS2004 questionnaire; the location of column 5 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds Co55 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 5 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "CO61"
+data_type = "decimal"
+name = "Samarbete om innovation med universitet eller högskolor, Sverige (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 6 (Universitet eller högskolor) i Sverige under 2000–2002, enligt leverans. Betydelsen är antagen: partnerraden följer 2002–2004 års enkät (fråga 13) och platskolumn 1 antas vara Sverige som i alla dokumenterade omgångar; SCB dokumenterar ingen enkät för 2000–2002."
+data_warning = "The partner (row 6, universities or higher education institutions) is assumed from the CIS2004 questionnaire, and location column 1 is assumed to be Sweden as in every documented wave; SCB documents no 2000-2002 questionnaire for this delivery."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds CO61 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning and location column 1 is read as Sweden. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co62"
+data_type = "decimal"
+name = "Samarbete om innovation med universitet eller högskolor, platskolumn 2 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 6 (Universitet eller högskolor) under 2000–2002, platskolumn 2, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 2 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 6, universities or higher education institutions) is assumed from the CIS2004 questionnaire; the location of column 2 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co62 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 2 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co63"
+data_type = "decimal"
+name = "Samarbete om innovation med universitet eller högskolor, platskolumn 3 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 6 (Universitet eller högskolor) under 2000–2002, platskolumn 3, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 3 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 6, universities or higher education institutions) is assumed from the CIS2004 questionnaire; the location of column 3 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co63 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 3 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co64"
+data_type = "decimal"
+name = "Samarbete om innovation med universitet eller högskolor, platskolumn 4 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 6 (Universitet eller högskolor) under 2000–2002, platskolumn 4, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 4 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 6, universities or higher education institutions) is assumed from the CIS2004 questionnaire; the location of column 4 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co64 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 4 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co65"
+data_type = "decimal"
+name = "Samarbete om innovation med universitet eller högskolor, platskolumn 5 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 6 (Universitet eller högskolor) under 2000–2002, platskolumn 5, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 5 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 6, universities or higher education institutions) is assumed from the CIS2004 questionnaire; the location of column 5 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co65 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 5 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "CO71"
+data_type = "decimal"
+name = "Samarbete om innovation med offentliga forskningsinstitut, Sverige (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 7 (Offentliga forskningsinstitut) i Sverige under 2000–2002, enligt leverans. Betydelsen är antagen: partnerraden följer 2002–2004 års enkät (fråga 13) och platskolumn 1 antas vara Sverige som i alla dokumenterade omgångar; SCB dokumenterar ingen enkät för 2000–2002."
+data_warning = "The partner (row 7, government or public research institutes) is assumed from the CIS2004 questionnaire, and location column 1 is assumed to be Sweden as in every documented wave; SCB documents no 2000-2002 questionnaire for this delivery."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds CO71 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning and location column 1 is read as Sweden. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co72"
+data_type = "decimal"
+name = "Samarbete om innovation med offentliga forskningsinstitut, platskolumn 2 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 7 (Offentliga forskningsinstitut) under 2000–2002, platskolumn 2, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 2 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 7, government or public research institutes) is assumed from the CIS2004 questionnaire; the location of column 2 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co72 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 2 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co73"
+data_type = "decimal"
+name = "Samarbete om innovation med offentliga forskningsinstitut, platskolumn 3 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 7 (Offentliga forskningsinstitut) under 2000–2002, platskolumn 3, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 3 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 7, government or public research institutes) is assumed from the CIS2004 questionnaire; the location of column 3 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co73 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 3 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co74"
+data_type = "decimal"
+name = "Samarbete om innovation med offentliga forskningsinstitut, platskolumn 4 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 7 (Offentliga forskningsinstitut) under 2000–2002, platskolumn 4, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 4 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 7, government or public research institutes) is assumed from the CIS2004 questionnaire; the location of column 4 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co74 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 4 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "_default"
+column = "co75"
+data_type = "decimal"
+name = "Samarbete om innovation med offentliga forskningsinstitut, platskolumn 5 (CIS2002)"
+definition = "Samarbete om innovationsverksamhet med partner 7 (Offentliga forskningsinstitut) under 2000–2002, platskolumn 5, enligt leverans. Partnerraden är antagen från 2002–2004 års enkät (fråga 13); vilken lokalisering kolumn 5 avser är inte dokumenterat, eftersom CIS2002 levererar fem platskolumner där 2004 och 2006 har fyra."
+data_warning = "The partner (row 7, government or public research institutes) is assumed from the CIS2004 questionnaire; the location of column 5 is not documented. CIS2002 delivers five location columns where 2004/2006 have four."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds co75 in CIS2002 (storage float). SCB documents no 2000-2002 innovation survey edition or questionnaire; the nearest documented wave, 2002-2004 (UF0315 Dokumentation av statistikens framtagning 2002-2004, questionnaire question 13), has the same seven partner rows but four location columns, so the partner row is carried with an assumed-meaning warning while location column 5 stays undocumented. No code list is asserted. (#1603 batch-e; Operator under maintainer delegation 2026-10-16; #1571.)"
+noted = "2026-10-16"
+
 # scb/innovation-foretag [[errata.delivered]] candidates were computed 2026-09-12
 # against SCB's raw Registerinformation export; folded duplicate columns
 # are merged with their version lists unioned.
@@ -13402,3 +13904,144 @@ slug = "emp2014"
 [[variable]]
 native_id = "257.emp2012"
 slug = "emp2012"
+
+
+[[variable]]
+native_id = "257.co11"
+slug = "cis2002-samarbete-koncernforetag-sverige"
+
+[[variable]]
+native_id = "257.co12"
+slug = "cis2002-samarbete-koncernforetag-platskolumn-2"
+
+[[variable]]
+native_id = "257.co13"
+slug = "cis2002-samarbete-koncernforetag-platskolumn-3"
+
+[[variable]]
+native_id = "257.co14"
+slug = "cis2002-samarbete-koncernforetag-platskolumn-4"
+
+[[variable]]
+native_id = "257.co15"
+slug = "cis2002-samarbete-koncernforetag-platskolumn-5"
+
+[[variable]]
+native_id = "257.CO21"
+slug = "cis2002-samarbete-leverantorer-sverige"
+
+[[variable]]
+native_id = "257.co22"
+slug = "cis2002-samarbete-leverantorer-platskolumn-2"
+
+[[variable]]
+native_id = "257.co23"
+slug = "cis2002-samarbete-leverantorer-platskolumn-3"
+
+[[variable]]
+native_id = "257.co24"
+slug = "cis2002-samarbete-leverantorer-platskolumn-4"
+
+[[variable]]
+native_id = "257.co25"
+slug = "cis2002-samarbete-leverantorer-platskolumn-5"
+
+[[variable]]
+native_id = "257.CO31"
+slug = "cis2002-samarbete-kunder-sverige"
+
+[[variable]]
+native_id = "257.co32"
+slug = "cis2002-samarbete-kunder-platskolumn-2"
+
+[[variable]]
+native_id = "257.co33"
+slug = "cis2002-samarbete-kunder-platskolumn-3"
+
+[[variable]]
+native_id = "257.co34"
+slug = "cis2002-samarbete-kunder-platskolumn-4"
+
+[[variable]]
+native_id = "257.co35"
+slug = "cis2002-samarbete-kunder-platskolumn-5"
+
+[[variable]]
+native_id = "257.CO41"
+slug = "cis2002-samarbete-konkurrenter-sverige"
+
+[[variable]]
+native_id = "257.co42"
+slug = "cis2002-samarbete-konkurrenter-platskolumn-2"
+
+[[variable]]
+native_id = "257.co43"
+slug = "cis2002-samarbete-konkurrenter-platskolumn-3"
+
+[[variable]]
+native_id = "257.co44"
+slug = "cis2002-samarbete-konkurrenter-platskolumn-4"
+
+[[variable]]
+native_id = "257.co45"
+slug = "cis2002-samarbete-konkurrenter-platskolumn-5"
+
+[[variable]]
+native_id = "257.CO51"
+slug = "cis2002-samarbete-konsulter-sverige"
+
+[[variable]]
+native_id = "257.co52"
+slug = "cis2002-samarbete-konsulter-platskolumn-2"
+
+[[variable]]
+native_id = "257.co53"
+slug = "cis2002-samarbete-konsulter-platskolumn-3"
+
+[[variable]]
+native_id = "257.co54"
+slug = "cis2002-samarbete-konsulter-platskolumn-4"
+
+[[variable]]
+native_id = "257.Co55"
+slug = "cis2002-samarbete-konsulter-platskolumn-5"
+
+[[variable]]
+native_id = "257.CO61"
+slug = "cis2002-samarbete-universitet-sverige"
+
+[[variable]]
+native_id = "257.co62"
+slug = "cis2002-samarbete-universitet-platskolumn-2"
+
+[[variable]]
+native_id = "257.co63"
+slug = "cis2002-samarbete-universitet-platskolumn-3"
+
+[[variable]]
+native_id = "257.co64"
+slug = "cis2002-samarbete-universitet-platskolumn-4"
+
+[[variable]]
+native_id = "257.co65"
+slug = "cis2002-samarbete-universitet-platskolumn-5"
+
+[[variable]]
+native_id = "257.CO71"
+slug = "cis2002-samarbete-offentlig-forskning-sverige"
+
+[[variable]]
+native_id = "257.co72"
+slug = "cis2002-samarbete-offentlig-forskning-platskolumn-2"
+
+[[variable]]
+native_id = "257.co73"
+slug = "cis2002-samarbete-offentlig-forskning-platskolumn-3"
+
+[[variable]]
+native_id = "257.co74"
+slug = "cis2002-samarbete-offentlig-forskning-platskolumn-4"
+
+[[variable]]
+native_id = "257.co75"
+slug = "cis2002-samarbete-offentlig-forskning-platskolumn-5"
