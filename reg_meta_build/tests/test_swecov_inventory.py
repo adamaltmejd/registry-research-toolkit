@@ -185,29 +185,52 @@ def test_curated_pivot_members_map_with_their_index(
 def test_member_decision_with_two_mappings_is_refused(
     tmp_path: Path, flavored_db: Path
 ) -> None:
-    """A member column carries one mapping, so a member decision naming two (here
-    the 2020 and 2021 year members of one column) is refused when the spec loads,
-    naming the column and the count. Fails if the refusal goes: the generator
-    then checks each mapping against the last one's period, drops the other, and
-    emits one mapping without error."""
-    mapping = (
-        '{{ register_variant = "inera/bestallda-prover/_default", '
-        'variable = "inera/bestallda-prover/t-kolumn", representation = "T_kolumn", '
-        "member = {{ year = {year} }} }}"
-    )
+    """A member column carries one mapping, so a member decision naming two is
+    refused when the spec loads, naming the column and the count. The two are the
+    silent-drop shape: year members 2020 and 2021 on two admissible variants whose
+    owners are documented only in their own year. Fails if the refusal goes: the
+    generator then checks both mappings against the last one's period, drops the
+    2020 mapping, and emits the 2021 one without error. The owners are inserted as
+    DB rows, like the rest of this harness's fixtures (#1654)."""
+    db = tmp_path / "candidate.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, "
+            "name, slug) VALUES (905, 901, 'Andra', 'andra')"
+        )
+        conn.execute(
+            "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
+            "VALUES (921,901,'hushall','hushall','Hushall')"
+        )
+        for variant, year in ((902, 2020), (905, 2021)):
+            conn.execute(
+                "INSERT INTO variable_state(state_id,variable_id,register_variant_id,"
+                "valid_from,valid_to,delivery_column_name) VALUES ((SELECT "
+                "COALESCE(MAX(state_id), 0) + 1 FROM variable_state),921,?,?,?,"
+                "'Hushallsid')",
+                (variant, f"{year}-01-01", f"{year}-12-31"),
+            )
+    variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/andra")
     decisions = (
-        '[[column]]\ncolumn = "T_kolumn"\nmappings = ['
-        + ", ".join(mapping.format(year=year) for year in (2020, 2021))
+        '[[column]]\ncolumn = "Hushallsid"\nmappings = ['
+        + ", ".join(
+            f'{{ register_variant = "{variant}", '
+            'variable = "inera/bestallda-prover/hushall", '
+            f'representation = "Hushallsid", member = {{ year = {year} }} }}'
+            for variant, year in zip(variants, (2020, 2021), strict=True)
+        )
         + ']\nreason = "reviewed pivot member"\n'
     )
 
-    with pytest.raises(RegMetaError, match="'T_kolumn' names 2") as refused:
+    with pytest.raises(RegMetaError, match="'Hushallsid' names 2") as refused:
         _run_inventory(
             tmp_path,
-            flavored_db,
+            db,
             "T",
-            ["T_kolumn"],
+            ["Hushallsid"],
             edition="{ from = 2020, to = 2021 }",
+            variants=variants,
             decisions=decisions,
         )
     assert refused.value.code == "steward_spec_invalid"
