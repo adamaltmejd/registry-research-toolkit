@@ -12224,3 +12224,331 @@ slug = "lan-foretag"
 [[variable]]
 native_id = "258.IGOV"
 slug = "igov"
+
+# #1603 batch-e: SWECOV-delivered columns whose source meaning is ambiguous are minted
+# as their own variables, with the candidate meanings named in data_warning
+# (maintainer rule 2026-10-16: ambiguity is not a hold reason; never pick a candidate).
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "AWSEU"
+data_type = "text"
+name = "AWSEU (enligt leverans)"
+definition = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AWSEU till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 34111, \"Tog emot beställningar via webbplats eller app från kunder i övriga EU\" (2015, exkl. EDI-beställningar); (2) SCB-variabel 19119, \"Tog emot beställningar via en webbplats eller app från kunder i övriga EU\" (2017–2024); (3) SCB-variabel 19120, \"Tog emot beställningar via webbplats eller app från kunder i resten av världen\" (2013, då SCB:s export knyter AWSEU till frågan om kunder i resten av världen). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2011"]
+source = "steward-holdings"
+evidence = "SWECOV holds AWSEU in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSEU with a verified native-question link, and later years attach the name to different questions (19120 in 2013; 34111 in 2015; 19119 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s AWSEU kan avse webbeställningar från kunder i övriga EU eller i resten av världen; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "AWSHM"
+data_type = "text"
+name = "AWSHM (enligt leverans)"
+definition = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AWSHM till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 34106, \"Tog emot beställningar via webbplats eller app från kunder i Sverige\" (2015, exkl. EDI-beställningar); (2) SCB-variabel 19121, \"Tog emot beställningar via en webbplats eller app från kunder i Sverige\" (2017–2024); (3) SCB-variabel 19119, \"Tog emot beställningar via en webbplats eller app från kunder i övriga EU\" (2013, då SCB:s export knyter AWSHM till frågan om kunder i övriga EU). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2011"]
+source = "steward-holdings"
+evidence = "SWECOV holds AWSHM in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSHM with a verified native-question link, and later years attach the name to different questions (19119 in 2013; 34106 in 2015; 19121 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s AWSHM kan avse webbeställningar från kunder i Sverige eller i övriga EU; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "AWSWW"
+data_type = "text"
+name = "AWSWW (enligt leverans)"
+definition = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AWSWW till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 34110, \"Tog emot beställningar via webbplats eller app från kunder i övriga världen\" (2015, exkl. EDI-beställningar); (2) SCB-variabel 19120, \"Tog emot beställningar via webbplats eller app från kunder i resten av världen\" (2017–2024); (3) SCB-variabel 19121, \"Tog emot beställningar via en webbplats eller app från kunder i Sverige\" (2013, då SCB:s export knyter AWSWW till frågan om kunder i Sverige). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2011"]
+source = "steward-holdings"
+evidence = "SWECOV holds AWSWW in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSWW with a verified native-question link, and later years attach the name to different questions (19121 in 2013; 34110 in 2015; 19120 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s AWSWW kan avse webbeställningar från kunder i resten av världen eller i Sverige; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "AXSEU"
+data_type = "text"
+name = "AXSEU (enligt leverans)"
+definition = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AXSEU till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26893, \"Tog emot EDI-beställningar från kunder från övriga EU\" (2013); (2) SCB-variabel 34108, \"Tog emot beställningar via EDI från kunder i övriga EU\" (2015–2021, exkl. beställningar via webbplats eller app). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2011"]
+source = "steward-holdings"
+evidence = "SWECOV holds AXSEU in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSEU with a verified native-question link, and later years attach the name to two questions (26893 in 2013; 34108 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s AXSEU kan avse EDI-beställningar från kunder i övriga EU enligt 2013 års fråga (26893) eller enligt frågan från 2015 (34108); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "AXSHM"
+data_type = "text"
+name = "AXSHM (enligt leverans)"
+definition = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AXSHM till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26892, \"Tog emot EDI-beställningar från kunder i Sverige\" (2013); (2) SCB-variabel 34109, \"Tog emot beställningar via EDI från kunder i Sverige\" (2015–2021, exkl. beställningar via webbplats eller app). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2011"]
+source = "steward-holdings"
+evidence = "SWECOV holds AXSHM in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSHM with a verified native-question link, and later years attach the name to two questions (26892 in 2013; 34109 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s AXSHM kan avse EDI-beställningar från kunder i Sverige enligt 2013 års fråga (26892) eller enligt frågan från 2015 (34109); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "AXSWW"
+data_type = "text"
+name = "AXSWW (enligt leverans)"
+definition = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AXSWW till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26894, \"Tog emot EDI-beställningar från kunder i resten av världen\" (2013); (2) SCB-variabel 34107, \"Tog emot beställningar via EDI från kunder i övriga världen\" (2015–2021, exkl. beställningar via webbplats eller app). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2011"]
+source = "steward-holdings"
+evidence = "SWECOV holds AXSWW in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSWW with a verified native-question link, and later years attach the name to two questions (26894 in 2013; 34107 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s AXSWW kan avse EDI-beställningar från kunder i resten av världen enligt 2013 års fråga (26894) eller enligt frågan från 2015 (34107); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "FIXBB"
+data_type = "text"
+name = "FIXBB (enligt leverans)"
+definition = "SCB:s dokumentation knyter kolumnnamnet FIXBB till två frågor 2017 och 2018 och till ingen fråga 2016. Kandidaterna är (1) SCB-variabel 15902, \"Internetanslutning via fast bredbandsanslutning via kabel-tv/fiber\" (frågetexten gäller anslutning via det fasta telefonnätet med ADSL eller annan DSL; kod 9 = inte svarat); (2) SCB-variabel 30783, \"Använder fast bredbandsanslutning till internet\" (all slags fast bredband, t.ex. DSL, fiber eller kabel; kod 9 = ska ej svara). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd. Lagringstypen är varchar 2016–2017 och float 2018; variabeln anges som text."
+is_sensitive = false
+is_identifier = false
+versions = ["2016", "2017", "2018"]
+source = "steward-holdings"
+evidence = "SWECOV holds FIXBB in ITftg_Mikro_2016..2018 and ITftg_Stora_2016..2018. Previously unmapped because two source questions claim FIXBB in 2017 and 2018 (15902: DSL through the telephone network; 30783: any fixed broadband), both using code 9 with different meanings (not answered vs should not answer), and the catalog has no supported delivery for FIXBB in 2016. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s FIXBB kan avse DSL-anslutning via telefonnätet (15902) eller all slags fast bredbandsanslutning (30783), med olika betydelse för kod 9; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "GDIST"
+data_type = "text"
+name = "GDIST (enligt leverans)"
+definition = "SCB:s dokumentation för 2009–2012 knyter inte kolumnnamnet GDIST till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 19132, \"Sysselsatta som regelbundet arbetar utanför företaget\" (2013–2014); (2) SCB-variabel 38332, \"Anställda arbetar regelbundet utanför företaget\" (2015 och 2017–2020). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2009", "2010", "2011", "2012"]
+source = "steward-holdings"
+evidence = "SWECOV holds GDIST in ITftg_2009..ITftg_2012. Previously unmapped because the 2009–2012 business-survey metadata contain no exact literal GDIST with a verified native-question link, and later years attach the name to two questions (19132 in 2013–2014; 38332 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s GDIST kan avse sysselsatta (19132) eller anställda (38332) som regelbundet arbetar utanför företaget; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "GSOLOTH"
+data_type = "text"
+name = "GSOLOTH (enligt leverans)"
+definition = "SCB:s dokumentation knyter kolumnnamnet GSOLOTH till två helt olika frågor 2017 och till ingen fråga 2012 och 2016. Kandidaterna är (1) SCB-variabel 38333, \"Använder företaget annan energibesparande it-lösning för att minska energiförbrukningen\" (2013–2014 och 2017–2020); (2) SCB-variabel 28818, \"Använde internet för att erbjuda varor eller tjänster i myndigheters elektroniska upphandlingssystem i övriga EU-länder\" (2015 och 2017). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2012", "2016", "2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds GSOLOTH in ITftg_2012, ITftg_Mikro_2016..2017 and ITftg_Stora_2016..2017. Previously unmapped because the 2017 export assigns GSOLOTH to both energy-saving IT solutions (38333) and electronic public procurement in other EU countries (28818), and the 2012 and 2016 metadata link GSOLOTH to no question (maintainer review 2026-10-01). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s GSOLOTH kan avse energibesparande it-lösningar (38333) eller elektronisk offentlig upphandling i övriga EU-länder (28818); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "GUSENRG"
+data_type = "text"
+name = "GUSENRG (enligt leverans)"
+definition = "SCB:s dokumentation för 2009–2012 och 2016 knyter inte kolumnnamnet GUSENRG till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 19139, \"Miljöpolicy för minskad energianvändning vid IT-användning\" (2013–2015); (2) SCB-variabel 38331, \"Miljöpolicy som innebär minskad energiförbrukning av it\" (2017–2020, med exempel som skärmsläckare och avstängda datorer). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2009", "2010", "2011", "2012", "2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds GUSENRG in ITftg_2009..ITftg_2012, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2009–2012 and 2016 metadata contain no exact literal GUSENRG with a verified native-question link, and later years attach the name to two questions (19139 in 2013–2015; 38331 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s GUSENRG kan avse miljöpolicy för minskad energianvändning vid it-användning enligt frågan 2013–2015 (19139) eller frågan från 2017 (38331); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "IGOV2PREU"
+data_type = "text"
+name = "IGOV2PREU (enligt leverans)"
+definition = "SCB:s dokumentation för 2011, 2012 och 2016 knyter inte kolumnnamnet IGOV2PREU till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26879, \"Lämnade anbud i myndigheters elektroniska upphandlingssystem i andra EU-länder än Sverige\" (2013, med referensår 2010 i definitionen); (2) SCB-variabel 28818, \"Använde internet för att erbjuda varor eller tjänster i myndigheters elektroniska upphandlingssystem i övriga EU-länder\" (2017–2018). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2011", "2012", "2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds IGOV2PREU in ITftg_2011, ITftg_2012 and ITftg_Stora_2016. Previously unmapped because the 2011, 2012 and 2016 metadata contain no exact literal IGOV2PREU with a verified native-question link, and later years attach the name to two questions (26879 in 2013; 28818 in 2017–2018). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s IGOV2PREU kan avse anbud i (26879) eller erbjudanden via (28818) myndigheters elektroniska upphandlingssystem i övriga EU-länder; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "INV3R_PAP"
+data_type = "text"
+name = "INV3R_PAP (enligt leverans)"
+definition = "SCB:s dokumentation knyter kolumnnamnet INV3R_PAP till två frågor 2017 och till ingen fråga 2014 och 2016. Kandidaterna är (1) SCB-variabel 35491, \"Andel mottagna elektroniska fakturor som kan processas automatiskt\" (andel av alla fakturor företaget tog emot); (2) SCB-variabel 38334, \"Andel mottagna e-fakturor som kan processas automatiskt i mottagarens it-system\" (andel av fakturor från andra företag och offentlig sektor under föregående år). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd. Lagringstypen är varchar i vissa tabeller och float i andra; variabeln anges som text."
+is_sensitive = false
+is_identifier = false
+versions = ["2014", "2016", "2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds INV3R_PAP in ITftg_Mikro_2014, ITftg_Mikro_2017 and ITftg_Stora_2014, 2016, 2017. Previously unmapped because the 2017 export assigns INV3R_PAP to native questions 35491 and 38334 with different supplier/denominator and reference-year wording, and the 2014 and 2016 metadata link INV3R_PAP to no question (maintainer review 2026-10-01). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s INV3R_PAP kan avse andel automatiskt processbara e-fakturor med olika avsändarkrets och referensår (35491 eller 38334); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "INV3R_PMP"
+data_type = "text"
+name = "INV3R_PMP (enligt leverans)"
+definition = "SCB:s dokumentation knyter kolumnnamnet INV3R_PMP till två frågor 2017 och till ingen fråga 2014 och 2016. Kandidaterna är (1) SCB-variabel 35490, \"Andel mottagna fakturor som inte kan processas automatiskt\" (pappersfakturor och e-fakturor som inte kan processas automatiskt, av alla mottagna fakturor); (2) SCB-variabel 38335, \"Andel mottagna e-fakturor och pappersfakturor som inte kan processas automatiskt i mottagarens it-system\" (andel av fakturor från företag och offentlig sektor under föregående år). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd. Lagringstypen är varchar i vissa tabeller och float i andra; variabeln anges som text."
+is_sensitive = false
+is_identifier = false
+versions = ["2014", "2016", "2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds INV3R_PMP in ITftg_Mikro_2014, ITftg_Mikro_2017 and ITftg_Stora_2014, 2016, 2017. Previously unmapped because the 2017 export assigns INV3R_PMP to native questions 35490 and 38335 with different supplier/denominator and reference-year wording, and the 2014 and 2016 metadata link INV3R_PMP to no question (maintainer review 2026-10-01). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s INV3R_PMP kan avse andel fakturor som inte kan processas automatiskt, med olika avsändarkrets och referensår (35490 eller 38335); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "PMD"
+data_type = "text"
+name = "PMD (enligt leverans)"
+definition = "SCB:s dokumentation för 2012 knyter inte kolumnnamnet PMD till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 28819, \"Tillhandahåller de anställda med bärbara enheter för företagsändamål som kan ansluta till internet via en mobil anslutning\" (2013); (2) SCB-variabel 25333, \"Använder mobil bredbandsanslutning via 3G- eller 4G-nätet\" (2019–2021). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2012"]
+source = "steward-holdings"
+evidence = "SWECOV holds PMD in ITftg_2012. Previously unmapped because the 2012 business-survey metadata contain no exact literal PMD with a verified native-question link, and later years attach the name to two questions (28819 in 2013; 25333 from 2019). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s PMD kan avse bärbara enheter med mobil anslutning till anställda (28819) eller mobil bredbandsanslutning via 3G/4G (25333); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "UTVEGANV2"
+data_type = "text"
+name = "UTVEGANV2 (enligt leverans)"
+definition = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet UTVEGANV2 till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 17641, \"Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning\" (2017); (2) SCB-variabel 38383, \"Andel av antalet årsverken som arbetar med programvaruutveckling som har karaktär av investering\" (2018). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds UTVEGANV2 in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the question represented by UTVEGANV2, and adjacent years attach the name to two questions (17641 in 2017; 38383 in 2018). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s UTVEGANV2 kan avse andel årsverken i programvaruutveckling för extern försäljning (17641) eller med karaktär av investering (38383); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "WEBACC"
+data_type = "text"
+name = "WEBACC (enligt leverans)"
+definition = "SCB:s dokumentation för 2008 och 2016 knyter inte kolumnnamnet WEBACC till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 16914, \"Produktkatalog eller prislista finns på företagets webbplats\" (2013–2021); (2) SCB-variabel 46822, \"På företagets webbplats erbjuds beskrivning av varor och/eller tjänster, prisinformation\" (2023 och 2025). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2008", "2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds WEBACC in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBACC with a verified native-question link, and later years attach the name to two questions (16914 in 2013–2021; 46822 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s WEBACC kan avse produktkatalog eller prislista (16914) eller beskrivning av varor och tjänster med prisinformation (46822) på företagets webbplats; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "WEBCTM"
+data_type = "text"
+name = "WEBCTM (enligt leverans)"
+definition = "SCB:s dokumentation för 2008 och 2016 knyter inte kolumnnamnet WEBCTM till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 16915, \"På företagets webbplats finns möjlighet för besökare att kundanpassa/designa produkter\" (2013–2021); (2) SCB-variabel 46823, \"På företagets webbplats erbjuds funktioner för att avgränsa en sökning på webbplatsen\" (2023). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2008", "2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds WEBCTM in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBCTM with a verified native-question link, and later years attach the name to two questions (16915 in 2013–2021; 46823 in 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s WEBCTM kan avse kundanpassning av produkter (16915) eller avgränsning av sökningar (46823) på företagets webbplats; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "WEBPER"
+data_type = "text"
+name = "WEBPER (enligt leverans)"
+definition = "SCB:s dokumentation för 2008 och 2016 knyter inte kolumnnamnet WEBPER till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 16919, \"På företagets webbplats finns möjlighet till individuellt anpassat innehåll för återkommande besökare\" (2013–2021); (2) SCB-variabel 46824, \"På företagets webbplats erbjuds igenkänning av kunder via inloggning och personanpassat innehåll\" (2023 och 2025). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2008", "2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds WEBPER in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBPER with a verified native-question link, and later years attach the name to two questions (16919 in 2013–2021; 46824 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s WEBPER kan avse individuellt anpassat innehåll för återkommande besökare (16919) eller kundigenkänning via inloggning (46824) på företagets webbplats; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[variable]]
+native_id = "258.AWSEU"
+slug = "awseu-enligt-leverans"
+
+[[variable]]
+native_id = "258.AWSHM"
+slug = "awshm-enligt-leverans"
+
+[[variable]]
+native_id = "258.AWSWW"
+slug = "awsww-enligt-leverans"
+
+[[variable]]
+native_id = "258.AXSEU"
+slug = "axseu-enligt-leverans"
+
+[[variable]]
+native_id = "258.AXSHM"
+slug = "axshm-enligt-leverans"
+
+[[variable]]
+native_id = "258.AXSWW"
+slug = "axsww-enligt-leverans"
+
+[[variable]]
+native_id = "258.FIXBB"
+slug = "fixbb-enligt-leverans"
+
+[[variable]]
+native_id = "258.GDIST"
+slug = "gdist-enligt-leverans"
+
+[[variable]]
+native_id = "258.GSOLOTH"
+slug = "gsoloth-enligt-leverans"
+
+[[variable]]
+native_id = "258.GUSENRG"
+slug = "gusenrg-enligt-leverans"
+
+[[variable]]
+native_id = "258.IGOV2PREU"
+slug = "igov2preu-enligt-leverans"
+
+[[variable]]
+native_id = "258.INV3R_PAP"
+slug = "inv3r-pap-enligt-leverans"
+
+[[variable]]
+native_id = "258.INV3R_PMP"
+slug = "inv3r-pmp-enligt-leverans"
+
+[[variable]]
+native_id = "258.PMD"
+slug = "pmd-enligt-leverans"
+
+[[variable]]
+native_id = "258.UTVEGANV2"
+slug = "utveganv2-enligt-leverans"
+
+[[variable]]
+native_id = "258.WEBACC"
+slug = "webacc-enligt-leverans"
+
+[[variable]]
+native_id = "258.WEBCTM"
+slug = "webctm-enligt-leverans"
+
+[[variable]]
+native_id = "258.WEBPER"
+slug = "webper-enligt-leverans"

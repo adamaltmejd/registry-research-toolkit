@@ -443,11 +443,6 @@ reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 729
 select_owner = true
 
 [[column]]
-column = "COOP_NO"
-tables = ["CIS2020"]
-unmap = "COOP_NO and COOP_OTH both exist in CIS2020. Source question 39102 names COOP_OTH, and the questionnaire separately includes no cooperation. The meaning of physical COOP_NO is not established."
-
-[[column]]
 column = "Co52"
 tables = ["CIS2010"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-consultants-other-europe", representation = "co52" }]
@@ -495,11 +490,6 @@ tables = ["CIS2008"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-consultants-other-countries", representation = "co55" }]
 reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "EMP"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[column]]
 column = "ENV_ENDEM"
@@ -808,11 +798,6 @@ column = "RRdInX"
 tables = ["CIS2002", "CIS2004", "CIS2006"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/utgifter-for-egen-fou", representation = "Q11a" }]
 reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
-
-[[column]]
-column = "STRAT"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[column]]
 column = "TurnIn"

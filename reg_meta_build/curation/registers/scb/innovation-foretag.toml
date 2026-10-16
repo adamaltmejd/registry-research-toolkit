@@ -14045,3 +14045,61 @@ slug = "cis2002-samarbete-offentlig-forskning-platskolumn-4"
 [[variable]]
 native_id = "257.co75"
 slug = "cis2002-samarbete-offentlig-forskning-platskolumn-5"
+
+# #1603 batch-e: SWECOV-delivered columns whose source meaning is ambiguous are minted
+# as their own variables, with the candidate meanings named in data_warning
+# (maintainer rule 2026-10-16: ambiguity is not a hold reason; never pick a candidate).
+
+[[errata.column]]
+variant = "_default"
+column = "COOP_NO"
+data_type = "decimal"
+name = "COOP_NO (enligt leverans)"
+definition = "I CIS2020 finns både COOP_NO och COOP_OTH. SCB:s dokumentation för 2020 knyter fråga 39102 till COOP_OTH, medan COOP_NO 2016–2018 användes för samma fråga. Kandidaterna är (1) SCB-variabel 39102, \"Samarbete inom övriga aktiviteter\" (samarbete med andra företag eller organisationer inom andra affärsrelaterade aktiviteter än innovation och FoU); (2) svarsalternativet om inget samarbete i 2020 års frågeblankett (saknar egen variabel i SCB:s export). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd. Lagringstypen är float; SCB dokumenterar fråga 39102 som text, så variabeln anges här som decimal efter lagringen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2020-2020"
+source = "steward-holdings"
+evidence = "SWECOV holds COOP_NO in CIS2020. Previously unmapped because COOP_NO and COOP_OTH both exist in CIS2020; source question 39102 names COOP_OTH, and the questionnaire separately includes a no-cooperation option, so the meaning of the delivered COOP_NO is not established. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s COOP_NO kan avse samarbete inom övriga aktiviteter (39102) eller frågeblankettens alternativ om inget samarbete; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "_default"
+column = "EMP"
+data_type = "decimal"
+name = "EMP (enligt leverans)"
+definition = "SCB:s källmetadata för 2002–2004 knyter inte kolumnnamnet EMP till någon fråga eller produktionsårgång. Det enda kandidatbegreppet i SCB:s export är SCB-variabel 690, \"Antal anställda\" (antal anställda personer hämtat från FDB, under namnet EMP i 2022–2024 års leveranser); att den levererade kolumnen har samma betydelse är inte fastställt. Lagringstypen är float; variabeln anges som decimal."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2002-2002"
+source = "steward-holdings"
+evidence = "SWECOV holds EMP in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2022. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s EMP i CIS2002 kan avse antal anställda (690), som kolumnnamnet betyder från 2022, men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilken årgång och källa värdet avser."
+
+[[errata.column]]
+variant = "_default"
+column = "STRAT"
+data_type = "decimal"
+name = "STRAT (enligt leverans)"
+definition = "SCB:s källmetadata för 2002–2004 knyter inte kolumnnamnet STRAT till någon fråga eller produktionsårgång. Det enda kandidatbegreppet i SCB:s export är SCB-variabel 462, \"Stratum\" (det stratum ett element tillhör vid stratifierat urval, under namnet STRAT i 2022–2024 års leveranser); att den levererade kolumnen har samma betydelse är inte fastställt. Lagringstypen är float; SCB dokumenterar senare omgångars STRAT som text, så variabeln anges här som decimal efter lagringen."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2002-2002"
+source = "steward-holdings"
+evidence = "SWECOV holds STRAT in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2022. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s STRAT i CIS2002 kan avse urvalsstratum (462), som kolumnnamnet betyder från 2022, men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilken stratifiering värdet följer."
+
+[[variable]]
+native_id = "257.COOP_NO"
+slug = "coop-no-enligt-leverans"
+
+[[variable]]
+native_id = "257.EMP"
+slug = "emp-enligt-leverans"
+
+[[variable]]
+native_id = "257.STRAT"
+slug = "strat-enligt-leverans"

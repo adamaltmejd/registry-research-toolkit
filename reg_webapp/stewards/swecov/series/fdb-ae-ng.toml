@@ -21,11 +21,3 @@ unmap = "Workplace join key of the näringsgren aspect table; scb/fdb/cfar-numme
 column = "P1105_Lopnr_cfarnr"
 tables = ["FDB_AE_Ng_2024"]
 unmap = "Workplace join key of the näringsgren aspect table; scb/fdb/cfar-nummer is orderable from FDB_AE_2024, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
-
-[[column]]
-column = "RangOrdning"
-unmap = "The accepted FDB export assigns this same annual field to ordinary-industry and statistical-industry native definitions (rank880/885; share881/887), both in the same AE variant and year. The AE_Ng table and neighboring ng field suggest an industry table but do not identify which statistical/registered ranking scheme the generic field uses. Preserve the physical holding and both source meanings; do not choose an owner from its table name alone. Exact review: Batch57-ambiguous20-owner-review.json. Maintainer authorizes preserving unsupported mappings as unavailable; no original column, year or source question is removed."
-
-[[column]]
-column = "tidomspct"
-unmap = "The accepted FDB export assigns this same annual field to ordinary-industry and statistical-industry native definitions (rank880/885; share881/887), both in the same AE variant and year. The AE_Ng table and neighboring ng field suggest an industry table but do not identify which statistical/registered ranking scheme the generic field uses. Preserve the physical holding and both source meanings; do not choose an owner from its table name alone. Exact review: Batch57-ambiguous20-owner-review.json. Maintainer authorizes preserving unsupported mappings as unavailable; no original column, year or source question is removed."
