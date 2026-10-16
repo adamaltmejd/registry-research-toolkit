@@ -8,4 +8,4 @@ edition = { from = 1990, to = 2024 }
 
 [[column]]
 column = "FodelseArManDag"
-unmap = "Literal source field retained; enriched delivery documentation does not establish a semantic owner."
+unmap = "Disclosure hold: the full date of birth makes persons easier to identify, so it is shared with caution and never by default; it stays unmapped in the SWECOV overlay (maintainer decision 2026-10-13, #1302; scope.toml sensitive_columns)."
