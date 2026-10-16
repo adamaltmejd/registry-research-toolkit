@@ -31,8 +31,7 @@ def test_warning_with_a_changed_payload_under_its_old_identity_is_refused(
     import json
     from pathlib import Path
 
-    from reg_meta_build.data_warnings import DataWarning
-    from reg_meta_build.source_evidence import canonical_sha256
+    from reg_meta_build.data_warnings import DataWarning, warning_identity
 
     fixture = DataWarning.model_validate_json(
         (Path(__file__).parent / "cases/holdings/warning/warning.json").read_text()
@@ -40,7 +39,7 @@ def test_warning_with_a_changed_payload_under_its_old_identity_is_refused(
     payload = fixture.model_dump(mode="json", exclude={"warning_id"})
     payload.update(register_fqid="scb/example")
     written = DataWarning.model_validate_json(
-        json.dumps({"warning_id": canonical_sha256(payload), **payload})
+        json.dumps({"warning_id": warning_identity(payload), **payload})
     )
     output = tmp_path / "reg_meta.db"
     with pytest.raises(ValidationError, match="identity"):

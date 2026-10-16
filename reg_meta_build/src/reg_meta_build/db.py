@@ -1699,7 +1699,8 @@ CREATE INDEX idx_variable_state_lineage_warning_consumer ON variable_state_linea
 -- stay in the build report. Each row holds its coordinates once: the reader derives
 -- the register and variable FQIDs and the variant slug from the ID columns, and the
 -- repeated summary and detail text lives in `data_warning_text`. `warning_id` is the
--- SHA-256 of the reconstructed warning, as 32 raw bytes. Rows are inserted in
+-- SHA-256 of the reconstructed warning with its curation pointers nulled
+-- (`data_warnings.warning_identity`), as 32 raw bytes. Rows are inserted in
 -- (register_id, variable_id, warning_id) order, so the rowid clusters a register's
 -- and a variable's warnings on adjacent pages.
 CREATE TABLE data_warning_text (

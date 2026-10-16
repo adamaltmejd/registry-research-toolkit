@@ -1598,6 +1598,14 @@ curator identity rationale; maintainer decision, #1296) never reach `data_warnin
 `validate_built_db` refuses an artifact that holds one or whose row does not hash to its
 `warning_id`.
 
+A `warning_id` hashes the warning with its curation pointers (`acknowledged_by`,
+`case_id`) set to null, because those name an entry by its array position: deleting or
+reordering an unrelated entry must not change the id, nor the reader's `warning_id`
+order (#1606). Warnings that differ only in their pointers are therefore one warning.
+Two `[[acknowledge]]` entries for owners of one shared source record give such twins,
+and the catalog keeps one, naming the least pointer. The build report's issues keep
+every entry.
+
 A written variable whose name is longer than the reader's 200-character search query cap
 is a `variable_name_over_search_cap` warning issue in the report ledger, never a refusal
 and never a catalog `data_warning` (#1261): the server cannot find it by exact name

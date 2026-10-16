@@ -1,0 +1,44 @@
+{
+  "projections": [
+    {
+      "table": "warnings",
+      "where": {
+        "register": "sample"
+      },
+      "fields": [
+        "variable",
+        "variant",
+        "column",
+        "valid_from",
+        "valid_to",
+        "code",
+        "detail",
+        "acknowledged_by"
+      ],
+      "match": "set",
+      "rows": [
+        [
+          null,
+          null,
+          null,
+          "2021-01-01",
+          "2021-12-31",
+          "missing_coding_period",
+          "Accepted while the 2021 delivery stays uncoded.",
+          "curation/registers/scb/sample.toml#/acknowledge/2"
+        ],
+        [
+          "other",
+          "people",
+          "OTHER",
+          "2021-01-01",
+          "2021-12-31",
+          "missing_coding_period",
+          "Accepted while OTHER stays uncoded.",
+          "curation/registers/scb/sample.toml#/acknowledge/1"
+        ]
+      ],
+      "note": "The twins are one register-wide warning naming entry 2, the least of 2 and 3; OTHER's own gap keeps its owner and entry 1."
+    }
+  ]
+}

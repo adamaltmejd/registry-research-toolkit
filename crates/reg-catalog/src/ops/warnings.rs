@@ -18,7 +18,8 @@ use crate::{Code, Error, Scope};
 /// `DataWarning`, reconstructed from its `data_warning` row.
 #[derive(Serialize, ToSchema)]
 pub struct DataWarning {
-    /// SHA-256 of the rest of the warning.
+    /// SHA-256 of the rest of the warning with `acknowledged_by` and `case_id`
+    /// set to null, so moving a curation entry never changes it.
     warning_id: String,
     register_fqid: String,
     variable_fqid: Option<String>,
@@ -35,7 +36,11 @@ pub struct DataWarning {
     fields: Vec<String>,
     refs: Vec<SourceRecordRef>,
     withheld_output: Vec<String>,
+    /// The curation entry that accepts the issue, by file and position. When
+    /// several entries yield the same warning, the least of them.
     acknowledged_by: Option<String>,
+    /// The curation entry the warning annotates, by file and position; the least
+    /// when several yield the same warning.
     case_id: Option<String>,
 }
 

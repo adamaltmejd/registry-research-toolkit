@@ -8,11 +8,8 @@
       "fields": [
         "locator"
       ],
-      "rows": [
-        [
-          "curation/registers/scb/sample.toml#/errata.delivered/1"
-        ]
-      ]
+      "rows": [],
+      "note": "The pasted pin is current: the entry is not stale."
     },
     {
       "table": "states",
@@ -27,8 +24,13 @@
         [
           "a",
           "2020-01-01"
+        ],
+        [
+          "a",
+          "2021-01-01"
         ]
-      ]
+      ],
+      "note": "The entry applies, so the 2021 blank row becomes column A under a, as in errata-delivered-blank-row-is-rewritten-and-owned-by-the-split."
     }
   ]
 }

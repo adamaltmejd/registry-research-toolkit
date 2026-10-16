@@ -1,0 +1,37 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry",
+        "detail": {
+          "contains": "expected_evidence_sha256 = \"a0f8a84e5a867be87b000ae52b4ad33081c688a521b3593cc83c76bc18dd853d\""
+        }
+      },
+      "fields": [
+        "locator"
+      ],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/errata.delivered/1"
+        ]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {
+        "column": "A"
+      },
+      "fields": [
+        "variable",
+        "valid_from"
+      ],
+      "rows": [
+        [
+          "a",
+          "2020-01-01"
+        ]
+      ]
+    }
+  ]
+}

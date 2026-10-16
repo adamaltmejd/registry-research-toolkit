@@ -2389,13 +2389,15 @@
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "description": "The curation entry that accepts the issue, by file and position. When\nseveral entries yield the same warning, the least of them."
           },
           "case_id": {
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "description": "The curation entry the warning annotates, by file and position; the least\nwhen several yield the same warning."
           },
           "code": {
             "type": "string"
@@ -2460,7 +2462,7 @@
           },
           "warning_id": {
             "type": "string",
-            "description": "SHA-256 of the rest of the warning."
+            "description": "SHA-256 of the rest of the warning with `acknowledged_by` and `case_id`\nset to null, so moving a curation entry never changes it."
           },
           "withheld_output": {
             "type": "array",

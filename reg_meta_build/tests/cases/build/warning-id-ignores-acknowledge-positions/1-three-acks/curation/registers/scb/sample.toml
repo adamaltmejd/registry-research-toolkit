@@ -1,0 +1,50 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.101.first"
+slug = "first"
+[[variable]]
+native_id = "1.101.second"
+slug = "second"
+[[variable]]
+native_id = "1.102"
+slug = "other"
+[[identity.partition]]
+variable = "1.101"
+columns = { First = "1.101.first", Second = "1.101.second" }
+columns_ref = "fixture"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/sample/other"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:121\", \"variable:102\", \"member:1004\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "Accepted while OTHER stays uncoded."
+evidence = "Synthetic fixture issue."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/sample/first"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:121\", \"variable:101\", \"member:1002\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "Accepted while the 2021 delivery stays uncoded."
+evidence = "Synthetic fixture issue."
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/sample/second"
+refs = ["{\"source\": \"scb-registerinformation\", \"semantic_record_key\": [\"register:1\", \"variant:10\", \"edition:121\", \"variable:101\", \"member:1002\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "Accepted while the 2021 delivery stays uncoded."
+evidence = "Synthetic fixture issue."

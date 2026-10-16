@@ -56,6 +56,7 @@ from reg_meta_build.curation_tree import CLASSIFICATION_INVALID, load_curation_t
 from reg_meta_build.data_warnings import (
     BUILD_ONLY_CODES,
     acknowledged_data_warnings,
+    keep_warning,
     scope_data_warnings,
 )
 from reg_meta_build.input_snapshot import _git, input_bundle_repository
@@ -1769,7 +1770,7 @@ def _resolve(
                 pending_source_issues.pop(key, None)
                 seen_scopes.add(outcome.key)
                 for warning in outcome.data_warnings:
-                    data_warnings[warning.warning_id] = warning
+                    keep_warning(data_warnings, warning)
                 acknowledged.update(outcome.acknowledged)
                 if outcome.strict_refusals:
                     # Only a diagnostic build counts one; a strict build raised.
@@ -2095,7 +2096,7 @@ def _resolve(
                     compiled.event_acknowledgements,
                     event_bindings.guarded_registers,
                 ):
-                    data_warnings[warning.warning_id] = warning
+                    keep_warning(data_warnings, warning)
                 resolved_metadata = resolve_metadata_dependencies(
                     source_events.metadata,
                     panel.variables,
@@ -2140,7 +2141,7 @@ def _resolve(
                     compiled.lineage_acknowledgements,
                     lineage_registers,
                 ):
-                    data_warnings[warning.warning_id] = warning
+                    keep_warning(data_warnings, warning)
                 if registers:
                     counts["skipped_curation"] = sum(
                         part.skipped

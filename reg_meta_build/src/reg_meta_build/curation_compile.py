@@ -111,6 +111,7 @@ from .source_curation import (
     _field_matches,
     acknowledgement_evidence_sha256,
     capture_expectations,
+    current_pins,
     documented_labels_match,
     evaluate_cases,
     evaluate_source_expectations,
@@ -6399,14 +6400,19 @@ def compile_errata(
                         )
                     )
                     continue
-                if isinstance(
-                    row, ErrataDeliveredEntry
-                ) and row.expected_evidence_sha256 != acknowledgement_evidence_sha256(
-                    context.records_for_refs(set(result.evidence_refs))
-                    + (
-                        donor_context.records_for_refs(set(result.evidence_refs))
-                        if donor_context is not None
-                        else ()
+                if isinstance(row, ErrataDeliveredEntry) and (
+                    row.expected_evidence_sha256
+                    != (
+                        pin := acknowledgement_evidence_sha256(
+                            context.records_for_refs(set(result.evidence_refs))
+                            + (
+                                donor_context.records_for_refs(
+                                    set(result.evidence_refs)
+                                )
+                                if donor_context is not None
+                                else ()
+                            )
+                        )
                     )
                 ):
                     statuses["stale"].append(case_id)
@@ -6415,7 +6421,8 @@ def compile_errata(
                             case_id,
                             subject,
                             "the documented column or its native target rows changed "
-                            "since review (expected_evidence_sha256)",
+                            "since review (expected_evidence_sha256)."
+                            + current_pins(pin, ()),
                             refs=result.evidence_refs,
                         )
                     )
