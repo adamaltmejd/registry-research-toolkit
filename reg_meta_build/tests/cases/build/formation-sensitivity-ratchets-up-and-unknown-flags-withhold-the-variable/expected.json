@@ -29,8 +29,9 @@
     },
     {
       "table": "issues",
-      "where": {"code": "stale_curation_entry"},
+      "where": {"code": "stale_curation_entry", "detail": {"contains": "Current pins: expected_evidence_sha256 = \"84abc060cc8981e6de4ebcbbef932a2d1b6cc76e4e24f4d26c0236642369f580\""}},
       "fields": ["locator"],
+      "note": "The stale refusal prints NOSUM's own family digest (member 108), the pin a curator re-reviewing it would paste, as errata.delivered's does since #1558.",
       "rows": [
         ["curation/registers/scb/sample.toml#/errata.flags/2"]
       ]
