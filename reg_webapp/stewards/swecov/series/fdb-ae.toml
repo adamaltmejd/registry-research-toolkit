@@ -128,3 +128,28 @@ column = "ng5"
 tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
 mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 5 } }]
 reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "tidomspct1"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1603", reason = "Wide-pivot slot 1 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held until a document settles the owner or the Operator rules otherwise." }
+
+[[column]]
+column = "tidomspct2"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1603", reason = "Wide-pivot slot 2 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held until a document settles the owner or the Operator rules otherwise." }
+
+[[column]]
+column = "tidomspct3"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1603", reason = "Wide-pivot slot 3 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held until a document settles the owner or the Operator rules otherwise." }
+
+[[column]]
+column = "tidomspct4"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1603", reason = "Wide-pivot slot 4 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held until a document settles the owner or the Operator rules otherwise." }
+
+[[column]]
+column = "tidomspct5"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1603", reason = "Wide-pivot slot 5 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held until a document settles the owner or the Operator rules otherwise." }
