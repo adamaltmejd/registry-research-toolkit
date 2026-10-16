@@ -45,26 +45,6 @@ edition = 2020
 partition = "stora"
 
 [[column]]
-column = "EMPIUSEPCT"
-tables = ["ITftg_Stora_2016"]
-unmap = "The supplied source records do not identify the exact question or native variable represented by physical EMPIUSEPCT in 2016. Similar question wording does not establish the delivery link."
-
-[[column]]
-column = "EMPMD1PCT"
-tables = ["ITftg_Stora_2016"]
-unmap = "The supplied source records do not identify the exact question or native variable represented by physical EMPMD1PCT in 2016. Similar question wording does not establish the delivery link."
-
-[[column]]
 column = "EMPMD1PCT"
 tables = ["ITftg_Stora_2017"]
 unmap = "Two source questions claim EMPMD1PCT in 2017: native 23393 describes mobile-phone 3G/4G internet use; native 28822 describes the share of employees supplied with other portable devices for mobile internet. The physical column does not identify which device definition or denominator applies."
-
-[[column]]
-column = "UTVSUP2"
-tables = ["ITftg_Stora_2017"]
-unmap = "The catalog has no supported delivery for physical UTVSUP2 in 2017. Available question metadata do not establish this exact column’s role for this year."
-
-[[column]]
-column = "WEBORD"
-tables = ["ITftg_Stora_2016"]
-unmap = "The supplied source records do not identify the exact question or native variable represented by physical WEBORD in 2016. Similar question wording does not establish the delivery link."

@@ -573,11 +573,6 @@ reason = "Physical CIS2016 follows its exact 2014 - 2016 questionnaire edition: 
 select_owner = true
 
 [[column]]
-column = "HO"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
-
-[[column]]
 column = "INITPS"
 tables = ["CIS2012"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/processinnovation-utvecklad-av-foretaget", representation = "INITPS" }]
@@ -711,11 +706,6 @@ mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "
 reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
 
 [[column]]
-column = "LILLAN"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
-
-[[column]]
 column = "Mareur"
 tables = ["CIS2004", "CIS2006"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/geografisk-marknad-eu-efta", representation = "Q2c" }]
@@ -810,11 +800,6 @@ column = "TurnMar"
 tables = ["CIS2002", "CIS2004", "CIS2006"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad", representation = "Q7a" }]
 reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
-
-[[column]]
-column = "WEIGHT"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[column]]
 column = "co11"

@@ -14103,3 +14103,59 @@ slug = "emp-enligt-leverans"
 [[variable]]
 native_id = "257.STRAT"
 slug = "strat-enligt-leverans"
+
+[[variable]]
+native_id = "257.HO"
+slug = "ho-enligt-leverans"
+
+[[variable]]
+native_id = "257.LILLAN"
+slug = "lillan-enligt-leverans"
+
+[[variable]]
+native_id = "257.WEIGHT"
+slug = "weight-enligt-leverans"
+
+# #1603 batch-e, unblocked by #1652: ambiguous literals beside an [[errata.delivered]] entry on disjoint versions.
+
+[[errata.column]]
+variant = "_default"
+column = "HO"
+data_type = "text"
+name = "HO (enligt leverans)"
+definition = "SCB:s källmetadata för 2002–2004 knyter inte kolumnnamnet HO till någon fråga eller produktionsårgång. Det enda kandidatbegreppet i SCB:s export är SCB-variabel 37075, \"Koncernmarkering - Huvudkontoret beläget\" (var huvudkontoret är beläget, under namnet HO i 2014–2020 års leveranser och i katalogen även för omgångarna 2004–2012); att den levererade kolumnen har samma betydelse är inte fastställt. Lagringstypen är varchar; variabeln anges som text."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds HO in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2014 (and carried by [[errata.delivered]] into 2004 - 2006 to 2010 - 2012). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] HO entry (2004 - 2006 to 2010 - 2012) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s HO i CIS2002 kan avse var huvudkontoret är beläget (37075), som kolumnnamnet betyder i katalogen från 2004–2006 (i SCB:s dokumentation från 2014–2016), men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilken kodning värdet följer."
+
+[[errata.column]]
+variant = "_default"
+column = "LILLAN"
+data_type = "decimal"
+name = "LILLAN (enligt leverans)"
+definition = "SCB:s källmetadata för 2002–2004 knyter inte kolumnnamnet LILLAN till någon fråga eller produktionsårgång. Det enda kandidatbegreppet i SCB:s export är SCB-variabel 5697, \"Lilla n per stratum\" (antal element per stratum i urvalet, under namnet LillaN i 2020–2022 års leveranser och i katalogen även för omgångarna 2014–2018); att den levererade kolumnen har samma betydelse är inte fastställt. Lagringstypen är float; variabeln anges som decimal."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds LILLAN in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2020 (and carried by [[errata.delivered]] into 2014 - 2016 and 2016 - 2018). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] LillaN entry (2014 - 2016, 2016 - 2018) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s LILLAN i CIS2002 kan avse antal element per stratum i urvalet (5697), som kolumnnamnet LillaN betyder i katalogen från 2014–2016 (i SCB:s dokumentation från 2020–2022), men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilken stratifiering värdet följer."
+
+[[errata.column]]
+variant = "_default"
+column = "WEIGHT"
+data_type = "decimal"
+name = "WEIGHT (enligt leverans)"
+definition = "SCB:s källmetadata för 2002–2004 knyter inte kolumnnamnet WEIGHT till någon fråga eller produktionsårgång. Det enda kandidatbegreppet i SCB:s export är SCB-variabel 49567, \"Bortfallskompenserad vikt\" (bortfallsjusterad vikt, under namnet WEIGHT i 2022–2024 års leveranser och i katalogen även för omgångarna 2004–2014); att den levererade kolumnen har samma betydelse är inte fastställt. Lagringstypen är float; variabeln anges som decimal."
+is_sensitive = false
+is_identifier = false
+versions = ["2000 - 2002"]
+source = "steward-holdings"
+evidence = "SWECOV holds WEIGHT in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2022 (and carried by [[errata.delivered]] into 2004 - 2006 to 2012 - 2014). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] WEIGHT entry (2004 - 2006 to 2012 - 2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s WEIGHT i CIS2002 kan avse bortfallskompenserad vikt (49567), som kolumnnamnet betyder i katalogen från 2004–2006 (i SCB:s dokumentation från 2022–2024), men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilket urval och vilken bortfallsjustering vikten avser."

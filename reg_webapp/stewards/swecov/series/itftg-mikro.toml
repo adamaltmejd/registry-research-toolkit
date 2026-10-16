@@ -43,8 +43,3 @@ partition = "mikro"
 table = "ITftg_Mikro_2020"
 edition = 2020
 partition = "mikro"
-
-[[column]]
-column = "WEBORD"
-tables = ["ITftg_Mikro_2016"]
-unmap = "The supplied source records do not identify the exact question or native variable represented by physical WEBORD in 2016. Similar question wording does not establish the delivery link."

@@ -12582,3 +12582,113 @@ slug = "webper-enligt-leverans"
 [[variable]]
 native_id = "258.UTVEXF2"
 slug = "utvexf2-enligt-leverans"
+
+[[variable]]
+native_id = "258.EMPIUSEPCT"
+slug = "empiusepct-enligt-leverans"
+
+[[variable]]
+native_id = "258.EMPMD1PCT"
+slug = "empmd1pct-enligt-leverans"
+
+[[variable]]
+native_id = "258.ITERP1"
+slug = "iterp1-enligt-leverans"
+
+[[variable]]
+native_id = "258.SISC"
+slug = "sisc-enligt-leverans"
+
+[[variable]]
+native_id = "258.WEBORD"
+slug = "webord-enligt-leverans"
+
+[[variable]]
+native_id = "258.UTVSUP2"
+slug = "utvsup2-enligt-leverans"
+
+# #1603 batch-e, unblocked by #1652: ambiguous literals beside an [[errata.delivered]] entry on disjoint versions.
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "EMPIUSEPCT"
+data_type = "text"
+name = "EMPIUSEPCT (enligt leverans)"
+definition = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet EMPIUSEPCT till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 17675, \"Andel av sysselsatta som arbetar vid internetanslutna datorer\" (2013–2015 och 2017–2019; i katalogen även 2008–2012 med antagen betydelse); (2) SCB-variabel 41949, \"Andel av anställda som i arbetet använder en dator, mobiltelefon, surfplatta eller liknande\" (2020–2024). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds EMPIUSEPCT in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the exact question represented by EMPIUSEPCT, and other years attach the name to two questions (17675 in 2013–2015 and 2017–2019; 41949 from 2020). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] EMPIUSEPCT entries (2008–2012 carry; 2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s EMPIUSEPCT kan avse andel sysselsatta som arbetar vid internetanslutna datorer (17675) eller andel anställda som i arbetet använder dator, mobiltelefon, surfplatta eller liknande (41949); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "EMPMD1PCT"
+data_type = "text"
+name = "EMPMD1PCT (enligt leverans)"
+definition = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet EMPMD1PCT till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 28822, \"Andel av de anställda som företaget tillhandahåller med andra bärbara enheter för företagsändamål som kan ansluta till internet via en mobil anslutning\" (2014–2015 och 2017–2018); (2) SCB-variabel 23393, \"Använder mobiltelefon med 3G,4G för internetuppkoppling\" (2017, då SCB:s export knyter EMPMD1PCT till både 23393 och 28822). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds EMPMD1PCT in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the exact question represented by EMPMD1PCT, and SCB attaches the name to 28822 (2014–2015, 2017–2018) and in 2017 also to 23393. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] EMPMD1PCT entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s EMPMD1PCT kan avse andel anställda med andra bärbara enheter med mobil internetanslutning (28822) eller användning av mobiltelefon med 3G/4G för internetuppkoppling (23393); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "ITERP1"
+data_type = "text"
+name = "ITERP1 (enligt leverans)"
+definition = "SCB:s dokumentation för 2010 och 2012 knyter inte kolumnnamnet ITERP1 till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 28811, \"Använder ERP-system (affärssystem) för att dela information elektroniskt mellan olika funktioner inom företaget\" (2013–2021); (2) SCB-variabel 46790, \"Företaget använder ERP-system\" (2023 och 2025). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2010", "2012"]
+source = "steward-holdings"
+evidence = "SWECOV holds ITERP1 in ITftg_2010 and ITftg_2012. Previously unmapped because the 2010 and 2012 business-survey metadata contain no exact literal ITERP1 with a verified native-question link, and later years attach the name to two questions (28811 in 2013–2021; 46790 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] ITERP1 entries (2014; 2015) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s ITERP1 kan avse användning av ERP-system för att dela information mellan funktioner inom företaget enligt frågan 2013–2021 (28811) eller enligt frågan från 2023 (46790); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "SISC"
+data_type = "text"
+name = "SISC (enligt leverans)"
+definition = "SCB:s dokumentation för 2008–2010 och 2012 knyter inte kolumnnamnet SISC till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 16946, \"Delar information om lagertillgång elektroniskt via automatiserat informationsutbyte\" (2014–2015); (2) SCB-variabel 28804, \"Delar information om lagertillgång elektroniskt med kunder eller leverantörer\" (2017); (3) SCB-variabel 46794, \"Företaget delar data elektroniskt med leverantörer eller kunder i distributionskedjan\" (2023). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2008", "2009", "2010", "2012"]
+source = "steward-holdings"
+evidence = "SWECOV holds SISC in ITftg_2008, ITftg_2009, ITftg_2010 and ITftg_2012. Previously unmapped because the 2008–2010 and 2012 business-survey metadata contain no exact literal SISC with a verified native-question link, and later years attach the name to three questions (16946 in 2014–2015; 28804 in 2017; 46794 in 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] SISC entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s SISC kan avse elektronisk delning av lagertillgång via automatiserat informationsutbyte (16946) eller med kunder eller leverantörer (28804), eller elektronisk delning av data i distributionskedjan (46794); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "WEBORD"
+data_type = "text"
+name = "WEBORD (enligt leverans)"
+definition = "SCB:s dokumentation för 2008, 2011, 2012 och 2016 knyter inte kolumnnamnet WEBORD till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26864, \"På företagets webbplats finns möjlighet att lägga beställningar, göra bokningar eller reservationer\" (2013–2021); (2) SCB-variabel 16917, \"På företagets webbplats erbjuds möjlighet att beställa, reservera eller boka on-line\" (2023 och 2025). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd."
+is_sensitive = false
+is_identifier = false
+versions = ["2008", "2011", "2012", "2016"]
+source = "steward-holdings"
+evidence = "SWECOV holds WEBORD in ITftg_2008, ITftg_2011, ITftg_2012, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008, 2011, 2012 and 2016 metadata contain no exact literal WEBORD with a verified native-question link, and later years attach the name to two questions (26864 in 2013–2021; 16917 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] WEBORD entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s WEBORD kan avse möjlighet att beställa eller boka på företagets webbplats enligt frågan 2013–2021 (26864) eller enligt frågan från 2023 (16917); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+
+[[errata.column]]
+variant = "it-anvandning-i-foretag"
+column = "UTVSUP2"
+data_type = "text"
+name = "UTVSUP2 (enligt leverans)"
+definition = "SCB:s dokumentation för 2017 knyter inte kolumnnamnet UTVSUP2 till någon fråga i undersökningen. Det enda kandidatbegreppet i SCB:s export är SCB-variabel 17642, \"Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - övriga\" (under namnet UTVSUP2 2016 och 2018); att den levererade kolumnen har samma betydelse är inte fastställt. SCB knyter 2017 i stället 17642 till UTVEXF2, som ITftg_Stora_2017 också levererar, och 17641 (programvaruutveckling för extern försäljning) till UTVEGANV2."
+is_sensitive = false
+is_identifier = false
+versions = ["2017"]
+source = "steward-holdings"
+evidence = "SWECOV holds UTVSUP2 in ITftg_Stora_2017. Previously unmapped because SCB's 2017 documentation has no UTVSUP2 row and attaches 17642, which UTVSUP2 carries in 2016 (delivered) and 2018, to UTVEXF2, which ITftg_Stora_2017 also holds, so carrying UTVSUP2 to 17642 would give one table two columns for one variable. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] UTVSUP2 entry (2016) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+noted = "2026-10-16"
+data_warning = "SWECOV:s UTVSUP2 i 2017 kan avse andel årsverken i programvaruutveckling - övriga (17642), som kolumnnamnet betyder 2016 och 2018, men SCB knyter 2017 den frågan till UTVEXF2, som samma tabell också levererar; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
