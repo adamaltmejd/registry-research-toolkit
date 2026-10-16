@@ -16,4 +16,5 @@ unmap = "Month join column of the household file; sos/ekb/manad is orderable fro
 
 [[column]]
 column = "P1105_LopNr_EKB"
-hold = { follow_up = "#1633", reason = "Household-year link key between the EKB household and person files: the aggregate check on MONA, reported as a conclusion only found it unique per household and year in the household file, with every person-file key present there. It needs its own sos/ekb variable, which a non-SCB register cannot mint yet (#1633; #1556; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "sos/ekb/ekb-manad", variable = "sos/ekb/lopnr-hushall-ar", representation = "P1105_LopNr_EKB" }]
+reason = "Household-year link key between the EKB household and person files (aggregate check on MONA, reported as a conclusion only: unique per household and year in the household file, every person-file key present there). Maps to its minted sos/ekb variable (#1633; #1556; maintainer decision 2026-10-16; #1603 batch-e)."

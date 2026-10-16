@@ -12,7 +12,8 @@ unmap = "Plain-text label of the code column DELFORMAN_KOD in the same table: no
 
 [[column]]
 column = "DELFORMAN_KOD"
-hold = { follow_up = "#1633", reason = "Delförmån code in long format, one row per occurrence, with codes 1:1 with their DELFORMAN labels (aggregate check on MONA, reported as a conclusion only). It is not one of the catalog's positional delforman-kod-1..3 (MiDAS TTP_KOD_1..3), so it needs an any-position variable, which a non-SCB register cannot mint yet (#1633; #1556; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "fk/tillfallig-foraldrapenning/delfall1-1-8", variable = "fk/tillfallig-foraldrapenning/delforman-kod", representation = "DELFORMAN_KOD" }]
+reason = "Delförmån code in long format, one row per occurrence, with codes 1:1 with their DELFORMAN labels (aggregate check on MONA, reported as a conclusion only). Not one of the positional delforman-kod-1..3; maps to its minted any-position variable (#1633; #1556; maintainer decision 2026-10-16; #1603 batch-e)."
 
 [[column]]
 column = "P1105_LopNr_Barn_PersonNr"

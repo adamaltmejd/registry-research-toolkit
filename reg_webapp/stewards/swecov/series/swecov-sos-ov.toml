@@ -15,360 +15,450 @@ reason = "P1105 pseudonymised person key of the table's own register: maps to th
 
 [[column]]
 column = "kva_typ1"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 1 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ10"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 10 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ11"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 11 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ12"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 12 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ13"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 13 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ14"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 14 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ15"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 15 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ16"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 16 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ17"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 17 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ18"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 18 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ19"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 19 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ2"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 2 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ20"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 20 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ21"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 21 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ22"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 22 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ23"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 23 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ24"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 24 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ25"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 25 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ26"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 26 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ27"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 27 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ28"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 28 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ29"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 29 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ3"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 3 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ30"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 30 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ4"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 4 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ5"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 5 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ6"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 6 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ7"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 7 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ8"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 8 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "kva_typ9"
-hold = { follow_up = "#1633", reason = "No target variable: sos/par has no KVÅ code-type variable for kva_typ, and minting one needs a non-SCB errata.column (#1633). Wide-pivot member once that variable exists (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/kva-typ-enligt-leverans", representation = "kva_typ", member = { position = 9 } }]
+reason = "kva_typ1..kva_typ30 are the 30 wide slots of kva_typ, minted on sos/par as kva-typ-enligt-leverans (SoS documents no such field; meaning assumed). #1495 wide-pivot member; #1603 batch-e (#1633); Operator under maintainer delegation 2026-10-16/17."
 
 [[column]]
 column = "DIA1"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 1 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA2"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 2 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA3"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 3 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA4"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 4 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA5"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 5 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA6"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 6 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA7"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 7 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA8"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 8 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA9"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 9 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA10"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 10 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA11"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 11 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA12"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 12 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA13"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 13 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA14"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 14 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA15"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 15 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA16"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 16 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA17"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 17 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA18"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 18 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA19"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 19 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA20"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 20 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA21"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 21 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA22"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 22 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA23"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 23 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA24"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 24 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA25"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 25 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA26"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 26 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA27"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 27 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA28"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 28 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA29"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 29 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "DIA30"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code DIA variable (sos/par/diagnoskod-atc-skada-forgiftning) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/diagnoskod-atc-skada-forgiftning", representation = "DIA", member = { position = 30 } }]
+reason = "SoS documents one diagnosis code per row (DIA, the long-format diagnosis file); DIA1..DIA30 are its 30 wide slots. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op1"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 1 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op2"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 2 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op3"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 3 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op4"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 4 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op5"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 5 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op6"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 6 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op7"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 7 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op8"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 8 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op9"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 9 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op10"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 10 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op11"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 11 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op12"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 12 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op13"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 13 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op14"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 14 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op15"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 15 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op16"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 16 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op17"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 17 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op18"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 18 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op19"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 19 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op20"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 20 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op21"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 21 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op22"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 22 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op23"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 23 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op24"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 24 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op25"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 25 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op26"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 26 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op27"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 27 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op28"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 28 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op29"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 29 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
 
 [[column]]
 column = "op30"
-hold = { follow_up = "#1633", reason = "Needs a non-SCB delivered carry (not available): SoS documents the per-code ATG variable (sos/par/atgardskod-eller-atc-kod) on sos/par only from 2015, while this table spans 2005-2023, and errata.delivered resolves only for SCB registers (#1633). Wide-pivot member once carried (#1495)." }
+mappings = [{ register_variant = "sos/par/par-ov", variable = "sos/par/atgardskod-eller-atc-kod", representation = "ATG", member = { position = 30 } }]
+reason = "SoS documents one action code per row (ATG, the long-format action file); op1..op30 are its 30 wide slots. Not OP, which holds all codes in one string. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
