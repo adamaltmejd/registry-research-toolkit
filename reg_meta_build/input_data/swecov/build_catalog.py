@@ -43,7 +43,7 @@ import sys
 import unicodedata
 from collections import defaultdict
 from dataclasses import dataclass, field
-from itertools import count
+from itertools import count, pairwise
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -2150,6 +2150,87 @@ def _inventory_mapping_records(
     return owned, "stale_declared_mapping_target" if issue or not owned else None
 
 
+def _overlaps_edition(record: dict, edition: object) -> bool:
+    """Whether a delivered record's window reaches a finite edition; an undated
+    record counts as reaching it. A year-independent state never does: a finite
+    edition admits only dated ones (`_inventory_period_records`)."""
+    if record["period_scope"] != "intervals":
+        return False
+    if record["valid_from"] is None or record["valid_to"] is None:
+        return True
+    return any(
+        record["valid_from"] <= hi and lo <= record["valid_to"]
+        for lo, hi in edition_bounds_of(edition)
+    )
+
+
+def _union_mapping_records(
+    mappings: list[ColumnMapping],
+    select_owner: bool,
+    by_coordcol: dict,
+    edition: object,
+) -> tuple[list[tuple[ColumnMapping, list[dict]]], str | None]:
+    """The records of reviewed mappings that cover the edition only together (#1555).
+
+    A column whose edition straddles a variant split (one variant to 2018-09, its
+    successor from 2018-10) maps once per variant. Each mapping's owner windows,
+    clipped to the edition, must be nonempty; together they tile the edition with
+    no gap and no overlap. Without `select_owner`, another owner of a mapped
+    representation active in the edition competes with the union. The records are
+    marked `union`: each covers only its own part, so the whole-edition owner check
+    does not apply to them. Ordering clips each variant to its own states.
+    """
+    from reg_meta_build.inventory import _merge
+    from reg_meta_build.inventory_coverage import _covers
+
+    if edition == YEAR_INDEPENDENT_EDITION:
+        return [], "stale_declared_mapping_target"
+    bounds = edition_bounds_of(edition)
+    owners = {(m.register_variant, m.variable.rsplit("/", 1)[1]) for m in mappings}
+    # The physical-column lookup misses these when the representation differs.
+    if not select_owner and any(
+        r["coord"] == mapping.register_variant
+        and (r["coord"], r["vslug"]) not in owners
+        and _overlaps_edition(r, edition)
+        for mapping in mappings
+        for r in by_coordcol[(mapping.register_variant, mapping.representation.upper())]
+    ):
+        return [], "ambiguous_delivered_owners"
+    pieces: list[tuple[ColumnMapping, list[dict]]] = []
+    clipped: list[tuple[str, str]] = []
+    for mapping in mappings:
+        owner = mapping.variable.rsplit("/", 1)[1]
+        owned = [
+            r
+            for r in by_coordcol[
+                (mapping.register_variant, mapping.representation.upper())
+            ]
+            if r["coord"] == mapping.register_variant
+            and r["col"] == mapping.representation
+            and r["vslug"] == owner
+            and r["period_scope"] == "intervals"
+            and r["valid_from"] is not None
+            and r["valid_to"] is not None
+        ]
+        windows = [
+            (max(lo, b_lo), min(hi, b_hi))
+            for lo, hi in _merge([(r["valid_from"], r["valid_to"]) for r in owned])
+            for b_lo, b_hi in bounds
+            if lo <= b_hi and b_lo <= hi
+        ]
+        if not windows:
+            return [], "stale_declared_mapping_target"
+        clipped += windows
+        pieces.append((mapping, [{**r, "union": True} for r in owned]))
+    clipped.sort()
+    if any(hi >= next_lo for (_, hi), (next_lo, _) in pairwise(clipped)):
+        return [], "union_mapping_overlap"
+    merged = tuple(_merge(clipped))
+    if not all(_covers(interval, merged) for interval in bounds):
+        return [], "union_mapping_gap"
+    return pieces, None
+
+
 def _school_year_edition(anchor: str, year: int) -> str:
     """The school year a bare table year names, under a series' spelling.
 
@@ -2238,7 +2319,9 @@ def _mapping_db(
 
     slugs = scratch / "slugs"
     slugs.mkdir()
-    for path in sorted((REPO_ROOT / "reg_meta_build/fqid_slugs" / steward).glob("*.toml")):
+    for path in sorted(
+        (REPO_ROOT / "reg_meta_build/fqid_slugs" / steward).glob("*.toml")
+    ):
         if not path.name.endswith(".auto.toml"):
             shutil.copyfile(path, slugs / path.name)
     result = extend_db(
@@ -2397,7 +2480,11 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
             # A year or month member serves only its own period, so its owner
             # must cover that period, not the table's whole edition.
             column_edition = edition
-            for mapping in (decision.mappings if decision is not None else None) or ():
+            mappings = (decision.mappings if decision is not None else None) or []
+            # Mappings that cover the edition only together, tried as a union.
+            partial: list[ColumnMapping] = []
+            adopted: list[tuple[ColumnMapping, list[dict]]] = []
+            for mapping in mappings:
                 if mapping.member is not None and mapping.member.kind != "position":
                     column_edition = mapping.member.index
                 declared, mapping_issue = _inventory_mapping_records(
@@ -2408,8 +2495,23 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     ],
                     column_edition,
                 )
+                if mapping_issue == "stale_declared_mapping_target" and (
+                    len(mappings) > 1 and mapping.member is None
+                ):
+                    partial.append(mapping)
+                    mapping_issue = None
+                    continue
                 if mapping_issue:
                     break
+                adopted.append((mapping, declared))
+            if len(partial) == 1:
+                mapping_issue = "stale_declared_mapping_target"
+            elif partial and not mapping_issue:
+                pieces, mapping_issue = _union_mapping_records(
+                    partial, decision.select_owner, by_coordcol, column_edition
+                )
+                adopted += pieces
+            for mapping, declared in [] if mapping_issue else adopted:
                 if mapping.member is not None:
                     declared = [{**r, "member": mapping.member} for r in declared]
                 owner = mapping.variable.rsplit("/", 1)[1]
@@ -2422,8 +2524,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     for r in recs
                     if r["coord"] != mapping.register_variant
                     or (
-                        fold_identity(r["col"])
-                        != fold_identity(mapping.representation)
+                        fold_identity(r["col"]) != fold_identity(mapping.representation)
                         if decision.select_owner
                         else r["col"] != mapping.representation or r["vslug"] != owner
                     )
@@ -2432,7 +2533,9 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
             if any(r.get("member") for r in recs):
                 # A member column carries only its decision's mappings; a second
                 # curated one stays, so the inventory's one-mapping rule refuses it.
-                recs = [r for r in recs if (r["coord"], r["vslug"], r["col"]) in curated]
+                recs = [
+                    r for r in recs if (r["coord"], r["vslug"], r["col"]) in curated
+                ]
             if mapping_issue:
                 worklist["mapping_scope_needed"].append(
                     {
@@ -2469,7 +2572,40 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 )
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
-            recs, scope_issue = _inventory_period_records(recs, column_edition)
+            # Union records cover only their own part, so they skip the
+            # whole-edition owner check. On a union's variants the union decides:
+            # another owner active in the edition competes with it (ambiguous, as
+            # for any reviewed mapping without select_owner), and the union
+            # owner's other spellings drop. Other variants take the usual check.
+            union = [r for r in recs if r.get("union")]
+            owners = {(r["coord"], r["vslug"]) for r in union}
+            union_coords = {coord for coord, _ in owners}
+            competing = any(
+                r["coord"] in union_coords
+                and (r["coord"], r["vslug"]) not in owners
+                and _overlaps_edition(r, column_edition)
+                for r in recs
+                if not r.get("union")
+            )
+            rest = [
+                r for r in recs if not r.get("union") and r["coord"] not in union_coords
+            ]
+            if union:
+                # The union covers the edition, so an owner on another variant
+                # matters only if it reaches the edition, where it competes; a
+                # historical one (a variant ending before it) is dropped.
+                competing = competing or any(
+                    _overlaps_edition(r, column_edition) for r in rest
+                )
+                rest = []
+            recs, scope_issue = (
+                ([], "ambiguous_delivered_owners")
+                if competing
+                else _inventory_period_records(rest, column_edition)
+                if rest
+                else ([], None)
+            )
+            recs += [] if scope_issue else union
             if not scope_issue:
                 recs, scope_issue = _fold_case_twins(
                     recs, LOPNR_PREFIX.sub("", col), curated, representative

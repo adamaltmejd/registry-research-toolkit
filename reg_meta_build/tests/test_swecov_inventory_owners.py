@@ -543,3 +543,151 @@ def test_inventory_refuses_case_only_twins_without_physical_or_representative(
         "t_kolumn",
         "case_twin_without_physical_or_representative_literal",
     )
+
+
+_THIRD_VARIANT = ("historical", "current", "independent")
+
+
+@pytest.mark.parametrize(
+    ("successor_from", "beside", "refusal"),
+    [
+        ("2018-10-01", None, None),
+        ("2018-10-01", "alias", None),
+        ("2018-10-01", "competing", "ambiguous_delivered_owners"),
+        ("2018-10-01", "historical", None),
+        ("2018-10-01", "independent", None),
+        ("2018-10-01", "current", "ambiguous_delivered_owners"),
+        ("2018-11-01", None, "union_mapping_gap"),
+        ("2018-06-01", None, "union_mapping_overlap"),
+    ],
+)
+def test_inventory_maps_a_column_by_the_union_of_split_variants(
+    tmp_path: Path,
+    flavored_db: Path,
+    successor_from: str,
+    beside: str | None,
+    refusal: str | None,
+) -> None:
+    """A column whose 2018 edition straddles a variant split (`_default` to
+    2018-09, `efter` from `successor_from`) maps once per variant when the two
+    reviewed mappings, each clipped to the edition, tile it (#1555, the FK
+    assistansersättning shape). A gap or an overlap between them goes to the scope
+    worklist and the run exits. Beside the union on `_default`, a dated `LOPNR`
+    spelling of the same owner is dropped (the union still maps), while another
+    variable delivering the representation there through 2018 competes with it and
+    is refused as ambiguous, even under another physical name (`Physical`, which
+    the physical-column lookup misses). On a third admissible variant the decision
+    does not map, an owner ending in 2001 or holding only a
+    year-independent state is irrelevant (the union maps), while one
+    still delivering in 2018 competes and is refused. Fails if a partial mapping
+    is still refused alone (the tiled case exits as stale), if the whole-edition
+    owner check later drops the union records (a single-year edition is the one
+    that check assesses), if the leftover spelling, the historical owner or the year-independent one sinks
+    the union, if a competing or current owner is admitted, or if the tiling check
+    misses a gap or an overlap (those cases map)."""
+    db = tmp_path / "split.db"
+    shutil.copyfile(flavored_db, db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, "
+            "name, slug) VALUES (905, 901, 'Efter', 'efter')"
+        )
+        conn.execute(
+            "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
+            "name) VALUES (920, 901, 'lopnr', 'lopnr', 'Lopnr')"
+        )
+        for variant, start, end in (
+            (902, "2002-01-01", "2018-09-30"),
+            (905, successor_from, "9999-12-31"),
+        ):
+            conn.execute(
+                "INSERT INTO variable_state (state_id, variable_id, "
+                "register_variant_id, valid_from, valid_to, data_type, "
+                "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
+                "+ 1 FROM variable_state), 920, ?, ?, ?, 'varchar', 'Lopnr')",
+                (variant, start, end),
+            )
+        if beside == "alias":
+            # Co-delivered spellings: each alias window, the state's own included.
+            conn.executemany(
+                "INSERT INTO variable_alias VALUES (920, 902, ?)",
+                [("Lopnr",), ("LOPNR",)],
+            )
+            conn.executemany(
+                "INSERT INTO variable_alias_window (variable_id, register_variant_id, "
+                "delivery_column_name, valid_from, valid_to) VALUES (920, 902, ?, ?, ?)",
+                [
+                    ("Lopnr", "2002-01-01", "2018-09-30"),
+                    ("LOPNR", "2018-01-01", "2018-06-30"),
+                ],
+            )
+        if beside in _THIRD_VARIANT:
+            conn.execute(
+                "INSERT INTO register_variant (register_variant_id, register_id, "
+                "name, slug) VALUES (906, 901, 'Tidig', 'tidig')"
+            )
+            conn.execute(
+                "INSERT INTO variable_state (state_id, variable_id, "
+                "register_variant_id, valid_from, valid_to, data_type, "
+                "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
+                "+ 1 FROM variable_state), 920, 906, '1990-01-01', ?, 'varchar', "
+                "'Lopnr')",
+                ("2001-12-31" if beside == "historical" else "9999-12-31",),
+            )
+        if beside == "independent":
+            conn.execute(
+                "UPDATE variable_state SET period_scope='year_independent', "
+                "valid_from=NULL, valid_to=NULL WHERE register_variant_id=906"
+            )
+        if beside == "competing":
+            conn.execute(
+                "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
+                "name) VALUES (921, 901, 'annan', 'annan', 'Annan')"
+            )
+            conn.execute(
+                "INSERT INTO variable_state (state_id, variable_id, "
+                "register_variant_id, valid_from, valid_to, data_type, "
+                "delivery_column_name) VALUES ((SELECT COALESCE(MAX(state_id), 0) "
+                "+ 1 FROM variable_state), 921, 902, '2018-01-01', '2018-12-31', "
+                "'varchar', 'Lopnr')"
+            )
+    variants = ("inera/bestallda-prover/_default", "inera/bestallda-prover/efter")
+    # A third admissible variant the decision does not map.
+    admissible = (
+        (*variants, "inera/bestallda-prover/tidig")
+        if beside in _THIRD_VARIANT
+        else variants
+    )
+    physical = "Physical" if beside == "competing" else "Lopnr"
+    decisions = (
+        f'[[column]]\ncolumn = "{physical}"\nmappings = ['
+        + ", ".join(
+            f'{{ register_variant = "{variant}", '
+            'variable = "inera/bestallda-prover/lopnr", representation = "Lopnr" }'
+            for variant in variants
+        )
+        + ']\nreason = "one key across the variant split"\n'
+    )
+
+    def run() -> Path:
+        return _run_inventory(
+            tmp_path,
+            db,
+            "T_split",
+            [physical],
+            edition="2018",
+            variants=admissible,
+            decisions=decisions,
+        )
+
+    if refusal is not None:
+        with pytest.raises(SystemExit, match="Inventory not replaced"):
+            run()
+        (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
+        assert (entry["column"], entry["code"]) == (physical, refusal)
+        return
+    (column,) = load_delivery_inventory(run() / "inventory.toml").tables[0].columns
+    assert sorted((m.register_variant, str(m.variable)) for m in column.mappings) == [
+        (variants[0], "inera/bestallda-prover/lopnr"),
+        (variants[1], "inera/bestallda-prover/lopnr"),
+    ]
