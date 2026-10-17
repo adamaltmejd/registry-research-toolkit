@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "A correction of the sensitivity flag: sensitivity only ratchets up, and identifier is the one flag a field entry corrects (#1662).",
+  "fails_if": "the `[[errata.field]]` loader accepts `sensitivity` as a corrected field, so an authored entry could lower a source's sensitive claim",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/sos/par.toml [[errata.field.field]] entry 1",
+    "message_contains": [
+      "Input should be 'name'"
+    ]
+  }
+}

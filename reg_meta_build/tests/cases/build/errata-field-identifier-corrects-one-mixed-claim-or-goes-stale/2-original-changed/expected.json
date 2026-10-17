@@ -1,0 +1,42 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "par"
+        }
+      },
+      "fields": [
+        "code",
+        "subject",
+        "fields"
+      ],
+      "note": "LOPDAT is withheld as in step 1.",
+      "rows": [
+        [
+          "unresolved_flag",
+          "sos/par/lopdat",
+          [
+            "is_identifier"
+          ]
+        ]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {
+        "code": "stale_curation_entry"
+      },
+      "fields": [
+        "locator"
+      ],
+      "note": "The entry's guarded identifier no longer matches its original.",
+      "rows": [
+        [
+          "curation/registers/sos/par.toml#/errata.field/1"
+        ]
+      ]
+    }
+  ]
+}

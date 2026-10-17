@@ -781,11 +781,14 @@ they add no variable, state, alias identity, or coverage in a neighboring editio
 ### Entries and pins
 
 A curation entry carries no pin by default. It names literal source coordinates:
-register, variant, column and edition labels. The compile checks every entry against the
-complete source scope; an entry that matches nothing, or more than it names, is stale,
-which is an error. Unrelated later editions, layout changes and deliveries elsewhere
-therefore never stale it. Compiled `CodingDecision` cases capture checked evidence in
-memory for the current build.
+register, variant, column and edition labels. For SoS, `variant` is the deldatamängd
+name (for example `bu_insats_endastxnr`), not the variant's native id; an entry naming
+the id selects no original and goes stale with "literal source coordinate has no
+originals or differs from the guarded prose/scopes". The compile checks every entry
+against the complete source scope; an entry that matches nothing, or more than it names,
+is stale, which is an error. Unrelated later editions, layout changes and deliveries
+elsewhere therefore never stale it. Compiled `CodingDecision` cases capture checked
+evidence in memory for the current build.
 
 Evidence digests. Every pinned digest over delivered evidence goes through one function,
 `evidence_sha256` (source_evidence.py): the `expected_evidence_sha256` of owners,
@@ -936,6 +939,25 @@ apply: a sensitivity claim from any source only ratchets up, and an identifier c
 that disagrees reconciles to unknown and withholds the variable again. A later auxiliary
 flag is therefore never silently overridden, and no separate refusal is owed. Undeclared
 variables keep the `unresolved_flag` ratchet.
+
+The one way a disagreeing identifier claim resolves is an authored correction of one
+occurrence (#1662): an `[[errata.field]]` entry with `field = "identifier"` and an
+explicit boolean `value` on one exact variable, variant and column (and edition, where
+the source has one). The entry has no provider gate, but it applies only where the
+source record itself states the flag: SoS deliveries (the Kopplingsvariabel cell) and
+the maintained thin-provider TOMLs (`is_identifier`). SCB records never state it, since
+the flag comes from the Unika and Identifierare support joins, so an SCB identifier
+correction always goes stale. It carries the usual original-scope and prose guards, plus
+exactly one guard on the source's stated identifier, which must be the opposite of the
+correction. A correction equal to the original is refused, and cited `evidence` is
+required. It changes only that occurrence's input, so the occurrences then agree and
+reconcile as usual. Code-list binding reads the same corrected flag, so a corrected
+occurrence gains or loses identifier leniency on its codes with it. A changed original
+record stales the entry at its locator, and any other disagreeing occurrence still
+withholds the variable. Without an entry, a disagreement still reconciles to unknown and
+withholds. The flag matters downstream: exports and mock-data generation read
+`is_identifier`, so a wrong flag misleads them and a withheld one drops the variable.
+Sensitivity has no such correction; it only ratchets up.
 
 Field entries may pin duplicate observations with `expected_records`, using complete
 original `RecordExpectation` alternatives. Except for the source-defined attribution

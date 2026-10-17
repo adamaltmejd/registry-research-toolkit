@@ -609,7 +609,12 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
             value
         ) == len(SourceFields.model_fields):
             return value
-        return _OccurrenceCorrectionEntry._prose_guards(value)
+        # An identifier correction pins the source's stated flag beside the prose.
+        prose = [item for item in value if item.name != "identifier"]
+        if len(value) - len(prose) > 1:
+            raise ValueError("expected_fields may guard the identifier only once")
+        _OccurrenceCorrectionEntry._prose_guards(prose)
+        return value
 
     field: Literal[
         "name",
@@ -620,10 +625,15 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
         "column_name",
         "representation",
         "source_attribution",
+        "identifier",
     ]
-    value: str
+    # Text for every field but `identifier`, whose correction states a boolean (#1662).
+    value: str | bool
 
-    _value = field_validator("value")(_require_trimmed)
+    @field_validator("value")
+    @classmethod
+    def _value(cls, value: str | bool) -> str | bool:
+        return value if isinstance(value, bool) else _require_trimmed(value)
 
     @model_validator(mode="after")
     def _changed_text(self) -> ErrataFieldEntry:
@@ -673,14 +683,26 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
                 "unit corrections require the original measurement unit guard"
             )
         expected = next(
-            item for item in self.expected_fields if item.name == self.field
+            (item for item in self.expected_fields if item.name == self.field), None
         )
-        if expected.status != "value" or not isinstance(expected.value, str):
+        kind = bool if self.field == "identifier" else str
+        if (
+            expected is None
+            or expected.status != "value"
+            or type(expected.value) is not kind
+            or type(self.value) is not kind
+        ):
             raise ValueError(
-                "the corrected field needs an original supplied text value"
+                "an identifier correction states a boolean and guards the original's stated identifier"
+                if kind is bool
+                else "the corrected field needs an original supplied text value"
             )
         if expected.value == self.value:
-            raise ValueError("the replacement must differ from the original text")
+            raise ValueError(
+                "the correction must differ from the original value"
+                if kind is bool
+                else "the replacement must differ from the original text"
+            )
         if self.field == "column_name" and self.expected_records is not None:
             # Load requires the new column among the alternatives, but compile
             # selects only rows still on the original column, so such an entry

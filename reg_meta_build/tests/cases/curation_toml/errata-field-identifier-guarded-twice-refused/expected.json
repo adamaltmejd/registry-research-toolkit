@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "The identifier correction guards the original's stated identifier twice, once true and once false.",
+  "fails_if": "the `[[errata.field]]` loader stops refusing a repeated identifier guard, so guards [true, false] load and one of them always equals the correction: the entry slips past the equal-value refusal and matches as a silent no-op",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/sos/par.toml [[errata.field.expected_fields]] entry 1",
+    "message_contains": [
+      "expected_fields may guard the identifier only once"
+    ]
+  }
+}

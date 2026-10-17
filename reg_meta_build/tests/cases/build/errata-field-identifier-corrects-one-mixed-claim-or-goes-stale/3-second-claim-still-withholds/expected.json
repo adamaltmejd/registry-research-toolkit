@@ -1,0 +1,46 @@
+{
+  "projections": [
+    {
+      "table": "variables",
+      "where": {
+        "register": "par"
+      },
+      "fields": [
+        "variable",
+        "is_identifier"
+      ],
+      "note": "Neither variable is built: each still has a disagreeing identifier claim.",
+      "rows": []
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": {
+          "contains": "par"
+        }
+      },
+      "fields": [
+        "code",
+        "subject",
+        "fields"
+      ],
+      "note": "DATUM is withheld for its identifier like LOPDAT; the entry still applies, so it reports no stale or overbroad issue.",
+      "rows": [
+        [
+          "unresolved_flag",
+          "sos/par/datum",
+          [
+            "is_identifier"
+          ]
+        ],
+        [
+          "unresolved_flag",
+          "sos/par/lopdat",
+          [
+            "is_identifier"
+          ]
+        ]
+      ]
+    }
+  ]
+}
