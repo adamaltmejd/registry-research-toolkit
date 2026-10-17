@@ -14281,6 +14281,6 @@ variant = "_default"
 column = "EMP"
 versions = ["2000 - 2002", "2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2016 - 2018", "2018 - 2020"]
 upstream = "omitted-column-in-version"
-expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+expected_evidence_sha256 = "4f7097aa4e5fb8c073200ff5ed66edd3ada3fca0f5acadc101e6b92a516f4922"
 evidence = "SWECOV holds the wave's own reference-year employee count in every CIS table: EMP in CIS2002 (2000 - 2002); emp04 in CIS2004 (2002 - 2004); emp06 in CIS2006 (2004 - 2006); emp08 in CIS2008 (2006 - 2008); emp10 in CIS2010 (2008 - 2010); Emp2018 in CIS2018 (2016 - 2018); Emp2020 in CIS2020 (2018 - 2020). SCB documents the column EMP, Antal anställda (SCB-variabel 690, hämtat från FDB), only from 2020 - 2022 (as EMP2022) and 2022 - 2024; its export has no row for it in these versions. Under the maintainer's same-name rule the column takes the meaning of its nearest documented edition, so these waves deliver antal-anstallda rather than a per-wave mint (one EMP variable); CIS<Y> is the <Y-2> - <Y> wave, and CIS2002's 2000 - 2002 round is the errata.version above. Replaces the CIS2002 'EMP (enligt leverans)' mint (#1603 batch-e, #1495; Operator under maintainer delegation 2026-10-16, option (b), 2026-10-17)."
 noted = "2026-10-17"
