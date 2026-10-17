@@ -1934,8 +1934,8 @@ reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per refer
 [[column]]
 column = "Emp2020"
 tables = ["CIS2020"]
-mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2020 } }]
-reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp2020-enligt-leverans", representation = "Emp2020" }]
+reason = "The 2018 - 2020 wave's own reference-year employee count (2020), minted per reference year with its meaning assumed from SCB's EMP (antal-anstallda); SCB delivers antal-anstallda for 2020 as EMP2022, so the EMP carry stops at 2016 - 2018. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16, option (a) 2026-10-17."
 
 [[column]]
 column = "emp02"
@@ -1984,167 +1984,195 @@ reason = "The 2018 - 2020 wave's prior reference-year employee count (2018), min
 [[column]]
 column = "CO21"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-leverantorer-sverige", representation = "CO21" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "CO31"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-kunder-sverige", representation = "CO31" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "CO41"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konkurrenter-sverige", representation = "CO41" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "CO51"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konsulter-sverige", representation = "CO51" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "CO61"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-universitet-sverige", representation = "CO61" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "CO71"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-sverige", representation = "CO71" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co11"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-koncernforetag-sverige", representation = "co11" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co12"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-2", representation = "co12" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co13"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-3", representation = "co13" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co14"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-4", representation = "co14" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co22"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-2", representation = "co22" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co23"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-3", representation = "co23" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co24"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-4", representation = "co24" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co32"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-2", representation = "co32" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co33"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-3", representation = "co33" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co34"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-4", representation = "co34" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co42"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-2", representation = "co42" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co43"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-3", representation = "co43" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co44"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-4", representation = "co44" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co52"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-2", representation = "co52" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co53"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-3", representation = "co53" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co54"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-4", representation = "co54" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co62"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-2", representation = "co62" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co63"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-3", representation = "co63" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co64"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-4", representation = "co64" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co72"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-2", representation = "co72" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co73"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-3", representation = "co73" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[column]]
 column = "co74"
 tables = ["CIS2002"]
+select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-4", representation = "co74" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
