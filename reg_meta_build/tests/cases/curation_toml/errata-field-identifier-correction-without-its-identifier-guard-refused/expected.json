@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "The identifier correction guards only the four prose fields, not the original's stated identifier.",
+  "fails_if": "the `[[errata.field]]` loader stops requiring an identifier correction to guard the original's stated identifier, so a correction that cannot go stale when the source changes its flag loads (or the build fails unlocated on the missing guard)",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/sos/par.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "an identifier correction states a boolean and guards the original's stated identifier"
+    ]
+  }
+}

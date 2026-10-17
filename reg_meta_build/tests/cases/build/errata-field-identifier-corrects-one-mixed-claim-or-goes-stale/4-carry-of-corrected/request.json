@@ -1,0 +1,5 @@
+{
+  "note": "Step 1's corrected DATUM, plus an [[errata.occurrence_carry]] of the corrected PAR_F original over 1995-2000. A carry has no source records and binds its donor's coding records, but its identifier is the occurrence's own, which the carry copies from the corrected original (false). So the carried scope gets no identifier leniency either: its Kodlista_DATUM member of unknown validity reports unknown_code_membership over 1995-2000 like the documented occurrences.",
+  "fails_if": "`bind_occurrence_code_lists` takes a carry's identifier from its donor's raw source record (identifier true) instead of the occurrence's corrected fields, so the carried scope clamps the unknown-validity member silently (no unknown_code_membership over 1995-2000)",
+  "sources": "sos-par-mixed-identifier"
+}

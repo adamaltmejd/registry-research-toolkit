@@ -807,10 +807,15 @@ def bind_occurrence_code_lists(
     results = []
     for record in {record.record_id: record for record in records}.values():
         fields = occurrence.fields if occurrence.source_records else record.fields
-        identifier_fields = record.fields
+        # The occurrence's own flag, after any checked identifier correction (#1662),
+        # so a corrected occurrence never keeps identifier leniency on its codes. A
+        # carry or mint has no source records and binds its donor's coding records,
+        # but its flag is still its own.
+        identifier_fields = occurrence.fields
         if support is not None:
             identifier_fields, _ = reconcile_source_fields(
-                (record,), support=tuple(match.fields for match in support.bind(record))
+                (occurrence,),
+                support=tuple(match.fields for match in support.bind(record)),
             )
         results.append(
             bind_code_lists(

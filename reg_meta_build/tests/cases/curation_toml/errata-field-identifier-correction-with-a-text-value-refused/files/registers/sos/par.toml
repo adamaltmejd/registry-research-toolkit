@@ -1,0 +1,16 @@
+[register]
+provider = "sos"
+slug = "par"
+native_id = "5891427617861710725"
+
+[[errata.field]]
+variable = "5891427617861710725.DATUM"
+variant = "PAR_F"
+column = "DATUM"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2020" }] }
+expected_period = { kind = "not_applicable" }
+evidence = "Reviewed against the five sibling subsets."
+noted = "2026-10-17"
+expected_fields = [{ name = "name", status = "value", value = "Datum" }, { name = "definition", status = "absent" }, { name = "description", status = "unknown" }, { name = "operational_definition", status = "absent" }, { name = "identifier", status = "value", value = true }]
+field = "identifier"
+value = "false"

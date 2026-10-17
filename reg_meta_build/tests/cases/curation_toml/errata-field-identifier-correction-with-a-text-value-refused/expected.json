@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "The identifier correction states the text \"false\", not a boolean.",
+  "fails_if": "the `[[errata.field]]` loader stops requiring a boolean identifier correction, so a text flag loads and fails the build unlocated when the checked change is formed",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/sos/par.toml [[errata.field]] entry 1",
+    "message_contains": [
+      "an identifier correction states a boolean and guards the original's stated identifier"
+    ]
+  }
+}

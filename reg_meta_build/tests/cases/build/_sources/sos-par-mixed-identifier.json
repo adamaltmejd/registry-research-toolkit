@@ -1,0 +1,44 @@
+{
+  "description": "SOS PAR: subsets PAR_A..PAR_F, each delivering DATUM and LOPDAT over 2001-2020; PAR_F marks both as linkage variables, the other five leave Kopplingsvariabel blank. Kodlista_DATUM names DATUM, so it binds all six DATUM rows; its one member's Tidsperiod (Okänd) is malformed, so the member's validity is unknown.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+    ]
+  },
+  "sos": [
+    {
+      "abbrev": "PAR",
+      "title": "Patientregistret",
+      "description": "Ett syntetiskt SOS-register för testbygget.",
+      "subsets": [
+        {"name": "PAR_A", "label": "PAR_A", "description": "Vy A", "data_from": 2001, "data_to": 2020},
+        {"name": "PAR_B", "label": "PAR_B", "description": "Vy B", "data_from": 2001, "data_to": 2020},
+        {"name": "PAR_C", "label": "PAR_C", "description": "Vy C", "data_from": 2001, "data_to": 2020},
+        {"name": "PAR_D", "label": "PAR_D", "description": "Vy D", "data_from": 2001, "data_to": 2020},
+        {"name": "PAR_E", "label": "PAR_E", "description": "Vy E", "data_from": 2001, "data_to": 2020},
+        {"name": "PAR_F", "label": "PAR_F", "description": "Vy F", "data_from": 2001, "data_to": 2020}
+      ],
+      "variables": [
+        {"name": "DATUM", "deldatamangd": "PAR_A", "label": "Datum", "data_from": 2001, "data_to": 2020},
+        {"name": "DATUM", "deldatamangd": "PAR_B", "label": "Datum", "data_from": 2001, "data_to": 2020},
+        {"name": "DATUM", "deldatamangd": "PAR_C", "label": "Datum", "data_from": 2001, "data_to": 2020},
+        {"name": "DATUM", "deldatamangd": "PAR_D", "label": "Datum", "data_from": 2001, "data_to": 2020},
+        {"name": "DATUM", "deldatamangd": "PAR_E", "label": "Datum", "data_from": 2001, "data_to": 2020},
+        {"name": "DATUM", "deldatamangd": "PAR_F", "label": "Datum", "data_from": 2001, "data_to": 2020, "linkage": "X"},
+        {"name": "LOPDAT", "deldatamangd": "PAR_A", "label": "Lopdat", "data_from": 2001, "data_to": 2020},
+        {"name": "LOPDAT", "deldatamangd": "PAR_B", "label": "Lopdat", "data_from": 2001, "data_to": 2020},
+        {"name": "LOPDAT", "deldatamangd": "PAR_C", "label": "Lopdat", "data_from": 2001, "data_to": 2020},
+        {"name": "LOPDAT", "deldatamangd": "PAR_D", "label": "Lopdat", "data_from": 2001, "data_to": 2020},
+        {"name": "LOPDAT", "deldatamangd": "PAR_E", "label": "Lopdat", "data_from": 2001, "data_to": 2020},
+        {"name": "LOPDAT", "deldatamangd": "PAR_F", "label": "Lopdat", "data_from": 2001, "data_to": 2020, "linkage": "X"}
+      ],
+      "sheets": {
+        "Kodlista_DATUM": [
+          ["Variabelnamn", "DATUM"],
+          ["Tidsperiod", "Kod", "Beskrivning"],
+          ["Okänd", "1", "Okänd period"]
+        ]
+      }
+    }
+  ]
+}

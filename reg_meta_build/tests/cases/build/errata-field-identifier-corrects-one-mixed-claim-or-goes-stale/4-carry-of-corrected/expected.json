@@ -1,0 +1,28 @@
+{
+  "projections": [
+    {
+      "table": "variables",
+      "where": {"register": "par"},
+      "fields": ["variable", "is_identifier"],
+      "note": "The carry copies the corrected original, so DATUM stays a non-identifier.",
+      "rows": [
+        ["datum", 0]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"code": "unknown_code_membership"},
+      "fields": ["subject", "valid_from", "valid_to"],
+      "note": "The six documented occurrences over 2001-2020, as in step 1, and the carried PAR_F scope over 1995-2000: the carry keeps the corrected flag, so its unknown-validity member is reported, not clamped.",
+      "rows": [
+        ["sos/par/datum", "1995-01-01", "2000-12-31"],
+        ["sos/par/datum", "2001-01-01", "2020-12-31"],
+        ["sos/par/datum", "2001-01-01", "2020-12-31"],
+        ["sos/par/datum", "2001-01-01", "2020-12-31"],
+        ["sos/par/datum", "2001-01-01", "2020-12-31"],
+        ["sos/par/datum", "2001-01-01", "2020-12-31"],
+        ["sos/par/datum", "2001-01-01", "2020-12-31"]
+      ]
+    }
+  ]
+}

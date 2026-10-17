@@ -1,0 +1,154 @@
+{
+  "note": "The same [[errata.field]] entry as step 1, but PAR_F's DATUM delivery no longer marks Kopplingsvariabel: the original's stated identifier is now false, which differs from the entry's guarded true while every prose and scope guard still matches. The entry is stale at its own locator rather than applying to a record it was not reviewed against. A changed prose guard is already pinned by errata-field-stale-when-its-original-changes; this step pins the identifier guard alone.",
+  "fails_if": "`compile_occurrence_corrections` stops comparing the guarded identifier with the original's current flag, so the `identifier` correction still applies (no stale issue names errata.field/1)",
+  "sources": {
+    "description": "As sos-par-mixed-identifier without its Kodlista_DATUM sheet, but PAR_F now leaves DATUM's Kopplingsvariabel blank: the original the entry guards no longer states an identifier.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 1001,
+          "var_id": 101,
+          "colname": "VALUE"
+        }
+      ]
+    },
+    "sos": [
+      {
+        "abbrev": "PAR",
+        "title": "Patientregistret",
+        "description": "Ett syntetiskt SOS-register för testbygget.",
+        "subsets": [
+          {
+            "name": "PAR_A",
+            "label": "PAR_A",
+            "description": "Vy A",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_B",
+            "label": "PAR_B",
+            "description": "Vy B",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_C",
+            "label": "PAR_C",
+            "description": "Vy C",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_D",
+            "label": "PAR_D",
+            "description": "Vy D",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_E",
+            "label": "PAR_E",
+            "description": "Vy E",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "PAR_F",
+            "label": "PAR_F",
+            "description": "Vy F",
+            "data_from": 2001,
+            "data_to": 2020
+          }
+        ],
+        "variables": [
+          {
+            "name": "DATUM",
+            "deldatamangd": "PAR_A",
+            "label": "Datum",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "DATUM",
+            "deldatamangd": "PAR_B",
+            "label": "Datum",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "DATUM",
+            "deldatamangd": "PAR_C",
+            "label": "Datum",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "DATUM",
+            "deldatamangd": "PAR_D",
+            "label": "Datum",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "DATUM",
+            "deldatamangd": "PAR_E",
+            "label": "Datum",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "DATUM",
+            "deldatamangd": "PAR_F",
+            "label": "Datum",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "LOPDAT",
+            "deldatamangd": "PAR_A",
+            "label": "Lopdat",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "LOPDAT",
+            "deldatamangd": "PAR_B",
+            "label": "Lopdat",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "LOPDAT",
+            "deldatamangd": "PAR_C",
+            "label": "Lopdat",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "LOPDAT",
+            "deldatamangd": "PAR_D",
+            "label": "Lopdat",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "LOPDAT",
+            "deldatamangd": "PAR_E",
+            "label": "Lopdat",
+            "data_from": 2001,
+            "data_to": 2020
+          },
+          {
+            "name": "LOPDAT",
+            "deldatamangd": "PAR_F",
+            "label": "Lopdat",
+            "data_from": 2001,
+            "data_to": 2020,
+            "linkage": "X"
+          }
+        ]
+      }
+    ]
+  }
+}

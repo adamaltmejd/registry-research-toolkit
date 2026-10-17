@@ -1,0 +1,42 @@
+{
+  "projections": [
+    {
+      "table": "variables",
+      "where": {"register": "par"},
+      "fields": ["variable", "is_identifier"],
+      "note": "DATUM's corrected outlier now agrees with its five siblings, so DATUM is built as a non-identifier. LOPDAT is absent: its claims still disagree.",
+      "rows": [
+        ["datum", 0]
+      ]
+    },
+    {
+      "table": "issues",
+      "where": {"subject": {"contains": "par"}},
+      "fields": ["code", "subject", "fields"],
+      "note": "Only LOPDAT is withheld, for its identifier alone; the entry applies without a stale or overbroad issue. DATUM's coding is unknown on each of its six non-identifier occurrences, whose Kodlista_DATUM member has unknown validity (refs below).",
+      "rows": [
+        ["unknown_code_membership", "sos/par/datum", ["coding"]],
+        ["unknown_code_membership", "sos/par/datum", ["coding"]],
+        ["unknown_code_membership", "sos/par/datum", ["coding"]],
+        ["unknown_code_membership", "sos/par/datum", ["coding"]],
+        ["unknown_code_membership", "sos/par/datum", ["coding"]],
+        ["unknown_code_membership", "sos/par/datum", ["coding"]],
+        ["unresolved_flag", "sos/par/lopdat", ["is_identifier"]]
+      ]
+    },
+    {
+      "table": "issue_refs",
+      "where": {"code": "unknown_code_validity"},
+      "fields": ["code", "ref"],
+      "note": "Kodlista_DATUM binds all six DATUM rows, and its member's malformed Tidsperiod is unknown validity. Only an identifier record clamps that away silently; after the correction no DATUM record is one, so PAR_F reports the issue like its five siblings.",
+      "rows": [
+        ["unknown_code_validity", "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx#register:Patientregistret/deldatamangd:PAR_A/variable:DATUM"],
+        ["unknown_code_validity", "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx#register:Patientregistret/deldatamangd:PAR_B/variable:DATUM"],
+        ["unknown_code_validity", "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx#register:Patientregistret/deldatamangd:PAR_C/variable:DATUM"],
+        ["unknown_code_validity", "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx#register:Patientregistret/deldatamangd:PAR_D/variable:DATUM"],
+        ["unknown_code_validity", "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx#register:Patientregistret/deldatamangd:PAR_E/variable:DATUM"],
+        ["unknown_code_validity", "Socialstyrelsen/Metadata Patientregistret (PAR)_webb.xlsx#register:Patientregistret/deldatamangd:PAR_F/variable:DATUM"]
+      ]
+    }
+  ]
+}
