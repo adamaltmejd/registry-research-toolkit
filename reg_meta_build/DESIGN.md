@@ -2569,7 +2569,20 @@ partition label names a shard's. The columns are additive for the builder but ag
 **major** schema bump (12.0.0): an 11.x reader admits any later 11 minor and would emit
 a projection's shared cell from both tables, which is wrong output. The builder and the
 reader gate move together, and the change merges only with the release that publishes
-12.0 assets.
+12.0 assets. 12.0.0 also adds `holding_mapping.window_lo`/`window_hi`, a mapping's
+column window ("Column windows" below): an 11.x reader would order a windowed column
+over its whole edition, the same wrong-output reasoning, so the window rides the same
+major rather than a second one.
+
+A mapping may carry a column `window` (#1645): a token or a `{ from, to }` range, the
+part of the table's edition in which this column delivers this coordinate. One table can
+union two deliveries with different field sets, each owned by a variant covering only
+its part of the edition (SoS BU: the old field set up to 2016 under the `pnrq0`
+variants, the new one from 2018, no register for 2017). A mapping without a window keeps
+the whole-edition rule unchanged. `holding_mapping` stores the window's ISO bounds in
+`window_lo`/`window_hi`, separate from a member's period: a one-year window is not a
+year member, which belongs to a member set and labels the manifest entry. A CHECK keeps
+a window off member mappings.
 
 A refusal is a configuration error (exit 10) that names the file and each offending
 `table[...]`, `column[...]` or field, under one code per rule family:
@@ -2579,7 +2592,8 @@ missing or unknown keys, contract version, slug and FQID shape), `inventory_no_t
 `inventory_duplicate_mapping`, `inventory_edition_invalid`,
 `inventory_period_scope_invalid`, `inventory_unmapped_reason_invalid`,
 `inventory_member_invalid` (a member set's own rules below),
-`inventory_projection_invalid` (a projection's own rules below) and
+`inventory_projection_invalid` (a projection's own rules below),
+`inventory_window_invalid` (a column window's own rules below) and
 `inventory_cell_conflict` (the one-to-one rule below). When several lines fail, the code
 is the first line's.
 
@@ -2594,8 +2608,9 @@ across tables or across columns of one table. That error is the supersession wor
 ("Holdings curation rules" below). Zero-column cells are not errors; they are not
 admitted. One physical column may still serve several variants (the combined
 Utrikeshandel table), several tables may map one coordinate over disjoint editions (the
-ordinary annual series), and a declared projection shares cells with its parent
-("Projections" below).
+ordinary annual series), a declared projection shares cells with its parent
+("Projections" below), and a windowed mapping serves only its window ("Column windows"
+below).
 
 **Disjoint partitions.** Some registers arrive as several tables split by sub-population
 within one edition: survey strata (`ITftg_Mikro`/`ITftg_Stora`), reporter streams
@@ -2650,6 +2665,31 @@ entity or time key) in both files, so each file carries its own row keys and the
 joins a projection file to its parent's on the shared key
 ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"). An undeclared overlap
 stays a refusal; the order never deduplicates one.
+
+**Column windows** (#1645). A windowed mapping serves its coordinate only inside its
+window, so the overlap check compares the window, as for a year or month member, and the
+order neither serves the column outside it nor borrows another window's delivery across
+it. The rules, refused as `inventory_window_invalid` with every offending line: a window
+lies inside one segment of the table's edition after joining adjacent intervals, as the
+projection edition check does (so `[2018, 2019]` is one segment, and a year-independent
+table takes none) and is not inverted; a member mapping takes no window, since a member
+serves its own period; a windowed `(register_variant, variable)` maps once in its
+column, because the reader keys a held column by table and column under one variant.
+Overlap is not a window rule: two windows of one variant on conflating representations
+are an `inventory_cell_conflict`, and windows of different variants may overlap as their
+unwindowed mappings may, so a key column present in both deliveries maps once per
+variant window. Gaps between windows are legal: those years are stated as not delivered,
+never covered. Coverage of a windowed mapping by its variant (the SWECOV generator's
+owner check) is judged against the window only. In a projection pair a windowed mapping
+is not a position member, so only a parent mapping that is not a position member serves
+it ("Projections" above), and the parent serves a shared non-key cell only where its own
+served period (edition, member or window) covers every instant the projection's mapping
+serves; a projection window outside the parent's window is the projection's own cell,
+emitted in the projection's own file, and partial coverage stays a conflict. Key cells
+are never dropped by the parent, windowed or not; the order's emission gate keeps a
+projection's shared key in a file only where the projection contributes a cell of its
+own in that file's period unit, and a window is its own period unit
+([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest").
 
 **Wide-pivot member sets** (#1495). The columns of one table that map one
 `(register_variant, variable, representation)` with a `member` index are one location,

@@ -506,12 +506,19 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Holdings resolution
    invariants") is that one location: every position member serves the table's edition
    and is emitted, while a year or month member serves only its own period, so it
-   matches and covers only where that period reaches the slice. A declared projection's
-   non-key mapping (`holding_table.projection_of`, #1634) is dropped wherever its parent
-   serves it: the parent maps the same canonical triple over that instant, at the same
-   position. A projection's position member is served only by the parent's member of
-   that position, and a plain column or a year or month member only by a parent mapping
-   that is not a position member. This is the inventory's rule
+   matches and covers only where that period reaches the slice. A column window
+   (`holding_mapping.window_lo`/`window_hi`, #1645) likewise limits a mapping to its own
+   period: the column matches, covers and is emitted only there, and a request outside
+   every window of a column is a gap, never served from its table's edition. A declared
+   projection's non-key mapping (`holding_table.projection_of`, #1634) is dropped
+   wherever its parent serves it: the parent maps the same canonical triple over that
+   instant, at the same position. A projection's position member is served only by the
+   parent's member of that position, and a plain column, a year or month member or a
+   windowed mapping only by a parent mapping that is not a position member. The parent
+   serves a cell only where its own served period (its edition, or the mapping's member
+   or window) covers the instant the projection's mapping serves: a projection cell
+   outside the parent's window stays the projection's and counts as its own cell for
+   emission (conformance `order/projection-windows`). This is the inventory's rule
    ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Projections"), which
    refuses any other overlap, so the parent alone serves each shared cell and no
    projection cell is dropped without a parent cell in its place. A key mapping (the
@@ -560,7 +567,12 @@ and placement. A period unit is an entry's `requested_period`, the clipped perio
 binding slice serves: a source period range is one unit, while a year or month member
 serves its own period as its own unit. A year or month member always forms its own unit,
 for any table, projection or not, so a source range over a table with a year member
-splits into the range's file and the member's file. The placement is the partition, the
+splits into the range's file and the member's file. A column window (#1645) likewise
+serves its own clipped period, so a window narrower than the source range is its own
+unit too. `simplify:` a unit's file is keyless only when a windowed column or a member
+is narrower than the ordered key's range, since the key then sits in the range's unit
+and not in the narrower one. Grouping files by the binding slice's period before
+clipping removes that, and is tracked in #1661. The placement is the partition, the
 projection or neither, named in slug spelling (`lisa_individer-15plus_2019.csv`,
 `agi_individuppgifter-agi_arb_2021-03.csv` for a partition,
 `<register>_<variant>_<token>_<period>.csv` for a projection). What goes in as two

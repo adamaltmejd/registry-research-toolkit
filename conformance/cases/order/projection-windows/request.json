@@ -1,0 +1,37 @@
+{
+  "note": "Narrow is a declared projection of Wide (#1634) and both carry column windows (#1645): the parent serves a shared non-key cell only where its own window covers the instant. Wide's Field serves 2015..2016, so Narrow's FieldA (the same window) is dropped and Narrow's FieldB serves 2017..2019 in Narrow's own file. Narrow's shared key Id is requested over the source's 2015..2019, another period unit than FieldB's 2017..2019, so it is not emitted: Narrow's 2017..2019 file carries FieldB alone, as a windowed column of any table forms its own period unit, and Wide's 2015..2019 file carries Id. Fails if the parent wins by its table's edition instead of its window (FieldB dropped, Narrow emits nothing and a 2017..2019 coverage gap blocks the order), if a projection's window is ignored (FieldA no longer lies inside Wide's window and is emitted beside Wide's Field), or if the shared-key gate stops being per period unit (Narrow's 2015..2019 Id, a file of keys only, is emitted).",
+  "fixture": "projection-windows",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Example",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": 2015,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/id",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/example/field",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}

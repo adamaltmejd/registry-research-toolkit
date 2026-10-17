@@ -192,8 +192,13 @@ def compile_holdings(
             for literal, mapping in zip(literals, column.mappings, strict=True):
                 member = mapping.member
                 lo, hi = (member and member.bounds()) or (None, None)
+                window_lo, window_hi = (
+                    edition_bounds(mapping.window)[0]
+                    if mapping.window is not None
+                    else (None, None)
+                )
                 conn.execute(
-                    "INSERT INTO holding_mapping(column_id, variant_id, variable_id, representation_literal, representation_canonical, member_position, member_lo, member_hi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO holding_mapping(column_id, variant_id, variable_id, representation_literal, representation_canonical, member_position, member_lo, member_hi, window_lo, window_hi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     (
                         column_id,
                         variants[mapping.register_variant],
@@ -203,6 +208,8 @@ def compile_holdings(
                         member and member.position,
                         lo,
                         hi,
+                        window_lo,
+                        window_hi,
                     ),
                 )
                 mappings_count += 1

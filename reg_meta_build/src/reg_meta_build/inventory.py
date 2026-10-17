@@ -63,6 +63,7 @@ _PERIOD_SCOPE = "inventory_period_scope_invalid"
 _CELL_CONFLICT = "inventory_cell_conflict"
 _MEMBER = "inventory_member_invalid"
 _PROJECTION = "inventory_projection_invalid"
+_WINDOW = "inventory_window_invalid"
 
 
 class _InventoryGuardError(ValueError):
@@ -365,12 +366,30 @@ class ColumnMapping(_InventoryModel):
     corresponds to. The
     representation is a required join discriminator, not an output substitute.
     `member` marks the column as one indexed member of a wide pivot (#1495); the
-    member set, not the column, is then the location that serves the cell."""
+    member set, not the column, is then the location that serves the cell.
+    `window` narrows the mapping to its own delivered period inside the table's
+    edition (#1645): the column serves this coordinate only there.
+    `_check_windows` owns its rules, which need the whole table."""
 
     register_variant: str
     variable: str
     representation: str = Field(min_length=1)
     member: ColumnMember | None = None
+    window: EditionSegment | None = None
+
+    @field_validator("window", mode="before")
+    @classmethod
+    def _window_year_int_to_token(cls, value: object) -> object:
+        return _year_int_to_token(value)
+
+    def served(self, edition: tuple[_Interval, ...]) -> tuple[_Interval, ...]:
+        """The period this mapping serves in a table of `edition`: its window, its
+        year or month member's period, else the whole edition."""
+        if self.window is not None:
+            return (_segment_bounds(self.window),)
+        if self.member is not None and (period := self.member.bounds()) is not None:
+            return (period,)
+        return edition
 
     @field_validator("register_variant")
     @classmethod
@@ -420,7 +439,9 @@ class InventoryColumn(_InventoryModel):
     Several mappings let one physical column serve several register variants
     (the combined Utrikeshandel table), unless one of them is a wide-pivot
     member: a member column carries exactly that one mapping
-    (`_check_member_sets`)."""
+    (`_check_member_sets`). A column whose field set two variants deliver over
+    different parts of the edition maps once per variant, each with its own
+    `window` (`_check_windows`)."""
 
     name: str = Field(min_length=1)
     mappings: tuple[ColumnMapping, ...] = Field(default=(), alias="mapping")
@@ -608,9 +629,10 @@ class InventoryTable(_InventoryModel):
 class _Placement(NamedTuple):
     """One mapping's physical placement, as `_check_one_to_one_resolution`
     compares them. The location is a `(table, column)`, or a table's member set;
-    the served bounds are the table's coalesced edition, or a year or month
-    member's own period; `position` is a position member's index, None for a
-    plain column or a year or month member."""
+    the served bounds are the table's coalesced edition, a year or month
+    member's own period, or a column window (#1645); `position` is a position
+    member's index, None for a plain column, a windowed column or a year or month
+    member."""
 
     location: str
     representation: str
@@ -635,9 +657,10 @@ def _parent_serves(placement: _Placement, parent: _Placement) -> bool:
     position member or neither is a position member, and the parent serves every
     instant the projection's does. A position set is served member by member, so
     a projection's positions must be positions of the parent's set; a plain
-    column, or a year or month member, is served only by the parent's plain
-    column or year or month member. `crates/reg-catalog`'s `PARENT_SERVES` is the
-    same rule at order time."""
+    column, a windowed column or a year or month member is served only by a
+    parent mapping that is not a position member and whose own served period
+    (edition, member or window) covers it. `crates/reg-catalog`'s `PARENT_SERVES`
+    is the same rule at order time."""
     return (
         _representations_conflate(placement.representation, parent.representation)
         and placement.position == parent.position
@@ -866,12 +889,17 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
     the overlap check compares those. `_check_member_sets` holds the set's own
     rules first.
 
+    Column windows (#1645): a mapping with a `window` serves only that period, so
+    the overlap check compares the window, as for a year or month member.
+    `_check_windows` holds the window's own rules first.
+
     Cost: group by `(register_variant, variable, period_scope)` and compare
     pairwise only within each group. An inventory with many variables avoids a
     global quadratic scan; the usual largest group is one variable's annual
     series with a few dozen editions.
     """
     _check_member_sets(tables)
+    _check_windows(tables)
     parents = {table.id: table.projection.of for table in tables if table.projection}
     located: dict[tuple[str, str, str], list[_Placement]] = {}
     for table in tables:
@@ -883,13 +911,11 @@ def validate_inventory_placements(tables: tuple[InventoryTable, ...]) -> None:
                     mapping.variable,
                     table.period_scope,
                 )
-                served = bounds
+                served = mapping.served(bounds)
                 if mapping.member is None:
                     location = _location(table.id, column.name)
                 else:
                     location = _member_location(table.id, mapping.representation)
-                    if (period := mapping.member.bounds()) is not None:
-                        served = (period,)
                 located.setdefault(key, []).append(
                     _Placement(
                         location,
@@ -1055,6 +1081,74 @@ def _check_member_sets(tables: tuple[InventoryTable, ...]) -> None:
             _MEMBER,
             "invalid wide-pivot member set:\n"
             + "\n".join(f"    {line}" for line in problems),
+        )
+
+
+def _check_windows(tables: tuple[InventoryTable, ...]) -> None:
+    """A column window's own rules (#1645), per table. A window lies inside one
+    segment of the table's coalesced edition (`_edition_intervals`), so a
+    year-independent table takes none, and a member, which serves its own period,
+    takes none.
+
+    A windowed mapping is its column's only mapping of its
+    `(register_variant, variable)`: the order reader keys a held column by table
+    and column under one variant, so a second mapping there would inherit or drop
+    the window.
+
+    Overlap is not a window rule. Two windows of one variant overlapping on
+    conflating representations are a cell conflict
+    (`validate_inventory_placements`), and windows of different variants may
+    overlap as their unwindowed mappings may. Gaps are allowed, because a column
+    is not delivered outside its windows. A mapping without a window keeps the
+    whole-edition rule."""
+    problems: list[str] = []
+    for table in tables:
+        segments = _edition_intervals(table)
+        for column in table.columns:
+            where = _location(table.id, column.name)
+            for mapping in column.mappings:
+                if mapping.window is None:
+                    continue
+                coordinate = f"{mapping.register_variant} {mapping.variable}"
+                if mapping.member is not None:
+                    problems.append(
+                        f"{where}: {coordinate} states a window and a member — a "
+                        "member serves its own period"
+                    )
+                    continue
+                if not segments:
+                    problems.append(
+                        f"{where}: {coordinate} states a window in a "
+                        "year-independent table"
+                    )
+                    continue
+                try:
+                    window = _segment_bounds(mapping.window)
+                except ValueError as exc:
+                    problems.append(f"{where}: {coordinate} window: {exc}")
+                    continue
+                if not any(lo <= window[0] and window[1] <= hi for lo, hi in segments):
+                    problems.append(
+                        f"{where}: {coordinate} window {_render((window,))} lies "
+                        f"outside the table's edition {_render(segments)}"
+                    )
+                    continue
+                if (
+                    sum(
+                        (other.register_variant, other.variable)
+                        == (mapping.register_variant, mapping.variable)
+                        for other in column.mappings
+                    )
+                    > 1
+                ):
+                    problems.append(
+                        f"{where}: {coordinate} has a window and another mapping in "
+                        "this column — a windowed coordinate maps once per column"
+                    )
+    if problems:
+        raise _InventoryGuardError(
+            _WINDOW,
+            "invalid column window:\n" + "\n".join(f"    {line}" for line in problems),
         )
 
 

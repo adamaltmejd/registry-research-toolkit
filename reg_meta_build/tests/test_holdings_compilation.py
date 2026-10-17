@@ -136,6 +136,13 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
                     "SELECT ht.physical_id, hc.name, member_position, member_lo, member_hi FROM holding_mapping hm JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) WHERE member_position IS NOT NULL OR member_lo IS NOT NULL ORDER BY ht.physical_id, hc.name"
                 )
             ]
+        if request.get("observe_windows"):
+            actual["windows"] = [
+                dict(row)
+                for row in conn.execute(
+                    "SELECT ht.physical_id, hc.name, rv.slug AS variant, member_lo, window_lo, window_hi FROM holding_mapping hm JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) JOIN register_variant rv ON rv.register_variant_id=hm.variant_id WHERE window_lo IS NOT NULL ORDER BY ht.physical_id, hc.name, rv.slug"
+                )
+            ]
         if request.get("observe_accounting"):
             actual["accounting"] = compiled.accounting.counts
         assert actual == expected

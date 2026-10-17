@@ -26,9 +26,10 @@ if TYPE_CHECKING:
 
 type Scope = Literal["reference", "holdings"]
 # A held mapping's period bounds over its table's `holding_period` row `hp`: a
-# year/month pivot member holds only its own period (#1495), inside the edition.
-HELD_LO = "COALESCE(hm.member_lo, hp.lo)"
-HELD_HI = "COALESCE(hm.member_hi, hp.hi)"
+# year/month pivot member (#1495) or a column window (#1645) holds only its own
+# period, inside one segment of the edition.
+HELD_LO = "COALESCE(hm.member_lo, hm.window_lo, hp.lo)"
+HELD_HI = "COALESCE(hm.member_hi, hm.window_hi, hp.hi)"
 # (scope, variable_id, register_variant_id, column, period_scope, state_count,
 # windows as (valid_from, valid_to) in order)
 type BrowseRow = tuple[str, int, int, str | None, str, int, tuple[tuple[str, str], ...]]

@@ -1,0 +1,17 @@
+{
+  "note": "Narrow's FieldA is windowed 2015..2017 against Wide's Field window 2015..2016: the parent serves only part of it, so the overlap is a cell conflict. FieldB (2018..2019) is outside Wide's window and admitted; Id is fully served.",
+  "fails_if": "`_parent_serves` admits a projection mapping whose window the parent covers only in part (FieldA's 2015..2016 overlap with Wide's Field is admitted), or refuses a window the parent does not reach at all (FieldB) or a fully served key (Id)",
+  "error": {
+    "code": "inventory_cell_conflict",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "table['Narrow'].column['FieldA'] (representation 'Field') and table['Wide'].column['Field'] (representation 'Field') both map scb/example/annual scb/example/field over 2015..2016\n"
+    ],
+    "message_excludes": [
+      "column['FieldB']",
+      "column['Id']"
+    ]
+  }
+}

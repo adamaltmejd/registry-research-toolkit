@@ -1,0 +1,48 @@
+version = 1
+steward = "swecov"
+
+# A windowed column inside a projection pair (#1645, #1634): the parent wins only
+# where its own window covers the instant. `Wide` delivers `Field` for 2015..2016
+# only, so `Narrow`'s `FieldA` (2015..2016) is the claim `Wide` serves, while its
+# `FieldB` (2017..2019) is Narrow's own. `Id` is unwindowed in both: Wide serves it.
+[[table]]
+id = "Narrow"
+edition = { from = 2015, to = 2019 }
+projection = { of = "Wide", token = "narrow" }
+[[table.column]]
+name = "FieldA"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/field"
+representation = "Field"
+window = { from = 2015, to = 2016 }
+[[table.column]]
+name = "FieldB"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/field"
+representation = "Field"
+window = { from = 2017, to = 2019 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Wide"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "Field"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/field"
+representation = "Field"
+window = { from = 2015, to = 2016 }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"

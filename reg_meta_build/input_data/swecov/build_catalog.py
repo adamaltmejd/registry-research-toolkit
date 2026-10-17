@@ -61,7 +61,7 @@ from reg_meta_build.steward_spec import (
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from reg_meta_build.inventory import ColumnMapping
+    from reg_meta_build.inventory import ColumnMapping, EditionRange
 
 DEFAULT_CSV = max(
     Path(__file__).parent.glob("SWECOV_variables_full_*.csv"),
@@ -2106,7 +2106,8 @@ def _fold_case_twins(
 #                    `projection` (#1634); the series'
 #                    `variants` are the table's admissible coordinates; curated
 #                    column decisions: a reviewed mapping (guarded by the physical
-#                    coordinates and full catalog coverage of the edition), an
+#                    coordinates and full catalog coverage of the edition, or of
+#                    the mapping's own `window` (#1645), emitted verbatim), an
 #                    unmap or an interim hold
 #
 # Every other column is auto-mapped by the single-candidate rule against the
@@ -2165,6 +2166,25 @@ def _overlaps_edition(record: dict, edition: object) -> bool:
     )
 
 
+def _competing_owner(
+    mappings: list[ColumnMapping],
+    by_coordcol: dict,
+    reach: Callable[[ColumnMapping], object],
+) -> bool:
+    """Whether another owner delivers a mapped representation on its variant over
+    the mapping's reach (the edition, or a column window). Looked up by the
+    declared representation: the physical-column lookup misses these when the
+    representation differs from the physical name."""
+    owners = {(m.register_variant, m.variable.rsplit("/", 1)[1]) for m in mappings}
+    return any(
+        r["coord"] == mapping.register_variant
+        and (r["coord"], r["vslug"]) not in owners
+        and _overlaps_edition(r, reach(mapping))
+        for mapping in mappings
+        for r in by_coordcol[(mapping.register_variant, mapping.representation.upper())]
+    )
+
+
 def _union_mapping_records(
     mappings: list[ColumnMapping],
     select_owner: bool,
@@ -2187,15 +2207,7 @@ def _union_mapping_records(
     if edition == YEAR_INDEPENDENT_EDITION:
         return [], "stale_declared_mapping_target"
     bounds = edition_bounds_of(edition)
-    owners = {(m.register_variant, m.variable.rsplit("/", 1)[1]) for m in mappings}
-    # The physical-column lookup misses these when the representation differs.
-    if not select_owner and any(
-        r["coord"] == mapping.register_variant
-        and (r["coord"], r["vslug"]) not in owners
-        and _overlaps_edition(r, edition)
-        for mapping in mappings
-        for r in by_coordcol[(mapping.register_variant, mapping.representation.upper())]
-    ):
+    if not select_owner and _competing_owner(mappings, by_coordcol, lambda _: edition):
         return [], "ambiguous_delivered_owners"
     pieces: list[tuple[ColumnMapping, list[dict]]] = []
     clipped: list[tuple[str, str]] = []
@@ -2251,6 +2263,13 @@ def _toml_str(value: str) -> str:
     # JSON string escaping is valid TOML basic-string escaping except U+007F,
     # which JSON leaves raw and TOML forbids in a basic string.
     return json.dumps(value, ensure_ascii=False).replace("\x7f", "\\u007f")
+
+
+def _raw_window(window: EditionRange | str) -> object:
+    """A mapping's column window in its authored TOML shape (#1645)."""
+    if isinstance(window, str):
+        return window
+    return {"from": window.from_, "to": window.to}
 
 
 def _toml_edition(edition: object) -> str:
@@ -2493,16 +2512,22 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
             for mapping in mappings:
                 if mapping.member is not None and mapping.member.kind != "position":
                     column_edition = mapping.member.index
+                # A column window (#1645) is that mapping's own delivered period,
+                # so its owner must cover the window only.
                 declared, mapping_issue = _inventory_mapping_records(
                     mapping,
                     decision.select_owner,
                     by_coordcol[
                         (mapping.register_variant, mapping.representation.upper())
                     ],
-                    column_edition,
+                    column_edition
+                    if mapping.window is None
+                    else _raw_window(mapping.window),
                 )
                 if mapping_issue == "stale_declared_mapping_target" and (
-                    len(mappings) > 1 and mapping.member is None
+                    len(mappings) > 1
+                    and mapping.member is None
+                    and mapping.window is None
                 ):
                     partial.append(mapping)
                     mapping_issue = None
@@ -2517,14 +2542,36 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     partial, decision.select_owner, by_coordcol, column_edition
                 )
                 adopted += pieces
+            # A decision with a window decides each mapping over its own reach:
+            # its window, or the edition for a plain mapping beside it.
+            windowed = any(mapping.window is not None for mapping, _ in adopted)
+            if (
+                windowed
+                and not mapping_issue
+                and not decision.select_owner
+                and _competing_owner(
+                    [mapping for mapping, _ in adopted],
+                    by_coordcol,
+                    lambda m: column_edition
+                    if m.window is None
+                    else _raw_window(m.window),
+                )
+            ):
+                mapping_issue = "ambiguous_delivered_owners"
             for mapping, declared in [] if mapping_issue else adopted:
                 if mapping.member is not None:
                     declared = [{**r, "member": mapping.member} for r in declared]
+                if mapping.window is not None:
+                    window = _raw_window(mapping.window)
+                    declared = [{**r, "window": window} for r in declared]
+                elif windowed:
+                    declared = [{**r, "decided": True} for r in declared]
                 owner = mapping.variable.rsplit("/", 1)[1]
-                # select_owner drops every other owner of the physical column,
-                # case twins included: neighbouring waves may spell one cell
-                # `co11` and `CO11`, and both reach `recs` through the folded
-                # lookup. `fold_identity` is the `py_lower` fold (#853, #1571).
+                # select_owner drops every other owner of the representation on
+                # this variant, case twins included: neighbouring waves may spell
+                # one cell `co11` and `CO11`, and both reach `recs` through the
+                # folded lookup. `fold_identity` is the `py_lower` fold (#853,
+                # #1571). An owner of a renamed column's physical name survives.
                 recs = [
                     r
                     for r in recs
@@ -2578,30 +2625,41 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 )
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
-            # Union records cover only their own part, so they skip the
-            # whole-edition owner check. On a union's variants the union decides:
-            # another owner active in the edition competes with it (ambiguous, as
-            # for any reviewed mapping without select_owner), and the union
-            # owner's other spellings drop. Other variants take the usual check.
-            union = [r for r in recs if r.get("union")]
+            # Union records, windowed records and the plain records of a decision
+            # with a window cover only their own part, so they skip the
+            # whole-edition owner check. On their variants they decide over their
+            # reach, the window for a windowed record and the edition otherwise:
+            # another owner active there competes with them (ambiguous, as for any
+            # reviewed mapping without select_owner), and their owner's other
+            # spellings drop. Other variants take the usual check.
+            def decides(r: dict) -> bool:
+                return bool(r.get("union") or r.get("window") or r.get("decided"))
+
+            union = [r for r in recs if decides(r)]
             owners = {(r["coord"], r["vslug"]) for r in union}
-            union_coords = {coord for coord, _ in owners}
+            # Keyed by variant: a decision names each variant once
+            # (`steward_spec` refuses a repeated mapping register_variant).
+            reach = {r["coord"]: r.get("window") or column_edition for r in union}
+            union_coords = set(reach)
             competing = any(
                 r["coord"] in union_coords
                 and (r["coord"], r["vslug"]) not in owners
-                and _overlaps_edition(r, column_edition)
+                and _overlaps_edition(r, reach[r["coord"]])
                 for r in recs
-                if not r.get("union")
+                if not decides(r)
             )
             rest = [
-                r for r in recs if not r.get("union") and r["coord"] not in union_coords
+                r for r in recs if not decides(r) and r["coord"] not in union_coords
             ]
             if union:
-                # The union covers the edition, so an owner on another variant
-                # matters only if it reaches the edition, where it competes; a
-                # historical one (a variant ending before it) is dropped.
+                # The mapped variants decide over their reach, so an owner on
+                # another variant matters only if it reaches one of them, where it
+                # competes; a historical one (a variant ending before it) is
+                # dropped.
                 competing = competing or any(
-                    _overlaps_edition(r, column_edition) for r in rest
+                    _overlaps_edition(r, period)
+                    for r in rest
+                    for period in reach.values()
                 )
                 rest = []
             recs, scope_issue = (
@@ -2654,6 +2712,8 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     index = member.index
                     value = _toml_str(index) if isinstance(index, str) else index
                     lines.append(f"member = {{ {member.kind} = {value} }}")
+                if (window := r.get("window")) is not None:
+                    lines.append(f"window = {_toml_edition(window)}")
 
     dest = steward_dir / "inventory.toml"
     wl_path = args.csv.parent / "derived" / "inventory_worklist.json"
