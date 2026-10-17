@@ -2232,7 +2232,7 @@ produce review material; they do not approve or apply new curation during a buil
 ## Steward extension
 
 **Compiled-holdings contract (2026-10-04).** `extend-db` copies an exact validated
-global database built under the current `SCHEMA_VERSION` (11.0.0), adds steward-private
+global database built under the current `SCHEMA_VERSION` (12.0.0), adds steward-private
 providers and their registers, variables and states, then compiles accepted physical
 holdings into the same SQLite artifact. A base built under an older schema is rebuilt,
 never migrated. Rebuild the public base once per schema and reuse it for steward
@@ -2534,15 +2534,16 @@ mapping requires `register_variant`, `variable` and a nonempty literal `represen
 Changed input bytes always require fresh acceptance.
 
 A table has an opaque exact `id`, an explicit `edition`, a `period_scope` defaulting to
-`intervals`, an optional `partition` and all its literal columns. Finite editions use
-the shared period grammar: a token, a `{from, to}` range, or a sorted, nonoverlapping
-list. Year-independent input sets `period_scope = "year_independent"` and the whole
-edition `"_default"`, and its mappings name concrete variants. `_default` is never a
-finite or unknown-scope sentinel. Retained unknown tables come from the spec's
-`retain_unknown` entries plus the raw census, not invented finite entries. Partitions
-use the slug grammar (`_default`, `class` and period-shaped values are rejected); they
-name shards of a delivery, not populations a researcher selects. An unmapped column
-keeps its authored reason where one is given; none is synthesized.
+`intervals`, an optional `partition`, an optional `projection` and all its literal
+columns. Finite editions use the shared period grammar: a token, a `{from, to}` range,
+or a sorted, nonoverlapping list. Year-independent input sets
+`period_scope = "year_independent"` and the whole edition `"_default"`, and its mappings
+name concrete variants. `_default` is never a finite or unknown-scope sentinel. Retained
+unknown tables come from the spec's `retain_unknown` entries plus the raw census, not
+invented finite entries. Partitions use the slug grammar (`_default`, `class` and
+period-shaped values are rejected); they name shards of a delivery, not populations a
+researcher selects. An unmapped column keeps its authored reason where one is given;
+none is synthesized.
 
 A mapping may carry a wide-pivot `member` index (#1495): `{ position = N }`,
 `{ year = YYYY }` or `{ month = "YYYY-MM" }`. A wide pivot delivers one variable as N
@@ -2558,6 +2559,18 @@ unfiltered, which is wrong output, so an old reader must refuse the database ins
 The builder and the reader gate move together, and the change merges only with the
 release that publishes 11.0 assets.
 
+`projection = { of = "<parent id>", token = "<slug>" }` (#1634) declares the table a
+projection of another table's delivery ("Projections" below).
+`holding_table.projection_of` stores the parent's `physical_id` and
+`holding_table.projection` the token, with a CHECK that one is set exactly when the
+other is. The token is authored and opaque, never derived from the table id, and rides
+the partition's slug grammar and CHECK: it names the projection's own extract file, as a
+partition label names a shard's. The columns are additive for the builder but again a
+**major** schema bump (12.0.0): an 11.x reader admits any later 11 minor and would emit
+a projection's shared cell from both tables, which is wrong output. The builder and the
+reader gate move together, and the change merges only with the release that publishes
+12.0 assets.
+
 A refusal is a configuration error (exit 10) that names the file and each offending
 `table[...]`, `column[...]` or field, under one code per rule family:
 `inventory_toml_unreadable` (not UTF-8 TOML), `inventory_invalid` (field grammar: types,
@@ -2565,7 +2578,8 @@ missing or unknown keys, contract version, slug and FQID shape), `inventory_no_t
 `inventory_table_no_columns`, `inventory_duplicate_table`, `inventory_duplicate_column`,
 `inventory_duplicate_mapping`, `inventory_edition_invalid`,
 `inventory_period_scope_invalid`, `inventory_unmapped_reason_invalid`,
-`inventory_member_invalid` (a member set's own rules below) and
+`inventory_member_invalid` (a member set's own rules below),
+`inventory_projection_invalid` (a projection's own rules below) and
 `inventory_cell_conflict` (the one-to-one rule below). When several lines fail, the code
 is the first line's.
 
@@ -2579,8 +2593,9 @@ same variant and variable, the same canonical representation and overlapping edi
 across tables or across columns of one table. That error is the supersession worklist
 ("Holdings curation rules" below). Zero-column cells are not errors; they are not
 admitted. One physical column may still serve several variants (the combined
-Utrikeshandel table), and several tables may map one coordinate over disjoint editions
-(the ordinary annual series).
+Utrikeshandel table), several tables may map one coordinate over disjoint editions (the
+ordinary annual series), and a declared projection shares cells with its parent
+("Projections" below).
 
 **Disjoint partitions.** Some registers arrive as several tables split by sub-population
 within one edition: survey strata (`ITftg_Mikro`/`ITftg_Stora`), reporter streams
@@ -2592,6 +2607,49 @@ The one-to-one rule holds per cell and partition: overlapping tables conflict un
 they carry distinct curated partition labels; equal labels, or an unlabelled
 whole-population claim, conflict on overlapping cells. The order emits every partition
 as its own file ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest").
+
+**Projections** (#1634). Some deliveries arrive twice: a wide table and a narrower table
+of some of its columns, often for another purpose and sometimes at a finer grain (SWECOV
+`VBBARN`, recipient × child × month, beside its parent `VB`, recipient × month). A table
+declares `projection = { of = "<parent id>", token = "<slug>" }`: the same delivery
+under other columns. A non-key cell both map is one claim, served by the parent; the
+projection's other cells are its own. The declaration is curated, never inferred from an
+overlap, and like a partition it is an inventory and order concept only. The pair is
+refused as `inventory_projection_invalid`, every offending table on its own line, unless
+the parent is another table of the inventory, is not itself a projection, neither table
+carries a partition (a shard is a different delivery), both have the same period scope
+and edition bounds, compared after joining adjacent intervals
+(`{ from = 2018, to = 2018 }` is `2018`, and `[2018, 2019]` is
+`{ from = 2018, to = 2019 }`), and the projection maps only variants the parent maps.
+Among tables mapping a common variant over a common period (overlapping editions, or
+both year-independent), a token differs from every other projection token and every
+partition label, since two placements with one name would write one file name and the
+later would overwrite the earlier; the file name carries the period, so an annual series
+of projections may repeat one token, as partitions repeat across editions. There is no
+grain check: each projection is its own extract file, so a finer grain is carried by its
+own keys.
+
+The parent serves a projection's mapping when it maps the same canonical triple over
+every instant the mapping serves, and at the same position: a projection's position
+member is served only by the parent's member of that position (the parent's set holds
+that member), and a plain column or a year or month member only by a parent mapping that
+is not a position member (a plain column or a year or month member covering it). So a
+projection whose position set is equal to or a subset of the parent's is served, while a
+larger set, a position set beside a plain parent column, or a plain column beside a
+parent position set is the projection's own claim on the parent's cell. Coverage
+compares coalesced editions, like the edition check. The one-to-one rule then skips the
+declared pair where the parent serves the projection's mapping, and skips two
+projections of one parent where the parent serves each one's mapping; partial coverage,
+a mapping the parent does not serve, two columns of one projection, two projections
+sharing a cell the parent lacks, and every third table still conflict, each with the
+ordinary located `inventory_cell_conflict`. The order's `PARENT_SERVES` is the same rule
+([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"), so it drops exactly the
+mappings this check admitted as served. The order emits a shared non-key cell from the
+parent alone and keeps every key cell (an identifier, or the bound variant's panel
+entity or time key) in both files, so each file carries its own row keys and the user
+joins a projection file to its parent's on the shared key
+([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest"). An undeclared overlap
+stays a refusal; the order never deduplicates one.
 
 **Wide-pivot member sets** (#1495). The columns of one table that map one
 `(register_variant, variable, representation)` with a `member` index are one location,
@@ -2633,7 +2691,10 @@ conflict rather than auto-picking a survivor; a filename date is not proof of
 supersession. A **special-purpose sub-extract** (data already held, re-delivered at
 another level of detail for a narrow purpose: the `RTB_SaBo_*` extracts, the
 `SWECOV_SOS_*_comorb` comorbidity tables) is likewise excluded from the order surface at
-curation, under its own exclusion reason class distinct from supersession.
+curation, under its own exclusion reason class distinct from supersession. A re-delivery
+of the same edition under other columns, at the parent's grain or a finer one, is not a
+sub-extract: it is declared a projection of the fuller table ("Projections" above) and
+keeps its own columns orderable.
 
 **Partition labels (ratified 2026-09-01).** Disjoint-partition labels are explicit
 curated facts, never inferred, so a true redelivery cannot hide behind partitions

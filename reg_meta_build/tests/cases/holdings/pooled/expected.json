@@ -8,6 +8,7 @@
         "to": 2020
       },
       "partition": null,
+      "projection": null,
       "retain_unknown_reason": null
     }
   ],

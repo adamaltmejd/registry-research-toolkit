@@ -74,6 +74,10 @@ struct Entry {
     /// The availability-clipped period this table serves.
     requested_period: String,
     physical: Physical,
+    /// A projection's key cell its parent also serves (#1634): kept only when
+    /// the projection contributes a cell of its own to the order.
+    #[serde(skip)]
+    shared_key: bool,
 }
 
 /// The project-side coordinate of an entry.
@@ -101,6 +105,10 @@ struct Physical {
     /// The table's disjoint-partition label; absent when it has none.
     #[serde(skip_serializing_if = "Option::is_none")]
     partition: Option<String>,
+    /// The table's projection token (#1634): the table is a declared projection
+    /// of another table's delivery, extracted as its own file; absent otherwise.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    projection: Option<String>,
     /// The column's wide-pivot member index; absent for a plain column.
     #[serde(skip_serializing_if = "Option::is_none")]
     member: Option<Member>,
@@ -216,12 +224,36 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     if !order.findings.is_empty() {
         return Err(blocked(order.findings));
     }
+    // A projection's shared key cells ride along only with a cell of its own in the
+    // same output file: a projection file whose ordered cells its parent all serves
+    // is not emitted, so no file holds only keys its parent's file also holds.
+    let own: BTreeSet<(String, String, String)> = order
+        .entries
+        .iter()
+        .filter(|e| e.physical.projection.is_some() && !e.shared_key)
+        .map(placement)
+        .collect();
+    order
+        .entries
+        .retain(|e| !e.shared_key || own.contains(&placement(e)));
     Ok(Manifest {
         version: VERSION,
         provenance: provenance(catalog, &project),
         entries: order.entries,
         clips: order.clips,
     })
+}
+
+/// The output file an entry lands in: the table under the variant, for one period
+/// unit (the entry's `requested_period`; crates/DESIGN.md, "Extraction keeps delivery
+/// topology").
+fn placement(entry: &Entry) -> (String, String, String) {
+    let l = &entry.logical;
+    (
+        entry.physical.table.clone(),
+        format!("{}/{}/{}", l.provider, l.register, l.variant),
+        entry.requested_period.clone(),
+    )
 }
 
 /// `project_invalid`: validate's issues for a project rejected before the catalog.
@@ -574,7 +606,7 @@ impl Order<'_> {
             .filter_map(|s| s.emitted.delivery_column_name.clone())
             .min()
             .expect("an unblocked year-independent resolution has a column");
-        let mut located: Vec<(String, String, Option<String>, Option<Member>)> = if self.steward {
+        let mut located: Vec<Located> = if self.steward {
             let canonical = canonical(self.conn, id, variant, &column)?;
             matches(
                 self.conn,
@@ -585,21 +617,35 @@ impl Order<'_> {
                 None,
             )?
             .into_iter()
-            .map(|m| (m.table, m.column, m.partition, m.member))
+            .map(|m| Located {
+                table: m.table,
+                column: m.column,
+                placement: m.placement,
+            })
             .collect()
         } else {
-            vec![(String::new(), column.clone(), None, None)]
+            vec![Located {
+                table: String::new(),
+                column: column.clone(),
+                placement: Placement::default(),
+            }]
         };
         // Stable: plain columns keep their table-and-name order; members order by
         // index, not name.
-        located.sort_by(|a, b| (&a.0, &a.3).cmp(&(&b.0, &b.3)));
+        located
+            .sort_by(|a, b| (&a.table, &a.placement.member).cmp(&(&b.table, &b.placement.member)));
         if located.is_empty() {
             let message = "no year-independent steward table maps this delivery column";
             let period = Some("_default".to_owned());
             self.finding(source, binding, "mapping_missing", message.into(), period);
             return Ok(());
         }
-        for (table, physical, partition, member) in located {
+        for Located {
+            table,
+            column: physical,
+            placement,
+        } in located
+        {
             self.entries.push(Entry {
                 source: source.name.clone(),
                 logical: logical(source, binding, &column),
@@ -608,9 +654,11 @@ impl Order<'_> {
                     edition: "_default".into(),
                     table,
                     column: physical,
-                    partition,
-                    member,
+                    partition: placement.partition,
+                    projection: placement.projection,
+                    member: placement.member,
                 },
+                shared_key: placement.shared_key,
             });
         }
         Ok(())
@@ -671,8 +719,7 @@ impl Order<'_> {
                     }
                     covered.extend(overlaps.iter().cloned());
                     let key = (m.table, m.column, column.clone());
-                    let held = (m.periods, m.partition, m.member);
-                    contribute(&mut contributions, key, overlaps, held);
+                    contribute(&mut contributions, key, overlaps, (m.periods, m.placement));
                 }
             } else {
                 // The global fallback: canonical resolution is the topology, and a
@@ -709,10 +756,7 @@ impl Order<'_> {
         }
         // Stable: ties keep first-contribution order, as today's sort does. A
         // member orders by its index, not its column name.
-        contributions.sort_by(|a, b| {
-            (&a.key.0, &a.edition, &a.member, &a.key.1)
-                .cmp(&(&b.key.0, &b.edition, &b.member, &b.key.1))
-        });
+        contributions.sort_by(|a, b| a.order().cmp(&b.order()));
         for c in contributions {
             let (table, physical, column) = c.key;
             self.entries.push(Entry {
@@ -723,9 +767,11 @@ impl Order<'_> {
                     edition: render(&c.edition),
                     table,
                     column: physical,
-                    partition: c.partition,
-                    member: c.member,
+                    partition: c.placement.partition,
+                    projection: c.placement.projection,
+                    member: c.placement.member,
                 },
+                shared_key: c.placement.shared_key,
             });
         }
         Ok(())
@@ -733,37 +779,64 @@ impl Order<'_> {
 }
 
 /// One entry in the making: `(table, physical column, representation)`, the table's
-/// edition and partition, the column's member index, and the requested days it
-/// serves.
+/// edition, the column's placement, and the requested days it serves.
 struct Contribution {
     key: (String, String, String),
     edition: Vec<Interval>,
-    partition: Option<String>,
-    member: Option<Member>,
+    placement: Placement,
     days: Vec<Interval>,
 }
 
-/// A held column's table edition, partition and member index.
-type Held = (Vec<Interval>, Option<String>, Option<Member>);
+/// Where a held column lands in the extract beyond its table: the table's partition
+/// or projection token, the column's member index, and whether it is a projection's
+/// key cell its parent also serves.
+#[derive(Default)]
+struct Placement {
+    partition: Option<String>,
+    projection: Option<String>,
+    member: Option<Member>,
+    shared_key: bool,
+}
+
+/// A year-independent held column.
+struct Located {
+    table: String,
+    column: String,
+    placement: Placement,
+}
+
+impl Contribution {
+    /// Table, edition, member index, then column: a member orders by its index, not
+    /// its column name.
+    fn order(&self) -> (&String, &Vec<Interval>, &Option<Member>, &String) {
+        (
+            &self.key.0,
+            &self.edition,
+            &self.placement.member,
+            &self.key.1,
+        )
+    }
+}
+
+/// A held column's table edition and placement.
+type Held = (Vec<Interval>, Placement);
 
 fn contribute(
     contributions: &mut Vec<Contribution>,
     key: (String, String, String),
     days: Vec<Interval>,
-    (edition, partition, member): Held,
+    (edition, placement): Held,
 ) {
     match contributions.iter_mut().find(|c| c.key == key) {
         Some(c) => {
             c.days.extend(days);
             c.edition = edition;
-            c.partition = partition;
-            c.member = member;
+            c.placement = placement;
         }
         None => contributions.push(Contribution {
             key,
             edition,
-            partition,
-            member,
+            placement,
             days,
         }),
     }
@@ -803,10 +876,9 @@ struct Match {
     table_id: i64,
     table: String,
     column: String,
-    partition: Option<String>,
     source_ref: String,
     periods: Vec<Interval>,
-    member: Option<Member>,
+    placement: Placement,
     member_period: Option<Interval>,
 }
 
@@ -818,6 +890,50 @@ impl Match {
             .clone()
             .map_or_else(|| self.periods.clone(), |period| vec![period])
     }
+}
+
+/// Whether a mapping `hm` of table `ht` is one its declared parent also serves
+/// (#1634): `ht` is a projection whose parent maps the same `(variable, variant,
+/// canonical representation)` at the same position, or neither at a position, over
+/// every instant `hm` serves. A position member is served only by the parent's member
+/// of that position, and a plain mapping or a year or month member only by a parent
+/// mapping that is not a position member. A plain parent mapping serves the whole
+/// shared edition; a year or month member serves its own period, so it covers a
+/// projection member inside it, or a plain projection mapping whose edition lies
+/// inside it. This is the builder's `_parent_serves`, so the order drops exactly the
+/// mappings the inventory admitted as served. Only the declared pair is compared: an
+/// undeclared overlap is the builder's refusal, never deduplicated here.
+const PARENT_SERVES: &str = "EXISTS (SELECT 1 FROM holding_table pt \
+     JOIN holding_column pc ON pc.table_id = pt.table_id \
+     JOIN holding_mapping pm ON pm.column_id = pc.column_id \
+     WHERE pt.physical_id = ht.projection_of AND pm.variable_id = hm.variable_id \
+     AND pm.variant_id = hm.variant_id \
+     AND pm.representation_canonical = hm.representation_canonical \
+     AND pm.member_position IS hm.member_position \
+     AND (pm.member_lo IS NULL OR (\
+          pm.member_lo <= COALESCE(hm.member_lo, \
+              (SELECT MIN(p.lo) FROM holding_period p WHERE p.table_id = ht.table_id)) \
+          AND pm.member_hi >= COALESCE(hm.member_hi, \
+              (SELECT MAX(p.hi) FROM holding_period p WHERE p.table_id = ht.table_id)))))";
+
+/// Whether mapping `hm` binds a row key of its variant: an identifier variable, or
+/// the bound variant's `panel_entity_key` or `panel_time_key`, each a bare slug or a
+/// JSON list of slugs (decoded as `show`'s `panel_key` does).
+// simplify: the `panel_time_key` sentinel `period` passes through as a slug, so a
+// variable slugged `period` would count as a time key; exclude the sentinel if such a
+// variable is ever bound as a panel key.
+const IS_KEY: &str = "EXISTS (SELECT 1 FROM variable v JOIN register_variant rv \
+     ON rv.register_variant_id = hm.variant_id WHERE v.variable_id = hm.variable_id \
+     AND (v.is_identifier = 1 \
+          OR v.slug IN (SELECT value FROM json_each(CASE WHEN rv.panel_entity_key LIKE '[%' \
+              THEN rv.panel_entity_key ELSE json_array(rv.panel_entity_key) END)) \
+          OR v.slug IN (SELECT value FROM json_each(CASE WHEN rv.panel_time_key LIKE '[%' \
+              THEN rv.panel_time_key ELSE json_array(rv.panel_time_key) END))))";
+
+/// A projection's mapping its parent serves is dropped unless it is a key: the
+/// parent alone serves a shared non-key cell, while each file carries its own keys.
+fn kept() -> String {
+    format!("({IS_KEY} OR NOT {PARENT_SERVES})")
 }
 
 /// The held locations of the variable under the variant in tables of `scope`
@@ -835,9 +951,10 @@ fn matches(
     bounds: Option<(&str, &str)>,
 ) -> Result<Vec<Match>, Error> {
     let (lo, hi) = bounds.unzip();
-    let mut stmt = conn.prepare_cached(
+    let mut stmt = conn.prepare_cached(&format!(
         "SELECT DISTINCT ht.table_id, ht.physical_id, hc.name, ht.partition, ht.source_ref, \
-         hp.lo, hp.hi, hm.member_position, hm.member_lo, hm.member_hi \
+         hp.lo, hp.hi, hm.member_position, hm.member_lo, hm.member_hi, ht.projection, \
+         {PARENT_SERVES} \
          FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE hm.variable_id = ?1 AND hm.variant_id = ?2 AND ht.scope = ?3 \
@@ -845,8 +962,10 @@ fn matches(
          AND (?5 IS NULL OR EXISTS (SELECT 1 FROM holding_period p \
               WHERE p.table_id = ht.table_id AND p.lo <= ?6 AND p.hi >= ?5)) \
          AND (?5 IS NULL OR hm.member_lo IS NULL OR (hm.member_lo <= ?6 AND hm.member_hi >= ?5)) \
+         AND {kept} \
          ORDER BY ht.physical_id, hc.name, hp.lo, hp.hi",
-    )?;
+        kept = kept(),
+    ))?;
     let rows = stmt.query_map(params![id, variant, scope, representation, lo, hi], |row| {
         let period: (Option<String>, Option<String>) = (row.get(5)?, row.get(6)?);
         let (member_lo, member_hi): (Option<String>, Option<String>) = (row.get(8)?, row.get(9)?);
@@ -855,10 +974,15 @@ fn matches(
                 table_id: row.get(0)?,
                 table: row.get(1)?,
                 column: row.get(2)?,
-                partition: row.get(3)?,
                 source_ref: row.get(4)?,
                 periods: Vec::new(),
-                member: Member::from_columns(row.get(7)?, member_lo.clone(), member_hi.clone()),
+                placement: Placement {
+                    partition: row.get(3)?,
+                    projection: row.get(10)?,
+                    member: Member::from_columns(row.get(7)?, member_lo.clone(), member_hi.clone()),
+                    // A kept mapping its parent serves is a key.
+                    shared_key: row.get(11)?,
+                },
                 member_period: member_lo.zip(member_hi),
             },
             period,
@@ -890,11 +1014,13 @@ fn representations(
     variant: i64,
 ) -> Result<BTreeSet<String>, Error> {
     Ok(conn
-        .prepare_cached(
+        .prepare_cached(&format!(
             "SELECT hm.representation_canonical FROM holding_mapping hm \
-             JOIN holding_column hc USING(column_id) \
-             WHERE hc.table_id = ? AND hc.name = ? AND hm.variable_id = ? AND hm.variant_id = ?",
-        )?
+             JOIN holding_column hc USING(column_id) JOIN holding_table ht USING(table_id) \
+             WHERE hc.table_id = ? AND hc.name = ? AND hm.variable_id = ? AND hm.variant_id = ? \
+             AND {kept}",
+            kept = kept(),
+        ))?
         .query_map(params![table_id, column, id, variant], |row| row.get(0))?
         .collect::<rusqlite::Result<_>>()?)
 }

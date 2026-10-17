@@ -1,0 +1,83 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Child",
+        "variable": "scb/example/child",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Child",
+        "edition": "2019",
+        "table": "Combined"
+      },
+      "requested_period": "2019",
+      "source": "Annual"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Child",
+        "variable": "scb/example/child",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Child",
+        "edition": "2019",
+        "projection": "combined-narrow",
+        "table": "CombinedNarrow"
+      },
+      "requested_period": "2019",
+      "source": "Annual"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Extra",
+        "variable": "scb/example/extra",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Extra",
+        "edition": "2019",
+        "projection": "combined-narrow",
+        "table": "CombinedNarrow"
+      },
+      "requested_period": "2019",
+      "source": "Annual"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Child",
+        "variable": "scb/example/child",
+        "variant": "monthly"
+      },
+      "physical": {
+        "column": "Child",
+        "edition": "2019",
+        "table": "Combined"
+      },
+      "requested_period": "2019",
+      "source": "Monthly"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "dc96c53e95da88d62dff0982943ba84d34ed27bd11b50b7f804687b2bcebcca8",
+    "catalog_schema_version": "12.0.0",
+    "mode": "steward_holdings",
+    "project_hash": "5e665996efebcd530a0908d5d52e3384b06230a05ba6d3f2ca800bea9270fa86",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

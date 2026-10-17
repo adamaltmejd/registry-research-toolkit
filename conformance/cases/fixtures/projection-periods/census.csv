@@ -1,0 +1,5 @@
+Category,Detail,Table,V1,V2,V3
+Fixture,,Diag,Dia1,Dia2,Person
+Fixture,,DiagNarrow,Dia1,Own,Person
+Fixture,,Yearly,Person,,
+Fixture,,YearlyNarrow,Late_2019,Own,Person

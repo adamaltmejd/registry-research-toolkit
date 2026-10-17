@@ -1,0 +1,94 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Hushallsid",
+        "variable": "scb/example/hushall",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Hushallsid_2018",
+        "edition": "2018..2020",
+        "member": {
+          "year": 2018
+        },
+        "table": "Panel"
+      },
+      "requested_period": "2018",
+      "source": "Panel"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Hushallsid",
+        "variable": "scb/example/hushall",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Hushallsid_2019",
+        "edition": "2018..2020",
+        "member": {
+          "year": 2019
+        },
+        "table": "Panel"
+      },
+      "requested_period": "2019",
+      "source": "Panel"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Hushallsid",
+        "variable": "scb/example/hushall",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Hushallsid_2020",
+        "edition": "2018..2020",
+        "member": {
+          "year": 2020
+        },
+        "projection": "panel-narrow",
+        "table": "PanelNarrow"
+      },
+      "requested_period": "2020",
+      "source": "Panel"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "DIA",
+        "variable": "scb/example/diagnos",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "DIA_2018",
+        "edition": "2018",
+        "member": {
+          "year": 2018
+        },
+        "table": "Wide2018"
+      },
+      "requested_period": "2018",
+      "source": "Pivot"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "dc96c53e95da88d62dff0982943ba84d34ed27bd11b50b7f804687b2bcebcca8",
+    "catalog_schema_version": "12.0.0",
+    "mode": "steward_holdings",
+    "project_hash": "52ab63eb4e8f4161094461615bbe2af364fce5fe3a0f707a96771f4fbdca57a5",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

@@ -1,0 +1,82 @@
+{
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Hushallsid",
+        "variable": "scb/example/hushall",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Hushallsid_2018",
+        "edition": "2018..2020",
+        "member": {
+          "year": 2018
+        },
+        "table": "Panel"
+      },
+      "requested_period": "2018",
+      "source": "Panel"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Hushallsid",
+        "variable": "scb/example/hushall",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Hushallsid_2019",
+        "edition": "2018..2020",
+        "member": {
+          "year": 2019
+        },
+        "table": "Panel"
+      },
+      "requested_period": "2019",
+      "source": "Panel"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Hushallsid",
+        "variable": "scb/example/hushall",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Hushallsid_2020",
+        "edition": "2018..2020",
+        "member": {
+          "year": 2020
+        },
+        "projection": "panel-narrow",
+        "table": "PanelNarrow"
+      },
+      "requested_period": "2020",
+      "source": "Panel"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "DIA",
+        "variable": "scb/example/diagnos",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "DIA_2018",
+        "edition": "2018",
+        "member": {
+          "year": 2018
+        },
+        "table": "Wide2018"
+      },
+      "requested_period": "2018",
+      "source": "Pivot"
+    }
+  ],
+  "clips": []
+}

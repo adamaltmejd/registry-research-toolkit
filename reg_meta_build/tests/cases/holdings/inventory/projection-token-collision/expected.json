@@ -1,0 +1,22 @@
+{
+  "note": "A projection token names the projection's own extract file. Dup1 and Dup2 share a token, and AsShard's token is the partition label of the annual shard North of the same edition: each pair would write one file name under scb/example/annual. MonthlySouth's token equals South's partition label, but they share no variant; BarnKid2018 and BarnKid2019 share a token in disjoint editions, and EastKid2018's token is East2019's partition label in a disjoint edition: the file name carries the period, so each names another file. FixedDup1 and FixedDup2 are year-independent projections with one token, which share the `_default` period; FixedEast's year-independent token equals East2019's label.",
+  "fails_if": "two projections mapping a common variant over overlapping editions with one token, or a projection token equal to a partition label on a common variant and overlapping edition, stop being refused (one file silently overwrites the other), two year-independent projections with one token stop being refused, or a token equal to a label of another variant, of a disjoint edition or of a table of the other period scope is refused",
+  "error": {
+    "code": "inventory_projection_invalid",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "table['Dup1'] projection token 'dup': equals table['Dup2']'s projection token under scb/example/annual",
+      "table['AsShard'] projection token 'north': equals table['North']'s partition label under scb/example/annual",
+      "table['FixedDup1'] projection token 'fixed': equals table['FixedDup2']'s projection token under scb/example/annual"
+    ],
+    "message_excludes": [
+      "table['MonthlySouth']",
+      "table['BarnKid2018']",
+      "table['BarnKid2019']",
+      "table['EastKid2018']",
+      "table['FixedEast']"
+    ]
+  }
+}

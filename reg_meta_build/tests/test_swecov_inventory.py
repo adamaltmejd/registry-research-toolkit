@@ -302,6 +302,45 @@ def test_an_unknown_edition_spelling_is_refused(
     assert refused.value.code == "steward_spec_invalid"
 
 
+@pytest.mark.parametrize("token", ["barn", "Barn Kid"])
+def test_a_curated_projection_reaches_the_inventory(
+    tmp_path: Path, flavored_db: Path, token: str
+) -> None:
+    """A series table's `projection = { of, token }` is emitted on that table's
+    inventory entry, which the inventory loader admits as a projection of its
+    parent; a token outside the slug grammar is refused at the spec, located at
+    its series file, before anything is emitted. Fails if the generator drops the
+    declaration (the two tables' shared column is then a cell conflict) or the
+    spec admits a token no extract file name can carry."""
+    csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
+    csv_path.write_text(
+        "Category,Detail,Table\n"
+        "Inera/1177,Ordered tests,T2012,T_kolumn\n"
+        "Inera/1177,Ordered tests,TKid2012,T_kolumn\n",
+        encoding="utf-8",
+    )
+    series = (
+        one_table_series("T2012") + f'\n[[table]]\ntable = "TKid2012"\nedition = 2012\n'
+        f'projection = {{ of = "T2012", token = "{token}" }}\n'
+    )
+    spec = write_spec(tmp_path / "steward", csv_path, {"s": series})
+    run = argparse.Namespace(csv=csv_path, spec=spec, out=spec)
+    if token != "barn":
+        with pytest.raises(RegMetaError, match="series/s.toml") as refused:
+            build_catalog.write_inventory(run, flavored_db)
+        assert refused.value.code == "steward_spec_invalid"
+        assert not (spec / "inventory.toml").exists()
+        return
+    build_catalog.write_inventory(run, flavored_db)
+    tables = {
+        table.id: table
+        for table in load_delivery_inventory(spec / "inventory.toml").tables
+    }
+    assert tables["T2012"].projection is None
+    projection = tables["TKid2012"].projection
+    assert (projection.of, projection.token) == ("T2012", "barn")
+
+
 def test_a_stage_refuses_a_census_table_the_spec_does_not_dispose_of(
     tmp_path: Path, flavored_db: Path
 ) -> None:

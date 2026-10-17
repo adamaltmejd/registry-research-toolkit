@@ -1,0 +1,41 @@
+{
+  "note": "Person in 2018 (source S2018), YearlyNarrow's own 2019 year member Late in 2019 (source S2019). YearlyNarrow contributes nothing of its own in 2018, so Person 2018 comes from Yearly alone; its 2019 file holds Late_2019, with no key because the order binds none for 2019. Fails if the shared-key gate is per table and variant, not per period unit (YearlyNarrow's 2018 Person is emitted: a file of keys only).",
+  "fixture": "projection-periods",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "S2018",
+        "register_variant": "scb/example/annual",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/person",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      },
+      {
+        "name": "S2019",
+        "register_variant": "scb/example/annual",
+        "period": 2019,
+        "bindings": [
+          {
+            "variable": "scb/example/late",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}

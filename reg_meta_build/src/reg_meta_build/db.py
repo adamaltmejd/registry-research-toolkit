@@ -32,7 +32,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 from .source_evidence import SourceRecordRef  # noqa: TC001
 
 # Produced catalog schema; readers gate their independently supported version.
-SCHEMA_VERSION = "11.0.0"
+SCHEMA_VERSION = "12.0.0"
 
 if TYPE_CHECKING:
     from .ir import (
@@ -1742,6 +1742,15 @@ CREATE TABLE holding_table (
         AND partition GLOB '[a-z]*' AND partition NOT GLOB '*[^a-z0-9-]*'
         AND partition NOT LIKE '%--%' AND substr(partition, -1) <> '-'
         AND partition <> 'class')),
+    -- Curated parent whose delivery this table is a column subset of (#1634); never an
+    -- inferred overlap, a shard or a different edition.
+    projection_of TEXT REFERENCES holding_table(physical_id),
+    -- Authored projection token naming the projection's own extract file, as a partition
+    -- label names a shard's; never derived from physical_id.
+    projection TEXT CHECK (projection IS NULL OR (length(projection) > 0
+        AND projection GLOB '[a-z]*' AND projection NOT GLOB '*[^a-z0-9-]*'
+        AND projection NOT LIKE '%--%' AND substr(projection, -1) <> '-'
+        AND projection <> 'class')),
     -- Authored retain_unknown reason only; never an invented reason or warning witness JSON.
     retain_unknown_reason TEXT CHECK (retain_unknown_reason IS NULL
         OR length(trim(retain_unknown_reason)) > 0),
@@ -1750,6 +1759,8 @@ CREATE TABLE holding_table (
     CHECK ((scope = 'unknown' AND retain_unknown_reason IS NOT NULL)
         OR (scope <> 'unknown' AND retain_unknown_reason IS NULL)),
     CHECK (scope = 'unknown' OR edition_json IS NOT NULL),
+    CHECK (projection_of IS NULL OR (scope <> 'unknown' AND projection_of <> physical_id)),
+    CHECK ((projection IS NULL) = (projection_of IS NULL)),
     CHECK (scope <> 'year_independent' OR
         (json_type(edition_json) = 'text' AND json_extract(edition_json, '$') = '_default'))
 );

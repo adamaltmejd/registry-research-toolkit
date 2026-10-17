@@ -5130,6 +5130,13 @@
                 "null"
               ]
             },
+            "projection": {
+              "description": "The table's projection token (#1634): the table is a declared projection\nof another table's delivery, extracted as its own file; absent otherwise.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "table": {
               "type": "string"
             }

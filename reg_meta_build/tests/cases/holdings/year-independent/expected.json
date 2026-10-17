@@ -5,6 +5,7 @@
       "scope": "year_independent",
       "edition": "_default",
       "partition": null,
+      "projection": null,
       "retain_unknown_reason": null
     }
   ],

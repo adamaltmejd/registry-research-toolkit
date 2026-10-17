@@ -1,0 +1,7 @@
+{
+  "catalog": "catalog.json",
+  "inventory": "inventory.toml",
+  "census": "census.csv",
+  "fails_if": "a declared projection's shared Id conflicts with its parent (the exemption is lost), the projection declaration (parent and token) is not stored on the projection's holding_table row (or is stored on the parent), or the artifact validator rebuilds the pair without it and refuses the build",
+  "scope": "scope.toml"
+}

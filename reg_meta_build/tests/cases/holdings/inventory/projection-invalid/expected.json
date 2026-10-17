@@ -1,0 +1,23 @@
+{
+  "note": "Two valid projections of Parent (Good, and SpelledRange whose one-year range has Parent's bounds) and one table per projection rule; the refusal lists every offending table on its own line and leaves the valid ones alone. The shared cells never reach the one-to-one check: the projection rules refuse first.",
+  "fails_if": "a projection naming a missing table or itself, a projection of a projection, a partitioned projection, a projection of a partitioned parent, a projection with another edition, or a projection mapping a variant its parent does not map stops being refused, or a valid projection is refused (including one whose edition is spelled differently with the same bounds)",
+  "error": {
+    "code": "inventory_projection_invalid",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "table['Orphan'] projection of 'Missing': names no other table of this inventory",
+      "table['Self'] projection of 'Self': names no other table of this inventory",
+      "table['Chain'] projection of 'Good': names a projection; name the table it projects",
+      "table['Sharded'] projection of 'Parent': a projection and its parent carry no partition",
+      "table['OfShard'] projection of 'ShardParent': a projection and its parent carry no partition",
+      "table['Later'] projection of 'Parent': a projection has its parent's edition and period scope",
+      "table['OtherVariant'] projection of 'Parent': maps variants its parent does not: scb/example/monthly"
+    ],
+    "message_excludes": [
+      "table['Good']",
+      "table['SpelledRange']"
+    ]
+  }
+}

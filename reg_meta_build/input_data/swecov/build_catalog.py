@@ -2102,7 +2102,8 @@ def _fold_case_twins(
 #
 #   scope.toml       lookups, exclusions and retained-unknown tables: not emitted
 #   series/*.toml    each member table with its explicit edition (spelled by the
-#                    series' `edition_spelling`) and partition; the series'
+#                    series' `edition_spelling`), partition and curated
+#                    `projection` (#1634); the series'
 #                    `variants` are the table's admissible coordinates; curated
 #                    column decisions: a reviewed mapping (guarded by the physical
 #                    coordinates and full catalog coverage of the edition), an
@@ -2461,6 +2462,11 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
             lines.append('period_scope = "year_independent"')
         if members[table].partition is not None:
             lines.append(f"partition = {_toml_str(members[table].partition)}")
+        if (projection := members[table].projection) is not None:
+            lines.append(
+                f"projection = {{ of = {_toml_str(projection.of)}, "
+                f"token = {_toml_str(projection.token)} }}"
+            )
         for col in cols:
             n_cols += 1
             decision = decisions.get((table, col))
