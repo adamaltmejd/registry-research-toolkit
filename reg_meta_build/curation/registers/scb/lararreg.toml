@@ -13285,9 +13285,10 @@ evidence = "SWECOV holds ANNANPED in LReg_1999 through LReg_2016; the same deliv
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column Argang on Lärarregistret, Tjänsteregistret for Läsåret 1989/1990 to 2005/2006. The meaning is assumed from SCB's Läsåret 2006/2007 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column Argang on Lärarregistret, Tjänsteregistret for Läsåret 1989/1990 to 2005/2006. The meaning and unit are assumed from SCB's Läsåret 2006/2007 documentation of the same delivered name in this register; it is not confirmed for these editions."
 variant = "tjansteregistret"
 column = "Argang"
+measurement_unit = "Läsår"
 versions = ["Läsåret 1989/1990", "Läsåret 1990/1991", "Läsåret 1991/1992", "Läsåret 1992/1993", "Läsåret 1993/1994", "Läsåret 1994/1995", "Läsåret 1995/1996", "Läsåret 1996/1997", "Läsåret 1997/1998", "Läsåret 1998/1999", "Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006"]
 upstream = "omitted-column-in-version"
 native_variable_id = 1396
@@ -13384,9 +13385,10 @@ evidence = "SWECOV holds SFITyp in LReg_1999 through LReg_2005; the same deliver
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column Saktar on Lärarregistret, Tjänsteregistret for Läsåret 2007/2008. The meaning is assumed from SCB's Läsåret 2006/2007 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column Saktar on Lärarregistret, Tjänsteregistret for Läsåret 2007/2008. The meaning and unit are assumed from SCB's Läsåret 2006/2007 documentation of the same delivered name in this register; it is not confirmed for these editions."
 variant = "tjansteregistret"
 column = "Saktar"
+measurement_unit = "År"
 versions = ["Läsåret 2007/2008"]
 upstream = "omitted-column-in-version"
 native_variable_id = 8770

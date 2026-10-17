@@ -14294,9 +14294,10 @@ slug = "emp2020-enligt-leverans"
 # same-name rule; replaces the CIS2002 EMP mint.
 
 [[errata.delivered]]
-data_warning = "Betydelsen antas från SCB:s EMP (antal anställda, variabel 690), som SCB dokumenterar först från 2020–2022; för den här omgången dokumenterar SCB inte kolumnen, och SWECOV fastställer inte att värdet har samma källa och årgång."
+data_warning = "Betydelsen och enheten antas från SCB:s EMP (antal anställda, variabel 690), som SCB dokumenterar först från 2020–2022; för den här omgången dokumenterar SCB inte kolumnen, och SWECOV fastställer inte att värdet har samma källa och årgång."
 variant = "_default"
 column = "EMP"
+measurement_unit = "Antal"
 versions = ["2000 - 2002", "2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2016 - 2018"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "4f7097aa4e5fb8c073200ff5ed66edd3ada3fca0f5acadc101e6b92a516f4922"

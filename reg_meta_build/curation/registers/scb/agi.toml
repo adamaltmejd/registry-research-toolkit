@@ -968,9 +968,10 @@ evidence = "SWECOV holds ERSATTNINGS_KOD1..4 in the Soc_AGIIndivid<YYYYMM>_Def t
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column ERSATTNINGS_BELOPP on Individuppgifter AGI for 2021 to 2023. The meaning is assumed from SCB's 2020 documentation of the same delivered name in this register (native 6111, Utbetalt ersättningsbelopp); it is not confirmed for these years."
+data_warning = "SCB documents no column ERSATTNINGS_BELOPP on Individuppgifter AGI for 2021 to 2023. The meaning and unit are assumed from SCB's 2020 documentation of the same delivered name in this register (native 6111, Utbetalt ersättningsbelopp); it is not confirmed for these years."
 variant = "individuppgifter-agi"
 column = "ERSATTNINGS_BELOPP"
+measurement_unit = "Kronor (SEK)"
 versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
 upstream = "omitted-column-in-version"
 native_variable_id = 6111

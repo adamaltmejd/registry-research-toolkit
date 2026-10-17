@@ -12495,9 +12495,10 @@ noted = "2026-10-16"
 data_warning = "SWECOV:s PMD kan avse bärbara enheter med mobil anslutning till anställda (28819) eller mobil bredbandsanslutning via 3G/4G (25333); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
 
 [[errata.delivered]]
-data_warning = "SCB documents no column EMPIUSEPCT on IT-användning i företag for 2008-2012. The meaning is assumed from SCB's 2013 documentation of native 17675 (andel sysselsatta som använder dator med internetuppkoppling), the nearest edition with the same delivered name; it is not confirmed for these rounds."
+data_warning = "SCB documents no column EMPIUSEPCT on IT-användning i företag for 2008-2012. The meaning and unit are assumed from SCB's 2013 documentation of native 17675 (andel sysselsatta som använder dator med internetuppkoppling), the nearest edition with the same delivered name; it is not confirmed for these rounds."
 variant = "it-anvandning-i-foretag"
 column = "EMPIUSEPCT"
+measurement_unit = "Procent"
 versions = ["2008", "2009", "2010", "2011", "2012"]
 upstream = "omitted-column-in-version"
 native_variable_id = 17675
