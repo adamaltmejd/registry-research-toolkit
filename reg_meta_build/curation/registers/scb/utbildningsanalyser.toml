@@ -8385,3 +8385,49 @@ upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "c358021fc58585802358a8a363d5d1cae7a48f643c00f59bcb16a9accbffed8b"
 evidence = "SWECOV holds F6VT21c in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
 noted = "2026-10-17"
+
+# ── #1640: coding of the added Vårterminen 2020 windows left unavailable ──
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/utbildningsanalyser/undantag-distans-extra-anpassningar-ht"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:366\",\"variant:1649\",\"edition:17984\",\"variable:44999\",\"member:840376\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
+evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/utbildningsanalyser/f6ht20c"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:366\",\"variant:1649\",\"edition:17984\",\"variable:45001\",\"member:840378\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
+evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/utbildningsanalyser/undantag-distans-extra-anpassningar-vt"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:366\",\"variant:1649\",\"edition:17984\",\"variable:44995\",\"member:840372\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
+evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/utbildningsanalyser/f6vt21c"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:366\",\"variant:1649\",\"edition:17984\",\"variable:44997\",\"member:840374\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
+evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
