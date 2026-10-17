@@ -554,7 +554,7 @@ evidence = "Exact unavailable-dictionary limitation under the approved source-re
 
 [[errata.field]]
 variable = "7550156225339591583.PLACDAT1"
-variant = "7550156225339591583.5603219700258472414"
+variant = "bu_insats_endastxnr"
 column = "PLACDAT1"
 expected_fields = [{ name = "name", status = "value", value = "Datum för start av placering" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dag då den första placeringen för insatsen påbörjades" }, { name = "operational_definition", status = "absent" }, { name = "identifier", status = "value", value = true }]
 expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2014" }] }
