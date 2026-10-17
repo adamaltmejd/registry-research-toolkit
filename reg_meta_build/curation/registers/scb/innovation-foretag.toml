@@ -14066,20 +14066,6 @@ data_warning = "SWECOV:s COOP_NO kan avse samarbete inom övriga aktiviteter (39
 
 [[errata.column]]
 variant = "_default"
-column = "EMP"
-data_type = "decimal"
-name = "EMP (enligt leverans)"
-definition = "SCB:s källmetadata för 2002–2004 knyter inte kolumnnamnet EMP till någon fråga eller produktionsårgång. Det enda kandidatbegreppet i SCB:s export är SCB-variabel 690, \"Antal anställda\" (antal anställda personer hämtat från FDB, under namnet EMP i 2022–2024 års leveranser); att den levererade kolumnen har samma betydelse är inte fastställt. Lagringstypen är float; variabeln anges som decimal."
-is_sensitive = false
-is_identifier = false
-holdings_period = "2002-2002"
-source = "steward-holdings"
-evidence = "SWECOV holds EMP in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2022. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
-noted = "2026-10-16"
-data_warning = "SWECOV:s EMP i CIS2002 kan avse antal anställda (690), som kolumnnamnet betyder från 2022, men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilken årgång och källa värdet avser."
-
-[[errata.column]]
-variant = "_default"
 column = "STRAT"
 data_type = "decimal"
 name = "STRAT (enligt leverans)"
@@ -14199,10 +14185,6 @@ native_id = "257.COOP_NO"
 slug = "coop-no-enligt-leverans"
 
 [[variable]]
-native_id = "257.EMP"
-slug = "emp-enligt-leverans"
-
-[[variable]]
 native_id = "257.STRAT"
 slug = "strat-enligt-leverans"
 
@@ -14289,3 +14271,16 @@ slug = "emp2016-enligt-leverans"
 [[variable]]
 native_id = "257.Emp2018"
 slug = "emp2018-enligt-leverans"
+
+# #1603 batch-e, option (b): antal-anstallda (EMP) carried into every SWECOV CIS wave by the
+# same-name rule; replaces the CIS2002 EMP mint.
+
+[[errata.delivered]]
+data_warning = "Betydelsen antas från SCB:s EMP (antal anställda, variabel 690), som SCB dokumenterar först från 2020–2022; för den här omgången dokumenterar SCB inte kolumnen, och SWECOV fastställer inte att värdet har samma källa och årgång."
+variant = "_default"
+column = "EMP"
+versions = ["2000 - 2002", "2002 - 2004", "2004 - 2006", "2006 - 2008", "2008 - 2010", "2016 - 2018", "2018 - 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+evidence = "SWECOV holds the wave's own reference-year employee count in every CIS table: EMP in CIS2002 (2000 - 2002); emp04 in CIS2004 (2002 - 2004); emp06 in CIS2006 (2004 - 2006); emp08 in CIS2008 (2006 - 2008); emp10 in CIS2010 (2008 - 2010); Emp2018 in CIS2018 (2016 - 2018); Emp2020 in CIS2020 (2018 - 2020). SCB documents the column EMP, Antal anställda (SCB-variabel 690, hämtat från FDB), only from 2020 - 2022 (as EMP2022) and 2022 - 2024; its export has no row for it in these versions. Under the maintainer's same-name rule the column takes the meaning of its nearest documented edition, so these waves deliver antal-anstallda rather than a per-wave mint (one EMP variable); CIS<Y> is the <Y-2> - <Y> wave, and CIS2002's 2000 - 2002 round is the errata.version above. Replaces the CIS2002 'EMP (enligt leverans)' mint (#1603 batch-e, #1495; Operator under maintainer delegation 2026-10-16, option (b), 2026-10-17)."
+noted = "2026-10-17"
