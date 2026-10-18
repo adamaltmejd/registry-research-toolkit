@@ -188,4 +188,5 @@ unmap = "Known shared field retained physically in auxiliary holding Partner_201
 
 [[column]]
 column = "P1105_Lopnr_PersonNr_Partner"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. RTB source policy explicitly identifies annual family status columns and their native family register; original table year and own family-status state fix the December 31 snapshot."
+mappings = [{ register_variant = "scb/rtb/familjer-fran-1998", variable = "scb/rtb/personnr-partner", representation = "PersonNr_Partner" }]
+reason = "Undocumented partner person key minted on scb/rtb/familjer-fran-1998 (Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md))."

@@ -952,3 +952,68 @@ slug = "fartygets-namn"
 [[variable]]
 native_id = "392.FARTYGSSIGNAL"
 slug = "fartygssignal"
+
+# ── #1603 batch-e / #1495: same-name carries of the Soc_ wide-pivot ERSATTNINGS_KOD/BELOPP slots into 2021-2023 ──
+# Meaning and any documented unit are carried (maintainer unit ruling 2026-10-17); code
+# lists are not.
+
+[[errata.delivered]]
+data_warning = "SCB documents no column ERSATTNINGS_KOD on Individuppgifter AGI for 2021 to 2023. The meaning is assumed from SCB's 2020 documentation of the same delivered name in this register (native 6112, Ersättningskod); it is not confirmed for these years."
+variant = "individuppgifter-agi"
+column = "ERSATTNINGS_KOD"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+native_variable_id = 6112
+expected_evidence_sha256 = "820a65a87cfda007a66dbfb446336890cf0bc87349611e3c265c9e850c27830a"
+evidence = "SWECOV holds ERSATTNINGS_KOD1..4 in the Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12, mapped as wide-pivot members of scb/agi/ersattningskod; SCB documents ERSATTNINGS_KOD on this variant as native 6112 in 2019 and 2020 and nothing after 2020. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule; #1495 wide-pivot cells; Operator pivot draft 2026-10-16). Delivered storage type (int/bigint) is compatible with the documented data type (integer). Meaning only: the code list is not carried."
+noted = "2026-10-16"
+
+[[errata.delivered]]
+data_warning = "SCB documents no column ERSATTNINGS_BELOPP on Individuppgifter AGI for 2021 to 2023. The meaning and unit are assumed from SCB's 2020 documentation of the same delivered name in this register (native 6111, Utbetalt ersättningsbelopp); it is not confirmed for these years."
+variant = "individuppgifter-agi"
+column = "ERSATTNINGS_BELOPP"
+measurement_unit = "Kronor (SEK)"
+versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmånsutbetalningar", "2023, löne- och förmånsutbetalningar"]
+upstream = "omitted-column-in-version"
+native_variable_id = 6111
+expected_evidence_sha256 = "19c448ba7271121ed4664862f37626d51e56d101c6ac15cdc177a9bb970a3c9b"
+evidence = "SWECOV holds ERSATTNINGS_BELOPP1..4 in the Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12, mapped as wide-pivot members of scb/agi/ersattningsbelopp; SCB documents ERSATTNINGS_BELOPP on this variant as native 6111 in 2019 and 2020 and nothing after 2020. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule; #1495 wide-pivot cells; Operator pivot draft 2026-10-16). Delivered storage type (int/bigint) is compatible with the documented data type (integer). Meaning and unit carried from the documented edition."
+noted = "2026-10-16"
+
+# ── #1603 batch-e: coding of the carried ERSATTNINGS_KOD windows left unavailable (meaning only) ──
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/agi/ersattningskod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:15110\",\"variable:6112\",\"member:706531\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:17968\",\"variable:6112\",\"member:834268\"]}"]
+fields = ["coding"]
+valid_from = "2021-01-01"
+valid_to = "2021-12-31"
+reason = "The #1603 batch-e same-name carry gives this column 2020's meaning for 2021; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
+evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ERSATTNINGS_KOD on individuppgifter-agi under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
+expected_evidence_sha256 = "5cb773d8832901a16f89850af0f6e639a14113ae5802ef29c7ba09c616f83bc1"
+expected_diagnostic_sha256 = "8f348ffbff84e86e06ecf3b74bb99c1ae86622eed4ef6d228061f6e497981362"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/agi/ersattningskod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:15110\",\"variable:6112\",\"member:706531\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:17968\",\"variable:6112\",\"member:834268\"]}"]
+fields = ["coding"]
+valid_from = "2022-01-01"
+valid_to = "2022-12-31"
+reason = "The #1603 batch-e same-name carry gives this column 2020's meaning for 2022; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
+evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ERSATTNINGS_KOD on individuppgifter-agi under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
+expected_evidence_sha256 = "5cb773d8832901a16f89850af0f6e639a14113ae5802ef29c7ba09c616f83bc1"
+expected_diagnostic_sha256 = "12459109ae7720d2583377332d0450ffb1a17f5c8c7c6f2f00798dbe673414c0"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/agi/ersattningskod"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:15110\",\"variable:6112\",\"member:706531\"]}", "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:17968\",\"variable:6112\",\"member:834268\"]}"]
+fields = ["coding"]
+valid_from = "2023-01-01"
+valid_to = "2023-12-31"
+reason = "The #1603 batch-e same-name carry gives this column 2020's meaning for 2023; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
+evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ERSATTNINGS_KOD on individuppgifter-agi under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
+expected_evidence_sha256 = "5cb773d8832901a16f89850af0f6e639a14113ae5802ef29c7ba09c616f83bc1"
+expected_diagnostic_sha256 = "a1aafc02fad9b841182e6a20d6a7ebe3e441b7743a68146a6be552c8425fac28"

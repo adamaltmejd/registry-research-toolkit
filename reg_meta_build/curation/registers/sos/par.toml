@@ -539,6 +539,92 @@ value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillstånd
 evidence = "Hard line breaks only. Original rows row:15 and row:88 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 noted = "2026-09-30"
 
+# #1603 batch-e (#1633): SWECOV's PAR_OV/PAR_SV tables deliver the per-position DIA
+# and ATG codes for 2005-2014 too, under the same names. SoS documents them only from
+# 2015, so each carry adds a warned 2005-2014 occurrence beside the documented one.
+# Guards copy the original prepared records; the DIA/PAR_OV description fix above is
+# replayed onto the carried years.
+
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.DIA"
+variant = "PAR_OV"
+column = "DIA"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet\när orsakat av eller relaterat\ntill läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }, { name = "name", status = "value", value = "Diagnoskod eller ATC-kod vid skada eller förgiftning" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported diagnosis codes only inside the DIAGNOS string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented DIA."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents DIA as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, diagnosis codes exist only inside DIAGNOS (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; maintainer same-name rule 2026-10-16."
+noted = "2026-10-17"
+
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.DIA"
+variant = "PAR_SV"
+column = "DIA"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }, { name = "name", status = "value", value = "Diagnoskod eller ATC-kod vid skada eller förgiftning" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported diagnosis codes only inside the DIAGNOS string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented DIA."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents DIA as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, diagnosis codes exist only inside DIAGNOS (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; maintainer same-name rule 2026-10-16."
+noted = "2026-10-17"
+
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.ATG"
+variant = "PAR_OV"
+column = "ATG"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Åtgärd som utförts under vårdkontakten. Vid läkemedelstillförsel kan värdet vara en ATC-kod som anger läkemedlet i fråga" }, { name = "name", status = "value", value = "Åtgärdskod eller ATC-kod som avser läkemedelstillförsel" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported action codes only inside the OP string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented ATG."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents ATG as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, action codes exist only inside OP (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; maintainer same-name rule 2026-10-16."
+noted = "2026-10-17"
+
+[[errata.occurrence_carry]]
+variable = "5891427617861710725.ATG"
+variant = "PAR_SV"
+column = "ATG"
+expected_fields = [{ name = "definition", status = "absent" }, { name = "description", status = "value", value = "Åtgärd som utförts under vårdkontakten. Vid läkemedelstillförsel kan värdet vara en ATC-kod som anger läkemedlet i fråga" }, { name = "name", status = "value", value = "Åtgärdskod eller ATC-kod som avser läkemedelstillförsel" }, { name = "operational_definition", status = "absent" }, { name = "coverage_from", status = "value", value = "2015" }, { name = "coverage_to", status = "unknown" }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
+data_warning = "Before 2015 Socialstyrelsen reported action codes only inside the OP string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented ATG."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents ATG as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, action codes exist only inside OP (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; maintainer same-name rule 2026-10-16."
+noted = "2026-10-17"
+
+# #1603 batch-e (#1633): kva_typ is the stem of SWECOV's kva_typ1..30 position
+# columns on PAR_OV and PAR_SV. SoS documents no such field, so it is minted, one
+# entry per subset with identical facts, so both share one variable.
+
+[[variable]]
+native_id = "5891427617861710725.kva_typ"
+slug = "kva-typ-enligt-leverans"
+
+[[errata.column]]
+variant = "PAR_OV"
+column = "kva_typ"
+data_type = "text"
+name = "kva_typ (enligt leverans)"
+definition = "Typ av KVÅ-åtgärdskod per position (antagen betydelse)."
+holdings_period = "2005-2023"
+data_warning = "Socialstyrelsen documents no such field. The meaning, the type of the KVÅ procedure code at each position, is a candidate reading of the delivered column."
+source = "steward-holdings"
+evidence = "SWECOV's SWECOV_SOS_OV table (edition 2005-2023) holds kva_typ1..30 beside the op1..30 action-code positions; the SoS PAR metadata documents no kva_typ field. data_type from SWECOV's storage type (text). #1603 batch-e; Operator pivot draft 2026-10-16."
+noted = "2026-10-17"
+
+[[errata.column]]
+variant = "PAR_SV"
+column = "kva_typ"
+data_type = "text"
+name = "kva_typ (enligt leverans)"
+definition = "Typ av KVÅ-åtgärdskod per position (antagen betydelse)."
+holdings_period = "2005-2023"
+data_warning = "Socialstyrelsen documents no such field. The meaning, the type of the KVÅ procedure code at each position, is a candidate reading of the delivered column."
+source = "steward-holdings"
+evidence = "SWECOV's SWECOV_SOS_SV table (edition 2005-2023) holds kva_typ1..30 beside the op1..30 action-code positions; the SoS PAR metadata documents no kva_typ field. data_type from SWECOV's storage type (text). #1603 batch-e; Operator pivot draft 2026-10-16."
+noted = "2026-10-17"
+
 [[errata.field]]
 variable = "5891427617861710725.DIA_ANT"
 variant = "PAR_OV"
@@ -933,6 +1019,16 @@ evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Mis
 
 [[acknowledge]]
 code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATG', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_OV', 'column', 'ATG')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_OV\",\"variable:ATG\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2005-01-01"
+valid_to = "2014-12-31"
+reason = "The #1603 batch-e occurrence_carry copies ATG and its source classification declaration into 2005-2014; the same unavailable source dictionary limits it there as in 2015+ (acknowledged above). Preserve source facts and every separate coding limitation."
+evidence = "Mirrors the 2015+ acknowledgement of this exact literal KVÅ reference (user-approved exact39 missing-dictionary limitations, 2026-09-30) for the years the #1603 batch-e carry adds (maintainer same-name rule 2026-10-16)."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
 subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATG', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'ATG')"
 refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:ATG\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
 fields = ["classification_declared"]
@@ -940,6 +1036,16 @@ valid_from = "2015-01-01"
 valid_to = "9999-12-31"
 reason = "Exact unavailable source dictionary limits verified classification; preserve source facts and every separate coding limitation."
 evidence = "User-approved exact39 missing-dictionary limitations,2026-09-30. Missing authoritative dictionary membership/edition for this exact literal source reference. Existing finite source domains remain; ambiguous or unknown coding remains withheld. No category union, guessed edition, code rewrite or source-period inference. Review Unavailable-dictionary39-user-review.md and complete-source receipt. Exact current selectors and full diagnostic/source receipts:Unavailable-dictionary39-current-review-receipt.json; original fields, literal domains and separate coding withholding retained."
+
+[[acknowledge]]
+code = "unresolved_classification_reference"
+subject = "('Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variable', 'native-str', 'ATG', 'variant-key', 'Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx', 'sos', 'register', 'name', 'Patientregistret', 'variant', 'name', 'PAR_SV', 'column', 'ATG')"
+refs = ["{\"semantic_record_key\":[\"register:Patientregistret\",\"deldatamangd:PAR_SV\",\"variable:ATG\"],\"source\":\"Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx\"}"]
+fields = ["classification_declared"]
+valid_from = "2005-01-01"
+valid_to = "2014-12-31"
+reason = "The #1603 batch-e occurrence_carry copies ATG and its source classification declaration into 2005-2014; the same unavailable source dictionary limits it there as in 2015+ (acknowledged above). Preserve source facts and every separate coding limitation."
+evidence = "Mirrors the 2015+ acknowledgement of this exact literal KVÅ reference (user-approved exact39 missing-dictionary limitations, 2026-09-30) for the years the #1603 batch-e carry adds (maintainer same-name rule 2026-10-16)."
 
 [[acknowledge]]
 code = "unresolved_classification_reference"

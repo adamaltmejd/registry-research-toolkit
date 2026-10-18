@@ -493,15 +493,6 @@ columns = [{ valid_from = "1961-01-01", valid_to = "2013-12-31", column = "VARTB
 evidence = "Complete accepted BU native family: VARTBARN. Exact named tables provide their own description. Preserve each literal source text on its own delivery and supplied period, including child/young-person wording, collection instructions and intervention/placement event granularity. No common text is invented, no physical table is merged and no statistical equivalence is asserted. All original fields, flags, types, scopes, parent facts and coding references are pinned. Acceptance cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-delivery-text-source-proof.json."
 noted = "2026-10-01"
 
-[[acknowledge]]
-code = "unresolved_flag"
-subject = "sos/bu/datum-start-placering"
-refs = ["{\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_19602013\",\"variable:PLACDAT1\"]}", "{\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_endastxnr\",\"variable:PLACDAT1\"]}", "{\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_insats_pnrq0\",\"variable:PLACDAT1\"]}", "{\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_19602013\",\"variable:PLACDAT1\"]}", "{\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_endastxnr\",\"variable:PLACDAT1\"]}", "{\"source\":\"Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx\",\"semantic_record_key\":[\"register:Registret över insatser till barn och unga\",\"deldatamangd:bu_plac_pnrq0\",\"variable:PLACDAT1\"]}"]
-fields = ["is_identifier"]
-expected_evidence_sha256 = "c07db78e1a190a528d2c5adac7adf0354aca7ed1085e329c2e1418e45b8f5e3d"
-reason = "One supplied BU placement-start date delivery is marked as an identifier while five sibling deliveries are not. The catalog cannot express this mixed delivery-specific identifier flag. Preserve every source flag and leave this variable and dependent output unavailable; do not default the unresolved flag to false."
-evidence = "Complete6-original native PLACDAT1 family, accepted WGS source cdd343ba8a61e6d2e44a2f057ae6677e579db32d. Exact full-original fingerprint guard; no type, date, coding or flag correction. Proof Batch48-BU-PLACDAT1-mixed-identifier-source-proof.json."
-
 [[coding.documented]]
 variable = "7550156225339591583.PNRQ"
 variant = "7550156225339591583.5325661757297592148"
@@ -558,3 +549,17 @@ valid_to = "2013-12-31"
 expected_evidence_sha256 = "53a4b4976dbf9fd4120b9d8002b271768abd383730919afb0760f104ab7b32c3"
 reason = "The supplied BU father’s birth-country field names the Skatteverket country-code dictionary, but the held inputs do not supply the historical dictionary membership or edition for1960–2013. Preserve both original declarations and all source facts; leave verified classification links empty rather than substitute a modern country-code book."
 evidence = "Exact unavailable-dictionary limitation under the approved source-retention policy. Both physical originals under the one semantic reference are retained and fingerprinted; identical diagnostics are counted once, while distinct references, details and periods remain independent. Complete accepted WGS source cdd343ba8a61e6d2e44a2f057ae6677e579db32d; proof Batch48-BU-FFODLAND-unavailable-dictionary-proof.json."
+
+# ── #1662: datum-start-placering's one mixed identifier claim (#1603 batch-e) ──
+
+[[errata.field]]
+variable = "7550156225339591583.PLACDAT1"
+variant = "bu_insats_endastxnr"
+column = "PLACDAT1"
+expected_fields = [{ name = "name", status = "value", value = "Datum för start av placering" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Dag då den första placeringen för insatsen påbörjades" }, { name = "operational_definition", status = "absent" }, { name = "identifier", status = "value", value = true }]
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2014" }] }
+expected_period = { kind = "not_applicable", intervals = [] }
+field = "identifier"
+value = false
+evidence = "PLACDAT1 is the start date of the intervention's first placement (Datum för start av placering), not a linkage key. Five of the six SoS BU deliveries that document it (bu_insats_19602013, bu_insats_pnrq0, bu_plac_19602013, bu_plac_endastxnr, bu_plac_pnrq0) state it is not an identifier; bu_insats_endastxnr is the single outlier. Sensitivity is unchanged (all six state sensitive). Maintainer approval 2026-10-17 (#1662; #1603 batch-e)."
+noted = "2026-10-17"

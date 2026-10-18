@@ -77,4 +77,24 @@ slug = "ordinarie-vardares-sjukdom"
 [[variable]]
 native_id = "6486633934264544358.VAB"
 slug = "vard-av-barn"
+
+# #1603 batch-e (#1633): SWECOV's FK_TFP_DELFALL_lev4 delivers the delförmån code in
+# long format, one row per occurrence. FK documents only the positional
+# DELFORMAN_KOD_1..3, so the any-position column is minted.
+
+[[variable]]
+native_id = "6486633934264544358.DELFORMAN_KOD"
+slug = "delforman-kod"
+
+[[errata.column]]
+variant = "6486633934264544358.delfall1-1-8"
+column = "DELFORMAN_KOD"
+data_warning = "Undocumented column: FK documents only the positional DELFORMAN_KOD_1..3, not this one-row-per-occurrence DELFORMAN_KOD. The meaning is adapted from those columns; an aggregate check on MONA found its codes match the DELFORMAN labels one to one."
+data_type = "text"
+name = "Delförmånskod"
+definition = "Typ av TFP som har ersatts för under delfallet, en rad per delförmån (långt format)."
+holdings_period = "2015-2024"
+source = "steward-holdings"
+evidence = "SWECOV's FK_TFP_DELFALL_lev4 (edition 2015-2024) holds DELFORMAN_KOD beside its plain-text label DELFORMAN. FK documents only the positional DELFORMAN_KOD_1..3 on delfall1-1-8 (definition adapted from those). An aggregate check on MONA, reported as a conclusion only, found the codes 1:1 with their DELFORMAN labels, one row per occurrence. data_type from SWECOV's storage type (text). #1603 batch-e; maintainer decision 2026-10-16 (#1556)."
+noted = "2026-10-17"
 # register 7664376130118991107

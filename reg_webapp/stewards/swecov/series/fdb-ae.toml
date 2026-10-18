@@ -104,3 +104,52 @@ column = "aestat"
 tables = ["FDB_AE_2022"]
 mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/arbstalle-status", representation = "AdmStat" }]
 reason = "fdb's workplace status under the pre-2023 SWECOV spelling: the aggregate check on MONA, reported as a conclusion only found exactly the three AdmStat codes (0, 1, 9) SCB documents for fdb from 2019, and none of the AEStat-only codes 2, 7, 8 that the 2016–2018 tables carry. (#1603; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "ng2"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 2 } }]
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator pivot draft 2026-10-16."
+
+[[column]]
+column = "ng3"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 3 } }]
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator pivot draft 2026-10-16."
+
+[[column]]
+column = "ng4"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 4 } }]
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator pivot draft 2026-10-16."
+
+[[column]]
+column = "ng5"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 5 } }]
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator pivot draft 2026-10-16."
+
+[[column]]
+column = "tidomspct1"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1657", reason = "Wide-pivot slot 1 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+
+[[column]]
+column = "tidomspct2"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1657", reason = "Wide-pivot slot 2 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+
+[[column]]
+column = "tidomspct3"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1657", reason = "Wide-pivot slot 3 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+
+[[column]]
+column = "tidomspct4"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1657", reason = "Wide-pivot slot 4 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+
+[[column]]
+column = "tidomspct5"
+tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
+hold = { follow_up = "#1657", reason = "Wide-pivot slot 5 of tidomspct. SCB documents TidOmsPct on arbetsstalleenheter under two owners in every year (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column. Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }

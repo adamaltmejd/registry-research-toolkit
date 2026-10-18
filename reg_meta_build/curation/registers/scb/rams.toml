@@ -1031,19 +1031,21 @@ noted = "2026-10-15"
 [[errata.delivered]]
 variant = "arbetsstallen"
 column = "AntalSysC"
+measurement_unit = "Antal"
 versions = ["2019"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "1575229fc11cacde71b2f602f8a0242bfd0ea7910c2b6d24a999a192cb9bf25e"
-evidence = "SWECOV holds AntalSysC in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "SWECOV holds AntalSysC in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced). Unit: a count of employed persons (AM0207 KD 2019 p. 9; RAMS target quantities are counts, KD 2019 p. 2), as SCB documents for 2020-2021."
 noted = "2026-10-15"
 
 [[errata.delivered]]
 variant = "arbetsstallen"
 column = "AntalSysS"
+measurement_unit = "Antal"
 versions = ["2019"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "7cc398ec412af75d67a294ad197c59d0efb045da740abefdf7763a7916c7299e"
-evidence = "SWECOV holds AntalSysS in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+evidence = "SWECOV holds AntalSysS in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced). Unit: a count of employed persons (AM0207 KD 2019 p. 9; RAMS target quantities are counts, KD 2019 p. 2), as SCB documents for 2020-2021."
 noted = "2026-10-15"
 
 # ── #1603 B5: SWECOV JOBB2009–JOBB2010 AstSni02 ──

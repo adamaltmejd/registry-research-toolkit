@@ -137,44 +137,5 @@ edition = "1999-10-15"
 [[column]]
 column = "P1105_Lopnr_Skolkod"
 tables = ["ElevGymn12"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 2012-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Utb_Form"
-tables = ["ElevGymn95"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1995-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Utb_Form"
-tables = ["ElevGymn96"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1996-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Utb_Form"
-tables = ["ElevGymn97"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1997-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Utb_Form"
-tables = ["ElevGymn98"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1998-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Utbild"
-tables = ["ElevGymn95"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1995-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Utbild"
-tables = ["ElevGymn96"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1996-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Utbild"
-tables = ["ElevGymn97"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1997-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
-
-[[column]]
-column = "Utbild"
-tables = ["ElevGymn98"]
-unmap = "Physical field retained without catalog mapping: the complete current source catalog does not establish a delivered owner for this exact 1998-10-15 table period. Source states for other periods, spellings or variants do not establish this historical field meaning. No contemporary dictionary or later domain is substituted. Reviewed against Batch57 full catalog and exact raw holding; see Batch57-school-inventory-period-proof.json."
+mappings = [{ register_variant = "scb/gymnasieskola-elever/_default", variable = "scb/gymnasieskola-elever/skolkod-urspr", representation = "Skolkod_Urspr" }]
+reason = "For 15 oktober 2012 SCB documents the school code on this variant only as Skolkod_Urspr (scb/gymnasieskola-elever/skolkod-urspr), with the same definition as Skolkod in other years; SWECOV delivers it under its usual pseudonymised Skolkod header. #1603 batch-e; maintainer orderable rule 2026-10-16."

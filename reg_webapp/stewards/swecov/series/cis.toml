@@ -59,11 +59,6 @@ reason = "Exact reviewed physical column and accepted native owner; full current
 
 [[column]]
 column = "CO21"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "CO21"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-suppliers-sweden", representation = "co21" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -82,11 +77,6 @@ tables = ["CIS2008"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-suppliers-sweden", representation = "co21" }]
 reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "CO31"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "CO31"
@@ -118,11 +108,6 @@ select_owner = true
 
 [[column]]
 column = "co32"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co32"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-customers-other-europe", representation = "co32" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -148,11 +133,6 @@ tables = ["CIS2010"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-customers-other-europe", representation = "co32" }]
 reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co33"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co33"
@@ -184,11 +164,6 @@ select_owner = true
 
 [[column]]
 column = "co34"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co34"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-customers-other-countries", representation = "co34" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -214,11 +189,6 @@ tables = ["CIS2010"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-customers-china-india", representation = "co34" }]
 reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co35"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co35"
@@ -348,11 +318,6 @@ select_owner = true
 
 [[column]]
 column = "CO41"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "CO41"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-competitors-sweden", representation = "co41" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -371,11 +336,6 @@ tables = ["CIS2008"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-competitors-sweden", representation = "co41" }]
 reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "CO51"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "CO51"
@@ -400,11 +360,6 @@ select_owner = true
 
 [[column]]
 column = "CO61"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "CO61"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-universities-sweden", representation = "co61" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -412,13 +367,17 @@ select_owner = true
 
 [[column]]
 column = "CO61"
-tables = ["CIS2006", "CIS2008"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-universities-sweden", representation = "co61" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
-column = "CO71"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+column = "CO61"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-sweden", representation = "co61" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "CO71"
@@ -429,8 +388,17 @@ select_owner = true
 
 [[column]]
 column = "CO71"
-tables = ["CIS2006", "CIS2008"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-public-research-sweden", representation = "co71" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "CO71"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-sweden", representation = "co71" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "CO81"
@@ -473,11 +441,6 @@ tables = ["CIS2014"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-public-research-other-countries", representation = "CO85" }]
 reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "COOP_NO"
-tables = ["CIS2020"]
-unmap = "COOP_NO and COOP_OTH both exist in CIS2020. Source question 39102 names COOP_OTH, and the questionnaire separately includes no cooperation. The meaning of physical COOP_NO is not established."
 
 [[column]]
 column = "Co52"
@@ -523,20 +486,10 @@ select_owner = true
 
 [[column]]
 column = "Co55"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "Co55"
 tables = ["CIS2008"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-consultants-other-countries", representation = "co55" }]
 reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "EMP"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[column]]
 column = "ENV_ENDEM"
@@ -618,11 +571,6 @@ tables = ["CIS2016"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/koncernmarkering", representation = "GP" }]
 reason = "Physical CIS2016 follows its exact 2014 - 2016 questionnaire edition: native RegVerId 11529, VarId 4045, CVID 469440, literal GP. Prepared SCB originals directly link this owner to that edition; the competing owner's later wave shares only the boundary calendar year. Keep the distinct native meanings and all original facts."
 select_owner = true
-
-[[column]]
-column = "HO"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
 
 [[column]]
 column = "INITPS"
@@ -758,11 +706,6 @@ mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "
 reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
 
 [[column]]
-column = "LILLAN"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
-
-[[column]]
 column = "Mareur"
 tables = ["CIS2004", "CIS2006"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/geografisk-marknad-eu-efta", representation = "Q2c" }]
@@ -847,11 +790,6 @@ mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "
 reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
 
 [[column]]
-column = "STRAT"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
-
-[[column]]
 column = "TurnIn"
 tables = ["CIS2004", "CIS2006"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-foretaget", representation = "Q7b" }]
@@ -862,16 +800,6 @@ column = "TurnMar"
 tables = ["CIS2002", "CIS2004", "CIS2006"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/omsattningsandel-inno-ny-for-marknad", representation = "Q7a" }]
 reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
-
-[[column]]
-column = "WEIGHT"
-tables = ["CIS2002"]
-unmap = "The supplied 2002–2004 source metadata do not establish this physical column’s native question or production vintage. Questionnaire concepts alone do not identify its delivery role."
-
-[[column]]
-column = "co11"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co11"
@@ -917,11 +845,6 @@ select_owner = true
 
 [[column]]
 column = "co12"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co12"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-group-enterprises-other-europe", representation = "co12" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -961,11 +884,6 @@ tables = ["CIS2014"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-other-europe", representation = "CO12" }]
 reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co13"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co13"
@@ -1011,11 +929,6 @@ select_owner = true
 
 [[column]]
 column = "co14"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co14"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-group-enterprises-other-countries", representation = "co14" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1055,11 +968,6 @@ tables = ["CIS2014"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-group-enterprises-china-india", representation = "CO14" }]
 reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co15"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co15"
@@ -1112,11 +1020,6 @@ select_owner = true
 
 [[column]]
 column = "co22"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co22"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-suppliers-other-europe", representation = "co22" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1156,11 +1059,6 @@ tables = ["CIS2014"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-other-europe", representation = "CO22" }]
 reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co23"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co23"
@@ -1206,11 +1104,6 @@ select_owner = true
 
 [[column]]
 column = "co24"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co24"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-suppliers-other-countries", representation = "co24" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1250,11 +1143,6 @@ tables = ["CIS2014"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-suppliers-china-india", representation = "CO24" }]
 reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co25"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co25"
@@ -1335,11 +1223,6 @@ select_owner = true
 
 [[column]]
 column = "co42"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co42"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-competitors-other-europe", representation = "co42" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1379,11 +1262,6 @@ tables = ["CIS2014"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-competitors-other-europe", representation = "CO42" }]
 reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co43"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co43"
@@ -1429,11 +1307,6 @@ select_owner = true
 
 [[column]]
 column = "co44"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co44"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-competitors-other-countries", representation = "co44" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1473,11 +1346,6 @@ tables = ["CIS2014"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-competitors-china-india", representation = "CO44" }]
 reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co45"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co45"
@@ -1530,11 +1398,6 @@ select_owner = true
 
 [[column]]
 column = "co52"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co52"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-consultants-labs-private-research-other-europe", representation = "co52" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1553,11 +1416,6 @@ tables = ["CIS2008"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-consultants-other-europe", representation = "co52" }]
 reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co53"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co53"
@@ -1600,11 +1458,6 @@ tables = ["CIS2014"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2014-cooperation-consultants-usa", representation = "CO53" }]
 reason = "CIS2014 is the 2012–2014 questionnaire delivery: native RegVerId 7293, VarId 15662, CVID 400684; historical concordance page 23 identifies this exact cooperation component. Preserve the existing tracked physical mapping; overlapping CIS2016 dates do not identify this table. See curation/registers/scb/innovation-foretag/cis2014-matrix-meaning-evidence.json."
 select_owner = true
-
-[[column]]
-column = "co54"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
 
 [[column]]
 column = "co54"
@@ -1651,7 +1504,9 @@ select_owner = true
 [[column]]
 column = "co61"
 tables = ["CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-universities-sweden", representation = "co61" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co61"
@@ -1669,11 +1524,6 @@ select_owner = true
 
 [[column]]
 column = "co62"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co62"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-universities-other-europe", representation = "co62" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1681,8 +1531,24 @@ select_owner = true
 
 [[column]]
 column = "co62"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-universities-other-europe", representation = "co62" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co62"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-other-europe", representation = "co62" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co62"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-universities-other-europe", representation = "co62" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co62"
@@ -1700,11 +1566,6 @@ select_owner = true
 
 [[column]]
 column = "co63"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co63"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-universities-usa", representation = "co63" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1712,8 +1573,24 @@ select_owner = true
 
 [[column]]
 column = "co63"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-universities-usa", representation = "co63" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co63"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-usa", representation = "co63" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co63"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-universities-usa", representation = "co63" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co63"
@@ -1731,11 +1608,6 @@ select_owner = true
 
 [[column]]
 column = "co64"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co64"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-universities-other-countries", representation = "co64" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1743,8 +1615,24 @@ select_owner = true
 
 [[column]]
 column = "co64"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-universities-other-countries", representation = "co64" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co64"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-china-india", representation = "co64" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co64"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-universities-china-india", representation = "co64" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co64"
@@ -1762,13 +1650,17 @@ select_owner = true
 
 [[column]]
 column = "co65"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-universities-other-countries", representation = "co65" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co65"
-tables = ["CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-universities-other-countries", representation = "co65" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co65"
@@ -1787,7 +1679,9 @@ select_owner = true
 [[column]]
 column = "co71"
 tables = ["CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-public-research-sweden", representation = "co71" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co71"
@@ -1805,11 +1699,6 @@ select_owner = true
 
 [[column]]
 column = "co72"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co72"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-public-research-other-europe", representation = "co72" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1817,8 +1706,24 @@ select_owner = true
 
 [[column]]
 column = "co72"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-public-research-other-europe", representation = "co72" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co72"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-other-europe", representation = "co72" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co72"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-public-research-other-europe", representation = "co72" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co72"
@@ -1836,11 +1741,6 @@ select_owner = true
 
 [[column]]
 column = "co73"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co73"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-public-research-usa", representation = "co73" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1848,8 +1748,24 @@ select_owner = true
 
 [[column]]
 column = "co73"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-public-research-usa", representation = "co73" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co73"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-usa", representation = "co73" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co73"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-public-research-usa", representation = "co73" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co73"
@@ -1867,11 +1783,6 @@ select_owner = true
 
 [[column]]
 column = "co74"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
-
-[[column]]
-column = "co74"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2004-cooperation-public-research-other-countries", representation = "co74" }]
 reason = "CIS2004 is the 2002–2004 questionnaire delivery: native RegVerId 1209, VarId 15662, CVID 98939; the wave's questionnaire fixes this partner row and location by position (#1571). See curation/registers/scb/innovation-foretag/cis2004-matrix-meaning-evidence.json."
@@ -1879,8 +1790,24 @@ select_owner = true
 
 [[column]]
 column = "co74"
-tables = ["CIS2006", "CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2006-cooperation-public-research-other-countries", representation = "co74" }]
+reason = "CIS2006 is the 2004–2006 questionnaire delivery: native RegVerId 1182, VarId 15662, CVID 98933; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2006-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co74"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-china-india", representation = "co74" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
+
+[[column]]
+column = "co74"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-public-research-china-india", representation = "co74" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co74"
@@ -1898,13 +1825,17 @@ select_owner = true
 
 [[column]]
 column = "co75"
-tables = ["CIS2002"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix answer with no established meaning: CIS2002 (2000-2002) has no native catalog coordinate; follow-up #1571. Maintainer-decided 2026-10-14, re-confirmed 2026-10-16." }
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2008-cooperation-public-research-other-countries", representation = "co75" }]
+reason = "CIS2008 is the 2006–2008 questionnaire delivery: native RegVerId 2675, VarId 15662, CVID 158927; partner rows 6 and 7 are read on SCB's 7-category partner list in this wave's documentation, carried over word for word from 2002–2004, so the definition carries that caveat (maintainer decision 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2008-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co75"
-tables = ["CIS2008", "CIS2010"]
-hold = { follow_up = "#1571", reason = "Interim hold: CIS cooperation-matrix partner row 6/7 not pinned: the 2004-2006, 2006-2008 and 2008-2010 questionnaires have eight partner rows (a-h; private R&D institutes split from consultants) but these tables carry seven co row groups, and no SCB document says how the delivery folds eight rows into seven; follow-up #1571. Maintainer-decided 2026-10-16." }
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2010-cooperation-public-research-other-countries", representation = "co75" }]
+reason = "CIS2010 is the 2008–2010 questionnaire delivery: native RegVerId 4114, VarId 15662, CVID 257746; partner rows 6 and 7 carry the CIS2006/CIS2008 meaning under the maintainer's same-name rule, and the definition carries the assumed-meaning and carried-over-list caveat (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4). See curation/registers/scb/innovation-foretag/cis2010-matrix-meaning-evidence.json."
+select_owner = true
 
 [[column]]
 column = "co75"
@@ -1969,3 +1900,279 @@ reason = "Exact reviewed physical column and accepted native owner; full current
 [[column]]
 column = "PeOrgNrHe"
 storage_header = "P1105_LopNr_PeOrgNrHe"
+
+[[column]]
+column = "emp04"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2004 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp06"
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2006 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp08"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2008 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp10"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2010 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Emp2018"
+tables = ["CIS2018"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2018 } }]
+reason = "SCB Antal anställda (EMP); the CIS wave delivers employment per reference year, and this column is the table's own edition year. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Emp2020"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp2020-enligt-leverans", representation = "Emp2020" }]
+reason = "The 2018 - 2020 wave's own reference-year employee count (2020), minted per reference year with its meaning assumed from SCB's EMP (antal-anstallda); SCB delivers antal-anstallda for 2020 as EMP2022, so the EMP carry stops at 2016 - 2018. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16, option (a) 2026-10-17."
+
+[[column]]
+column = "emp02"
+tables = ["CIS2004"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp02-enligt-leverans", representation = "emp02" }]
+reason = "The 2002 - 2004 wave's prior reference-year employee count (2002), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp04"
+tables = ["CIS2006"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp04-enligt-leverans", representation = "emp04" }]
+reason = "The 2004 - 2006 wave's prior reference-year employee count (2004), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp06"
+tables = ["CIS2008"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp06-enligt-leverans", representation = "emp06" }]
+reason = "The 2006 - 2008 wave's prior reference-year employee count (2006), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp08"
+tables = ["CIS2010"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp08-enligt-leverans", representation = "emp08" }]
+reason = "The 2008 - 2010 wave's prior reference-year employee count (2008), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "emp2010"
+tables = ["CIS2012"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp2010-enligt-leverans", representation = "emp2010" }]
+reason = "The 2010 - 2012 wave's prior reference-year employee count (2010), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Emp2016"
+tables = ["CIS2018"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp2016-enligt-leverans", representation = "Emp2016" }]
+reason = "The 2016 - 2018 wave's prior reference-year employee count (2016), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "Emp2018"
+tables = ["CIS2020"]
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/emp2018-enligt-leverans", representation = "Emp2018" }]
+reason = "The 2018 - 2020 wave's prior reference-year employee count (2018), minted per reference year with its meaning assumed from the wave's EMP (antal-anstallda). #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+# #1603 batch-e: the CIS2002 cooperation-matrix cells, pinned to the 2000 - 2002 round.
+
+[[column]]
+column = "CO21"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-leverantorer-sverige", representation = "CO21" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "CO31"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-kunder-sverige", representation = "CO31" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "CO41"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konkurrenter-sverige", representation = "CO41" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "CO51"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konsulter-sverige", representation = "CO51" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "CO61"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-universitet-sverige", representation = "CO61" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "CO71"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-sverige", representation = "CO71" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co11"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-koncernforetag-sverige", representation = "co11" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co12"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-2", representation = "co12" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co13"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-3", representation = "co13" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co14"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-4", representation = "co14" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co22"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-2", representation = "co22" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co23"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-3", representation = "co23" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co24"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-4", representation = "co24" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co32"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-2", representation = "co32" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co33"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-3", representation = "co33" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co34"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-4", representation = "co34" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co42"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-2", representation = "co42" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co43"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-3", representation = "co43" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co44"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-4", representation = "co44" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co52"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-2", representation = "co52" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co53"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-3", representation = "co53" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co54"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-4", representation = "co54" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co62"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-2", representation = "co62" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co63"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-3", representation = "co63" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co64"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-4", representation = "co64" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co72"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-2", representation = "co72" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co73"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-3", representation = "co73" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "co74"
+tables = ["CIS2002"]
+select_owner = true
+mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-4", representation = "co74" }]
+reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."

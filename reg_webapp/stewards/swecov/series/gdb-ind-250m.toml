@@ -177,6 +177,3 @@ table = "GDB_Ind_250m_2024"
 edition = "2025-01-01"
 partition = "ind-250m"
 
-[[column]]
-column = "P1105_Lopnr_PersonNr"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }

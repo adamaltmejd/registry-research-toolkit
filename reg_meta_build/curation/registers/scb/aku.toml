@@ -3683,3 +3683,36 @@ native_variable_id = 7627
 expected_evidence_sha256 = "9a3fc2cbf109c60d7e29e2a3cbf56623060b9d686a81b6b272c3e43365313a0b"
 evidence = "SWECOV holds ArLand in AKU_2015 and AKU_2016; SCB documents it on this variant from 2017 as arbetsland-for-ett-ar-sedan-rotgr-2-7, whose operational definition takes rotation group 2 from question ArVerks5e and fills rotation group 7 from HuLand one year earlier. The aggregate check found rotation group 2 substantially non-null, rotation group 7 filled and rotation group 1 empty, consistent with that design; no claim is made about where the design began. (#1603; maintainer decision 2026-10-15, D2; the maintainer's aggregate check on MONA, reported as a conclusion only)."
 noted = "2026-10-15"
+
+# #1603 batch-e: UArbLand 2017 and 2018 have two SCB owners; native 3811 (UarbLand/UArbLand
+# 2005-2020 on this variant) keeps it and native 39235, the 2021+ variant's variable, is
+# withdrawn (Operator SCB doc-check 2026-10-17, maintainer ratified 2026-10-18).
+[[errata.support]]
+kind = "contradictory_question"
+variable = "122.39235"
+variant = "122.142"
+column = "UArbLand"
+edition = "18775"
+expected_fields = [{ name = "name", status = "value", value = "Arbetsland i senaste arbete, personer u. arbete som haft arbete senaste 8 åren" }, { name = "definition", status = "value", value = "I vilket land arbetade du?" }, { name = "description", status = "absent" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2017"
+expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
+evidence = "SCB's Registerinformation documents native 3811 (I vilket land arbetade du?; scb/aku/uarbland) as column UarbLand/UArbLand on AKU april 2005-dec 2020 in every edition 2005-2020; its 2005 operational definition is 'Arbetsland i senaste arbete, personer utan arbete som har haft arbete senaste 8 åren'. Native 39235 (Arbetsland i senaste arbete, personer u. arbete som haft arbete senaste 8 åren; definition 'I vilket land arbetade du?') is the variable of the AKU variant from January 2021, where it is UarbLand 2021-2026, and is attached to the 2005-2020 variant only in the 2017 and 2018 editions. It is withdrawn from UArbLand at those editions, with native 3811 at the same edition as the positive same-column authority. Both natives describe the same question; this settles only which native owns the column on this variant. The withdrawn assertion is kept as source support with its original fields, coding and period unchanged. (#1603 batch-e; Operator SCB doc-check 2026-10-17, maintainer ratified 2026-10-18)."
+noted = "2026-10-17"
+authority = { variable = "122.3811", variant = "122.142", column = "UArbLand", edition = "18775", expected_fields = [{ name = "name", status = "value", value = "I vilket land arbetade du?" }, { name = "definition", status = "value", value = "I vilket land arbetade du?" }, { name = "description", status = "absent" }, { name = "operational_definition", status = "value", value = "Arbetsland i senaste arbete, personer utan arbete som har haft arbete senaste 8 åren" }], expected_period_text = "2017", expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }, expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }, evidence = "Native 3811 is UarbLand/UArbLand on AKU april 2005-dec 2020 in every edition 2005-2020 (SCB Registerinformation).", noted = "2026-10-17" }
+expected_coding_sha256 = "143469df4b02208341fbd62991dc7dc8c769e592d2ed52aed3cbf16635711848"
+
+[[errata.support]]
+kind = "contradictory_question"
+variable = "122.39235"
+variant = "122.142"
+column = "UArbLand"
+edition = "18774"
+expected_fields = [{ name = "name", status = "value", value = "Arbetsland i senaste arbete, personer u. arbete som haft arbete senaste 8 åren" }, { name = "definition", status = "value", value = "I vilket land arbetade du?" }, { name = "description", status = "absent" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "SCB's Registerinformation documents native 3811 (I vilket land arbetade du?; scb/aku/uarbland) as column UarbLand/UArbLand on AKU april 2005-dec 2020 in every edition 2005-2020; its 2005 operational definition is 'Arbetsland i senaste arbete, personer utan arbete som har haft arbete senaste 8 åren'. Native 39235 (Arbetsland i senaste arbete, personer u. arbete som haft arbete senaste 8 åren; definition 'I vilket land arbetade du?') is the variable of the AKU variant from January 2021, where it is UarbLand 2021-2026, and is attached to the 2005-2020 variant only in the 2017 and 2018 editions. It is withdrawn from UArbLand at those editions, with native 3811 at the same edition as the positive same-column authority. Both natives describe the same question; this settles only which native owns the column on this variant. The withdrawn assertion is kept as source support with its original fields, coding and period unchanged. (#1603 batch-e; Operator SCB doc-check 2026-10-17, maintainer ratified 2026-10-18)."
+noted = "2026-10-17"
+authority = { variable = "122.3811", variant = "122.142", column = "UArbLand", edition = "18774", expected_fields = [{ name = "name", status = "value", value = "I vilket land arbetade du?" }, { name = "definition", status = "value", value = "I vilket land arbetade du?" }, { name = "description", status = "absent" }, { name = "operational_definition", status = "value", value = "Arbetsland i senaste arbete, personer utan arbete som har haft arbete senaste 8 åren" }], expected_period_text = "2018", expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }, expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }, evidence = "Native 3811 is UarbLand/UArbLand on AKU april 2005-dec 2020 in every edition 2005-2020 (SCB Registerinformation).", noted = "2026-10-17" }
+expected_coding_sha256 = "143469df4b02208341fbd62991dc7dc8c769e592d2ed52aed3cbf16635711848"

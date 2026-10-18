@@ -2515,3 +2515,25 @@ fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
 expected_evidence_sha256 = "5b042766ef5da888294fec874fe19e240669b2f8ab7c917396751207e904af56"
+
+# #1603 batch-e (#1633): SWECOV's EKB household and person tables share a
+# steward-assigned household-year link key that SoS does not document. It is not
+# HID (hushallsid), which SoS builds from the household members' personnummer.
+
+[[variable]]
+native_id = "5352018376318353790.P1105_LopNr_EKB"
+slug = "lopnr-hushall-ar"
+
+[[errata.column]]
+variant = "EKB_MANAD"
+column = "P1105_LopNr_EKB"
+data_type = "text"
+name = "Löpnummer för hushåll och år"
+definition = "Länknyckel mellan EKB:s hushålls- och personfiler: ett löpnummer per hushåll och år."
+is_identifier = true
+is_sensitive = true
+holdings_period = "2015-2023"
+data_warning = "Socialstyrelsen documents no such column. Its meaning comes from an aggregate check of the delivered tables, not from SoS metadata. Flags follow the FK/SoS löpnummer precedent (FK LOPNR and SoS HID are sensitive identifiers)."
+source = "steward-holdings"
+evidence = "SWECOV's SWECOV_SOS_EKB_HUSH and SWECOV_SOS_EKB_PERS tables (edition 2015-2023) hold the column; the SoS EKB metadata documents no such column. An aggregate check on MONA, reported as a conclusion only, found it unique per household and year in the household file, with every person-file key present there. data_type from SWECOV's storage type (text). #1603 batch-e; maintainer decision 2026-10-16 (#1556)."
+noted = "2026-10-17"

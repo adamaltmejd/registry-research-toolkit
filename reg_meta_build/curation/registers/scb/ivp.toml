@@ -388,11 +388,12 @@ noted = "2026-10-15"
 [[errata.delivered]]
 variant = "industrins-varuproduktion"
 column = "ProdVarde"
+measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["1996", "1997", "1998", "1999", "2000", "2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 4987
 expected_evidence_sha256 = "3ebff7ce4606eda8a88afb78f000b35ddbdb0fb891bd159b6379fb7f0b92ce36"
-evidence = "SWECOV holds the column in IVP_1996–IVP_2001; NV0207 BS 2004 pp. 2–5 document the production value for the survey since 1996 with the same definition as the 2002+ rows. The aggregate check found the 1996 total consistent with SCB's published total in thousand SEK, so the unit is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+evidence = "SWECOV holds the column in IVP_1996–IVP_2001; NV0207 BS 2004 pp. 2–5 document the production value for the survey since 1996 with the same definition as the 2002+ rows. The aggregate check found the 1996 total consistent with SCB's published total in thousand SEK, so the unit is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2002+ unit for this column; the aggregate check above shows the 1996-2001 values are in the same thousand-SEK unit."
 noted = "2026-10-15"
 
 # ── #1603: IVP Typkod 1996–2007 labels ──

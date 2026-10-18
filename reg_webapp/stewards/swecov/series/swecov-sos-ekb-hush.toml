@@ -1,3 +1,4 @@
+# SWECOV_SOS_EKB_HUSH is a projection of SWECOV_SOS_EKB_PERS (#1634): the household-year key is one claim served by the person file, and the household file stays its own extract with its own household-year key. Its rows are monthly (ekb-manad); AR/MANAD are mapped as its time key (maintainer 2026-10-18) (maintainer, AskUserQuestion 2026-10-18 "HUSH projection of PERS"; #1603 batch-e).
 id = "swecov-sos-ekb-hush"
 register = "sos/ekb"
 variants = ["sos/ekb/ekb-manad"]
@@ -5,15 +6,19 @@ variants = ["sos/ekb/ekb-manad"]
 [[table]]
 table = "SWECOV_SOS_EKB_HUSH"
 edition = { from = 2015, to = 2023 }
+projection = { of = "SWECOV_SOS_EKB_PERS", token = "hushall" }
 
 [[column]]
 column = "AR"
-unmap = "Year join column of the household file; sos/ekb/ar is orderable from SWECOV_SOS_EKB_PERS, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
+mappings = [{ register_variant = "sos/ekb/ekb-manad", variable = "sos/ekb/ar", representation = "AR" }]
+reason = "Year of the household file's monthly rows; with MANAD it is the ekb-manad time key, so the ordered household file can be aligned to months. Maintainer 2026-10-18 (AskUserQuestion \"Map AR/MANAD on HUSH\"; supersedes the 2026-09-02 aux-table unmap for this file only; #1603 batch-e)."
 
 [[column]]
 column = "MANAD"
-unmap = "Month join column of the household file; sos/ekb/manad is orderable from SWECOV_SOS_EKB_PERS, same edition. Maintainer-decided 2026-09-02 (aux-table join keys); reason added 2026-10-13."
+mappings = [{ register_variant = "sos/ekb/ekb-manad", variable = "sos/ekb/manad", representation = "MANAD" }]
+reason = "Month of the household file's monthly rows; with AR it is the ekb-manad time key, so the ordered household file can be aligned to months. Maintainer 2026-10-18 (AskUserQuestion \"Map AR/MANAD on HUSH\"; supersedes the 2026-09-02 aux-table unmap for this file only; #1603 batch-e)."
 
 [[column]]
 column = "P1105_LopNr_EKB"
-hold = { follow_up = "#1633", reason = "Household-year link key between the EKB household and person files: the aggregate check on MONA, reported as a conclusion only found it unique per household and year in the household file, with every person-file key present there. It needs its own sos/ekb variable, which a non-SCB register cannot mint yet (#1633; #1556; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "sos/ekb/ekb-manad", variable = "sos/ekb/lopnr-hushall-ar", representation = "P1105_LopNr_EKB" }]
+reason = "Household-year link key between the EKB household and person files (aggregate check on MONA, reported as a conclusion only: unique per household and year in the household file, every person-file key present there). Maps to its minted sos/ekb variable (#1633; #1556; maintainer decision 2026-10-16; #1603 batch-e)."

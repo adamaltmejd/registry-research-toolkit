@@ -2541,3 +2541,19 @@ variant = "_default"
 variant_slug = "_default"
 variant_name = "Deltidsveckor"
 tables = ["IFA_Deltidsveckor_Lev2", "IFA_Deltidsveckor_Lev3"]
+
+[[flavor]]
+holding = "Läkemedelsverket"
+provider = "lakemedelsverket"
+provider_name = "Läkemedelsverket"
+register = "biverkningar-mla"
+register_name = "Misstänkta läkemedelsbiverkningar (SWECOV-uttag)"
+variant = "_default"
+variant_slug = "_default"
+variant_name = "Misstänkta läkemedelsbiverkningar (SWECOV-uttag)"
+tables = ["LV_mla_2005010", "LV_mla_2020010"]
+# SWECOV's LV_mla extracts use the general drug-reaction field dictionary (ATC code,
+# drug name, MedDRA levels, seriousness, reporter, time to onset), not the
+# vaccine-scoped field list of the global lakemedelsverket/biverkningar register, so
+# they get their own register from the delivery's field names. A flavor cannot add a
+# variant to a global register (maintainer decision 2026-10-16, #1603 batch-e D7; #1610).

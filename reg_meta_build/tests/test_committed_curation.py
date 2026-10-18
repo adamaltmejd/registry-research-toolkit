@@ -44,9 +44,7 @@ if TYPE_CHECKING:
 
 # Overlay families the model accepts but no committed register declares yet. Remove
 # an entry when its first declaration lands.
-# `errata.occurrence_carry` lands with SWECOV's batch-e PAR carries (#1633); that
-# curation change removes it here.
-_NOT_YET_DECLARED = {"errata.edition_period", "errata.occurrence_carry"}
+_NOT_YET_DECLARED = {"errata.edition_period"}
 
 # SCB's grouped SNI reporting labels, unbound in eda7462a. Some grouped codes are also
 # valid codes in the detailed books (`01` in SNI2002), so a label rule naming one can

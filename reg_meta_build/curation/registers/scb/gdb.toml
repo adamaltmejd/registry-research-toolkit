@@ -436,6 +436,120 @@ source = "steward-holdings"
 evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1494; maintainer decision 2026-10-16, #1579 default route)."
 noted = "2026-10-16"
 
+# ── #1603 batch-e D8: GDB geo-linkage extract columns (#1494) ──
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "AstKommun"
+data_warning = "Undocumented column: SCB documents no AstKommun on any GDB variant. The meaning (the workplace's municipality code) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_type = "text"
+name = "Arbetsställets kommun"
+definition = "Kommun där arbetsstället ligger, som kommunkod. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "DeSO_2018"
+data_warning = "Undocumented column: SCB documents no DeSO_2018 on any GDB variant. The meaning (DeSO under SCB's 2018 division) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_type = "text"
+name = "DeSO enligt 2018 års indelning"
+definition = "Demografiskt statistikområde (DeSO) enligt SCB:s indelning från 2018. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2024-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "DeSO_2025"
+data_warning = "Undocumented column: SCB documents no DeSO_2025 on any GDB variant. The meaning (DeSO under SCB's revised 2025 division) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_type = "text"
+name = "DeSO enligt 2025 års indelning"
+definition = "Demografiskt statistikområde (DeSO) enligt SCB:s reviderade indelning från 2025. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = false
+holdings_period = "2025-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "CfarNr"
+data_warning = "Undocumented column: SCB documents no CfarNr on any GDB variant. The meaning (the workplace's CFAR number, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_type = "text"
+name = "Arbetsställets CFAR-nummer"
+definition = "Identitetsbegrepp för arbetsställe. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = true
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing cfarnr variables (non-sensitive identifier in most SCB registers)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "PeOrgNr"
+data_warning = "Undocumented column: SCB documents no PeOrgNr on any GDB variant. The meaning (a person or organisation number, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_type = "text"
+name = "Person-/organisationsnummer"
+definition = "Identitetsbegrepp för juridiska enheter; för fysiska personer med näringsverksamhet används personnumret. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = true
+holdings_period = "1991-2024"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing person-orgnr variables (non-sensitive identifier in most SCB registers)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "PersonNr"
+data_warning = "Undocumented column: SCB documents no PersonNr on any GDB variant. The meaning (a person number, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_type = "text"
+name = "Personnummer"
+definition = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = true
+holdings_period = "1991-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing personnr variables (non-sensitive identifier in most SCB registers)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "skolenhetskod"
+data_warning = "Undocumented column: SCB documents no skolenhetskod on any GDB variant. The meaning (the school unit code, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_type = "text"
+name = "Skolenhet"
+definition = "Skolenhet är en administrativ enhet där lärare och/eller elever finns; den avser en organisatorisk enhet på en adress, inte en byggnad. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = true
+holdings_period = "2014-2025"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing skolenhetskod variables (non-sensitive identifier in most SCB registers)."
+noted = "2026-10-16"
+
+[[errata.column]]
+variant = "adresser-fastigheter"
+column = "skolkod"
+data_warning = "Undocumented column: SCB documents no skolkod on any GDB variant. The meaning (the school code, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_type = "text"
+name = "Skola"
+definition = "Skola, en administrativ enhet där lärare och/eller elever finns; den avser en organisatorisk enhet på en adress, inte en byggnad. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
+is_sensitive = false
+is_identifier = true
+holdings_period = "1991-2014"
+source = "steward-holdings"
+evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end rule (table Y = SCB's version per 1 January Y+1, maintainer decision 2026-10-16) (reg_webapp/stewards/swecov/series); SCB's Registerinformation export documents no such column on any scb/gdb variant, so it is minted (#1494; maintainer decision 2026-10-16, #1603 batch-e D8). Flags and definition follow SCB's existing skolkod variables (non-sensitive identifier in most SCB registers)."
+noted = "2026-10-16"
+
 # ── #1603 C: GDB year-end rule — DeSO and Kommun versions SCB's export omits ──
 
 [[errata.version]]
@@ -721,6 +835,38 @@ slug = "astnr"
 [[variable]]
 native_id = "70.Skolform"
 slug = "skolform"
+
+[[variable]]
+native_id = "70.AstKommun"
+slug = "astkommun"
+
+[[variable]]
+native_id = "70.DeSO_2018"
+slug = "deso-2018"
+
+[[variable]]
+native_id = "70.DeSO_2025"
+slug = "deso-2025"
+
+[[variable]]
+native_id = "70.CfarNr"
+slug = "cfarnr"
+
+[[variable]]
+native_id = "70.PeOrgNr"
+slug = "person-orgnr"
+
+[[variable]]
+native_id = "70.PersonNr"
+slug = "personnr"
+
+[[variable]]
+native_id = "70.skolenhetskod"
+slug = "skolenhetskod"
+
+[[variable]]
+native_id = "70.skolkod"
+slug = "skolkod"
 
 # ── #1603 C: coding of the added windows left unavailable ──
 

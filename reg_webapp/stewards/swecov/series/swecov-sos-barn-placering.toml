@@ -1,6 +1,6 @@
 id = "swecov-sos-barn-placering"
 register = "sos/bu"
-variants = []
+variants = ["sos/bu/bu-plac", "sos/bu/bu-plac-pnrq0"]
 
 [[table]]
 table = "SWECOV_SOS_BARN_PLACERING"
@@ -8,20 +8,25 @@ edition = { from = 2008, to = 2021 }
 
 [[column]]
 column = "INSATS_BESLUT_DATUM"
-hold = { follow_up = "#1610", reason = "The table unions two BU codings: the old fields and codes belong to the 2015–2016 deliveries, and the newer coding is used from 2017 with older rows recoded (aggregate check on MONA, reported as a conclusion only). The catalog's old BU variants end in 2016 and the new ones start in 2018, so no variant covers the union, and a steward table maps whole, never split by edition. Held until a per-source-table re-delivery or a covering variant exists (#1610; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "sos/bu/bu-plac", variable = "sos/bu/insats-beslut-datumn", representation = "INSATS_BESLUT_DATUMN", window = { from = 2018, to = 2021 } }]
+reason = "The table unions two SoS BU deliveries (aggregate check on MONA, reported as a conclusion only): the old field set comes from the 2015–2016 deliveries, and the new field set from the deliveries from 2017 on, which recode the older history into separate columns. New-coding column, mapped where its catalog variant covers it (bu-plac opens in 2018); 2008–2017 stay unmapped until SoS's variant windows are settled (#1645). (#1603 batch-e; maintainer decision 2026-10-16, D6a)"
 
 [[column]]
 column = "INSTYP"
-hold = { follow_up = "#1610", reason = "The table unions two BU codings: the old fields and codes belong to the 2015–2016 deliveries, and the newer coding is used from 2017 with older rows recoded (aggregate check on MONA, reported as a conclusion only). The catalog's old BU variants end in 2016 and the new ones start in 2018, so no variant covers the union, and a steward table maps whole, never split by edition. Held until a per-source-table re-delivery or a covering variant exists (#1610; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "sos/bu/bu-plac-pnrq0", variable = "sos/bu/instyp", representation = "INSTYP", window = { from = 2008, to = 2016 } }]
+reason = "The table unions two SoS BU deliveries (aggregate check on MONA, reported as a conclusion only): the old field set comes from the 2015–2016 deliveries, and the new field set from the deliveries from 2017 on, which recode the older history into separate columns. Old-coding column of the 2015–2016 deliveries, mapped on the old variant (bu-plac-pnrq0, through 2016) for the table's decision years it covers (#1645). (#1603 batch-e; maintainer decision 2026-10-16, D6a)"
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
-hold = { follow_up = "#1610", reason = "The table unions two BU codings: the old fields and codes belong to the 2015–2016 deliveries, and the newer coding is used from 2017 with older rows recoded (aggregate check on MONA, reported as a conclusion only). The catalog's old BU variants end in 2016 and the new ones start in 2018, so no variant covers the union, and a steward table maps whole, never split by edition. Held until a per-source-table re-delivery or a covering variant exists (#1610; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "sos/bu/bu-plac-pnrq0", variable = "sos/bu/personnr", representation = "PNR", window = { from = 2008, to = 2016 } }, { register_variant = "sos/bu/bu-plac", variable = "sos/bu/personnr", representation = "PNR", window = { from = 2018, to = 2021 } }]
+reason = "The table unions two SoS BU deliveries (aggregate check on MONA, reported as a conclusion only): the old field set comes from the 2015–2016 deliveries, and the new field set from the deliveries from 2017 on, which recode the older history into separate columns. Pseudonymised person key, present in both deliveries, so it maps once per variant window (#1645); 2017 is outside both catalog variants. (#1603 batch-e; maintainer decision 2026-10-16, D6a)"
 
 [[column]]
 column = "PLAC_FORM"
-hold = { follow_up = "#1610", reason = "The table unions two BU codings: the old fields and codes belong to the 2015–2016 deliveries, and the newer coding is used from 2017 with older rows recoded (aggregate check on MONA, reported as a conclusion only). The catalog's old BU variants end in 2016 and the new ones start in 2018, so no variant covers the union, and a steward table maps whole, never split by edition. Held until a per-source-table re-delivery or a covering variant exists (#1610; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "sos/bu/bu-plac", variable = "sos/bu/plac-form", representation = "PLAC_FORM", window = { from = 2018, to = 2021 } }]
+reason = "The table unions two SoS BU deliveries (aggregate check on MONA, reported as a conclusion only): the old field set comes from the 2015–2016 deliveries, and the new field set from the deliveries from 2017 on, which recode the older history into separate columns. New-coding column, mapped where its catalog variant covers it (bu-plac opens in 2018); 2008–2017 stay unmapped until SoS's variant windows are settled (#1645). (#1603 batch-e; maintainer decision 2026-10-16, D6a)"
 
 [[column]]
 column = "PLAC_START_DATUM"
-hold = { follow_up = "#1610", reason = "The table unions two BU codings: the old fields and codes belong to the 2015–2016 deliveries, and the newer coding is used from 2017 with older rows recoded (aggregate check on MONA, reported as a conclusion only). The catalog's old BU variants end in 2016 and the new ones start in 2018, so no variant covers the union, and a steward table maps whole, never split by edition. Held until a per-source-table re-delivery or a covering variant exists (#1610; maintainer decision 2026-10-16)." }
+mappings = [{ register_variant = "sos/bu/bu-plac", variable = "sos/bu/plac-start-datumn", representation = "PLAC_START_DATUMN", window = { from = 2018, to = 2021 } }]
+reason = "The table unions two SoS BU deliveries (aggregate check on MONA, reported as a conclusion only): the old field set comes from the 2015–2016 deliveries, and the new field set from the deliveries from 2017 on, which recode the older history into separate columns. New-coding column, mapped where its catalog variant covers it (bu-plac opens in 2018); 2008–2017 stay unmapped until SoS's variant windows are settled (#1645). (#1603 batch-e; maintainer decision 2026-10-16, D6a)"

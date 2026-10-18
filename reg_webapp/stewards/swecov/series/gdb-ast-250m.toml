@@ -172,14 +172,3 @@ table = "GDB_Ast_250m_2023"
 edition = "2024-01-01"
 partition = "ast-250m"
 
-[[column]]
-column = "AstKommun"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "P1105_Lopnr_CfarNr"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }
-
-[[column]]
-column = "P1105_Lopnr_PeOrgNr"
-hold = { follow_up = "#1494", reason = "SWECOV geo-linkage extract column with no scb/gdb catalog variable; unorderable until a swecov geo-linkage flavor register models it (#1494)." }

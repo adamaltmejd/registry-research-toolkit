@@ -8343,3 +8343,95 @@ noted = "2026-10-12"
 [[variable]]
 native_id = "366.PersonNr"
 slug = "personnr-elev"
+
+# ── #1603 / #1640: SWECOV Distansutb_gymn_VT20 second-wave F6 items ──
+
+[[errata.delivered]]
+data_warning = "Second-wave measurement: this item asks about the autumn 2020 / spring 2021 terms but is delivered in the Vårterminen 2020 file. It is not a copy of the Höstterminen 2020 - Vårterminen 2021 item: the respondents only partly overlap and their answers partly differ."
+variant = "distansundervisning-gymnasieskolan"
+column = "F6HT20b"
+versions = ["Vårterminen 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "696832550156bbc1e10f42c93f57cd1588a35b476e68dcab6224864093210d19"
+evidence = "SWECOV holds F6HT20b in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
+noted = "2026-10-17"
+
+[[errata.delivered]]
+data_warning = "Second-wave measurement: this item asks about the autumn 2020 / spring 2021 terms but is delivered in the Vårterminen 2020 file. It is not a copy of the Höstterminen 2020 - Vårterminen 2021 item: the respondents only partly overlap and their answers partly differ."
+variant = "distansundervisning-gymnasieskolan"
+column = "F6HT20c"
+versions = ["Vårterminen 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "fce6660488d6c1f1596708a0a4b1e9729c8a2b1c628cc3ca5ef27db26360fca2"
+evidence = "SWECOV holds F6HT20c in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
+noted = "2026-10-17"
+
+[[errata.delivered]]
+data_warning = "Second-wave measurement: this item asks about the autumn 2020 / spring 2021 terms but is delivered in the Vårterminen 2020 file. It is not a copy of the Höstterminen 2020 - Vårterminen 2021 item: the respondents only partly overlap and their answers partly differ."
+variant = "distansundervisning-gymnasieskolan"
+column = "F6VT21b"
+versions = ["Vårterminen 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "48761d26edccb0a36c20c9e433bf5d2ae715233ea9589aec1b75f6db4c5e9d35"
+evidence = "SWECOV holds F6VT21b in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
+noted = "2026-10-17"
+
+[[errata.delivered]]
+data_warning = "Second-wave measurement: this item asks about the autumn 2020 / spring 2021 terms but is delivered in the Vårterminen 2020 file. It is not a copy of the Höstterminen 2020 - Vårterminen 2021 item: the respondents only partly overlap and their answers partly differ."
+variant = "distansundervisning-gymnasieskolan"
+column = "F6VT21c"
+versions = ["Vårterminen 2020"]
+upstream = "omitted-column-in-version"
+expected_evidence_sha256 = "c358021fc58585802358a8a363d5d1cae7a48f643c00f59bcb16a9accbffed8b"
+evidence = "SWECOV holds F6VT21c in Distansutb_gymn_VT20 (the Vårterminen 2020 file); SCB documents the item on this variant only in Höstterminen 2020 - Vårterminen 2021. The maintainer's aggregate check on MONA, reported as a conclusion only, found it is the same item measured in a second wave, not a copy of the Distansutb_gymn_HT20_VT21 column. Every SWECOV column is orderable (#1603; maintainer decision 2026-10-16), so the item is stated as delivered in the Vårterminen 2020 version with a second-wave warning (#1640)."
+noted = "2026-10-17"
+
+# ── #1640: coding of the added Vårterminen 2020 windows left unavailable ──
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/utbildningsanalyser/undantag-distans-extra-anpassningar-ht"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:366\",\"variant:1649\",\"edition:17984\",\"variable:44999\",\"member:840376\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
+evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "ed9f3dce481063a0e7ac3565ffdbcf86c84b68705d97bbbd671847108e0b2d80"
+expected_diagnostic_sha256 = "63360b64832213449f1da8209e26fac165260a5d28e3f273afb58f65ebf2e5cd"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/utbildningsanalyser/f6ht20c"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:366\",\"variant:1649\",\"edition:17984\",\"variable:45001\",\"member:840378\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
+evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "ce59fd0b1771f02fdba2a80e2fc270297cd3e0d60f8ba0a37577becb2914e72a"
+expected_diagnostic_sha256 = "16650e1410374b304d64e7ec1aa82b155fe8896d0c6dd844b822bda5a3e92c6b"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/utbildningsanalyser/undantag-distans-extra-anpassningar-vt"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:366\",\"variant:1649\",\"edition:17984\",\"variable:44995\",\"member:840372\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
+evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "0f5b1d3ec3077a9ac732148cdef6b8f07dc454559c29d8a839ca006ff84179b7"
+expected_diagnostic_sha256 = "aebb8dd2f18f394d8dd5b1a4a3d866db81d7444bb9dc87c32ecc2076da7d79bb"
+
+[[acknowledge]]
+code = "missing_coding_period"
+subject = "scb/utbildningsanalyser/f6vt21c"
+refs = ["{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:366\",\"variant:1649\",\"edition:17984\",\"variable:44997\",\"member:840374\"]}"]
+fields = ["coding"]
+valid_from = "2020-01-01"
+valid_to = "2020-06-30"
+reason = "The #1640 errata.delivered entry adds this item's second-wave availability in the Vårterminen 2020 version, which SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying the Höstterminen 2020 - Vårterminen 2021 list into it would assert membership nobody has checked."
+evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
+expected_evidence_sha256 = "a078af323212879181f67ec292d11ebb05b0a0e436550bc4508a25c06c8c71f1"
+expected_diagnostic_sha256 = "8901e1ab5c05a61f406819e7d50232b19dc05d81c0872f02c532b253297b0865"
