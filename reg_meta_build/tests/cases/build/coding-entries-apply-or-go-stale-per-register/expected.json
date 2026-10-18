@@ -1867,6 +1867,58 @@
     {
       "table": "state_codes",
       "where": {
+        "register": "extendcasecarry",
+        "variable": "value"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2016-01-01",
+          "2016-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2017-01-01",
+          "2017-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2018-01-01",
+          "2018-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "#1676: version 2017 omits VALUE and an [[errata.delivered]] same-name carry delivers it there as Saktar, citing every documented row of the column (SAktAr 2016 and 2019, SaktAr 2018) as evidence. The folded extension's 2017 target is the carry, its witness the 2016 SAktAr row; SaktAr is delivered outside both windows. The listless 2017 target takes the witness list (01 Label); the documented rows keep their own list."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "case_id": "curation/registers/scb/extendcasecarry.toml#/coding.extend/1/period/1"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [],
+      "note": "#1676: the extension over the carried 2017 target raises no issue at its case. The carry cites the witness spelling's rows, so the effective-column index holds them under the carried key too; the target guard expects every row under that key and is not withheld by peer_membership_changed."
+    },
+    {
+      "table": "state_codes",
+      "where": {
         "register": "extendcaseauthority"
       },
       "fields": [

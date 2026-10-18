@@ -1846,7 +1846,9 @@ def acknowledged_diagnostic(
 
 
 def current_pins(
-    evidence_sha256: str | None, named: Iterable[ResolutionDiagnostic]
+    evidence_sha256: str | None,
+    named: Iterable[ResolutionDiagnostic],
+    coding_sha256: str | None = None,
 ) -> str:
     """A stale acknowledgement's detail suffix: its pins as the build computes them.
 
@@ -1859,6 +1861,8 @@ def current_pins(
     pins = []
     if evidence_sha256 is not None:
         pins.append(f'expected_evidence_sha256 = "{evidence_sha256}"')
+    if coding_sha256 is not None:
+        pins.append(f'expected_coding_sha256 = "{coding_sha256}"')
     if len(distinct) == 1:
         pins.append(
             "expected_diagnostic_sha256 = "

@@ -5480,23 +5480,30 @@ def compile_coding_register(
                     targets = tuple(entry.source_authority.records)
                 elif compact:
                     targets = compact_evidence[evidence_key][3]
-                # Each witness spelling's rows are guarded under their own key; the
-                # target key's guard holds the rest.
+                # Each guard expects exactly the rows the effective-column index
+                # holds under its key, as `peers` reads them. Each witness
+                # spelling's rows are guarded under their own key, the target's
+                # under the target key. An [[errata.delivered]] carry as the target
+                # cites every documented spelling's rows, so the index holds them
+                # under the target key too (#1676): the target guard then covers a
+                # witness spelling whole, and that spelling gets no second guard.
+                target_refs = originals_of(column)[0]
+                witness_members = {
+                    key: tuple(
+                        item.ref for item in expectations_of(key, target_fields, False)
+                    )
+                    for key in witness_keys
+                }
                 witness_guards = tuple(
                     PeerGuard(
                         guard_id=f"{case_id}:witness:{index}",
                         source=scope.source,
                         effective_column=key,
-                        expected_members=tuple(
-                            item.ref
-                            for item in expectations_of(key, target_fields, False)
-                        ),
+                        expected_members=members,
                     )
-                    for index, key in enumerate(witness_keys, 1)
+                    for index, (key, members) in enumerate(witness_members.items(), 1)
+                    if not target_refs.issuperset(members)
                 )
-                witness_refs = {
-                    ref for guard in witness_guards for ref in guard.expected_members
-                }
                 guards = (
                     PeerGuard(
                         guard_id=case_id,
@@ -5505,7 +5512,7 @@ def compile_coding_register(
                         expected_members=tuple(
                             target.ref
                             for target in targets
-                            if target.ref not in witness_refs
+                            if target.ref in target_refs
                         ),
                     ),
                     *witness_guards,
@@ -6104,6 +6111,7 @@ def compile_occurrence_corrections(
                         )
                     )
                 authority_family: tuple[SourceRecord, ...] = ()
+                coding_pin: str | None = None
                 if isinstance(entry, ErrataSupportEntry):
                     if entry.authority is None:
                         # The replacement's documented family is guarded beside
@@ -6128,25 +6136,27 @@ def compile_occurrence_corrections(
                         )
                     if valid:
                         with open_value_bindings(prepared.value_sources) as sessions:
-                            valid = (
-                                _support_coding_sha256(
-                                    tuple(
-                                        {
-                                            r.record_id: r
-                                            for r in family + authority_family
-                                        }.values()
-                                    ),
-                                    sessions,
-                                )
-                                == entry.expected_coding_sha256
+                            coding_pin = _support_coding_sha256(
+                                tuple(
+                                    {
+                                        r.record_id: r
+                                        for r in family + authority_family
+                                    }.values()
+                                ),
+                                sessions,
                             )
+                            valid = coding_pin == entry.expected_coding_sha256
                 if not valid:
                     statuses["over_broad" if overbroad else "stale"].append(case_id)
                     diagnostics.append(
                         _family_diagnostic(
                             case_id,
                             entry.variable,
-                            "literal source coordinate has no originals or differs from the guarded prose/scopes"
+                            # A computed coding pin means every guard matched.
+                            "guarded prose/scopes match but the coding fingerprint differs"
+                            + current_pins(None, (), coding_pin)
+                            if coding_pin is not None
+                            else "literal source coordinate has no originals or differs from the guarded prose/scopes"
                             + current_pins(family_pin, ()),
                             refs=tuple(record_ref(record) for record in selected),
                             overbroad=overbroad,
