@@ -1,0 +1,16 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {
+        "locator": "curation/registers/scb/sample.toml#/errata.support/1",
+        "detail": {
+          "contains": "guarded prose/scopes match but the coding fingerprint differs Current pins: expected_coding_sha256 = \"96c8c7e3a00a4d463682506ea758b8b5341cc0bcacae2f85e23b2243c1b72896\"."
+        }
+      },
+      "fields": ["code", "severity"],
+      "rows": [["stale_curation_entry", "error"]],
+      "note": "The pin is step 1's, which matches this same reviewed delivery."
+    }
+  ]
+}

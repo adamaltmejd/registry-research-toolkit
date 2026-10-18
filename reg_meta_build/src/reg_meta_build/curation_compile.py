@@ -6104,6 +6104,7 @@ def compile_occurrence_corrections(
                         )
                     )
                 authority_family: tuple[SourceRecord, ...] = ()
+                coding_pin: str | None = None
                 if isinstance(entry, ErrataSupportEntry):
                     if entry.authority is None:
                         # The replacement's documented family is guarded beside
@@ -6128,25 +6129,27 @@ def compile_occurrence_corrections(
                         )
                     if valid:
                         with open_value_bindings(prepared.value_sources) as sessions:
-                            valid = (
-                                _support_coding_sha256(
-                                    tuple(
-                                        {
-                                            r.record_id: r
-                                            for r in family + authority_family
-                                        }.values()
-                                    ),
-                                    sessions,
-                                )
-                                == entry.expected_coding_sha256
+                            coding_pin = _support_coding_sha256(
+                                tuple(
+                                    {
+                                        r.record_id: r
+                                        for r in family + authority_family
+                                    }.values()
+                                ),
+                                sessions,
                             )
+                            valid = coding_pin == entry.expected_coding_sha256
                 if not valid:
                     statuses["over_broad" if overbroad else "stale"].append(case_id)
                     diagnostics.append(
                         _family_diagnostic(
                             case_id,
                             entry.variable,
-                            "literal source coordinate has no originals or differs from the guarded prose/scopes"
+                            # A computed coding pin means every guard matched.
+                            "guarded prose/scopes match but the coding fingerprint differs"
+                            + current_pins(None, (), coding_pin)
+                            if coding_pin is not None
+                            else "literal source coordinate has no originals or differs from the guarded prose/scopes"
                             + current_pins(family_pin, ()),
                             refs=tuple(record_ref(record) for record in selected),
                             overbroad=overbroad,

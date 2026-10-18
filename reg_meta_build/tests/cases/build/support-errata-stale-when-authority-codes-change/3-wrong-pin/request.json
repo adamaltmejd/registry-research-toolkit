@@ -1,0 +1,5 @@
+{
+  "note": "The reviewed delivery again, with a wrong `expected_coding_sha256`: every guard matches, so the stale detail names the coding fingerprint and prints step 1's pin to re-pin from (#1675).",
+  "fails_if": "the support stale detail stops telling a coding-pin mismatch from prose/scope drift, or stops printing the current `expected_coding_sha256` when only the coding fingerprint differs",
+  "sources": "scb-support-question"
+}
