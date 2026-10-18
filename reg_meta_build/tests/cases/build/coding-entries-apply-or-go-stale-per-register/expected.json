@@ -1799,7 +1799,7 @@
           "Label"
         ]
       ],
-      "note": "#1672: each requested period resolves its own target spelling. 2018 delivers SAktAr alone, so its target is SAktAr and its witness is the folded Saktar spelling delivered in 2020; 2019 delivers Saktar, whose own 2020 row is the witness. Both listless targets take the witness list (01 Label); the 2018 spelling does not make the 2019 period over-broad, nor 2019's the 2018 period."
+      "note": "#1672: each requested period resolves its own target spelling. 2018 delivers SAktAr alone, so its target is SAktAr and its witness is the folded Saktar spelling delivered in 2020; 2019 delivers Saktar, whose own 2020 row is the witness. Both listless targets take the witness list (01 Label); the 2018 spelling does not make the 2019 period over-broad, nor 2019's the 2018 period. The entry's one pin, coding_evidence_sha256 over all its rows 7401-7403, holds for both periods."
     },
     {
       "table": "issues",
@@ -1863,6 +1863,57 @@
         ]
       ],
       "note": "#1672: the pinned folded extension is not stale; the one issue is formation's native-identity warning, as in register extendcase."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendcaseauthority"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2021-01-01",
+          "2021-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "#1672: the listless target Saktar is delivered before (2019) and after (2021) the 2020 witness SAktAr, whose list has a blank name. The blank-label extension carries a source_authority over the target and witness rows 7701-7703 (expected_records, source_codings and raw_codings placeholders, in the curator helper's canonical record order), so both periods take the witness list (01 Label)."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "77.5",
+          "scb/extendcaseauthority/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "source_native_identity_retained"
+        ]
+      ],
+      "note": "#1672: the folded blank-label extension's source authority is not stale; the one issue is formation's native-identity warning, as in register extendcase."
     }
   ]
 }

@@ -1270,8 +1270,12 @@ source authority, including raw fingerprints; it never receives an invented name
 extension's target and witness columns match by the column identity fold
 (`fold_identity`), so they may differ by case; two folded spellings delivered in one
 edition refuse the entry (`ambiguous_coding_column_identity`) rather than pick one. Each
-period resolves its own target spelling, and a witness spelling's rows join the target's
-evidence digest, source-authority records and peer guards.
+period resolves and applies to its own target spelling, but the entry's one evidence
+digest, source authority and peer guards cover, in canonical record order, the rows of
+every requested period's target spelling and of the witness spellings. A folded spelling
+delivered in neither a requested period nor the witness window is outside them, while a
+single spelling's pin covers all of that column's rows: rows outside both windows are
+not evidence for the extension.
 
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot

@@ -17,5 +17,6 @@ periods = [["2018-01-01", "2018-12-31"], ["2019-01-01", "2019-12-31"]]
 list = "list"
 list_members = [["01", "Label"]]
 witness = ["2020-01-01", "2020-12-31"]
+expected_evidence_sha256 = {{coding_evidence_sha256 key=member:7401,member:7402,member:7403}}
 reason = "Reviewed coding"
 source = "fixture"

@@ -4995,15 +4995,23 @@ def compile_coding_register(
             )
         return captured[key]
 
-    # A folded extension's witness spellings (#1672) hold source rows outside the
+    # A folded extension's other spellings (#1672) hold source rows outside the
     # target key: they join its pinned originals and expectations, so the complete
-    # target-and-witness authority is pinned. Without witness keys these are the
+    # entry-wide authority is pinned. Both keep the canonical order of one key's
+    # (originals in file order, expectations as `capture_expectations` sorts and
+    # groups them), whatever the key order. Without witness keys these are the
     # target's own.
     def pinned_originals(
         column: NativeKey, witness_keys: tuple[NativeKey, ...]
     ) -> tuple[SourceRecord, ...]:
+        if not witness_keys:
+            return originals_of(column)[1]
+        refs = set().union(*(originals_of(key)[0] for key in (column, *witness_keys)))
+        assert original_refs is not None
         return tuple(
-            record for key in (column, *witness_keys) for record in originals_of(key)[1]
+            record
+            for record, ref in zip(originals, original_refs, strict=True)
+            if ref in refs
         )
 
     def pinned_expectations(
@@ -5012,10 +5020,10 @@ def compile_coding_register(
         fields: tuple[str, ...],
         parents: bool,
     ) -> tuple[RecordExpectation, ...]:
-        return tuple(
-            item
-            for key in (column, *witness_keys)
-            for item in expectations_of(key, fields, parents)
+        if not witness_keys:
+            return expectations_of(column, fields, parents)
+        return capture_expectations(
+            pinned_originals(column, witness_keys), fields=fields, parents=parents
         )
 
     for kind, entries in (
@@ -5068,7 +5076,8 @@ def compile_coding_register(
             # by case: fold them with the column identity rule (#1672). Spellings
             # delivered concurrently are two columns, so the entry names neither.
             # Each period resolves its own target spelling, so a spelling delivered
-            # in another requested period cannot invalidate it.
+            # in another requested period cannot invalidate it; that period's other
+            # entry spellings are its witness keys.
             period_columns: (
                 list[tuple[set[NativeKey], tuple[NativeKey, ...]]] | None
             ) = None
@@ -5112,24 +5121,32 @@ def compile_coding_register(
                         continue
                     witness_from, witness_to = extension.witness
                     witness_window = finite((witness_from, witness_to))
-                    period_columns = []
-                    for start, end in periods:
-                        period_matches = {
+                    targets_by_period = [
+                        {
                             key
                             for key in spellings
                             if overlaps(delivered_windows(key), finite((start, end)))
                         }
-                        period_columns.append(
-                            (
-                                period_matches,
-                                tuple(
-                                    key
-                                    for key in spellings
-                                    if key not in period_matches
-                                    and overlaps(delivered_windows(key), witness_window)
-                                ),
-                            )
+                        for start, end in periods
+                    ]
+                    # The entry has one pin and one source authority, so they cover
+                    # every requested period's target spelling and the witness
+                    # spellings at once; each period still applies to its own target.
+                    entry_keys = tuple(
+                        key
+                        for key in spellings
+                        if any(key in targets for targets in targets_by_period)
+                        or overlaps(delivered_windows(key), witness_window)
+                    )
+                    period_columns = [
+                        (
+                            period_matches,
+                            tuple(
+                                key for key in entry_keys if key not in period_matches
+                            ),
                         )
+                        for period_matches in targets_by_period
+                    ]
                 elif spelled:
                     matches = {key for spellings in spelled for key in spellings}
             if period_columns is None:
@@ -5154,7 +5171,8 @@ def compile_coding_register(
                     )
                     continue
                 column = next(iter(matches))
-                evidence_key = (column, *witness_keys)
+                # One compact entry per entry-wide key set, whichever is the target.
+                evidence_key = tuple(sorted((column, *witness_keys), key=repr))
                 claims = coding.get(column, ()) + tuple(
                     claim for key in witness_keys for claim in coding.get(key, ())
                 )

@@ -851,9 +851,11 @@ class CodingSelection(CodingWindow):
         ]
         | None
     ) = None
-    # Case spellings of the decision's column (#1672): an extension's witness may be
-    # delivered under a spelling that folds (`fold_identity`) to the target's, never
-    # concurrently with it. Their claims join the target's for this decision only.
+    # Case spellings of the decision's column (#1672): an extension's witness, or
+    # another requested period, may be delivered under a spelling that folds
+    # (`fold_identity`) to the target's, never concurrently with it. These are the
+    # entry's other pinned spellings; their claims join the target's for this
+    # decision only.
     witness_column_keys: tuple[NativeKey, ...] = ()
 
     @model_validator(mode="after")
