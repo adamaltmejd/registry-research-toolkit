@@ -53,7 +53,3 @@ column = "P1105_Lopnr_PeOrgNr_opnr"
 tables = ["Konkurs_2022", "Konkurs_2023", "Konkurs_2024"]
 mappings = [{ register_variant = "scb/konkurser/konkurser-offentliga-ackord", variable = "scb/konkurser/person-orgnr", representation = "opnr" }]
 reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable (documented for 2022-2024 by the #1502 errata); maintainer-decided 2026-10-13 (Operator batch on #1502/#1504)."
-
-[[column]]
-column = "PersonNr_opnr"
-storage_header = "P1105_LopNr_PersonNr_opnr"

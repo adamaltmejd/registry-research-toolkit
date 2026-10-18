@@ -7,7 +7,3 @@ variants = ["scb/utbildningsanalyser/distansundervisning-grundskola"]
 [[table]]
 table = "Distansutb_grund_VT20"
 edition = "VT2020"
-
-[[column]]
-column = "PersonNr"
-storage_header = "P1105_Lopnr_PersonNr"

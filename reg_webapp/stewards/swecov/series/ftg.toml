@@ -137,11 +137,3 @@ edition = 2022
 [[table]]
 table = "Ftg_2023"
 edition = 2023
-
-[[column]]
-column = "CfarNr_LISA"
-storage_header = "P1105_LopNr_CfarNr_LISA"
-
-[[column]]
-column = "PeOrgNr_LISA"
-storage_header = "P1105_LopNr_PeOrgNr_LISA"

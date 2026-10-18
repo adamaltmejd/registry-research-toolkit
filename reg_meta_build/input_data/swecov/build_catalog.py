@@ -47,7 +47,6 @@ from itertools import count, pairwise
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from reg_core_py import fold_identity
 from reg_meta_build.holdings_census import census_rows
 from reg_meta_build.steward_spec import (
     STEWARDS_DIR,
@@ -2320,7 +2319,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
             Path(scratch),
         )
         spec = write_inventory(args, mapping_db)
-    _check_storage_types(args, spec, storage)
+    _check_storage_types(args, storage)
     print("  candidate manifest pins:")
     print(f'    "steward_spec_sha256": "{spec.sha256}"')
     print(f'    "global_db_sha256": "{global_sha}"')
@@ -2567,19 +2566,21 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 elif windowed:
                     declared = [{**r, "decided": True} for r in declared]
                 owner = mapping.variable.rsplit("/", 1)[1]
-                # select_owner drops every other owner of the representation on
-                # this variant, case twins included: neighbouring waves may spell
-                # one cell `co11` and `CO11`, and both reach `recs` through the
-                # folded lookup. `fold_identity` is the `py_lower` fold (#853,
-                # #1571). An owner of a renamed column's physical name survives.
+                # select_owner drops every other owner of the representation and
+                # of the physical name on this variant. Every record on the
+                # variant here came through the folded physical-name lookup (a
+                # decision names each variant once), so all of them go: case
+                # twins (neighbouring waves spell one cell `co11` and `CO11`,
+                # #1571) and, for a renamed column, the physical name's own
+                # owner, which would otherwise survive as a second mapping or
+                # an ambiguity (#1664). The declared owner is re-added.
                 recs = [
                     r
                     for r in recs
                     if r["coord"] != mapping.register_variant
                     or (
-                        fold_identity(r["col"]) != fold_identity(mapping.representation)
-                        if decision.select_owner
-                        else r["col"] != mapping.representation or r["vslug"] != owner
+                        not decision.select_owner
+                        and (r["col"] != mapping.representation or r["vslug"] != owner)
                     )
                 ] + declared
                 curated.update((r["coord"], r["vslug"], r["col"]) for r in declared)
@@ -2763,29 +2764,25 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
 
 
 def _check_storage_types(
-    args: argparse.Namespace, spec: StewardSpec, storage: dict[tuple[str, str], str]
+    args: argparse.Namespace, storage: dict[tuple[str, str], str]
 ) -> None:
     """Report curated global data types the steward's storage disagrees with (#1562).
 
     The global build never reads the storage schema, so this refresh is where a
     disagreement surfaces. It is a worklist, never an automatic global change.
-    Each series' register is checked against the series' own tables, each table
-    under the headers its `storage_header` decisions select.
+    Each curated entry is checked against the physical columns the inventory
+    just written maps to its variable (#1666).
     """
-    from reg_meta_build.curation_tree import load_register_files
+    from reg_meta_build.curation_tree import load_curation_tree
+    from reg_meta_build.inventory import load_inventory
     from reg_meta_build.steward_storage import (
-        storage_policy_from_spec,
         storage_type_findings,
         write_storage_findings,
     )
 
-    try:
-        policy = storage_policy_from_spec(spec)
-    except ValueError as exc:
-        raise SystemExit(f"inventory: {exc}") from exc
     findings = storage_type_findings(
-        load_register_files(REPO_ROOT / "reg_meta_build" / "curation"),
-        policy,
+        load_curation_tree(REPO_ROOT / "reg_meta_build" / "curation"),
+        load_inventory(args.out / "inventory.toml"),
         storage,
     )
     dest = args.csv.parent / "derived" / "storage_type_findings.tsv"

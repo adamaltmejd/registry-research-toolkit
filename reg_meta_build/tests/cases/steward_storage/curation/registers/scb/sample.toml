@@ -5,6 +5,9 @@ native_id = "1"
 [[variant]]
 native_id = "1.2"
 slug = "people"
+[[variant]]
+native_id = "1.3"
+slug = "firms"
 
 [[errata.column]]
 variant = "people"
@@ -42,7 +45,7 @@ noted = "2026-10-13"
 variant = "people"
 column = "ELSEWHERE"
 name = "ELSEWHERE"
-definition = "Stored only outside the register's prefixes"
+definition = "Stored only in a table the inventory does not map"
 versions = ["2020"]
 source = "steward-holdings"
 evidence = "held"
@@ -61,7 +64,7 @@ noted = "2026-10-13"
 variant = "people"
 column = "AGREES"
 name = "AGREES"
-definition = "Curated integer over integer storage"
+definition = "Curated integer over its own integer storage; the documented variable delivers AGREES in 2018"
 versions = ["2020"]
 data_type = "integer"
 source = "steward-holdings"
@@ -85,7 +88,7 @@ column = "Renamed"
 versions = ["2020"]
 expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 data_type = "integer"
-evidence = "stored under the policy's physical header PHYS"
+evidence = "stored under the physical header PHYS"
 noted = "2026-10-13"
 
 [[errata.delivered]]
@@ -94,5 +97,38 @@ column = "Outside"
 versions = ["2020"]
 expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
 data_type = "integer"
-evidence = "stored only outside the register's prefixes"
+evidence = "stored only in a table the inventory does not map"
 noted = "2026-10-13"
+
+[[errata.delivered]]
+variant = "people"
+column = "AGREES"
+versions = ["2018"]
+expected_evidence_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+data_type = "date"
+evidence = "the documented variable's delivery of AGREES, typed date by its own storage"
+noted = "2026-10-18"
+
+[[variable]]
+native_id = "1.HELD"
+slug = "held"
+
+[[variable]]
+native_id = "1.MIXED"
+slug = "mixed"
+
+[[variable]]
+native_id = "1.WIDE"
+slug = "wide"
+
+[[variable]]
+native_id = "1.ELSEWHERE"
+slug = "elsewhere"
+
+[[variable]]
+native_id = "1.AGREES"
+slug = "agrees"
+
+[[variable]]
+native_id = "1.DOCONLY"
+slug = "doconly"

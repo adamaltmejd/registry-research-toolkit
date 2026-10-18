@@ -1,0 +1,116 @@
+# The generated inventory the storage check reads (#1666). AGREES is one literal
+# held by two variables: the mint in CIS2020 and a documented variable in
+# CIS2018 (#1647), and a third variable on the firms variant. Renamed is stored under the physical header PHYS. CIS2018's
+# RENAMED holds the literal unmapped. The SOS DIA is a wide pivot of two members.
+
+version = 1
+steward = "sample"
+
+[[table]]
+id = "CIS2018"
+edition = 2018
+
+[[table.column]]
+name = "MIXED"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/people"
+variable = "scb/sample/mixed"
+representation = "MIXED"
+
+[[table.column]]
+name = "AGREES"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/people"
+variable = "scb/sample/agrees-documented"
+representation = "AGREES"
+
+[[table.column]]
+name = "RENAMED"
+
+[[table]]
+id = "CIS2020"
+edition = 2020
+
+[[table.column]]
+name = "HELD"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/people"
+variable = "scb/sample/held"
+representation = "HELD"
+
+[[table.column]]
+name = "MIXED"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/people"
+variable = "scb/sample/mixed"
+representation = "MIXED"
+
+[[table.column]]
+name = "WIDE"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/people"
+variable = "scb/sample/wide"
+representation = "WIDE"
+
+[[table.column]]
+name = "GUID"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/people"
+variable = "scb/sample/guid"
+representation = "Guid"
+
+[[table.column]]
+name = "AGREES"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/people"
+variable = "scb/sample/agrees"
+representation = "AGREES"
+
+[[table.column]]
+name = "PHYS"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/people"
+variable = "scb/sample/renamed"
+representation = "Renamed"
+
+[[table]]
+id = "PIV2020"
+edition = 2020
+
+[[table.column]]
+name = "DIA1"
+
+[[table.column.mapping]]
+register_variant = "sos/pivot/pivot-ov"
+variable = "sos/pivot/dia"
+representation = "DIA"
+member = { position = 1 }
+
+[[table.column]]
+name = "DIA2"
+
+[[table.column.mapping]]
+register_variant = "sos/pivot/pivot-ov"
+variable = "sos/pivot/dia"
+representation = "DIA"
+member = { position = 2 }
+
+[[table]]
+id = "FIRM2018"
+edition = 2018
+
+[[table.column]]
+name = "AGREES"
+
+[[table.column.mapping]]
+register_variant = "scb/sample/firms"
+variable = "scb/sample/agrees-firm"
+representation = "AGREES"

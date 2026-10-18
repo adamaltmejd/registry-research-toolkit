@@ -27,7 +27,3 @@ reason = "Second-wave item (#1640): the VT2020 file carries the HT2020/VT2021 it
 column = "F6VT21c"
 mappings = [{ register_variant = "scb/utbildningsanalyser/distansundervisning-gymnasieskolan", variable = "scb/utbildningsanalyser/f6vt21c", representation = "F6VT21c" }]
 reason = "Second-wave item (#1640): the VT2020 file carries the HT2020/VT2021 item, delivered to this version through errata.delivered with a second-wave data_warning. Mapped under the orderable rule (#1603; maintainer decision 2026-10-16)."
-
-[[column]]
-column = "PersonNr"
-storage_header = "P1105_Lopnr_PersonNr"

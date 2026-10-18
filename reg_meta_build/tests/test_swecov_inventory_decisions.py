@@ -289,6 +289,35 @@ def test_mapping_decision_explicit_owner_selection_preserves_physical_column(
     assert column.mappings[0].representation == "T_kolumn"
 
 
+def test_owner_selection_drops_physical_name_owner_of_renamed_column(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """Physical `T_kolumn` is renamed to `Covid_19_antikroppar` and its owner
+    selected, while `t-kolumn` delivers the physical name `T_kolumn` on the same
+    variant. Over a range edition, whose owners stay unassessed, a surviving
+    physical-name owner is written as a second mapping (over a single year it
+    makes the column ambiguous instead). Fails if owner selection drops only the
+    owners of the representation (#1664)."""
+    decisions = _mapping_decision(
+        column="T_kolumn",
+        variable="inera/bestallda-prover/covid-19-antikroppar",
+        representation="Covid_19_antikroppar",
+        select_owner=True,
+    )
+    steward = _run_inventory(
+        tmp_path,
+        flavored_db,
+        "TSERIES",
+        ["T_kolumn"],
+        edition=_RANGE,
+        decisions=decisions,
+    )
+    (column,) = load_delivery_inventory(steward / "inventory.toml").tables[0].columns
+    assert [(str(m.variable), m.representation) for m in column.mappings] == [
+        ("inera/bestallda-prover/covid-19-antikroppar", "Covid_19_antikroppar")
+    ]
+
+
 def test_mapping_decision_owner_selection_requires_own_complete_coverage(
     tmp_path: Path, flavored_db: Path
 ) -> None:

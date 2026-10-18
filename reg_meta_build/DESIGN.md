@@ -214,12 +214,15 @@ Authority depends on the fact and scope, rather than a universal file ordering:
   erratum without `data_type` takes the documented class alone. A column left untyped is
   withheld with a located `unknown_data_type` error until curation types or acknowledges
   it.
-- The steward refresh (`build_catalog.py inventory`) cross-checks every curated type on
-  a register a steward-spec series names against that series' member tables in the
-  steward's storage-schema export (folded column names join waves; a column decision's
-  `storage_header` names the physical header where storage spells a column differently,
-  in the tables the decision selects only) and writes
-  `derived/storage_type_findings.tsv`. The export is a required input: a missing or
+- The steward refresh (`build_catalog.py inventory`) cross-checks every curated type and
+  steward-held column against the steward's storage-schema export, on every register
+  that curates one, whether or not the generated inventory maps it, and writes
+  `derived/storage_type_findings.tsv`. An entry is compared only with its own cells: the
+  physical columns the inventory maps to its variable on its variant under its column,
+  read under each cell's physical header (a renamed column, a pseudonymised key, every
+  member of a wide pivot; column names fold). A mint covers only its own versions and
+  the same literal can be another variable elsewhere (#1647), so another version's table
+  of that literal is not evidence (#1666). The export is a required input: a missing or
   unreadable `--storage-csv` fails the run, so no refresh skips the check (#1594).
   Disagreeing storage, uncurated steward holdings and steward holdings or typed
   delivered columns that match no storage column print a warning in the refresh summary;
@@ -2573,14 +2576,14 @@ is one register's tables across years: it names the register, the variants its t
 deliver, each member table's explicit edition (or year-independent scope and partition),
 how a bare-year edition is spelled (`edition_spelling`: annual, or a school-year anchor)
 and its curated column decisions. Only a series whose every column decision is an
-`unmap` (tables with no catalog owner) may omit the register; any mapping, hold,
-`storage_header` or `graft_onto` refuses without one. Membership is the only grouping
-authority; nothing groups tables by name. A column decision selects whole member tables
-and is exactly one of a reviewed mapping, a permanent `unmap`, an interim `hold` (its
-`follow_up` must parse as an issue reference; the build never reads the issue), a
-`storage_header` or a `graft_onto`. The scope holds the census guard (`census_sha256`),
-the lookup, exclude and retain-unknown dispositions, census-holding routes for the
-enrichment stages and the steward-owned flavor registers.
+`unmap` (tables with no catalog owner) may omit the register; any mapping, hold or
+`graft_onto` refuses without one. Membership is the only grouping authority; nothing
+groups tables by name. A column decision selects whole member tables and is exactly one
+of a reviewed mapping, a permanent `unmap`, an interim `hold` (its `follow_up` must
+parse as an issue reference; the build never reads the issue) or a `graft_onto`. The
+scope holds the census guard (`census_sha256`), the lookup, exclude and retain-unknown
+dispositions, census-holding routes for the enrichment stages and the steward-owned
+flavor registers.
 
 A series boundary is a documented break in the source (a changed population frame, unit
 or subject key, cited in a comment at the top of each split series file), never a change
@@ -2590,7 +2593,7 @@ one takes the series set. A table's own set is what its curated mappings and the
 generator's auto-mapping may use. A family whose tables map to different registers is
 still several series, because a series is single-register. Where the grafts stage cannot
 place a gap-fill column (one with no catalog variable yet) on one variant, a per-column
-`graft_onto` decision names it; like `storage_header`, it never reaches the inventory.
+`graft_onto` decision names it; it never reaches the inventory.
 
 Every census table has exactly one disposition, a series or one scope entry
 (`steward_table_disposition_invalid`). A series admits variants of its own register
@@ -2851,10 +2854,11 @@ meaning is unknown or that one delivery supersedes another.
 
 A curated mapping decision may declare `select_owner = true` when the physical delivery
 documents which source question or survey wave owns that column. This selects one
-already-declared owner for that table, edition, variant and literal representation; it
-does not extend dates or merge variables. The selected owner must independently cover
-the complete edition. Without this explicit curation, simultaneous owners still fail
-closed.
+already-declared owner for that table, edition, variant and literal representation, and
+drops every other owner of that representation or of the physical column name on the
+variant; it does not extend dates or merge variables. The selected owner must
+independently cover the complete edition. Without this explicit curation, simultaneous
+owners still fail closed.
 
 A reviewed mapping normally covers the complete edition by itself. A decision whose
 mappings each cover only part of it, because the edition straddles a variant split (one

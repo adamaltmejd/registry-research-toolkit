@@ -1,0 +1,22 @@
+[register]
+provider = "sos"
+slug = "pivot"
+native_id = "2"
+
+[[variant]]
+native_id = "2.20"
+slug = "pivot-ov"
+display_group = "PIVOT_OV"
+
+[[errata.column]]
+variant = "PIVOT_OV"
+column = "DIA"
+name = "DIA"
+definition = "Held as the wide pivot DIA1, DIA2; a non-SCB entry names its source variant label"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-18"
+
+[[variable]]
+native_id = "2.DIA"
+slug = "dia"

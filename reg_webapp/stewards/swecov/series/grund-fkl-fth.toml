@@ -83,15 +83,3 @@ column = "SKOM"
 tables = ["Grund_Fkl_Fth_2008"]
 mappings = [{ register_variant = "scb/grundskola-elever/individregister", variable = "scb/grundskola-elever/kommun", representation = "Kommun" }]
 reason = "SCB delivery report, sheet Skolverkets elevreg., row 11, identifies SKOM as Skolkommun for 2008-2016; the owner emits Kommun (Kommun för där grundskolan ligger) at exactly 2008-10-15. Maintainer-approved 2026-10-13 (OP-2026-10-13-E)."
-
-[[column]]
-column = "AvdFTH"
-storage_header = "P1105_LopNr_AVDFTH"
-
-[[column]]
-column = "SkolKodFTH"
-storage_header = "P1105_Lopnr_SkolKodFTH"
-
-[[column]]
-column = "SkolenhetsKodFTH"
-storage_header = "P1105_Lopnr_Skolenhetskodfth"
