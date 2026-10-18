@@ -465,8 +465,8 @@ reason = "SoS documents one action code per row (ATG, the long-format action fil
 
 [[column]]
 column = "EKOD6"
-hold = { follow_up = "#1603", reason = "SWECOV stores EKOD6 as a one-character column, too narrow for an external-cause code, while EKOD1..5 are ten characters. Held for the batch-f MONA check of whether it is ever populated: unmap as empty if never, otherwise revisit a carry of the par-ov yttre-orsakskod variable (#1603 batch-e; Operator 2026-10-16)." }
+unmap = "Empty in every delivered year 2005–2023 (aggregate check on MONA, reported as a conclusion only; Operator acceptance 2026-10-18, #1603 batch-f F1); there is no value to order. SWECOV stores it as a one-character column, too narrow for an external-cause code."
 
 [[column]]
 column = "EKOD7"
-hold = { follow_up = "#1603", reason = "SWECOV stores EKOD7 as a one-character column, too narrow for an external-cause code, while EKOD1..5 are ten characters. Held for the batch-f MONA check of whether it is ever populated: unmap as empty if never, otherwise revisit a carry of the par-ov yttre-orsakskod variable (#1603 batch-e; Operator 2026-10-16)." }
+unmap = "Empty in every delivered year 2005–2023 (aggregate check on MONA, reported as a conclusion only; Operator acceptance 2026-10-18, #1603 batch-f F1); there is no value to order. SWECOV stores it as a one-character column, too narrow for an external-cause code."
