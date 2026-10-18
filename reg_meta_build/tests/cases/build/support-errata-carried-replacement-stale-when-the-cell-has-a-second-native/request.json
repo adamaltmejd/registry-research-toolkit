@@ -1,0 +1,15 @@
+{
+  "note": "Besides 1.18, native 1.19 also documents VALUE in edition 9020, so 1.18 is not the cell's sole owner: a second source native is a positive authority, and the withdrawal belongs to contradictory_question. The carry itself is unchanged.",
+  "fails_if": "`_carried_replacement_refusal` stops refusing a cell that another source native documents in the same edition, so member 1802 becomes support beside 1.19 and the carry",
+  "sources": {
+    "description": "scb-carried-replacement plus native 1.19 documenting VALUE in edition 9020 (version 2020).",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1801, "var_id": 18, "colname": "VALUE", "year": "2019", "regver_id": 9019, "varname": "Invoiced"},
+        {"cvid": 1802, "var_id": 18, "colname": "VALUE", "year": "2020", "regver_id": 9020, "varname": "Invoiced"},
+        {"cvid": 1901, "var_id": 19, "colname": "VALUE", "year": "2020", "regver_id": 9020, "varname": "Other"},
+        {"cvid": 1701, "var_id": 17, "colname": "VALUE", "year": "2021", "regver_id": 9021, "varname": "Statistical"}
+      ]
+    }
+  }
+}

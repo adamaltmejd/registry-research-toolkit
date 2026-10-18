@@ -779,9 +779,9 @@ class ErrataFieldEntry(_OccurrenceCorrectionEntry):
 
 
 class ErrataSupportEntry(_OccurrenceCorrectionEntry):
-    kind: Literal["contradictory_question", "nonphysical_projection"] = (
-        "contradictory_question"
-    )
+    kind: Literal[
+        "contradictory_question", "nonphysical_projection", "carried_replacement"
+    ] = "contradictory_question"
     edition: str
 
     _text = field_validator("variable", "variant", "edition", "evidence")(
@@ -797,12 +797,36 @@ class ErrataSupportEntry(_OccurrenceCorrectionEntry):
             return value
         return _OccurrenceCorrectionEntry._prose_guards(value)
 
-    authority: _OccurrenceCorrectionEntry
+    # A positive source native on the same cell; carried_replacement has none.
+    authority: _OccurrenceCorrectionEntry | None = None
+    # carried_replacement only: the native an `[[errata.delivered]]` carry puts on
+    # the withdrawn sole owner's cell (#1671), spelled like `variable`.
+    replacement: str | None = None
     expected_coding_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
 
     @model_validator(mode="after")
     def _same_physical_question(self) -> ErrataSupportEntry:
         authority = self.authority
+        if self.kind == "carried_replacement":
+            if authority is not None or self.replacement is None:
+                raise ValueError(
+                    "carried_replacement support names a replacement native and no authority"
+                )
+            _require_trimmed(self.column)
+            _require_trimmed(self.replacement)
+            if self.replacement == self.variable:
+                raise ValueError(
+                    "the replacement must be a different native variable than the withdrawn one"
+                )
+            if self.replacement.rsplit(".", 1)[0] != self.variable.rsplit(".", 1)[0]:
+                raise ValueError(
+                    "the replacement must be a native variable of the same register"
+                )
+            return self
+        if authority is None or self.replacement is not None:
+            raise ValueError(
+                f"{self.kind} support requires an authority and no replacement"
+            )
         if self.kind == "nonphysical_projection":
             expected = {item.name: item for item in self.expected_fields}
             witness = {item.name: item for item in authority.expected_fields}

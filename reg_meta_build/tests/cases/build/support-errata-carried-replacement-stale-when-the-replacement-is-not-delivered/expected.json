@@ -1,0 +1,23 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code", "locator", "detail"],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/sample.toml#/errata.support/1",
+          "curation/registers/scb/sample.toml#/errata.support/1: carried_replacement_not_delivered:2020: no [[errata.delivered]] carries 1.17 on this variant, literal column and version"
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation", "key": "member:1802"},
+      "fields": ["use", "variable"],
+      "rows": [
+        ["catalog", "scb/sample/invoiced"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "A carried_replacement whose replacement is the withdrawn native itself. Everything else is complete, so only the different-native rule refuses it.",
+  "fails_if": "`ErrataSupportEntry` stops refusing a `carried_replacement` whose `replacement` equals `variable`, so the entry loads and would withdraw the native in favour of its own carry",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.support]] entry 1",
+    "message_contains": [
+      "the replacement must be a different native variable than the withdrawn one"
+    ]
+  }
+}

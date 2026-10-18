@@ -1,0 +1,21 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator", "detail"],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/errata.support/1",
+          "curation/registers/scb/sample.toml#/errata.support/1: literal source coordinate has no originals or differs from the guarded prose/scopes"
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation", "use": "support"},
+      "fields": ["key"],
+      "rows": []
+    }
+  ]
+}

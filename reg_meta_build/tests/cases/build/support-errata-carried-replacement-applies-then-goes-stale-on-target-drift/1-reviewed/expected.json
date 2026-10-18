@@ -1,0 +1,43 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation"},
+      "fields": ["key", "column_name", "use", "variable"],
+      "rows": [
+        ["member:1701", "VALUE", "catalog", "scb/sample/statistical"],
+        ["member:1801", "VALUE", "catalog", "scb/sample/invoiced"],
+        ["member:1802", "VALUE", "support", "scb/sample/invoiced"]
+      ]
+    },
+    {
+      "table": "states",
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to"],
+      "rows": [
+        ["invoiced", "people", "VALUE", "2019-01-01", "2019-12-31"],
+        ["statistical", "people", "VALUE", "2020-01-01", "2020-12-31"],
+        ["statistical", "people", "VALUE", "2021-01-01", "2021-12-31"]
+      ]
+    },
+    {
+      "table": "warnings",
+      "fields": ["variable", "variant", "column", "valid_from", "valid_to", "summary", "fields"],
+      "rows": [
+        [
+          "statistical",
+          "people",
+          "VALUE",
+          "2020-01-01",
+          "2020-12-31",
+          "The 2020 delivery carries the statistical value.",
+          ["definition"]
+        ]
+      ]
+    }
+  ]
+}

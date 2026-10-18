@@ -1003,6 +1003,23 @@ compilation and replay. The witness establishes the quantity, not delivery in th
 negative-column edition. Only the checked negative projection becomes support; all
 original facts remain available and positive physical occurrences retain their role.
 
+The `carried_replacement` kind (#1671) withdraws a cell's sole documented owner, which
+`contradictory_question` cannot do: no other source native on the cell can be its
+authority. It takes the same target guards, exact edition and coding pin, names no
+`authority`, and names a `replacement` native of the same register instead. An
+`[[errata.delivered]]` carry of that native onto the same variant, literal column and
+version is what authorises it: the edition's state then belongs to the carried
+occurrence, with the carry's `data_warning`. The target becomes support exactly as a
+contradicted assertion does, and the replacement's documented family is guarded beside
+it. Compilation refuses the entry, with a located detail token, when no such carry
+exists (`carried_replacement_not_delivered`) or when another source native documents the
+cell (`carried_replacement_second_native`, which is `contradictory_question`'s case).
+Without the entry the carry still lands beside the documented owner, as before, and
+`contradictory_question` is unchanged. The pairing checks that the carry is declared,
+not that it applied: a carry its converter refuses is its own located stale entry.
+Withdrawing a sole owner without a carried replacement stays out of scope, since it
+would leave the cell without an owner.
+
 Ordinary variables form from an established native identity. Their names bind that exact
 source coordinate; additional deliveries do not require handwritten whole-variable
 cases. A complete unchecked native family retains catalog identity across renamed
