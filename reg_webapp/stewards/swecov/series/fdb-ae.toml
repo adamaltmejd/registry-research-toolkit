@@ -109,25 +109,25 @@ reason = "fdb's workplace status under the pre-2023 SWECOV spelling: the aggrega
 column = "ng2"
 tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
 mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 2 } }]
-reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator pivot draft 2026-10-16."
 
 [[column]]
 column = "ng3"
 tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
 mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 3 } }]
-reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator pivot draft 2026-10-16."
 
 [[column]]
 column = "ng4"
 tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
 mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 4 } }]
-reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator pivot draft 2026-10-16."
 
 [[column]]
 column = "ng5"
 tables = ["FDB_AE_2015", "FDB_AE_2016", "FDB_AE_2017", "FDB_AE_2018", "FDB_AE_2019", "FDB_AE_2020", "FDB_AE_2021", "FDB_AE_2022"]
 mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/naringsgren", representation = "Ng", member = { position = 5 } }]
-reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB Näringsgren (Ng) on arbetsställeenheter, which the long FDB_AE_Ng tables deliver as `ng`; ng2..ng5 are its secondary slots. ng1 stays on its own SCB variable scb/fdb/ng1, so the set starts at position 2. #1495 wide-pivot member; #1603 batch-e; Operator pivot draft 2026-10-16."
 
 [[column]]
 column = "tidomspct1"

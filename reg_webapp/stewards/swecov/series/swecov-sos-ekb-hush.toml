@@ -1,4 +1,4 @@
-# SWECOV_SOS_EKB_HUSH is a projection of SWECOV_SOS_EKB_PERS (#1634): the household-year key is one claim served by the person file, and the household file stays its own extract with its key at household-year grain (maintainer, AskUserQuestion 2026-10-18 "HUSH projection of PERS"; #1603 batch-e).
+# SWECOV_SOS_EKB_HUSH is a projection of SWECOV_SOS_EKB_PERS (#1634): the household-year key is one claim served by the person file, and the household file stays its own extract with its own household-year key. Its rows are monthly (ekb-manad), and AR/MANAD are unmapped below, so an ordered household file cannot be aligned to months (maintainer, AskUserQuestion 2026-10-18 "HUSH projection of PERS"; #1603 batch-e).
 id = "swecov-sos-ekb-hush"
 register = "sos/ekb"
 variants = ["sos/ekb/ekb-manad"]

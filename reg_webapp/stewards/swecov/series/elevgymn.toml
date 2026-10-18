@@ -138,4 +138,4 @@ edition = "1999-10-15"
 column = "P1105_Lopnr_Skolkod"
 tables = ["ElevGymn12"]
 mappings = [{ register_variant = "scb/gymnasieskola-elever/_default", variable = "scb/gymnasieskola-elever/skolkod-urspr", representation = "Skolkod_Urspr" }]
-reason = "For 15 oktober 2012 SCB documents the school code on this variant only as Skolkod_Urspr (scb/gymnasieskola-elever/skolkod-urspr), with the same definition as Skolkod in other years; SWECOV delivers it under its usual pseudonymised Skolkod header. #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "For 15 oktober 2012 SCB documents the school code on this variant only as Skolkod_Urspr (scb/gymnasieskola-elever/skolkod-urspr), with the same definition as Skolkod in other years; SWECOV delivers it under its usual pseudonymised Skolkod header. #1603 batch-e; maintainer orderable rule 2026-10-16."

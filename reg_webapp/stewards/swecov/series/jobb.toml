@@ -140,214 +140,214 @@ reason = "Same SCB variable as the catalog owner: SCB documents the workplace SN
 column = "LonFInkJan"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJan", member = { month = "2019-01" } }]
-reason = "SCB documents LonFInkJan as the 2019-01 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-01-01–2019-01-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJan as the 2019-01 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-01-01–2019-01-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkFeb"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkFeb", member = { month = "2019-02" } }]
-reason = "SCB documents LonFInkFeb as the 2019-02 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-02-01–2019-02-28); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkFeb as the 2019-02 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-02-01–2019-02-28); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkMars"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkMars", member = { month = "2019-03" } }]
-reason = "SCB documents LonFInkMars as the 2019-03 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-03-01–2019-03-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkMars as the 2019-03 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-03-01–2019-03-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkApr"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkApr", member = { month = "2019-04" } }]
-reason = "SCB documents LonFInkApr as the 2019-04 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-04-01–2019-04-30); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkApr as the 2019-04 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-04-01–2019-04-30); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkMaj"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkMaj", member = { month = "2019-05" } }]
-reason = "SCB documents LonFInkMaj as the 2019-05 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-05-01–2019-05-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkMaj as the 2019-05 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-05-01–2019-05-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkJuni"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJuni", member = { month = "2019-06" } }]
-reason = "SCB documents LonFInkJuni as the 2019-06 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-06-01–2019-06-30); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJuni as the 2019-06 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-06-01–2019-06-30); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkJuli"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJuli", member = { month = "2019-07" } }]
-reason = "SCB documents LonFInkJuli as the 2019-07 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-07-01–2019-07-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJuli as the 2019-07 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-07-01–2019-07-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkAug"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkAug", member = { month = "2019-08" } }]
-reason = "SCB documents LonFInkAug as the 2019-08 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-08-01–2019-08-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkAug as the 2019-08 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-08-01–2019-08-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkSep"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkSep", member = { month = "2019-09" } }]
-reason = "SCB documents LonFInkSep as the 2019-09 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-09-01–2019-09-30); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkSep as the 2019-09 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-09-01–2019-09-30); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkOkt"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkOkt", member = { month = "2019-10" } }]
-reason = "SCB documents LonFInkOkt as the 2019-10 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-10-01–2019-10-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkOkt as the 2019-10 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-10-01–2019-10-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkNov"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkNov", member = { month = "2019-11" } }]
-reason = "SCB documents LonFInkNov as the 2019-11 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-11-01–2019-11-30); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkNov as the 2019-11 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-11-01–2019-11-30); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkDec"
 tables = ["JOBB2019"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkDec", member = { month = "2019-12" } }]
-reason = "SCB documents LonFInkDec as the 2019-12 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-12-01–2019-12-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkDec as the 2019-12 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2019-12-01–2019-12-31); one month inside the annual 2019 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkJan"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJan", member = { month = "2020-01" } }]
-reason = "SCB documents LonFInkJan as the 2020-01 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-01-01–2020-01-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJan as the 2020-01 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-01-01–2020-01-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkFeb"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkFeb", member = { month = "2020-02" } }]
-reason = "SCB documents LonFInkFeb as the 2020-02 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-02-01–2020-02-29); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkFeb as the 2020-02 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-02-01–2020-02-29); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkMars"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkMars", member = { month = "2020-03" } }]
-reason = "SCB documents LonFInkMars as the 2020-03 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-03-01–2020-03-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkMars as the 2020-03 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-03-01–2020-03-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkApr"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkApr", member = { month = "2020-04" } }]
-reason = "SCB documents LonFInkApr as the 2020-04 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-04-01–2020-04-30); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkApr as the 2020-04 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-04-01–2020-04-30); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkMaj"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkMaj", member = { month = "2020-05" } }]
-reason = "SCB documents LonFInkMaj as the 2020-05 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-05-01–2020-05-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkMaj as the 2020-05 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-05-01–2020-05-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkJuni"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJuni", member = { month = "2020-06" } }]
-reason = "SCB documents LonFInkJuni as the 2020-06 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-06-01–2020-06-30); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJuni as the 2020-06 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-06-01–2020-06-30); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkJuli"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJuli", member = { month = "2020-07" } }]
-reason = "SCB documents LonFInkJuli as the 2020-07 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-07-01–2020-07-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJuli as the 2020-07 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-07-01–2020-07-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkAug"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkAug", member = { month = "2020-08" } }]
-reason = "SCB documents LonFInkAug as the 2020-08 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-08-01–2020-08-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkAug as the 2020-08 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-08-01–2020-08-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkSep"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkSep", member = { month = "2020-09" } }]
-reason = "SCB documents LonFInkSep as the 2020-09 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-09-01–2020-09-30); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkSep as the 2020-09 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-09-01–2020-09-30); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkOkt"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkOkt", member = { month = "2020-10" } }]
-reason = "SCB documents LonFInkOkt as the 2020-10 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-10-01–2020-10-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkOkt as the 2020-10 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-10-01–2020-10-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkNov"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkNov", member = { month = "2020-11" } }]
-reason = "SCB documents LonFInkNov as the 2020-11 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-11-01–2020-11-30); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkNov as the 2020-11 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-11-01–2020-11-30); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkDec"
 tables = ["JOBB2020"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkDec", member = { month = "2020-12" } }]
-reason = "SCB documents LonFInkDec as the 2020-12 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-12-01–2020-12-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkDec as the 2020-12 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2020-12-01–2020-12-31); one month inside the annual 2020 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkJan"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJan", member = { month = "2021-01" } }]
-reason = "SCB documents LonFInkJan as the 2021-01 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-01-01–2021-01-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJan as the 2021-01 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-01-01–2021-01-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkFeb"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkFeb", member = { month = "2021-02" } }]
-reason = "SCB documents LonFInkFeb as the 2021-02 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-02-01–2021-02-28); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkFeb as the 2021-02 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-02-01–2021-02-28); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkMars"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkMars", member = { month = "2021-03" } }]
-reason = "SCB documents LonFInkMars as the 2021-03 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-03-01–2021-03-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkMars as the 2021-03 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-03-01–2021-03-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkApr"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkApr", member = { month = "2021-04" } }]
-reason = "SCB documents LonFInkApr as the 2021-04 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-04-01–2021-04-30); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkApr as the 2021-04 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-04-01–2021-04-30); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkMaj"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkMaj", member = { month = "2021-05" } }]
-reason = "SCB documents LonFInkMaj as the 2021-05 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-05-01–2021-05-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkMaj as the 2021-05 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-05-01–2021-05-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkJuni"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJuni", member = { month = "2021-06" } }]
-reason = "SCB documents LonFInkJuni as the 2021-06 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-06-01–2021-06-30); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJuni as the 2021-06 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-06-01–2021-06-30); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkJuli"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkJuli", member = { month = "2021-07" } }]
-reason = "SCB documents LonFInkJuli as the 2021-07 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-07-01–2021-07-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkJuli as the 2021-07 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-07-01–2021-07-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkAug"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkAug", member = { month = "2021-08" } }]
-reason = "SCB documents LonFInkAug as the 2021-08 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-08-01–2021-08-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkAug as the 2021-08 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-08-01–2021-08-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkSep"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkSep", member = { month = "2021-09" } }]
-reason = "SCB documents LonFInkSep as the 2021-09 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-09-01–2021-09-30); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkSep as the 2021-09 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-09-01–2021-09-30); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkOkt"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkOkt", member = { month = "2021-10" } }]
-reason = "SCB documents LonFInkOkt as the 2021-10 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-10-01–2021-10-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkOkt as the 2021-10 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-10-01–2021-10-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkNov"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkNov", member = { month = "2021-11" } }]
-reason = "SCB documents LonFInkNov as the 2021-11 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-11-01–2021-11-30); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkNov as the 2021-11 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-11-01–2021-11-30); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "LonFInkDec"
 tables = ["JOBB2021"]
 mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/lone-eller-foretagarinkomst-manad", representation = "LonFInkDec", member = { month = "2021-12" } }]
-reason = "SCB documents LonFInkDec as the 2021-12 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-12-01–2021-12-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SCB documents LonFInkDec as the 2021-12 delivery column of Löne- eller företagarinkomst per månad on jobbregistret (alias window 2021-12-01–2021-12-31); one month inside the annual 2021 edition. #1645 per-column month window; #1603 batch-e; maintainer orderable rule 2026-10-16."

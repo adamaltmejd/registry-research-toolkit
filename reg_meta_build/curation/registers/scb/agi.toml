@@ -954,7 +954,8 @@ native_id = "392.FARTYGSSIGNAL"
 slug = "fartygssignal"
 
 # ── #1603 batch-e / #1495: same-name carries of the Soc_ wide-pivot ERSATTNINGS_KOD/BELOPP slots into 2021-2023 ──
-# Code lists and units are not carried (meaning only).
+# Meaning and any documented unit are carried (maintainer unit ruling 2026-10-17); code
+# lists are not.
 
 [[errata.delivered]]
 data_warning = "SCB documents no column ERSATTNINGS_KOD on Individuppgifter AGI for 2021 to 2023. The meaning is assumed from SCB's 2020 documentation of the same delivered name in this register (native 6112, Ersättningskod); it is not confirmed for these years."
@@ -964,7 +965,7 @@ versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmå
 upstream = "omitted-column-in-version"
 native_variable_id = 6112
 expected_evidence_sha256 = "820a65a87cfda007a66dbfb446336890cf0bc87349611e3c265c9e850c27830a"
-evidence = "SWECOV holds ERSATTNINGS_KOD1..4 in the Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12, mapped as wide-pivot members of scb/agi/ersattningskod; SCB documents ERSATTNINGS_KOD on this variant as native 6112 in 2019 and 2020 and nothing after 2020. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule; #1495 wide-pivot cells; Operator under maintainer delegation 2026-10-16). Delivered storage type (int/bigint) is compatible with the documented data type (integer). Meaning only: the code list is not carried."
+evidence = "SWECOV holds ERSATTNINGS_KOD1..4 in the Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12, mapped as wide-pivot members of scb/agi/ersattningskod; SCB documents ERSATTNINGS_KOD on this variant as native 6112 in 2019 and 2020 and nothing after 2020. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule; #1495 wide-pivot cells; Operator pivot draft 2026-10-16). Delivered storage type (int/bigint) is compatible with the documented data type (integer). Meaning only: the code list is not carried."
 noted = "2026-10-16"
 
 [[errata.delivered]]
@@ -976,7 +977,7 @@ versions = ["2021, löne- och förmånsutbetalningar", "2022, löne- och förmå
 upstream = "omitted-column-in-version"
 native_variable_id = 6111
 expected_evidence_sha256 = "19c448ba7271121ed4664862f37626d51e56d101c6ac15cdc177a9bb970a3c9b"
-evidence = "SWECOV holds ERSATTNINGS_BELOPP1..4 in the Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12, mapped as wide-pivot members of scb/agi/ersattningsbelopp; SCB documents ERSATTNINGS_BELOPP on this variant as native 6111 in 2019 and 2020 and nothing after 2020. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule; #1495 wide-pivot cells; Operator under maintainer delegation 2026-10-16). Delivered storage type (int/bigint) is compatible with the documented data type (integer). Meaning and unit carried from the documented edition."
+evidence = "SWECOV holds ERSATTNINGS_BELOPP1..4 in the Soc_AGIIndivid<YYYYMM>_Def tables for every month 2021-01..2023-12, mapped as wide-pivot members of scb/agi/ersattningsbelopp; SCB documents ERSATTNINGS_BELOPP on this variant as native 6111 in 2019 and 2020 and nothing after 2020. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule; #1495 wide-pivot cells; Operator pivot draft 2026-10-16). Delivered storage type (int/bigint) is compatible with the documented data type (integer). Meaning and unit carried from the documented edition."
 noted = "2026-10-16"
 
 # ── #1603 batch-e: coding of the carried ERSATTNINGS_KOD windows left unavailable (meaning only) ──

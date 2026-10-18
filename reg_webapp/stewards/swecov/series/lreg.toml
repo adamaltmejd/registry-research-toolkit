@@ -147,28 +147,28 @@ storage_header = "P1105_LopNr_RoKod"
 column = "Anstslag"
 tables = ["LReg_1992", "LReg_1993", "LReg_1994"]
 mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/typ-av-anstallning", representation = "Anst" }]
-reason = "SWECOV storage spelling Anstslag of the catalog variable scb/lararreg/typ-av-anstallning, which SCB documents on this variant in these school years under the delivery column Anst (the later spelling Anstslag belongs to the same variable). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SWECOV storage spelling Anstslag of the catalog variable scb/lararreg/typ-av-anstallning, which SCB documents on this variant in these school years under the delivery column Anst (the later spelling Anstslag belongs to the same variable). #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "Behkod"
 tables = ["LReg_1990", "LReg_1991", "LReg_1992", "LReg_1993", "LReg_1994"]
 mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/pedagogisk-hogskoleexamen", representation = "Beh" }]
-reason = "SWECOV storage spelling Behkod of the catalog variable scb/lararreg/pedagogisk-hogskoleexamen, which SCB documents on this variant in these school years under the delivery column Beh (the later spelling Behkod belongs to the same variable). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SWECOV storage spelling Behkod of the catalog variable scb/lararreg/pedagogisk-hogskoleexamen, which SCB documents on this variant in these school years under the delivery column Beh (the later spelling Behkod belongs to the same variable). #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "befkod"
 tables = ["LReg_1991", "LReg_1992", "LReg_1993", "LReg_1994"]
 mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/befattningskod-pedagogisk", representation = "Bef" }]
-reason = "SWECOV storage spelling befkod of the catalog variable scb/lararreg/befattningskod-pedagogisk, which SCB documents on this variant in these school years under the delivery column Bef (the later spelling befkod belongs to the same variable). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SWECOV storage spelling befkod of the catalog variable scb/lararreg/befattningskod-pedagogisk, which SCB documents on this variant in these school years under the delivery column Bef (the later spelling befkod belongs to the same variable). #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "InriktningGY"
 tables = ["LReg_1999", "LReg_2000", "LReg_2001", "LReg_2002", "LReg_2003", "LReg_2004", "LReg_2005"]
 mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/inriktning-fristaende-gy", representation = "FriTypGy" }]
-reason = "SWECOV storage spelling InriktningGY of the catalog variable scb/lararreg/inriktning-fristaende-gy, which SCB documents on this variant in these school years under the delivery column FriTypGy (the later spelling InriktningGY belongs to the same variable). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SWECOV storage spelling InriktningGY of the catalog variable scb/lararreg/inriktning-fristaende-gy, which SCB documents on this variant in these school years under the delivery column FriTypGy (the later spelling InriktningGY belongs to the same variable). #1603 batch-e; maintainer orderable rule 2026-10-16."
 
 [[column]]
 column = "Tjledig"
 tables = ["LReg_1989", "LReg_1990", "LReg_1991", "LReg_1992", "LReg_1993", "LReg_1994"]
 mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/tjl", representation = "Tjl" }]
-reason = "SWECOV storage spelling Tjledig of the catalog variable scb/lararreg/tjl: for these school years SCB documents native family 13671 on this variant only under the delivery column Tjl (the TjLedig column, scb/lararreg/tjledig, starts in Läsåret 1995/1996). #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+reason = "SWECOV storage spelling Tjledig of the catalog variable scb/lararreg/tjl: for these school years SCB documents native family 13671 on this variant only under the delivery column Tjl (the TjLedig column, scb/lararreg/tjledig, starts in Läsåret 1995/1996). #1603 batch-e; maintainer orderable rule 2026-10-16."
