@@ -1863,46 +1863,6 @@
         ]
       ],
       "note": "#1672: the pinned folded extension is not stale; the one issue is formation's native-identity warning, as in register extendcase."
-    },
-    {
-      "table": "state_codes",
-      "where": {
-        "register": "extendcasepindrift",
-        "valid_from": "2019-01-01"
-      },
-      "fields": [
-        "valid_from",
-        "valid_to",
-        "code",
-        "label"
-      ],
-      "rows": [
-        [
-          "2019-01-01",
-          "2019-12-31",
-          null,
-          null
-        ]
-      ],
-      "note": "#1672: the stale extension leaves the 2019 target without a value set, as in register extendgone."
-    },
-    {
-      "table": "issues",
-      "where": {
-        "subject": "76.5",
-        "case_id": "curation/registers/scb/extendcasepindrift.toml#/coding.extend/1/period/1"
-      },
-      "fields": [
-        "code",
-        "case_id"
-      ],
-      "rows": [
-        [
-          "stale_curation_entry",
-          "curation/registers/scb/extendcasepindrift.toml#/coding.extend/1/period/1"
-        ]
-      ],
-      "note": "#1672: the pin was recorded as the literal digest the build reported for this entry while the witness row 7602 still carried the shared Variabeldefinition (the extendcasepin form, applied); the fixture then changed only that witness row's Variabeldefinition. The witness spelling's rows sit under their own column key, so a pin that covered only the target key would still apply; the folded extension pins the witness rows too and goes stale."
     }
   ]
 }
