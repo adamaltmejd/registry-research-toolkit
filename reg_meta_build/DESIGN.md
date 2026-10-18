@@ -214,20 +214,21 @@ Authority depends on the fact and scope, rather than a universal file ordering:
   erratum without `data_type` takes the documented class alone. A column left untyped is
   withheld with a located `unknown_data_type` error until curation types or acknowledges
   it.
-- The steward refresh (`build_catalog.py inventory`) cross-checks every curated type on
-  a register the generated inventory maps against the steward's storage-schema export
-  and writes `derived/storage_type_findings.tsv`. An entry is compared only with its own
-  cells: the physical columns the inventory maps to its variable on its variant under
-  its column, read under each cell's physical header (a renamed column, a pseudonymised
-  key, every member of a wide pivot; column names fold). A mint covers only its own
-  versions and the same literal can be another variable elsewhere (#1647), so another
-  version's table of that literal is not evidence (#1666). The export is a required
-  input: a missing or unreadable `--storage-csv` fails the run, so no refresh skips the
-  check (#1594). Disagreeing storage, uncurated steward holdings and steward holdings or
-  typed delivered columns that match no storage column print a warning in the refresh
-  summary; a documented column SWECOV does not hold is no finding. Curation, not the
-  check, decides what changes. Storage metadata never establishes per-year availability
-  or row content.
+- The steward refresh (`build_catalog.py inventory`) cross-checks every curated type and
+  steward-held column against the steward's storage-schema export, on every register
+  that curates one, whether or not the generated inventory maps it, and writes
+  `derived/storage_type_findings.tsv`. An entry is compared only with its own cells: the
+  physical columns the inventory maps to its variable on its variant under its column,
+  read under each cell's physical header (a renamed column, a pseudonymised key, every
+  member of a wide pivot; column names fold). A mint covers only its own versions and
+  the same literal can be another variable elsewhere (#1647), so another version's table
+  of that literal is not evidence (#1666). The export is a required input: a missing or
+  unreadable `--storage-csv` fails the run, so no refresh skips the check (#1594).
+  Disagreeing storage, uncurated steward holdings and steward holdings or typed
+  delivered columns that match no storage column print a warning in the refresh summary;
+  a documented column SWECOV does not hold is no finding. Curation, not the check,
+  decides what changes. Storage metadata never establishes per-year availability or row
+  content.
 - Agents can investigate official handbooks separately and author structured curation
   with document/page references. Neither preparation nor a build extracts or interprets
   PDFs or calls an LLM.
