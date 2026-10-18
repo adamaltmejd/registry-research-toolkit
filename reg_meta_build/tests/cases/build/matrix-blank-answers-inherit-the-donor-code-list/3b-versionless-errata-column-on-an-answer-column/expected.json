@@ -6,7 +6,7 @@
       "fields": ["detail"],
       "note": "The holdings_period mint is refused at its own entry, naming the matrix answer and asking for named versions",
       "rows": [
-        ["curation/registers/scb/innovation-foretag.toml#/errata.column/1: curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014 answer 'abroad' claims column 'CO12' in edition '2012 - 2014'; the mint names no `versions`, so it binds no edition and cannot be shown disjoint from the matrix edition; name the mint's `versions` to show it is disjoint"]
+        ["curation/registers/scb/innovation-foretag.toml#/errata.column/1: curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014 answer 'abroad' claims column 'co12' in edition '2012 - 2014'; the mint names no `versions`, so it binds no edition and cannot be shown disjoint from the matrix edition; name the mint's `versions` to show it is disjoint, or remove the mint if the matrix answer covers it"]
       ]
     },
     {

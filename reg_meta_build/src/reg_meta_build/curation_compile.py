@@ -7100,9 +7100,13 @@ def compile_errata(
                         for native_edition, (name, claim) in matrix_columns.get(
                             (variant_id, fold_column(row.column)), {}
                         ).items()
-                        # A versionless mint binds no edition, so it cannot be
-                        # shown disjoint, as undated holdings overlap in
-                        # scb_errata._overlaps_documenting_edition.
+                        # Deliberately stricter than
+                        # scb_errata._overlaps_documenting_edition, which
+                        # compares `holdings_period` by date: a versionless
+                        # mint binds no edition, and matrix claims compare on
+                        # edition, never on date, so it is refused on variant
+                        # and column whatever its period. Named `versions`
+                        # compare on the bound editions' native ids (regver).
                         if row.versions is None
                         or any(
                             edition.name in row.versions
@@ -7116,7 +7120,8 @@ def compile_errata(
                         blockers += (
                             "the mint names no `versions`, so it binds no edition "
                             "and cannot be shown disjoint from the matrix edition; "
-                            "name the mint's `versions` to show it is disjoint",
+                            "name the mint's `versions` to show it is disjoint, "
+                            "or remove the mint if the matrix answer covers it",
                         )
                     converted = None
                 else:

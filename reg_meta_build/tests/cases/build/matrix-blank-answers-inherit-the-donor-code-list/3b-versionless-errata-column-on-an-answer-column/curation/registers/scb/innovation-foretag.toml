@@ -6,7 +6,7 @@ native_id = "257"
 native_id = "257.553"
 slug = "_default"
 [[variable]]
-native_id = "257.CO12"
+native_id = "257.co12"
 slug = "c-co12"
 [[representation.matrix]]
 source_mode = "documented_blank"
@@ -15,7 +15,7 @@ selector = { register = "scb/innovation-foretag", register_id = 257, variant = "
 
 [[errata.column]]
 variant = "_default"
-column = "CO12"
+column = "co12"
 name = "CO12"
 definition = "Held in the answers' years"
 holdings_period = "2012-2014"
