@@ -90,7 +90,8 @@
         "column",
         "valid_from",
         "valid_to",
-        "state_name"
+        "state_name",
+        "measurement_unit"
       ],
       "rows": [
         [
@@ -98,7 +99,25 @@
           "DELKOD",
           "2012-01-01",
           "2016-12-31",
-          "Delkod"
+          "Delkod",
+          "Antal"
+        ]
+      ]
+    },
+    {
+      "table": "variables",
+      "where": {
+        "register": "r",
+        "variable": "delkod"
+      },
+      "fields": [
+        "variable",
+        "measurement_unit"
+      ],
+      "rows": [
+        [
+          "delkod",
+          "Antal"
         ]
       ]
     },
