@@ -107,7 +107,7 @@ def test_named_answers_preserve_exact_occurrences_and_pooled_coverage() -> None:
     converted = convert_matrix(
         matrix, records, case_id="accepted-matrix", provenance="pinned input"
     )
-    result = apply_occurrence_cases(records, (converted.case,))
+    result = apply_occurrence_cases(records, converted.cases)
     assert not result.diagnostics
     assert len(result.occurrences) == 2
     assert len({item.variable_key for item in result.occurrences}) == 2
@@ -128,8 +128,9 @@ def test_named_answers_preserve_exact_occurrences_and_pooled_coverage() -> None:
     assert {item.naming.slug for item in converted.naming} == {
         a.slug for a in matrix.answers
     }
-    assert isinstance(converted.case.decision, OccurrenceCorrectionDecision)
-    assert "source_pages" in converted.case.decision.provenance
+    for case in converted.cases:
+        assert isinstance(case.decision, OccurrenceCorrectionDecision)
+        assert "source_pages" in case.decision.provenance
 
 
 def test_blank_source_is_retained_and_only_declared_answers_are_added() -> None:
@@ -162,7 +163,7 @@ def test_blank_source_is_retained_and_only_declared_answers_are_added() -> None:
             provenance="pinned input",
             coding={donor: (claims[0], claims[0])},
         )
-    result = apply_occurrence_cases(records, (converted.case,))
+    result = apply_occurrence_cases(records, converted.cases)
     assert not result.diagnostics
     assert len([o for o in result.occurrences if o.use == "support"]) == 2
     added = [o for o in result.occurrences if o.use == "catalog"]
@@ -178,16 +179,15 @@ def test_blank_source_is_retained_and_only_declared_answers_are_added() -> None:
         assert item.fields.sensitivity == value_field(matrix.answer_facts.is_sensitive)
         assert item.edition_scope == records[0].edition_scope
         assert item.fields.data_type == value_field(matrix.answer_facts.data_type)
-    assert isinstance(converted.case.decision, OccurrenceCorrectionDecision)
-    assert all(
-        {"data_type", "identifier", "sensitivity"}.isdisjoint(effect.copied_fields)
-        for effect in converted.case.decision.effects
-        if effect.kind == "addition"
-    )
-    assert "SWECOV CIS2014=float" in converted.case.decision.provenance
-    assert (
-        "SCB adjacent wave declares both flags 0" in converted.case.decision.provenance
-    )
+    for case in converted.cases:
+        assert isinstance(case.decision, OccurrenceCorrectionDecision)
+        assert all(
+            {"data_type", "identifier", "sensitivity"}.isdisjoint(effect.copied_fields)
+            for effect in case.decision.effects
+            if effect.kind == "addition"
+        )
+        assert "SWECOV CIS2014=float" in case.decision.provenance
+        assert "SCB adjacent wave declares both flags 0" in case.decision.provenance
 
 
 @pytest.mark.parametrize(
@@ -227,7 +227,9 @@ def test_original_changes_invalidate_the_whole_reviewed_partition(change: str) -
                 ),
                 records[1],
             )
-    assert evaluate_case(converted.case, changed).status == "stale"
+    assert all(
+        evaluate_case(case, changed).status == "stale" for case in converted.cases
+    )
     for name in converted.naming:
         assert check_naming_target(name.target, changed)
 
@@ -250,8 +252,11 @@ def test_other_editions_and_physical_layout_do_not_change_answer_ownership() -> 
         )
         for r in records
     )
-    assert evaluate_case(converted.case, (*moved, *other)).status == "applicable"
-    result = apply_occurrence_cases((*moved, *other), (converted.case,))
+    assert all(
+        evaluate_case(case, (*moved, *other)).status == "applicable"
+        for case in converted.cases
+    )
+    result = apply_occurrence_cases((*moved, *other), converted.cases)
     assert result.occurrences[-1].source_records == other
     assert not result.occurrences[-1].identity_checked
 
@@ -352,7 +357,7 @@ def test_matrix_activation_preserves_existing_case_and_checked_conversion(
     ref = "curation/registers/scb/innovation-foretag.toml#/matrix/2014 - 2016"
     expected = convert_matrix(matrix, records, case_id=ref, provenance=ref)
     assert issues == ()
-    assert cases[key] == (expected.case,)
+    assert cases[key] == expected.cases
     assert names[key] == expected.naming
     assert keys[key] == tuple(expected.provider_keys.items())
 

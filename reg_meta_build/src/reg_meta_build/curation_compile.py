@@ -2054,7 +2054,7 @@ def compile_matrix_repr(
                             _stale_partition(ref, matrix.selector.edition, str(exc))
                         )
                         continue
-                    cases[scope_key].append(converted.case)
+                    cases[scope_key].extend(converted.cases)
                     names[scope_key].extend(converted.naming)
                     keys[scope_key].extend(converted.provider_keys.items())
                 alias_cases, alias_issues = compile_alias_windows(

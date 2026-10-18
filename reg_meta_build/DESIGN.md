@@ -1110,7 +1110,10 @@ carries a reviewed `decimal` type from the SWECOV CIS2014 storage catalog and ex
 identifier and sensitivity flags from SCB's adjacent 2014–2016 wave declarations. The
 evidence JSON records both sources; type and flags are authored for every answer, with
 none of those facts copied from the blank donor. CIS 2016 answers retain their named
-source rows and support flags.
+source rows and support flags. An answer's optional `data_warning` is the curator's
+caveat on its meaning (#1668): each answer compiles to its own case over the shared
+partition guard, so the warning annotates only that answer's occurrences, with the
+warning field `definition` as on `[[errata.delivered]]`.
 
 A steward holding dated at dataset grain (`holdings_period`) converts to exactly one
 pooled-range occurrence over that range (Y-212): the delivery list says the column is
