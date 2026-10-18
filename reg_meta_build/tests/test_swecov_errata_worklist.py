@@ -40,12 +40,17 @@ _INERA = "inera/bestallda-prover/_default"
 
 
 def _held(
-    steward_dir: Path, holdings: dict[int | str, tuple[str, ...]], variant: str
+    steward_dir: Path,
+    holdings: dict[int | str, tuple[str, ...]],
+    variant: str,
+    narrowing: str | None = None,
 ) -> None:
     """A committed-inventory stand-in: one `[[table]]` per edition holding those
     columns of `Beställda prover`, each mapped to its own representation — the
     shape `cmd_inventory` emits. `variant` is the coordinate they map onto, so a
-    holdings statement can name the register under another provider."""
+    holdings statement can name the register under another provider.
+    `narrowing` is a TOML line added to every mapping: a column window (#1645) or
+    a year or month member (#1495)."""
     register = variant.rpartition("/")[0]
     lines = ["version = 1", 'steward = "swecov"']
     for edition, columns in holdings.items():
@@ -71,6 +76,8 @@ def _held(
                 f'variable = "{register}/{_VARIABLE_OF[column]}"',
                 f'representation = "{column}"',
             ]
+            if narrowing is not None:
+                lines.append(narrowing)
     (steward_dir / "inventory.toml").write_text(
         "\n".join(lines) + "\n", encoding="utf-8"
     )
@@ -81,13 +88,14 @@ def _errata_text(
     db: Path,
     holdings: dict[int | str, tuple[str, ...]],
     variant: str = _INERA,
+    narrowing: str | None = None,
 ) -> str:
     """Write the holdings, run the subcommand, read back the worklist it leaves
     under `derived/`. `tomllib.loads` of the result is the maintainer's own read:
     comment-only sections carry no entries, so an all-commented worklist is `{}`."""
     steward_dir = tmp_path / "steward"
     steward_dir.mkdir(exist_ok=True)
-    _held(steward_dir, holdings, variant)
+    _held(steward_dir, holdings, variant, narrowing)
     csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
     build_catalog.cmd_errata(argparse.Namespace(csv=csv_path, db=db, out=steward_dir))
     return (csv_path.parent / "derived" / "errata_worklist.toml").read_text(
@@ -333,6 +341,94 @@ def test_errata_worklist_lists_a_non_scb_miss_as_a_curated_window(
     assert "held 2020, catalog windows 2019" in line
     assert "not errata (provider `inera`, not `scb`)" in line
     assert "the curated-provider TOML extend-db overlays" in line
+
+
+@pytest.mark.parametrize(
+    ("narrowing", "served"),
+    [
+        ('window = "2018-Q1"', ("2018-01-01", "2018-03-31")),
+        ('member = { month = "2018-03" }', ("2018-03-01", "2018-03-31")),
+    ],
+)
+def test_errata_worklist_judges_a_narrowed_column_on_its_own_period(
+    tmp_path: Path, flavored_db: Path, narrowing: str, served: tuple[str, str]
+) -> None:
+    """A column window (#1645) or a month member (#1495) is the column's own
+    delivered period, so a 2018 table holding `T_kolumn` only there is covered by a
+    catalog window of exactly that period. Fails if the diagnostic judges the
+    mapping on the table's whole 2018 edition, which lists a false curated-window
+    miss."""
+    db = tmp_path / "narrowed.db"
+    db.write_bytes(flavored_db.read_bytes())
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "UPDATE variable_state SET valid_from = ?, valid_to = ? "
+        "WHERE delivery_column_name = 'T_kolumn'",
+        served,
+    )
+    conn.commit()
+    conn.close()
+
+    text = _errata_text(tmp_path, db, {2018: ("T_kolumn",)}, narrowing=narrowing)
+
+    assert "T_kolumn:" not in text
+
+
+@pytest.mark.parametrize("old_first", [True, False])
+def test_errata_worklist_judges_each_windowed_variant_of_a_column_alone(
+    tmp_path: Path, flavored_db: Path, old_first: bool
+) -> None:
+    """One 2018 column mapped by two variants over disjoint windows (#1645): the
+    old variant in Q1, which the catalog covers, and a new variant in Q4, which the
+    catalog delivers only from November. October is a real gap of the new variant,
+    reported once in either mapping order. Fails if the diagnostic judges the
+    column by one mapping only, or lets the covered old window cover the new one."""
+    db = tmp_path / "two-variants.db"
+    db.write_bytes(flavored_db.read_bytes())
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "INSERT INTO register_variant (register_variant_id, register_id, name, slug) "
+        "VALUES (905, 901, 'Ny', 'ny')"
+    )
+    conn.execute(
+        "UPDATE variable_state SET valid_from = '2018-01-01', valid_to = '2018-03-31' "
+        "WHERE delivery_column_name = 'T_kolumn'"
+    )
+    conn.execute(
+        "INSERT INTO variable_state (state_id, variable_id, register_variant_id,"
+        " valid_from, valid_to, data_type, delivery_column_name) VALUES ((SELECT"
+        " MAX(state_id) + 1 FROM variable_state), 904, 905, '2018-11-01',"
+        " '9999-12-31', 'varchar', 'T_kolumn')"
+    )
+    conn.execute("INSERT INTO variable_alias VALUES (904, 905, 'T_kolumn')")
+    conn.commit()
+    conn.close()
+    register = _INERA.rpartition("/")[0]
+    mappings = [
+        f'register_variant = "{variant}"\nvariable = "{register}/t-kolumn"\n'
+        f'representation = "T_kolumn"\nwindow = "{window}"'
+        for variant, window in ((_INERA, "2018-Q1"), (f"{register}/ny", "2018-Q4"))
+    ]
+    steward_dir = tmp_path / "steward"
+    steward_dir.mkdir()
+    (steward_dir / "inventory.toml").write_text(
+        'version = 1\nsteward = "swecov"\n\n[[table]]\nid = "T_2018"\n'
+        'edition = 2018\n\n[[table.column]]\nname = "T_kolumn"\n'
+        + "".join(
+            f"\n[[table.column.mapping]]\n{mapping}\n"
+            for mapping in (mappings if old_first else mappings[::-1])
+        ),
+        encoding="utf-8",
+    )
+    csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
+    build_catalog.cmd_errata(argparse.Namespace(csv=csv_path, db=db, out=steward_dir))
+    text = (csv_path.parent / "derived" / "errata_worklist.toml").read_text(
+        encoding="utf-8"
+    )
+
+    (line,) = [ln for ln in text.splitlines() if "T_kolumn:" in ln]
+    assert line.startswith(f"# {register}/ny T_kolumn:")
+    assert "held 2018-Q4, catalog windows 2018-11-01.." in line
 
 
 @pytest.mark.parametrize("variant", [_INERA, "scb/bestallda-prover/_default"])

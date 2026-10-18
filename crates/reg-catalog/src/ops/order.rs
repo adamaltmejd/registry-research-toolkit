@@ -870,8 +870,8 @@ fn canonical(conn: &Connection, id: i64, variant: i64, column: &str) -> Result<S
 }
 
 /// A held physical location of a binding: a table's column, with the table's
-/// identity, partition, scope source and edition periods, and the column's member
-/// index with the period a year or month member serves.
+/// identity, partition, scope source and edition periods, the column's member
+/// index, and the period a year or month member or a column window (#1645) serves.
 struct Match {
     table_id: i64,
     table: String,
@@ -879,14 +879,15 @@ struct Match {
     source_ref: String,
     periods: Vec<Interval>,
     placement: Placement,
-    member_period: Option<Interval>,
+    own_period: Option<Interval>,
 }
 
 impl Match {
-    /// The periods the column serves: a year or month member's own period (inside
-    /// the edition, as the builder holds), else the table's edition.
+    /// The periods the column serves: a year or month member's or a column window's
+    /// own period (inside one edition segment, as the builder holds), else the
+    /// table's edition. Nothing outside a window is served or borrowed.
     fn served(&self) -> Vec<Interval> {
-        self.member_period
+        self.own_period
             .clone()
             .map_or_else(|| self.periods.clone(), |period| vec![period])
     }
@@ -896,13 +897,14 @@ impl Match {
 /// (#1634): `ht` is a projection whose parent maps the same `(variable, variant,
 /// canonical representation)` at the same position, or neither at a position, over
 /// every instant `hm` serves. A position member is served only by the parent's member
-/// of that position, and a plain mapping or a year or month member only by a parent
-/// mapping that is not a position member. A plain parent mapping serves the whole
-/// shared edition; a year or month member serves its own period, so it covers a
-/// projection member inside it, or a plain projection mapping whose edition lies
-/// inside it. This is the builder's `_parent_serves`, so the order drops exactly the
-/// mappings the inventory admitted as served. Only the declared pair is compared: an
-/// undeclared overlap is the builder's refusal, never deduplicated here.
+/// of that position, and a plain mapping, a year or month member or a windowed mapping
+/// only by a parent mapping that is not a position member. A plain parent mapping
+/// serves the whole shared edition; a year or month member or a column window (#1645)
+/// serves its own period, so it covers a projection member or window inside it, or a
+/// plain projection mapping whose edition lies inside it, and the parent serves
+/// nothing outside it. This is the builder's `_parent_serves`, so the order drops
+/// exactly the mappings the inventory admitted as served. Only the declared pair is
+/// compared: an undeclared overlap is the builder's refusal, never deduplicated here.
 const PARENT_SERVES: &str = "EXISTS (SELECT 1 FROM holding_table pt \
      JOIN holding_column pc ON pc.table_id = pt.table_id \
      JOIN holding_mapping pm ON pm.column_id = pc.column_id \
@@ -910,10 +912,10 @@ const PARENT_SERVES: &str = "EXISTS (SELECT 1 FROM holding_table pt \
      AND pm.variant_id = hm.variant_id \
      AND pm.representation_canonical = hm.representation_canonical \
      AND pm.member_position IS hm.member_position \
-     AND (pm.member_lo IS NULL OR (\
-          pm.member_lo <= COALESCE(hm.member_lo, \
+     AND (COALESCE(pm.member_lo, pm.window_lo) IS NULL OR (\
+          COALESCE(pm.member_lo, pm.window_lo) <= COALESCE(hm.member_lo, hm.window_lo, \
               (SELECT MIN(p.lo) FROM holding_period p WHERE p.table_id = ht.table_id)) \
-          AND pm.member_hi >= COALESCE(hm.member_hi, \
+          AND COALESCE(pm.member_hi, pm.window_hi) >= COALESCE(hm.member_hi, hm.window_hi, \
               (SELECT MAX(p.hi) FROM holding_period p WHERE p.table_id = ht.table_id)))))";
 
 /// Whether mapping `hm` binds a row key of its variant: an identifier variable, or
@@ -939,9 +941,12 @@ fn kept() -> String {
 /// The held locations of the variable under the variant in tables of `scope`
 /// (today's `Holdings.matches`), mapped as `representation` when given and in a
 /// table with a period overlapping `bounds` when given, where a year or month
-/// member's own period must overlap them too; ordered by table and column.
-// One Match per (table, column) carries the column's member: the builder refuses a
-// member column with a second mapping (`inventory_member_invalid`), so it is unambiguous.
+/// member's own period must overlap them too; ordered by table and column. A column
+/// window is not pre-filtered: the caller clips `served()` to the slice.
+// One Match per (table, column) carries the column's member or window: the builder
+// refuses a member column with a second mapping (`inventory_member_invalid`) and a
+// windowed (variant, variable) mapped twice in one column (`inventory_window_invalid`),
+// so under one variable and variant it is unambiguous.
 fn matches(
     conn: &Connection,
     id: i64,
@@ -954,7 +959,8 @@ fn matches(
     let mut stmt = conn.prepare_cached(&format!(
         "SELECT DISTINCT ht.table_id, ht.physical_id, hc.name, ht.partition, ht.source_ref, \
          hp.lo, hp.hi, hm.member_position, hm.member_lo, hm.member_hi, ht.projection, \
-         {PARENT_SERVES} \
+         {PARENT_SERVES}, \
+         COALESCE(hm.member_lo, hm.window_lo), COALESCE(hm.member_hi, hm.window_hi) \
          FROM holding_mapping hm JOIN holding_column hc USING(column_id) \
          JOIN holding_table ht USING(table_id) LEFT JOIN holding_period hp USING(table_id) \
          WHERE hm.variable_id = ?1 AND hm.variant_id = ?2 AND ht.scope = ?3 \
@@ -968,7 +974,7 @@ fn matches(
     ))?;
     let rows = stmt.query_map(params![id, variant, scope, representation, lo, hi], |row| {
         let period: (Option<String>, Option<String>) = (row.get(5)?, row.get(6)?);
-        let (member_lo, member_hi): (Option<String>, Option<String>) = (row.get(8)?, row.get(9)?);
+        let (own_lo, own_hi): (Option<String>, Option<String>) = (row.get(12)?, row.get(13)?);
         Ok((
             Match {
                 table_id: row.get(0)?,
@@ -979,11 +985,11 @@ fn matches(
                 placement: Placement {
                     partition: row.get(3)?,
                     projection: row.get(10)?,
-                    member: Member::from_columns(row.get(7)?, member_lo.clone(), member_hi.clone()),
+                    member: Member::from_columns(row.get(7)?, row.get(8)?, row.get(9)?),
                     // A kept mapping its parent serves is a key.
                     shared_key: row.get(11)?,
                 },
-                member_period: member_lo.zip(member_hi),
+                own_period: own_lo.zip(own_hi),
             },
             period,
         ))

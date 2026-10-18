@@ -1,0 +1,137 @@
+{
+  "tables": [
+    {
+      "physical_id": "Narrow",
+      "scope": "intervals",
+      "edition": {
+        "from": 2015,
+        "to": 2019
+      },
+      "partition": null,
+      "projection": {
+        "of": "Wide",
+        "token": "narrow"
+      },
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Wide",
+      "scope": "intervals",
+      "edition": {
+        "from": 2015,
+        "to": 2019
+      },
+      "partition": null,
+      "projection": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Narrow",
+      "lo": "2015-01-01",
+      "hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Wide",
+      "lo": "2015-01-01",
+      "hi": "2019-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Narrow",
+      "name": "FieldA",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Narrow",
+      "name": "FieldB",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Narrow",
+      "name": "Id",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Field",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Id",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Narrow",
+      "name": "FieldA",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/field",
+      "representation_literal": "Field",
+      "representation_canonical": "Field"
+    },
+    {
+      "physical_id": "Narrow",
+      "name": "FieldB",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/field",
+      "representation_literal": "Field",
+      "representation_canonical": "Field"
+    },
+    {
+      "physical_id": "Narrow",
+      "name": "Id",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Field",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/field",
+      "representation_literal": "Field",
+      "representation_canonical": "Field"
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Id",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    }
+  ],
+  "windows": [
+    {
+      "physical_id": "Narrow",
+      "name": "FieldA",
+      "variant": "annual",
+      "member_lo": null,
+      "window_lo": "2015-01-01",
+      "window_hi": "2016-12-31"
+    },
+    {
+      "physical_id": "Narrow",
+      "name": "FieldB",
+      "variant": "annual",
+      "member_lo": null,
+      "window_lo": "2017-01-01",
+      "window_hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Field",
+      "variant": "annual",
+      "member_lo": null,
+      "window_lo": "2015-01-01",
+      "window_hi": "2016-12-31"
+    }
+  ],
+  "warnings": []
+}

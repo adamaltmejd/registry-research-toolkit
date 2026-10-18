@@ -1,0 +1,8 @@
+{
+  "catalog": "catalog.json",
+  "inventory": "inventory.toml",
+  "census": "census.csv",
+  "observe_windows": true,
+  "fails_if": "the projection arm compares a windowed mapping by its table's edition instead of its window (Narrow's FieldA would then conflict with Wide's Field, which serves only 2015..2016 of it), or the two disjoint windows of Field in Narrow are refused",
+  "scope": "scope.toml"
+}
