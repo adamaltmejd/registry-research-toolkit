@@ -1,0 +1,83 @@
+{
+  "clips": [],
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Person",
+        "variable": "scb/example/person",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Person",
+        "edition": "2018..2019",
+        "table": "Yearly"
+      },
+      "requested_period": "2018",
+      "source": "S2018"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Person",
+        "variable": "scb/example/person",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Person",
+        "edition": "2018..2019",
+        "projection": "yearly-narrow",
+        "table": "YearlyNarrow"
+      },
+      "requested_period": "2018",
+      "source": "S2018"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Own",
+        "variable": "scb/example/own",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Own",
+        "edition": "2018..2019",
+        "projection": "yearly-narrow",
+        "table": "YearlyNarrow"
+      },
+      "requested_period": "2018",
+      "source": "S2018"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Person",
+        "variable": "scb/example/person",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Person",
+        "edition": "2018..2019",
+        "table": "Yearly"
+      },
+      "requested_period": "2019",
+      "source": "S2019"
+    }
+  ],
+  "provenance": {
+    "artifact_kind": "steward",
+    "catalog_generation_id": "9267d3d0a72310eabe2cdef38b59d95416e9cb1bc33da104448b289bb6cad904",
+    "catalog_schema_version": "12.0.0",
+    "mode": "steward_holdings",
+    "project_hash": "4f6f600599dec70fb232cdc23d061c3e3d99651f2b76a4c83c606d3511e9dabe",
+    "project_name": "Reader case",
+    "project_reg_meta_version": "reg_meta/v0.40.1",
+    "project_schema_version": "3.0.0",
+    "steward": "swecov"
+  },
+  "version": 1
+}

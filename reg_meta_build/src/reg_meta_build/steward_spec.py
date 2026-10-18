@@ -328,12 +328,30 @@ class Scope(_SpecModel):
 # --- series/<id>.toml ------------------------------------------------------------
 
 
+class SeriesProjection(_SpecModel):
+    """A table's `projection = { of = ..., token = ... }` (#1634): the parent
+    table and the authored token of the projection's own extract file."""
+
+    of: LiteralName
+    token: str
+
+    @field_validator("token")
+    @classmethod
+    def _token(cls, value: str) -> str:
+        validate_slug(value, "projection token")
+        return value
+
+
 class SeriesTable(_SpecModel):
     """One delivered table: an explicit edition, or a year-independent scope.
 
     `variants`, when present, is the table's own admissible variant set, a
     nonempty subset of the series' variants; absent, the table takes the
     series set. A change of variant set is not a series boundary.
+
+    `projection` declares the table a projection of another table's delivery
+    (#1634), with the token naming its own extract file; the inventory loader
+    judges the pair.
     """
 
     table: LiteralName
@@ -341,6 +359,7 @@ class SeriesTable(_SpecModel):
     edition: RawEdition | None = None
     period_scope: Literal["year_independent"] | None = None
     partition: str | None = None
+    projection: SeriesProjection | None = None
 
     @field_validator("partition")
     @classmethod

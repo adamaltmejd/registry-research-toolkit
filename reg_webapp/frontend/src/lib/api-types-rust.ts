@@ -1026,6 +1026,11 @@ export interface components {
             member?: components["schemas"]["PivotMember"] | null;
             /** @description The table's disjoint-partition label; absent when it has none. */
             partition?: string | null;
+            /**
+             * @description The table's projection token (#1634): the table is a declared projection
+             *     of another table's delivery, extracted as its own file; absent otherwise.
+             */
+            projection?: string | null;
             table: string;
         };
         /**

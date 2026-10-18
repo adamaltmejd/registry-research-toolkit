@@ -1,0 +1,208 @@
+version = 1
+steward = "swecov"
+
+# Narrow is Wide's delivery under other columns: it shares the key Id and the
+# non-key Region with Wide, and has its own key Child and non-key Extra.
+[[table]]
+id = "Narrow"
+edition = 2018
+projection = { of = "Wide", token = "narrow" }
+[[table.column]]
+name = "Child"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/child"
+representation = "Child"
+[[table.column]]
+name = "Extra"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/extra"
+representation = "Extra"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+[[table.column]]
+name = "Region"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/region"
+representation = "Region"
+
+[[table]]
+id = "Wide"
+edition = 2018
+[[table.column]]
+name = "Amount"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/amount"
+representation = "Amount"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+[[table.column]]
+name = "Region"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/region"
+representation = "Region"
+
+# The finer-grain pair: VB is recipient x month, VBBARN recipient x child x
+# month. Recipient (the variant's panel_entity_key, a JSON list) and Month
+# (its panel_time_key, a bare slug) are keys though neither is an identifier.
+[[table]]
+id = "VB"
+edition = 2018
+[[table.column]]
+name = "Month"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/month"
+representation = "Month"
+[[table.column]]
+name = "Payment"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/payment"
+representation = "Payment"
+[[table.column]]
+name = "Recipient"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/recipient"
+representation = "Recipient"
+
+[[table]]
+id = "VBBARN"
+edition = 2018
+projection = { of = "VB", token = "barn" }
+[[table.column]]
+name = "Benefit"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/benefit"
+representation = "Benefit"
+[[table.column]]
+name = "Child"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/child"
+representation = "Child"
+[[table.column]]
+name = "Month"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/month"
+representation = "Month"
+[[table.column]]
+name = "Recipient"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/recipient"
+representation = "Recipient"
+
+# Year members: Panel serves Hushallsid in 2018 and 2019, its projection
+# PanelNarrow in 2018 (which Panel serves) and 2020 (which it does not).
+[[table]]
+id = "Panel"
+edition = { from = 2018, to = 2020 }
+[[table.column]]
+name = "Hushallsid_2018"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/hushall"
+representation = "Hushallsid"
+member = { year = 2018 }
+[[table.column]]
+name = "Hushallsid_2019"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/hushall"
+representation = "Hushallsid"
+member = { year = 2019 }
+
+[[table]]
+id = "PanelNarrow"
+edition = { from = 2018, to = 2020 }
+projection = { of = "Panel", token = "panel-narrow" }
+[[table.column]]
+name = "Hushallsid_2018"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/hushall"
+representation = "Hushallsid"
+member = { year = 2018 }
+[[table.column]]
+name = "Hushallsid_2020"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/hushall"
+representation = "Hushallsid"
+member = { year = 2020 }
+
+# A parent year member serving a plain projection column whose edition lies inside it.
+[[table]]
+id = "Wide2018"
+edition = 2018
+[[table.column]]
+name = "DIA_2018"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/diagnos"
+representation = "DIA"
+member = { year = 2018 }
+
+[[table]]
+id = "Narrow2018"
+edition = 2018
+projection = { of = "Wide2018", token = "dia" }
+[[table.column]]
+name = "DIA"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/diagnos"
+representation = "DIA"
+
+# One physical column serving two variants: CombinedNarrow shares the key Child with
+# Combined under both, and has its own Extra under the annual variant only.
+[[table]]
+id = "Combined"
+edition = 2019
+[[table.column]]
+name = "Child"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/child"
+representation = "Child"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/child"
+representation = "Child"
+
+[[table]]
+id = "CombinedNarrow"
+edition = 2019
+projection = { of = "Combined", token = "combined-narrow" }
+[[table.column]]
+name = "Child"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/child"
+representation = "Child"
+[[table.column.mapping]]
+register_variant = "scb/example/monthly"
+variable = "scb/example/child"
+representation = "Child"
+[[table.column]]
+name = "Extra"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/extra"
+representation = "Extra"

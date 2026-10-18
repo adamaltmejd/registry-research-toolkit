@@ -1,0 +1,18 @@
+{
+  "note": "A projection's position member is a cell its parent serves only where the parent holds the same variable at that position; a plain column only where the parent's mapping is not a position set. Wider holds Dia at positions 1 to 4 beside Parent's 1 and 2, and Op as positions beside Parent's plain Op; Plain holds Op as a plain column beside Parent2019's Op positions. Subset holds Dia at positions 1 and 3 of Parent2019's 1 to 3, all of which the parent serves.",
+  "fails_if": "the projection exemption treats a position member as served by any parent mapping of the variable (Wider's Dia3 and Dia4, Wider's Op positions against a plain parent column and Plain's plain Op against parent positions are admitted, and the order then drops them without a finding), or refuses a projection whose positions are a subset of its parent's (Subset)",
+  "error": {
+    "code": "inventory_cell_conflict",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "table['Parent'] member set 'Dia' (representation 'Dia') and table['Wider'] member set 'Dia' (representation 'Dia') both map scb/example/annual scb/example/dia over 2018\n",
+      "table['Parent'].column['Op'] (representation 'Op') and table['Wider'] member set 'Op' (representation 'Op') both map scb/example/annual scb/example/op over 2018\n",
+      "table['Parent2019'] member set 'Op' (representation 'Op') and table['Plain'].column['Op'] (representation 'Op') both map scb/example/annual scb/example/op over 2019\n"
+    ],
+    "message_excludes": [
+      "table['Subset']"
+    ]
+  }
+}

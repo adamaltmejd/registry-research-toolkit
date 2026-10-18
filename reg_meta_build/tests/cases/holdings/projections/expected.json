@@ -1,0 +1,92 @@
+{
+  "tables": [
+    {
+      "physical_id": "Narrow",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": null,
+      "projection": {
+        "of": "Wide",
+        "token": "narrow"
+      },
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Wide",
+      "scope": "intervals",
+      "edition": 2018,
+      "partition": null,
+      "projection": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Narrow",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    },
+    {
+      "physical_id": "Wide",
+      "lo": "2018-01-01",
+      "hi": "2018-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Narrow",
+      "name": "Extra",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Narrow",
+      "name": "Id",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Amount",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Id",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Narrow",
+      "name": "Extra",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/extra",
+      "representation_literal": "Extra",
+      "representation_canonical": "Extra"
+    },
+    {
+      "physical_id": "Narrow",
+      "name": "Id",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Amount",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/amount",
+      "representation_literal": "Amount",
+      "representation_canonical": "Amount"
+    },
+    {
+      "physical_id": "Wide",
+      "name": "Id",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/id",
+      "representation_literal": "Id",
+      "representation_canonical": "Id"
+    }
+  ],
+  "warnings": []
+}

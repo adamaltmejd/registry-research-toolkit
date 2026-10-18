@@ -183,6 +183,8 @@ def validate_compiled_holdings(conn: sqlite3.Connection) -> None:
                     "edition": json.loads(table["edition_json"]),
                     "period_scope": scope,
                     "partition": table["partition"],
+                    "projection": table["projection_of"]
+                    and {"of": table["projection_of"], "token": table["projection"]},
                     "column": columns,
                 }
             )

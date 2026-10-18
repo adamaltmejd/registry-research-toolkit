@@ -1,0 +1,11 @@
+Category,Detail,Table,V1,V2,V3,V4
+Fixture,,Combined,Child,,,
+Fixture,,CombinedNarrow,Child,Extra,,
+Fixture,,Narrow,Id,Extra,Region,Child
+Fixture,,Narrow2018,DIA,,,
+Fixture,,Panel,Hushallsid_2018,Hushallsid_2019,,
+Fixture,,PanelNarrow,Hushallsid_2018,Hushallsid_2020,,
+Fixture,,VB,Recipient,Month,Payment,
+Fixture,,VBBARN,Recipient,Child,Month,Benefit
+Fixture,,Wide,Id,Amount,Region,
+Fixture,,Wide2018,DIA_2018,,,

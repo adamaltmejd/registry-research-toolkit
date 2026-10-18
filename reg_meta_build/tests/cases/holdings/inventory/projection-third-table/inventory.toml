@@ -1,0 +1,127 @@
+version = 1
+steward = "swecov"
+
+# Narrow is a valid projection of Wide; Other is an undeclared third table
+# serving the same Id cell, so it conflicts with both.
+[[table]]
+id = "Narrow"
+edition = 2018
+projection = { of = "Wide", token = "narrow" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+[[table.column]]
+name = "Note"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/note"
+representation = "Note"
+
+[[table]]
+id = "Other"
+edition = 2018
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Wide"
+edition = 2018
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+# A declared pair the parent does not fully serve: Panel holds Hushallsid only
+# as its 2018 member, while PanelNarrow's plain column serves 2018..2019. The
+# pair conflicts over 2018, where both would serve the cell.
+[[table]]
+id = "Panel"
+edition = { from = 2018, to = 2019 }
+[[table.column]]
+name = "Hushallsid_2018"
+[[table.column.mapping]]
+register_variant = "scb/rtb/individer"
+variable = "scb/rtb/hushallsid"
+representation = "Hushallsid"
+member = { year = 2018 }
+
+[[table]]
+id = "PanelNarrow"
+edition = { from = 2018, to = 2019 }
+projection = { of = "Panel", token = "panel-narrow" }
+[[table.column]]
+name = "Hushallsid"
+[[table.column.mapping]]
+register_variant = "scb/rtb/individer"
+variable = "scb/rtb/hushallsid"
+representation = "Hushallsid"
+
+# Two projections of one parent. Both map Id, which Sibling's parent Wide serves:
+# no conflict. Both map Note, which Wide does not: a plain cell conflict.
+[[table]]
+id = "Sibling"
+edition = 2018
+projection = { of = "Wide", token = "sibling" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+[[table.column]]
+name = "Note"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/note"
+representation = "Note"
+
+# A projection whose two columns both map the parent's key: the parent serves the
+# cell, but one table's two columns are still two locations of one cell.
+[[table]]
+id = "Twin"
+edition = 2018
+projection = { of = "Wide", token = "twin" }
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+[[table.column]]
+name = "SecondId"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+# Valid: one edition spelled as a list of years and as a range; the parent serves
+# the projection's 2018..2019 column with its own.
+[[table]]
+id = "ListParent"
+edition = [2018, 2019]
+[[table.column]]
+name = "Spell"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/spell"
+representation = "Spell"
+
+[[table]]
+id = "RangeNarrow"
+edition = { from = 2018, to = 2019 }
+projection = { of = "ListParent", token = "range-narrow" }
+[[table.column]]
+name = "Spell"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/spell"
+representation = "Spell"

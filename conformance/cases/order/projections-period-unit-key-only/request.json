@@ -1,0 +1,46 @@
+{
+  "note": "Person and Own in 2018 (source S2018), Person alone in 2019 (source S2019). YearlyNarrow contributes its own Own in 2018 only, so it emits Person beside Own for 2018 and nothing for 2019, where Yearly's 2019 file carries Person. Fails if the shared-key gate is per table and variant, not per period unit (YearlyNarrow's 2019 Person is emitted: a file of keys only).",
+  "fixture": "projection-periods",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "S2018",
+        "register_variant": "scb/example/annual",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/person",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/example/own",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      },
+      {
+        "name": "S2019",
+        "register_variant": "scb/example/annual",
+        "period": 2019,
+        "bindings": [
+          {
+            "variable": "scb/example/person",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}

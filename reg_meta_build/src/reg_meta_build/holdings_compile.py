@@ -206,6 +206,17 @@ def compile_holdings(
                     ),
                 )
                 mappings_count += 1
+    # A second pass: tables insert in physical_id order, so a projection may sort
+    # before the parent its foreign key names. One statement sets both columns,
+    # which the schema requires together.
+    conn.executemany(
+        "UPDATE holding_table SET projection_of = ?, projection = ? WHERE physical_id = ?",
+        (
+            (table.projection.of, table.projection.token, table.id)
+            for table in canonical.tables
+            if table.projection is not None
+        ),
+    )
     return CompiledHoldings(
         len(logical) + len(unknown), column_id, mappings_count, accounting
     )

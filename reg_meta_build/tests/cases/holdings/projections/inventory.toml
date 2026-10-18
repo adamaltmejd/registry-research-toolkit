@@ -1,0 +1,38 @@
+version = 1
+steward = "swecov"
+
+# `Narrow` is `Wide`'s delivery under fewer columns (#1634): its `Id` is the
+# claim `Wide` serves, its `Extra` is its own. Without the `projection` declaration the two
+# `Id` columns are an `inventory_cell_conflict`.
+[[table]]
+id = "Narrow"
+edition = 2018
+projection = { of = "Wide", token = "narrow" }
+[[table.column]]
+name = "Extra"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/extra"
+representation = "Extra"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"
+
+[[table]]
+id = "Wide"
+edition = 2018
+[[table.column]]
+name = "Amount"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/amount"
+representation = "Amount"
+[[table.column]]
+name = "Id"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/id"
+representation = "Id"

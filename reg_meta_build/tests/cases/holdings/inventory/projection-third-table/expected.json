@@ -1,0 +1,24 @@
+{
+  "note": "A declared projection pair (Narrow of Wide) beside an undeclared third table (Other) mapping the shared Id cell; a second projection of Wide (Sibling) sharing Id, which Wide serves, and Note, which Wide does not, with Narrow; a declared pair (PanelNarrow of Panel) whose parent serves the shared cell only as its 2018 member; a projection (Twin) whose two columns both map the key Wide serves; and a valid pair (RangeNarrow of ListParent) whose one edition is spelled as a year list and as a range. The fully served pair is the projections compile case; here the exemption reaches neither a third table, from either side of the pair, nor two projections sharing a cell their parent lacks, nor a pair the parent serves only in part, nor two columns of one projection.",
+  "fails_if": "the projection exemption skips a pair that is not the declared (projection, parent) pair, so Other's overlap with Narrow, Wide or Sibling is admitted; skips two projections of one parent where the parent does not serve the shared cell (Narrow and Sibling over Note), or refuses them where it does (over Id); skips a declared pair whose parent location does not serve every instant the projection's serves (Panel's 2018 member against PanelNarrow's 2018..2019 column); skips two columns of one projection that map one cell its parent serves (Twin's Id and SecondId); or reports a fully served declared pair, including one whose edition is spelled `[2018, 2019]` against `{ from = 2018, to = 2019 }` (refused as another edition, or as served only in part)",
+  "error": {
+    "code": "inventory_cell_conflict",
+    "locators": [
+      "table"
+    ],
+    "message_contains": [
+      "table['Narrow'].column['Id'] (representation 'Id') and table['Other'].column['Id'] (representation 'Id') both map scb/example/annual scb/example/id over 2018\n",
+      "table['Other'].column['Id'] (representation 'Id') and table['Wide'].column['Id'] (representation 'Id') both map scb/example/annual scb/example/id over 2018\n",
+      "table['Other'].column['Id'] (representation 'Id') and table['Sibling'].column['Id'] (representation 'Id') both map scb/example/annual scb/example/id over 2018\n",
+      "table['Narrow'].column['Note'] (representation 'Note') and table['Sibling'].column['Note'] (representation 'Note') both map scb/example/annual scb/example/note over 2018\n",
+      "table['Panel'] member set 'Hushallsid' (representation 'Hushallsid') and table['PanelNarrow'].column['Hushallsid'] (representation 'Hushallsid') both map scb/rtb/individer scb/rtb/hushallsid over 2018\n",
+      "table['Twin'].column['Id'] (representation 'Id') and table['Twin'].column['SecondId'] (representation 'Id') both map scb/example/annual scb/example/id over 2018\n"
+    ],
+    "message_excludes": [
+      "table['Narrow'].column['Id'] (representation 'Id') and table['Wide']",
+      "table['Narrow'].column['Id'] (representation 'Id') and table['Sibling']",
+      "table['Sibling'].column['Id'] (representation 'Id') and table['Wide']",
+      "table['RangeNarrow']"
+    ]
+  }
+}

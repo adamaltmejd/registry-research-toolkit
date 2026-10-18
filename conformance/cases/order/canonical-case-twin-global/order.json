@@ -20,8 +20,8 @@
   ],
   "provenance": {
     "artifact_kind": "catalog",
-    "catalog_generation_id": "e0e185b0ef772f50244a8deb96652d311651968b723f2d61e29f56053cca785c",
-    "catalog_schema_version": "11.0.0",
+    "catalog_generation_id": "74c941b3cdd2667215984a2990a1e480f3bf40e367af429034bcd2170311fab1",
+    "catalog_schema_version": "12.0.0",
     "mode": "global_fallback",
     "project_hash": "054784d65384f460ccd505a800715b669d0413dea8a0b1e1b7beb67dd6049626",
     "project_name": "Reader case",

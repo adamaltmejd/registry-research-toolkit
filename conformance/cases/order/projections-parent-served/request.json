@@ -1,0 +1,34 @@
+{
+  "note": "Every ordered cell of Narrow (Id, Region) is one Wide serves. Fails if Narrow's shared key Id is emitted without a cell of Narrow's own: a projection whose ordered cells its parent all serves emits no file.",
+  "fixture": "projection-order",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Example",
+        "register_variant": "scb/example/annual",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/id",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          },
+          {
+            "variable": "scb/example/region",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}
