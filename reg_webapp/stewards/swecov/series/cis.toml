@@ -1898,10 +1898,6 @@ mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "
 reason = "Exact reviewed physical column and accepted native owner; full current catalog coverage. Complete own-native source audit (Batch40-representation33-authoring-proof.json)"
 
 [[column]]
-column = "PeOrgNrHe"
-storage_header = "P1105_LopNr_PeOrgNrHe"
-
-[[column]]
 column = "emp04"
 tables = ["CIS2004"]
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/antal-anstallda", representation = "EMP", member = { year = 2004 } }]

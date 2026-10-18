@@ -303,14 +303,6 @@ tables = ["FTG_FOU_2015"]
 unmap = "Empty in FTG_FOU_2015: the aggregate check found no non-null value, so there is nothing to order (#1603; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
-column = "ViktRev"
-storage_header = "Vikt"
-
-[[column]]
-column = "v0201"
-storage_header = "V201"
-
-[[column]]
 column = "v0401_1"
 tables = ["FTG_FOU_2017"]
 mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0401-1-enligt-leverans", representation = "v0401_1" }]

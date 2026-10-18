@@ -416,15 +416,14 @@ class SeriesColumn(_SpecModel):
 
     Exactly one of: `mappings` (a reviewed representation, with `reason`, and
     `select_owner` to pick one documented owner among several), `unmap` (a
-    permanent reason), `hold` (interim, with a follow-up), `storage_header`
-    (the header the steward's storage holds this curated column under) or
-    `graft_onto` (with `reason`: the variant the grafts stage places this
-    column on as a gap-fill candidate, a column the catalog has no variable
-    for yet). `tables` narrows the decision to whole tables of the series; it
-    defaults to all.
+    permanent reason), `hold` (interim, with a follow-up) or `graft_onto`
+    (with `reason`: the variant the grafts stage places this column on as a
+    gap-fill candidate, a column the catalog has no variable for yet).
+    `tables` narrows the decision to whole tables of the series; it defaults
+    to all.
 
-    `storage_header` and `graft_onto` never reach the inventory, so they sit
-    beside a column's one mapping, unmap or hold decision. A `graft_onto`
+    `graft_onto` never reaches the inventory, so it sits beside a column's one
+    mapping, unmap or hold decision. A `graft_onto`
     column may live only in the holding's excluded tables: its placement is a
     holding fact, not a table one.
     """
@@ -436,20 +435,19 @@ class SeriesColumn(_SpecModel):
     select_owner: bool = False
     unmap: Reason | None = None
     hold: Hold | None = None
-    storage_header: LiteralName | None = None
     graft_onto: VariantCoordinate | None = None
 
     @model_validator(mode="after")
     def _one_decision(self) -> SeriesColumn:
         kinds = [
             name
-            for name in ("mappings", "unmap", "hold", "storage_header", "graft_onto")
+            for name in ("mappings", "unmap", "hold", "graft_onto")
             if getattr(self, name) is not None
         ]
         if len(kinds) != 1:
             raise ValueError(
-                "a column decision states exactly one of mappings, unmap, hold, "
-                f"storage_header and graft_onto; got {kinds or 'none'}"
+                "a column decision states exactly one of mappings, unmap, hold "
+                f"and graft_onto; got {kinds or 'none'}"
             )
         if self.graft_onto is not None:
             if self.reason is None or self.select_owner:
@@ -527,7 +525,7 @@ class Series(_SpecModel):
         result: dict[tuple[str, str], SeriesColumn] = {}
         every = [table.table for table in self.tables]
         for entry in self.columns:
-            if entry.storage_header is None and entry.graft_onto is None:
+            if entry.graft_onto is None:
                 for table in entry.tables or every:
                     result[table, entry.column] = entry
         return result
@@ -638,7 +636,6 @@ def _check_series(path: Path, series: Series) -> None:
             )
     admissible = series.table_variants()
     seen: dict[tuple[str, str], int] = {}
-    headers: dict[tuple[str, str], int] = {}
     grafts: dict[str, int] = {}
     for index, entry in enumerate(series.columns, 1):
         where = f"{path}: series {series.id!r} column[{index}] ({entry.column})"
@@ -646,7 +643,7 @@ def _check_series(path: Path, series: Series) -> None:
             raise _spec_error(
                 SERIES_REGISTER_MISMATCH,
                 f"{where}: only an unmap needs no series register; declare the "
-                "series `register` for a mapping, hold, storage_header or graft_onto",
+                "series `register` for a mapping, hold or graft_onto",
             )
         outside = sorted(set(entry.tables or ()) - set(every))
         if outside:
@@ -685,16 +682,6 @@ def _check_series(path: Path, series: Series) -> None:
                     f"(first at column[{grafts[entry.column]}])",
                 )
             grafts[entry.column] = index
-            continue
-        if entry.storage_header is not None:
-            for table in entry.tables or every:
-                if (table, entry.column) in headers:
-                    raise _spec_error(
-                        SPEC_INVALID,
-                        f"{where}: second storage_header for table {table} "
-                        f"(first at column[{headers[table, entry.column]}])",
-                    )
-                headers[table, entry.column] = index
             continue
         for table in entry.tables or every:
             if (table, entry.column) in seen:

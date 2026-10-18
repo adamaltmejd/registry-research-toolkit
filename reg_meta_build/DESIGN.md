@@ -2552,14 +2552,14 @@ is one register's tables across years: it names the register, the variants its t
 deliver, each member table's explicit edition (or year-independent scope and partition),
 how a bare-year edition is spelled (`edition_spelling`: annual, or a school-year anchor)
 and its curated column decisions. Only a series whose every column decision is an
-`unmap` (tables with no catalog owner) may omit the register; any mapping, hold,
-`storage_header` or `graft_onto` refuses without one. Membership is the only grouping
-authority; nothing groups tables by name. A column decision selects whole member tables
-and is exactly one of a reviewed mapping, a permanent `unmap`, an interim `hold` (its
-`follow_up` must parse as an issue reference; the build never reads the issue), a
-`storage_header` or a `graft_onto`. The scope holds the census guard (`census_sha256`),
-the lookup, exclude and retain-unknown dispositions, census-holding routes for the
-enrichment stages and the steward-owned flavor registers.
+`unmap` (tables with no catalog owner) may omit the register; any mapping, hold or
+`graft_onto` refuses without one. Membership is the only grouping authority; nothing
+groups tables by name. A column decision selects whole member tables and is exactly one
+of a reviewed mapping, a permanent `unmap`, an interim `hold` (its `follow_up` must
+parse as an issue reference; the build never reads the issue) or a `graft_onto`. The
+scope holds the census guard (`census_sha256`), the lookup, exclude and retain-unknown
+dispositions, census-holding routes for the enrichment stages and the steward-owned
+flavor registers.
 
 A series boundary is a documented break in the source (a changed population frame, unit
 or subject key, cited in a comment at the top of each split series file), never a change
@@ -2569,7 +2569,7 @@ one takes the series set. A table's own set is what its curated mappings and the
 generator's auto-mapping may use. A family whose tables map to different registers is
 still several series, because a series is single-register. Where the grafts stage cannot
 place a gap-fill column (one with no catalog variable yet) on one variant, a per-column
-`graft_onto` decision names it; like `storage_header`, it never reaches the inventory.
+`graft_onto` decision names it; it never reaches the inventory.
 
 Every census table has exactly one disposition, a series or one scope entry
 (`steward_table_disposition_invalid`). A series admits variants of its own register
