@@ -635,12 +635,14 @@ text is curator annotation, excluded from the evidence digest. The optional
 states with no unit. `[[errata.column]]` carries the variable identity (`name` and
 `definition`), a source and evidence, plus either named versions, bounded
 `holdings_period`, or the legacy undated `all_versions = true`; it mints a variable for
-a column SCB does not document on that variant in the period the entry claims. A literal
-SCB documents only in other editions may carry a different meaning there, so the entry
-still mints its own variable, with its own slug, and never joins the documented owner
-(#1621). It is refused (`column_now_documented`) when its named editions or its
-`holdings_period` overlap an edition that documents the literal, under any
-case/diacritic spelling: the two variables would otherwise both claim one physical
+a column SCB does not document on that variant in the period the entry claims. Its
+optional `measurement_unit` is the mint's own unit, authored from the entry's evidence
+as on `[[errata.delivered]]` and never inherited from a donor or documented column
+(#1665). A literal SCB documents only in other editions may carry a different meaning
+there, so the entry still mints its own variable, with its own slug, and never joins the
+documented owner (#1621). It is refused (`column_now_documented`) when its named
+editions or its `holdings_period` overlap an edition that documents the literal, under
+any case/diacritic spelling: the two variables would otherwise both claim one physical
 column in one period. Undated entries and editions without known bounds cannot be shown
 disjoint, so they are refused whenever the literal is documented anywhere on the
 variant. So is a literal a checked correction touches, an `[[errata.occurrence_period]]`
@@ -664,16 +666,17 @@ register that declares no variant). The entry anchors on one record of the varia
 guarded with that record's whole native family, and adds one pooled occurrence in the
 variant the anchor's own occurrence lands in: a SOS workbook without a Deldatamängder
 sheet places every variable in the synthesized `_default`, and the mint follows it. Its
-optional `data_warning` annotates that occurrence, as on the SCB path. A routed token
-(`[[identity.route]]`) is refused as stale: name its destination. Its name is the
-`[[variable]]` entry `<register native_id>.<column>`, which is also a documented SOS or
-thin variable's own source id, so the entry is refused (`column_now_documented`) when
-the register documents the column anywhere, or an `[[identity.rename]]` gives a
-documented variable that column. The `[[variable]]` entry then names the documented
-variable through native naming: a documented column extended outside its documented
-years is an `[[errata.occurrence_carry]]`. The mint takes its slug by naming
-conversion's rules (`accepted_variable_slugs`): a generated pin in a churning zone is
-inactive, and an authored entry overrides a generated one.
+optional `data_warning` annotates that occurrence and its optional `measurement_unit` is
+that occurrence's unit, as on the SCB path. A routed token (`[[identity.route]]`) is
+refused as stale: name its destination. Its name is the `[[variable]]` entry
+`<register native_id>.<column>`, which is also a documented SOS or thin variable's own
+source id, so the entry is refused (`column_now_documented`) when the register documents
+the column anywhere, or an `[[identity.rename]]` gives a documented variable that
+column. The `[[variable]]` entry then names the documented variable through native
+naming: a documented column extended outside its documented years is an
+`[[errata.occurrence_carry]]`. The mint takes its slug by naming conversion's rules
+(`accepted_variable_slugs`): a generated pin in a churning zone is inactive, and an
+authored entry overrides a generated one.
 
 `[[errata.delivered]]` and `[[errata.column]]` split exactly one question: does SCB
 document this column, with this meaning, on this variant? One column/variant omission is

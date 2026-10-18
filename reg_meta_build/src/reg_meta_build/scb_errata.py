@@ -1417,13 +1417,16 @@ def _overlaps_documenting_edition(
 
 
 def declared_column_fields(
-    entry: ErrataColumn | ProviderErrataColumn, declared_flags: frozenset[str]
+    entry: ErrataColumn | ProviderErrataColumn,
+    declared_flags: frozenset[str],
+    curated_unit: str | None = None,
 ) -> SourceFields:
     """The facts a `[[errata.column]]` entry states for the variable it mints.
 
     ``declared_flags`` names the flag keys present in the original TOML; a
     steward holding states false for an omitted one, any other source leaves it
-    unknown.
+    unknown. ``curated_unit`` is the entry's authored `measurement_unit` (#1665);
+    without one the mint has no unit.
     """
     return SourceFields(
         availability=value_field(True),
@@ -1433,6 +1436,9 @@ def declared_column_fields(
         data_type=(
             value_field(entry.data_type) if entry.data_type is not None else None
         ),
+        measurement_unit=value_field(normalize_text(curated_unit))
+        if curated_unit is not None
+        else None,
         classification_declared=value_field(entry.classification)
         if entry.classification is not None
         else None,
@@ -1459,6 +1465,7 @@ def convert_column_entry(
     declared_flags: frozenset[str],
     documented_corrected: bool,
     delivered_versions: frozenset[str] = frozenset(),
+    curated_unit: str | None = None,
 ) -> ErrataConversion:
     """Retain supplied facts; the type is the curated ``data_type`` or unknown.
 
@@ -1474,6 +1481,7 @@ def convert_column_entry(
     code memberships are never copied into these occurrences.
     ``delivered_versions`` names the editions `[[errata.delivered]]` entries add
     this column to on the variant; the entry must not share a period with them.
+    ``curated_unit`` is the entry's authored unit, never a documented one's.
     """
     if not declared_flags <= {"is_identifier", "is_sensitive"}:
         raise ValueError("declared_flags must name original boolean declaration keys")
@@ -1522,7 +1530,7 @@ def convert_column_entry(
     assert register is not None and variant is not None
     variable = (*register, "declared-column", fold_column(entry.column))
     provenance = entry.provenance
-    fields = declared_column_fields(entry, declared_flags)
+    fields = declared_column_fields(entry, declared_flags, curated_unit)
     effects: tuple[OccurrenceEffect, ...] = tuple(
         CuratedOccurrenceAddition(
             occurrence_key=f"{case_id}:{canonical_sha256(list(edition.key))}",
