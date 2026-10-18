@@ -1266,7 +1266,10 @@ the target and witness; projections sharing a source reference are checked separ
 holding anchor for another quantity cannot supply its coding. Contrary historical
 members or labels remain unresolved under the explicit-link policy. A literal empty
 source-book label is accepted only with explicit nonempty members and complete prepared
-source authority, including raw fingerprints; it never receives an invented name.
+source authority, including raw fingerprints; it never receives an invented name. The
+extension's target and witness columns match by the column identity fold
+(`fold_identity`), so they may differ by case; two folded spellings delivered in one
+edition refuse the entry (`ambiguous_coding_column_identity`) rather than pick one.
 
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot

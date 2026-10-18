@@ -583,7 +583,11 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
                 tuple(
                     (
                         "over_broad"
-                        if diagnostic_issue.code == "overbroad_curation_entry"
+                        if diagnostic_issue.code
+                        in {
+                            "overbroad_curation_entry",
+                            "ambiguous_coding_column_identity",
+                        }
                         else "stale",
                         diagnostic_issue.case_id,
                     )

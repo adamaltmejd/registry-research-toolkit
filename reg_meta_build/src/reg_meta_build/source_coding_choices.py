@@ -959,7 +959,7 @@ def apply_coding_choices(
     evaluations = evaluate_cases(ordered, records)
     resolved = {key: resolve_code_membership(claims) for key, claims in coding.items()}
     choices: dict[NativeKey, list[tuple[str, CodingResolution]]] = defaultdict(list)
-    raw_coding_cache: dict[NativeKey, tuple[str, ...]] = {}
+    raw_coding_cache: dict[tuple[NativeKey, ...], tuple[str, ...]] = {}
     diagnostics = []
     accounting = []
     for case, evaluation in zip(ordered, evaluations, strict=True):
@@ -1058,7 +1058,10 @@ def apply_coding_choices(
                 )
                 accounting.append(CodingChoiceAccounting(case.case_id, "stale", (), ()))
                 continue
-        claims = coding[decision.column_key]
+        witness_keys = getattr(decision.selection, "witness_column_keys", ())
+        claims = coding[decision.column_key] + tuple(
+            claim for key in witness_keys for claim in coding.get(key, ())
+        )
         if any(claim.scope.kind == "year_independent" for claim in claims):
             report(
                 "coding_scope_changed",
@@ -1086,11 +1089,12 @@ def apply_coding_choices(
         else:
             raw_codings = None
             if getattr(decision.selection, "expected_raw_codings", None) is not None:
-                if decision.column_key not in raw_coding_cache:
-                    raw_coding_cache[decision.column_key] = tuple(
+                cache_key = (decision.column_key, *witness_keys)
+                if cache_key not in raw_coding_cache:
+                    raw_coding_cache[cache_key] = tuple(
                         evidence_sha256(claim) for claim in claims
                     )
-                raw_codings = raw_coding_cache[decision.column_key]
+                raw_codings = raw_coding_cache[cache_key]
             selected, problem = _selection(decision, claims, raw_codings=raw_codings)
             if problem is not None:
                 report(

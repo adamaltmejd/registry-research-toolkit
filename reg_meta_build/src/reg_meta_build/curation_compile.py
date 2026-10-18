@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast
 
 from pydantic import TypeAdapter, ValidationError
-from reg_core_py import parse_fqid
+from reg_core_py import fold_identity, parse_fqid
 
 from ._curation import SentinelCode, curation_error, fold_column
 from ._resolved_common import covers_window, remaining_windows
@@ -99,6 +99,7 @@ from .source_curation import (
     CheckedVariantAssignment,
     ClassificationDecision,
     CodingDecision,
+    CodingSelection,
     ColumnRepresentation,
     CuratedOccurrenceAddition,
     CurationCase,
@@ -4940,12 +4941,49 @@ def compile_coding_register(
             )
         return column_originals[column]
 
-    def tokens_of(column: NativeKey) -> tuple[str, ...]:
-        if column not in claim_tokens:
-            claim_tokens[column] = tuple(
-                evidence_sha256(claim) for claim in coding.get(column, ())
-            )
-        return claim_tokens[column]
+    def tokens_of(
+        column: NativeKey, spellings: tuple[NativeKey, ...] = ()
+    ) -> tuple[str, ...]:
+        """The column's claim tokens, then those of its folded case spellings."""
+        for key in (column, *spellings):
+            if key not in claim_tokens:
+                claim_tokens[key] = tuple(
+                    evidence_sha256(claim) for claim in coding.get(key, ())
+                )
+        return tuple(
+            token for key in (column, *spellings) for token in claim_tokens[key]
+        )
+
+    folded_columns: dict[tuple[NativeKey, str], list[NativeKey]] | None = None
+
+    def folded_spellings(prefix: NativeKey, column: str) -> list[NativeKey]:
+        """Delivered column keys under one variable and variant whose spelling folds
+        (`fold_identity`, the column identity rule) to the entry's column (#1672)."""
+        nonlocal folded_columns
+        if folded_columns is None:
+            folded_columns = defaultdict(list)
+            for key in sorted(columns, key=repr):
+                if len(key) > 1 and key[-2] == "column":
+                    folded_columns[key[:-1], fold_identity(str(key[-1]))].append(key)
+        return folded_columns.get((prefix, fold_identity(column)), [])
+
+    def delivered_windows(column: NativeKey) -> tuple[tuple[int, int], ...]:
+        return tuple(
+            bounds
+            for column_scope in column_scopes.get(column, ())
+            for bounds in (coding_scope_bounds(column_scope) or ())
+        )
+
+    def overlaps(
+        windows: tuple[tuple[int, int], ...], others: tuple[tuple[int, int], ...]
+    ) -> bool:
+        return any(lo <= hi_ and lo_ <= hi for lo, hi in windows for lo_, hi_ in others)
+
+    def finite(*periods: tuple[str, str]) -> tuple[tuple[int, int], ...]:
+        return tuple(
+            (date.fromisoformat(start).toordinal(), date.fromisoformat(end).toordinal())
+            for start, end in periods
+        )
 
     def expectations_of(
         column: NativeKey, fields: tuple[str, ...], parents: bool
@@ -5003,6 +5041,64 @@ def compile_coding_register(
                 for variant in variants
                 if (key := column_identity(variable, variant, entry.column)) in columns
             }
+            # The extension's target and witness spellings of one column may differ
+            # by case: fold them with the column identity rule (#1672). Spellings
+            # delivered concurrently are two columns, so the entry names neither.
+            witness_keys: tuple[NativeKey, ...] = ()
+            if kind == "extend":
+                extension = cast("CodingExtendEntry", entry)
+                spelled = [
+                    spellings
+                    for variable in variables
+                    for variant in variants
+                    if (
+                        spellings := folded_spellings(
+                            column_identity(variable, variant, "")[:-1], entry.column
+                        )
+                    )
+                ]
+                if len(spelled) == 1 and len(spelled[0]) > 1:
+                    spellings = spelled[0]
+                    concurrent = [
+                        (a[-1], b[-1])
+                        for a, b in combinations(spellings, 2)
+                        if overlaps(delivered_windows(a), delivered_windows(b))
+                    ]
+                    if concurrent:
+                        for period_index, (start, end) in enumerate(periods, 1):
+                            case_id = f"{ref}/period/{period_index}"
+                            diagnostics.append(
+                                ResolutionDiagnostic(
+                                    code="ambiguous_coding_column_identity",
+                                    severity="error",
+                                    case_id=case_id,
+                                    subject=entry.variable,
+                                    detail=f"{case_id}: column {entry.column!r} "
+                                    "folds to spellings delivered in one edition "
+                                    f"({', '.join(f'{a!r} and {b!r}' for a, b in concurrent)}); "
+                                    "the extension names no single column.",
+                                    valid_from=start,
+                                    valid_to=end,
+                                    withheld_output=(case_id,),
+                                )
+                            )
+                        continue
+                    matches = {
+                        key
+                        for key in spellings
+                        if overlaps(delivered_windows(key), finite(*periods))
+                    }
+                    witness_from, witness_to = extension.witness
+                    witness_keys = tuple(
+                        key
+                        for key in spellings
+                        if key not in matches
+                        and overlaps(
+                            delivered_windows(key), finite((witness_from, witness_to))
+                        )
+                    )
+                elif spelled:
+                    matches = {key for spellings in spelled for key in spellings}
             if len(matches) != 1:
                 status = "overbroad" if len(matches) > 1 else "stale"
                 for period_index, (start, end) in enumerate(periods, 1):
@@ -5021,7 +5117,10 @@ def compile_coding_register(
                     )
                 continue
             column = next(iter(matches))
-            claims = coding.get(column, ())
+            evidence_key = (column, *witness_keys)
+            claims = coding.get(column, ()) + tuple(
+                claim for key in witness_keys for claim in coding.get(key, ())
+            )
             for period_index, (start, end) in enumerate(periods, 1):
                 case_id = f"{ref}/period/{period_index}"
                 source_windows = tuple(
@@ -5092,6 +5191,10 @@ def compile_coding_register(
                     selection, status, detail = compile_coding_selection(
                         entry, kind, claims, start, end
                     )
+                    if witness_keys and isinstance(selection, CodingSelection):
+                        selection = selection.model_copy(
+                            update={"witness_column_keys": witness_keys}
+                        )
                 evidence_digest = (
                     entry.expected_evidence_sha256
                     if isinstance(
@@ -5107,10 +5210,10 @@ def compile_coding_register(
                 )
                 compact = evidence_digest is not None
                 if compact:
-                    if column not in compact_evidence:
+                    if evidence_key not in compact_evidence:
                         full_originals = originals_of(column)[1]
-                        raw_codings = tokens_of(column)
-                        compact_evidence[column] = (
+                        raw_codings = tokens_of(column, witness_keys)
+                        compact_evidence[evidence_key] = (
                             full_originals,
                             raw_codings,
                             acknowledgement_evidence_sha256(
@@ -5120,11 +5223,11 @@ def compile_coding_register(
                                 column, tuple(SourceFields.model_fields), True
                             ),
                         )
-                    if compact_evidence[column][2] != evidence_digest:
+                    if compact_evidence[evidence_key][2] != evidence_digest:
                         status, detail = (
                             "stale",
                             "complete source coding evidence changed."
-                            + current_pins(compact_evidence[column][2], ()),
+                            + current_pins(compact_evidence[evidence_key][2], ()),
                         )
                 if (
                     isinstance(
@@ -5181,7 +5284,8 @@ def compile_coding_register(
                         or (
                             authority.raw_codings is not None
                             # Distinct claims, compared as sets on both sides.
-                            and set(authority.raw_codings) != set(tokens_of(column))
+                            and set(authority.raw_codings)
+                            != set(tokens_of(column, witness_keys))
                         )
                         or tuple(sorted(authority.codings))
                         != copied_coding_fingerprints(claims)
@@ -5225,7 +5329,7 @@ def compile_coding_register(
                                 "codings": list(copied_coding_fingerprints(claims)),
                                 "raw_codings": None
                                 if authority.raw_codings is None
-                                else sorted(set(tokens_of(column))),
+                                else sorted(set(tokens_of(column, witness_keys))),
                                 "marker_bindings": None
                                 if authority.marker_bindings is None
                                 or value_bindings is None
@@ -5281,7 +5385,7 @@ def compile_coding_register(
                     selection = selection.model_copy(
                         update={
                             "expected_raw_codings": tuple(
-                                sorted(set(compact_evidence[column][1]))
+                                sorted(set(compact_evidence[evidence_key][1]))
                                 if compact
                                 else sorted(
                                     set(entry.source_authority.raw_codings or ())
@@ -5318,7 +5422,7 @@ def compile_coding_register(
                 ):
                     targets = tuple(entry.source_authority.records)
                 elif compact:
-                    targets = compact_evidence[column][3]
+                    targets = compact_evidence[evidence_key][3]
                 guard = PeerGuard(
                     guard_id=case_id,
                     source=scope.source,

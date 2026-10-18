@@ -1704,6 +1704,69 @@
         ]
       ],
       "note": "The incomplete 2021 claim stays an unknown-membership period of its own; the extension does not touch it."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendcase"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "#1672: the entry names the 2019 target's spelling Saktar and the 2020 witness delivers SAktAr; the column identity folds (fold_identity), so the witness list (01 Label) extends to the listless 2019 target as in register extend."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "72.5",
+          "scb/extendcase/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "source_native_identity_retained"
+        ]
+      ],
+      "note": "#1672: the folded extension is neither stale nor over-broad, and the 2019 target raises no missing_coding_period. The one issue is formation's warning that the nonconcurrent spellings Saktar and SAktAr are one native quantity, which does not depend on coding."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "73.5",
+        "case_id": "curation/registers/scb/extendcasetwin.toml#/coding.extend/1/period/1"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "ambiguous_coding_column_identity",
+          "curation/registers/scb/extendcasetwin.toml#/coding.extend/1/period/1"
+        ]
+      ],
+      "note": "#1672: 2019 delivers both Saktar and SAKTAR, which fold to the entry's column, so the extension names no single target column and is refused at its located case rather than picking one spelling."
     }
   ]
 }
