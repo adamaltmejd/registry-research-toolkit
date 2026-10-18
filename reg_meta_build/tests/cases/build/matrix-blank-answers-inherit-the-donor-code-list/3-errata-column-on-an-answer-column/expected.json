@@ -1,0 +1,24 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["detail"],
+      "note": "Only the CO12 mint on the matrix's own edition is refused, at its own entry, naming the matrix answer",
+      "rows": [
+        ["curation/registers/scb/innovation-foretag.toml#/errata.column/2: curation/registers/scb/innovation-foretag.toml#/matrix/2012 - 2014 answer 'abroad' claims column 'CO12' in edition '2012 - 2014'"]
+      ]
+    },
+    {
+      "table": "states",
+      "where": {"column": ["CO11", "CO12"]},
+      "fields": ["variable", "column", "valid_from", "valid_to"],
+      "note": "CO12 stays answer-abroad's alone; the CO11 mint on the adjacent wave shares 2012 with answer-sweden and is built",
+      "rows": [
+        ["answer-abroad", "CO12", "2012-01-01", "2014-12-31"],
+        ["answer-sweden", "CO11", "2012-01-01", "2014-12-31"],
+        ["c-co11", "CO11", "2010-01-01", "2012-12-31"]
+      ]
+    }
+  ]
+}

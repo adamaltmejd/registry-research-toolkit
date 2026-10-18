@@ -160,11 +160,13 @@ from .source_value_bindings import (
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+    from .cis2016_matrix import Cis2016Matrix
     from .curation_tree import (
         CurationTree,
         IdentityColumnOwnerEntry,
         IdentityRenameEntry,
         IdentitySplitEntry,
+        MatrixRepresentationEntry,
         RegisterCuration,
     )
     from .pipeline import CompiledScope
@@ -1916,6 +1918,24 @@ def compile_alias_windows(
     return tuple(cases), tuple(diagnostics)
 
 
+def _load_declared_matrix(
+    tree: CurationTree, declaration: MatrixRepresentationEntry
+) -> Cis2014Matrix | Cis2016Matrix:
+    """A `[[representation.matrix]]` declaration's evidence, kept inside the tree."""
+    path = tree.root / declaration.evidence_file
+    if not path.resolve().is_relative_to(tree.root.resolve()):
+        raise curation_error(
+            "matrix_evidence_invalid",
+            f"{declaration.evidence_file}: matrix evidence escapes curation root.",
+            "Keep reviewed matrix evidence inside the curation tree.",
+        )
+    return load_matrix(
+        path,
+        source_mode=declaration.source_mode,
+        expected_selector=declaration.selector,
+    )
+
+
 def compile_matrix_repr(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -1984,18 +2004,7 @@ def compile_matrix_repr(
                 keys[scope_key].extend(period_keys)
                 diagnostics.extend(issues)
                 for declaration in register.representation.matrix:
-                    path = tree.root / declaration.evidence_file
-                    if not path.resolve().is_relative_to(tree.root.resolve()):
-                        raise curation_error(
-                            "matrix_evidence_invalid",
-                            f"{declaration.evidence_file}: matrix evidence escapes curation root.",
-                            "Keep reviewed matrix evidence inside the curation tree.",
-                        )
-                    matrix = load_matrix(
-                        path,
-                        source_mode=declaration.source_mode,
-                        expected_selector=declaration.selector,
-                    )
+                    matrix = _load_declared_matrix(tree, declaration)
                     ref = f"{register.source_file}#/matrix/{matrix.selector.edition}"
                     if native[-1] != matrix.selector.register_id:
                         diagnostics.append(
@@ -6926,6 +6935,27 @@ def compile_errata(
                 if edition.native_id is not None and edition.name in split.editions:
                     moved_editions[edition.key] = (edition.name, split.split)
         variant_contexts: dict[int, ErrataVariantContext] = {}
+        # The columns a documented_blank CIS matrix adds, by variant, native
+        # edition and column (#1681). The source names no such column, so the
+        # documented-column check cannot see them; a named matrix's columns are
+        # documented and refused there. Keyed by edition, never by date: CIS
+        # waves share a reference year across separate deliveries.
+        matrix_columns: dict[tuple[int, int, str], str] = {}
+        for declaration in register.representation.matrix:
+            if declaration.source_mode != "documented_blank":
+                continue
+            matrix = _load_declared_matrix(tree, declaration)
+            selector = matrix.selector
+            for answer in matrix.answers:
+                for column in answer.columns:
+                    matrix_columns[
+                        selector.register_variant_id,
+                        selector.regver_id,
+                        fold_column(column),
+                    ] = (
+                        f"{register.source_file}#/matrix/{selector.edition} "
+                        f"answer {answer.key!r}"
+                    )
         for index, row in enumerate(register.errata.version, 1):
             case_id = f"{register.source_file}#/errata.version/{index}"
             statuses["entries_read"].append(case_id)
@@ -7061,6 +7091,25 @@ def compile_errata(
                     f"{register_id}.{row.column}" not in accepted_names
                 ):
                     blockers = ("declared column has no tracked slug",)
+                    converted = None
+                elif table == "column" and (
+                    claims := tuple(
+                        f"{matrix_columns[key]} claims column {row.column!r} "
+                        f"in edition {edition.name!r}"
+                        for edition in editions
+                        if edition.name in (row.versions or ())
+                        and edition.native_id is not None
+                        and (
+                            key := (
+                                variant_id,
+                                edition.native_id,
+                                fold_column(row.column),
+                            )
+                        )
+                        in matrix_columns
+                    )
+                ):
+                    blockers = claims
                     converted = None
                 else:
                     context = variant_contexts.get(variant_id)
