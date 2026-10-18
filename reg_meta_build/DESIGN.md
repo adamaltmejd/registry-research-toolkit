@@ -1134,10 +1134,14 @@ Identifier variables take one leaf-slug family across all providers (maintainer 
   `Pseudonummer`) is not forced into the `personnr` family. It takes its own
   `lopnr-<role>` slug (`lopnr-barn`, `lopnr-sokande`, `lopnr-hushall-ar`).
 
-No slug or name carries a documentation status. A steward-held column SCB does not
-document takes `<literal>-enligt-leverans` and the name `<literal> (enligt leverans)`;
-the warning, not the slug, says what is undocumented. An identifier key follows the
-forms above and takes no `-enligt-leverans` suffix.
+No slug or name carries a documentation status. A steward-held column the provider does
+not document takes `<literal>-enligt-leverans` and the name
+`<literal> (enligt leverans)` by default. Where a documented precedent names its
+meaning, it may instead take a descriptive slug and name: the GDB geo-linkage columns
+(#1494), and the CIS2002 cooperation cells, which take the CIS2004 cell meaning. An
+identifier key follows the forms above and takes no `-enligt-leverans` suffix. Whatever
+the slug, every undocumented mint carries a `data_warning` saying it is undocumented;
+the warning, not the slug, says what is undocumented.
 
 ### Occurrences and coding
 
