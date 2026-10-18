@@ -13271,7 +13271,7 @@ native_id = "232.RoKod"
 slug = "rektorsomrade"
 
 # ── #1603 batch-e: same-name carries for undocumented rounds under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule) ──
-# Each entry carries the nearest documented edition's variable into editions SCB does not document, with a data_warning. Code lists are not carried.
+# Each entry carries the nearest documented edition's variable into editions SCB does not document, with a data_warning. Code lists are not carried, except where a batch-f coding.extend below carries the donor list.
 
 [[errata.delivered]]
 data_warning = "SCB documents no column ANNANPED on Lärarregistret, Tjänsteregistret for Läsåret 1999/2000 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions."
@@ -13640,7 +13640,8 @@ expected_diagnostic_sha256 = "6d330ce39a4579952ece6eea8f36c8d8411d1ac1653c820619
 
 # ── #1603 batch-f F7: carry the donor edition's code list into the same-name carried windows ──
 # Maintainer ruling 2026-10-18 ('Carry the 9 lists', via the Operator): every delivered value is in
-# the donor list (aggregate check on MONA, conclusion only). Saktar waits on case-folded column identity.
+# the donor list (aggregate check on MONA, conclusion only). The other three, Saktar here and FoU V001/V1001,
+# follow in batch-g: their folded extends tripped the carried-target defect fixed in #1676.
 
 [[coding.extend]]
 variable = "232.42803"

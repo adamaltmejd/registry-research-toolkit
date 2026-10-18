@@ -400,8 +400,7 @@ noted = "2026-10-15"
 
 # #1603 batch-f F6 (maintainer ruling 2026-10-18, 'Re-home to statistiskt'): Varde 1997-2010
 # is the statistical value. 19317 is carried onto the cell; 19318, SCB's sole documented
-# owner in 1999-2010, is withdrawn per edition (#1671). DRAFT: field names follow #1671's
-# shape as confirmed by the Builder 2026-10-18; coding/evidence pins from the scoped check.
+# owner in 1999-2010, is withdrawn per edition (#1671).
 
 [[errata.delivered]]
 data_warning = "SCB documents no statistical-value column Varde on this variant before 2011; for 1999-2010 it documents Varde as invoiced value. The meaning is taken from SCB's 2011 documentation of statistiskt-varde, which SCB's P1105 delivery variable list and an aggregate check against SCB's published totals support; it is not confirmed by SCB's Registerinformation for these editions."
@@ -412,7 +411,7 @@ versions = ["1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "200
 upstream = "omitted-column-in-version"
 native_variable_id = 19317
 expected_evidence_sha256 = "5145ef94598916b7698eb9ddceb7ac2d310d4064f80d32f677bff1ed3cd2e375"
-evidence = "SWECOV holds Varde in UHV_1997 through UHV_2010. SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6). The unit Kronor (SEK) is carried with the meaning: SCB documents it on native 19317 in every documented edition (2026-10-17 unit-with-meaning rule; maintainer AskUserQuestion answer 'Fold into batch-g', 2026-10-18)."
+evidence = "SWECOV holds Varde in UHV_1997 through UHV_2010. SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by this entry (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6). The unit Kronor (SEK) is carried with the meaning: SCB documents it on native 19317 in every documented edition (2026-10-17 unit-with-meaning rule; maintainer AskUserQuestion answer 'Fold into batch-g', 2026-10-18: batch-f ships with the batch-g build)."
 noted = "2026-10-18"
 
 [[errata.support]]
