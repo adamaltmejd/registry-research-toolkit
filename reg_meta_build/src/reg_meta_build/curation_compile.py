@@ -5572,8 +5572,9 @@ def _carried_replacement_refusal(
     """Why a `carried_replacement` cannot withdraw its sole owner (#1671), or None.
 
     The withdrawal leaves the cell to the replacement, so an `[[errata.delivered]]`
-    carry must put that native on the same variant, literal column and version.
-    A second source native on the cell is a positive authority, which is
+    carry must put that native on the same variant, column and version.
+    Columns compare folded, as delivered cells are keyed: a second source native
+    on the cell under any spelling is a positive authority, which is
     `contradictory_question`'s case.
     """
     assert entry.replacement is not None
@@ -5587,7 +5588,7 @@ def _carried_replacement_refusal(
     }
     if not any(
         row.variant in slugs
-        and row.column == entry.column
+        and fold_column(row.column) == fold_column(entry.column)
         and version in row.versions
         and str(row.native_variable_id) == replacement
         for row in register.errata.delivered
@@ -5602,7 +5603,8 @@ def _carried_replacement_refusal(
             for record in records
             if record.subject.native.variable_id is not None
             and _variant_label(register, record) == entry.variant
-            and _literal_field(record, "column_name") == entry.column
+            and fold_column(_literal_field(record, "column_name") or "")
+            == fold_column(entry.column)
             and str(record.subject.native.edition_id) == entry.edition
         }
         - {entry.variable.rsplit(".", 1)[-1]}
