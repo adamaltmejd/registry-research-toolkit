@@ -1113,7 +1113,10 @@ none of those facts copied from the blank donor. CIS 2016 answers retain their n
 source rows and support flags. An answer's optional `data_warning` is the curator's
 caveat on its meaning (#1668): each answer compiles to its own case over the shared
 partition guard, so the warning annotates only that answer's occurrences, with the
-warning field `definition` as on `[[errata.delivered]]`.
+warning field `definition` as on `[[errata.delivered]]`. Each case's provenance names
+the declaration and only that answer's own evidence (source pages, meaning evidence)
+beside the matrix-level evidence, so editing one answer never changes a sibling's
+warning detail or id; the full declaration is the committed evidence file.
 
 A steward holding dated at dataset grain (`holdings_period`) converts to exactly one
 pooled-range occurrence over that range (Y-212): the delivery list says the column is

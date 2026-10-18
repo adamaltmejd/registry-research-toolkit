@@ -123,9 +123,8 @@ class MatrixAnswer(_CurationModel):
     source_pages: dict[NonEmpty, Annotated[int, Field(ge=1)]]
     meaning_evidence: NonEmpty | None = None
     # The curator's caveat on this answer's meaning (#1668), written as its own
-    # data_warning rows. Left out of the dump when absent, so an unwarned
-    # declaration's provenance keeps its exact text.
-    data_warning: NonEmpty | None = Field(default=None, exclude_if=lambda v: v is None)
+    # data_warning rows.
+    data_warning: NonEmpty | None = None
 
     @model_validator(mode="after")
     def _complete_answer_evidence(self) -> MatrixAnswer:
@@ -333,9 +332,18 @@ def convert_matrix(
         "Preserve the existing reviewed answer identities and exact source partition. "
         + matrix.evidence.question
     )
-    full_provenance = (
-        provenance + "; accepted declaration=" + matrix.model_dump_json(by_alias=True)
-    )
+    evidence = matrix.evidence
+    shared_evidence = [
+        f"evidence: {evidence.document} <{evidence.url}> "
+        f"sha256={evidence.sha256}, noted {evidence.noted}"
+    ]
+    if isinstance(matrix, Cis2014Matrix):
+        facts = matrix.answer_facts
+        shared_evidence += [
+            f"data_type={facts.data_type}: {facts.data_type_evidence}",
+            f"is_identifier={str(facts.is_identifier).lower()}, "
+            f"is_sensitive={str(facts.is_sensitive).lower()}: {facts.flag_evidence}",
+        ]
     cases = []
     names = []
     provider_keys = {}
@@ -424,6 +432,22 @@ def convert_matrix(
                 contributors=(),
             )
         )
+        # The answer's own evidence only, never a sibling's: a warning's detail
+        # carries this text and its id hashes it, so a sibling edit must not move
+        # either (#1606). The full declaration is the committed evidence file.
+        answer_provenance = "\n".join(
+            (
+                f"{provenance}; answer={answer.key}",
+                *shared_evidence,
+                "source_pages: "
+                + ", ".join(f"{c}={answer.source_pages[c]}" for c in answer.columns),
+                *(
+                    (f"meaning_evidence: {answer.meaning_evidence}",)
+                    if answer.meaning_evidence is not None
+                    else ()
+                ),
+            )
+        )
         cases.append(
             CurationCase(
                 case_id=f"{case_id}:{answer.key}",
@@ -438,7 +462,7 @@ def convert_matrix(
                     else (),
                     effects=tuple(effects),
                     reason=reason,
-                    provenance=full_provenance,
+                    provenance=answer_provenance,
                 ),
             )
         )
