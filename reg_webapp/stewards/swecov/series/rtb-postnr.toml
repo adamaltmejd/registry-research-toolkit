@@ -1,4 +1,5 @@
 # Editions are RTB year-end versions: SWECOV's RTB_PostNr_YYYY is read as status 31 December YYYY, like every other scb/rtb series; the postnr carry warns that this date is assumed (Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)).
+# Each RTB_PostNr_YYYY is a projection of RTB<YYYY> (#1634): the person key is one claim served by the main table, and the postnr extract keeps its own key file (maintainer, AskUserQuestion 2026-10-18 "Projection, all 6 years"; #1603 batch-e).
 id = "rtb-postnr"
 register = "scb/rtb"
 variants = ["scb/rtb/folkbokforda-personer"]
@@ -6,23 +7,29 @@ variants = ["scb/rtb/folkbokforda-personer"]
 [[table]]
 table = "RTB_PostNr_2015"
 edition = "2015-12-31"
+projection = { of = "RTB2015", token = "postnr" }
 
 [[table]]
 table = "RTB_PostNr_2016"
 edition = "2016-12-31"
+projection = { of = "RTB2016", token = "postnr" }
 
 [[table]]
 table = "RTB_PostNr_2017"
 edition = "2017-12-31"
+projection = { of = "RTB2017", token = "postnr" }
 
 [[table]]
 table = "RTB_PostNr_2018"
 edition = "2018-12-31"
+projection = { of = "RTB2018", token = "postnr" }
 
 [[table]]
 table = "RTB_PostNr_2019"
 edition = "2019-12-31"
+projection = { of = "RTB2019", token = "postnr" }
 
 [[table]]
 table = "RTB_PostNr_2020"
 edition = "2020-12-31"
+projection = { of = "RTB2020", token = "postnr" }
