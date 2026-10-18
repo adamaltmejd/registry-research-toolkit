@@ -5,4 +5,5 @@ narrower	scb/sample	curation/registers/scb/sample.toml#/errata.column/3	WIDE	dec
 unmatched	scb/sample	curation/registers/scb/sample.toml#/errata.column/4	ELSEWHERE		
 disagrees	scb/sample	curation/registers/scb/sample.toml#/errata.delivered/1	Guid	text	CIS2020=uniqueidentifier
 unmatched	scb/sample	curation/registers/scb/sample.toml#/errata.delivered/3	Outside	integer	
+unmatched	scb/unmapped	curation/registers/scb/unmapped.toml#/errata.column/1	LOST	integer	
 uncurated	sos/pivot	curation/registers/sos/pivot.toml#/errata.column/1	DIA		PIV2020=int, PIV2020=smallint

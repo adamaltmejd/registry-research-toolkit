@@ -3,10 +3,9 @@
 A steward's storage-schema export (table, column, SQL type; no row content) is
 steward-derived, so the global build never reads it (#1562). The steward
 generator's `inventory` stage runs this check instead: it compares every curated
-global data type on a register the generated inventory maps against the storage
-types of the physical columns the inventory maps to that entry's variable, and
-reports disagreements as a worklist. Curation, not this check, decides what
-changes.
+global data type against the storage types of the physical columns the generated
+inventory maps to that entry's variable, and reports disagreements as a worklist.
+Curation, not this check, decides what changes.
 """
 
 from __future__ import annotations
@@ -161,26 +160,11 @@ def storage_type_findings(
                         (table.id, fold_column(column.name)),
                     )
                 )
-    mapped = {register for register, _ in cells}
     findings: list[StorageFinding] = []
+    # The curated entries scope the registers, not the inventory: a steward-held
+    # entry on a register the inventory maps nowhere is unmatched, not skipped.
     for register in sorted(tree.registers, key=lambda item: item.source_file):
         name = f"{register.register_info.provider}/{register.register_info.slug}"
-        if name not in mapped:
-            continue
-        accepted = accepted_variable_slugs(tree, register)
-        # SCB entries name the variant by slug. A non-SCB entry names its source
-        # variant label instead (#1633), which only the build resolves, so its
-        # variable identity alone scopes its cells.
-        slugs = {variant.slug for variant in register.variant} or {"_default"}
-        native = register.register_info.native_id
-        # A mint's variable is named by its `<register>.<column>` source id,
-        # whose slug every curating provider pins.
-        mints = {
-            fold_column(entry.column): accepted.get(
-                f"{native}.{entry.column}", (None,)
-            )[0]
-            for entry in register.errata.column
-        }
         # (location, variant, column, data_type, steward-held, minted)
         curated: list[tuple[str, str, str, str | None, bool, bool]] = [
             (
@@ -207,9 +191,24 @@ def storage_type_findings(
             for index, entry in enumerate(register.errata.delivered, 1)
             if entry.data_type is not None
         ]
+        curated = [item for item in curated if item[3] is not None or item[4]]
+        if not curated:
+            continue
+        accepted = accepted_variable_slugs(tree, register)
+        # SCB entries name the variant by slug. A non-SCB entry names its source
+        # variant label instead (#1633), which only the build resolves, so its
+        # variable identity alone scopes its cells.
+        slugs = {variant.slug for variant in register.variant} or {"_default"}
+        native = register.register_info.native_id
+        # A mint's variable is named by its `<register>.<column>` source id,
+        # whose slug every curating provider pins.
+        mints = {
+            fold_column(entry.column): accepted.get(
+                f"{native}.{entry.column}", (None,)
+            )[0]
+            for entry in register.errata.column
+        }
         for location, variant, column, data_type, holding, minted in curated:
-            if data_type is None and not holding:
-                continue
             mint = mints.get(fold_column(column))
             held = {
                 (table, storage[table, header])

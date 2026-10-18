@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "unmapped"
+native_id = "3"
+[[variant]]
+native_id = "3.1"
+slug = "people"
+
+[[errata.column]]
+variant = "people"
+column = "LOST"
+name = "LOST"
+definition = "Held, but the inventory maps no cell on this register"
+versions = ["2020"]
+data_type = "integer"
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-18"
+
+[[variable]]
+native_id = "3.LOST"
+slug = "lost"

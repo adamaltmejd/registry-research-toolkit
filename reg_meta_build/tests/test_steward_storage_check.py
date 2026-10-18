@@ -30,7 +30,8 @@ def test_storage_check_reports_each_disagreement_kind(tmp_path: Path) -> None:
     (scb-docs) decimal over integer storage, and Guid (folded onto storage GUID)
     a storage type outside the catalog vocabulary. ELSEWHERE, a steward holding,
     is stored only in a table the inventory does not map, so it is unmatched,
-    and so is Outside, a typed delivered erratum stored only there; DOCONLY, a
+    and so is Outside, a typed delivered erratum stored only there, and LOST, a
+    steward holding on a register the inventory maps no cell on; DOCONLY, a
     documented column storage does not hold, is no finding. AGREES is one
     literal held by two variables (#1647): the mint's own CIS2020 table agrees
     with its integer, the documented variable's CIS2018 table agrees with the
@@ -45,7 +46,8 @@ def test_storage_check_reports_each_disagreement_kind(tmp_path: Path) -> None:
     the representation instead of the inventory's physical header (Renamed would
     be unmatched), requires a non-SCB entry's variant label to be a slug (DIA
     would be unmatched), skips an unmatched steward-held column or typed delivered
-    erratum silently, stops comparing a documented type that storage holds,
+    erratum silently, scopes registers by the inventory's mappings instead of the
+    curated entries (LOST would vanish), stops comparing a documented type that storage holds,
     reports a documented column absent from storage, or reports an agreeing
     type."""
     # The tree loader requires a classifications directory, which git cannot
