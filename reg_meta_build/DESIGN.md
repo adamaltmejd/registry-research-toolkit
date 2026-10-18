@@ -1266,7 +1266,16 @@ the target and witness; projections sharing a source reference are checked separ
 holding anchor for another quantity cannot supply its coding. Contrary historical
 members or labels remain unresolved under the explicit-link policy. A literal empty
 source-book label is accepted only with explicit nonempty members and complete prepared
-source authority, including raw fingerprints; it never receives an invented name.
+source authority, including raw fingerprints; it never receives an invented name. The
+extension's target and witness columns match by the column identity fold
+(`fold_identity`), so they may differ by case; two folded spellings delivered in one
+edition refuse the entry (`ambiguous_coding_column_identity`) rather than pick one. Each
+period resolves and applies to its own target spelling, but the entry's one evidence
+digest, source authority and peer guards cover, in canonical record order, the rows of
+every requested period's target spelling and of the witness spellings. A folded spelling
+delivered in neither a requested period nor the witness window is outside them, while a
+single spelling's pin covers all of that column's rows: rows outside both windows are
+not evidence for the extension.
 
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot

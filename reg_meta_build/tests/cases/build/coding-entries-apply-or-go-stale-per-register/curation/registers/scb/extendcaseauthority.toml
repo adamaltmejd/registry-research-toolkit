@@ -1,0 +1,22 @@
+[register]
+provider = "scb"
+slug = "extendcaseauthority"
+native_id = "77"
+[[variant]]
+native_id = "77.772"
+slug = "people"
+[[variable]]
+native_id = "77.5"
+slug = "value"
+
+[[coding.extend]]
+variable = "77.5"
+variant = "people"
+column = "Saktar"
+periods = [["2019-01-01", "2019-12-31"], ["2021-01-01", "2021-12-31"]]
+list = ""
+list_members = [["01", "Label"]]
+witness = ["2020-01-01", "2020-12-31"]
+source_authority = { records = {{expected_records key=member:7701,member:7702,member:7703}}, codings = {{source_codings key=member:7701,member:7702,member:7703}}, raw_codings = {{raw_codings key=member:7701,member:7702,member:7703}} }
+reason = "Reviewed coding"
+source = "fixture"

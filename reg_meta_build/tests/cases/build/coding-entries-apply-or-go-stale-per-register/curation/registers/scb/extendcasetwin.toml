@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "extendcasetwin"
+native_id = "73"
+[[variant]]
+native_id = "73.732"
+slug = "people"
+[[variable]]
+native_id = "73.5"
+slug = "value"
+
+[[coding.extend]]
+variable = "73.5"
+variant = "people"
+column = "Saktar"
+periods = [["2019-01-01", "2019-12-31"]]
+list = "list"
+list_members = [["01", "Label"]]
+witness = ["2020-01-01", "2020-12-31"]
+reason = "Reviewed coding"
+source = "fixture"
