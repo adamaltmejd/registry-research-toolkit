@@ -1,0 +1,11 @@
+{
+  "projections": [
+    {
+      "table": "warnings",
+      "where": {"variable": "answer-abroad"},
+      "fields": ["variable", "column", "summary", "detail", "fields", "warning_id"],
+      "rows": {"step": "1-declared-answers"},
+      "note": "Abroad's warning, detail and id included, is step 1's although its sibling changed."
+    }
+  ]
+}

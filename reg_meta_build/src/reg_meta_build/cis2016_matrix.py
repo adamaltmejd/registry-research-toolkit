@@ -122,6 +122,9 @@ class MatrixAnswer(_CurationModel):
     response: MatrixAxis
     source_pages: dict[NonEmpty, Annotated[int, Field(ge=1)]]
     meaning_evidence: NonEmpty | None = None
+    # The curator's caveat on this answer's meaning (#1668), written as its own
+    # data_warning rows.
+    data_warning: NonEmpty | None = None
 
     @model_validator(mode="after")
     def _complete_answer_evidence(self) -> MatrixAnswer:
@@ -244,7 +247,7 @@ def load_matrix(
 
 @dataclass(frozen=True)
 class MatrixConversion:
-    case: CurationCase
+    cases: tuple[CurationCase, ...]
     naming: tuple[NamingDeclaration, ...]
     provider_keys: dict[NativeKey, str]
 
@@ -325,12 +328,31 @@ def convert_matrix(
         or original.edition_key is None
     ):
         raise ValueError("accepted matrix needs established native parent identities")
-    effects: list[OccurrenceEffect] = []
-    if blank:
-        effects.append(CheckedSourceUse(ref=donor.ref))
+    reason = (
+        "Preserve the existing reviewed answer identities and exact source partition. "
+        + matrix.evidence.question
+    )
+    evidence = matrix.evidence
+    shared_evidence = [
+        f"evidence: {evidence.document} <{evidence.url}> "
+        f"sha256={evidence.sha256}, noted {evidence.noted}"
+    ]
+    if isinstance(matrix, Cis2014Matrix):
+        facts = matrix.answer_facts
+        shared_evidence += [
+            f"data_type={facts.data_type}: {facts.data_type_evidence}",
+            f"is_identifier={str(facts.is_identifier).lower()}, "
+            f"is_sensitive={str(facts.is_sensitive).lower()}: {facts.flag_evidence}",
+        ]
+    cases = []
     names = []
     provider_keys = {}
     for answer in sorted(matrix.answers, key=lambda item: item.key):
+        # One case per answer, so an answer's data_warning annotates only its own
+        # occurrences; every case guards the same complete partition.
+        effects: list[OccurrenceEffect] = (
+            [CheckedSourceUse(ref=donor.ref)] if blank else []
+        )
         key = (*register_key, "accepted-matrix", case_id, answer.key)
         provider_keys[key] = str(selector.var_id)
         authored = {
@@ -410,18 +432,38 @@ def convert_matrix(
                 contributors=(),
             )
         )
-    case = CurationCase(
-        case_id=case_id,
-        targets=expected,
-        peer_guards=(guard,),
-        decision=OccurrenceCorrectionDecision(
-            reviewed=True,
-            effects=tuple(effects),
-            reason="Preserve the existing reviewed answer identities and exact source partition. "
-            + matrix.evidence.question,
-            provenance=provenance
-            + "; accepted declaration="
-            + matrix.model_dump_json(by_alias=True),
-        ),
-    )
-    return MatrixConversion(case, tuple(names), provider_keys)
+        # The answer's own evidence only, never a sibling's: a warning's detail
+        # carries this text and its id hashes it, so a sibling edit must not move
+        # either (#1606). The full declaration is the committed evidence file.
+        answer_provenance = "\n".join(
+            (
+                f"{provenance}; answer={answer.key}",
+                *shared_evidence,
+                "source_pages: "
+                + ", ".join(f"{c}={answer.source_pages[c]}" for c in answer.columns),
+                *(
+                    (f"meaning_evidence: {answer.meaning_evidence}",)
+                    if answer.meaning_evidence is not None
+                    else ()
+                ),
+            )
+        )
+        cases.append(
+            CurationCase(
+                case_id=f"{case_id}:{answer.key}",
+                targets=expected,
+                peer_guards=(guard,),
+                decision=OccurrenceCorrectionDecision(
+                    reviewed=True,
+                    # As [[errata.delivered]] annotates an assumed meaning.
+                    data_warning=answer.data_warning,
+                    data_warning_fields=("definition",)
+                    if answer.data_warning is not None
+                    else (),
+                    effects=tuple(effects),
+                    reason=reason,
+                    provenance=answer_provenance,
+                ),
+            )
+        )
+    return MatrixConversion(tuple(cases), tuple(names), provider_keys)

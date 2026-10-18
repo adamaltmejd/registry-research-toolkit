@@ -2054,7 +2054,7 @@ def compile_matrix_repr(
                             _stale_partition(ref, matrix.selector.edition, str(exc))
                         )
                         continue
-                    cases[scope_key].append(converted.case)
+                    cases[scope_key].extend(converted.cases)
                     names[scope_key].extend(converted.naming)
                     keys[scope_key].extend(converted.provider_keys.items())
                 alias_cases, alias_issues = compile_alias_windows(
@@ -6766,6 +6766,7 @@ def _compile_provider_columns(
                                 entry,
                                 frozenset(row.model_fields_set)
                                 & {"is_identifier", "is_sensitive"},
+                                row.measurement_unit,
                             ),
                             edition_scope=pooled,
                             edition_period_scope=pooled,
@@ -7186,6 +7187,7 @@ def compile_errata(
                                 == (register_id, variant_id, fold_column(row.column))
                                 for version in claim.versions
                             ),
+                            curated_unit=row.measurement_unit,
                         )
                         blockers, converted = result.blockers, result.case
                 if converted is None:

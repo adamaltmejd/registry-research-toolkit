@@ -23,6 +23,13 @@
       ]
     },
     {
+      "table": "warnings",
+      "fields": ["variable", "column", "valid_from", "valid_to", "summary", "fields"],
+      "rows": [
+        ["answer-abroad", "CO12", "2012-01-01", "2014-12-31", "Read on the partner list the previous wave documents.", ["definition"]]
+      ]
+    },
+    {
       "table": "state_codes",
       "fields": ["column", "code", "label"],
       "rows": [

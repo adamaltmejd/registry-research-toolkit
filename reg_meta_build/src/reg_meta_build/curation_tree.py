@@ -404,6 +404,10 @@ class ErrataColumnEntry(_CurationModel):
     name: str
     definition: str
     data_type: str | None = None
+    # The minted column's unit, stated by the curator from the entry's evidence
+    # (#1665). As on [[errata.delivered]], it is never inherited from a donor or
+    # documented column: without it, the mint has no unit.
+    measurement_unit: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
     classification: str | None = None
     is_identifier: bool | None = None
     is_sensitive: bool | None = None

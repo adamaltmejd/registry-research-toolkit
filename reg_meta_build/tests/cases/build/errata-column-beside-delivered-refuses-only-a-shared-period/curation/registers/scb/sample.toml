@@ -57,6 +57,7 @@ name = "R"
 definition = "Held"
 versions = ["2022"]
 data_type = "integer"
+measurement_unit = "Antal"
 is_identifier = false
 is_sensitive = false
 source = "steward-holdings"
