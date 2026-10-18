@@ -140,10 +140,6 @@ table = "LReg_2022"
 edition = 2022
 
 [[column]]
-column = "RoKod"
-storage_header = "P1105_LopNr_RoKod"
-
-[[column]]
 column = "Anstslag"
 tables = ["LReg_1992", "LReg_1993", "LReg_1994"]
 mappings = [{ register_variant = "scb/lararreg/tjansteregistret", variable = "scb/lararreg/typ-av-anstallning", representation = "Anst" }]

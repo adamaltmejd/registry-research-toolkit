@@ -73,7 +73,3 @@ unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maint
 column = "Sni2002"
 tables = ["Moms_2022"]
 unmap = "Placeholder 00000 in effectively every row (MONA aggregate check, maintainer decision 2026-10-15); there is no SNI 2002 value to order (#1603)."
-
-[[column]]
-column = "IdPers"
-storage_header = "P1105_LopNr_IdPers"

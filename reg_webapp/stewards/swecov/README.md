@@ -17,14 +17,13 @@ mappings and coverage before publishing one immutable DB. Only the compiled arti
 supplies browse membership, semantic admission, physical coverage, and order
 materialization to the deployed webapp.
 
-The inventory command checks storage types against the series: each series' register is
-compared with its member tables in the MONA storage-schema export (`--storage-csv`,
-required), and a column decision's `storage_header` names a column storage spells
-differently. The global catalog build reads no steward input, so that check is where
-SWECOV storage meets curated global types: it writes `derived/storage_type_findings.tsv`
-and warns in the run summary when storage disagrees with a curated type, a steward-held
-column lacks one, or a curated entry matches no storage column. Curation decides the
-fix.
+The inventory command checks storage types against the inventory it writes: each curated
+type is compared with the MONA storage-schema export (`--storage-csv`, required) under
+the physical columns the inventory maps to that type's variable. The global catalog
+build reads no steward input, so that check is where SWECOV storage meets curated global
+types: it writes `derived/storage_type_findings.tsv` and warns in the run summary when
+storage disagrees with a curated type, a steward-held column lacks one, or a curated
+entry matches no storage column. Curation decides the fix.
 
 SWECOV remains the proving steward while the workflow is tested pre-v1. Extracting its
 branding and delivery pipeline into a steward-owned system is separate from this runtime
