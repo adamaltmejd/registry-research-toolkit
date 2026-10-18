@@ -577,8 +577,8 @@ expected_fields = [{ name = "definition", status = "absent" }, { name = "descrip
 expected_scope = { kind = "intervals", intervals = [{ start = "2015" }] }
 expected_period = { kind = "not_applicable", intervals = [] }
 carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" }] }
-data_warning = "Before 2015 Socialstyrelsen reported action codes only inside the OP string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented ATG."
-evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents ATG as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, action codes exist only inside OP (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; maintainer same-name rule 2026-10-16."
+data_warning = "Before 2015 Socialstyrelsen reported action codes only inside the OP string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented ATG. In 2009 and 2012–2014 a few first-position records hold more than one code, separated by a comma or semicolon."
+evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents ATG as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, action codes exist only inside OP (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; maintainer same-name rule 2026-10-16. The first position is single-code in 2005–2008, 2010 and 2011 and holds a few multi-code records in 2009 and 2012–2014 (aggregate check on MONA, reported as a conclusion only; maintainer ruling 2026-10-18 via the Operator, 'Add warning clause', #1603 batch-f F5)."
 noted = "2026-10-17"
 
 [[errata.occurrence_carry]]

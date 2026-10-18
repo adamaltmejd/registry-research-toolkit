@@ -13,8 +13,8 @@ reason = "The table unions two SoS BU deliveries (aggregate check on MONA, repor
 
 [[column]]
 column = "INSTYP"
-mappings = [{ register_variant = "sos/bu/bu-plac-pnrq0", variable = "sos/bu/instyp", representation = "INSTYP", window = { from = 2008, to = 2016 } }]
-reason = "The table unions two SoS BU deliveries (aggregate check on MONA, reported as a conclusion only): the old field set comes from the 2015–2016 deliveries, and the new field set from the deliveries from 2017 on, which recode the older history into separate columns. Old-coding column of the 2015–2016 deliveries, mapped on the old variant (bu-plac-pnrq0, through 2016) for the table's decision years it covers (#1645). (#1603 batch-e; maintainer decision 2026-10-16, D6a)"
+mappings = [{ register_variant = "sos/bu/bu-plac-pnrq0", variable = "sos/bu/instyp", representation = "INSTYP", window = { from = 2015, to = 2016 } }]
+reason = "The table unions two SoS BU deliveries (aggregate check on MONA, reported as a conclusion only): the old field set comes from the 2015–2016 deliveries, and the new field set from the deliveries from 2017 on, which recode the older history into separate columns. Old-coding column of the 2015–2016 deliveries, mapped on the old variant (bu-plac-pnrq0) for decision years 2015–2016, the only years with values (aggregate check on MONA, reported as a conclusion only; Operator acceptance 2026-10-18, #1603 batch-f F3) (#1645). (#1603 batch-e; maintainer decision 2026-10-16, D6a)"
 
 [[column]]
 column = "P1105_LopNr_PersonNr"

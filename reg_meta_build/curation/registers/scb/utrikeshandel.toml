@@ -398,16 +398,201 @@ expected_evidence_sha256 = "99648c40a95add4e347116413b528d5f8766995ec9e819a8a128
 evidence = "SWECOV holds the column in UHV_1997 and UHV_1998; HA0201 DO 2011 pp. 4 and 18 document the same variable for the series, which SCB documents on this variant from 1999 with the same definition. Placed on the landskod-utrikeshandel side (the code list used through 2016), not land (2017+). (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
 noted = "2026-10-15"
 
+# #1603 batch-f F6 (maintainer ruling 2026-10-18, 'Re-home to statistiskt'): Varde 1997-2010
+# is the statistical value. 19317 is carried onto the cell; 19318, SCB's sole documented
+# owner in 1999-2010, is withdrawn per edition (#1671).
+
 [[errata.delivered]]
-data_warning = "Owner under review: SCB's Registerinformation documents this variant's Varde as invoiced value (fakturerat värde) from 1999 to 2010, but SCB's P1105 delivery variable list describes the delivered UHV varde as statistical value in SEK (Statistiskt värde i SEK) for 1997-2021. Which value these years hold is not confirmed."
+data_warning = "SCB documents no statistical-value column Varde on this variant before 2011; for 1999-2010 it documents Varde as invoiced value. The meaning is taken from SCB's 2011 documentation of statistiskt-varde, which SCB's P1105 delivery variable list and an aggregate check against SCB's published totals support; it is not confirmed by SCB's Registerinformation for these editions."
 variant = "varu-landfordelat-intrastat"
 column = "Varde"
-versions = ["1997", "1998"]
+measurement_unit = "Kronor (SEK)"
+versions = ["1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010"]
 upstream = "omitted-column-in-version"
-native_variable_id = 19318
-expected_evidence_sha256 = "1b0ea6d9521d490b4c327340331834da9dccc7a6b5753bac4e3131ae2f6a76aa"
-evidence = "SWECOV holds the column in UHV_1997 and UHV_1998; HA0201 DO 2011 pp. 4 and 18 document the same variable for the series, which SCB documents on this variant from 1999 with the same definition. Placed on fakturerat-varde, the value documented for the whole 1999+ span; statistiskt-varde starts 2011. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced). Owner under review (#1603 batch-e; Operator two-owner settlement 2026-10-16, maintainer ratified 2026-10-18): SCB's P1105 delivery variable list (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV) describes varde as 'Statistiskt värde i SEK' for 1997-2021, which contradicts the invoiced-value owner; the same list labels vikt 'Statistiskt värde i Kilo', a copy-paste label, so the list alone does not settle it. Batch-f MONA aggregate check decides."
-noted = "2026-10-16"
+native_variable_id = 19317
+expected_evidence_sha256 = "5145ef94598916b7698eb9ddceb7ac2d310d4064f80d32f677bff1ed3cd2e375"
+evidence = "SWECOV holds Varde in UHV_1997 through UHV_2010. SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by this entry (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6). The unit Kronor (SEK) is carried with the meaning: SCB documents it on native 19317 in every documented edition (2026-10-17 unit-with-meaning rule; maintainer AskUserQuestion answer 'Fold into batch-g', 2026-10-18: batch-f ships with the batch-g build)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2321"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "1999"
+expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2320"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2319"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2001"
+expected_scope = { kind = "intervals", intervals = [{ start = "2001", end = "2001" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2001-01-01", end = "2001-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2318"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2002"
+expected_scope = { kind = "intervals", intervals = [{ start = "2002", end = "2002" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2002-01-01", end = "2002-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2317"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "15770"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2822"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2821"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2820"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2819"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2271"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "188.19318"
+variant = "188.258"
+column = "Varde"
+edition = "2813"
+expected_fields = [{ name = "name", status = "value", value = "Fakturerat värde" }, { name = "definition", status = "value", value = "Varans fakturerade värde i SEK." }, { name = "description", status = "value", value = "För Intrastat samlas uppgifter för värde in i fakturerat värde. Detta konverteras till statistiskt värde när statistiken publiceras." }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+replacement = "188.19317"
+expected_coding_sha256 = "a1529e50ea8039498909ed821cc3a1a62e618141f8127247edfb1b50e83f281e"
+evidence = "SCB's P1105 delivery variable lists describe UHV varde as 'Statistiskt värde i SEK' for 1997-2021 (Dataleverans 2023-2024, Bilaga 2 - Variabellista.xlsx, sheet UHV). SWECOV's delivered totals match SCB's published statistical value (HA0201, OImpExpSITC4Ar), not the invoiced value, in a pre-2011 and a post-2011 year (aggregate check on MONA, reported as a conclusion only). SCB's own description of native 19318 says Intrastat collects the invoiced value and converts it to statistical value when the statistics are published. Native 19317 statistiskt-varde is carried onto this cell by the errata.delivered entry above (#1671). Maintainer ruling 2026-10-18 via the Operator ('Re-home to statistiskt', #1603 batch-f F6)."
+noted = "2026-10-18"
 
 # #1603 batch-e: SCB attaches two natives to Varde in 2011-2023. Native 19317
 # statistiskt-varde keeps it; native 19318 fakturerat-varde is withdrawn per edition
