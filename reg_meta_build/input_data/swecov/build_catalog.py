@@ -47,7 +47,6 @@ from itertools import count, pairwise
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from reg_core_py import fold_identity
 from reg_meta_build.holdings_census import census_rows
 from reg_meta_build.steward_spec import (
     STEWARDS_DIR,
@@ -2567,19 +2566,21 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 elif windowed:
                     declared = [{**r, "decided": True} for r in declared]
                 owner = mapping.variable.rsplit("/", 1)[1]
-                # select_owner drops every other owner of the representation on
-                # this variant, case twins included: neighbouring waves may spell
-                # one cell `co11` and `CO11`, and both reach `recs` through the
-                # folded lookup. `fold_identity` is the `py_lower` fold (#853,
-                # #1571). An owner of a renamed column's physical name survives.
+                # select_owner drops every other owner of the representation and
+                # of the physical name on this variant. Every record on the
+                # variant here came through the folded physical-name lookup (a
+                # decision names each variant once), so all of them go: case
+                # twins (neighbouring waves spell one cell `co11` and `CO11`,
+                # #1571) and, for a renamed column, the physical name's own
+                # owner, which would otherwise survive as a second mapping or
+                # an ambiguity (#1664). The declared owner is re-added.
                 recs = [
                     r
                     for r in recs
                     if r["coord"] != mapping.register_variant
                     or (
-                        fold_identity(r["col"]) != fold_identity(mapping.representation)
-                        if decision.select_owner
-                        else r["col"] != mapping.representation or r["vslug"] != owner
+                        not decision.select_owner
+                        and (r["col"] != mapping.representation or r["vslug"] != owner)
                     )
                 ] + declared
                 curated.update((r["coord"], r["vslug"], r["col"]) for r in declared)

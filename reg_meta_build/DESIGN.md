@@ -2828,10 +2828,11 @@ meaning is unknown or that one delivery supersedes another.
 
 A curated mapping decision may declare `select_owner = true` when the physical delivery
 documents which source question or survey wave owns that column. This selects one
-already-declared owner for that table, edition, variant and literal representation; it
-does not extend dates or merge variables. The selected owner must independently cover
-the complete edition. Without this explicit curation, simultaneous owners still fail
-closed.
+already-declared owner for that table, edition, variant and literal representation, and
+drops every other owner of that representation or of the physical column name on the
+variant; it does not extend dates or merge variables. The selected owner must
+independently cover the complete edition. Without this explicit curation, simultaneous
+owners still fail closed.
 
 A reviewed mapping normally covers the complete edition by itself. A decision whose
 mappings each cover only part of it, because the edition straddles a variant split (one
