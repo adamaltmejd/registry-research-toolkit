@@ -1275,7 +1275,10 @@ digest, source authority and peer guards cover, in canonical record order, the r
 every requested period's target spelling and of the witness spellings. A folded spelling
 delivered in neither a requested period nor the witness window is outside them, while a
 single spelling's pin covers all of that column's rows: rows outside both windows are
-not evidence for the extension.
+not evidence for the extension. A target period delivered by an `[[errata.delivered]]`
+carry is the exception: the carry cites every documented spelling's rows, so they are
+the target's own rows and its guard covers them, and a witness spelling the target
+covers whole gets no second guard.
 
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot

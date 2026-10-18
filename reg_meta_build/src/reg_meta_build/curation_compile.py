@@ -5480,23 +5480,30 @@ def compile_coding_register(
                     targets = tuple(entry.source_authority.records)
                 elif compact:
                     targets = compact_evidence[evidence_key][3]
-                # Each witness spelling's rows are guarded under their own key; the
-                # target key's guard holds the rest.
+                # Each guard expects exactly the rows the effective-column index
+                # holds under its key, as `peers` reads them. Each witness
+                # spelling's rows are guarded under their own key, the target's
+                # under the target key. An [[errata.delivered]] carry as the target
+                # cites every documented spelling's rows, so the index holds them
+                # under the target key too (#1676): the target guard then covers a
+                # witness spelling whole, and that spelling gets no second guard.
+                target_refs = originals_of(column)[0]
+                witness_members = {
+                    key: tuple(
+                        item.ref for item in expectations_of(key, target_fields, False)
+                    )
+                    for key in witness_keys
+                }
                 witness_guards = tuple(
                     PeerGuard(
                         guard_id=f"{case_id}:witness:{index}",
                         source=scope.source,
                         effective_column=key,
-                        expected_members=tuple(
-                            item.ref
-                            for item in expectations_of(key, target_fields, False)
-                        ),
+                        expected_members=members,
                     )
-                    for index, key in enumerate(witness_keys, 1)
+                    for index, (key, members) in enumerate(witness_members.items(), 1)
+                    if not target_refs.issuperset(members)
                 )
-                witness_refs = {
-                    ref for guard in witness_guards for ref in guard.expected_members
-                }
                 guards = (
                     PeerGuard(
                         guard_id=case_id,
@@ -5505,7 +5512,7 @@ def compile_coding_register(
                         expected_members=tuple(
                             target.ref
                             for target in targets
-                            if target.ref not in witness_refs
+                            if target.ref in target_refs
                         ),
                     ),
                     *witness_guards,

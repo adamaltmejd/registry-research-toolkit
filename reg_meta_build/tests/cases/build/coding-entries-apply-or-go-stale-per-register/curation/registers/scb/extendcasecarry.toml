@@ -1,0 +1,34 @@
+[register]
+provider = "scb"
+slug = "extendcasecarry"
+native_id = "76"
+[[variant]]
+native_id = "76.762"
+slug = "people"
+[[variable]]
+native_id = "76.5"
+slug = "value"
+[[variable]]
+native_id = "76.99"
+slug = "other"
+
+[[errata.delivered]]
+variant = "people"
+column = "Saktar"
+versions = ["2017"]
+upstream = "omitted-column-in-version"
+native_variable_id = 5
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=76 key=member:7601,member:7603,member:7604}}
+evidence = "Fixture delivery carries Saktar in 2017"
+noted = "2026-10-18"
+
+[[coding.extend]]
+variable = "76.5"
+variant = "people"
+column = "Saktar"
+periods = [["2017-01-01", "2017-12-31"]]
+list = "list"
+list_members = [["01", "Label"]]
+witness = ["2016-01-01", "2016-12-31"]
+reason = "Reviewed coding"
+source = "fixture"
