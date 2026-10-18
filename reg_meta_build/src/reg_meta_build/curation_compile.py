@@ -6935,27 +6935,29 @@ def compile_errata(
                 if edition.native_id is not None and edition.name in split.editions:
                     moved_editions[edition.key] = (edition.name, split.split)
         variant_contexts: dict[int, ErrataVariantContext] = {}
-        # The columns a documented_blank CIS matrix adds, by variant, native
-        # edition and column (#1681). The source names no such column, so the
+        # The columns a documented_blank CIS matrix adds, by variant and column,
+        # then native edition (#1681). The source names no such column, so the
         # documented-column check cannot see them; a named matrix's columns are
-        # documented and refused there. Keyed by edition, never by date: CIS
-        # waves share a reference year across separate deliveries.
-        matrix_columns: dict[tuple[int, int, str], str] = {}
-        for declaration in register.representation.matrix:
-            if declaration.source_mode != "documented_blank":
-                continue
-            matrix = _load_declared_matrix(tree, declaration)
-            selector = matrix.selector
-            for answer in matrix.answers:
-                for column in answer.columns:
-                    matrix_columns[
-                        selector.register_variant_id,
-                        selector.regver_id,
-                        fold_column(column),
-                    ] = (
-                        f"{register.source_file}#/matrix/{selector.edition} "
-                        f"answer {answer.key!r}"
-                    )
+        # documented and refused there. Named `versions` compare by edition,
+        # never by date: CIS waves share a reference year across separate
+        # deliveries. A versionless mint binds no edition, so it is refused on
+        # variant and column alone.
+        matrix_columns: dict[tuple[int, str], dict[int, tuple[str, str]]] = {}
+        if register.errata.column and len(matches) == 1:
+            for declaration in register.representation.matrix:
+                if declaration.source_mode != "documented_blank":
+                    continue
+                matrix = _load_declared_matrix(tree, declaration)
+                selector = matrix.selector
+                for answer in matrix.answers:
+                    for column in answer.columns:
+                        matrix_columns.setdefault(
+                            (selector.register_variant_id, fold_column(column)), {}
+                        )[selector.regver_id] = (
+                            selector.edition,
+                            f"{register.source_file}#/matrix/{selector.edition} "
+                            f"answer {answer.key!r}",
+                        )
         for index, row in enumerate(register.errata.version, 1):
             case_id = f"{register.source_file}#/errata.version/{index}"
             statuses["entries_read"].append(case_id)
@@ -7094,22 +7096,28 @@ def compile_errata(
                     converted = None
                 elif table == "column" and (
                     claims := tuple(
-                        f"{matrix_columns[key]} claims column {row.column!r} "
-                        f"in edition {edition.name!r}"
-                        for edition in editions
-                        if edition.name in (row.versions or ())
-                        and edition.native_id is not None
-                        and (
-                            key := (
-                                variant_id,
-                                edition.native_id,
-                                fold_column(row.column),
-                            )
+                        f"{claim} claims column {row.column!r} in edition {name!r}"
+                        for native_edition, (name, claim) in matrix_columns.get(
+                            (variant_id, fold_column(row.column)), {}
+                        ).items()
+                        # A versionless mint binds no edition, so it cannot be
+                        # shown disjoint, as undated holdings overlap in
+                        # scb_errata._overlaps_documenting_edition.
+                        if row.versions is None
+                        or any(
+                            edition.name in row.versions
+                            and edition.native_id == native_edition
+                            for edition in editions
                         )
-                        in matrix_columns
                     )
                 ):
                     blockers = claims
+                    if row.versions is None:
+                        blockers += (
+                            "the mint names no `versions`, so it binds no edition "
+                            "and cannot be shown disjoint from the matrix edition; "
+                            "name the mint's `versions` to show it is disjoint",
+                        )
                     converted = None
                 else:
                     context = variant_contexts.get(variant_id)
