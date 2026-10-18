@@ -1766,7 +1766,143 @@
           "curation/registers/scb/extendcasetwin.toml#/coding.extend/1/period/1"
         ]
       ],
-      "note": "#1672: 2019 delivers both Saktar and SAKTAR, which fold to the entry's column, so the extension names no single target column and is refused at its located case rather than picking one spelling."
+      "note": "#1672: the 2019 target delivers Saktar alone, but the 2020 witness delivers both SAktAr and SAKTAR, which fold to the entry's column, each under the same list. Spellings concurrent in any edition, the witness's included, are two columns, so the extension names no single column and is refused at its located case rather than reading one witness spelling."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendcaseperiods"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2018-01-01",
+          "2018-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "#1672: each requested period resolves its own target spelling. 2018 delivers SAktAr alone, so its target is SAktAr and its witness is the folded Saktar spelling delivered in 2020; 2019 delivers Saktar, whose own 2020 row is the witness. Both listless targets take the witness list (01 Label); the 2018 spelling does not make the 2019 period over-broad, nor 2019's the 2018 period."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "74.5",
+          "scb/extendcaseperiods/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "source_native_identity_retained"
+        ]
+      ],
+      "note": "#1672: neither period is stale or over-broad. The one issue is formation's warning that the nonconcurrent spellings are one native quantity, as in register extendcase."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendcasepin"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          "01",
+          "Label"
+        ],
+        [
+          "2020-01-01",
+          "2020-12-31",
+          "01",
+          "Label"
+        ]
+      ],
+      "note": "#1672: the pin is coding_evidence_sha256 of the target row 7501 and the witness row 7502, the complete target-and-witness authority, so the folded extension applies as in register extendcase."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": [
+          "75.5",
+          "scb/extendcasepin/value"
+        ]
+      },
+      "fields": [
+        "code"
+      ],
+      "rows": [
+        [
+          "source_native_identity_retained"
+        ]
+      ],
+      "note": "#1672: the pinned folded extension is not stale; the one issue is formation's native-identity warning, as in register extendcase."
+    },
+    {
+      "table": "state_codes",
+      "where": {
+        "register": "extendcasepindrift",
+        "valid_from": "2019-01-01"
+      },
+      "fields": [
+        "valid_from",
+        "valid_to",
+        "code",
+        "label"
+      ],
+      "rows": [
+        [
+          "2019-01-01",
+          "2019-12-31",
+          null,
+          null
+        ]
+      ],
+      "note": "#1672: the stale extension leaves the 2019 target without a value set, as in register extendgone."
+    },
+    {
+      "table": "issues",
+      "where": {
+        "subject": "76.5",
+        "case_id": "curation/registers/scb/extendcasepindrift.toml#/coding.extend/1/period/1"
+      },
+      "fields": [
+        "code",
+        "case_id"
+      ],
+      "rows": [
+        [
+          "stale_curation_entry",
+          "curation/registers/scb/extendcasepindrift.toml#/coding.extend/1/period/1"
+        ]
+      ],
+      "note": "#1672: the pin was recorded as the literal digest the build reported for this entry while the witness row 7602 still carried the shared Variabeldefinition (the extendcasepin form, applied); the fixture then changed only that witness row's Variabeldefinition. The witness spelling's rows sit under their own column key, so a pin that covered only the target key would still apply; the folded extension pins the witness rows too and goes stale."
     }
   ]
 }

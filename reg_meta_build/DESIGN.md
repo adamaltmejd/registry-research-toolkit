@@ -1269,7 +1269,9 @@ source-book label is accepted only with explicit nonempty members and complete p
 source authority, including raw fingerprints; it never receives an invented name. The
 extension's target and witness columns match by the column identity fold
 (`fold_identity`), so they may differ by case; two folded spellings delivered in one
-edition refuse the entry (`ambiguous_coding_column_identity`) rather than pick one.
+edition refuse the entry (`ambiguous_coding_column_identity`) rather than pick one. Each
+period resolves its own target spelling, and a witness spelling's rows join the target's
+evidence digest, source-authority records and peer guards.
 
 `coding.documented` supplies an independently reviewed finite list for an exact native
 owner, variant, physical column and finite occurrence window when source coding cannot

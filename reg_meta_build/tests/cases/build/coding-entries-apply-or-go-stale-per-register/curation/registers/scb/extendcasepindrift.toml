@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "extendcasepindrift"
+native_id = "76"
+[[variant]]
+native_id = "76.762"
+slug = "people"
+[[variable]]
+native_id = "76.5"
+slug = "value"
+
+[[coding.extend]]
+variable = "76.5"
+variant = "people"
+column = "Saktar"
+periods = [["2019-01-01", "2019-12-31"]]
+list = "list"
+list_members = [["01", "Label"]]
+witness = ["2020-01-01", "2020-12-31"]
+# Recorded as the digest the build reported for this entry while the 2020 witness
+# row 7602 carried the shared Variabeldefinition (applied, as extendcasepin does);
+# the source then changed only that row's Variabeldefinition (#1672).
+expected_evidence_sha256 = "a101c5ac291eb063124eeea7c5edc91ffc6234a19a47e4da26c8ffad6ee4e68f"
+reason = "Reviewed coding"
+source = "fixture"

@@ -4995,6 +4995,29 @@ def compile_coding_register(
             )
         return captured[key]
 
+    # A folded extension's witness spellings (#1672) hold source rows outside the
+    # target key: they join its pinned originals and expectations, so the complete
+    # target-and-witness authority is pinned. Without witness keys these are the
+    # target's own.
+    def pinned_originals(
+        column: NativeKey, witness_keys: tuple[NativeKey, ...]
+    ) -> tuple[SourceRecord, ...]:
+        return tuple(
+            record for key in (column, *witness_keys) for record in originals_of(key)[1]
+        )
+
+    def pinned_expectations(
+        column: NativeKey,
+        witness_keys: tuple[NativeKey, ...],
+        fields: tuple[str, ...],
+        parents: bool,
+    ) -> tuple[RecordExpectation, ...]:
+        return tuple(
+            item
+            for key in (column, *witness_keys)
+            for item in expectations_of(key, fields, parents)
+        )
+
     for kind, entries in (
         ("warning", register.coding.warning),
         ("choice", register.coding.choice),
@@ -5044,7 +5067,11 @@ def compile_coding_register(
             # The extension's target and witness spellings of one column may differ
             # by case: fold them with the column identity rule (#1672). Spellings
             # delivered concurrently are two columns, so the entry names neither.
-            witness_keys: tuple[NativeKey, ...] = ()
+            # Each period resolves its own target spelling, so a spelling delivered
+            # in another requested period cannot invalidate it.
+            period_columns: (
+                list[tuple[set[NativeKey], tuple[NativeKey, ...]]] | None
+            ) = None
             if kind == "extend":
                 extension = cast("CodingExtendEntry", entry)
                 spelled = [
@@ -5083,26 +5110,36 @@ def compile_coding_register(
                                 )
                             )
                         continue
-                    matches = {
-                        key
-                        for key in spellings
-                        if overlaps(delivered_windows(key), finite(*periods))
-                    }
                     witness_from, witness_to = extension.witness
-                    witness_keys = tuple(
-                        key
-                        for key in spellings
-                        if key not in matches
-                        and overlaps(
-                            delivered_windows(key), finite((witness_from, witness_to))
+                    witness_window = finite((witness_from, witness_to))
+                    period_columns = []
+                    for start, end in periods:
+                        period_matches = {
+                            key
+                            for key in spellings
+                            if overlaps(delivered_windows(key), finite((start, end)))
+                        }
+                        period_columns.append(
+                            (
+                                period_matches,
+                                tuple(
+                                    key
+                                    for key in spellings
+                                    if key not in period_matches
+                                    and overlaps(delivered_windows(key), witness_window)
+                                ),
+                            )
                         )
-                    )
                 elif spelled:
                     matches = {key for spellings in spelled for key in spellings}
-            if len(matches) != 1:
-                status = "overbroad" if len(matches) > 1 else "stale"
-                for period_index, (start, end) in enumerate(periods, 1):
-                    case_id = f"{ref}/period/{period_index}"
+            if period_columns is None:
+                period_columns = [(matches, ())] * len(periods)
+            for period_index, ((start, end), (matches, witness_keys)) in enumerate(
+                zip(periods, period_columns, strict=True), 1
+            ):
+                case_id = f"{ref}/period/{period_index}"
+                if len(matches) != 1:
+                    status = "overbroad" if len(matches) > 1 else "stale"
                     diagnostics.append(
                         ResolutionDiagnostic(
                             code=f"{status}_curation_entry",
@@ -5115,14 +5152,12 @@ def compile_coding_register(
                             withheld_output=(case_id,),
                         )
                     )
-                continue
-            column = next(iter(matches))
-            evidence_key = (column, *witness_keys)
-            claims = coding.get(column, ()) + tuple(
-                claim for key in witness_keys for claim in coding.get(key, ())
-            )
-            for period_index, (start, end) in enumerate(periods, 1):
-                case_id = f"{ref}/period/{period_index}"
+                    continue
+                column = next(iter(matches))
+                evidence_key = (column, *witness_keys)
+                claims = coding.get(column, ()) + tuple(
+                    claim for key in witness_keys for claim in coding.get(key, ())
+                )
                 source_windows = tuple(
                     (date.fromordinal(lo).isoformat(), date.fromordinal(hi).isoformat())
                     for column_scope in column_scopes.get(column, ())
@@ -5211,7 +5246,7 @@ def compile_coding_register(
                 compact = evidence_digest is not None
                 if compact:
                     if evidence_key not in compact_evidence:
-                        full_originals = originals_of(column)[1]
+                        full_originals = pinned_originals(column, witness_keys)
                         raw_codings = tokens_of(column, witness_keys)
                         compact_evidence[evidence_key] = (
                             full_originals,
@@ -5219,8 +5254,11 @@ def compile_coding_register(
                             acknowledgement_evidence_sha256(
                                 full_originals, raw_codings
                             ),
-                            expectations_of(
-                                column, tuple(SourceFields.model_fields), True
+                            pinned_expectations(
+                                column,
+                                witness_keys,
+                                tuple(SourceFields.model_fields),
+                                True,
                             ),
                         )
                     if compact_evidence[evidence_key][2] != evidence_digest:
@@ -5242,9 +5280,9 @@ def compile_coding_register(
                     and entry.source_authority is not None
                 ):
                     authority = entry.source_authority
-                    authority_records = originals_of(column)[1]
-                    expected = expectations_of(
-                        column, tuple(SourceFields.model_fields), True
+                    authority_records = pinned_originals(column, witness_keys)
+                    expected = pinned_expectations(
+                        column, witness_keys, tuple(SourceFields.model_fields), True
                     )
                     enumeration_matches = (
                         isinstance(entry, CodingDocumentedEntry)
@@ -5399,14 +5437,15 @@ def compile_coding_register(
                     entry, (CodingSentinelEntry, CodingWarningEntry)
                 )
                 # Targets, like an authority's records, are this column's originals.
-                if not originals_of(column)[2]:
+                if not all(originals_of(key)[2] for key in (column, *witness_keys)):
                     raise ValueError(f"{case_id}: target refs left the original scope")
-                targets = expectations_of(
-                    column,
+                target_fields = (
                     tuple(SourceFields.model_fields)
                     if kind in {"documented", "uncoded", "sentinel", "support"}
-                    else ("column_name",),
-                    False,
+                    else ("column_name",)
+                )
+                targets = pinned_expectations(
+                    column, witness_keys, target_fields, False
                 )
                 if (
                     isinstance(
@@ -5423,18 +5462,42 @@ def compile_coding_register(
                     targets = tuple(entry.source_authority.records)
                 elif compact:
                     targets = compact_evidence[evidence_key][3]
-                guard = PeerGuard(
-                    guard_id=case_id,
-                    source=scope.source,
-                    effective_column=column,
-                    expected_members=tuple(target.ref for target in targets),
+                # Each witness spelling's rows are guarded under their own key; the
+                # target key's guard holds the rest.
+                witness_guards = tuple(
+                    PeerGuard(
+                        guard_id=f"{case_id}:witness:{index}",
+                        source=scope.source,
+                        effective_column=key,
+                        expected_members=tuple(
+                            item.ref
+                            for item in expectations_of(key, target_fields, False)
+                        ),
+                    )
+                    for index, key in enumerate(witness_keys, 1)
+                )
+                witness_refs = {
+                    ref for guard in witness_guards for ref in guard.expected_members
+                }
+                guards = (
+                    PeerGuard(
+                        guard_id=case_id,
+                        source=scope.source,
+                        effective_column=column,
+                        expected_members=tuple(
+                            target.ref
+                            for target in targets
+                            if target.ref not in witness_refs
+                        ),
+                    ),
+                    *witness_guards,
                 )
                 if isinstance(entry, CodingWarningEntry):
                     cases.append(
                         CurationCase(
                             case_id=case_id,
                             targets=targets,
-                            peer_guards=(guard,),
+                            peer_guards=guards,
                             decision=SourceWarningDecision(
                                 reviewed=True,
                                 column_key=column,
@@ -5454,7 +5517,7 @@ def compile_coding_register(
                         CurationCase(
                             case_id=case_id,
                             targets=targets,
-                            peer_guards=(guard,),
+                            peer_guards=guards,
                             decision=ClassificationDecision(
                                 reviewed=True,
                                 column_key=column,
@@ -5481,7 +5544,7 @@ def compile_coding_register(
                     CurationCase(
                         case_id=case_id,
                         targets=targets,
-                        peer_guards=(guard,),
+                        peer_guards=guards,
                         decision=CodingDecision(
                             reviewed=True,
                             column_key=column,
@@ -5495,8 +5558,8 @@ def compile_coding_register(
                                 # The rows of the delivery this build read: the
                                 # authority pins their content, not their position.
                                 f"{entry.source}\nSource rows: "
-                                f"{', '.join(sorted({record.source_revision_id for record in originals_of(column)[1]}))}\n"
-                                f"Rows: {', '.join(locator.physical_table + ':' + locator.physical_record for record in originals_of(column)[1] for locator in record.locators)}"
+                                f"{', '.join(sorted({record.source_revision_id for record in pinned_originals(column, witness_keys)}))}\n"
+                                f"Rows: {', '.join(locator.physical_table + ':' + locator.physical_record for record in pinned_originals(column, witness_keys) for locator in record.locators)}"
                                 if isinstance(
                                     entry,
                                     (
