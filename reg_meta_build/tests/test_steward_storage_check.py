@@ -9,14 +9,14 @@ writes and the generator's refusal to run without the export; the fixture under
 
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 from _swecov_fixtures import GENERATOR, run_generator
-from reg_meta_build.curation_tree import load_register_files
-from reg_meta_build.steward_spec import load_steward_spec
+from reg_meta_build.curation_tree import load_curation_tree
+from reg_meta_build.inventory import load_inventory
 from reg_meta_build.steward_storage import (
     read_storage_types,
-    storage_policy_from_spec,
     storage_type_findings,
     write_storage_findings,
 )
@@ -26,24 +26,36 @@ _CASE = Path(__file__).parent / "cases" / "steward_storage"
 
 def test_storage_check_reports_each_disagreement_kind(tmp_path: Path) -> None:
     """Pins the worklist: HELD is an uncurated steward holding, MIXED a curated
-    integer with a text storage wave, WIDE a documented (scb-docs) decimal over
-    integer storage, and Guid (folded onto storage GUID) a storage type outside
-    the catalog vocabulary. ELSEWHERE, a steward holding, is stored only under a
-    table outside the register's series, so it is unmatched, and so is
-    Outside, a typed delivered erratum stored only there; DOCONLY, a
-    documented column storage does not hold, is no finding. AGREES matches its
-    storage and is no finding. Renamed's storage_header PHYS is selected for
-    CIS2020 only, so its sibling CIS2018 is read under the curated name, whose
-    text type disagrees. Fails if the check drops a kind, stops folding the
-    column, ignores the series' tables or header mapping, applies a header
-    beyond the tables its decision selects (Renamed would then agree), skips an
-    unmatched steward-held column or typed delivered erratum silently (as it
-    would if typed delivered entries stopped counting as steward-held), stops
-    comparing a documented type that storage holds, reports a documented column
-    absent from storage, or reports an agreeing type."""
+    integer with a text storage wave in its own tables, WIDE a documented
+    (scb-docs) decimal over integer storage, and Guid (folded onto storage GUID)
+    a storage type outside the catalog vocabulary. ELSEWHERE, a steward holding,
+    is stored only in a table the inventory does not map, so it is unmatched,
+    and so is Outside, a typed delivered erratum stored only there; DOCONLY, a
+    documented column storage does not hold, is no finding. AGREES is one
+    literal held by two variables (#1647): the mint's own CIS2020 table agrees
+    with its integer, the documented variable's CIS2018 table agrees with the
+    delivered erratum's date, so neither is a finding (#1666); FIRM2018's
+    AGREES text is a third variable on another variant. Renamed is mapped
+    from the physical header PHYS, whose integer agrees; the unmapped RENAMED in
+    CIS2018 is not its storage. The SOS mint DIA names its variant by source
+    label, as a non-SCB entry does, and is held as the pivot members DIA1 and
+    DIA2, both read. Fails if the check drops a kind, stops folding
+    the column, compares an entry with another variable's, another variant's or
+    an unmapped table of the same literal (AGREES or Renamed would disagree), reads storage under
+    the representation instead of the inventory's physical header (Renamed would
+    be unmatched), requires a non-SCB entry's variant label to be a slug (DIA
+    would be unmatched), skips an unmatched steward-held column or typed delivered
+    erratum silently, stops comparing a documented type that storage holds,
+    reports a documented column absent from storage, or reports an agreeing
+    type."""
+    # The tree loader requires a classifications directory, which git cannot
+    # keep empty.
+    curation = tmp_path / "curation"
+    shutil.copytree(_CASE / "curation", curation)
+    (curation / "classifications").mkdir()
     findings = storage_type_findings(
-        load_register_files(_CASE / "curation"),
-        storage_policy_from_spec(load_steward_spec(_CASE / "spec")),
+        load_curation_tree(curation),
+        load_inventory(_CASE / "inventory.toml"),
         read_storage_types(_CASE / "swecov_column_types.csv"),
     )
     output = tmp_path / "findings.tsv"

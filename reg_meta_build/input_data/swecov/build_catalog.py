@@ -2319,7 +2319,7 @@ def cmd_inventory(args: argparse.Namespace) -> None:
             Path(scratch),
         )
         spec = write_inventory(args, mapping_db)
-    _check_storage_types(args, spec, storage)
+    _check_storage_types(args, storage)
     print("  candidate manifest pins:")
     print(f'    "steward_spec_sha256": "{spec.sha256}"')
     print(f'    "global_db_sha256": "{global_sha}"')
@@ -2764,29 +2764,25 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
 
 
 def _check_storage_types(
-    args: argparse.Namespace, spec: StewardSpec, storage: dict[tuple[str, str], str]
+    args: argparse.Namespace, storage: dict[tuple[str, str], str]
 ) -> None:
     """Report curated global data types the steward's storage disagrees with (#1562).
 
     The global build never reads the storage schema, so this refresh is where a
     disagreement surfaces. It is a worklist, never an automatic global change.
-    Each series' register is checked against the series' own tables, each table
-    under the headers its `storage_header` decisions select.
+    Each curated entry is checked against the physical columns the inventory
+    just written maps to its variable (#1666).
     """
-    from reg_meta_build.curation_tree import load_register_files
+    from reg_meta_build.curation_tree import load_curation_tree
+    from reg_meta_build.inventory import load_inventory
     from reg_meta_build.steward_storage import (
-        storage_policy_from_spec,
         storage_type_findings,
         write_storage_findings,
     )
 
-    try:
-        policy = storage_policy_from_spec(spec)
-    except ValueError as exc:
-        raise SystemExit(f"inventory: {exc}") from exc
     findings = storage_type_findings(
-        load_register_files(REPO_ROOT / "reg_meta_build" / "curation"),
-        policy,
+        load_curation_tree(REPO_ROOT / "reg_meta_build" / "curation"),
+        load_inventory(args.out / "inventory.toml"),
         storage,
     )
     dest = args.csv.parent / "derived" / "storage_type_findings.tsv"

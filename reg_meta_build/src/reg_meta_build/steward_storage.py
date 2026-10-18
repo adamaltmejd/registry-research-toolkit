@@ -3,9 +3,10 @@
 A steward's storage-schema export (table, column, SQL type; no row content) is
 steward-derived, so the global build never reads it (#1562). The steward
 generator's `inventory` stage runs this check instead: it compares every curated
-global data type on a register a steward series names against the storage types
-of the same folded column in that series' tables, and reports disagreements as a
-worklist. Curation, not this check, decides what changes.
+global data type on a register the generated inventory maps against the storage
+types of the physical columns the inventory maps to that entry's variable, and
+reports disagreements as a worklist. Curation, not this check, decides what
+changes.
 """
 
 from __future__ import annotations
@@ -17,20 +18,18 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-
 from reg_meta_build._curation import (
     data_type_class,
     fold_column,
     widen_data_type_classes,
 )
+from reg_meta_build.source_naming import accepted_variable_slugs
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
     from pathlib import Path
 
-    from reg_meta_build.curation_tree import RegisterCuration
-    from reg_meta_build.steward_spec import StewardSpec
+    from reg_meta_build.curation_tree import CurationTree
+    from reg_meta_build.inventory import DeliveryInventory
 
 _HEADER = (
     "table_schema",
@@ -46,54 +45,7 @@ _HEADER = (
 
 
 class StorageSchemaError(ValueError):
-    """The storage-schema export or the spec's storage headers violate their contract."""
-
-
-class StoragePolicyRegister(BaseModel):
-    """One register's steward storage tables and physical header spellings.
-
-    ``tables`` maps each member table to its curated columns stored under
-    another header, where the two differ beyond the column fold (FoU's
-    ``v0201`` is stored as ``V201``). A header applies only to the table it is
-    keyed under.
-    """
-
-    model_config = ConfigDict(extra="forbid", frozen=True, strict=True)
-
-    tables: dict[str, dict[str, str]] = Field(min_length=1)
-
-    @field_validator("tables")
-    @classmethod
-    def _literal(cls, value: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
-        for table, headers in value.items():
-            names = [table, *headers, *headers.values()]
-            if any(not name or name != name.strip() for name in names):
-                raise ValueError("tables and headers must be non-empty literal names")
-            if len({fold_column(column) for column in headers}) != len(headers):
-                raise ValueError(
-                    f"storage columns of {table} must be unique after the column fold"
-                )
-        return value
-
-
-def storage_policy_from_spec(spec: StewardSpec) -> dict[str, StoragePolicyRegister]:
-    """`provider/slug` → its series' member tables, each with the
-    `storage_header` spellings the decisions select for it.
-
-    Each series' register is checked against the series' own tables."""
-    tables: dict[str, dict[str, dict[str, str]]] = defaultdict(dict)
-    for series in spec.series:
-        if series.register_coord is None:
-            continue
-        members = tables[series.register_coord]
-        for table in series.tables:
-            members[table.table] = {}
-        for (table, column), header in series.storage_headers().items():
-            members[table][column] = header
-    return {
-        register: StoragePolicyRegister(tables=dict(sorted(members.items())))
-        for register, members in sorted(tables.items())
-    }
+    """The storage-schema export violates its contract."""
 
 
 def read_storage_types(path: Path) -> dict[tuple[str, str], str]:
@@ -166,9 +118,9 @@ class StorageFinding:
     narrower than the curated type, which documented Datatyp can legitimately
     widen. ``uncurated``: a steward-holdings column with no curated type that
     storage could type. ``unmatched``: a steward holding or typed
-    ``errata.delivered`` column the register's storage tables do not hold, so
-    nothing checked it (a misspelt header, a missing ``storage_header`` decision
-    or a table outside the prefixes). A documented (``scb-docs``) type is
+    ``errata.delivered`` column whose inventory cells storage does not hold, so
+    nothing checked it (the inventory maps it nowhere, or storage spells or
+    places the mapped column differently). A documented (``scb-docs``) type is
     compared only where storage holds its column.
     """
 
@@ -180,75 +132,99 @@ class StorageFinding:
     storage: str
 
 
-def _storage_text(tables: dict[str, str]) -> str:
-    return ", ".join(f"{table}={tables[table]}" for table in sorted(tables))
-
-
 def storage_type_findings(
-    registers: Iterable[RegisterCuration],
-    policy: dict[str, StoragePolicyRegister],
+    tree: CurationTree,
+    inventory: DeliveryInventory,
     storage: dict[tuple[str, str], str],
 ) -> tuple[StorageFinding, ...]:
-    """Compare curated register data types with the prefix-selected storage."""
+    """Compare curated register data types with the storage of their own cells.
+
+    An entry's cells are the physical columns the generated inventory maps to
+    its variable on its variant under its column (#1666). A minted variable
+    covers only its own versions, and the same literal can be another variable
+    in other versions (#1647), so another version's table of that literal is not
+    evidence. Storage is read under each cell's physical header, which the
+    inventory carries for a renamed column, a pseudonymised key and every member
+    of a wide pivot."""
+    # (register, folded representation) -> [(variant, variable leaf, (table, header))]
+    cells: dict[tuple[str, str], list[tuple[str, str, tuple[str, str]]]] = defaultdict(
+        list
+    )
+    for table in inventory.tables:
+        for column in table.columns:
+            for mapping in column.mappings:
+                register, variant = mapping.register_variant.rsplit("/", 1)
+                cells[register, fold_column(mapping.representation)].append(
+                    (
+                        variant,
+                        mapping.variable.rsplit("/", 1)[1],
+                        (table.id, fold_column(column.name)),
+                    )
+                )
+    mapped = {register for register, _ in cells}
     findings: list[StorageFinding] = []
-    for register in sorted(registers, key=lambda item: item.source_file):
+    for register in sorted(tree.registers, key=lambda item: item.source_file):
         name = f"{register.register_info.provider}/{register.register_info.slug}"
-        selected = policy.get(name)
-        if selected is None:
+        if name not in mapped:
             continue
-        # simplify: member ids are matched as prefixes, so a storage table whose
-        # name extends a member id is checked too, under the longest member it
-        # extends; give the check an exact table set if storage ever holds such
-        # a table outside the series.
-        members = sorted(selected.tables, key=len, reverse=True)
-        headers = {
-            member: {
-                fold_column(column): fold_column(header)
-                for column, header in columns.items()
-            }
-            for member, columns in selected.tables.items()
+        accepted = accepted_variable_slugs(tree, register)
+        # SCB entries name the variant by slug. A non-SCB entry names its source
+        # variant label instead (#1633), which only the build resolves, so its
+        # variable identity alone scopes its cells.
+        slugs = {variant.slug for variant in register.variant} or {"_default"}
+        native = register.register_info.native_id
+        # A mint's variable is named by its `<register>.<column>` source id,
+        # whose slug every curating provider pins.
+        mints = {
+            fold_column(entry.column): accepted.get(
+                f"{native}.{entry.column}", (None,)
+            )[0]
+            for entry in register.errata.column
         }
-        # (member, storage column) -> {storage table: SQL type}
-        by_column: dict[tuple[str, str], dict[str, str]] = {}
-        for (table, column), sql_type in storage.items():
-            member = next((m for m in members if table.startswith(m)), None)
-            if member is not None:
-                by_column.setdefault((member, column), {})[table] = sql_type
-        curated: list[tuple[str, str, str | None, bool]] = [
+        # (location, variant, column, data_type, steward-held, minted)
+        curated: list[tuple[str, str, str, str | None, bool, bool]] = [
             (
                 f"{register.source_file}#/errata.column/{index}",
+                entry.variant,
                 entry.column,
                 entry.data_type,
                 entry.source == "steward-holdings",
+                True,
             )
             for index, entry in enumerate(register.errata.column, 1)
         ]
         curated += [
             (
                 f"{register.source_file}#/errata.delivered/{index}",
+                entry.variant,
                 entry.column,
                 entry.data_type,
                 # A typed delivered erratum is an additional physical column
                 # typed from steward storage, so storage must hold it.
                 True,
+                False,
             )
             for index, entry in enumerate(register.errata.delivered, 1)
             if entry.data_type is not None
         ]
-        for location, column, data_type, holding in curated:
+        for location, variant, column, data_type, holding, minted in curated:
             if data_type is None and not holding:
                 continue
-            folded = fold_column(column)
-            # Each member table is read under its own header for the column.
-            tables = {
-                table: sql_type
-                for member in members
-                for table, sql_type in by_column.get(
-                    (member, headers[member].get(folded, folded)), {}
-                ).items()
+            mint = mints.get(fold_column(column))
+            held = {
+                (table, storage[table, header])
+                for on, leaf, (table, header) in cells.get(
+                    (name, fold_column(column)), ()
+                )
+                if (on == variant or variant not in slugs)
+                # A delivered column's variable is the documented one, never
+                # the register's mint of that column, which holds the other
+                # versions (#1647).
+                and (leaf == mint if minted else leaf != mint)
+                and (table, header) in storage
             }
             kind: FindingKind | None
-            if not tables:
+            if not held:
                 # Only a steward-held column is expected in storage; a column
                 # SCB documents need not be one SWECOV holds.
                 if holding:
@@ -258,7 +234,7 @@ def storage_type_findings(
                         )
                     )
                 continue
-            classes = {data_type_class(kind) for kind in tables.values()}
+            classes = {data_type_class(sql_type) for _, sql_type in held}
             if data_type is None:
                 kind = "uncurated"
             elif (
@@ -274,10 +250,9 @@ def storage_type_findings(
             else:
                 kind = None
             if kind is not None:
+                text = ", ".join(f"{table}={sql}" for table, sql in sorted(held))
                 findings.append(
-                    StorageFinding(
-                        kind, name, location, column, data_type, _storage_text(tables)
-                    )
+                    StorageFinding(kind, name, location, column, data_type, text)
                 )
     return tuple(findings)
 

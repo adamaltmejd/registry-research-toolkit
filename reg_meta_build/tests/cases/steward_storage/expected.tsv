@@ -4,5 +4,5 @@ disagrees	scb/sample	curation/registers/scb/sample.toml#/errata.column/2	MIXED	i
 narrower	scb/sample	curation/registers/scb/sample.toml#/errata.column/3	WIDE	decimal	CIS2020=int
 unmatched	scb/sample	curation/registers/scb/sample.toml#/errata.column/4	ELSEWHERE		
 disagrees	scb/sample	curation/registers/scb/sample.toml#/errata.delivered/1	Guid	text	CIS2020=uniqueidentifier
-disagrees	scb/sample	curation/registers/scb/sample.toml#/errata.delivered/2	Renamed	integer	CIS2018=varchar, CIS2020=int
 unmatched	scb/sample	curation/registers/scb/sample.toml#/errata.delivered/3	Outside	integer	
+uncurated	sos/pivot	curation/registers/sos/pivot.toml#/errata.column/1	DIA		PIV2020=int, PIV2020=smallint

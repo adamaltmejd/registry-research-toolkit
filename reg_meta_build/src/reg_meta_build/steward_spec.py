@@ -540,17 +540,6 @@ class Series(_SpecModel):
             if entry.graft_onto is not None
         }
 
-    def storage_headers(self) -> dict[tuple[str, str], str]:
-        """`(table, curated column)` → the header the steward's storage holds it
-        under in that table, for the tables the decision selects."""
-        every = [table.table for table in self.tables]
-        return {
-            (table, entry.column): entry.storage_header
-            for entry in self.columns
-            if entry.storage_header is not None
-            for table in entry.tables or every
-        }
-
 
 # --- loading -------------------------------------------------------------------
 
