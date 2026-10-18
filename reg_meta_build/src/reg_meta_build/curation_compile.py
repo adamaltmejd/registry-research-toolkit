@@ -5563,6 +5563,60 @@ def _occurrence_correction_matches(
     )
 
 
+def _carried_replacement_refusal(
+    register: RegisterCuration,
+    entry: ErrataSupportEntry,
+    target: SourceRecord,
+    records: tuple[SourceRecord, ...],
+) -> str | None:
+    """Why a `carried_replacement` cannot withdraw its sole owner (#1671), or None.
+
+    The withdrawal leaves the cell to the replacement, so an `[[errata.delivered]]`
+    carry must put that native on the same variant, column and version.
+    Columns compare folded, as delivered cells are keyed: a second source native
+    on the cell under any spelling is a positive authority, which is
+    `contradictory_question`'s case.
+    """
+    assert entry.replacement is not None
+    replacement = entry.replacement.rsplit(".", 1)[-1]
+    # Delivered entries name the variant by slug and the edition by version name.
+    version = target.original_period_text
+    slugs = {
+        variant.slug
+        for variant in register.variant
+        if variant.native_id == entry.variant
+    }
+    if not any(
+        row.variant in slugs
+        and fold_column(row.column) == fold_column(entry.column)
+        and version in row.versions
+        and str(row.native_variable_id) == replacement
+        for row in register.errata.delivered
+    ):
+        return (
+            f"carried_replacement_not_delivered:{version}: no [[errata.delivered]] "
+            f"carries {entry.replacement} on this variant, literal column and version"
+        )
+    others = sorted(
+        {
+            str(record.subject.native.variable_id)
+            for record in records
+            if record.subject.native.variable_id is not None
+            and _variant_label(register, record) == entry.variant
+            and fold_column(_literal_field(record, "column_name") or "")
+            == fold_column(entry.column)
+            and str(record.subject.native.edition_id) == entry.edition
+        }
+        - {entry.variable.rsplit(".", 1)[-1]}
+    )
+    if others:
+        return (
+            f"carried_replacement_second_native:{','.join(others)}: the cell has "
+            'another source native; withdraw with kind = "contradictory_question"'
+        )
+    return None
+
+
 def _support_coding_sha256(
     records: tuple[SourceRecord, ...], sessions: tuple[ValueBindingSession, ...]
 ) -> str:
@@ -5644,8 +5698,14 @@ def compile_occurrence_corrections(
                 for entry in rows
             }
             wanted.update(
-                entry.authority.variable.rsplit(".", 1)[-1]
+                variable.rsplit(".", 1)[-1]
                 for entry in register.errata.support
+                for variable in (
+                    entry.authority.variable
+                    if entry.authority is not None
+                    else entry.replacement,
+                )
+                if variable is not None
             )
             families = {
                 str(key[-1]): members
@@ -5663,6 +5723,7 @@ def compile_occurrence_corrections(
             list
         )
         places_in_default: bool | None = None
+        register_records: tuple[SourceRecord, ...] | None = None
         for table, rows in entries:
             for index, entry in enumerate(rows, 1):
                 case_id = f"{register.source_file}#/errata.{table}/{index}"
@@ -5859,17 +5920,27 @@ def compile_occurrence_corrections(
                     )
                 authority_family: tuple[SourceRecord, ...] = ()
                 if isinstance(entry, ErrataSupportEntry):
-                    authority_family = families.get(
-                        entry.authority.variable.rsplit(".", 1)[-1], ()
-                    )
-                    authority = _select_occurrence_correction(
-                        register, entry.authority, authority_family
-                    )
-                    valid = (
-                        valid
-                        and _occurrence_correction_matches(entry.authority, authority)
-                        and len({record_ref(r) for r in authority}) == 1
-                    )
+                    if entry.authority is None:
+                        # The replacement's documented family is guarded beside
+                        # the target, as an authority's is.
+                        assert entry.replacement is not None
+                        authority_family = families.get(
+                            entry.replacement.rsplit(".", 1)[-1], ()
+                        )
+                    else:
+                        authority_family = families.get(
+                            entry.authority.variable.rsplit(".", 1)[-1], ()
+                        )
+                        authority = _select_occurrence_correction(
+                            register, entry.authority, authority_family
+                        )
+                        valid = (
+                            valid
+                            and _occurrence_correction_matches(
+                                entry.authority, authority
+                            )
+                            and len({record_ref(r) for r in authority}) == 1
+                        )
                     if valid:
                         with open_value_bindings(prepared.value_sources) as sessions:
                             valid = (
@@ -5899,6 +5970,32 @@ def compile_occurrence_corrections(
                     continue
                 assert location is not None
                 scope, register_key = location
+                if (
+                    isinstance(entry, ErrataSupportEntry)
+                    and entry.kind == "carried_replacement"
+                ):
+                    if register_records is None:
+                        register_records = tuple(
+                            record
+                            for _, members in prepared.records.iter_register_slices(
+                                scope.source, (register_key,)
+                            )
+                            for record in members
+                        )
+                    refusal = _carried_replacement_refusal(
+                        register, entry, selected[0], register_records
+                    )
+                    if refusal is not None:
+                        statuses["stale"].append(case_id)
+                        diagnostics.append(
+                            _family_diagnostic(
+                                case_id,
+                                entry.variable,
+                                refusal,
+                                refs=tuple(record_ref(record) for record in selected),
+                            )
+                        )
+                        continue
                 if isinstance(entry, ErrataFieldEntry):
                     checked_corrections.append((entry, chosen_refs))
                 carry_effects: tuple[CuratedOccurrenceAddition, ...] = ()
@@ -6156,7 +6253,10 @@ def compile_occurrence_corrections(
                     )
                 )
                 expected_names = set(expected)
-                if isinstance(entry, ErrataSupportEntry):
+                if (
+                    isinstance(entry, ErrataSupportEntry)
+                    and entry.authority is not None
+                ):
                     expected_names.update(
                         field.name for field in entry.authority.expected_fields
                     )

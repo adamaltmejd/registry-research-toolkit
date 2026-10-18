@@ -1,0 +1,23 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "stale_curation_entry"},
+      "fields": ["locator", "detail"],
+      "rows": [
+        [
+          "curation/registers/scb/sample.toml#/errata.support/1",
+          "curation/registers/scb/sample.toml#/errata.support/1: carried_replacement_second_native:19: the cell has another source native; withdraw with kind = \"contradictory_question\""
+        ]
+      ]
+    },
+    {
+      "table": "uses",
+      "where": {"source": "scb-registerinformation", "key": "member:1802"},
+      "fields": ["use", "variable"],
+      "rows": [
+        ["catalog", "scb/sample/invoiced"]
+      ]
+    }
+  ]
+}

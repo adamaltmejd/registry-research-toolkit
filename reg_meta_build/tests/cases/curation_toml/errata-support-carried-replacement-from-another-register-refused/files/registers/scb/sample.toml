@@ -1,0 +1,25 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.10"
+slug = "people"
+[[variable]]
+native_id = "1.18"
+slug = "invoiced"
+
+[[errata.support]]
+kind = "carried_replacement"
+variable = "1.18"
+variant = "1.10"
+column = "VALUE"
+edition = "9020"
+expected_fields = [{ name = "name", status = "value", value = "Invoiced" }, { name = "definition", status = "value", value = "A generic family label" }, { name = "description", status = "absent" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2020"
+expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+replacement = "2.17"
+evidence = "Delivery variable list describes VALUE as the statistical value"
+noted = "2026-10-18"
+expected_coding_sha256 = "489a9e3a6fad06b4a59aa2f65497a21ee5659de8d45d48523b8e6256bc667df7"

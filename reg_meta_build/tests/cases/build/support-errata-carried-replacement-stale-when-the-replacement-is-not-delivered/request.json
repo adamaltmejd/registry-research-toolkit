@@ -1,0 +1,5 @@
+{
+  "note": "The [[errata.delivered]] carry of 1.17 names version 2019, not the withdrawn version 2020. Withdrawing 1.18 there would leave VALUE 2020 without an owner, so the entry is refused and 1.18 keeps the cell.",
+  "fails_if": "`_carried_replacement_refusal` stops requiring a delivered carry of the replacement on the withdrawn version (or drops its version comparison), so member 1802 becomes support and VALUE 2020 has no owner",
+  "sources": "scb-carried-replacement"
+}

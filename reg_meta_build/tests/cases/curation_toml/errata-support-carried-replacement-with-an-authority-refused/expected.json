@@ -1,0 +1,12 @@
+{
+  "loader": "register_files",
+  "note": "A carried_replacement that also states a positive authority. A cell with a source authority is contradictory_question's case; the carried kind has none to check.",
+  "fails_if": "`ErrataSupportEntry` stops refusing an `authority` on a `carried_replacement`, so the entry loads and its authority is silently never checked",
+  "error": {
+    "code": "register_entry_invalid",
+    "locator": "curation/registers/scb/sample.toml [[errata.support]] entry 1",
+    "message_contains": [
+      "carried_replacement support names a replacement native and no authority"
+    ]
+  }
+}

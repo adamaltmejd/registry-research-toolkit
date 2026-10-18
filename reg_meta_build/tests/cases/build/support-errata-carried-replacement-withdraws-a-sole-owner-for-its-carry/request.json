@@ -1,0 +1,5 @@
+{
+  "note": "1.18 is the sole documented owner of VALUE in version 2020 (edition 9020). The carried_replacement withdraws it there as support, and the [[errata.delivered]] carry of 1.17 into version 2020 owns the cell with the carry's warning. Version 2019 keeps its documented owner: the withdrawal is exact-edition.",
+  "fails_if": "the carried_replacement compile stops withdrawing the sole owner (no `CheckedSourceUse` for the target), so member 1802 stays catalog and version 2020 keeps two owners; or it pairs the carry on the edition id instead of the version name, so the paired carry is not found and the entry is refused",
+  "sources": "scb-carried-replacement"
+}

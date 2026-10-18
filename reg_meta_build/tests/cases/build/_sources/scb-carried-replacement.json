@@ -1,0 +1,10 @@
+{
+  "description": "Variable 1.18 is the sole documented owner of VALUE in editions 9019 (version 2019) and 9020 (version 2020); variable 1.17 documents VALUE only in edition 9021 (version 2021). Edition ids differ from version names so a carry matched on the wrong one cannot pair.",
+  "scb": {
+    "registerinformation": [
+      {"cvid": 1801, "var_id": 18, "colname": "VALUE", "year": "2019", "regver_id": 9019, "varname": "Invoiced"},
+      {"cvid": 1802, "var_id": 18, "colname": "VALUE", "year": "2020", "regver_id": 9020, "varname": "Invoiced"},
+      {"cvid": 1701, "var_id": 17, "colname": "VALUE", "year": "2021", "regver_id": 9021, "varname": "Statistical"}
+    ]
+  }
+}
