@@ -180,9 +180,11 @@ the DDL, derive or validation. A bundle belongs to the resolve code that wrote i
 `materialize-db` refuses one whose recorded resolve-code fingerprint differs from the
 running builder's (`resolved_bundle_code_mismatch`).
 
-`--timing` reports phase wall time, not host CPU time or a profiler result. Capture
-those separately during an agreed verification run when required; concurrent audits are
-not isolated performance evidence.
+`--timing` reports phase wall time, not host CPU time or a profiler result, on stderr
+and as the `timing` list in `report/summary.json`. A phased (`materialize-db`) summary
+lists only its own phases; the resolve split is in the bundle-producing build's summary.
+Capture those separately during an agreed verification run when required; concurrent
+audits are not isolated performance evidence.
 
 Start one build and follow its existing process/session; never relaunch to check
 progress. Read phase timing and the log tail. For tool polling, use bounded waits so

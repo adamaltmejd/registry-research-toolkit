@@ -90,7 +90,7 @@ from reg_meta_build.resolved_metadata import (
     state_reference_key,
     validate_metadata_structure,
 )
-from reg_meta_build.source_files import _emit_timing
+from reg_meta_build.source_files import _emit_timing, _start_timing, _timing_enabled
 from reg_meta_build.validate import validate_built_db
 
 if TYPE_CHECKING:
@@ -1133,6 +1133,14 @@ def _retain_completed_artifact(
         raise
 
 
+def _finish_timing(result: dict[str, object], report_dir: Path, started: float) -> None:
+    """Emit `pipeline: total` and, with `--timing`, rewrite the summary that
+    `materialize_build` wrote so its phases include the total."""
+    _emit_timing("pipeline: total", started)
+    if _timing_enabled():
+        write_summary(report_dir, result)
+
+
 def build_catalog(
     prepared_path: Path,
     input_commit: str,
@@ -1156,6 +1164,7 @@ def build_catalog(
     resolution as a bundle that `materialize_resolved` places. `workers`
     processes resolve the source scopes, with the same result for any count.
     """
+    _start_timing()
     started = time.perf_counter()
     publishable = not diagnostic and not registers
     # Refuse bad paths and an unclean publishable builder before resolving.
@@ -1189,7 +1198,7 @@ def build_catalog(
     # Reported after publication: a failure here keeps the completed-artifact
     # status, as it did when this line sat inside the pipeline's last guard.
     with _retain_completed_artifact(result, report_dir):
-        _emit_timing("pipeline: total", started)
+        _finish_timing(result, resolved.report_dir, started)
     return result
 
 
@@ -1211,6 +1220,7 @@ def materialize_resolved(
     The report directory gets the bundle's ledger member, then materialization's,
     so it reads as the unphased build's report.
     """
+    _start_timing()
     started = time.perf_counter()
     bundle, output, report_dir = (
         bundle.resolve(),
@@ -1233,7 +1243,7 @@ def materialize_resolved(
     shutil.copyfile(bundle / EVENTS_FILE, resolved.ledger)
     result = materialize_build(resolved, revision=revision)
     with _retain_completed_artifact(result, report_dir):
-        _emit_timing("pipeline: total", started)
+        _finish_timing(result, resolved.report_dir, started)
     return result
 
 

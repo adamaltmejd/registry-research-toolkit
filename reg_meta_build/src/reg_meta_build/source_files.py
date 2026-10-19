@@ -278,7 +278,47 @@ def _timing_enabled() -> bool:
     return os.environ.get("REG_META_BUILD_TIMING") == "1"
 
 
+# One build's emitted phases, in emit order, for its `report/summary.json`.
+# simplify: process-global, which is enough while a process runs one build at a
+# time; pass a collector through the pipeline if builds ever run concurrently.
+# Scope workers hand theirs back through `_scope_outcome_bytes`.
+_TIMINGS: list[tuple[str, float]] = []
+
+
+def _start_timing() -> None:
+    """Forget an earlier build's phases; each build entry point calls it first."""
+    _TIMINGS.clear()
+
+
 def _emit_timing(label: str, t0: float) -> None:
-    """Emit a greppable ``[timing] <label>: <s>`` stderr line if timing is on."""
+    """Emit a greppable ``[timing] <label>: <s>`` stderr line if timing is on,
+    and record the phase for the build's summary."""
     if _timing_enabled():
-        _progress(f"[timing] {label}: {time.perf_counter() - t0:.1f}s")
+        seconds = round(time.perf_counter() - t0, 1)
+        _TIMINGS.append((label, seconds))
+        _progress(f"[timing] {label}: {seconds:.1f}s")
+
+
+def _timing_mark() -> int:
+    """A position in the recorded phases, for `_take_timings`."""
+    return len(_TIMINGS)
+
+
+def _take_timings(start: int) -> list[tuple[str, float]]:
+    """Remove and return the phases recorded since `start` (a `_timing_mark`),
+    so a forked worker can hand its phases back to the parent."""
+    taken = _TIMINGS[start:]
+    del _TIMINGS[start:]
+    return taken
+
+
+def _record_timings(timings: list[tuple[str, float]]) -> None:
+    """Record phases taken with `_take_timings`, here or in a worker."""
+    _TIMINGS.extend(timings)
+
+
+def _timing_phases() -> list[dict[str, object]] | None:
+    """The phases recorded since `_start_timing`, or None when timing is off."""
+    if not _timing_enabled():
+        return None
+    return [{"phase": label, "seconds": seconds} for label, seconds in _TIMINGS]

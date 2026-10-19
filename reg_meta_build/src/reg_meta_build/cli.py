@@ -344,7 +344,8 @@ def _add_pipeline_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--timing",
         action="store_true",
-        help="Emit phase and source-scope durations to stderr.",
+        help="Emit phase and source-scope durations to stderr and list them in "
+        "summary.json.",
     )
     parser.add_argument(
         "--workers",
@@ -493,7 +494,7 @@ def _build_parser() -> argparse.ArgumentParser:
     materialize_p.add_argument(
         "--timing",
         action="store_true",
-        help="Emit phase durations to stderr.",
+        help="Emit phase durations to stderr and list them in summary.json.",
     )
 
     check_p = sub.add_parser(
