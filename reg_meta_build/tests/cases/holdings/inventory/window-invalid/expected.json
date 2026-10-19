@@ -1,6 +1,6 @@
 {
-  "note": "One table per column-window rule (#1645); the refusal lists every broken window and leaves Good and Overlap alone. Good: the key column's two disjoint windows on two variants, with no delivery between them, and a field windowed on one variant. Overlap: two variants' windows of one column overlap, which the same mappings without windows may too.",
-  "fails_if": "a window reaching outside its table's edition or across the gap of an interrupted edition, a windowed coordinate mapped again in its column, an inverted window, a window on a member, or a window in a year-independent table stops being refused under inventory_window_invalid, or a valid set of disjoint windows with a gap, or overlapping windows of one column on two variants, is refused",
+  "note": "One table per column-window rule (#1645) and per mapping-warning window rule (#1684); the refusal lists every broken window and leaves Good and Overlap alone. Good: the key column's two disjoint windows on two variants, with no delivery between them, a field windowed on one variant, and a warning spanning exactly its mapping's window. Overlap: two variants' windows of one column overlap, which the same mappings without windows may too.",
+  "fails_if": "a window reaching outside its table's edition or across the gap of an interrupted edition, a windowed coordinate mapped again in its column, an inverted window, a window on a member, a window in a year-independent table, a mapping warning's window reaching past the period its mapping serves (judged by the table edition instead of the mapping window), or a mapping warning's window in a year-independent table stops being refused under inventory_window_invalid, or a valid set of disjoint windows with a gap, overlapping windows of one column on two variants, or a warning window equal to its mapping's window, is refused",
   "error": {
     "code": "inventory_window_invalid",
     "locators": [
@@ -10,7 +10,9 @@
       "table['Repeated'].column['Id']",
       "table['Inverted'].column['OldField']",
       "table['Member'].column['Lon_2018']",
-      "table['Independent'].column['Kon']"
+      "table['Independent'].column['Kon']",
+      "table['Warned'].column['OldField']",
+      "table['WarnedIndependent'].column['Kon']"
     ],
     "message_contains": [
       "table['Outside'].column['OldField']: scb/example/old scb/example/oldfield window 2014..2016 lies outside the table's edition 2015..2019",
@@ -18,7 +20,9 @@
       "table['Repeated'].column['Id']: scb/example/old scb/example/id has a window and another mapping in this column",
       "table['Inverted'].column['OldField']: scb/example/old scb/example/oldfield window: edition range 'from' is after 'to'",
       "table['Member'].column['Lon_2018']: scb/example/old scb/example/lon states a window and a member",
-      "table['Independent'].column['Kon']: scb/example/old scb/example/kon states a window in a year-independent table"
+      "table['Independent'].column['Kon']: scb/example/old scb/example/kon states a window in a year-independent table",
+      "table['Warned'].column['OldField']: scb/example/old scb/example/oldfield data_warning window 2016..2017 lies outside the period the mapping serves 2015..2016",
+      "table['WarnedIndependent'].column['Kon']: scb/example/old scb/example/kon states a data_warning window in a year-independent table"
     ],
     "message_excludes": [
       "table['Good']",

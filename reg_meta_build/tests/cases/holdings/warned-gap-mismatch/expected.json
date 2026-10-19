@@ -1,0 +1,12 @@
+{
+  "fails_if": "a mapping warning that does not license its uncovered held days (#1684) is accepted, or is refused without its located line: one year wider than the uncovered days (mismatched), a gap inside the served period (only a leading or trailing interval is licensed), a clone overlapping another column's catalog state of the cell by even one day (a rename the table maps under its new column), two code versions in force at the served end (no single clone source), or two clones of one cell and code version copying different states that overlap (a rename across undocumented transition years)",
+  "error_code": "inventory_coverage_warning_invalid",
+  "error_contains": "A mapping warning does not license the held days the catalog leaves uncovered:",
+  "error_locators": [
+    "policy/inventory.toml:table['Kod_2016_2019'].column['Kod']: scb/example/annual scb/example/kod representation 'Kod': the catalog leaves 2016..2017 of the served period 2016..2019 uncovered, but the data_warning window is 2016..2018",
+    "policy/inventory.toml:table['Mid_2016_2019'].column['Mid']: scb/example/annual scb/example/mid representation 'Mid': the catalog leaves 2017..2018 of the served period 2016..2019 uncovered; a data_warning licenses one leading or trailing uncovered interval",
+    "policy/inventory.toml:table['Omr_2016_2019'].column['KodNew']: scb/example/annual scb/example/omr representation 'KodNew': the clone over 2016..2017 would overlap the catalog state of column 'KodOld' over 2010..2016-01-01; a warning cannot license years another column of the cell already documents: map that column's representation instead",
+    "policy/inventory.toml:table['Ver_2016_2019'].column['Ver']: scb/example/annual scb/example/ver representation 'Ver': 2 catalog states of the cell (code versions 'v1', 'v2') could each be cloned over 2016..2017",
+    "policy/inventory.toml:table['Byt_old'].column['Old']: scb/example/annual scb/example/byt representation 'Old': the clone over 2014..2015 (copying column 'Old') overlaps the clone over 2015..2017 (copying column 'New') licensed at policy/inventory.toml:table['Byt_new'].column['New']: scb/example/annual scb/example/byt representation 'New'; one day of a cell takes one coding"
+  ]
+}

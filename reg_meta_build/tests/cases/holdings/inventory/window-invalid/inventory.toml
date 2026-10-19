@@ -2,7 +2,8 @@ version = 1
 steward = "swecov"
 
 # Valid: the key column maps the old variant up to 2016 and the new one from
-# 2018, with no delivery in 2017; the old field maps the old variant only.
+# 2018, with no delivery in 2017; the old field maps the old variant only. The
+# old key mapping's warning spans exactly its window (#1684).
 [[table]]
 id = "Good"
 edition = { from = 2015, to = 2019 }
@@ -13,6 +14,7 @@ register_variant = "scb/example/old"
 variable = "scb/example/id"
 representation = "Id"
 window = { from = 2015, to = 2016 }
+data_warning = { summary = "Recoded", detail = "Recoded by a later delivery.", window = { from = 2015, to = 2016 } }
 [[table.column.mapping]]
 register_variant = "scb/example/new"
 variable = "scb/example/id"
@@ -121,3 +123,30 @@ register_variant = "scb/example/old"
 variable = "scb/example/kon"
 representation = "Kon"
 window = 2016
+
+# A mapping warning's window inside the table's edition but past the mapping's
+# own window (#1684).
+[[table]]
+id = "Warned"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "OldField"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/oldfield"
+representation = "OldField"
+window = { from = 2015, to = 2016 }
+data_warning = { summary = "Recoded", detail = "Recoded by a later delivery.", window = { from = 2016, to = 2017 } }
+
+# A mapping warning's window in a year-independent table.
+[[table]]
+id = "WarnedIndependent"
+edition = "_default"
+period_scope = "year_independent"
+[[table.column]]
+name = "Kon"
+[[table.column.mapping]]
+register_variant = "scb/example/old"
+variable = "scb/example/kon"
+representation = "Kon"
+data_warning = { summary = "Recoded", detail = "Recoded by a later delivery.", window = 2016 }

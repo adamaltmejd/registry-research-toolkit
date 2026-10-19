@@ -1,0 +1,13 @@
+[
+  {
+    "slug": "example-kod",
+    "short_name": "Example kod",
+    "name": "Example kod",
+    "codes": [
+      {
+        "code": "1",
+        "label": "Ett"
+      }
+    ]
+  }
+]

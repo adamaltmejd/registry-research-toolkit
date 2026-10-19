@@ -29,6 +29,8 @@ register_variant = "scb/example/old"
 variable = "scb/example/legacy"
 representation = "Legacy"
 window = { from = 2015, to = 2016 }
+# A steward-scoped caveat on the last delivered year only (#1684).
+data_warning = { summary = "Legacy is recoded for 2016", detail = "The 2016 rows were recoded into the current coding by a later delivery.", window = 2016 }
 [[table.column]]
 name = "NewField"
 [[table.column.mapping]]
