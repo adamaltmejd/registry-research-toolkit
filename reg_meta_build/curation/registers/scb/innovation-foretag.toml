@@ -14086,6 +14086,7 @@ data_warning = "SWECOV:s STRAT i CIS2002 kan avse urvalsstratum (462), som kolum
 variant = "_default"
 column = "emp02"
 data_type = "integer"
+measurement_unit = "Antal"
 name = "emp02 (enligt leverans)"
 definition = "Antal anställda för referensåret 2002, enligt leverans i CIS2004 (2002 - 2004). SCB dokumenterar inte kolumnnamnet emp02; betydelsen är antagen från samma omgångs antal anställda (EMP) och årtalet i kolumnnamnet."
 data_warning = "SCB documents no column emp02 on Innovationsverksamhet i företag. The meaning (number of employees in reference year 2002) is assumed from the same wave's employee count EMP (scb/innovation-foretag/antal-anstallda) and the year in the column name; it is not confirmed."
@@ -14093,13 +14094,14 @@ is_sensitive = false
 is_identifier = false
 holdings_period = "2004-2004"
 source = "steward-holdings"
-evidence = "SWECOV holds emp02 in CIS2004 beside emp04, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp02 carries the wave's prior reference year 2002. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (int); flags follow antal-anstallda (non-sensitive, non-identifier); no unit or code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+evidence = "SWECOV holds emp02 in CIS2004 beside emp04, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp02 carries the wave's prior reference year 2002. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (int); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
 noted = "2026-10-16"
 
 [[errata.column]]
 variant = "_default"
 column = "emp04"
 data_type = "decimal"
+measurement_unit = "Antal"
 name = "emp04 (enligt leverans)"
 definition = "Antal anställda för referensåret 2004, enligt leverans i CIS2006 (2004 - 2006). SCB dokumenterar inte kolumnnamnet emp04; betydelsen är antagen från samma omgångs antal anställda (EMP) och årtalet i kolumnnamnet."
 data_warning = "SCB documents no column emp04 on Innovationsverksamhet i företag. The meaning (number of employees in reference year 2004) is assumed from the same wave's employee count EMP (scb/innovation-foretag/antal-anstallda) and the year in the column name; it is not confirmed."
@@ -14107,13 +14109,14 @@ is_sensitive = false
 is_identifier = false
 holdings_period = "2006-2006"
 source = "steward-holdings"
-evidence = "SWECOV holds emp04 in CIS2006 beside emp06, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp04 carries the wave's prior reference year 2004. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); no unit or code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+evidence = "SWECOV holds emp04 in CIS2006 beside emp06, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp04 carries the wave's prior reference year 2004. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
 noted = "2026-10-16"
 
 [[errata.column]]
 variant = "_default"
 column = "emp06"
 data_type = "integer"
+measurement_unit = "Antal"
 name = "emp06 (enligt leverans)"
 definition = "Antal anställda för referensåret 2006, enligt leverans i CIS2008 (2006 - 2008). SCB dokumenterar inte kolumnnamnet emp06; betydelsen är antagen från samma omgångs antal anställda (EMP) och årtalet i kolumnnamnet."
 data_warning = "SCB documents no column emp06 on Innovationsverksamhet i företag. The meaning (number of employees in reference year 2006) is assumed from the same wave's employee count EMP (scb/innovation-foretag/antal-anstallda) and the year in the column name; it is not confirmed."
@@ -14121,13 +14124,14 @@ is_sensitive = false
 is_identifier = false
 holdings_period = "2008-2008"
 source = "steward-holdings"
-evidence = "SWECOV holds emp06 in CIS2008 beside emp08, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp06 carries the wave's prior reference year 2006. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (int); flags follow antal-anstallda (non-sensitive, non-identifier); no unit or code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+evidence = "SWECOV holds emp06 in CIS2008 beside emp08, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp06 carries the wave's prior reference year 2006. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (int); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
 noted = "2026-10-16"
 
 [[errata.column]]
 variant = "_default"
 column = "emp08"
 data_type = "integer"
+measurement_unit = "Antal"
 name = "emp08 (enligt leverans)"
 definition = "Antal anställda för referensåret 2008, enligt leverans i CIS2010 (2008 - 2010). SCB dokumenterar inte kolumnnamnet emp08; betydelsen är antagen från samma omgångs antal anställda (EMP) och årtalet i kolumnnamnet."
 data_warning = "SCB documents no column emp08 on Innovationsverksamhet i företag. The meaning (number of employees in reference year 2008) is assumed from the same wave's employee count EMP (scb/innovation-foretag/antal-anstallda) and the year in the column name; it is not confirmed."
@@ -14135,13 +14139,14 @@ is_sensitive = false
 is_identifier = false
 holdings_period = "2010-2010"
 source = "steward-holdings"
-evidence = "SWECOV holds emp08 in CIS2010 beside emp10, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp08 carries the wave's prior reference year 2008. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (int); flags follow antal-anstallda (non-sensitive, non-identifier); no unit or code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+evidence = "SWECOV holds emp08 in CIS2010 beside emp10, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp08 carries the wave's prior reference year 2008. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (int); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
 noted = "2026-10-16"
 
 [[errata.column]]
 variant = "_default"
 column = "emp2010"
 data_type = "decimal"
+measurement_unit = "Antal"
 name = "emp2010 (enligt leverans)"
 definition = "Antal anställda för referensåret 2010, enligt leverans i CIS2012 (2010 - 2012). SCB dokumenterar inte kolumnnamnet emp2010; betydelsen är antagen från samma omgångs antal anställda (EMP) och årtalet i kolumnnamnet."
 data_warning = "SCB documents no column emp2010 on Innovationsverksamhet i företag. The meaning (number of employees in reference year 2010) is assumed from the same wave's employee count EMP (scb/innovation-foretag/antal-anstallda) and the year in the column name; it is not confirmed."
@@ -14149,13 +14154,14 @@ is_sensitive = false
 is_identifier = false
 holdings_period = "2012-2012"
 source = "steward-holdings"
-evidence = "SWECOV holds emp2010 in CIS2012 beside emp2012, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp2010 carries the wave's prior reference year 2010. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); no unit or code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+evidence = "SWECOV holds emp2010 in CIS2012 beside emp2012, the wave's own reference-year count, which maps to antal-anstallda as a year member; emp2010 carries the wave's prior reference year 2010. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
 noted = "2026-10-16"
 
 [[errata.column]]
 variant = "_default"
 column = "Emp2016"
 data_type = "decimal"
+measurement_unit = "Antal"
 name = "Emp2016 (enligt leverans)"
 definition = "Antal anställda för referensåret 2016, enligt leverans i CIS2018 (2016 - 2018). SCB dokumenterar inte kolumnnamnet Emp2016; betydelsen är antagen från samma omgångs antal anställda (EMP) och årtalet i kolumnnamnet."
 data_warning = "SCB documents no column Emp2016 on Innovationsverksamhet i företag. The meaning (number of employees in reference year 2016) is assumed from the same wave's employee count EMP (scb/innovation-foretag/antal-anstallda) and the year in the column name; it is not confirmed."
@@ -14163,13 +14169,14 @@ is_sensitive = false
 is_identifier = false
 holdings_period = "2018-2018"
 source = "steward-holdings"
-evidence = "SWECOV holds Emp2016 in CIS2018 beside Emp2018, the wave's own reference-year count, which maps to antal-anstallda as a year member; Emp2016 carries the wave's prior reference year 2016. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); no unit or code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+evidence = "SWECOV holds Emp2016 in CIS2018 beside Emp2018, the wave's own reference-year count, which maps to antal-anstallda as a year member; Emp2016 carries the wave's prior reference year 2016. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
 noted = "2026-10-16"
 
 [[errata.column]]
 variant = "_default"
 column = "Emp2018"
 data_type = "decimal"
+measurement_unit = "Antal"
 name = "Emp2018 (enligt leverans)"
 definition = "Antal anställda för referensåret 2018, enligt leverans i CIS2020 (2018 - 2020). SCB dokumenterar inte kolumnnamnet Emp2018; betydelsen är antagen från samma omgångs antal anställda (EMP) och årtalet i kolumnnamnet."
 data_warning = "SCB documents no column Emp2018 on Innovationsverksamhet i företag. The meaning (number of employees in reference year 2018) is assumed from the same wave's employee count EMP (scb/innovation-foretag/antal-anstallda) and the year in the column name; it is not confirmed."
@@ -14177,13 +14184,14 @@ is_sensitive = false
 is_identifier = false
 holdings_period = "2020-2020"
 source = "steward-holdings"
-evidence = "SWECOV holds Emp2018 in CIS2020 beside Emp2020, the wave's own reference-year count, which maps to antal-anstallda as a year member; Emp2018 carries the wave's prior reference year 2018. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); no unit or code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
+evidence = "SWECOV holds Emp2018 in CIS2020 beside Emp2020, the wave's own reference-year count, which maps to antal-anstallda as a year member; Emp2018 carries the wave's prior reference year 2018. SCB's Registerinformation export carries no row for it on this variant. Minted per reference year, as the register does for emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried. Operator under maintainer delegation 2026-10-16 (#1603 batch-e, #1495)."
 noted = "2026-10-16"
 
 [[errata.column]]
 variant = "_default"
 column = "Emp2020"
 data_type = "decimal"
+measurement_unit = "Antal"
 name = "Emp2020 (enligt leverans)"
 definition = "Antal anställda för referensåret 2020, enligt leverans i CIS2020 (2018 - 2020). SCB dokumenterar inte kolumnnamnet Emp2020; betydelsen är antagen från SCB:s antal anställda (EMP) och årtalet i kolumnnamnet."
 data_warning = "SCB documents no column Emp2020 on Innovationsverksamhet i företag. The meaning (number of employees in reference year 2020) is assumed from SCB's employee count EMP (scb/innovation-foretag/antal-anstallda) and the year in the column name; it is not confirmed."
@@ -14191,7 +14199,7 @@ is_sensitive = false
 is_identifier = false
 holdings_period = "2020-2020"
 source = "steward-holdings"
-evidence = "SWECOV holds Emp2020 in CIS2020, the 2018 - 2020 wave's own reference-year employee count. SCB's Registerinformation export carries no row for it on this variant; SCB delivers antal-anstallda for 2020 as EMP2022 (2020 - 2022), so carrying EMP into 2018 - 2020 would give 2020 two column names (unresolved_column_representation). Minted per reference year, as Emp2018 and the register's emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); no unit or code list is carried (#1603 batch-e, #1495; Operator under maintainer delegation 2026-10-16, option (a) 2026-10-17)."
+evidence = "SWECOV holds Emp2020 in CIS2020, the 2018 - 2020 wave's own reference-year employee count. SCB's Registerinformation export carries no row for it on this variant; SCB delivers antal-anstallda for 2020 as EMP2022 (2020 - 2022), so carrying EMP into 2018 - 2020 would give 2020 two column names (unresolved_column_representation). Minted per reference year, as Emp2018 and the register's emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried (#1603 batch-e, #1495; Operator under maintainer delegation 2026-10-16, option (a) 2026-10-17)."
 noted = "2026-10-17"
 
 [[variable]]

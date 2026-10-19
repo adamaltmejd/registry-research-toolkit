@@ -13274,7 +13274,7 @@ slug = "rektorsomrade"
 # Each entry carries the nearest documented edition's variable into editions SCB does not document, with a data_warning. Code lists are not carried, except where a batch-f coding.extend below carries the donor list.
 
 [[errata.delivered]]
-data_warning = "SCB documents no column ANNANPED on Lärarregistret, Tjänsteregistret for Läsåret 1999/2000 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column ANNANPED on Lärarregistret, Tjänsteregistret for Läsåret 1999/2000 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "tjansteregistret"
 column = "ANNANPED"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
@@ -13297,7 +13297,7 @@ evidence = "SWECOV holds Argang in LReg_1989 through LReg_2005; the same deliver
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column Jurform on Lärarregistret, Tjänsteregistret for Läsåret 2013/2014 to 2014/2015. The meaning is assumed from SCB's Läsåret 2015/2016 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column Jurform on Lärarregistret, Tjänsteregistret for Läsåret 2013/2014 to 2014/2015. The meaning is assumed from SCB's Läsåret 2015/2016 documentation of the same delivered name in this register; it is not confirmed for these editions. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "tjansteregistret"
 column = "Jurform"
 versions = ["Läsåret 2013/2014", "Läsåret 2014/2015"]
@@ -13341,7 +13341,7 @@ evidence = "SWECOV holds Lan in LReg_1989 through LReg_1998; the same delivered 
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column PRTJBL on Lärarregistret, Tjänsteregistret for Läsåret 1999/2000 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column PRTJBL on Lärarregistret, Tjänsteregistret for Läsåret 1999/2000 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "tjansteregistret"
 column = "PRTJBL"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
@@ -13352,7 +13352,7 @@ evidence = "SWECOV holds PRTJBL in LReg_1999 through LReg_2016; the same deliver
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column Saktar on Lärarregistret, Tjänsteregistret for Läsåret 2007/2008. The meaning and unit are assumed from SCB's Läsåret 2006/2007 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column Saktar on Lärarregistret, Tjänsteregistret for Läsåret 2007/2008. The meaning and unit are assumed from SCB's Läsåret 2006/2007 documentation of the same delivered name in this register; it is not confirmed for these editions. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "tjansteregistret"
 column = "Saktar"
 measurement_unit = "År"
@@ -13360,11 +13360,11 @@ versions = ["Läsåret 2007/2008"]
 upstream = "omitted-column-in-version"
 native_variable_id = 8770
 expected_evidence_sha256 = "61ca0a25eb36ab2b670a2994fe699fefd6de346d2d22367b2ff10b5a93347ad7"
-evidence = "SWECOV holds Saktar in LReg_2007; the same delivered name is documented on this variant as native 8770 (scb/lararreg/senaste-aktivt-ar), nearest in Läsåret 2006/2007. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. Meaning only: the code list is not carried."
+evidence = "SWECOV holds Saktar in LReg_2007; the same delivered name is documented on this variant as native 8770 (scb/lararreg/senaste-aktivt-ar), nearest in Läsåret 2006/2007. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed; maintainer decision 2026-10-16 (#1603 batch-e same-name rule). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7)."
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column TJLAR on Lärarregistret, Tjänsteregistret for Läsåret 1989/1990 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column TJLAR on Lärarregistret, Tjänsteregistret for Läsåret 1989/1990 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "tjansteregistret"
 column = "TJLAR"
 versions = ["Läsåret 1989/1990", "Läsåret 1990/1991", "Läsåret 1991/1992", "Läsåret 1992/1993", "Läsåret 1993/1994", "Läsåret 1994/1995", "Läsåret 1995/1996", "Läsåret 1996/1997", "Läsåret 1997/1998", "Läsåret 1998/1999", "Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
@@ -13375,7 +13375,7 @@ evidence = "SWECOV holds TJLAR in LReg_1989 through LReg_2016; the same delivere
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column TJLAREXLASYL on Lärarregistret, Tjänsteregistret for Läsåret 2013/2014 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column TJLAREXLASYL on Lärarregistret, Tjänsteregistret for Läsåret 2013/2014 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "tjansteregistret"
 column = "TJLAREXLASYL"
 versions = ["Läsåret 2013/2014", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
@@ -13386,7 +13386,7 @@ evidence = "SWECOV holds TJLAREXLASYL in LReg_2013 through LReg_2016; the same d
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column TJLEDLAR on Lärarregistret, Tjänsteregistret for Läsåret 1999/2000 to 2012/2013, Läsåret 2014/2015 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions."
+data_warning = "SCB documents no column TJLEDLAR on Lärarregistret, Tjänsteregistret for Läsåret 1999/2000 to 2012/2013, Läsåret 2014/2015 to 2016/2017. The meaning is assumed from SCB's Läsåret 2017/2018 documentation of the same delivered name in this register; it is not confirmed for these editions. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "tjansteregistret"
 column = "TJLEDLAR"
 versions = ["Läsåret 1999/2000", "Läsåret 2000/2001", "Läsåret 2001/2002", "Läsåret 2002/2003", "Läsåret 2003/2004", "Läsåret 2004/2005", "Läsåret 2005/2006", "Läsåret 2006/2007", "Läsåret 2007/2008", "Läsåret 2008/2009", "Läsåret 2009/2010", "Läsåret 2010/2011", "Läsåret 2011/2012", "Läsåret 2012/2013", "Läsåret 2014/2015", "Läsåret 2015/2016", "Läsåret 2016/2017"]
@@ -13640,8 +13640,8 @@ expected_diagnostic_sha256 = "6d330ce39a4579952ece6eea8f36c8d8411d1ac1653c820619
 
 # ── #1603 batch-f F7: carry the donor edition's code list into the same-name carried windows ──
 # Maintainer ruling 2026-10-18 ('Carry the 9 lists', via the Operator): every delivered value is in
-# the donor list (aggregate check on MONA, conclusion only). The other three, Saktar here and FoU V001/V1001,
-# follow in batch-g: their folded extends tripped the carried-target defect fixed in #1676.
+# the donor list (aggregate check on MONA, conclusion only). Saktar here and FoU V001/V1001 follow in
+# batch-g, after the carried-target fix (#1676); their delivered spellings differ from the donors' only in case.
 
 [[coding.extend]]
 variable = "232.42803"
@@ -13708,3 +13708,14 @@ witness = ["2017-07-01", "2018-06-30"]
 periods = [["1999-07-01", "2000-06-30"], ["2000-07-01", "2001-06-30"], ["2001-07-01", "2002-06-30"], ["2002-07-01", "2003-06-30"], ["2003-07-01", "2004-06-30"], ["2004-07-01", "2005-06-30"], ["2005-07-01", "2006-06-30"], ["2006-07-01", "2007-06-30"], ["2007-07-01", "2008-06-30"], ["2008-07-01", "2009-06-30"], ["2009-07-01", "2010-06-30"], ["2010-07-01", "2011-06-30"], ["2011-07-01", "2012-06-30"], ["2012-07-01", "2013-06-30"], ["2014-07-01", "2015-06-30"], ["2015-07-01", "2016-06-30"], ["2016-07-01", "2017-06-30"]]
 reason = "The #1603 batch-e same-name carry gives column TJLEDLAR the meaning of SCB's Läsåret 2017/2018 documentation (edition 11752) in these undocumented editions. Carry that edition's own code list into the same windows: every delivered value is in the donor list, per maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
 source = "SCB Registerinformation/Vardemangder for native 232.37235 on variant 232.411, edition 11752 (Läsåret 2017/2018); maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+[[coding.extend]]
+variable = "232.8770"
+variant = "232.411"
+column = "Saktar"
+list = "År"
+list_members = [["0000", "Värde ska ej finnas"], ["1900", "År 1900"], ["1901", "År 1901"], ["1902", "År 1902"], ["1903", "År 1903"], ["1904", "År 1904"], ["1905", "År 1905"], ["1906", "År 1906"], ["1907", "År 1907"], ["1908", "År 1908"], ["1909", "År 1909"], ["1910", "År 1910"], ["1911", "År 1911"], ["1912", "År 1912"], ["1913", "År 1913"], ["1914", "År 1914"], ["1915", "År 1915"], ["1916", "År 1916"], ["1917", "År 1917"], ["1918", "År 1918"], ["1919", "År 1919"], ["1920", "År 1920"], ["1921", "År 1921"], ["1922", "År 1922"], ["1923", "År 1923"], ["1924", "År 1924"], ["1925", "År 1925"], ["1926", "År 1926"], ["1927", "År 1927"], ["1928", "År 1928"], ["1929", "År 1929"], ["1930", "År 1930"], ["1931", "År 1931"], ["1932", "År 1932"], ["1933", "År 1933"], ["1934", "År 1934"], ["1935", "År 1935"], ["1936", "År 1936"], ["1937", "År 1937"], ["1938", "År 1938"], ["1939", "År 1939"], ["1940", "År 1940"], ["1941", "År 1941"], ["1942", "År 1942"], ["1943", "År 1943"], ["1944", "År 1944"], ["1945", "År 1945"], ["1946", "År 1946"], ["1947", "År 1947"], ["1948", "År 1948"], ["1949", "År 1949"], ["1950", "År 1950"], ["1951", "År 1951"], ["1952", "År 1952"], ["1953", "År 1953"], ["1954", "År 1954"], ["1955", "År 1955"], ["1956", "År 1956"], ["1957", "År 1957"], ["1958", "År 1958"], ["1959", "År 1959"], ["1960", "År 1960"], ["1961", "År 1961"], ["1962", "År 1962"], ["1963", "År 1963"], ["1964", "År 1964"], ["1965", "År 1965"], ["1966", "År 1966"], ["1967", "År 1967"], ["1968", "År 1968"], ["1969", "År 1969"], ["1970", "År 1970"], ["1971", "År 1971"], ["1972", "År 1972"], ["1973", "År 1973"], ["1974", "År 1974"], ["1975", "År 1975"], ["1976", "År 1976"], ["1977", "År 1977"], ["1978", "År 1978"], ["1979", "År 1979"], ["1980", "År 1980"], ["1981", "År 1981"], ["1982", "År 1982"], ["1983", "År 1983"], ["1984", "År 1984"], ["1985", "År 1985"], ["1986", "År 1986"], ["1987", "År 1987"], ["1988", "År 1988"], ["1989", "År 1989"], ["1990", "År 1990"], ["1991", "År 1991"], ["1992", "År 1992"], ["1993", "År 1993"], ["1994", "År 1994"], ["1995", "År 1995"], ["1996", "År 1996"], ["1997", "År 1997"], ["1998", "År 1998"], ["1999", "År 1999"], ["2000", "År 2000"], ["2001", "År 2001"], ["2002", "År 2002"], ["2003", "År 2003"], ["2004", "År 2004"], ["2005", "År 2005"], ["2006", "År 2006"], ["2007", "År 2007"], ["2008", "År 2008"], ["2009", "År 2009"], ["2010", "År 2010"], ["2011", "År 2011"], ["2012", "År 2012"], ["2013", "År 2013"], ["2014", "År 2014"], ["2015", "År 2015"], ["2016", "År 2016"], ["2017", "År 2017"], ["2018", "År 2018"], ["2019", "År 2019"], ["2020", "År 2020"], ["2021", "År 2021"], ["2022", "År 2022"], ["2023", "År 2023"], ["2024", "År 2024"], ["2025", "År 2025"]]
+witness = ["2006-07-01", "2007-06-30"]
+periods = [["2007-07-01", "2008-06-30"]]
+reason = "The #1603 batch-e same-name carry gives column Saktar the meaning of SCB's Läsåret 2006/2007 documentation (edition 542, column SAktAr) in this undocumented edition. Carry that edition's own code list into the same window: every delivered value is in the donor list, per maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only). The column spellings differ only in case. Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for native 232.8770 on variant 232.411, edition 542 (Läsåret 2006/2007); maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only)"

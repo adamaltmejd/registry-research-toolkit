@@ -955,14 +955,14 @@ noted = "2026-09-12"
 # Each entry carries the nearest documented edition's variable into rounds SCB does not document, with a data_warning.
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "foretagssektorn"
 column = "V001"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3320
 expected_evidence_sha256 = "4a3b983594096bbf140f889e818d6c6bfff013d5fd8e807bef1bea5f06e31fe1"
-evidence = "SWECOV holds V001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3320 (scb/fou/v001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+evidence = "SWECOV holds V001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3320 (scb/fou/v001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7)."
 noted = "2026-10-16"
 
 [[errata.delivered]]
@@ -2946,14 +2946,14 @@ evidence = "SWECOV holds V098 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V1001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V1001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "foretagssektorn"
 column = "V1001"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3532
 expected_evidence_sha256 = "a866e66c11e8305079a2869e2ae1202f1e7c326c9665d8f31d48b0f87d6f36be"
-evidence = "SWECOV holds V1001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3532 (scb/fou/v1001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+evidence = "SWECOV holds V1001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3532 (scb/fou/v1001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7)."
 noted = "2026-10-16"
 
 [[errata.delivered]]
@@ -18064,6 +18064,32 @@ expected_evidence_sha256 = "b2e2a9f1f03b1479569eee4e78f2529a388c64a271617b332b14
 list = "Antal anställda, storleksklass"
 list_members = [["0", "Uppgift saknas"], ["1", "0 anställda"], ["10", "1 000-1 499 anställda"], ["11", "1 500-1 999 anställda"], ["12", "2 000-2 999 anställda"], ["13", "3 000-3 999 anställda"], ["14", "4 000-4 999 anställda"], ["15", "5 000-9 999 anställda"], ["16", "10 000 eller fler anställda"], ["2", "1-4 anställda"], ["3", "5-9 anställda"], ["4", "10-19 anställda"], ["5", "20-49 anställda"], ["6", "50-99 anställda"], ["7", "100-199 anställda"], ["8", "200-499 anställda"], ["9", "500-999 anställda"]]
 witness = ["2003-01-01", "2003-12-31"]
+
+# #1603 batch-f F7: carry the 2003 code list into the same-name carried 2001 round of V001
+# (delivered V001, documented v001; coding.extend folds column case since #1674).
+[[coding.extend]]
+variable = "182.3320"
+variant = "182.373"
+column = "V001"
+list = "Ja(Finns)/Nej"
+list_members = [["1", "Ja/Finns"], ["2", "Nej"]]
+witness = ["2003-01-01", "2003-12-31"]
+periods = [["2001-01-01", "2001-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column V001 the meaning of SCB's 2003 documentation (edition 394, column v001) in the undocumented 2001 round. Carry that edition's own code list into the same window: every delivered value is in the donor list, per maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only). The column spellings differ only in case. Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for native 182.3320 on variant 182.373, edition 394 (2003); maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+# #1603 batch-f F7: carry the 2003 code list into the same-name carried 2001 round of V1001
+# (delivered V1001, documented v1001; coding.extend folds column case since #1674).
+[[coding.extend]]
+variable = "182.3532"
+variant = "182.373"
+column = "V1001"
+list = "Ja(Finns)/Nej"
+list_members = [["0", "Uppgift saknas"], ["1", "Ja/Finns"], ["2", "Nej"]]
+witness = ["2003-01-01", "2003-12-31"]
+periods = [["2001-01-01", "2001-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column V1001 the meaning of SCB's 2003 documentation (edition 394, column v1001) in the undocumented 2001 round. Carry that edition's own code list into the same window: every delivered value is in the donor list, per maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only). The column spellings differ only in case. Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for native 182.3532 on variant 182.373, edition 394 (2003); maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
 
 [[acknowledge]]
 code = "missing_coding_period"
