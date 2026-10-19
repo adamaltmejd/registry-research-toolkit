@@ -374,6 +374,20 @@ def test_base_rows_and_base_file_are_not_clobbered(
         table: set(base_conn.execute(f"SELECT * FROM {table}")) for table in tables
     }
     base_conn.close()
+    # A killed earlier run leaves its staging tmp and an uncheckpointed WAL. Fails
+    # if extend-db removes only the stale tmp: SQLite replays the leftover WAL onto
+    # the fresh, digest-checked base copy, rewriting a base row (#1697).
+    stale = tmp_path / "out" / "reg_meta.db.tmp"
+    stale.parent.mkdir()
+    shutil.copyfile(base_db, stale)
+    captured_wal = tmp_path / "captured-wal"
+    with closing(sqlite3.connect(stale)) as stale_conn:
+        stale_conn.execute("PRAGMA journal_mode=WAL")
+        stale_conn.execute("PRAGMA wal_autocheckpoint=0")
+        stale_conn.execute("UPDATE provider SET name = name || ' (stale)'")
+        stale_conn.commit()
+        shutil.copyfile(f"{stale}-wal", captured_wal)
+    shutil.copyfile(captured_wal, f"{stale}-wal")
     _, out = _run(tmp_path, base_db)
     flavored_conn = sqlite3.connect(out)
     after = {
