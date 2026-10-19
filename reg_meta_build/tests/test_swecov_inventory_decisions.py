@@ -90,6 +90,39 @@ def test_mapping_decision_maps_column_of_range_edition_table(
     assert [m.representation for m in physical.mappings] == ["T_kolumn"]
 
 
+_WARNING = (
+    'data_warning = { summary = "Recoded", detail = "Recoded by a later delivery.", '
+    "window = { from = 2017, to = 2018 } }"
+)
+
+
+def test_mapping_decision_warning_is_clipped_to_the_table(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A decision's mapping warning (#1684) reaches each of its tables with its
+    window clipped to the period the mapping serves there: 2017..2018 on a
+    2018..2019 table is 2018, with the authored texts. Fails if the generator
+    drops the warning or emits it unclipped (the inventory refuses a warning
+    window past what its mapping serves)."""
+    decision = _mapping_decision().replace('"T_kolumn" }', f'"T_kolumn", {_WARNING} }}')
+    steward = _run_inventory(
+        tmp_path,
+        flavored_db,
+        "TSERIES",
+        ["Physical"],
+        edition=_RANGE,
+        decisions=decision,
+    )
+    (table,) = load_delivery_inventory(steward / "inventory.toml").tables
+    ((mapping,),) = [column.mappings for column in table.columns]
+    assert mapping.data_warning is not None
+    assert (
+        mapping.data_warning.summary,
+        mapping.data_warning.detail,
+        mapping.data_warning.window,
+    ) == ("Recoded", "Recoded by a later delivery.", "2018")
+
+
 def test_mapping_decision_refuses_range_without_full_coverage(
     tmp_path: Path, flavored_db: Path
 ) -> None:
@@ -110,6 +143,50 @@ def test_mapping_decision_refuses_range_without_full_coverage(
         )
     (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
     assert entry["code"] == "stale_declared_mapping_target"
+
+
+@pytest.mark.parametrize(
+    ("window", "code"),
+    [
+        ("{ from = 2017, to = 2018 }", None),
+        ("{ from = 2017, to = 2019 }", "inventory_coverage_warning_invalid"),
+    ],
+)
+def test_mapping_decision_warning_licenses_exactly_the_uncovered_years(
+    tmp_path: Path, flavored_db: Path, window: str, code: str | None
+) -> None:
+    """The catalog state starts in 2019, so a mapping over 2018..2019 leaves 2018
+    uncovered (#1684). A warning whose window, clipped to the table, is exactly
+    2018 admits the mapping (emitted as 2018); one whose clip is 2018..2019 is
+    `inventory_coverage_warning_invalid`, the code extend-db refuses it by.
+    Unwarned, the gap stays stale (the case above). Fails if the generator
+    compares the unclipped window, accepts a mismatched warning, or reports the
+    mismatch as a stale target."""
+    db = _decision_db(
+        tmp_path, flavored_db, valid_to="2019-12-31", competing_owner=False
+    )
+    warning = _WARNING.replace("{ from = 2017, to = 2018 }", window)
+    decision = _mapping_decision().replace('"T_kolumn" }', f'"T_kolumn", {warning} }}')
+    if code is not None:
+        with pytest.raises(SystemExit, match="Inventory not replaced"):
+            _run_inventory(
+                tmp_path,
+                db,
+                "TSERIES",
+                ["Physical"],
+                edition=_RANGE,
+                decisions=decision,
+            )
+        (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
+        assert entry["code"] == code
+        return
+    steward = _run_inventory(
+        tmp_path, db, "TSERIES", ["Physical"], edition=_RANGE, decisions=decision
+    )
+    (table,) = load_delivery_inventory(steward / "inventory.toml").tables
+    ((mapping,),) = [column.mappings for column in table.columns]
+    assert mapping.data_warning is not None
+    assert mapping.data_warning.window == "2018"
 
 
 def test_unmap_preserves_exact_reason_without_other_changes(

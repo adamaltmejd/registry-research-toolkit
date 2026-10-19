@@ -167,5 +167,7 @@
       "window_hi": "2016-12-31"
     }
   ],
-  "warnings": []
+  "warnings": [
+    "steward_delivery_limitation"
+  ]
 }

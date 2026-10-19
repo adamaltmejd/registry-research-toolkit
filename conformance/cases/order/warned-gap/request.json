@@ -1,0 +1,31 @@
+{
+  "note": "Kod_2016_2019 holds Kod for 2016..2019, the catalog's only state starts in 2018, and the mapping's warning states exactly 2016..2017 (#1684). An order for the gap years alone is served from the table. Fails if the warning stops licensing the gap (no cloned state: a coverage_gap finding blocks the order) or the clone takes other bounds.",
+  "fixture": "warned-gap",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Example",
+        "register_variant": "scb/example/annual",
+        "period": {
+          "from": 2016,
+          "to": 2017
+        },
+        "bindings": [
+          {
+            "variable": "scb/example/kod",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries"
+  ]
+}

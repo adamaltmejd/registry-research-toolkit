@@ -1,0 +1,20 @@
+{
+  "entries": [
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Kod",
+        "variable": "scb/example/kod",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Kod",
+        "edition": "2016..2019",
+        "table": "Kod_2016_2019"
+      },
+      "requested_period": "2016..2017",
+      "source": "Example"
+    }
+  ]
+}
