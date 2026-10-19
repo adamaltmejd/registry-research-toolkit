@@ -30,9 +30,10 @@ variable = "scb/example/mid"
 representation = "Mid"
 data_warning = { summary = "Mid is held across a gap", detail = "The 2017-2018 rows are undocumented.", window = { from = 2017, to = 2018 } }
 
-# A rename: the catalog documents the cell as KodOld to 2017 and KodNew from
-# 2018. The table keeps KodNew for 2016..2019, and its warning states 2016..2017,
-# which KodOld already documents: the clone would overlap that state.
+# A rename: the catalog documents the cell as KodOld to 2016-01-01 and KodNew
+# from 2018. The table keeps KodNew for 2016..2019, and its warning states
+# 2016..2017, whose first day KodOld already documents: the clone would overlap
+# that state by exactly one day.
 [[table]]
 id = "Omr_2016_2019"
 edition = { from = 2016, to = 2019 }
@@ -56,3 +57,29 @@ register_variant = "scb/example/annual"
 variable = "scb/example/ver"
 representation = "Ver"
 data_warning = { summary = "Ver is recoded for 2016-2017", detail = "The 2016-2017 rows were recoded by a later delivery.", window = { from = 2016, to = 2017 } }
+
+# A rename across undocumented transition years: the catalog documents the cell
+# as Old to 2013 and New from 2018. Byt_old keeps Old to 2015 (warned 2014..2015,
+# cloned from Old), Byt_new keeps New from 2015 (warned 2015..2017, cloned from
+# New). The two clones overlap in 2015: one day of a cell takes one coding.
+[[table]]
+id = "Byt_old"
+edition = { from = 2010, to = 2015 }
+[[table.column]]
+name = "Old"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/byt"
+representation = "Old"
+data_warning = { summary = "Old is held past its documented years", detail = "The 2014-2015 rows are in the Old coding.", window = { from = 2014, to = 2015 } }
+
+[[table]]
+id = "Byt_new"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "New"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/byt"
+representation = "New"
+data_warning = { summary = "New covers its earlier years", detail = "The 2015-2017 rows are in the New coding.", window = { from = 2015, to = 2017 } }

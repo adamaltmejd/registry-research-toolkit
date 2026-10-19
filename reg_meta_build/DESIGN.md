@@ -2685,8 +2685,9 @@ year-independent table takes no warning window; both refuse as
 `inventory_window_invalid` beside the column-window lines. A global variable warning
 would reach every reader of the global catalog; this one is written only into the
 steward's flavor. `compile_holdings`, the one step extend-db and the synthetic harness
-share, builds one `DataWarning` per warned mapping and served segment at the canonical
-cell (variable, variant, canonical representation, window ∩ segment), code
+share, builds a `DataWarning` per warned mapping and served segment at the canonical
+cell (variable, variant, canonical representation, window ∩ segment), coalescing one
+cell's overlapping or abutting rows with the same texts into one, code
 `steward_delivery_limitation`, no source refs (the curated mapping is the witness). It
 merges them with the base's stored warnings and rewrites both warning tables through
 `write_data_warnings`, so base rows keep their content and the flavored
@@ -2706,23 +2707,39 @@ With U empty the warning is an ordinary caveat. Otherwise the warning must state
 U, which must be one leading or trailing interval of the served period; a window without
 bounds states the whole served period. Anything else refuses as
 `inventory_coverage_warning_invalid`, located at the mapping, naming U and the stated
-window. The flavor then gets one cloned state of the cell over U: a copy of the cell's
-state in force at the end of the served period (the extract is in the coding current at
-extraction), or, where U reaches that end, the nearest state after U, else before it.
+window. U licenses a copy of the cell's state in force at the end of the served period
+(the extract is in the coding current at extraction), or, where U reaches that end, of
+the nearest state after U, else before it. When more than one state qualifies (code
+versions in force together at that end), the source is ambiguous and the build refuses
+rather than picking one.
+
+The licences of one cell, code version and source state coalesce where they overlap or
+abut, and each run becomes one cloned state over their union. An annual table per year,
+each warned for its year, gives one state over the years, not one per table; two
+partition shards or projections licensing one gap give one state. The mapping warnings
+coalesce the same way: one cell's warnings with the same summary and detail that overlap
+or abut are one `data_warning` row over their union (`mapping_data_warnings`), so
+`states` shows a coalesced clone with one warning id.
+
+Each coalesced clone must then pass the rule `ResolvedVariable` applies at catalog
+formation: no two states of one variant and code version overlap. The check runs before
+the INSERT, under the same code, and covers two kinds of state. Against the catalog's
+states of every column of the cell, a warning cannot license years another column
+already documents. A rename the table maps under its new column (KodOld to 2017, KodNew
+from 2018, the table keeping KodNew over 2016..2019) refuses, naming the overlapping
+state's column and bounds; the curator maps that column's representation instead. This
+also covers a clone starting on another column's state start, which would otherwise fail
+the unique index unlocated. Against the other clones, two clones that copy different
+states never overlap: one day of a cell takes one coding. A rename across undocumented
+transition years (Old to 2013, New from 2018; one table keeping Old to 2015 warned
+2014..2015, another keeping New from 2015 warned 2015..2017) refuses, naming both tables
+and columns and both clones' bounds. A state of another code version may overlap a
+clone, as it may overlap a catalog state. A clone extends the cell's states only at the
+uncovered days; it never stands in for a state the catalog has.
+
 The clone's id is the catalog's own state id (`_storage_id`, in the provider's band)
 over the clone's start, so it names no steward; `pooled = 0` and
-`provenance = "steward:<id>"` mark it as the steward's word, not the catalog's. Two more
-refusals, under the same code, keep the clone a single, catalog-consistent state. When
-more than one state qualifies as the source (code versions in force together at that
-end), the source is ambiguous and the build refuses rather than picking one. A clone
-must also pass the rule `ResolvedVariable` applies at catalog formation: no two states
-of one variant and code version overlap. The check covers every column of the cell, so a
-warning cannot license years another column already documents. A rename the table maps
-under its new column (KodOld to 2017, KodNew from 2018, the table keeping KodNew over
-2016..2019) refuses, naming the overlapping state's column and bounds; the curator maps
-that column's representation instead. The same check covers a clone starting on another
-column's state start, which would otherwise fail the unique index unlocated. Several
-placements of one cell and U (partition shards, projections) are one clone. Its
+`provenance = "steward:<id>"` mark it as the steward's word, not the catalog's. Its
 `state_classification` and classification-conformance rows are copied under the clone's
 id; its lineage is not, since that would invent evidence. The derived tables read the
 states, so the clones are followed by a full `derive`, and extend-db derives twice

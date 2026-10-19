@@ -96,7 +96,7 @@
           "name": "Annual"
         },
         "valid_from": "2010-01-01",
-        "valid_to": "2017-12-31",
+        "valid_to": "2016-01-01",
         "delivery_column_name": "KodOld",
         "data_type": "integer",
         "data_length": "8",
@@ -111,6 +111,50 @@
         "valid_from": "2018-01-01",
         "valid_to": "2025-12-31",
         "delivery_column_name": "KodNew",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      }
+    ]
+  },
+  {
+    "register": {
+      "provider": "scb",
+      "slug": "example",
+      "name": "Example"
+    },
+    "slug": "byt",
+    "provider_key": "65",
+    "name": "Byt",
+    "definition": null,
+    "description": null,
+    "operational_definition": null,
+    "measurement_unit": null,
+    "is_sensitive": false,
+    "is_identifier": false,
+    "states": [
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2010-01-01",
+        "valid_to": "2013-12-31",
+        "delivery_column_name": "Old",
+        "data_type": "integer",
+        "data_length": "8",
+        "operational_definition": null,
+        "provenance": null
+      },
+      {
+        "variant": {
+          "slug": "annual",
+          "name": "Annual"
+        },
+        "valid_from": "2018-01-01",
+        "valid_to": "2025-12-31",
+        "delivery_column_name": "New",
         "data_type": "integer",
         "data_length": "8",
         "operational_definition": null,

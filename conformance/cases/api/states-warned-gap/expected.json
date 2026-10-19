@@ -75,6 +75,12 @@
       "/data/items/*/provenance": [
         null,
         "steward:swecov"
+      ],
+      "/data/items/*/warning_ids": [
+        [],
+        [
+          "77cf77ed376ef06dae8fb3dd80542524c44a9487fe18980eeaf3928851cfce50"
+        ]
       ]
     }
   }

@@ -1,6 +1,7 @@
 {
   "warnings": [
     "steward_delivery_limitation",
+    "steward_delivery_limitation",
     "steward_delivery_limitation"
   ],
   "tables": [
@@ -16,24 +17,32 @@
       "retain_unknown_reason": null
     },
     {
-      "physical_id": "Tal_north",
+      "physical_id": "Omr_2016_2019",
       "scope": "intervals",
       "edition": {
         "from": 2016,
         "to": 2019
       },
-      "partition": "north",
+      "partition": null,
       "projection": null,
       "retain_unknown_reason": null
     },
     {
-      "physical_id": "Tal_south",
+      "physical_id": "Tal_2016_2018",
       "scope": "intervals",
       "edition": {
         "from": 2016,
-        "to": 2019
+        "to": 2018
       },
-      "partition": "south",
+      "partition": null,
+      "projection": null,
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Tal_2019",
+      "scope": "intervals",
+      "edition": 2019,
+      "partition": null,
       "projection": null,
       "retain_unknown_reason": null
     }
@@ -45,13 +54,18 @@
       "hi": "2019-12-31"
     },
     {
-      "physical_id": "Tal_north",
+      "physical_id": "Omr_2016_2019",
       "lo": "2016-01-01",
       "hi": "2019-12-31"
     },
     {
-      "physical_id": "Tal_south",
+      "physical_id": "Tal_2016_2018",
       "lo": "2016-01-01",
+      "hi": "2018-12-31"
+    },
+    {
+      "physical_id": "Tal_2019",
+      "lo": "2019-01-01",
       "hi": "2019-12-31"
     }
   ],
@@ -62,12 +76,17 @@
       "unmapped_reason": null
     },
     {
-      "physical_id": "Tal_north",
+      "physical_id": "Omr_2016_2019",
+      "name": "KodNew",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Tal_2016_2018",
       "name": "Tal",
       "unmapped_reason": null
     },
     {
-      "physical_id": "Tal_south",
+      "physical_id": "Tal_2019",
       "name": "Tal",
       "unmapped_reason": null
     }
@@ -82,7 +101,15 @@
       "representation_canonical": "Kod"
     },
     {
-      "physical_id": "Tal_north",
+      "physical_id": "Omr_2016_2019",
+      "name": "KodNew",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/omr",
+      "representation_literal": "KodNew",
+      "representation_canonical": "KodNew"
+    },
+    {
+      "physical_id": "Tal_2016_2018",
       "name": "Tal",
       "register_variant": "scb/example/annual",
       "variable": "scb/example/tal",
@@ -90,7 +117,7 @@
       "representation_canonical": "Tal"
     },
     {
-      "physical_id": "Tal_south",
+      "physical_id": "Tal_2019",
       "name": "Tal",
       "register_variant": "scb/example/annual",
       "variable": "scb/example/tal",
@@ -120,6 +147,30 @@
       "register_variant": "scb/example/annual",
       "delivery_column_name": "Kod",
       "valid_from": "2019-01-01",
+      "valid_to": "2025-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/omr",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "KodOld",
+      "valid_from": "2010-01-01",
+      "valid_to": "2017-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/omr",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "KodNew",
+      "valid_from": "2016-01-01",
+      "valid_to": "2017-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/omr",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "KodNew",
+      "valid_from": "2018-01-01",
       "valid_to": "2025-12-31",
       "pooled": 0
     },

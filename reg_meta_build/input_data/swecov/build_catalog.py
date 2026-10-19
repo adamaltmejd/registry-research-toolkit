@@ -2170,8 +2170,21 @@ def _inventory_mapping_records(
         and (not select_owner or r["vslug"] == owner)
     ]
     licensed: tuple[tuple[str, str], ...] = ()
-    if mapping.data_warning is not None and edition != YEAR_INDEPENDENT_EDITION:
+    warning = mapping.data_warning
+    # A warning whose window misses this table is not emitted for it
+    # (`_warning_line`), so the table reviews as unwarned: a gap stays stale.
+    if (
+        warning is not None
+        and edition != YEAR_INDEPENDENT_EDITION
+        and (warning.window is None or _warning_window(warning, edition) is not None)
+    ):
         served = edition_bounds_of(edition)
+        # simplify: coverage here is the owner's delivered records for the exact
+        # representation spelling (states and the alias windows the records
+        # query admits); extend-db reads `inventory_coverage._load_windows`,
+        # folded by NFC casefold and with its own alias-window admission, and is
+        # the authority. Read `_load_windows` here if the two ever disagree on a
+        # SWECOV decision (a case-only twin or a filtered alias window).
         covered = _merge(
             [
                 (r["valid_from"], r["valid_to"])
@@ -2183,11 +2196,8 @@ def _inventory_mapping_records(
             ]
         )
         if gaps := uncovered_days(served, covered):
-            if mapping.data_warning.window is None:
-                stated = served
-            else:
-                clip = _warning_window(mapping.data_warning, edition)
-                stated = (clip,) if clip is not None else ()
+            clip = None if warning.window is None else _warning_window(warning, edition)
+            stated = served if clip is None else (clip,)
             if warning_gap_problem(served, gaps, stated):
                 return [], "inventory_coverage_warning_invalid"
             licensed = gaps

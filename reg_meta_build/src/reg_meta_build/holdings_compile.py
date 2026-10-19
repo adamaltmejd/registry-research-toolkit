@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sqlite3
 import tomllib
+from collections import defaultdict
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -17,10 +18,12 @@ from .holdings_accounting import (
     account_holdings,
 )
 from .inventory import (
+    ColumnMapping,
     DeliveryInventory,
     InventoryColumn,
     _edition_intervals,
     _location,
+    _merge,
     _render,
     _segment_bounds,
     edition_bounds,
@@ -144,14 +147,15 @@ def _licensed_clones(
     A warned mapping whose served period the catalog's windows for its cell
     (`inventory_coverage._load_windows`: states and alias windows, folded by
     column) leave partly uncovered holds those days only on the warning's word,
-    so the warning must state exactly those days (U). The flavor then gets one
-    state of the cell over U, cloned from the cell's state in force at the end of
-    the served period: the extract is in the coding current at extraction. Where
-    U reaches that end, the clone takes the cell's nearest state after U, else
-    the nearest before it. Two such states (code versions in force together) are
-    refused as ambiguous, and so is a clone overlapping a catalog state of its
-    variant and code version, under any column: a warning cannot license years
-    another column already documents. An unwarned mapping is never refused here:
+    so the warning must state exactly those days (U). U licenses a copy of the
+    cell's state in force at the end of the served period: the extract is in the
+    coding current at extraction. Where U reaches that end, it copies the cell's
+    nearest state after U, else the nearest before it. Two such states (code
+    versions in force together) are refused as ambiguous. Licences of one cell,
+    code version and source state coalesce where they overlap or abut
+    (`_coalesce`), so the flavor gets one state per run. Each coalesced clone is
+    then held to the catalog's no-overlap rule (`_clone_overlaps`) against the
+    catalog's states and the other clones. An unwarned mapping is never refused here:
     coverage is not a holdings validation gate (`inventory_coverage`), and its
     uncovered years stay a `coverage_gap` at order time."""
     # simplify: U is one leading or trailing interval, and a warned mapping with U
@@ -173,7 +177,9 @@ def _licensed_clones(
     }
     windows = _load_windows(conn, pairs)
     problems: list[str] = []
-    clones: dict[int, tuple[sqlite3.Row, int, str, str]] = {}
+    # Each warned mapping's licence: its uncovered days U and the one state of its
+    # cell they copy, keyed by (pair, code version, source state).
+    licences: dict[tuple[tuple[int, int], str, int], list[_Licence]] = defaultdict(list)
     for table, column, mapping in warned:
         assert mapping.data_warning is not None
         pair = (variables[mapping.variable], variants[mapping.register_variant])
@@ -192,8 +198,9 @@ def _licensed_clones(
             problems.append(f"{where}: {problem}")
             continue
         (lo, hi), end = gaps[0], served[-1][1]
-        states = _cell_states(conn, pair)
-        sources = _clone_sources(states, mapping.representation, lo, hi, end)
+        sources = _clone_sources(
+            _cell_states(conn, pair), mapping.representation, lo, hi, end
+        )
         if not sources:
             problems.append(
                 f"{where}: no catalog state of the cell to clone over {_render(gaps)}"
@@ -209,42 +216,16 @@ def _licensed_clones(
             )
             continue
         (source,) = sources
-        # The overlap rule `ResolvedVariable` applies at catalog formation
-        # ("overlapping states in variant"): states of one variant and code
-        # version never overlap. A clone is held to it too, before the INSERT,
-        # whose unique index would otherwise only catch a same-start clash.
-        overlapping = [
-            s
-            for s in states
-            if s["value_set_version_label"] == source["value_set_version_label"]
-            and s["valid_from"] <= hi
-            and lo <= s["valid_to"]
-        ]
-        if overlapping:
-            other = overlapping[0]
-            problems.append(
-                f"{where}: the clone over {_render(gaps)} would overlap the catalog "
-                f"state of column {other['delivery_column_name']!r} over "
-                f"{_render(((other['valid_from'], other['valid_to']),))}; a warning "
-                "cannot license years another column of the cell already "
-                "documents: map that column's representation instead"
-            )
-            continue
-        provider, register, slug = mapping.variable.split("/")
-        clone_id = _storage_id(
-            provider,
-            "state",
-            register,
-            slug,
-            mapping.register_variant.rsplit("/", 1)[1],
-            lo,
-            source["value_set_version_label"],
-        )
-        # The same cell and gap from two placements (shards, projections) is one
-        # clone; a second source for it is a contradiction, not a choice.
-        kept = clones.setdefault(clone_id, (source, clone_id, lo, hi))
-        if kept[0]["state_id"] != source["state_id"] or kept[2:] != (lo, hi):
-            problems.append(f"{where}: a second clone of one state over {lo}")
+        key = (pair, source["value_set_version_label"], source["state_id"])
+        licences[key].append(_Licence(where, mapping, source, lo, hi))
+    clones = [
+        clone
+        for (pair, _label, _source), group in sorted(licences.items())
+        for clone in _coalesce(pair, group)
+    ]
+    # Each pair of clones is compared once, by the earlier of the two.
+    for index, clone in enumerate(clones):
+        problems += _clone_overlaps(conn, clone, clones[index + 1 :])
     if problems:
         raise RegMetaError(
             exit_code=EXIT_CONFIG,
@@ -256,7 +237,105 @@ def _licensed_clones(
             "days, map the column whose state documents them, or extend the "
             "catalog's coverage; see reg_meta_build/DESIGN.md → Inventory TOML.",
         )
-    return [clones[k] for k in sorted(clones)]
+    return [
+        (clone.source, clone.clone_id, clone.lo, clone.hi)
+        for clone in sorted(clones, key=lambda clone: clone.clone_id)
+    ]
+
+
+@dataclass(frozen=True)
+class _Licence:
+    """One warned mapping's uncovered days `lo..hi` and the state they copy."""
+
+    where: str
+    mapping: ColumnMapping
+    source: sqlite3.Row
+    lo: str
+    hi: str
+
+
+@dataclass(frozen=True)
+class _Clone:
+    """One cloned state over `lo..hi`: the union of the overlapping or abutting
+    licences of one cell, code version and source state."""
+
+    pair: tuple[int, int]
+    source: sqlite3.Row
+    clone_id: int
+    lo: str
+    hi: str
+    licences: tuple[_Licence, ...]
+
+
+def _coalesce(pair: tuple[int, int], group: list[_Licence]) -> list[_Clone]:
+    """One clone per run of overlapping or abutting licences (`_merge`): an
+    annual table per year, each warned, licenses one state over the years, and
+    two shards licensing one gap are one clone. The id is the catalog state id
+    the clone's coordinates mint."""
+    clones = []
+    for lo, hi in _merge([(licence.lo, licence.hi) for licence in group]):
+        members = tuple(
+            licence for licence in group if lo <= licence.lo and licence.hi <= hi
+        )
+        mapping, source = members[0].mapping, members[0].source
+        provider, register, slug = mapping.variable.split("/")
+        clone_id = _storage_id(
+            provider,
+            "state",
+            register,
+            slug,
+            mapping.register_variant.rsplit("/", 1)[1],
+            lo,
+            source["value_set_version_label"],
+        )
+        clones.append(_Clone(pair, source, clone_id, lo, hi, members))
+    return clones
+
+
+def _clone_overlaps(
+    conn: sqlite3.Connection, clone: _Clone, later: list[_Clone]
+) -> list[str]:
+    """Why `clone` breaks the rule `ResolvedVariable` applies at catalog formation
+    ("overlapping states in variant"): states of one variant and code version
+    never overlap, under any column. Held against the catalog's states (a
+    warning cannot license years another column already documents) and against
+    the `later` clones (two codings for one day; licences of one source state
+    are already one clone, so these copy different states). Checked before the
+    INSERT, whose unique index would otherwise only catch a same-start clash."""
+    label = clone.source["value_set_version_label"]
+    where = clone.licences[0].where
+    span = _render(((clone.lo, clone.hi),))
+    problems: list[str] = []
+    for state in _cell_states(conn, clone.pair):
+        if (
+            state["value_set_version_label"] == label
+            and state["valid_from"] <= clone.hi
+            and clone.lo <= state["valid_to"]
+        ):
+            problems.append(
+                f"{where}: the clone over {span} would overlap the catalog state of "
+                f"column {state['delivery_column_name']!r} over "
+                f"{_render(((state['valid_from'], state['valid_to']),))}; a warning "
+                "cannot license years another column of the cell already "
+                "documents: map that column's representation instead"
+            )
+            break
+    for other in later:
+        if (
+            other.pair == clone.pair
+            and other.source["value_set_version_label"] == label
+            and other.lo <= clone.hi
+            and clone.lo <= other.hi
+        ):
+            problems.append(
+                f"{where}: the clone over {span} (copying column "
+                f"{clone.source['delivery_column_name']!r}) overlaps the clone over "
+                f"{_render(((other.lo, other.hi),))} (copying column "
+                f"{other.source['delivery_column_name']!r}) licensed at "
+                f"{other.licences[0].where}; one day of a cell takes one coding: "
+                "narrow one warning or map one column"
+            )
+    return problems
 
 
 def _cell_states(conn: sqlite3.Connection, pair: tuple[int, int]) -> list[sqlite3.Row]:
