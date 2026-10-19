@@ -2772,7 +2772,7 @@ serves; a projection window outside the parent's window is the projection's own 
 emitted in the projection's own file, and partial coverage stays a conflict. Key cells
 are never dropped by the parent, windowed or not; the order's emission gate keeps a
 projection's shared key in a file only where the projection contributes a cell of its
-own in that file's period unit, and a window is its own period unit
+own in that file, and a window does not split a file: the file is the table's edition
 ([../crates/DESIGN.md](../crates/DESIGN.md), "Order manifest").
 
 **Wide-pivot member sets** (#1495). The columns of one table that map one

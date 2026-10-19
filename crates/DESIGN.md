@@ -526,16 +526,16 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    `panel_time_key`, a bare slug or a JSON list) is never dropped: each file carries its
    own row keys. Tables without the declaration are never filtered.
 4. **Emission.** Every matching table is emitted whole, every partition included. A
-   projection's output file (its variant and period unit, below) is emitted when the
-   projection contributes at least one cell its parent does not serve in that file, key
-   or non-key; its shared key cells for that period unit then come along with it. A
-   projection file whose ordered cells its parent all serves is not emitted, its shared
-   keys included, so no file holds only keys its parent's file also holds. A projection
-   file can still lack a key when the order binds no key for that period unit, as any
-   table's file does when only a non-key column is ordered. Entries carry the literal
-   physical table and column; the canonical representation is a join key, not an output
-   substitute. Entries keep project order, then table, edition, member index and column,
-   so members order by index (`DIA2` before `DIA10`), not by name.
+   projection's output file (its variant and table edition, below) is emitted when the
+   projection contributes at least one cell its parent does not serve anywhere in that
+   file, key or non-key, from any source or period; its shared key cells then come along
+   with it. A projection file whose ordered cells its parent all serves is not emitted,
+   its shared keys included, so no file holds only keys its parent's file also holds. A
+   projection file can still lack a key when the order binds none, as any table's file
+   does when only a non-key column is ordered. Entries carry the literal physical table
+   and column; the canonical representation is a join key, not an output substitute.
+   Entries keep project order, then table, edition, member index and column, so members
+   order by index (`DIA2` before `DIA10`), not by name.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
 (`steward_mismatch`, `project_empty`, `period_not_orderable`, `variable_unresolved`,
@@ -562,18 +562,19 @@ none, so an inventory without partitions, projections or pivot members produces 
 bytes it did before any existed. The parent (`projection_of`) is not in the manifest:
 the token is the placement.
 
-**Extraction keeps delivery topology.** One output file per ordered variant, period unit
-and placement. A period unit is an entry's `requested_period`, the clipped period one
-binding slice serves: a source period range is one unit, while a year or month member
-serves its own period as its own unit. A year or month member always forms its own unit,
-for any table, projection or not, so a source range over a table with a year member
-splits into the range's file and the member's file. A column window (#1645) likewise
-serves its own clipped period, so a window narrower than the source range is its own
-unit too. `simplify:` a unit's file is keyless only when a windowed column or a member
-is narrower than the ordered key's range, since the key then sits in the range's unit
-and not in the narrower one. Grouping files by the binding slice's period before
-clipping removes that, and is tracked in #1661. The placement is the partition, the
-projection or neither, named in slug spelling (`lisa_individer-15plus_2019.csv`,
+**Extraction keeps delivery topology.** One output file per ordered variant, physical
+table and table edition (`physical.edition`, #1661). `physical.table` is the unique
+`physical_id`, and the partition and projection token are facts of the table, so the
+edition only names the file's period. An entry's `requested_period` keeps the clipped
+days it serves (availability, a column window, a year or month member) but never splits
+a file: a year or month member, a windowed column and the ordered key of one table land
+in the table's one file, whichever sources and years ordered them. Since v1 extracts
+each table whole, a split by clipped period would only repeat the same rows and separate
+columns from their keys. In the global fallback the edition is the entry's merged
+requested period, so nothing changes there. `simplify:` table grouping holds while v1
+has no row filter. Once a row filter exists, a file's filter is the union of its
+entries' `requested_period`. The placement is the partition, the projection or neither,
+named in slug spelling (`lisa_individer-15plus_2019.csv`,
 `agi_individuppgifter-agi_arb_2021-03.csv` for a partition,
 `<register>_<variant>_<token>_<period>.csv` for a projection). What goes in as two
 tables comes out as two files: shard identity (reporter stream, municipality) may exist

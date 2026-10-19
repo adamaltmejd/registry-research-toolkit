@@ -5004,7 +5004,7 @@
               "$ref": "#/$defs/PhysicalCoordinate"
             },
             "requested_period": {
-              "description": "The availability-clipped period this table serves.",
+              "description": "The days this entry serves: the request clipped by availability, a column\nwindow and a year or month member. It does not choose the output file; the\ntable's edition does.",
               "type": "string"
             },
             "source": {
@@ -5109,7 +5109,7 @@
               "type": "string"
             },
             "edition": {
-              "description": "The table's edition, rendered as a period.",
+              "description": "The table's edition, rendered as a period. With the table and the variant it\nnames the output file: one file per table edition, whatever periods its\nentries request.",
               "type": "string"
             },
             "member": {

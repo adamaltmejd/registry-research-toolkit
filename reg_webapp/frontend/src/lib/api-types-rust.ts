@@ -956,7 +956,11 @@ export interface components {
         OrderEntry: {
             logical: components["schemas"]["LogicalCoordinate"];
             physical: components["schemas"]["PhysicalCoordinate"];
-            /** @description The availability-clipped period this table serves. */
+            /**
+             * @description The days this entry serves: the request clipped by availability, a column
+             *     window and a year or month member. It does not choose the output file; the
+             *     table's edition does.
+             */
             requested_period: string;
             /** @description The project source's name. */
             source: string;
@@ -1021,7 +1025,11 @@ export interface components {
          */
         PhysicalCoordinate: {
             column: string;
-            /** @description The table's edition, rendered as a period. */
+            /**
+             * @description The table's edition, rendered as a period. With the table and the variant it
+             *     names the output file: one file per table edition, whatever periods its
+             *     entries request.
+             */
             edition: string;
             member?: components["schemas"]["PivotMember"] | null;
             /** @description The table's disjoint-partition label; absent when it has none. */

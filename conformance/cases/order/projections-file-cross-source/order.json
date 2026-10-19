@@ -21,6 +21,23 @@
       "logical": {
         "provider": "scb",
         "register": "example",
+        "representation": "Person",
+        "variable": "scb/example/person",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Person",
+        "edition": "2018..2019",
+        "projection": "yearly-narrow",
+        "table": "YearlyNarrow"
+      },
+      "requested_period": "2018",
+      "source": "S2018"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
         "representation": "Late",
         "variable": "scb/example/late",
         "variant": "annual"
