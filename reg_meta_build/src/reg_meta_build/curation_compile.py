@@ -160,11 +160,13 @@ from .source_value_bindings import (
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+    from .cis2016_matrix import Cis2016Matrix
     from .curation_tree import (
         CurationTree,
         IdentityColumnOwnerEntry,
         IdentityRenameEntry,
         IdentitySplitEntry,
+        MatrixRepresentationEntry,
         RegisterCuration,
     )
     from .pipeline import CompiledScope
@@ -1916,6 +1918,24 @@ def compile_alias_windows(
     return tuple(cases), tuple(diagnostics)
 
 
+def _load_declared_matrix(
+    tree: CurationTree, declaration: MatrixRepresentationEntry
+) -> Cis2014Matrix | Cis2016Matrix:
+    """A `[[representation.matrix]]` declaration's evidence, kept inside the tree."""
+    path = tree.root / declaration.evidence_file
+    if not path.resolve().is_relative_to(tree.root.resolve()):
+        raise curation_error(
+            "matrix_evidence_invalid",
+            f"{declaration.evidence_file}: matrix evidence escapes curation root.",
+            "Keep reviewed matrix evidence inside the curation tree.",
+        )
+    return load_matrix(
+        path,
+        source_mode=declaration.source_mode,
+        expected_selector=declaration.selector,
+    )
+
+
 def compile_matrix_repr(
     tree: CurationTree,
     prepared: PreparedCatalogSources,
@@ -1984,18 +2004,7 @@ def compile_matrix_repr(
                 keys[scope_key].extend(period_keys)
                 diagnostics.extend(issues)
                 for declaration in register.representation.matrix:
-                    path = tree.root / declaration.evidence_file
-                    if not path.resolve().is_relative_to(tree.root.resolve()):
-                        raise curation_error(
-                            "matrix_evidence_invalid",
-                            f"{declaration.evidence_file}: matrix evidence escapes curation root.",
-                            "Keep reviewed matrix evidence inside the curation tree.",
-                        )
-                    matrix = load_matrix(
-                        path,
-                        source_mode=declaration.source_mode,
-                        expected_selector=declaration.selector,
-                    )
+                    matrix = _load_declared_matrix(tree, declaration)
                     ref = f"{register.source_file}#/matrix/{matrix.selector.edition}"
                     if native[-1] != matrix.selector.register_id:
                         diagnostics.append(
@@ -6926,6 +6935,29 @@ def compile_errata(
                 if edition.native_id is not None and edition.name in split.editions:
                     moved_editions[edition.key] = (edition.name, split.split)
         variant_contexts: dict[int, ErrataVariantContext] = {}
+        # The columns a documented_blank CIS matrix adds, by variant and column,
+        # then native edition (#1681). The source names no such column, so the
+        # documented-column check cannot see them; a named matrix's columns are
+        # documented and refused there. Named `versions` compare by edition,
+        # never by date: CIS waves share a reference year across separate
+        # deliveries. A versionless mint binds no edition, so it is refused on
+        # variant and column alone.
+        matrix_columns: dict[tuple[int, str], dict[int, tuple[str, str]]] = {}
+        if register.errata.column and len(matches) == 1:
+            for declaration in register.representation.matrix:
+                if declaration.source_mode != "documented_blank":
+                    continue
+                matrix = _load_declared_matrix(tree, declaration)
+                selector = matrix.selector
+                for answer in matrix.answers:
+                    for column in answer.columns:
+                        matrix_columns.setdefault(
+                            (selector.register_variant_id, fold_column(column)), {}
+                        )[selector.regver_id] = (
+                            selector.edition,
+                            f"{register.source_file}#/matrix/{selector.edition} "
+                            f"answer {answer.key!r}",
+                        )
         for index, row in enumerate(register.errata.version, 1):
             case_id = f"{register.source_file}#/errata.version/{index}"
             statuses["entries_read"].append(case_id)
@@ -7061,6 +7093,36 @@ def compile_errata(
                     f"{register_id}.{row.column}" not in accepted_names
                 ):
                     blockers = ("declared column has no tracked slug",)
+                    converted = None
+                elif table == "column" and (
+                    claims := tuple(
+                        f"{claim} claims column {row.column!r} in edition {name!r}"
+                        for native_edition, (name, claim) in matrix_columns.get(
+                            (variant_id, fold_column(row.column)), {}
+                        ).items()
+                        # Deliberately stricter than
+                        # scb_errata._overlaps_documenting_edition, which
+                        # compares `holdings_period` by date: a versionless
+                        # mint binds no edition, and matrix claims compare on
+                        # edition, never on date, so it is refused on variant
+                        # and column whatever its period. Named `versions`
+                        # compare on the bound editions' native ids (regver).
+                        if row.versions is None
+                        or any(
+                            edition.name in row.versions
+                            and edition.native_id == native_edition
+                            for edition in editions
+                        )
+                    )
+                ):
+                    blockers = claims
+                    if row.versions is None:
+                        blockers += (
+                            "the mint names no `versions`, so it binds no edition "
+                            "and cannot be shown disjoint from the matrix edition; "
+                            "name the mint's `versions` to show it is disjoint, "
+                            "or remove the mint if the matrix answer covers it",
+                        )
                     converted = None
                 else:
                     context = variant_contexts.get(variant_id)

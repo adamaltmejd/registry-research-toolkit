@@ -1,0 +1,21 @@
+[register]
+provider = "scb"
+slug = "sample"
+native_id = "1"
+[[variant]]
+native_id = "1.2"
+slug = "people"
+[[variable]]
+native_id = "1.99"
+slug = "v99"
+[[variable]]
+native_id = "1.5"
+slug = "v5"
+
+[[errata.delivered]]
+variant = "people"
+column = "Q"
+versions = ["2020"]
+expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:5}}
+evidence = "accepted\n\ndelivery"
+noted = "2026-10-18"

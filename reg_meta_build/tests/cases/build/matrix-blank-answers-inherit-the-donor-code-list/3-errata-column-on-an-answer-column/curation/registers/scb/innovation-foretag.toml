@@ -1,0 +1,46 @@
+[register]
+provider = "scb"
+slug = "innovation-foretag"
+native_id = "257"
+[[variant]]
+native_id = "257.553"
+slug = "_default"
+[[variable]]
+native_id = "257.15661"
+slug = "v15661"
+[[variable]]
+native_id = "257.CO11"
+slug = "c-co11"
+[[variable]]
+native_id = "257.CO12"
+slug = "c-co12"
+[[representation.matrix]]
+source_mode = "documented_blank"
+evidence_file = "registers/scb/innovation-foretag/answers.json"
+selector = { register = "scb/innovation-foretag", register_id = 257, variant = "_default", register_variant_id = 553, edition = "2012 - 2014", regver_id = 7293, var_id = 15662, cvid = 400684 }
+
+[[errata.column]]
+variant = "_default"
+column = "CO11"
+name = "CO11"
+definition = "Held in the earlier wave"
+versions = ["2010 - 2012"]
+data_type = "decimal"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-18"
+
+[[errata.column]]
+variant = "_default"
+column = "CO12"
+name = "CO12"
+definition = "Held in the answers' wave"
+versions = ["2012 - 2014"]
+data_type = "decimal"
+is_identifier = false
+is_sensitive = false
+source = "steward-holdings"
+evidence = "held"
+noted = "2026-10-18"

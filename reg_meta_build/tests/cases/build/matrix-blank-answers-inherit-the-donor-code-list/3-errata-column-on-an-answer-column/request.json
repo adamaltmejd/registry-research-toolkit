@@ -1,0 +1,36 @@
+{
+  "note": "An [[errata.column]] mint on a documented_blank matrix answer's column (#1681). The step-1 source gains an earlier CIS wave, edition '2010 - 2012' (regver 7292, one documented column ORG). The CO12 mint names the matrix's own edition '2012 - 2014', so answer-abroad and the mint would both claim CO12 in that one delivery: the mint is refused as a stale entry whose detail names the matrix answer, and forms no c-co12 state. The CO11 mint names '2010 - 2012', the adjacent wave, which shares the reference year 2012 with the matrix edition, as committed CIS2002 mints share 2002 with the cis2004 matrix: two deliveries, so it mints c-co11 beside answer-sweden.",
+  "fails_if": "`compile_errata` in curation_compile.py does not refuse an [[errata.column]] mint on a column a documented_blank matrix answer adds in the same variant and edition (a c-co12 state is built, no stale issue), or the refusal compares dates rather than editions (the c-co11 mint on the adjacent wave is refused), or the detail stops naming the matrix answer",
+  "sources": {
+    "description": "SCB register 257 (variant 553): the step-1 blank-column CIS 2014 instance plus an earlier wave '2010 - 2012' documenting ORG.",
+    "scb": {
+      "registerinformation": [
+        {
+          "cvid": 400684,
+          "var_id": 15662,
+          "colname": "",
+          "varname": "Partner location",
+          "register": ["Innovation", 257, 553],
+          "regver_id": 7293,
+          "versionname": "2012 - 2014",
+          "year": "2014",
+          "data_type": "varchar"
+        },
+        {
+          "cvid": 400600,
+          "var_id": 15661,
+          "colname": "ORG",
+          "varname": "Organisation",
+          "register": ["Innovation", 257, 553],
+          "regver_id": 7292,
+          "versionname": "2010 - 2012",
+          "year": "2012",
+          "data_type": "varchar"
+        }
+      ],
+      "vardemangder": ["Svar|1|1|Yes|400684|7001"],
+      "valid_dates": ["7001|2012-01-01|2014-12-31"],
+      "unika": null
+    }
+  }
+}

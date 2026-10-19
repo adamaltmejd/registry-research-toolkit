@@ -657,9 +657,23 @@ edition has one, so sub-annual editions of one year stay disjoint. A column entr
 delivered editions then count as documenting ones, so the column entry is refused
 (`column_now_documented`) when a period overlaps, even under a different edition name;
 undated or `holdings_period` column entries beside a delivered one are refused at load.
-Its identity is `(register, column)`, so two variants of one register use the same
-variable identity. `source` records the evidence class; it does not change the
-materialized rows.
+A documented_blank CIS matrix answer adds a column the source names nowhere, so the
+documented-column check cannot see it (a named matrix's columns are documented and
+refused there). A column entry on the same variant and column is refused as stale when
+it cannot be shown disjoint from the matrix edition, its detail naming the matrix answer
+(#1681). Named `versions` compare on the bound editions' native edition ids (regver):
+the entry is refused when they include the matrix's own edition. A versionless entry
+(`holdings_period` or `all_versions`) binds no edition, and matrix claims compare on
+edition, not on date, so it is refused on variant and column whatever its period. This
+is deliberately stricter than the documented-column check
+(`scb_errata._overlaps_documenting_edition`), which compares a `holdings_period` by date
+and counts only fully undated holdings as overlapping. The edition comparison is never
+by date and must not become a date-overlap check: two claims on one delivered edition is
+the defect, while CIS waves are separate deliveries that share a reference year (the
+committed CIS2002 mints, edition "2000 - 2002", share 2002 with the cis2004 matrix's
+"2002 - 2004" and stay). Its identity is `(register, column)`, so two variants of one
+register use the same variable identity. `source` records the evidence class; it does
+not change the materialized rows.
 
 A non-SCB register (SOS, a thin provider) takes `[[errata.column]]` too (#1633). It has
 no named editions, so the entry dates its holding with `holdings_period` alone, and its
