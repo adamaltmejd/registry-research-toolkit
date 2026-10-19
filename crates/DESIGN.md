@@ -161,9 +161,9 @@ Rules:
 - **Deterministic responses.** `meta` carries no timing; the same request on the same
   catalog returns the same bytes, and goldens compare raw output.
 - **A ref is an FQID or a bare name.** A bare name is a register, variable or
-  classification name, matched case-insensitively (`fold_identity`), never a slug. A
-  unique name resolves; an ambiguous one returns the candidates with their FQIDs as
-  `ambiguous_ref`, so the next call can be exact.
+  classification name, matched case-insensitively (`fold_identity`), so a slug matches
+  only where it is also the name. A unique name resolves; an ambiguous one returns the
+  candidates with their FQIDs as `ambiguous_ref`, so the next call can be exact.
 - **`show` plus facet operations.** `show(ref)` returns a summary for any kind; separate
   operations fetch the heavy parts (states, values, lineage, graph, coverage).
 - **One time filter, `period`**, in `reg-core`'s grammar (`2019`, `2015..2019`,

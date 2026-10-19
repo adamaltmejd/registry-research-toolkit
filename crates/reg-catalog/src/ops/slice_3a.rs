@@ -17,9 +17,9 @@ pub const OPERATIONS: &[Operation] = &[
         tool: Some("search"),
         description: "Search the catalog's registers, variables, classifications and codes \
             in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` \
-            (a FQID or a register name, case-insensitive; a slug is not a name) and \
-            `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back \
-            as `cursor` for the next page.",
+            (a FQID or a register name, case-insensitive; a slug only where it is also the \
+            name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass \
+            `next_cursor` back as `cursor` for the next page.",
         params: &[
             Param::required("q", Type::String),
             Param::optional("type", Type::Enum(TYPES)),

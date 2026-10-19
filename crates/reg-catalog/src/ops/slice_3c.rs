@@ -13,10 +13,10 @@ pub const OPERATIONS: &[Operation] = &[
         paths: &["/api/schema/{ref}"],
         tool: Some("schema"),
         description: "The delivered columns of a register, or of one variable (a FQID or a \
-            name, case-insensitive; a slug is not a name): one row per register variant, \
-            window and column, with its type, width and concept group. `period` (2019, \
-            2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a \
-            slug); pass `next_cursor` back as `cursor` for the next page.",
+            name, case-insensitive; a slug only where it is also the name): one row per \
+            register variant, window and column, with its type, width and concept group. \
+            `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps \
+            one variant (a slug); pass `next_cursor` back as `cursor` for the next page.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("period", Type::Period),
@@ -70,10 +70,10 @@ pub const OPERATIONS: &[Operation] = &[
         paths: &["/api/coverage/{ref}"],
         tool: Some("coverage"),
         description: "The calendar years a register or a variable (a FQID or a name, \
-            case-insensitive; a slug is not a name) is delivered in: their span and gaps, \
-            and the years per register variant, or for a variable the columns delivered \
-            each year. An open-ended delivery counts its opening year; a ref with no dated \
-            delivery is not found.",
+            case-insensitive; a slug only where it is also the name) is delivered in: \
+            their span and gaps, and the years per register variant, or for a variable the \
+            columns delivered each year. An open-ended delivery counts its opening year; a \
+            ref with no dated delivery is not found.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("scope", Type::Scope),
@@ -86,11 +86,11 @@ pub const OPERATIONS: &[Operation] = &[
         name: "resolve",
         paths: &["/api/resolve"],
         tool: Some("resolve"),
-        description: "Delivered column names (data-file headers, 1 to 200 of them) to \
-            the variables delivering them, by exact case-insensitive match: one row per \
-            name, `matched` with its variables or `no_match`. `register` (a FQID or a \
-            name) keeps matches to one register. Not ref resolution: use `search` to \
-            discover names.",
+        description: "Delivered column names (data-file headers, 1 to 200 of them) to the \
+            variables delivering them, by exact case-insensitive match: one row per name, \
+            `matched` with its variables or `no_match`. `register` (a FQID or a register \
+            name, case-insensitive; a slug only where it is also the name) keeps matches \
+            to one register. Not ref resolution: use `search` to discover names.",
         params: &[
             Param::required("columns", Type::Strings),
             Param::optional("register", Type::Ref),

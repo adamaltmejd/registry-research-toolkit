@@ -32,8 +32,9 @@ Each tool's parameters are in its MCP schema; this is what each one is for.
 ## Conventions
 
 - **Refs.** A `ref` is an FQID (`scb/lisa`, `scb/lisa/kon`, `class/sun1996`) or a bare
-  name. A bare name that matches several entities fails with `ambiguous_ref`; repeat the
-  call with one of the candidates' FQIDs.
+  name: a register, variable or classification name, matched case-insensitively; a slug
+  matches only where it is also the name. A bare name that matches several entities
+  fails with `ambiguous_ref`; repeat the call with one of the candidates' FQIDs.
 - **Periods.** `period` takes `2019`, `2015..2019`, `LA2019`, `2019-03` or
   `2019-01-01..2019-06-30`. `diff` takes `from` and `to` in the same grammar.
 - **Paging.** Open-ended lists return `{"items": [...], "next_cursor": ...}`. Pass
