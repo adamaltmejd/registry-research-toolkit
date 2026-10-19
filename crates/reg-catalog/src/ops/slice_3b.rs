@@ -149,8 +149,9 @@ pub const OPERATIONS: &[Operation] = &[
         tool: Some("docs"),
         description: "A register's related documents (rehosted PDFs): title, source, \
             license, and the `sha256` and `byte_size` of the bytes \
-            `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID or a bare \
-            name.",
+            `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID \
+            (`scb/aes`) or the register's name, case and diacritics folded, matched \
+            as `show` matches a register name; a bare slug (`aes`) is not a name.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("scope", Type::Scope),
