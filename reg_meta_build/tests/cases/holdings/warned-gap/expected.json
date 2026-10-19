@@ -1,0 +1,60 @@
+{
+  "warnings": [
+    "steward_delivery_limitation"
+  ],
+  "tables": [
+    {
+      "physical_id": "Kod_2016_2019",
+      "scope": "intervals",
+      "edition": {
+        "from": 2016,
+        "to": 2019
+      },
+      "partition": null,
+      "projection": null,
+      "retain_unknown_reason": null
+    }
+  ],
+  "periods": [
+    {
+      "physical_id": "Kod_2016_2019",
+      "lo": "2016-01-01",
+      "hi": "2019-12-31"
+    }
+  ],
+  "columns": [
+    {
+      "physical_id": "Kod_2016_2019",
+      "name": "Kod",
+      "unmapped_reason": null
+    }
+  ],
+  "mappings": [
+    {
+      "physical_id": "Kod_2016_2019",
+      "name": "Kod",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/kod",
+      "representation_literal": "Kod",
+      "representation_canonical": "Kod"
+    }
+  ],
+  "states": [
+    {
+      "variable": "scb/example/kod",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "Kod",
+      "valid_from": "2016-01-01",
+      "valid_to": "2017-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/kod",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "Kod",
+      "valid_from": "2018-01-01",
+      "valid_to": "2025-12-31",
+      "pooled": 0
+    }
+  ]
+}

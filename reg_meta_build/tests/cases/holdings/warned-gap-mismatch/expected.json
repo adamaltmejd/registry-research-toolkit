@@ -1,0 +1,8 @@
+{
+  "fails_if": "a mapping warning one year wider than the held years the catalog does not cover (#1684) is accepted, licensing a clone over days the catalog already covers, or is refused without its located cell, the uncovered days and the stated window",
+  "error_code": "inventory_coverage_warning_invalid",
+  "error_contains": "the catalog leaves 2016..2017 of the served period 2016..2019 uncovered, but the data_warning window is 2016..2018",
+  "error_locators": [
+    "policy/inventory.toml:table['Kod_2016_2019'].column['Kod']: scb/example/annual scb/example/kod representation 'Kod'"
+  ]
+}

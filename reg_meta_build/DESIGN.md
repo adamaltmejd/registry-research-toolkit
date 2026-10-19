@@ -2604,7 +2604,12 @@ leave the register. Everything else the loader refuses is `steward_spec_invalid`
 located by file and entry. A curated mapping's `data_warning` (#1684, "Inventory TOML"
 below) spans the decision's tables: the generator clips its window to the period the
 mapping serves in each table and omits it where it misses, and the loader refuses a
-window that meets no dated table of the decision as `inventory_window_invalid`. Flavor
+window that meets no dated table of the decision as `inventory_window_invalid`. The
+generator reviews a warned mapping by the extend-db rule
+(`inventory_coverage.warning_gap_problem`): where the owner leaves part of a table's
+served period uncovered, it admits the mapping only if the table-clipped window states
+exactly those days, and lists a mismatch as `inventory_coverage_warning_invalid`. An
+unwarned mapping with uncovered years stays `stale_declared_mapping_target`. Flavor
 content is still drawn from a census holding and table selection, not from series
 membership: an excluded re-delivery still documents its columns.
 
@@ -2691,6 +2696,36 @@ query. A warning is keyed by the logical cell, so it reaches every partition sha
 projection serving that cell (`simplify:` in `mapping_data_warnings`). No reader
 changes: holdings `/api/warnings` and `states` warning ids attribute it like any
 column-scoped warning, and the order manifest carries no warning field.
+
+A mapping warning also licenses held days the catalog does not cover. The steward may
+hold years of a column that no catalog state documents (SoS registers whose later
+deliveries recoded earlier years). `compile_holdings` computes, for each warned mapping
+in a dated table, the served days that the cell's catalog windows leave uncovered (U:
+states and alias windows, folded by column, the windows `inventory_coverage` reads).
+With U empty the warning is an ordinary caveat. Otherwise the warning must state exactly
+U, which must be one leading or trailing interval of the served period; a window without
+bounds states the whole served period. Anything else refuses as
+`inventory_coverage_warning_invalid`, located at the mapping, naming U and the stated
+window. The flavor then gets one cloned state of the cell over U: a copy of the cell's
+state in force at the end of the served period (the extract is in the coding current at
+extraction), or, where U reaches that end, the nearest state after U, else before it.
+The clone's id is the catalog's own state id (`_storage_id`, in the provider's band)
+over the clone's start, so it names no steward; `pooled = 0` and
+`provenance = "steward:<id>"` mark it as the steward's word, not the catalog's. The id
+does not key the column, so a catalog state of the cell under another delivery column
+starting the same day would collide (`simplify:` in `_licensed_clones`). Its
+`state_classification` and classification-conformance rows are copied under the clone's
+id; its lineage is not, since that would invent evidence. The derived tables read the
+states, so the clones are followed by a full `derive`, and extend-db derives twice
+(`simplify:` in `compile_holdings`). The warning row and the clone cover the same days,
+so `states` attributes the warning to the clone only, and an order over U is served from
+the table.
+
+An unwarned mapping with uncovered served days is not refused by extend-db:
+`inventory_coverage` is a candidate emitter for the catalog, not a holdings validation
+gate, and the inventory states holdings, not coverage. Such a gap still surfaces at
+order time as a `coverage_gap` finding for the uncovered years. The warning is what
+turns a gap into a licensed holding, so the rule binds only a mapping that carries one.
 
 A refusal is a configuration error (exit 10) that names the file and each offending
 `table[...]`, `column[...]` or field, under one code per rule family:

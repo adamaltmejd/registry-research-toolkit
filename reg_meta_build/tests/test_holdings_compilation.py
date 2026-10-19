@@ -63,9 +63,15 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
     spec = load_steward_spec(spec_dir)
     with sqlite3.connect(output) as conn:
         if "error_contains" in expected:
-            with pytest.raises(ValueError) as error:
+            with pytest.raises((ValueError, RegMetaError)) as error:
                 compile_holdings(conn, candidate, steward="swecov", spec=spec)
-            message = str(error.value)
+            message = (
+                error.value.message
+                if isinstance(error.value, RegMetaError)
+                else str(error.value)
+            )
+            if "error_code" in expected:
+                assert error.value.code == expected["error_code"], message
             assert expected["error_contains"] in message
             for locator in expected.get("error_locators", []):
                 assert locator in message

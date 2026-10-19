@@ -1,0 +1,50 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/valid_from": [
+        "2016-01-01",
+        "2018-01-01"
+      ],
+      "/data/items/*/valid_to": [
+        "2017-12-31",
+        "2019-12-31"
+      ],
+      "/data/items/*/delivery_column_name": [
+        "Kod",
+        "Kod"
+      ],
+      "/data/items/*/data_type": [
+        "integer",
+        "integer"
+      ],
+      "/data/items/*/provenance": [
+        "steward:swecov",
+        null
+      ],
+      "/data/items/*/warning_ids": [
+        [
+          "237cc2fccf7cdb57f654de89e7b49efa0b3b2c6168804ee432722ee5d494386b"
+        ],
+        []
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/warning_id": [
+        "237cc2fccf7cdb57f654de89e7b49efa0b3b2c6168804ee432722ee5d494386b"
+      ],
+      "/data/*/code": [
+        "steward_delivery_limitation"
+      ],
+      "/data/*/valid_from": [
+        "2016-01-01"
+      ],
+      "/data/*/valid_to": [
+        "2017-12-31"
+      ]
+    }
+  }
+]

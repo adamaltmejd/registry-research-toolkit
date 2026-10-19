@@ -145,6 +145,50 @@ def test_mapping_decision_refuses_range_without_full_coverage(
     assert entry["code"] == "stale_declared_mapping_target"
 
 
+@pytest.mark.parametrize(
+    ("window", "code"),
+    [
+        ("{ from = 2017, to = 2018 }", None),
+        ("{ from = 2017, to = 2019 }", "inventory_coverage_warning_invalid"),
+    ],
+)
+def test_mapping_decision_warning_licenses_exactly_the_uncovered_years(
+    tmp_path: Path, flavored_db: Path, window: str, code: str | None
+) -> None:
+    """The catalog state starts in 2019, so a mapping over 2018..2019 leaves 2018
+    uncovered (#1684). A warning whose window, clipped to the table, is exactly
+    2018 admits the mapping (emitted as 2018); one whose clip is 2018..2019 is
+    `inventory_coverage_warning_invalid`, the code extend-db refuses it by.
+    Unwarned, the gap stays stale (the case above). Fails if the generator
+    compares the unclipped window, accepts a mismatched warning, or reports the
+    mismatch as a stale target."""
+    db = _decision_db(
+        tmp_path, flavored_db, valid_to="2019-12-31", competing_owner=False
+    )
+    warning = _WARNING.replace("{ from = 2017, to = 2018 }", window)
+    decision = _mapping_decision().replace('"T_kolumn" }', f'"T_kolumn", {warning} }}')
+    if code is not None:
+        with pytest.raises(SystemExit, match="Inventory not replaced"):
+            _run_inventory(
+                tmp_path,
+                db,
+                "TSERIES",
+                ["Physical"],
+                edition=_RANGE,
+                decisions=decision,
+            )
+        (entry,) = _inventory_worklist(tmp_path)["mapping_scope_needed"]
+        assert entry["code"] == code
+        return
+    steward = _run_inventory(
+        tmp_path, db, "TSERIES", ["Physical"], edition=_RANGE, decisions=decision
+    )
+    (table,) = load_delivery_inventory(steward / "inventory.toml").tables
+    ((mapping,),) = [column.mappings for column in table.columns]
+    assert mapping.data_warning is not None
+    assert mapping.data_warning.window == "2018"
+
+
 def test_unmap_preserves_exact_reason_without_other_changes(
     tmp_path: Path, flavored_db: Path
 ) -> None:

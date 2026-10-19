@@ -7,8 +7,10 @@ import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from ._resolved_common import _storage_id
 from .data_warnings import DataWarning, keep_warning, mapping_data_warnings
 from .db import catalog_coordinate_ids, stored_data_warnings, write_data_warnings
+from .errors import EXIT_CONFIG, RegMetaError
 from .holdings_accounting import (
     INVENTORY_ROLE_PATH,
     HoldingsAccounting,
@@ -17,9 +19,19 @@ from .holdings_accounting import (
 from .inventory import (
     DeliveryInventory,
     InventoryColumn,
+    _edition_intervals,
+    _location,
+    _render,
+    _segment_bounds,
     edition_bounds,
     load_inventory,
     validate_inventory_placements,
+)
+from .inventory_coverage import (
+    _fold,
+    _load_windows,
+    uncovered_days,
+    warning_gap_problem,
 )
 from .source_evidence import canonical_json
 from .steward_spec import scope_locator
@@ -109,6 +121,178 @@ def canonical_inventory(
     return canonical
 
 
+COVERAGE_WARNING_INVALID = "inventory_coverage_warning_invalid"
+
+# The state-keyed rows a clone carries over, each copied under the clone's id.
+_STATE_CHILDREN = (
+    "state_classification",
+    "classification_conformance",
+    "classification_conformance_code",
+)
+
+
+def _licensed_clones(
+    conn: sqlite3.Connection,
+    canonical: DeliveryInventory,
+    *,
+    variables: dict[str, int],
+    variants: dict[str, int],
+) -> list[tuple[sqlite3.Row, int, str, str]]:
+    """The catalog states a mapping warning licenses (#1684), as `(source state
+    row, clone id, valid_from, valid_to)`.
+
+    A warned mapping whose served period the catalog's windows for its cell
+    (`inventory_coverage._load_windows`: states and alias windows, folded by
+    column) leave partly uncovered holds those days only on the warning's word,
+    so the warning must state exactly those days (U). The flavor then gets one
+    state of the cell over U, cloned from the cell's state in force at the end of
+    the served period: the extract is in the coding current at extraction. Where
+    U reaches that end, the clone takes the cell's nearest state after U, else
+    the nearest before it. An unwarned mapping is never refused here: coverage is
+    not a holdings validation gate (`inventory_coverage`), and its uncovered
+    years stay a `coverage_gap` at order time."""
+    # simplify: U is one leading or trailing interval, and a warned mapping with U
+    # carries no second, unrelated caveat inside its coverage. Split the warning
+    # and the clone per interval if a delivery is ever uncovered at both ends.
+    # simplify: the clone id is the catalog state id over its start, which keys no
+    # column, so a state of the cell under another column starting that day fails
+    # the INSERT unlocated. Key the id by column if such a cell ever appears.
+    warned = [
+        (table, column, mapping)
+        for table in canonical.tables
+        if table.period_scope == "intervals"
+        for column in table.columns
+        for mapping in column.mappings
+        if mapping.data_warning is not None
+    ]
+    if not warned:
+        return []
+    pairs = {
+        (variables[mapping.variable], variants[mapping.register_variant])
+        for _, _, mapping in warned
+    }
+    windows = _load_windows(conn, pairs)
+    problems: list[str] = []
+    clones: dict[int, tuple[sqlite3.Row, int, str, str]] = {}
+    for table, column, mapping in warned:
+        assert mapping.data_warning is not None
+        pair = (variables[mapping.variable], variants[mapping.register_variant])
+        served = mapping.served(_edition_intervals(table))
+        gaps = uncovered_days(served, windows.for_mapping(pair, mapping.representation))
+        if not gaps:
+            continue
+        where = (
+            f"policy/inventory.toml:{_location(table.id, column.name)}: "
+            f"{mapping.register_variant} {mapping.variable} representation "
+            f"{mapping.representation!r}"
+        )
+        window = mapping.data_warning.window
+        stated = (_segment_bounds(window),) if window is not None else served
+        if problem := warning_gap_problem(served, gaps, stated):
+            problems.append(f"{where}: {problem}")
+            continue
+        (lo, hi), end = gaps[0], served[-1][1]
+        source = _clone_source(conn, pair, mapping.representation, lo, hi, end)
+        if source is None:
+            problems.append(
+                f"{where}: no catalog state of the cell to clone over {_render(gaps)}"
+                " (its coverage is alias windows only)"
+            )
+            continue
+        provider, register, slug = mapping.variable.split("/")
+        clone_id = _storage_id(
+            provider,
+            "state",
+            register,
+            slug,
+            mapping.register_variant.rsplit("/", 1)[1],
+            lo,
+            source["value_set_version_label"],
+        )
+        # The same cell and gap from two placements (shards, projections) is one
+        # clone; a second source for it is a contradiction, not a choice.
+        kept = clones.setdefault(clone_id, (source, clone_id, lo, hi))
+        if kept[0]["state_id"] != source["state_id"] or kept[2:] != (lo, hi):
+            problems.append(f"{where}: a second clone of one state over {lo}")
+    if problems:
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code=COVERAGE_WARNING_INVALID,
+            error_class="configuration",
+            message="A mapping warning must state exactly the held days the "
+            "catalog does not cover:\n" + "\n".join(f"  {line}" for line in problems),
+            remediation="Set the mapping's data_warning window to the uncovered "
+            "days, or extend the catalog's coverage; see reg_meta_build/DESIGN.md "
+            "→ Inventory TOML.",
+        )
+    return [clones[k] for k in sorted(clones)]
+
+
+def _clone_source(
+    conn: sqlite3.Connection,
+    pair: tuple[int, int],
+    representation: str,
+    lo: str,
+    hi: str,
+    end: str,
+) -> sqlite3.Row | None:
+    """The cell's state a clone over `lo..hi` copies: the one in force on `end`,
+    the served period's last day, unless the gap reaches it; then the nearest
+    state after the gap, else the nearest before it."""
+    states = [
+        row
+        for row in conn.execute(
+            "SELECT * FROM variable_state WHERE variable_id = ? "
+            "AND register_variant_id = ? AND period_scope = 'intervals' "
+            "ORDER BY valid_from",
+            pair,
+        )
+        if _fold(row["delivery_column_name"] or "") == _fold(representation)
+    ]
+    if hi < end:
+        return next(
+            (s for s in states if s["valid_from"] <= end <= s["valid_to"]), None
+        )
+    after = [s for s in states if s["valid_from"] > hi]
+    before = [s for s in states if s["valid_to"] < lo]
+    return after[0] if after else before[-1] if before else None
+
+
+def _write_clones(
+    conn: sqlite3.Connection,
+    clones: list[tuple[sqlite3.Row, int, str, str]],
+    *,
+    steward: str,
+) -> None:
+    """Insert each licensed clone and its state-keyed child rows. The clone's
+    provenance names the steward: the catalog documents no state there."""
+    for source, clone_id, lo, hi in clones:
+        row = {
+            **dict(source),
+            "state_id": clone_id,
+            "valid_from": lo,
+            "valid_to": hi,
+            "pooled": 0,
+            "provenance": f"steward:{steward}",
+        }
+        conn.execute(
+            f"INSERT INTO variable_state ({', '.join(row)}) "
+            f"VALUES ({', '.join('?' * len(row))})",
+            tuple(row.values()),
+        )
+        for table in _STATE_CHILDREN:
+            columns = [
+                name
+                for _, name, *_ in conn.execute(f"PRAGMA table_info({table})")
+                if name != "state_id"
+            ]
+            conn.execute(
+                f"INSERT INTO {table} (state_id, {', '.join(columns)}) "
+                f"SELECT ?, {', '.join(columns)} FROM {table} WHERE state_id = ?",
+                (clone_id, source["state_id"]),
+            )
+
+
 def _write_mapping_warnings(
     conn: sqlite3.Connection, canonical: DeliveryInventory
 ) -> None:
@@ -150,6 +334,7 @@ def compile_holdings(
     canonical = canonical_inventory(
         conn, inventory, coordinate_ids=(variables, variants)
     )
+    clones = _licensed_clones(conn, canonical, variables=variables, variants=variants)
     raw = tomllib.loads(inventory_path.read_text(encoding="utf-8"))
     authored = {table["id"]: (index, table) for index, table in enumerate(raw["table"])}
     logical = {table.id: table for table in canonical.tables}
@@ -246,6 +431,14 @@ def compile_holdings(
         ),
     )
     _write_mapping_warnings(conn, canonical)
+    if clones:
+        from .derive import derive
+
+        _write_clones(conn, clones, steward=steward)
+        # The derived tables read the states, so the clones need a full derive.
+        # simplify: extend-db then derives twice; narrow this to the
+        # state-dependent tables if a flavored build's time ever matters.
+        derive(conn)
     return CompiledHoldings(
         len(logical) + len(unknown), column_id, mappings_count, accounting
     )

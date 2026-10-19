@@ -1,0 +1,8 @@
+{
+  "catalog": "catalog.json",
+  "inventory": "inventory.toml",
+  "census": "census.csv",
+  "scope": "scope.toml",
+  "observe_catalog_states": true,
+  "fails_if": "a mapping warning that states exactly the held years the catalog does not cover (#1684) stops licensing them: no state is cloned over 2016..2017, the clone takes other bounds or does not name the steward, the warning is not written, or the re-derived artifact fails validate_built_db"
+}

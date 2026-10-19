@@ -1940,7 +1940,11 @@ def _steward_load_db(db_path: Path):
 
 
 def _inventory_period_records(
-    records: list[dict], edition: object, *, assess_ranges: bool = False
+    records: list[dict],
+    edition: object,
+    *,
+    assess_ranges: bool = False,
+    licensed: tuple[tuple[str, str], ...] = (),
 ) -> tuple[list[dict], str | None]:
     """Choose already-declared owners by their complete delivery windows.
 
@@ -1949,8 +1953,10 @@ def _inventory_period_records(
     cover its whole edition). The year-independent edition `_default` admits
     only year-independent states, and a finite edition only dated ones: neither
     scope stands in for the other. Distinct owners active together in one
-    variant stay ambiguous.
+    variant stay ambiguous. `licensed` days (a mapping warning's, #1684) need
+    no owner coverage.
     """
+    from reg_meta_build._resolved_common import remaining_windows
     from reg_meta_build.inventory import _merge
     from reg_meta_build.inventory_coverage import _covers
 
@@ -1966,7 +1972,15 @@ def _inventory_period_records(
         and not isinstance(edition, (str, int))
     ):
         return records, None
-    bounds = () if independent else edition_bounds_of(edition)
+    bounds = (
+        ()
+        if independent
+        else tuple(
+            part
+            for lo, hi in edition_bounds_of(edition)
+            for part in remaining_windows(licensed, lo, hi)
+        )
+    )
     grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for record in records:
         grouped[(record["coord"], record["vslug"])].append(record)
@@ -2137,7 +2151,16 @@ _PIVOT_REASON = (
 def _inventory_mapping_records(
     mapping: ColumnMapping, select_owner: bool, records: list[dict], edition: object
 ) -> tuple[list[dict], str | None]:
-    """The delivered records a reviewed mapping pins, or a stale-target code."""
+    """The delivered records a reviewed mapping pins, or a stale-target code.
+
+    A warned mapping (#1684) whose owner leaves part of the reach uncovered is
+    admitted when its warning, clipped to the table, states exactly those days
+    (`inventory_coverage.warning_gap_problem`, the rule extend-db refuses by);
+    the owner must then cover the rest. A mismatch is
+    `inventory_coverage_warning_invalid`. An unwarned gap stays stale."""
+    from reg_meta_build.inventory import _merge
+    from reg_meta_build.inventory_coverage import uncovered_days, warning_gap_problem
+
     owner = mapping.variable.rsplit("/", 1)[1]
     selected = [
         r
@@ -2146,7 +2169,31 @@ def _inventory_mapping_records(
         and r["col"] == mapping.representation
         and (not select_owner or r["vslug"] == owner)
     ]
-    admitted, issue = _inventory_period_records(selected, edition, assess_ranges=True)
+    licensed: tuple[tuple[str, str], ...] = ()
+    if mapping.data_warning is not None and edition != YEAR_INDEPENDENT_EDITION:
+        served = edition_bounds_of(edition)
+        covered = _merge(
+            [
+                (r["valid_from"], r["valid_to"])
+                for r in selected
+                if r["vslug"] == owner
+                and r["period_scope"] == "intervals"
+                and r["valid_from"] is not None
+                and r["valid_to"] is not None
+            ]
+        )
+        if gaps := uncovered_days(served, covered):
+            if mapping.data_warning.window is None:
+                stated = served
+            else:
+                clip = _warning_window(mapping.data_warning, edition)
+                stated = (clip,) if clip is not None else ()
+            if warning_gap_problem(served, gaps, stated):
+                return [], "inventory_coverage_warning_invalid"
+            licensed = gaps
+    admitted, issue = _inventory_period_records(
+        selected, edition, assess_ranges=True, licensed=licensed
+    )
     owned = [r for r in admitted if r["vslug"] == owner]
     return owned, "stale_declared_mapping_target" if issue or not owned else None
 
@@ -2256,18 +2303,13 @@ def _raw_window(window: EditionRange | str) -> object:
     return {"from": window.from_, "to": window.to}
 
 
-def _warning_line(warning: MappingWarning, reach: object) -> str | None:
-    """A decision's mapping warning (#1684) as one table's `data_warning` line,
-    its window clipped to what the mapping serves there (`reach`: its window, its
-    member's period or the table edition), or None where the window misses."""
-    from reg_meta_build.inventory import _intersect, _render_interval
+def _warning_window(warning: MappingWarning, reach: object) -> tuple[str, str] | None:
+    """A windowed mapping warning's window clipped to what the mapping serves in
+    one table (`reach`: its window, its member's period or the table edition), or
+    None where it misses (a year-independent reach is always missed)."""
+    from reg_meta_build.inventory import _intersect
 
-    fields = (
-        f"summary = {_toml_str(warning.summary)}, "
-        f"detail = {_toml_str(warning.detail)}"
-    )
-    if warning.window is None:
-        return f"data_warning = {{ {fields} }}"
+    assert warning.window is not None
     if reach == YEAR_INDEPENDENT_EDITION:
         return None
     window = edition_bounds_of(_raw_window(warning.window))[0]
@@ -2276,12 +2318,25 @@ def _warning_line(warning: MappingWarning, reach: object) -> str | None:
         for segment in edition_bounds_of(reach)
         if (clipped := _intersect(segment, window))
     ]
-    if not parts:
+    # simplify: across an interrupted edition the clip is its hull, which the
+    # inventory refuses (a warning window lies in one served segment). Emit one
+    # warning per segment if a decision's warning must span such a gap.
+    return (parts[0][0], parts[-1][1]) if parts else None
+
+
+def _warning_line(warning: MappingWarning, reach: object) -> str | None:
+    """A decision's mapping warning (#1684) as one table's `data_warning` line,
+    its window clipped to the table (`_warning_window`), or None where it misses."""
+    from reg_meta_build.inventory import _render_interval
+
+    fields = (
+        f"summary = {_toml_str(warning.summary)}, detail = {_toml_str(warning.detail)}"
+    )
+    if warning.window is None:
+        return f"data_warning = {{ {fields} }}"
+    if (clip := _warning_window(warning, reach)) is None:
         return None
-    # simplify: across an interrupted edition the clip is emitted as its hull,
-    # which the inventory refuses (a warning window lies in one served segment).
-    # Emit one warning per segment if a decision's warning must span such a gap.
-    token = _render_interval(parts[0][0], parts[-1][1])
+    token = _render_interval(*clip)
     ends = [int(end) if end.isdigit() else end for end in token.split("..")]
     clipped = ends[0] if len(ends) == 1 else {"from": ends[0], "to": ends[1]}
     return f"data_warning = {{ {fields}, window = {_toml_edition(clipped)} }}"
@@ -2566,9 +2621,9 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 and _competing_owner(
                     [mapping for mapping, _ in adopted],
                     by_coordcol,
-                    lambda m: column_edition
-                    if m.window is None
-                    else _raw_window(m.window),
+                    lambda m: (
+                        column_edition if m.window is None else _raw_window(m.window)
+                    ),
                 )
             ):
                 mapping_issue = "ambiguous_delivered_owners"
@@ -2649,6 +2704,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 )
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
+
             # Union records, windowed records and the plain records of a decision
             # with a window cover only their own part, so they skip the
             # whole-edition owner check. On their variants they decide over their

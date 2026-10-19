@@ -1,0 +1,15 @@
+{
+  "note": "Kod_2016_2019 holds Kod for 2016..2019, the catalog's only state starts in 2018, and the mapping's warning states exactly 2016..2017 (#1684). Holdings-scope states show a steward-provenance clone of the 2018 state over 2016..2017 carrying that warning's id, and the documented state without it. Fails if no clone is written, it takes other bounds, it is not marked as the steward's, or the warning is not attributed to it.",
+  "fixture": "warned-gap",
+  "kind": "steward",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kod"
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/kod"
+    }
+  ]
+}

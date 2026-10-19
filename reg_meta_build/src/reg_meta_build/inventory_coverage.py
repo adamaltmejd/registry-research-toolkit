@@ -86,7 +86,7 @@ from typing import TYPE_CHECKING, Literal
 # leaf, so a stanza reads like every other candidate emitter's. `_PROVIDER` is the
 # ONE provider `curation/registers/scb/<slug>.toml` accepts, imported rather than restated so the
 # partition here cannot drift from the loader's own refusal.
-from reg_meta_build._resolved_common import _CURATED_PROVIDERS
+from reg_meta_build._resolved_common import _CURATED_PROVIDERS, remaining_windows
 from reg_meta_build.db import catalog_coordinate_ids
 from reg_meta_build.edition_bounds import edition_claims
 from reg_meta_build.fqid_slugs import _toml_str
@@ -784,6 +784,41 @@ def _fold(column: str) -> str:
     which folds DISTINCT columns onto each other.
     """
     return unicodedata.normalize("NFC", column).lower()
+
+
+def uncovered_days(
+    served: tuple[_Interval, ...], windows: tuple[_Interval, ...]
+) -> tuple[_Interval, ...]:
+    """The days of `served` no catalog window covers, coalesced (#1684): the
+    held period a mapping warning must state exactly to license."""
+    return _merge(
+        [gap for lo, hi in served for gap in remaining_windows(windows, lo, hi)]
+    )
+
+
+def warning_gap_problem(
+    served: tuple[_Interval, ...],
+    gaps: tuple[_Interval, ...],
+    stated: tuple[_Interval, ...],
+) -> str | None:
+    """Why a mapping warning stating `stated` does not license the held days
+    `gaps` (nonempty) that the catalog leaves uncovered in `served` (#1684), or
+    None when it does: one leading or trailing interval, stated exactly. The one
+    rule extend-db refuses by and the SWECOV generator reviews a decision by."""
+    if len(gaps) > 1 or (gaps[0][0] != served[0][0] and gaps[0][1] != served[-1][1]):
+        return (
+            f"the catalog leaves {_render(gaps)} of the served period "
+            f"{_render(served)} uncovered; a data_warning licenses one leading or "
+            "trailing uncovered interval"
+        )
+    if stated != gaps:
+        return (
+            f"the catalog leaves {_render(gaps)} of the served period "
+            f"{_render(served)} uncovered, but the data_warning window is "
+            f"{_render(stated)}; the warning must state exactly the uncovered "
+            "days (mismatched)"
+        )
+    return None
 
 
 def _covers(edition: _Interval, windows: tuple[_Interval, ...]) -> bool:

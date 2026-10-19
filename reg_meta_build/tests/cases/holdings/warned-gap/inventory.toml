@@ -1,0 +1,17 @@
+version = 1
+steward = "swecov"
+
+# The delivery holds Kod for 2016..2019, but the catalog's only state starts in
+# 2018: the 2016..2017 rows were recoded into the current coding by a later
+# delivery (#1684). The warning states exactly those uncovered years, so it
+# licenses them: the flavor clones the 2018 state over 2016..2017.
+[[table]]
+id = "Kod_2016_2019"
+edition = { from = 2016, to = 2019 }
+[[table.column]]
+name = "Kod"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kod"
+representation = "Kod"
+data_warning = { summary = "Kod is recoded for 2016-2017", detail = "The 2016-2017 rows were recoded into the 2018 coding by a later delivery.", window = { from = 2016, to = 2017 } }

@@ -1,0 +1,16 @@
+version = 1
+steward = "swecov"
+
+# One year too wide (#1684): the catalog's only state starts in 2018, so it
+# leaves 2016..2017 uncovered, but the warning states 2016..2018. It licenses
+# nothing and refuses.
+[[table]]
+id = "Kod_2016_2019"
+edition = { from = 2016, to = 2019 }
+[[table.column]]
+name = "Kod"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kod"
+representation = "Kod"
+data_warning = { summary = "Kod is recoded for 2016-2017", detail = "The 2016-2017 rows were recoded into the 2018 coding by a later delivery.", window = { from = 2016, to = 2018 } }
