@@ -1038,10 +1038,9 @@ evidence = "SWECOV holds V016 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V017 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V017 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V017"
-measurement_unit = "värde, antal eller %"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3328
@@ -1098,10 +1097,9 @@ evidence = "SWECOV holds V0203 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0204 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0204 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 1 000 times above the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0204"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3334
@@ -1170,10 +1168,9 @@ evidence = "SWECOV holds V025 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V026 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V026 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V026"
-measurement_unit = "värde, antal eller %"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3343
@@ -1926,10 +1923,9 @@ evidence = "SWECOV holds V0536 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0537 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0537 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0537"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3472
@@ -2034,10 +2030,9 @@ evidence = "SWECOV holds V0554 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0555 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0555 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 100 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0555"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3479
@@ -2418,10 +2413,9 @@ evidence = "SWECOV holds V0661 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0662 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0662 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0662"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3507
@@ -2490,10 +2484,9 @@ evidence = "SWECOV holds V0681 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0682 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0682 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0682"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3511
@@ -2886,10 +2879,9 @@ evidence = "SWECOV holds V092 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V093 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V093 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 100 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V093"
-measurement_unit = "värde, antal eller %"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3397
@@ -2922,10 +2914,9 @@ evidence = "SWECOV holds V095 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V096 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V096 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 100 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V096"
-measurement_unit = "värde, antal eller %"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3400
@@ -3053,10 +3044,9 @@ evidence = "SWECOV holds V1052 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V1071 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V1071 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V1071"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3541
@@ -3281,10 +3271,9 @@ evidence = "SWECOV holds V1251 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V1252 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V1252 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V1252"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3560
@@ -3308,7 +3297,7 @@ noted = "2026-10-16"
 # native 4372) under the same-name rule. Needs #1647 (errata.delivered beside the
 # 2007-2015 errata.column on the same column); drop this entry if #1647 has not merged.
 [[errata.delivered]]
-data_warning = "SCB documents no column V0401 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation (FoU operating costs for product 1); the unit is unknown: 2003 documents 1000-tal kronor (KSEK), while the 2007-2015 forms ask for a percentage."
+data_warning = "SCB documents no column V0401 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation (FoU operating costs for product 1); the unit is unknown: 2003 documents 1000-tal kronor (KSEK), while the 2007-2015 forms ask for a percentage. In SWECOV's extract the values sit about 1 000 times above the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0401"
 versions = ["2001"]
