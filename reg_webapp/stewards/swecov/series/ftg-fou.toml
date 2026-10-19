@@ -103,10 +103,6 @@ tables = ["FTG_FOU_2015", "FTG_FOU_2017"]
 mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/sektortillhorighet", representation = "INSEKT" }]
 reason = "SWECOV delivery spelling of the own-register catalog variable scb/fou/sektortillhorighet (delivery column INSEKT); catalog errata #1541 (#1533), maintainer-decided 2026-10-12 (#1302)."
 
-[[column]]
-column = "TYPE_SECT"
-tables = ["FTG_FOU_2019", "FTG_FOU_2021"]
-unmap = "Constant in FTG_FOU_2019 and FTG_FOU_2021: the aggregate check found the single value Företagssektorn on every row, so the column carries no information beyond the table itself (#1603, #1509; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "UtsOmg"

@@ -47,9 +47,13 @@ partition = "stora"
 [[column]]
 column = "INV3R_PAP"
 tables = ["ITftg_Stora_2017"]
-hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (35491 and 38334); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+mappings = [{ register_variant = "scb/it-anvandning/it-anvandning-i-foretag", variable = "scb/it-anvandning/andel-mottagna-e-fakturor-processas", representation = "INV3R_PAP" }]
+reason = "SCB documents this 2017 column under two variables with the same meaning: andel-mottagna-e-fakturor-processas (35491, used here; it continues into 2018) and inv3r-pap (38334), whose wording adds the senders (other firms and the public sector), the reference year and the standardised formats (Operator 2026-10-19, same meaning, warn-not-hold; #1603 batch-g)."
+select_owner = true
 
 [[column]]
 column = "INV3R_PMP"
 tables = ["ITftg_Stora_2017"]
-hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (35490 and 38335); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+mappings = [{ register_variant = "scb/it-anvandning/it-anvandning-i-foretag", variable = "scb/it-anvandning/andel-mottagna-fakturor-ej-processas", representation = "INV3R_PMP" }]
+reason = "SCB documents this 2017 column under two variables with the same meaning: andel-mottagna-fakturor-ej-processas (35490, used here) and faktura-ej-autoprocess (38335), whose wording adds the senders (firms and the public sector), the reference year and the share framing (Operator 2026-10-19, same meaning, warn-not-hold; #1603 batch-g)."
+select_owner = true

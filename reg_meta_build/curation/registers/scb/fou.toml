@@ -3358,6 +3358,20 @@ noted = "2026-10-16"
 
 [[errata.column]]
 variant = "foretagssektorn"
+column = "TYPE_SECT"
+data_type = "text"
+name = "TYPE_SECT (enligt leverans)"
+definition = "Odokumenterad kolumn i SWECOV:s FoU-tabeller för 2019 och 2021. SCB dokumenterar ingen variabel TYPE_SECT på Företagssektorn för dessa omgångar; SCB dokumenterar en kolumn med samma namn som Institutionell sektor på FoU-undersökningen för privat icke-vinstdrivande sektor 2023, men att den betydelsen gäller här är inte bekräftat."
+data_warning = "Undocumented column: SCB documents no TYPE_SECT variable or code list on Företagssektorn for these rounds, so its meaning and codes are unknown. In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+is_sensitive = false
+is_identifier = false
+versions = ["2019", "2021"]
+source = "steward-holdings"
+evidence = "SWECOV holds TYPE_SECT in FTG_FOU_2019 and FTG_FOU_2021 (storage varchar(15)). Neither SCB's Registerinformation export nor the public UF0301 documentation names it for Företagssektorn; SCB documents the same name only on the PNP variant in 2023 (native 33, Institutionell sektor). Minted as delivered under warn-not-hold, replacing the 2026-10-16 constant unmap (Operator 2026-10-19, #1603 batch-g). No code list is asserted."
+noted = "2026-10-19"
+
+[[errata.column]]
+variant = "foretagssektorn"
 column = "V601"
 data_type = "integer"
 name = "V601 (enligt leverans)"
@@ -18240,6 +18254,10 @@ slug = "vikt-enligt-leverans"
 [[variable]]
 native_id = "182.TYPE_INST"
 slug = "type-inst-enligt-leverans"
+
+[[variable]]
+native_id = "182.TYPE_SECT"
+slug = "type-sect-enligt-leverans"
 
 [[variable]]
 native_id = "182.V601"
