@@ -233,6 +233,7 @@ def validate_built_db(
         _check_one_value_set_per_period(conn, result, tables)
         _check_no_codeless_codebearing_overlap(conn, result, tables, flavored=flavored)
         _check_pooled_state_overlap(conn, result, tables, flavored=flavored)
+        _check_same_version_states_disjoint(conn, result, tables)
         _check_open_ended_sentinel(conn, result, tables)
         _check_calendar_exact_bounds(conn, result, tables)
         _check_variable_alias_covers_state_columns(conn, result, tables)
@@ -860,6 +861,57 @@ def _check_pooled_state_overlap(
         column_state_overlap_failure(
             "overlapping_pooled_explicit_states", len(rows), len(affected), sample
         )
+    )
+
+
+def _check_same_version_states_disjoint(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """The `ResolvedVariable` state rule (#1694), checked on the written rows.
+
+    Within one ``(variable_id, register_variant_id, value_set_version_label)``
+    no two dated states overlap. Formation enforces this on the resolved IR
+    only; a later writer of ``variable_state`` (the steward overlay) can break
+    it, and ``idx_variable_state_unique`` keys on ``valid_from`` alone, so two
+    overlapping windows with distinct starts pass it. Runs for flavored builds
+    too: the steward rows are what it guards.
+
+    The rule's other two arms are held elsewhere: mixing dated and
+    year-independent states is refused per (variable, variant) by
+    ``_check_schema_shape``, and a second year-independent state per label by
+    ``idx_variable_state_independent_unique``.
+    """
+    result.section("[invariant: one state per (variable, variant, version, period)]")
+    if "variable_state" not in tables:
+        result.ok("variable_state absent — invariant skipped")
+        return
+    rows = conn.execute(
+        "SELECT p.slug, r.slug, v.slug, rv.slug, a.value_set_version_label, "
+        "       a.valid_from, a.valid_to, b.valid_from, b.valid_to "
+        "FROM variable_state a "
+        "JOIN variable_state b "
+        "  ON a.variable_id = b.variable_id "
+        " AND a.register_variant_id = b.register_variant_id "
+        " AND a.value_set_version_label = b.value_set_version_label "
+        " AND a.state_id < b.state_id "
+        " AND a.period_scope = 'intervals' AND b.period_scope = 'intervals' "
+        " AND a.valid_from <= b.valid_to AND b.valid_from <= a.valid_to "
+        "JOIN variable v ON v.variable_id = a.variable_id "
+        "JOIN register r ON r.register_id = v.register_id "
+        "JOIN provider p ON p.provider_id = r.provider_id "
+        "JOIN register_variant rv ON rv.register_variant_id = a.register_variant_id "
+        "ORDER BY p.slug, r.slug, v.slug, rv.slug, a.value_set_version_label"
+    ).fetchall()
+    if not rows:
+        result.ok("no two dated states of one (variable, variant, version) overlap")
+        return
+    sample = "; ".join(
+        f"{r[0]}/{r[1]}/{r[2]} {r[3]} {r[4]!r} [{r[5]}..{r[6]}] ∩ [{r[7]}..{r[8]}]"
+        for r in rows[:5]
+    )
+    result.fail(
+        f"{len(rows)} overlapping same-version dated state pair(s) — a period resolves "
+        f"to >1 state of one (variable, variant, version): {sample}"
     )
 
 
