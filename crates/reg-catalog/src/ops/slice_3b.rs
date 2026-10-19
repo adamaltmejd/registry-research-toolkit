@@ -17,8 +17,9 @@ pub const OPERATIONS: &[Operation] = &[
             classification, `class` (every classification) or a group \
             (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the \
             catalog root. A register lists its variables, groups and variants; a \
-            classification its owning variables. `ref` is a FQID or a bare name; a \
-            retired FQID answers for its successor, under the successor's `fqid`.",
+            classification its owning variables. `ref` is a FQID or a name, \
+            case-insensitive (a slug only where it is also the name); a retired FQID \
+            answers for its successor, under the successor's `fqid`.",
         params: &[
             Param::optional("ref", Type::Ref),
             Param::optional("scope", Type::Scope),
@@ -37,7 +38,8 @@ pub const OPERATIONS: &[Operation] = &[
             states overlapping it, a state's alias windows standing in for it where they \
             overlap. `variant` and `value_set_version` (`_none` for the empty label) \
             narrow the list. In holdings scope, only what is held, clipped to the held \
-            periods. `ref` is a variable FQID or a bare name.",
+            periods. `ref` is a variable FQID or name, case-insensitive (a slug only where \
+            it is also the name).",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("period", Type::Period),
@@ -83,13 +85,13 @@ pub const OPERATIONS: &[Operation] = &[
             `classification`, a book the coding declares, `partition` picks its part: \
             `source_extensions` (default; the codes outside the book, nonstandard and \
             sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs \
-            whose code the book holds). On a classification, `parent` reads one level \
-            of its code tree: empty for the roots, a code for that code's children; \
-            each code's `child_count` is null when the book has no tree, 0 for a leaf. \
-            `q` keeps the rows whose code or label contains it, case and diacritics \
-            folded, over the whole set (`parent` ignored); `total` counts them. In \
-            holdings scope, only \
-            a held state. `ref` is a classification or variable FQID or a bare name.",
+            whose code the book holds). On a classification, `parent` reads one level of \
+            its code tree: empty for the roots, a code for that code's children; each \
+            code's `child_count` is null when the book has no tree, 0 for a leaf. `q` \
+            keeps the rows whose code or label contains it, case and diacritics folded, \
+            over the whole set (`parent` ignored); `total` counts them. In holdings scope, \
+            only a held state. `ref` is a classification or variable FQID or name, \
+            case-insensitive (a slug only where it is also the name).",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("state", Type::StorageId),
@@ -112,11 +114,12 @@ pub const OPERATIONS: &[Operation] = &[
         paths: &["/api/docs/search"],
         tool: Some("docs"),
         description: "Search the documentation: with `q`, the entries whose title, \
-            variable or text match every word (as prefixes, case and diacritics \
-            ignored), best match first, each with a `snippet` marking the matched words \
-            in `**`; without `q`, every entry by filename. `register` (a register FQID \
-            or a bare name) keeps that register's entries; `register_ingested` says \
-            whether it has any. `total` counts the matches.",
+            variable or text match every word (as prefixes, case and diacritics ignored), \
+            best match first, each with a `snippet` marking the matched words in `**`; \
+            without `q`, every entry by filename. `register` (a register FQID or name, \
+            case-insensitive; a slug only where it is also the name) keeps that register's \
+            entries; `register_ingested` says whether it has any. `total` counts the \
+            matches.",
         params: &[
             Param::optional("q", Type::String),
             Param::optional("register", Type::Ref),
@@ -149,8 +152,10 @@ pub const OPERATIONS: &[Operation] = &[
         tool: Some("docs"),
         description: "A register's related documents (rehosted PDFs): title, source, \
             license, and the `sha256` and `byte_size` of the bytes \
-            `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID or a bare \
-            name.",
+            `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID \
+            (`scb/aes`) or the register's name, case-insensitive, matched as `show` \
+            matches a register name; a bare slug (`aes`) resolves only where it is \
+            also the name.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("scope", Type::Scope),

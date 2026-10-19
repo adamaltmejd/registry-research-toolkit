@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`. */
+        /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a name, case-insensitive (a slug only where it is also the name); a retired FQID answers for its successor, under the successor's `fqid`. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,7 +28,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`. */
+        /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a name, case-insensitive (a slug only where it is also the name); a retired FQID answers for its successor, under the successor's `fqid`. */
         get: operations["show"];
         put?: never;
         post?: never;
@@ -79,7 +79,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The calendar years a register or a variable (a FQID or a bare name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found. */
+        /** @description The calendar years a register or a variable (a FQID or a name, case-insensitive; a slug only where it is also the name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found. */
         get: operations["coverage"];
         put?: never;
         post?: never;
@@ -183,7 +183,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID or a bare name. */
+        /** @description A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID (`scb/aes`) or the register's name, case-insensitive, matched as `show` matches a register name; a bare slug (`aes`) resolves only where it is also the name. */
         get: operations["docs_related"];
         put?: never;
         post?: never;
@@ -200,7 +200,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or a bare name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches. */
+        /** @description Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or name, case-insensitive; a slug only where it is also the name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches. */
         get: operations["docs_search"];
         put?: never;
         post?: never;
@@ -337,7 +337,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Delivered column names (data-file headers, 1 to 200 of them) to the variables delivering them, by exact case-insensitive match: one row per name, `matched` with its variables or `no_match`. `register` (a FQID or a name) keeps matches to one register. Not ref resolution: use `search` to discover names. */
+        /** @description Delivered column names (data-file headers, 1 to 200 of them) to the variables delivering them, by exact case-insensitive match: one row per name, `matched` with its variables or `no_match`. `register` (a FQID or a register name, case-insensitive; a slug only where it is also the name) keeps matches to one register. Not ref resolution: use `search` to discover names. */
         get: operations["resolve"];
         put?: never;
         post?: never;
@@ -354,7 +354,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The delivered columns of a register, or of one variable (a FQID or a bare name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page. */
+        /** @description The delivered columns of a register, or of one variable (a FQID or a name, case-insensitive; a slug only where it is also the name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page. */
         get: operations["schema"];
         put?: never;
         post?: never;
@@ -371,7 +371,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a bare name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page. */
+        /** @description Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a register name, case-insensitive; a slug only where it is also the name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page. */
         get: operations["search"];
         put?: never;
         post?: never;
@@ -388,7 +388,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or a bare name. */
+        /** @description A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or name, case-insensitive (a slug only where it is also the name). */
         get: operations["states"];
         put?: never;
         post?: never;
@@ -405,7 +405,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or a bare name. */
+        /** @description A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or name, case-insensitive (a slug only where it is also the name). */
         get: operations["values"];
         put?: never;
         post?: never;
@@ -956,7 +956,11 @@ export interface components {
         OrderEntry: {
             logical: components["schemas"]["LogicalCoordinate"];
             physical: components["schemas"]["PhysicalCoordinate"];
-            /** @description The availability-clipped period this table serves. */
+            /**
+             * @description The days this entry serves: the request clipped by availability, a column
+             *     window and a year or month member. It does not choose the output file; the
+             *     table's edition does.
+             */
             requested_period: string;
             /** @description The project source's name. */
             source: string;
@@ -1021,7 +1025,11 @@ export interface components {
          */
         PhysicalCoordinate: {
             column: string;
-            /** @description The table's edition, rendered as a period. */
+            /**
+             * @description The table's edition, rendered as a period. With the table and the variant it
+             *     names the output file: one file per table edition, whatever periods its
+             *     entries request.
+             */
             edition: string;
             member?: components["schemas"]["PivotMember"] | null;
             /** @description The table's disjoint-partition label; absent when it has none. */

@@ -71,11 +71,13 @@ struct Entry {
     /// The project source's name.
     source: String,
     logical: Logical,
-    /// The availability-clipped period this table serves.
+    /// The days this entry serves: the request clipped by availability, a column
+    /// window and a year or month member. It does not choose the output file; the
+    /// table's edition does.
     requested_period: String,
     physical: Physical,
     /// A projection's key cell its parent also serves (#1634): kept only when
-    /// the projection contributes a cell of its own to the order.
+    /// the projection contributes a cell of its own to the same file.
     #[serde(skip)]
     shared_key: bool,
 }
@@ -98,7 +100,9 @@ struct Logical {
 #[derive(Serialize, ToSchema)]
 #[schema(as = PhysicalCoordinate)]
 struct Physical {
-    /// The table's edition, rendered as a period.
+    /// The table's edition, rendered as a period. With the table and the variant it
+    /// names the output file: one file per table edition, whatever periods its
+    /// entries request.
     edition: String,
     table: String,
     column: String,
@@ -224,9 +228,10 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     if !order.findings.is_empty() {
         return Err(blocked(order.findings));
     }
-    // A projection's shared key cells ride along only with a cell of its own in the
-    // same output file: a projection file whose ordered cells its parent all serves
-    // is not emitted, so no file holds only keys its parent's file also holds.
+    // A projection's shared key cells ride along only with a cell of its own anywhere
+    // in the same output file (the table's edition under the variant, from any source
+    // or period): a projection file whose ordered cells its parent all serves is not
+    // emitted, so no file holds only keys its parent's file also holds.
     let own: BTreeSet<(String, String, String)> = order
         .entries
         .iter()
@@ -244,15 +249,16 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     })
 }
 
-/// The output file an entry lands in: the table under the variant, for one period
-/// unit (the entry's `requested_period`; crates/DESIGN.md, "Extraction keeps delivery
-/// topology").
+/// The output file an entry lands in: the table under the variant, for the table's
+/// edition (crates/DESIGN.md, "Extraction keeps delivery topology"). `table` is the
+/// unique `physical_id`, so its partition and projection token are facts of it; the
+/// entry's clipped `requested_period` does not split the file.
 fn placement(entry: &Entry) -> (String, String, String) {
     let l = &entry.logical;
     (
         entry.physical.table.clone(),
         format!("{}/{}/{}", l.provider, l.register, l.variant),
-        entry.requested_period.clone(),
+        entry.physical.edition.clone(),
     )
 }
 

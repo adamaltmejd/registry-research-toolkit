@@ -12,6 +12,23 @@
       "physical": {
         "column": "Id",
         "edition": "2015..2019",
+        "projection": "narrow",
+        "table": "Narrow"
+      },
+      "requested_period": "2015..2019",
+      "source": "Example"
+    },
+    {
+      "logical": {
+        "provider": "scb",
+        "register": "example",
+        "representation": "Id",
+        "variable": "scb/example/id",
+        "variant": "annual"
+      },
+      "physical": {
+        "column": "Id",
+        "edition": "2015..2019",
         "table": "Wide"
       },
       "requested_period": "2015..2019",

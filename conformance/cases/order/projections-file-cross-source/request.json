@@ -1,5 +1,5 @@
 {
-  "note": "Person and Own in 2018 (source S2018), Person alone in 2019 (source S2019). YearlyNarrow contributes its own Own in 2018 only, so it emits Person beside Own for 2018 and nothing for 2019, where Yearly's 2019 file carries Person. Fails if the shared-key gate is per table and variant, not per period unit (YearlyNarrow's 2019 Person is emitted: a file of keys only).",
+  "note": "Person in 2018 (source S2018), YearlyNarrow's own 2019 year member Late in 2019 (source S2019). A file is the table's edition (#1661), so the key and the own cell, from different sources and years, land in YearlyNarrow's one 2018..2019 file: it carries Person beside Late_2019, and Yearly's file carries Person too. Fails if files are grouped by the clipped requested period or by source (YearlyNarrow's 2018 Person falls in a unit with no own cell and is dropped, leaving YearlyNarrow's file without its key).",
   "fixture": "projection-periods",
   "artifact": "steward",
   "project": {
@@ -17,11 +17,6 @@
             "variable": "scb/example/person",
             "type": "numeric",
             "numeric_subtype": "integer"
-          },
-          {
-            "variable": "scb/example/own",
-            "type": "numeric",
-            "numeric_subtype": "integer"
           }
         ]
       },
@@ -31,7 +26,7 @@
         "period": 2019,
         "bindings": [
           {
-            "variable": "scb/example/person",
+            "variable": "scb/example/late",
             "type": "numeric",
             "numeric_subtype": "integer"
           }
