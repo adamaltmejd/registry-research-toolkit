@@ -80,6 +80,8 @@ def derive_artifact(base: Path, out: Path) -> None:
     revision = builder_commit()
     tmp = out.with_name(out.name + ".tmp")
     tmp.unlink(missing_ok=True)
+    # A killed run's leftover WAL would replay onto the fresh copy.
+    _unlink_wal_sidecars(tmp)
     out.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(base, tmp)
     try:
