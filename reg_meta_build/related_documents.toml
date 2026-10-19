@@ -4,7 +4,8 @@
 # `reg_meta_build/input_data/SCB/docs/<register>/`. `sha256` and `byte_size`
 # pin the exact gitignored bytes so release assets are reproducible. The build
 # stores the bytes plus this provenance in `reg_meta_docs.db` so the released
-# asset can rehost permitted documents as one file.
+# asset can rehost permitted documents as one file. `build-docs` refuses when an
+# entry's binary is absent, unless the entry sets `required = false`.
 #
 # SCB's "Relaterat dokument - Registerversion" file links are served from the
 # mikrometadata UI without stable public PDF URLs. For those files, `source_url`

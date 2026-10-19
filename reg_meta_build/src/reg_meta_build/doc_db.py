@@ -760,20 +760,9 @@ def _insert_related_documents(
 
     if not related_documents:
         return 0
-    if related_docs_dir is None:
-        skipped = [
-            f"{register}/{doc.filename}"
-            for register, docs in sorted(related_documents.items())
-            for doc in docs
-        ]
-        if skipped:
-            log.warning(
-                "related document binary root input_data/SCB/docs is missing; "
-                "skipping mapped related documents: %s",
-                ", ".join(skipped),
-            )
 
-    missing_binaries: list[str] = []
+    missing_required: list[str] = []
+    missing_optional: list[str] = []
     total = 0
     for register, docs in sorted(related_documents.items()):
         if register not in active_registers:
@@ -785,7 +774,9 @@ def _insert_related_documents(
                 else None
             )
             if binary_path is None or not binary_path.is_file():
-                missing_binaries.append(f"{register}/{doc.filename}")
+                (missing_required if doc.required else missing_optional).append(
+                    f"{register}/{doc.filename}"
+                )
                 continue
             content = binary_path.read_bytes()
             digest = sha256(content).hexdigest()
@@ -825,10 +816,31 @@ def _insert_related_documents(
             )
             total += 1
 
-    if missing_binaries:
+    root_note = (
+        " (the binary root input_data/SCB/docs is missing)"
+        if related_docs_dir is None
+        else ""
+    )
+    if missing_required:
+        raise curation_error(
+            code="related_documents_binary_missing",
+            message=(
+                "required related document binaries are missing under "
+                f"input_data/SCB/docs{root_note}: {', '.join(missing_required)}."
+            ),
+            remediation=(
+                "Place each PDF at reg_meta_build/input_data/SCB/docs/<register>/"
+                "<filename> before running build-docs, or set `required = false` "
+                "on an intentionally staged entry in "
+                "reg_meta_build/related_documents.toml."
+            ),
+        )
+    if missing_optional:
         log.warning(
-            "related document map entries with no binary under input_data/SCB/docs: %s",
-            ", ".join(missing_binaries),
+            "optional related document map entries with no binary under "
+            "input_data/SCB/docs%s: %s",
+            root_note,
+            ", ".join(missing_optional),
         )
     return total
 
