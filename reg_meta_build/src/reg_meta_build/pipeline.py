@@ -91,7 +91,15 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import record_ref
 from reg_meta_build.source_event_resolution import SourceEventBindings
-from reg_meta_build.source_files import _emit_timing, _paths_overlap
+from reg_meta_build.source_files import (
+    _emit_timing,
+    _paths_overlap,
+    _record_timings,
+    _start_timing,
+    _take_timings,
+    _timing_mark,
+    _timing_phases,
+)
 from reg_meta_build.source_naming import (  # noqa: TC001
     NamingAmbiguity,
     NamingDeclaration,
@@ -755,19 +763,34 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
     return outcome
 
 
-def _scope_outcome_bytes(key: ScopeKey) -> bytes:
-    """One scope's pickled `ScopeOutcome`; a failure is part of the outcome.
+def _scope_outcome_bytes(
+    key: ScopeKey,
+) -> tuple[bytes, list[tuple[str, float]]]:
+    """One scope's pickled `ScopeOutcome`, and the `--timing` phases it recorded;
+    a failure is part of the outcome.
 
     Every worker count takes this one pickle round trip, so the parent folds the
-    same object graph whether a scope resolved here or in a worker.
+    same object graph whether a scope resolved here or in a worker. The phases
+    travel beside the outcome, never in it, so no timing reaches the resolution.
     """
     journal: list[ScopeAction] = []
+    timings_start = _timing_mark()
     try:
         outcome = _resolve_scope(key, journal)
     except Exception as exc:  # noqa: BLE001 — re-raised by the fold, in scope order
         journal.append(_scope_failure(exc))
         outcome = ScopeOutcome(key=key, journal=tuple(journal))
-    return pickle.dumps(outcome, protocol=pickle.HIGHEST_PROTOCOL)
+    return (
+        pickle.dumps(outcome, protocol=pickle.HIGHEST_PROTOCOL),
+        _take_timings(timings_start),
+    )
+
+
+def _scope_outcome(result: tuple[bytes, list[tuple[str, float]]]) -> ScopeOutcome:
+    """Unpickle one scope's outcome and record its phases, in scope order."""
+    outcome, timings = result
+    _record_timings(timings)
+    return pickle.loads(outcome)
 
 
 def _scope_outcomes(
@@ -781,7 +804,7 @@ def _scope_outcomes(
             with ExitStack() as stack:
                 _SCOPE_HANDLES = _open_scope_handles(stack)
                 for key in order:
-                    yield pickle.loads(_scope_outcome_bytes(key))
+                    yield _scope_outcome(_scope_outcome_bytes(key))
             return
         # Fork shares the context copy-on-write; spawn would pickle it into every
         # worker. Each worker opens its own reader and value sessions, the parent
@@ -806,9 +829,9 @@ def _scope_outcomes(
             for key in order:
                 pending.append(pool.submit(_scope_outcome_bytes, key))
                 if len(pending) >= 2 * workers:
-                    yield pickle.loads(pending.popleft().result())
+                    yield _scope_outcome(pending.popleft().result())
             while pending:
-                yield pickle.loads(pending.popleft().result())
+                yield _scope_outcome(pending.popleft().result())
         except BaseException:
             pool.terminate_workers()
             raise
@@ -956,6 +979,12 @@ def ledger_line(kind: str, value: dict[str, object]) -> str:
 
 
 def write_summary(report_dir: Path, summary: dict[str, object]) -> None:
+    """Write `summary.json`; with `--timing` it also lists the build's phases so
+    far, as the `[timing]` stderr lines name them (`pipeline: total` wraps the
+    others, so they do not sum to it)."""
+    phases = _timing_phases()
+    if phases is not None:
+        summary = {**summary, "timing": phases}
     (report_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
 
 
@@ -1035,6 +1064,7 @@ def check_curation(
     """Check complete selected scopes before catalog assembly, without a database."""
     if not registers or not all(registers):
         raise ValueError("--registers requires nonempty comma-separated scope names")
+    _start_timing()
     started = time.perf_counter()
     result = _resolve(
         prepared_path,
@@ -1049,8 +1079,8 @@ def check_curation(
         workers=workers,
     )
     assert isinstance(result, dict)
-    write_summary(report_dir.resolve(), result)
     _emit_timing("pipeline: total", started)
+    write_summary(report_dir.resolve(), result)
     return result
 
 
