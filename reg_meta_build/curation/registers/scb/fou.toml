@@ -3626,6 +3626,7 @@ native_variable_id = 3331
 # `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT01"
 data_type = "text"
@@ -3670,6 +3671,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT05"
 data_type = "text"
@@ -3681,6 +3683,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT06"
 data_type = "text"
@@ -3692,6 +3695,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT07"
 data_type = "text"
@@ -3703,6 +3707,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT08"
 data_type = "text"
@@ -4022,6 +4027,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "FEStat"
 data_type = "text"
@@ -4671,6 +4677,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "FtgStat"
 data_type = "text"
@@ -8169,6 +8176,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V0557"
 data_type = "integer"
@@ -8587,6 +8595,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1091"
 data_type = "integer"
@@ -8598,6 +8607,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1092"
 data_type = "integer"
@@ -8620,6 +8630,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1102"
 data_type = "integer"
@@ -8631,6 +8642,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of FTG_FOU_2015 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V111"
 data_type = "text"
@@ -8664,6 +8676,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1131"
 data_type = "integer"
@@ -8675,6 +8688,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1132"
 data_type = "integer"
@@ -8884,6 +8898,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1242"
 data_type = "integer"
@@ -10567,6 +10582,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V381"
 data_type = "integer"
@@ -10622,6 +10638,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V441"
 data_type = "integer"
@@ -10633,6 +10650,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V451"
 data_type = "integer"
@@ -11194,6 +11212,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V532"
 data_type = "integer"
@@ -11260,6 +11279,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of FTG_FOU_1999 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V551"
 data_type = "text"
@@ -11271,6 +11291,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of FTG_FOU_1999 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V552"
 data_type = "text"
@@ -11535,6 +11556,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V622"
 data_type = "integer"
@@ -11623,6 +11645,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V662"
 data_type = "integer"
@@ -12107,6 +12130,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V9081"
 data_type = "integer"
@@ -12646,6 +12670,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of FTG_FOU_1999 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V952"
 data_type = "text"
@@ -12723,6 +12748,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V982"
 data_type = "integer"
@@ -12767,6 +12793,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR022"
 data_type = "integer"
@@ -13064,6 +13091,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR270"
 data_type = "integer"
@@ -13075,6 +13103,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR271"
 data_type = "integer"
@@ -13086,6 +13115,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR272"
 data_type = "integer"
@@ -13097,6 +13127,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR280"
 data_type = "integer"
@@ -13108,6 +13139,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR281"
 data_type = "integer"
@@ -13119,6 +13151,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR282"
 data_type = "integer"
@@ -13284,6 +13317,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR381"
 data_type = "integer"
@@ -13339,6 +13373,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR441"
 data_type = "integer"
@@ -13702,6 +13737,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR551"
 data_type = "integer"
@@ -13713,6 +13749,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR552"
 data_type = "integer"
@@ -13955,6 +13992,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR662"
 data_type = "integer"
@@ -14395,6 +14433,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR952"
 data_type = "integer"
@@ -14461,6 +14500,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR982"
 data_type = "integer"

@@ -13248,7 +13248,7 @@ holdings_period = "1989-07-01/1999-06-30"
 source = "steward-holdings"
 evidence = "SWECOV holds REKTOR in LReg_1989 through LReg_1998, editions school years LA1989 through LA1998; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on tjansteregistret. holdings_period is the SWECOV holdings range, from the start of LA1989 to the end of LA1998 (#1302, #1533). The forskola REKTOR name match is not used as evidence."
 noted = "2026-10-12"
-data_warning = "Delivery is documented; the column's meaning and codes are not."
+data_warning = "Delivery is documented; the column's meaning and codes are not. In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 
 [[errata.column]]
 variant = "tjansteregistret"
