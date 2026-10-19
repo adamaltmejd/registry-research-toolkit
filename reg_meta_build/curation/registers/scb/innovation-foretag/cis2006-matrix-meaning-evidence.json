@@ -363,7 +363,7 @@
         "co51"
       ],
       "label_en": "Consultants or private laboratories — Sweden",
-      "definition_en": "Cooperation with consultants or private laboratories in Sweden. This row reads as e on SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with consultants or private laboratories in Sweden.",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -374,7 +374,8 @@
       },
       "source_pages": {
         "co51": 13
-      }
+      },
+      "data_warning": "This row reads as e on SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "consultants-other-europe",
@@ -383,7 +384,7 @@
         "co52"
       ],
       "label_en": "Consultants or private laboratories — Other Europe",
-      "definition_en": "Cooperation with consultants or private laboratories elsewhere in Europe. This row reads as e on SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with consultants or private laboratories elsewhere in Europe.",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -394,7 +395,8 @@
       },
       "source_pages": {
         "co52": 13
-      }
+      },
+      "data_warning": "This row reads as e on SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "consultants-usa",
@@ -403,7 +405,7 @@
         "co53"
       ],
       "label_en": "Consultants or private laboratories — USA",
-      "definition_en": "Cooperation with consultants or private laboratories in the USA. This row reads as e on SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with consultants or private laboratories in the USA.",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -414,7 +416,8 @@
       },
       "source_pages": {
         "co53": 13
-      }
+      },
+      "data_warning": "This row reads as e on SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "consultants-other-countries",
@@ -423,7 +426,7 @@
         "co54"
       ],
       "label_en": "Consultants or private laboratories — Other countries",
-      "definition_en": "Cooperation with consultants or private laboratories in other countries (including China and India). This row reads as e on SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with consultants or private laboratories in other countries (including China and India).",
       "partner": {
         "key": "consultants",
         "label_en": "Consultants or private laboratories"
@@ -434,7 +437,8 @@
       },
       "source_pages": {
         "co54": 13
-      }
+      },
+      "data_warning": "This row reads as e on SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "universities-sweden",
@@ -443,7 +447,7 @@
         "co61"
       ],
       "label_en": "Universities or higher education institutions — Sweden",
-      "definition_en": "Cooperation with universities or higher education institutions (Sweden). Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with universities or higher education institutions (Sweden).",
       "partner": {
         "key": "universities",
         "label_en": "Universities or higher education institutions"
@@ -454,7 +458,8 @@
       },
       "source_pages": {
         "co61": 66
-      }
+      },
+      "data_warning": "Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "universities-other-europe",
@@ -463,7 +468,7 @@
         "co62"
       ],
       "label_en": "Universities or higher education institutions — Other Europe",
-      "definition_en": "Cooperation with universities or higher education institutions (Other Europe). Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with universities or higher education institutions (Other Europe).",
       "partner": {
         "key": "universities",
         "label_en": "Universities or higher education institutions"
@@ -474,7 +479,8 @@
       },
       "source_pages": {
         "co62": 66
-      }
+      },
+      "data_warning": "Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "universities-usa",
@@ -483,7 +489,7 @@
         "co63"
       ],
       "label_en": "Universities or higher education institutions — USA",
-      "definition_en": "Cooperation with universities or higher education institutions (USA). Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with universities or higher education institutions (USA).",
       "partner": {
         "key": "universities",
         "label_en": "Universities or higher education institutions"
@@ -494,7 +500,8 @@
       },
       "source_pages": {
         "co63": 66
-      }
+      },
+      "data_warning": "Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "universities-other-countries",
@@ -503,7 +510,7 @@
         "co64"
       ],
       "label_en": "Universities or higher education institutions — Other countries",
-      "definition_en": "Cooperation with universities or higher education institutions (Other countries). Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with universities or higher education institutions (Other countries).",
       "partner": {
         "key": "universities",
         "label_en": "Universities or higher education institutions"
@@ -514,7 +521,8 @@
       },
       "source_pages": {
         "co64": 66
-      }
+      },
+      "data_warning": "Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "public-research-sweden",
@@ -523,7 +531,7 @@
         "co71"
       ],
       "label_en": "Government or public research institutes — Sweden",
-      "definition_en": "Cooperation with government or public research institutes (Sweden). Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with government or public research institutes (Sweden).",
       "partner": {
         "key": "public_research",
         "label_en": "Government or public research institutes"
@@ -534,7 +542,8 @@
       },
       "source_pages": {
         "co71": 66
-      }
+      },
+      "data_warning": "Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "public-research-other-europe",
@@ -543,7 +552,7 @@
         "co72"
       ],
       "label_en": "Government or public research institutes — Other Europe",
-      "definition_en": "Cooperation with government or public research institutes (Other Europe). Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with government or public research institutes (Other Europe).",
       "partner": {
         "key": "public_research",
         "label_en": "Government or public research institutes"
@@ -554,7 +563,8 @@
       },
       "source_pages": {
         "co72": 66
-      }
+      },
+      "data_warning": "Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "public-research-usa",
@@ -563,7 +573,7 @@
         "co73"
       ],
       "label_en": "Government or public research institutes — USA",
-      "definition_en": "Cooperation with government or public research institutes (USA). Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with government or public research institutes (USA).",
       "partner": {
         "key": "public_research",
         "label_en": "Government or public research institutes"
@@ -574,7 +584,8 @@
       },
       "source_pages": {
         "co73": 66
-      }
+      },
+      "data_warning": "Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     },
     {
       "key": "public-research-other-countries",
@@ -583,7 +594,7 @@
         "co74"
       ],
       "label_en": "Government or public research institutes — Other countries",
-      "definition_en": "Cooperation with government or public research institutes (Other countries). Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4).",
+      "definition_en": "Cooperation with government or public research institutes (Other countries).",
       "partner": {
         "key": "public_research",
         "label_en": "Government or public research institutes"
@@ -594,7 +605,8 @@
       },
       "source_pages": {
         "co74": 66
-      }
+      },
+      "data_warning": "Read from SCB's 7-category list 'Typ av samarbetspartner' in this wave's documentation (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes), which is carried over word for word from the 2002–2004 documentation; nothing in SCB's documentation ties that list to the delivered co columns (maintainer decision 2026-10-16, #1603 batch-e D4)."
     }
   ]
 }

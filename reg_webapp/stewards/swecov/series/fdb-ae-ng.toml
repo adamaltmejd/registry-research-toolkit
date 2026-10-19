@@ -24,8 +24,12 @@ unmap = "Workplace join key of the näringsgren aspect table; scb/fdb/cfar-numme
 
 [[column]]
 column = "RangOrdning"
-hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (ng-rangordning 880 and ngs-rangordning 885); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/ng-rangordning", representation = "RangOrdning" }]
+reason = "RangOrdning ranks the Näringsgren rows of the unit: in SWECOV's extract the rank-1 row holds the largest TidOmsPct share (aggregate check on MONA, reported as a conclusion only). So SWECOV's Ng mapping settles the owner as ng-rangordning (880), not ngs-rangordning (885). Maintainer ruling M2, settled from data 2026-10-19 (#1657; #1603 batch-g)."
+select_owner = true
 
 [[column]]
 column = "tidomspct"
-hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (ng-tid-oms-pct 881 and procent-tid-omsattning 887); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+mappings = [{ register_variant = "scb/fdb/arbetsstalleenheter", variable = "scb/fdb/ng-tid-oms-pct", representation = "TidOmsPct" }]
+reason = "TidOmsPct is the share of time or turnover of the Näringsgren slot it sits beside: in SWECOV's extract each share is filled exactly where its Ng slot is, the values are whole percentages, a unit's shares sum to about 100, and the rank-1 slot holds the largest share (aggregate check on MONA, reported as a conclusion only). So SWECOV's Ng mapping settles the owner as ng-tid-oms-pct (881), not procent-tid-omsattning (887). Maintainer ruling M2, settled from data 2026-10-19 (#1657; #1603 batch-g)."
+select_owner = true

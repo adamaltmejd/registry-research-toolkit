@@ -53,3 +53,8 @@ column = "P1105_Lopnr_PeOrgNr_opnr"
 tables = ["Konkurs_2022", "Konkurs_2023", "Konkurs_2024"]
 mappings = [{ register_variant = "scb/konkurser/konkurser-offentliga-ackord", variable = "scb/konkurser/person-orgnr", representation = "opnr" }]
 reason = "P1105 pseudonymised organisation key of the table's own register: maps to that register's organisation identifier variable (documented for 2022-2024 by the #1502 errata); maintainer-decided 2026-10-13 (Operator batch on #1502/#1504)."
+
+[[column]]
+column = "tidning"
+tables = ["Konkurs_2015", "Konkurs_2017", "Konkurs_2018", "Konkurs_2019", "Konkurs_2020"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."

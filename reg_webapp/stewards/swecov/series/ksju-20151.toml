@@ -19,3 +19,8 @@ column = "HelAntDagar"
 mappings = [{ register_variant = "scb/ksju/sjukfranvaro-sjukloneperioden", variable = "scb/ksju/helantdagar-2015", representation = "HelAntDagar" }]
 select_owner = true
 reason = "SCB documents both the helantdagar and helantdagar-2015 owners for 2015. The 2015 values are continuous with 2016+ (aggregate check on MONA, reported as a conclusion only), and the register's identity.partition assigns the CamelCase spelling to helantdagar-2015 (HelAntDagar), so 2015 joins the 2015– series. (#1603; maintainer decision 2026-10-16)."
+
+[[column]]
+column = "one_sni"
+tables = ["KSju_20151"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."

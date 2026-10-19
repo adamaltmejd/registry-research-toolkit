@@ -47,9 +47,248 @@ partition = "mikro"
 [[column]]
 column = "INV3R_PAP"
 tables = ["ITftg_Mikro_2017"]
-hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (35491 and 38334); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+mappings = [{ register_variant = "scb/it-anvandning/it-anvandning-i-foretag", variable = "scb/it-anvandning/andel-mottagna-e-fakturor-processas", representation = "INV3R_PAP", data_warning = { summary = "SCB documents this column under two variables with the same meaning.", detail = "SCB documents this 2017 column under two variables with the same meaning: andel-mottagna-e-fakturor-processas (35491, used here; it continues into 2018) and inv3r-pap (38334), whose wording adds the senders (other firms and the public sector), the reference year and the standardised formats (Operator 2026-10-19, same meaning, warn-not-hold; #1603 batch-g)." } }]
+reason = "Select the owner SCB carries on into 2018 where there is one, else the lower native id, between two documented owners with the same meaning (Operator 2026-10-19, same meaning, warn-not-hold; #1603 batch-g; the last #1657 holds)."
+select_owner = true
 
 [[column]]
 column = "INV3R_PMP"
 tables = ["ITftg_Mikro_2017"]
-hold = { follow_up = "#1657", reason = "Two documented SCB owners in this edition (35490 and 38335); no SCB document selects one (#1603 batch-e doc-check 2026-10-17). A column never maps to two variables, and a steward mint is refused while SCB documents the column (column_now_documented). Held for a steward mint beside a two-owner documented column, naming both owners as candidates (#1657)." }
+mappings = [{ register_variant = "scb/it-anvandning/it-anvandning-i-foretag", variable = "scb/it-anvandning/andel-mottagna-fakturor-ej-processas", representation = "INV3R_PMP", data_warning = { summary = "SCB documents this column under two variables with the same meaning.", detail = "SCB documents this 2017 column under two variables with the same meaning: andel-mottagna-fakturor-ej-processas (35490, used here) and faktura-ej-autoprocess (38335), whose wording adds the senders (firms and the public sector), the reference year and the share framing (Operator 2026-10-19, same meaning, warn-not-hold; #1603 batch-g)." } }]
+reason = "Select the owner SCB carries on into 2018 where there is one, else the lower native id, between two documented owners with the same meaning (Operator 2026-10-19, same meaning, warn-not-hold; #1603 batch-g; the last #1657 holds)."
+select_owner = true
+
+[[column]]
+column = "ADEGOV1"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "ADEPAY1"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "AWSVALBGPCT"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "AWSVALCPCT"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "AWSVALPCT"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "AXSVALPCT"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "AgKat"
+tables = ["ITftg_Mikro_2013"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "CRMAN"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "CRMSTR"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "EBUY2"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "EMPIUSEPCT"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "EMPMD1PCT"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "INV3R_PAP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "INV3R_PMP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "INV3SBG"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "INV3SBG_PAP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "INV3SBG_PEMP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "INV3SBG_PPMP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "ITERP1"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "ITSP2"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "ITSPRCR2"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "ITSPT2"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "ITSPVAC2"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "ITUST2"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "JEAnt"
+tables = ["ITftg_Mikro_2013"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "JurForm"
+tables = ["ITftg_Mikro_2013"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "KommunSate"
+tables = ["ITftg_Mikro_2013"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Lansate"
+tables = ["ITftg_Mikro_2013"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Q13E_SCAN"
+tables = ["ITftg_Mikro_2013"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Q13E_SIV"
+tables = ["ITftg_Mikro_2013"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "RFAC1"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "RFASPRI1"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "RFPSDP1"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "SISC"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "SISCADE"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "SISCWEB"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "Sektor"
+tables = ["ITftg_Mikro_2013"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "StatusTillaggKod"
+tables = ["ITftg_Mikro_2016"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "TURN"
+tables = ["ITftg_Mikro_2014", "ITftg_Mikro_2016"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "UTVANTP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "UTVEGANV"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "UTVEXF"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "UTVP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "UTVSUP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "WEBCMP"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "WEBORD"
+tables = ["ITftg_Mikro_2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "XGrupp"
+tables = ["ITftg_Mikro_2015", "ITftg_Mikro_2016", "ITftg_Mikro_2017"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."

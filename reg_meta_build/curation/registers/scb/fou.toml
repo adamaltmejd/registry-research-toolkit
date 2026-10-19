@@ -955,14 +955,14 @@ noted = "2026-09-12"
 # Each entry carries the nearest documented edition's variable into rounds SCB does not document, with a data_warning.
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "foretagssektorn"
 column = "V001"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3320
 expected_evidence_sha256 = "4a3b983594096bbf140f889e818d6c6bfff013d5fd8e807bef1bea5f06e31fe1"
-evidence = "SWECOV holds V001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3320 (scb/fou/v001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+evidence = "SWECOV holds V001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3320 (scb/fou/v001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7)."
 noted = "2026-10-16"
 
 [[errata.delivered]]
@@ -1038,10 +1038,9 @@ evidence = "SWECOV holds V016 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V017 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V017 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V017"
-measurement_unit = "värde, antal eller %"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3328
@@ -1098,10 +1097,9 @@ evidence = "SWECOV holds V0203 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0204 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0204 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 1 000 times above the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0204"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3334
@@ -1170,10 +1168,9 @@ evidence = "SWECOV holds V025 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V026 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V026 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V026"
-measurement_unit = "värde, antal eller %"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3343
@@ -1926,10 +1923,9 @@ evidence = "SWECOV holds V0536 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0537 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0537 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0537"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3472
@@ -2034,10 +2030,9 @@ evidence = "SWECOV holds V0554 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0555 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0555 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 100 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0555"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3479
@@ -2418,10 +2413,9 @@ evidence = "SWECOV holds V0661 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0662 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0662 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0662"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3507
@@ -2490,10 +2484,9 @@ evidence = "SWECOV holds V0681 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V0682 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V0682 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0682"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3511
@@ -2886,10 +2879,9 @@ evidence = "SWECOV holds V092 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V093 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V093 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 100 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V093"
-measurement_unit = "värde, antal eller %"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3397
@@ -2922,10 +2914,9 @@ evidence = "SWECOV holds V095 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V096 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V096 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 100 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V096"
-measurement_unit = "värde, antal eller %"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3400
@@ -2946,14 +2937,14 @@ evidence = "SWECOV holds V098 in FTG_FOU_2001; the same delivered name is docume
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V1001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V1001 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. The documented edition's code list is carried as well; every delivered value is in it (#1603 F7, maintainer ruling 2026-10-18)."
 variant = "foretagssektorn"
 column = "V1001"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3532
 expected_evidence_sha256 = "a866e66c11e8305079a2869e2ae1202f1e7c326c9665d8f31d48b0f87d6f36be"
-evidence = "SWECOV holds V1001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3532 (scb/fou/v1001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type."
+evidence = "SWECOV holds V1001 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3532 (scb/fou/v1001), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type. The donor edition's code list is carried by the coding.extend entry below (maintainer ruling 2026-10-18, #1603 batch-f F7)."
 noted = "2026-10-16"
 
 [[errata.delivered]]
@@ -3053,10 +3044,9 @@ evidence = "SWECOV holds V1052 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V1071 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V1071 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V1071"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3541
@@ -3281,10 +3271,9 @@ evidence = "SWECOV holds V1251 in FTG_FOU_2001; the same delivered name is docum
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SCB documents no column V1252 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+data_warning = "SCB documents no column V1252 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds. In SWECOV's extract the values sit about 10 times below the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V1252"
-measurement_unit = "1000-tal kronor (KSEK)"
 versions = ["2001"]
 upstream = "omitted-column-in-version"
 native_variable_id = 3560
@@ -3308,7 +3297,7 @@ noted = "2026-10-16"
 # native 4372) under the same-name rule. Needs #1647 (errata.delivered beside the
 # 2007-2015 errata.column on the same column); drop this entry if #1647 has not merged.
 [[errata.delivered]]
-data_warning = "SCB documents no column V0401 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation (FoU operating costs for product 1); the unit is unknown: 2003 documents 1000-tal kronor (KSEK), while the 2007-2015 forms ask for a percentage."
+data_warning = "SCB documents no column V0401 on FoU Företagssektorn for 2001. The meaning is assumed from SCB's 2003 documentation (FoU operating costs for product 1); the unit is unknown: 2003 documents 1000-tal kronor (KSEK), while the 2007-2015 forms ask for a percentage. In SWECOV's extract the values sit about 1 000 times above the scale of SCB's documented 2003 delivery of the same column (aggregate check on MONA, reported as a conclusion only), so the unit may differ from the documented one and no unit is stated (Operator 2026-10-19, M4 and A6 option 3, #1603 batch-g)."
 variant = "foretagssektorn"
 column = "V0401"
 versions = ["2001"]
@@ -3366,6 +3355,20 @@ versions = ["2019", "2021"]
 source = "steward-holdings"
 evidence = "SWECOV holds TYPE_INST in FTG_FOU_2019 and FTG_FOU_2021 (storage varchar(4)). Neither SCB's Registerinformation export nor the public UF0301 documentation names it. No code list is asserted (#1603 batch-e, #1509; Operator under maintainer delegation 2026-10-16)."
 noted = "2026-10-16"
+
+[[errata.column]]
+variant = "foretagssektorn"
+column = "TYPE_SECT"
+data_type = "text"
+name = "TYPE_SECT (enligt leverans)"
+definition = "Odokumenterad kolumn i SWECOV:s FoU-tabeller för 2019 och 2021. SCB dokumenterar ingen variabel TYPE_SECT på Företagssektorn för dessa omgångar; SCB dokumenterar en kolumn med samma namn som Institutionell sektor på FoU-undersökningen för privat icke-vinstdrivande sektor 2023, men att den betydelsen gäller här är inte bekräftat."
+data_warning = "Undocumented column: SCB documents no TYPE_SECT variable or code list on Företagssektorn for these rounds, so its meaning and codes are unknown. In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+is_sensitive = false
+is_identifier = false
+versions = ["2019", "2021"]
+source = "steward-holdings"
+evidence = "SWECOV holds TYPE_SECT in FTG_FOU_2019 and FTG_FOU_2021 (storage varchar(15)). Neither SCB's Registerinformation export nor the public UF0301 documentation names it for Företagssektorn; SCB documents the same name only on the PNP variant in 2023 (native 33, Institutionell sektor). Minted as delivered under warn-not-hold, replacing the 2026-10-16 constant unmap (Operator 2026-10-19, #1603 batch-g). No code list is asserted."
+noted = "2026-10-19"
 
 [[errata.column]]
 variant = "foretagssektorn"
@@ -3626,6 +3629,7 @@ native_variable_id = 3331
 # `evidence`, and holdings lists do not supply a source data type.
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT01"
 data_type = "text"
@@ -3670,6 +3674,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT05"
 data_type = "text"
@@ -3681,6 +3686,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT06"
 data_type = "text"
@@ -3692,6 +3698,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT07"
 data_type = "text"
@@ -3703,6 +3710,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "ACAT08"
 data_type = "text"
@@ -4022,6 +4030,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "FEStat"
 data_type = "text"
@@ -4671,6 +4680,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "FtgStat"
 data_type = "text"
@@ -8169,6 +8179,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V0557"
 data_type = "integer"
@@ -8587,6 +8598,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1091"
 data_type = "integer"
@@ -8598,6 +8610,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1092"
 data_type = "integer"
@@ -8620,6 +8633,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1102"
 data_type = "integer"
@@ -8631,6 +8645,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of FTG_FOU_2015 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V111"
 data_type = "text"
@@ -8664,6 +8679,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1131"
 data_type = "integer"
@@ -8675,6 +8691,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1132"
 data_type = "integer"
@@ -8884,6 +8901,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V1242"
 data_type = "integer"
@@ -10567,6 +10585,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V381"
 data_type = "integer"
@@ -10622,6 +10641,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V441"
 data_type = "integer"
@@ -10633,6 +10653,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V451"
 data_type = "integer"
@@ -11194,6 +11215,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V532"
 data_type = "integer"
@@ -11260,6 +11282,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of FTG_FOU_1999 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V551"
 data_type = "text"
@@ -11271,6 +11294,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of FTG_FOU_1999 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V552"
 data_type = "text"
@@ -11535,6 +11559,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V622"
 data_type = "integer"
@@ -11623,6 +11648,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V662"
 data_type = "integer"
@@ -12107,6 +12133,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V9081"
 data_type = "integer"
@@ -12646,6 +12673,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of FTG_FOU_1999 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V952"
 data_type = "text"
@@ -12723,6 +12751,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "V982"
 data_type = "integer"
@@ -12767,6 +12796,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR022"
 data_type = "integer"
@@ -13064,6 +13094,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR270"
 data_type = "integer"
@@ -13075,6 +13106,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR271"
 data_type = "integer"
@@ -13086,6 +13118,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR272"
 data_type = "integer"
@@ -13097,6 +13130,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR280"
 data_type = "integer"
@@ -13108,6 +13142,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR281"
 data_type = "integer"
@@ -13119,6 +13154,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR282"
 data_type = "integer"
@@ -13284,6 +13320,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR381"
 data_type = "integer"
@@ -13339,6 +13376,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR441"
 data_type = "integer"
@@ -13702,6 +13740,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR551"
 data_type = "integer"
@@ -13713,6 +13752,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR552"
 data_type = "integer"
@@ -13955,6 +13995,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR662"
 data_type = "integer"
@@ -14395,6 +14436,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR952"
 data_type = "integer"
@@ -14461,6 +14503,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "foretagssektorn"
 column = "VAR982"
 data_type = "integer"
@@ -18065,6 +18108,32 @@ list = "Antal anställda, storleksklass"
 list_members = [["0", "Uppgift saknas"], ["1", "0 anställda"], ["10", "1 000-1 499 anställda"], ["11", "1 500-1 999 anställda"], ["12", "2 000-2 999 anställda"], ["13", "3 000-3 999 anställda"], ["14", "4 000-4 999 anställda"], ["15", "5 000-9 999 anställda"], ["16", "10 000 eller fler anställda"], ["2", "1-4 anställda"], ["3", "5-9 anställda"], ["4", "10-19 anställda"], ["5", "20-49 anställda"], ["6", "50-99 anställda"], ["7", "100-199 anställda"], ["8", "200-499 anställda"], ["9", "500-999 anställda"]]
 witness = ["2003-01-01", "2003-12-31"]
 
+# #1603 batch-f F7: carry the 2003 code list into the same-name carried 2001 round of V001
+# (delivered V001, documented v001; coding.extend folds column case since #1674).
+[[coding.extend]]
+variable = "182.3320"
+variant = "182.373"
+column = "V001"
+list = "Ja(Finns)/Nej"
+list_members = [["1", "Ja/Finns"], ["2", "Nej"]]
+witness = ["2003-01-01", "2003-12-31"]
+periods = [["2001-01-01", "2001-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column V001 the meaning of SCB's 2003 documentation (edition 394, column v001) in the undocumented 2001 round. Carry that edition's own code list into the same window: every delivered value is in the donor list, per maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only). The column spellings differ only in case. Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for native 182.3320 on variant 182.373, edition 394 (2003); maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+# #1603 batch-f F7: carry the 2003 code list into the same-name carried 2001 round of V1001
+# (delivered V1001, documented v1001; coding.extend folds column case since #1674).
+[[coding.extend]]
+variable = "182.3532"
+variant = "182.373"
+column = "V1001"
+list = "Ja(Finns)/Nej"
+list_members = [["0", "Uppgift saknas"], ["1", "Ja/Finns"], ["2", "Nej"]]
+witness = ["2003-01-01", "2003-12-31"]
+periods = [["2001-01-01", "2001-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column V1001 the meaning of SCB's 2003 documentation (edition 394, column v1001) in the undocumented 2001 round. Carry that edition's own code list into the same window: every delivered value is in the donor list, per maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only). The column spellings differ only in case. Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for native 182.3532 on variant 182.373, edition 394 (2003); maintainer ruling 2026-10-18 (#1603 batch-f F7: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/fou/typ-av-utgift-kostnad"
@@ -18185,6 +18254,10 @@ slug = "vikt-enligt-leverans"
 [[variable]]
 native_id = "182.TYPE_INST"
 slug = "type-inst-enligt-leverans"
+
+[[variable]]
+native_id = "182.TYPE_SECT"
+slug = "type-sect-enligt-leverans"
 
 [[variable]]
 native_id = "182.V601"

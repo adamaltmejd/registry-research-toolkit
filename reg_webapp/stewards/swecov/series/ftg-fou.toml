@@ -103,10 +103,6 @@ tables = ["FTG_FOU_2015", "FTG_FOU_2017"]
 mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/sektortillhorighet", representation = "INSEKT" }]
 reason = "SWECOV delivery spelling of the own-register catalog variable scb/fou/sektortillhorighet (delivery column INSEKT); catalog errata #1541 (#1533), maintainer-decided 2026-10-12 (#1302)."
 
-[[column]]
-column = "TYPE_SECT"
-tables = ["FTG_FOU_2019", "FTG_FOU_2021"]
-unmap = "Constant in FTG_FOU_2019 and FTG_FOU_2021: the aggregate check found the single value Företagssektorn on every row, so the column carries no information beyond the table itself (#1603, #1509; aggregate check on MONA, reported as a conclusion only; maintainer decision 2026-10-16)."
 
 [[column]]
 column = "UtsOmg"
@@ -397,3 +393,53 @@ column = "v0402_8"
 tables = ["FTG_FOU_2017"]
 mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-8-enligt-leverans", representation = "v0402_8" }]
 reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 8) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "V0462"
+tables = ["FTG_FOU_2009"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "V0472"
+tables = ["FTG_FOU_2007", "FTG_FOU_2009"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "v0462"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "v0472"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "v1781"
+tables = ["FTG_FOU_2017"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v1782"
+tables = ["FTG_FOU_2017"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v1783"
+tables = ["FTG_FOU_2017"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v853"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v913"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v953"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
