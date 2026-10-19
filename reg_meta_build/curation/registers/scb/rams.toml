@@ -362,11 +362,6 @@ slug = "naringsgren-huvud-sni92-begransad"
 
 
 [[variable]]
-native_id = "26.19053.astsni"
-slug = "naringsgren-huvud-jobbreg-1996"
-
-
-[[variable]]
 native_id = "26.19054.astsni02"
 slug = "naringsgren-stat-huvud"
 
@@ -761,8 +756,8 @@ expected_evidence_sha256 = "30c2b515d95c8e5fdbf665efb0140054ff75ec00dc0d84fa63d2
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
 variable = "26.19053"
-columns = { Ast2Sni07 = "26.19053.ast2sni07", AstSni = "26.19053.astsni", AstSni02 = "26.19053.astsni02", AstSni69 = "26.19053.astsni69", AstSni92 = "26.19053.astsni92", AstSni92Begr = "26.19053.astsni92begr", Astsni69 = "26.19053.astsni69", Astsni92 = "26.19053.astsni92", FtgSni02 = "26.19053.ftgsni02", FtgSni92 = "26.19053.ftgsni92" }
-columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+columns = { Ast2Sni07 = "26.19053.ast2sni07", AstSni = "26.19053.astsni92", AstSni02 = "26.19053.astsni02", AstSni69 = "26.19053.astsni69", AstSni92 = "26.19053.astsni92", AstSni92Begr = "26.19053.astsni92begr", Astsni69 = "26.19053.astsni69", Astsni92 = "26.19053.astsni92", FtgSni02 = "26.19053.ftgsni02", FtgSni92 = "26.19053.ftgsni92" }
+columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json. Exception (#1620): AstSni, documented only on jobbregistret 1996, shares the 26.19053.astsni92 component. It fills that variant's 1996 gap between the AstSni92 editions 1993-1995 and 1997-1999 with the same name, definition, operational definition, storage width and SNI92 value set as 1993-1995; LISA bakgrundsfakta 1990-2017 dates AstSNI92 to 1990-2001, and SWECOV holds the 1996 column as AstSni92 (maintainer ruling 2026-10-15, reg_webapp/stewards/swecov/series/jobb.toml)."
 expected_evidence_sha256 = "b59506d9132510a4affd864922d24253d2ff705f7b11fe4abfb6a3cecd8a400c"
 
 [[identity.partition]]
@@ -888,7 +883,7 @@ slug = "antk2"
 
 [[variable]]
 native_id = "26.19053.astsni92"
-slug = "astsni92"
+slug = "naringsgren-huvud-sni92"
 
 [[variable]]
 native_id = "26.19053.ftgsni02"
