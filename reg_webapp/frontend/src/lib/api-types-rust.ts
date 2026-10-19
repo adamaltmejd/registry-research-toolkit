@@ -183,7 +183,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID (`scb/aes`) or the register's name, case and diacritics folded, matched as `show` matches a register name; a bare slug (`aes`) is not a name. */
+        /** @description A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID (`scb/aes`) or the register's name, case-insensitive, matched as `show` matches a register name; a bare slug (`aes`) resolves only where it is also the name. */
         get: operations["docs_related"];
         put?: never;
         post?: never;

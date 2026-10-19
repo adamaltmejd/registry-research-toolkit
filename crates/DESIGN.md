@@ -568,20 +568,21 @@ table and table edition (`physical.edition`, #1661). `physical.table` is the uni
 edition only names the file's period. An entry's `requested_period` keeps the clipped
 days it serves (availability, a column window, a year or month member) but never splits
 a file: a year or month member, a windowed column and the ordered key of one table land
-in the table's one file, whichever sources and years ordered them. Since v1 extracts
-each table whole, a split by clipped period would only repeat the same rows and separate
-columns from their keys. In the global fallback the edition is the entry's merged
-requested period, so nothing changes there. `simplify:` table grouping holds while v1
-has no row filter. Once a row filter exists, a file's filter is the union of its
-entries' `requested_period`. The placement is the partition, the projection or neither,
-named in slug spelling (`lisa_individer-15plus_2019.csv`,
-`agi_individuppgifter-agi_arb_2021-03.csv` for a partition,
-`<register>_<variant>_<token>_<period>.csv` for a projection). What goes in as two
-tables comes out as two files: shard identity (reporter stream, municipality) may exist
-in no column, so a union would destroy information, and a projection may have a finer
-grain than its parent. Each file carries its own keys; the user joins a projection file
-to its parent's on the shared key. A multi-period range is one file, since v1 has no row
-filter.
+in the table's one file, whichever sources and years ordered them. A file's columns are
+the distinct physical columns of its entries: two entries for one column (two sources,
+or two periods) are one extracted column. Since v1 extracts each table whole, a split by
+clipped period would only repeat the same rows and separate columns from their keys. In
+the global fallback the edition is the entry's merged requested period, so nothing
+changes there. `simplify:` table grouping holds while v1 has no row filter. Once a row
+filter exists, a file's filter is the union of its entries' `requested_period`. The
+placement is the partition, the projection or neither, named in slug spelling
+(`lisa_individer-15plus_2019.csv`, `agi_individuppgifter-agi_arb_2021-03.csv` for a
+partition, `<register>_<variant>_<token>_<period>.csv` for a projection). What goes in
+as two tables comes out as two files: shard identity (reporter stream, municipality) may
+exist in no column, so a union would destroy information, and a projection may have a
+finer grain than its parent. Each file carries its own keys; the user joins a projection
+file to its parent's on the shared key. A multi-period range is one file, since v1 has
+no row filter.
 
 Design limit: sibling projections cannot share a key the parent lacks. Two projections
 of one parent that both map a key the parent does not map (a child id two narrow
