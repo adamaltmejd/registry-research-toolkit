@@ -3,6 +3,6 @@
   "inventory": "inventory.toml",
   "census": "census.csv",
   "observe_windows": true,
-  "fails_if": "a column window is dropped or mis-stored on its way to holding_mapping (or stored as a member), the one-to-one check compares a windowed column by its table's edition instead of its window (Combined's old Id and OldField would then conflict with Later over 2017..2019), or the artifact validator rebuilds a mapping without its window and refuses the build for that conflict",
+  "fails_if": "a column window is dropped or mis-stored on its way to holding_mapping (or stored as a member), the one-to-one check compares a windowed column by its table's edition instead of its window (Combined's old Id and OldField would then conflict with Later over 2017..2019), or the artifact validator rebuilds a mapping without its window and refuses the build for that conflict, or Legacy's mapping data_warning (#1684) is not written into the compiled artifact's data_warning table (or the merge with the base's warnings leaves the artifact failing validate_built_db)",
   "scope": "scope.toml"
 }

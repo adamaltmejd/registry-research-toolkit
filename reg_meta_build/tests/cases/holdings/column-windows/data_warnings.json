@@ -1,0 +1,21 @@
+[
+  {
+    "warning_id": "8b09cc6699da005e711815ac71547f1ee6fd6febb4107b8df5d14fad1a1d4cff",
+    "register_fqid": "scb/example",
+    "variable_fqid": null,
+    "variant": null,
+    "delivery_column_name": null,
+    "valid_from": null,
+    "valid_to": null,
+    "code": "source_availability_limitation",
+    "severity": "warning",
+    "summary": "Example documentation is incomplete",
+    "detail": "The example register's documentation is incomplete.",
+    "diagnostic_detail_sha256": "bcc5083b33cdf818e75a3260e26d73e2448384154a435648d150a5a321766c13",
+    "fields": [],
+    "refs": [],
+    "withheld_output": [],
+    "acknowledged_by": null,
+    "case_id": null
+  }
+]

@@ -60,7 +60,7 @@ from reg_meta_build.steward_spec import (
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from reg_meta_build.inventory import ColumnMapping, EditionRange
+    from reg_meta_build.inventory import ColumnMapping, EditionRange, MappingWarning
 
 DEFAULT_CSV = max(
     Path(__file__).parent.glob("SWECOV_variables_full_*.csv"),
@@ -2243,21 +2243,6 @@ def _union_mapping_records(
     return pieces, None
 
 
-def _school_year_edition(anchor: str, year: int) -> str:
-    """The school year a bare table year names, under a series' spelling.
-
-    SCB's school registers deliver school years, not calendar years, and a
-    SWECOV table named by ONE year holds one school year — which one depends
-    on the register (grades set in the spring are labelled by the spring year,
-    an October teacher snapshot by the autumn year), so the spelling is curated
-    per series (`edition_spelling`), never inferred."""
-    if anchor == "spring":
-        return f"LA{year - 1}"
-    if anchor == "autumn":
-        return f"LA{year}"
-    return f"{anchor.upper()}{year}"  # a single term: VT<Y> / HT<Y>
-
-
 def _toml_str(value: str) -> str:
     # JSON string escaping is valid TOML basic-string escaping except U+007F,
     # which JSON leaves raw and TOML forbids in a basic string.
@@ -2269,6 +2254,37 @@ def _raw_window(window: EditionRange | str) -> object:
     if isinstance(window, str):
         return window
     return {"from": window.from_, "to": window.to}
+
+
+def _warning_line(warning: MappingWarning, reach: object) -> str | None:
+    """A decision's mapping warning (#1684) as one table's `data_warning` line,
+    its window clipped to what the mapping serves there (`reach`: its window, its
+    member's period or the table edition), or None where the window misses."""
+    from reg_meta_build.inventory import _intersect, _render_interval
+
+    fields = (
+        f"summary = {_toml_str(warning.summary)}, "
+        f"detail = {_toml_str(warning.detail)}"
+    )
+    if warning.window is None:
+        return f"data_warning = {{ {fields} }}"
+    if reach == YEAR_INDEPENDENT_EDITION:
+        return None
+    window = edition_bounds_of(_raw_window(warning.window))[0]
+    parts = [
+        clipped
+        for segment in edition_bounds_of(reach)
+        if (clipped := _intersect(segment, window))
+    ]
+    if not parts:
+        return None
+    # simplify: across an interrupted edition the clip is emitted as its hull,
+    # which the inventory refuses (a warning window lies in one served segment).
+    # Emit one warning per segment if a decision's warning must span such a gap.
+    token = _render_interval(parts[0][0], parts[-1][1])
+    ends = [int(end) if end.isdigit() else end for end in token.split("..")]
+    clipped = ends[0] if len(ends) == 1 else {"from": ends[0], "to": ends[1]}
+    return f"data_warning = {{ {fields}, window = {_toml_edition(clipped)} }}"
 
 
 def _toml_edition(edition: object) -> str:
@@ -2454,9 +2470,8 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
         series = series_of.get(table)
         if series is None:  # a lookup or an exclusion
             continue
-        edition = members[table].inventory_edition
-        if isinstance(edition, int) and series.edition_spelling != "annual":
-            edition = _school_year_edition(series.edition_spelling, edition)
+        edition = series.spelled_edition(members[table])
+        if edition != members[table].inventory_edition:
             n_school_year[series.id] += 1
         # The table maps only onto its own admissible variants, all of the
         # series' register (`steward_series_register_mismatch` at load), so an
@@ -2565,6 +2580,14 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     declared = [{**r, "window": window} for r in declared]
                 elif windowed:
                     declared = [{**r, "decided": True} for r in declared]
+                if mapping.data_warning is not None:
+                    line = _warning_line(
+                        mapping.data_warning,
+                        column_edition
+                        if mapping.window is None
+                        else _raw_window(mapping.window),
+                    )
+                    declared = [{**r, "data_warning": line} for r in declared]
                 owner = mapping.variable.rsplit("/", 1)[1]
                 # select_owner drops every other owner of the representation and
                 # of the physical name on this variant. Every record on the
@@ -2715,6 +2738,8 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     lines.append(f"member = {{ {member.kind} = {value} }}")
                 if (window := r.get("window")) is not None:
                     lines.append(f"window = {_toml_edition(window)}")
+                if (warning := r.get("data_warning")) is not None:
+                    lines.append(warning)
 
     dest = steward_dir / "inventory.toml"
     wl_path = args.csv.parent / "derived" / "inventory_worklist.json"

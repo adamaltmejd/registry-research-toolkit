@@ -63,7 +63,9 @@ _PERIOD_SCOPE = "inventory_period_scope_invalid"
 _CELL_CONFLICT = "inventory_cell_conflict"
 _MEMBER = "inventory_member_invalid"
 _PROJECTION = "inventory_projection_invalid"
-_WINDOW = "inventory_window_invalid"
+# Public: the steward spec refuses a mapping warning that misses every table
+# under the same code (#1684).
+WINDOW_INVALID = "inventory_window_invalid"
 
 
 class _InventoryGuardError(ValueError):
@@ -355,6 +357,31 @@ class ColumnMember(_InventoryModel):
         return cls(year=int(token)) if len(token) == 4 else cls(month=token)
 
 
+class MappingWarning(_InventoryModel):
+    """A steward-scoped data warning on one column mapping (#1684): a caveat about
+    part of what this steward delivers, which only the steward's catalog shows.
+
+    The author writes both texts. `window` uses the mapping-window grammar and
+    narrows the warning to part of the mapping's served period; without one it
+    covers all of it. `_check_windows` owns its rules, which need the table."""
+
+    summary: str
+    detail: str
+    window: EditionSegment | None = None
+
+    @field_validator("summary", "detail")
+    @classmethod
+    def _nonblank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("a mapping warning's summary and detail must be nonblank")
+        return value
+
+    @field_validator("window", mode="before")
+    @classmethod
+    def _window_year_int_to_token(cls, value: object) -> object:
+        return _year_int_to_token(value)
+
+
 class ColumnMapping(_InventoryModel):
     """One semantic mapping of a physical column: which logical coordinate this
     column IS.
@@ -369,13 +396,16 @@ class ColumnMapping(_InventoryModel):
     member set, not the column, is then the location that serves the cell.
     `window` narrows the mapping to its own delivered period inside the table's
     edition (#1645): the column serves this coordinate only there.
-    `_check_windows` owns its rules, which need the whole table."""
+    `data_warning` attaches a steward-scoped caveat to part or all of what the
+    mapping serves (#1684). `_check_windows` owns the rules of both windows,
+    which need the whole table."""
 
     register_variant: str
     variable: str
     representation: str = Field(min_length=1)
     member: ColumnMember | None = None
     window: EditionSegment | None = None
+    data_warning: MappingWarning | None = None
 
     @field_validator("window", mode="before")
     @classmethod
@@ -1100,56 +1130,86 @@ def _check_windows(tables: tuple[InventoryTable, ...]) -> None:
     (`validate_inventory_placements`), and windows of different variants may
     overlap as their unwindowed mappings may. Gaps are allowed, because a column
     is not delivered outside its windows. A mapping without a window keeps the
-    whole-edition rule."""
+    whole-edition rule.
+
+    A mapping warning's window (#1684) lies inside one segment of what the
+    mapping serves (`ColumnMapping.served`), so one warning row states one
+    contiguous caveat. A year-independent table has no calendar to narrow, so its
+    warnings take no window; one without a window there is a single row without
+    bounds."""
     problems: list[str] = []
     for table in tables:
         segments = _edition_intervals(table)
         for column in table.columns:
             where = _location(table.id, column.name)
             for mapping in column.mappings:
-                if mapping.window is None:
-                    continue
                 coordinate = f"{mapping.register_variant} {mapping.variable}"
-                if mapping.member is not None:
-                    problems.append(
-                        f"{where}: {coordinate} states a window and a member — a "
-                        "member serves its own period"
-                    )
+                if mapping.window is not None:
+                    problem = _window_problem(mapping, column, segments)
+                    if problem is not None:
+                        problems.append(f"{where}: {coordinate} {problem}")
+                        continue
+                warning = mapping.data_warning
+                if warning is None or warning.window is None:
                     continue
                 if not segments:
                     problems.append(
-                        f"{where}: {coordinate} states a window in a "
+                        f"{where}: {coordinate} states a data_warning window in a "
                         "year-independent table"
                     )
                     continue
                 try:
-                    window = _segment_bounds(mapping.window)
+                    window = _segment_bounds(warning.window)
                 except ValueError as exc:
-                    problems.append(f"{where}: {coordinate} window: {exc}")
+                    problems.append(f"{where}: {coordinate} data_warning window: {exc}")
                     continue
-                if not any(lo <= window[0] and window[1] <= hi for lo, hi in segments):
+                served = mapping.served(segments)
+                if not any(lo <= window[0] and window[1] <= hi for lo, hi in served):
                     problems.append(
-                        f"{where}: {coordinate} window {_render((window,))} lies "
-                        f"outside the table's edition {_render(segments)}"
-                    )
-                    continue
-                if (
-                    sum(
-                        (other.register_variant, other.variable)
-                        == (mapping.register_variant, mapping.variable)
-                        for other in column.mappings
-                    )
-                    > 1
-                ):
-                    problems.append(
-                        f"{where}: {coordinate} has a window and another mapping in "
-                        "this column — a windowed coordinate maps once per column"
+                        f"{where}: {coordinate} data_warning window "
+                        f"{_render((window,))} lies outside the period the mapping "
+                        f"serves {_render(served)}"
                     )
     if problems:
         raise _InventoryGuardError(
-            _WINDOW,
+            WINDOW_INVALID,
             "invalid column window:\n" + "\n".join(f"    {line}" for line in problems),
         )
+
+
+def _window_problem(
+    mapping: ColumnMapping,
+    column: InventoryColumn,
+    segments: tuple[_Interval, ...],
+) -> str | None:
+    """Why a windowed mapping's own window is invalid, or None (#1645)."""
+    assert mapping.window is not None
+    if mapping.member is not None:
+        return "states a window and a member — a member serves its own period"
+    if not segments:
+        return "states a window in a year-independent table"
+    try:
+        window = _segment_bounds(mapping.window)
+    except ValueError as exc:
+        return f"window: {exc}"
+    if not any(lo <= window[0] and window[1] <= hi for lo, hi in segments):
+        return (
+            f"window {_render((window,))} lies outside the table's edition "
+            f"{_render(segments)}"
+        )
+    if (
+        sum(
+            (other.register_variant, other.variable)
+            == (mapping.register_variant, mapping.variable)
+            for other in column.mappings
+        )
+        > 1
+    ):
+        return (
+            "has a window and another mapping in this column — a windowed "
+            "coordinate maps once per column"
+        )
+    return None
 
 
 def _inventory_error(code: str, message: str, remediation: str) -> RegMetaError:

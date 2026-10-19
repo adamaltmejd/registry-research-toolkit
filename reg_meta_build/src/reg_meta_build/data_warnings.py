@@ -19,12 +19,14 @@ from reg_core_py import parse_fqid
 from reg_meta_build.source_curation import CodingDecision, SourceWarningDecision
 from reg_meta_build.source_intervals import occurrence_bounds
 
+from .inventory import _edition_intervals, _intersect, _segment_bounds
 from .slug_grammar import validate_slug
 from .source_evidence import SourceRecordRef, canonical_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+    from reg_meta_build.inventory import InventoryTable
     from reg_meta_build.resolved_catalog import ResolvedRegister
     from reg_meta_build.source_coordinates import NativeKey
     from reg_meta_build.source_curation import CurationCase, ResolutionDiagnostic
@@ -281,6 +283,81 @@ def diagnostic_data_warning(
     return DataWarning.model_validate_json(
         json.dumps({"warning_id": warning_identity(payload), **payload})
     )
+
+
+# The code of an authored steward mapping warning (#1684); user-facing.
+STEWARD_DELIVERY_LIMITATION = "steward_delivery_limitation"
+
+
+def mapping_data_warnings(
+    tables: tuple[InventoryTable, ...],
+) -> tuple[DataWarning, ...]:
+    """The steward's authored mapping warnings (#1684), one per warned mapping and
+    segment of the period it serves, at the mapping's canonical cell.
+
+    `tables` is the canonical inventory (`canonical_inventory`), so the column is
+    the representation readers attribute by. The curated mapping is itself the
+    witness, so a warning cites no source records. A year-independent table's
+    warning carries no bounds."""
+    # simplify: a warning is keyed by the logical cell, so it reaches every
+    # partition shard (and projection) serving that cell, and identical payloads
+    # from two shards are one warning under `keep_warning`. Add a holding key to
+    # `data_warning` when one shard needs a caveat its siblings must not show.
+    warnings: dict[str, DataWarning] = {}
+    for table in tables:
+        edition = _edition_intervals(table)
+        for column in table.columns:
+            for mapping in column.mappings:
+                warning = mapping.data_warning
+                if warning is None:
+                    continue
+                window = (
+                    _segment_bounds(warning.window)
+                    if warning.window is not None
+                    else None
+                )
+                if table.period_scope == "year_independent":
+                    bounds: list[tuple[str | None, str | None]] = [(None, None)]
+                else:
+                    bounds = [
+                        clipped
+                        for segment in mapping.served(edition)
+                        if (
+                            clipped := segment
+                            if window is None
+                            else _intersect(segment, window)
+                        )
+                    ]
+                for valid_from, valid_to in bounds:
+                    payload = {
+                        "register_fqid": mapping.variable.rsplit("/", 1)[0],
+                        "variable_fqid": mapping.variable,
+                        "variant": mapping.register_variant.rsplit("/", 1)[1],
+                        "delivery_column_name": mapping.representation,
+                        "valid_from": valid_from,
+                        "valid_to": valid_to,
+                        "code": STEWARD_DELIVERY_LIMITATION,
+                        "severity": "warning",
+                        "summary": warning.summary,
+                        "detail": warning.detail,
+                        "diagnostic_detail_sha256": sha256(
+                            warning.detail.encode("utf-8")
+                        ).hexdigest(),
+                        "fields": [],
+                        "refs": [],
+                        "withheld_output": [],
+                        "acknowledged_by": None,
+                        "case_id": None,
+                    }
+                    keep_warning(
+                        warnings,
+                        DataWarning.model_validate_json(
+                            json.dumps(
+                                {"warning_id": warning_identity(payload), **payload}
+                            )
+                        ),
+                    )
+    return tuple(warnings[k] for k in sorted(warnings))
 
 
 def acknowledged_data_warnings(

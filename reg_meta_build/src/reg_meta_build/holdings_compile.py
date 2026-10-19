@@ -7,7 +7,8 @@ import tomllib
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from .db import catalog_coordinate_ids
+from .data_warnings import DataWarning, keep_warning, mapping_data_warnings
+from .db import catalog_coordinate_ids, stored_data_warnings, write_data_warnings
 from .holdings_accounting import (
     INVENTORY_ROLE_PATH,
     HoldingsAccounting,
@@ -106,6 +107,26 @@ def canonical_inventory(
     canonical = inventory.model_copy(update={"tables": tuple(tables)})
     validate_inventory_placements(canonical.tables)
     return canonical
+
+
+def _write_mapping_warnings(
+    conn: sqlite3.Connection, canonical: DeliveryInventory
+) -> None:
+    """Add the steward's mapping warnings (#1684) to the base's, in the flavor only.
+
+    `write_data_warnings` writes a whole, empty table pair, so the stored warnings
+    and the steward's are merged and rewritten. Base rows keep their content; the
+    flavored `validate_built_db` re-derives every row's identity."""
+    steward = mapping_data_warnings(canonical.tables)
+    if not steward:
+        return
+    merged: dict[str, DataWarning] = {}
+    for warning in (*stored_data_warnings(conn), *steward):
+        keep_warning(merged, warning)
+    # `data_warning` references its text rows, so it is cleared first.
+    conn.execute("DELETE FROM data_warning")
+    conn.execute("DELETE FROM data_warning_text")
+    write_data_warnings(conn, tuple(merged[k] for k in sorted(merged)))
 
 
 def compile_holdings(
@@ -224,6 +245,7 @@ def compile_holdings(
             if table.projection is not None
         ),
     )
+    _write_mapping_warnings(conn, canonical)
     return CompiledHoldings(
         len(logical) + len(unknown), column_id, mappings_count, accounting
     )

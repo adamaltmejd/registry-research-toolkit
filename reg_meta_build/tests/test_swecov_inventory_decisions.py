@@ -90,6 +90,39 @@ def test_mapping_decision_maps_column_of_range_edition_table(
     assert [m.representation for m in physical.mappings] == ["T_kolumn"]
 
 
+_WARNING = (
+    'data_warning = { summary = "Recoded", detail = "Recoded by a later delivery.", '
+    "window = { from = 2017, to = 2018 } }"
+)
+
+
+def test_mapping_decision_warning_is_clipped_to_the_table(
+    tmp_path: Path, flavored_db: Path
+) -> None:
+    """A decision's mapping warning (#1684) reaches each of its tables with its
+    window clipped to the period the mapping serves there: 2017..2018 on a
+    2018..2019 table is 2018, with the authored texts. Fails if the generator
+    drops the warning or emits it unclipped (the inventory refuses a warning
+    window past what its mapping serves)."""
+    decision = _mapping_decision().replace('"T_kolumn" }', f'"T_kolumn", {_WARNING} }}')
+    steward = _run_inventory(
+        tmp_path,
+        flavored_db,
+        "TSERIES",
+        ["Physical"],
+        edition=_RANGE,
+        decisions=decision,
+    )
+    (table,) = load_delivery_inventory(steward / "inventory.toml").tables
+    ((mapping,),) = [column.mappings for column in table.columns]
+    assert mapping.data_warning is not None
+    assert (
+        mapping.data_warning.summary,
+        mapping.data_warning.detail,
+        mapping.data_warning.window,
+    ) == ("Recoded", "Recoded by a later delivery.", "2018")
+
+
 def test_mapping_decision_refuses_range_without_full_coverage(
     tmp_path: Path, flavored_db: Path
 ) -> None:

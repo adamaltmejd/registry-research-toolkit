@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 from reg_meta_build.errors import RegMetaError
+from reg_meta_build.inventory import WINDOW_INVALID
 from reg_meta_build.steward_spec import (
     SERIES_REGISTER_MISMATCH,
     TABLE_DISPOSITION_INVALID,
@@ -175,3 +176,38 @@ def test_only_an_all_unmap_series_may_omit_its_register(
         load_steward_spec(spec_dir)
     assert refused.value.code == SERIES_REGISTER_MISMATCH
     assert "column[1] (Kol)" in refused.value.message
+
+
+@pytest.mark.parametrize(("window", "admitted"), [("2019", True), ("2020", False)])
+def test_mapping_warning_window_must_meet_a_decided_table(
+    tmp_path: Path, window: str, admitted: bool
+) -> None:
+    """A decision's mapping warning (#1684) is clipped to each of its tables, so
+    a window meeting none of them is refused, located at the column. The decision
+    covers T2019 only: a 2020 window meets the series' T2020 but no decided table.
+    Fails if the window is checked against every series table, or not at all."""
+    body = _series(
+        "prover",
+        "inera/bestallda-prover",
+        ["inera/bestallda-prover/_default"],
+        ["T2019", "T2020"],
+    ) + (
+        '\n[[column]]\ncolumn = "Kol"\ntables = ["T2019"]\nreason = "Reviewed."\n'
+        'mappings = [{ register_variant = "inera/bestallda-prover/_default", '
+        'variable = "inera/bestallda-prover/kol", representation = "Kol", '
+        'data_warning = { summary = "Recoded", detail = "Recoded later.", '
+        f"window = {window} }} }}]\n"
+    )
+    spec_dir = _spec(tmp_path, {"prover": body})
+    if admitted:
+        (series,) = load_steward_spec(spec_dir).series
+        (mapping,) = series.columns[0].mappings
+        assert mapping.data_warning.window == window
+        return
+    with pytest.raises(RegMetaError) as refused:
+        load_steward_spec(spec_dir)
+    assert refused.value.code == WINDOW_INVALID
+    assert "series/prover.toml: series 'prover' column[1] (Kol)" in (
+        refused.value.message
+    )
+    assert "data_warning window 2020 meets no period" in refused.value.message

@@ -2601,9 +2601,12 @@ only, a table only a subset of its series' variants, and a curated mapping only 
 variant every table it covers admits (`steward_series_register_mismatch`); since the
 generator maps a table only onto its own admissible variants, auto-mapped columns cannot
 leave the register. Everything else the loader refuses is `steward_spec_invalid`,
-located by file and entry. Flavor content is still drawn from a census holding and table
-selection, not from series membership: an excluded re-delivery still documents its
-columns.
+located by file and entry. A curated mapping's `data_warning` (#1684, "Inventory TOML"
+below) spans the decision's tables: the generator clips its window to the period the
+mapping serves in each table and omits it where it misses, and the loader refuses a
+window that meets no dated table of the decision as `inventory_window_invalid`. Flavor
+content is still drawn from a census holding and table selection, not from series
+membership: an excluded re-delivery still documents its columns.
 
 ### Inventory TOML
 
@@ -2667,6 +2670,27 @@ the whole-edition rule unchanged. `holding_mapping` stores the window's ISO boun
 `window_lo`/`window_hi`, separate from a member's period: a one-year window is not a
 year member, which belongs to a member set and labels the manifest entry. A CHECK keeps
 a window off member mappings.
+
+A mapping may carry a steward-scoped `data_warning` (#1684):
+`data_warning = { summary = "…", detail = "…", window = … }`. The author writes both
+texts; the optional `window` uses the column-window grammar and narrows the warning to
+part of what the mapping serves (`ColumnMapping.served`: its window, its year or month
+member's period, else the edition). It lies inside one served segment, and a
+year-independent table takes no warning window; both refuse as
+`inventory_window_invalid` beside the column-window lines. A global variable warning
+would reach every reader of the global catalog; this one is written only into the
+steward's flavor. `compile_holdings`, the one step extend-db and the synthetic harness
+share, builds one `DataWarning` per warned mapping and served segment at the canonical
+cell (variable, variant, canonical representation, window ∩ segment), code
+`steward_delivery_limitation`, no source refs (the curated mapping is the witness). It
+merges them with the base's stored warnings and rewrites both warning tables through
+`write_data_warnings`, so base rows keep their content and the flavored
+`validate_built_db` checks every row. A warning without a window in a year-independent
+table is one row without bounds, which `held()` shows only to a period-free holdings
+query. A warning is keyed by the logical cell, so it reaches every partition shard and
+projection serving that cell (`simplify:` in `mapping_data_warnings`). No reader
+changes: holdings `/api/warnings` and `states` warning ids attribute it like any
+column-scoped warning, and the order manifest carries no warning field.
 
 A refusal is a configuration error (exit 10) that names the file and each offending
 `table[...]`, `column[...]` or field, under one code per rule family:
