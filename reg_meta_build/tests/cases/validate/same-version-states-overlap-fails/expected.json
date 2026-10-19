@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "failures_contain": [
+    "1 overlapping same-version dated state pair(s) — a period resolves to >1 state of one (variable, variant, version): scb/testreg/kon individer 'Kön' [2020-01-01..2021-12-31] ∩ [2021-12-31..2021-12-31]"
+  ]
+}
