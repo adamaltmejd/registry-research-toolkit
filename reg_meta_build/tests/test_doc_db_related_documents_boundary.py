@@ -112,10 +112,11 @@ def test_mapped_binary_is_stored_with_its_pins(package: Path, tmp_path: Path) ->
     )
 
 
-def test_missing_and_unmapped_binaries_warn_and_store_nothing(
+def test_missing_optional_and_unmapped_binaries_warn_and_store_nothing(
     package: Path, tmp_path: Path
 ) -> None:
-    _map(package, "testreg", "missing.pdf")
+    # Fails if an optional entry's absent binary refuses like a required one's.
+    _map(package, "testreg", "missing.pdf", required=False)
     _binary(package, "testreg", "unmapped.pdf", b"%PDF-1.4\nunmapped\n")
     run = _build(package, tmp_path)
     assert run.exit_code == 0
@@ -135,15 +136,19 @@ def test_binary_that_differs_from_its_pins_fails_the_build(
     assert "testreg/related.pdf" in run.payload["error"]["message"]
 
 
-def test_absent_binary_root_warns_and_skips_mapped_documents(
+def test_required_document_without_a_binary_fails_the_build(
     package: Path, tmp_path: Path
 ) -> None:
+    # Fails if a required entry's absent binary only warns and the docs DB ships
+    # without the document (#1686), or if the refusal fires only when the whole
+    # binary root is absent: the root and the register directory exist here and
+    # only the PDF is missing.
     _map(package, "testreg", "missing.pdf")
+    (package / "input_data" / "SCB" / "docs" / "testreg").mkdir(parents=True)
     run = _build(package, tmp_path)
-    assert run.exit_code == 0
-    assert "input_data/SCB/docs is missing" in run.stderr
-    assert "testreg/missing.pdf" in run.stderr
-    assert _related(run) == ([], "0")
+    assert run.exit_code == EXIT_CONFIG
+    assert run.payload["error"]["code"] == "related_documents_binary_missing"
+    assert "testreg/missing.pdf" in run.payload["error"]["message"]
 
 
 def test_optional_document_for_an_inactive_register_is_skipped_silently(

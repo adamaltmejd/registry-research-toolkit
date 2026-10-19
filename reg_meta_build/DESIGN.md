@@ -2878,9 +2878,13 @@ parses frontmatter, cleans markdown for FTS, resolves source URLs/titles from
 `doc_sources.toml`, and records document provenance. Unknown source mappings are
 warnings rather than invented links. Related binaries are checked against tracked hashes
 and sizes before being stored verbatim; license metadata determines whether
-redistribution is permitted. Missing required local binaries and unregistered PDFs are
-reported according to the document-build contract. This indexing does not interpret
-documents to change catalog facts.
+redistribution is permitted. A `required` entry (the default) whose binary is absent,
+including when the whole `input_data/SCB/docs` root is absent, refuses the build with
+`related_documents_binary_missing` naming each `register/filename`, so a release cannot
+ship a docs asset silently missing a document (#1686). There is no opt-out: a checkout
+without the gitignored PDFs cannot run `build-docs` against the repository map. A
+`required = false` entry with no binary and an unregistered PDF are warnings. This
+indexing does not interpret documents to change catalog facts.
 
 `doc_db.py` owns the build and FTS creation. The reader's docs schema gate is
 `DOC_SCHEMA` in `crates/reg-catalog/src/docs.rs`, which mirrors `DOC_SCHEMA_VERSION`.
