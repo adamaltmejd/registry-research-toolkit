@@ -55,3 +55,12 @@ license = "EU law"
 fetched = "2026-06-23"
 sha256 = "67089124ae4a6bc3104332faf10ecd8756b2cbfbb72786d9bad04b0e23b67cb8"
 byte_size = 1328961
+
+[[register.utrikeshandel.document]]
+title = "HA0201 Utrikeshandel med varor, Kvalitetsdeklaration, version 1 (2026-02-27)"
+filename = "ha0201_kd_2026_260227.pdf"
+source_url = "https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf"
+license = "CC BY 4.0"
+fetched = "2026-10-19"
+sha256 = "89569cd87289c932676ff115ca10060d25728a865b1be5831cc4575df4f9cac9"
+byte_size = 385254
