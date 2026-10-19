@@ -2711,9 +2711,18 @@ state in force at the end of the served period (the extract is in the coding cur
 extraction), or, where U reaches that end, the nearest state after U, else before it.
 The clone's id is the catalog's own state id (`_storage_id`, in the provider's band)
 over the clone's start, so it names no steward; `pooled = 0` and
-`provenance = "steward:<id>"` mark it as the steward's word, not the catalog's. The id
-does not key the column, so a catalog state of the cell under another delivery column
-starting the same day would collide (`simplify:` in `_licensed_clones`). Its
+`provenance = "steward:<id>"` mark it as the steward's word, not the catalog's. Two more
+refusals, under the same code, keep the clone a single, catalog-consistent state. When
+more than one state qualifies as the source (code versions in force together at that
+end), the source is ambiguous and the build refuses rather than picking one. A clone
+must also pass the rule `ResolvedVariable` applies at catalog formation: no two states
+of one variant and code version overlap. The check covers every column of the cell, so a
+warning cannot license years another column already documents. A rename the table maps
+under its new column (KodOld to 2017, KodNew from 2018, the table keeping KodNew over
+2016..2019) refuses, naming the overlapping state's column and bounds; the curator maps
+that column's representation instead. The same check covers a clone starting on another
+column's state start, which would otherwise fail the unique index unlocated. Several
+placements of one cell and U (partition shards, projections) are one clone. Its
 `state_classification` and classification-conformance rows are copied under the clone's
 id; its lineage is not, since that would invent evidence. The derived tables read the
 states, so the clones are followed by a full `derive`, and extend-db derives twice

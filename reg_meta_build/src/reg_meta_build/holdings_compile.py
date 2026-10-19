@@ -148,15 +148,15 @@ def _licensed_clones(
     state of the cell over U, cloned from the cell's state in force at the end of
     the served period: the extract is in the coding current at extraction. Where
     U reaches that end, the clone takes the cell's nearest state after U, else
-    the nearest before it. An unwarned mapping is never refused here: coverage is
-    not a holdings validation gate (`inventory_coverage`), and its uncovered
-    years stay a `coverage_gap` at order time."""
+    the nearest before it. Two such states (code versions in force together) are
+    refused as ambiguous, and so is a clone overlapping a catalog state of its
+    variant and code version, under any column: a warning cannot license years
+    another column already documents. An unwarned mapping is never refused here:
+    coverage is not a holdings validation gate (`inventory_coverage`), and its
+    uncovered years stay a `coverage_gap` at order time."""
     # simplify: U is one leading or trailing interval, and a warned mapping with U
     # carries no second, unrelated caveat inside its coverage. Split the warning
     # and the clone per interval if a delivery is ever uncovered at both ends.
-    # simplify: the clone id is the catalog state id over its start, which keys no
-    # column, so a state of the cell under another column starting that day fails
-    # the INSERT unlocated. Key the id by column if such a cell ever appears.
     warned = [
         (table, column, mapping)
         for table in canonical.tables
@@ -192,11 +192,42 @@ def _licensed_clones(
             problems.append(f"{where}: {problem}")
             continue
         (lo, hi), end = gaps[0], served[-1][1]
-        source = _clone_source(conn, pair, mapping.representation, lo, hi, end)
-        if source is None:
+        states = _cell_states(conn, pair)
+        sources = _clone_sources(states, mapping.representation, lo, hi, end)
+        if not sources:
             problems.append(
                 f"{where}: no catalog state of the cell to clone over {_render(gaps)}"
                 " (its coverage is alias windows only)"
+            )
+            continue
+        if len(sources) > 1:
+            labels = ", ".join(repr(s["value_set_version_label"]) for s in sources)
+            problems.append(
+                f"{where}: {len(sources)} catalog states of the cell (code versions "
+                f"{labels}) could each be cloned over {_render(gaps)}; a warning "
+                "licenses one coding, so the clone source is ambiguous"
+            )
+            continue
+        (source,) = sources
+        # The overlap rule `ResolvedVariable` applies at catalog formation
+        # ("overlapping states in variant"): states of one variant and code
+        # version never overlap. A clone is held to it too, before the INSERT,
+        # whose unique index would otherwise only catch a same-start clash.
+        overlapping = [
+            s
+            for s in states
+            if s["value_set_version_label"] == source["value_set_version_label"]
+            and s["valid_from"] <= hi
+            and lo <= s["valid_to"]
+        ]
+        if overlapping:
+            other = overlapping[0]
+            problems.append(
+                f"{where}: the clone over {_render(gaps)} would overlap the catalog "
+                f"state of column {other['delivery_column_name']!r} over "
+                f"{_render(((other['valid_from'], other['valid_to']),))}; a warning "
+                "cannot license years another column of the cell already "
+                "documents: map that column's representation instead"
             )
             continue
         provider, register, slug = mapping.variable.split("/")
@@ -219,43 +250,52 @@ def _licensed_clones(
             exit_code=EXIT_CONFIG,
             code=COVERAGE_WARNING_INVALID,
             error_class="configuration",
-            message="A mapping warning must state exactly the held days the "
-            "catalog does not cover:\n" + "\n".join(f"  {line}" for line in problems),
+            message="A mapping warning does not license the held days the "
+            "catalog leaves uncovered:\n" + "\n".join(f"  {line}" for line in problems),
             remediation="Set the mapping's data_warning window to the uncovered "
-            "days, or extend the catalog's coverage; see reg_meta_build/DESIGN.md "
-            "→ Inventory TOML.",
+            "days, map the column whose state documents them, or extend the "
+            "catalog's coverage; see reg_meta_build/DESIGN.md → Inventory TOML.",
         )
     return [clones[k] for k in sorted(clones)]
 
 
-def _clone_source(
-    conn: sqlite3.Connection,
-    pair: tuple[int, int],
+def _cell_states(conn: sqlite3.Connection, pair: tuple[int, int]) -> list[sqlite3.Row]:
+    """The dated catalog states of a (variable, variant) pair, every column."""
+    return conn.execute(
+        "SELECT * FROM variable_state WHERE variable_id = ? "
+        "AND register_variant_id = ? AND period_scope = 'intervals' "
+        "ORDER BY valid_from, value_set_version_label",
+        pair,
+    ).fetchall()
+
+
+def _clone_sources(
+    states: list[sqlite3.Row],
     representation: str,
     lo: str,
     hi: str,
     end: str,
-) -> sqlite3.Row | None:
-    """The cell's state a clone over `lo..hi` copies: the one in force on `end`,
-    the served period's last day, unless the gap reaches it; then the nearest
-    state after the gap, else the nearest before it."""
-    states = [
-        row
-        for row in conn.execute(
-            "SELECT * FROM variable_state WHERE variable_id = ? "
-            "AND register_variant_id = ? AND period_scope = 'intervals' "
-            "ORDER BY valid_from",
-            pair,
-        )
-        if _fold(row["delivery_column_name"] or "") == _fold(representation)
+) -> list[sqlite3.Row]:
+    """The cell's states a clone over `lo..hi` may copy: those of its column in
+    force on `end`, the served period's last day, unless the gap reaches it; then
+    those starting first after the gap, else those ending last before it. More
+    than one (code versions in force together) is ambiguous for the caller."""
+    column = [
+        s
+        for s in states
+        if _fold(s["delivery_column_name"] or "") == _fold(representation)
     ]
     if hi < end:
-        return next(
-            (s for s in states if s["valid_from"] <= end <= s["valid_to"]), None
-        )
-    after = [s for s in states if s["valid_from"] > hi]
-    before = [s for s in states if s["valid_to"] < lo]
-    return after[0] if after else before[-1] if before else None
+        return [s for s in column if s["valid_from"] <= end <= s["valid_to"]]
+    after = [s for s in column if s["valid_from"] > hi]
+    if after:
+        first = min(s["valid_from"] for s in after)
+        return [s for s in after if s["valid_from"] == first]
+    before = [s for s in column if s["valid_to"] < lo]
+    if before:
+        last = max(s["valid_to"] for s in before)
+        return [s for s in before if s["valid_to"] == last]
+    return []
 
 
 def _write_clones(

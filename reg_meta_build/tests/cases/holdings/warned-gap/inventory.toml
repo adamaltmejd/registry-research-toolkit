@@ -1,10 +1,11 @@
 version = 1
 steward = "swecov"
 
-# The delivery holds Kod for 2016..2019, but the catalog's only state starts in
-# 2018: the 2016..2017 rows were recoded into the current coding by a later
-# delivery (#1684). The warning states exactly those uncovered years, so it
-# licenses them: the flavor clones the 2018 state over 2016..2017.
+# The delivery holds Kod for 2016..2019, but the catalog's states start in 2018:
+# the 2016..2017 rows were recoded into the current coding by a later delivery
+# (#1684). The warning states exactly those uncovered years, so it licenses them:
+# the flavor clones the state in force at the table's end (2019, the integer
+# state with its classification), not the first state after the gap (2018).
 [[table]]
 id = "Kod_2016_2019"
 edition = { from = 2016, to = 2019 }
@@ -15,3 +16,31 @@ register_variant = "scb/example/annual"
 variable = "scb/example/kod"
 representation = "Kod"
 data_warning = { summary = "Kod is recoded for 2016-2017", detail = "The 2016-2017 rows were recoded into the 2018 coding by a later delivery.", window = { from = 2016, to = 2017 } }
+
+# Tal is held for 2016..2019 in two partition shards, and the catalog leaves
+# 2017..2019 uncovered at the end. The uncovered days reach the served end, so
+# the clone copies the nearest state after them (2020, integer), not the one
+# before (2016, string). Both shards license the same clone: one row.
+[[table]]
+id = "Tal_north"
+edition = { from = 2016, to = 2019 }
+partition = "north"
+[[table.column]]
+name = "Tal"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/tal"
+representation = "Tal"
+data_warning = { summary = "Tal is held past its documented years", detail = "The 2017-2019 rows are in the 2020 coding.", window = { from = 2017, to = 2019 } }
+
+[[table]]
+id = "Tal_south"
+edition = { from = 2016, to = 2019 }
+partition = "south"
+[[table.column]]
+name = "Tal"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/tal"
+representation = "Tal"
+data_warning = { summary = "Tal is held past its documented years", detail = "The 2017-2019 rows are in the 2020 coding.", window = { from = 2017, to = 2019 } }

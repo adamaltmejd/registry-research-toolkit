@@ -1,5 +1,6 @@
 {
   "warnings": [
+    "steward_delivery_limitation",
     "steward_delivery_limitation"
   ],
   "tables": [
@@ -13,11 +14,43 @@
       "partition": null,
       "projection": null,
       "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Tal_north",
+      "scope": "intervals",
+      "edition": {
+        "from": 2016,
+        "to": 2019
+      },
+      "partition": "north",
+      "projection": null,
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Tal_south",
+      "scope": "intervals",
+      "edition": {
+        "from": 2016,
+        "to": 2019
+      },
+      "partition": "south",
+      "projection": null,
+      "retain_unknown_reason": null
     }
   ],
   "periods": [
     {
       "physical_id": "Kod_2016_2019",
+      "lo": "2016-01-01",
+      "hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Tal_north",
+      "lo": "2016-01-01",
+      "hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Tal_south",
       "lo": "2016-01-01",
       "hi": "2019-12-31"
     }
@@ -26,6 +59,16 @@
     {
       "physical_id": "Kod_2016_2019",
       "name": "Kod",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Tal_north",
+      "name": "Tal",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Tal_south",
+      "name": "Tal",
       "unmapped_reason": null
     }
   ],
@@ -37,6 +80,22 @@
       "variable": "scb/example/kod",
       "representation_literal": "Kod",
       "representation_canonical": "Kod"
+    },
+    {
+      "physical_id": "Tal_north",
+      "name": "Tal",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/tal",
+      "representation_literal": "Tal",
+      "representation_canonical": "Tal"
+    },
+    {
+      "physical_id": "Tal_south",
+      "name": "Tal",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/tal",
+      "representation_literal": "Tal",
+      "representation_canonical": "Tal"
     }
   ],
   "states": [
@@ -53,6 +112,38 @@
       "register_variant": "scb/example/annual",
       "delivery_column_name": "Kod",
       "valid_from": "2018-01-01",
+      "valid_to": "2018-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/kod",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "Kod",
+      "valid_from": "2019-01-01",
+      "valid_to": "2025-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/tal",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "Tal",
+      "valid_from": "2010-01-01",
+      "valid_to": "2016-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/tal",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "Tal",
+      "valid_from": "2017-01-01",
+      "valid_to": "2019-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/tal",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "Tal",
+      "valid_from": "2020-01-01",
       "valid_to": "2025-12-31",
       "pooled": 0
     }

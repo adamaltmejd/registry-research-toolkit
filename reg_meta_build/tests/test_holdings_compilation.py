@@ -15,7 +15,7 @@ from reg_meta_build.derive import derive_holdings
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.materialize import write_resolved_catalog
-from reg_meta_build.resolved_catalog import ResolvedVariable
+from reg_meta_build.resolved_catalog import ResolvedClassification, ResolvedVariable
 from reg_meta_build.steward_spec import (
     Scope,
     StewardSpec,
@@ -49,8 +49,19 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
         ResolvedVariable.model_validate_json(json.dumps(value))
         for value in json.loads((case / request["catalog"]).read_text())
     )
+    # Read as the conformance artifact builder reads it (`reader_artifacts`).
+    books = case / "classifications.json"
+    classifications = tuple(
+        ResolvedClassification.model_validate_json(json.dumps(value))
+        for value in (json.loads(books.read_text()) if books.exists() else ())
+    )
     output = tmp_path / "reg_meta.db"
-    write_resolved_catalog(variables, output, manifest=synthetic_manifest())
+    write_resolved_catalog(
+        variables,
+        output,
+        manifest=synthetic_manifest(),
+        classifications=classifications,
+    )
     candidate = tmp_path / "candidate"
     (candidate / "policy").mkdir(parents=True)
     (candidate / "swecov").mkdir()

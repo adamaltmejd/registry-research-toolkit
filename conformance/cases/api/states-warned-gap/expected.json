@@ -4,28 +4,38 @@
     "json": {
       "/data/items/*/valid_from": [
         "2016-01-01",
-        "2018-01-01"
+        "2018-01-01",
+        "2019-01-01"
       ],
       "/data/items/*/valid_to": [
         "2017-12-31",
+        "2018-12-31",
         "2019-12-31"
-      ],
-      "/data/items/*/delivery_column_name": [
-        "Kod",
-        "Kod"
       ],
       "/data/items/*/data_type": [
         "integer",
+        "string",
         "integer"
+      ],
+      "/data/items/*/classifications/*/slug": [
+        [
+          "example-kod"
+        ],
+        [],
+        [
+          "example-kod"
+        ]
       ],
       "/data/items/*/provenance": [
         "steward:swecov",
+        null,
         null
       ],
       "/data/items/*/warning_ids": [
         [
           "237cc2fccf7cdb57f654de89e7b49efa0b3b2c6168804ee432722ee5d494386b"
         ],
+        [],
         []
       ]
     }
@@ -44,6 +54,27 @@
       ],
       "/data/*/valid_to": [
         "2017-12-31"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/valid_from": [
+        "2016-01-01",
+        "2017-01-01"
+      ],
+      "/data/items/*/valid_to": [
+        "2016-12-31",
+        "2019-12-31"
+      ],
+      "/data/items/*/data_type": [
+        "string",
+        "integer"
+      ],
+      "/data/items/*/provenance": [
+        null,
+        "steward:swecov"
       ]
     }
   }

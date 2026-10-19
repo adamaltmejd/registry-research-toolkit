@@ -1,9 +1,11 @@
 version = 1
 steward = "swecov"
 
-# One year too wide (#1684): the catalog's only state starts in 2018, so it
-# leaves 2016..2017 uncovered, but the warning states 2016..2018. It licenses
-# nothing and refuses.
+# Each table's warning fails to license its uncovered days (#1684), and the
+# refusal locates every one.
+
+# One year too wide: the catalog's only state starts in 2018, so it leaves
+# 2016..2017 uncovered, but the warning states 2016..2018.
 [[table]]
 id = "Kod_2016_2019"
 edition = { from = 2016, to = 2019 }
@@ -14,3 +16,43 @@ register_variant = "scb/example/annual"
 variable = "scb/example/kod"
 representation = "Kod"
 data_warning = { summary = "Kod is recoded for 2016-2017", detail = "The 2016-2017 rows were recoded into the 2018 coding by a later delivery.", window = { from = 2016, to = 2018 } }
+
+# A middle gap: states on both sides leave 2017..2018 uncovered inside the served
+# period. A warning licenses only a leading or trailing interval.
+[[table]]
+id = "Mid_2016_2019"
+edition = { from = 2016, to = 2019 }
+[[table.column]]
+name = "Mid"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/mid"
+representation = "Mid"
+data_warning = { summary = "Mid is held across a gap", detail = "The 2017-2018 rows are undocumented.", window = { from = 2017, to = 2018 } }
+
+# A rename: the catalog documents the cell as KodOld to 2017 and KodNew from
+# 2018. The table keeps KodNew for 2016..2019, and its warning states 2016..2017,
+# which KodOld already documents: the clone would overlap that state.
+[[table]]
+id = "Omr_2016_2019"
+edition = { from = 2016, to = 2019 }
+[[table.column]]
+name = "KodNew"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/omr"
+representation = "KodNew"
+data_warning = { summary = "KodNew covers the KodOld years", detail = "The 2016-2017 rows are in the KodNew coding.", window = { from = 2016, to = 2017 } }
+
+# Two code versions (v1, v2) are both in force at the served end, so the clone
+# has no single source.
+[[table]]
+id = "Ver_2016_2019"
+edition = { from = 2016, to = 2019 }
+[[table.column]]
+name = "Ver"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/ver"
+representation = "Ver"
+data_warning = { summary = "Ver is recoded for 2016-2017", detail = "The 2016-2017 rows were recoded by a later delivery.", window = { from = 2016, to = 2017 } }
