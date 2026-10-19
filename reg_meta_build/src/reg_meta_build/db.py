@@ -2083,8 +2083,9 @@ def publish_db(tmp_path: Path, final_path: Path) -> None:
         sqlite3.connect(tmp_path.resolve().as_uri() + "?mode=ro", uri=True)
     ) as conn:
         conn.row_factory = sqlite3.Row
-        # The companion source-provenance DB uses this atomic placement helper
-        # too, but has no catalog manifest or publication contract.
+        # The companion source-provenance DB and the docs DB use this atomic
+        # placement helper too, but have no catalog manifest or publication
+        # contract.
         if conn.execute(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='import_manifest'"
         ).fetchone():

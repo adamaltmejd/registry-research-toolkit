@@ -2883,8 +2883,11 @@ including when the whole `input_data/SCB/docs` root is absent, refuses the build
 `related_documents_binary_missing` naming each `register/filename`, so a release cannot
 ship a docs asset silently missing a document (#1686). There is no opt-out: a checkout
 without the gitignored PDFs cannot run `build-docs` against the repository map. A
-`required = false` entry with no binary and an unregistered PDF are warnings. This
-indexing does not interpret documents to change catalog facts.
+`required = false` entry with no binary and an unregistered PDF are warnings. The build
+stages `reg_meta_docs.db.tmp` beside the destination and installs it through
+`publish_db`, so a refusal leaves the previous docs DB untouched and a successful
+rebuild retains the replaced generation as `.prev` (#1690). This indexing does not
+interpret documents to change catalog facts.
 
 `doc_db.py` owns the build and FTS creation. The reader's docs schema gate is
 `DOC_SCHEMA` in `crates/reg-catalog/src/docs.rs`, which mirrors `DOC_SCHEMA_VERSION`.
