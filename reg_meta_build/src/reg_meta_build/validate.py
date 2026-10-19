@@ -900,7 +900,8 @@ def _check_same_version_states_disjoint(
         "JOIN register r ON r.register_id = v.register_id "
         "JOIN provider p ON p.provider_id = r.provider_id "
         "JOIN register_variant rv ON rv.register_variant_id = a.register_variant_id "
-        "ORDER BY p.slug, r.slug, v.slug, rv.slug, a.value_set_version_label"
+        "ORDER BY p.slug, r.slug, v.slug, rv.slug, a.value_set_version_label, "
+        "         a.valid_from, b.valid_from, a.state_id, b.state_id"
     ).fetchall()
     if not rows:
         result.ok("no two dated states of one (variable, variant, version) overlap")
