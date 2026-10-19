@@ -191,8 +191,8 @@ Otherwise copy forward (8d). If a new SCB PDF must be converted first, the recip
 docstring of `scripts/parse_lisa_docs.py`.
 
 `build-docs` refuses (`related_documents_binary_missing`) when a required PDF in
-`related_documents.toml` is absent, so place every PDF under
-`reg_meta_build/input_data/SCB/docs/<register>/` first.
+`related_documents.toml` is absent, so first place every PDF under
+`reg_meta_build/input_data/SCB/docs/<register>/` in the checkout that runs `build-docs`.
 
 ```sh
 set -euo pipefail

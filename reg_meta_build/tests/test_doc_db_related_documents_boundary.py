@@ -139,10 +139,12 @@ def test_binary_that_differs_from_its_pins_fails_the_build(
 def test_required_document_without_a_binary_fails_the_build(
     package: Path, tmp_path: Path
 ) -> None:
-    # Fails if a required entry's absent binary (here the whole binary root is
-    # absent, as in a checkout without the gitignored PDFs) only warns and the
-    # docs DB ships without the document (#1686).
+    # Fails if a required entry's absent binary only warns and the docs DB ships
+    # without the document (#1686), or if the refusal fires only when the whole
+    # binary root is absent: the root and the register directory exist here and
+    # only the PDF is missing.
     _map(package, "testreg", "missing.pdf")
+    (package / "input_data" / "SCB" / "docs" / "testreg").mkdir(parents=True)
     run = _build(package, tmp_path)
     assert run.exit_code == EXIT_CONFIG
     assert run.payload["error"]["code"] == "related_documents_binary_missing"
