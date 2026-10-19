@@ -2172,3 +2172,278 @@ tables = ["CIS2002"]
 select_owner = true
 mappings = [{ register_variant = "scb/innovation-foretag/_default", variable = "scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-4", representation = "co74" }]
 reason = "CIS2002 is the 2000–2002 round (errata.version \"2000 - 2002\"); its table edition year 2002 also lies in SCB's 2002 - 2004 version, so the cell is pinned to the 2000–2002 matrix variable declared for it, as the CIS2004–2008 cells are pinned to their own wave (#1571; #1603 batch-e; Operator under maintainer delegation 2026-10-16)."
+
+[[column]]
+column = "ETurn02"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Eforco"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Efored"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Eforqu"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Eforsa"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FCo"
+tables = ["CIS2002"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FEforeff"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FFun"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FFunrtd"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FHCon"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FInPdgd"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FInpdsv"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FInpslg"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FInpspd"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FInpssu"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FMkt"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FOrg"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FPro"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FSGMT"
+tables = ["CIS2002"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FSource"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Femp04"
+tables = ["CIS2004"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Fhbeg"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Fhdlay"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Fpmos"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Fturn04"
+tables = ["CIS2004", "CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "FunEU"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "FunGmt"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "FunLoc"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "FunRtd"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "MktDes"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "MktMet"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Nuts"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "OrgRel"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "OrgStr"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "OrgSys"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "ProCp"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "ProDsg"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "ProTm"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "Propat"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "RTot"
+tables = ["CIS2012"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "SCLI"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "SCON"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "SGMT"
+tables = ["CIS2002", "CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "SPRO"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Turn10"
+tables = ["CIS2012"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Turn2010"
+tables = ["CIS2014"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "Weightnr"
+tables = ["CIS2006", "CIS2008"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "femp06"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "scom"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "sentg"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "sins"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "sjou"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "ssup"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "suni"
+tables = ["CIS2006"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "turn08"
+tables = ["CIS2012"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."

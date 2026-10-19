@@ -20,3 +20,13 @@ edition = 2023
 [[table]]
 table = "AKU_RL_2024"
 edition = 2024
+
+[[column]]
+column = "HsArbHemmaAntV"
+tables = ["AKU_RL_2021"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "HsArbhemmaV"
+tables = ["AKU_RL_2021"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."

@@ -397,3 +397,53 @@ column = "v0402_8"
 tables = ["FTG_FOU_2017"]
 mappings = [{ register_variant = "scb/fou/foretagssektorn", variable = "scb/fou/v0402-8-enligt-leverans", representation = "v0402_8" }]
 reason = "Undocumented 2017 product-block column, minted as its own variable with its candidate meaning (v0402 for product group 8) named in the data_warning. #1495; #1603 batch-e; Operator under maintainer delegation 2026-10-16."
+
+[[column]]
+column = "V0462"
+tables = ["FTG_FOU_2009"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "V0472"
+tables = ["FTG_FOU_2007", "FTG_FOU_2009"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "v0462"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "v0472"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
+
+[[column]]
+column = "v1781"
+tables = ["FTG_FOU_2017"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v1782"
+tables = ["FTG_FOU_2017"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v1783"
+tables = ["FTG_FOU_2017"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v853"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v913"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
+
+[[column]]
+column = "v953"
+tables = ["FTG_FOU_2015"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A4, the batch-f F9 rule): there is no value to order, so the column is not minted for these tables."
