@@ -1113,3 +1113,285 @@ valid_to = "2004-12-31"
 reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
 evidence = "Availability from the #1603 B-batch errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "c76caad103257de3e9bdd845d45f707146d20f3aba90133e4399827cee6aa18e"
+
+# ── #1617: land (concept 45) carries an R&D NABS description; HA0201 partner country, 2017–2026 ──
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "10079"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2017"
+expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "11755"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "13056"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2019"
+expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "13821"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2020"
+expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "15843"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "18034"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "18595"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "19034"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2024"
+expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "19733"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2025"
+expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.258"
+column = "Landskod"
+edition = "20301"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2026"
+expected_scope = { kind = "intervals", intervals = [{ start = "2026", end = "2026" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2026-01-01", end = "2026-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "10076"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2017"
+expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "11753"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "13055"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2019"
+expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "13820"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2020"
+expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "15842"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "18033"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "18594"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "19033"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2024"
+expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "19732"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2025"
+expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
+
+[[errata.field]]
+variable = "188.45"
+variant = "188.393"
+column = "Landskod"
+edition = "20302"
+expected_fields = [{ name = "definition", status = "value", value = "Indelning i länder." }, { name = "description", status = "value", value = "Socioekonomisk mål enligt nomenklaturen \"Nomenclature for the analysis and comparison of scientific programmes and budgets (NABS 2007)\"" }, { name = "name", status = "value", value = "Land" }, { name = "operational_definition", status = "value", value = "För Extrastat avses endast handel med länder utanför EU" }]
+expected_period_text = "2026"
+expected_scope = { kind = "intervals", intervals = [{ start = "2026", end = "2026" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2026-01-01", end = "2026-12-31" }] }
+field = "description"
+value = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470."
+evidence = "SCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+noted = "2026-10-19"
