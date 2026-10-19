@@ -557,6 +557,9 @@ def compile_holdings(
         # The derived tables read the states, so the clones need a full derive.
         # simplify: extend-db then derives twice; narrow this to the
         # state-dependent tables if a flavored build's time ever matters.
+        # Above derive's parallel threshold its workers read committed rows, so
+        # commit first, as extend-db does before its own derive.
+        conn.commit()
         derive(conn)
     return CompiledHoldings(
         len(logical) + len(unknown), column_id, mappings_count, accounting

@@ -8,4 +8,5 @@ edition = { from = 2020, to = 2021 }
 
 [[column]]
 column = "P1105_LopNr_PersonNr"
-unmap = "Physical column retained without a verified catalog representation for the exact selected table coordinates and period. All five physical fields match the accepted literal FoHM CovidWGS delivery and its pooled 2020–2021 private source candidate."
+mappings = [{ register_variant = "fohm/covidwgs/fhm-covidwgs", variable = "fohm/covidwgs/p1105-lopnr-personnr", representation = "P1105_LopNr_PersonNr" }]
+reason = "The FoHM CovidWGS person key, documented by the accepted fohm provider file for the same 2020–2021 delivery as this table's other four columns, which map by name. The identifier needs a reviewed mapping; this replaces the earlier unverified-representation unmap (Operator 2026-10-19, warn-not-hold, #1603 batch-g)."

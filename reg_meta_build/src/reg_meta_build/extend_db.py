@@ -437,8 +437,10 @@ def extend_db(
         db_dir.mkdir(parents=True, exist_ok=True)
         final_path = db_dir / DB_FILENAME
         tmp_path = final_path.with_suffix(".db.tmp")
-        if tmp_path.exists():
-            tmp_path.unlink()
+        # A killed run can leave the tmp's WAL sidecars, with or without the tmp
+        # itself; SQLite would replay that WAL onto the fresh, verified copy.
+        tmp_path.unlink(missing_ok=True)
+        _unlink_wal_sidecars(tmp_path)
         # A released base is often read-only (0444). `copyfile` gives the staging
         # copy a fresh writable mode; `copy2` would carry 0444 over and SQLite
         # could not open it for writing.

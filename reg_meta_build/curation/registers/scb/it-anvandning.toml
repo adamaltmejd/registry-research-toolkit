@@ -653,6 +653,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "AgKat"
 data_type = "text"
@@ -686,6 +687,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "BGrupp"
 data_type = "text"
@@ -829,6 +831,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017, ITftg_Stora_2015, ITftg_Stora_2016, ITftg_Stora_2017 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "FEStat"
 data_type = "text"
@@ -840,6 +843,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "FETyp"
 data_type = "text"
@@ -851,6 +855,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017, ITftg_Stora_2015, ITftg_Stora_2016, ITftg_Stora_2017 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "FtgStat"
 data_type = "text"
@@ -1182,6 +1187,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011, ITftg_Mikro_2014, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017, ITftg_Mikro_2019 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "JEAnt"
 data_type = "text"
@@ -1193,6 +1199,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2008, ITftg_2009, ITftg_Mikro_2013, ITftg_Mikro_2014, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017, ITftg_Mikro_2019 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "JERel"
 data_type = "text"
@@ -1204,6 +1211,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "JurForm"
 data_type = "text"
@@ -1226,6 +1234,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "KommunSate"
 data_type = "text"
@@ -1237,6 +1246,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "Lansate"
 data_type = "text"
@@ -1270,6 +1280,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2008, ITftg_2009 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "Oms2"
 data_type = "text"
@@ -1281,6 +1292,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "Oms2_ny"
 data_type = "text"
@@ -1754,6 +1766,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "Sektor"
 data_type = "text"
@@ -1765,6 +1778,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "SGrupp"
 data_type = "text"
@@ -12246,6 +12260,7 @@ evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code
 # #1302: survey-design columns of IT-användning i företag held by SWECOV; undocumented, so name = column.
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2008, ITftg_2009 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "lillan"
 data_type = "text"
@@ -12257,6 +12272,7 @@ evidence = "SWECOV holds lillan in ITftg_2008..ITftg_2011, ITftg_Stora_2013..201
 noted = "2026-10-12"
 
 [[errata.column]]
+data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2008, ITftg_2009 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "storaN"
 data_type = "text"

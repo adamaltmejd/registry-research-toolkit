@@ -37,3 +37,8 @@ unmap = "Plain-text label of the code column LinjeKod in the same table: not a s
 column = "linrben"
 tables = ["Hreg_Reg_1993_2022", "Hreg_Reg_2022_2024"]
 unmap = "Plain-text label of the code column LInr in the same table: not a separate variable, it ships with the table; maintainer-decided 2026-10-12 (#1302 round 3)."
+
+[[column]]
+column = "Djup"
+tables = ["Hreg_Reg_2022_2024"]
+unmap = "Empty in every listed table (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, #1603 batch-g A3, the batch-f F9 rule): there is no value to order, so the same-name carry into these tables is withdrawn."
