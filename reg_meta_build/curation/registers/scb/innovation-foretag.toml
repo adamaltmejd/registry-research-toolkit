@@ -11915,26 +11915,6 @@ evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complet
 
 [[acknowledge]]
 code = "missing_coding_period"
-subject = "scb/innovation-foretag/ipr-patent"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:32713\",\"member:469420\"],\"source\":\"scb-registerinformation\"}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2006-12-31"
-reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
-evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-staten"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36983\",\"member:474454\"],\"source\":\"scb-registerinformation\"}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2006-12-31"
-reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
-evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
-
-[[acknowledge]]
-code = "missing_coding_period"
 subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-staten"
 refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36983\",\"member:474454\"],\"source\":\"scb-registerinformation\"}"]
 fields = ["coding"]
@@ -11948,28 +11928,8 @@ code = "missing_coding_period"
 subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-eu"
 refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36984\",\"member:474455\"],\"source\":\"scb-registerinformation\"}"]
 fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2006-12-31"
-reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
-evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/innovation-foretag/stod-for-innovationsverksamhet-eu"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36984\",\"member:474455\"],\"source\":\"scb-registerinformation\"}"]
-fields = ["coding"]
 valid_from = "2010-01-01"
 valid_to = "2012-12-31"
-reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
-evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/innovation-foretag/funrtd"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:36985\",\"member:474456\"],\"source\":\"scb-registerinformation\"}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2006-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
 
@@ -12065,41 +12025,11 @@ evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complet
 
 [[acknowledge]]
 code = "missing_coding_period"
-subject = "scb/innovation-foretag/ipr-monsterskydd"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37076\",\"member:479287\"],\"source\":\"scb-registerinformation\"}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2006-12-31"
-reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
-evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/innovation-foretag/ipr-varumarke"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:11529\",\"variable:37077\",\"member:479288\"],\"source\":\"scb-registerinformation\"}"]
-fields = ["coding"]
-valid_from = "2004-01-01"
-valid_to = "2006-12-31"
-reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
-evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
-
-[[acknowledge]]
-code = "missing_coding_period"
 subject = "scb/innovation-foretag/naringsgren"
 refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:18898\",\"variable:4027\",\"member:903250\"],\"source\":\"scb-registerinformation\"}"]
 fields = ["coding"]
 valid_from = "2002-01-01"
 valid_to = "2004-12-31"
-reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
-evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/innovation-foretag/agarkontroll"
-refs = ["{\"semantic_record_key\":[\"register:257\",\"variant:553\",\"edition:20007\",\"variable:74\",\"member:996348\"],\"source\":\"scb-registerinformation\"}"]
-fields = ["coding"]
-valid_from = "2014-01-01"
-valid_to = "2020-12-31"
 reason = "User-approved bounded historical coding limitation: keep the exact delivered column and supported physical metadata, with its unavailable historical code domain withheld."
 evidence = "User-approved exact21 missing-coding limitations,2026-09-30. Complete original fields, every supplied coding claim/association and newer domains retained. Existing delivery evidence establishes these columns/windows; it does not establish historical stored membership. No later-list extension, recoding, union, invented codebook or observation dates. Innovation-residual21-current-review-receipt.json and Innovation-residual21-user-review.md. Batch34 full payload/key equality checked; state.value_set remains withheld."
 
@@ -14327,3 +14257,82 @@ upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "4f7097aa4e5fb8c073200ff5ed66edd3ada3fca0f5acadc101e6b92a516f4922"
 evidence = "SWECOV holds the wave's own reference-year employee count in every CIS table: EMP in CIS2002 (2000 - 2002); emp04 in CIS2004 (2002 - 2004); emp06 in CIS2006 (2004 - 2006); emp08 in CIS2008 (2006 - 2008); emp10 in CIS2010 (2008 - 2010); Emp2018 in CIS2018 (2016 - 2018). SCB documents the column EMP, Antal anställda (SCB-variabel 690, hämtat från FDB), only from 2020 - 2022 (as EMP2022) and 2022 - 2024; its export has no row for it in these versions. Under the maintainer's same-name rule the column takes the meaning of its nearest documented edition, so these waves deliver antal-anstallda rather than a per-wave mint (one EMP variable); CIS<Y> is the <Y-2> - <Y> wave, and CIS2002's 2000 - 2002 round is the errata.version above. Replaces the CIS2002 'EMP (enligt leverans)' mint (#1603 batch-e, #1495; Operator under maintainer delegation 2026-10-16, option (b), 2026-10-17)."
 noted = "2026-10-17"
+
+# ── #1603 batch-g A8: carry the documented code list into same-name carried windows where every delivered value is in it (Operator 2026-10-19, extending F7) ──
+
+[[coding.extend]]
+variable = "257.74"
+variant = "257.553"
+column = "AGKAT"
+list = "Standard för indelning efter ägarkategori 2000"
+list_members = [["10", "Statligt kontrollerade enheter"], ["20", "Kommunalt kontrollerade enheter"], ["30", "Landstingskontrollerade enheter"], ["41", "Privat svenskkontrollerade enheter utan koncerntillhörighet"], ["42", "Privat svenskkontrollerade enheter med koncerntillhörighet"], ["50", "Utlandskontrollerade enheter"]]
+witness = ["2022-01-01", "2022-12-31"]
+periods = [["2014-01-01", "2020-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column AGKAT the meaning of SCB's documentation of scb/innovation-foretag/agarkontroll in the undocumented CIS2016, CIS2018, CIS2020 round(s). Carry the documented list Standard för indelning efter ägarkategori 2000 (2022) into the same window: every delivered value is in it, per Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for scb/innovation-foretag/agarkontroll on variant _default, documented 2022; Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+[[coding.extend]]
+variable = "257.36985"
+variant = "257.553"
+column = "FUNRTD"
+list = "Ja/Nej"
+list_members = [["1", "Ja"], ["2", "Nej"]]
+witness = ["2014-01-01", "2014-12-31"]
+periods = [["2004-01-01", "2006-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column FUNRTD the meaning of SCB's documentation of scb/innovation-foretag/funrtd in the undocumented CIS2006 round(s). Carry the documented list Ja/Nej (2014) into the same window: every delivered value is in it, per Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for scb/innovation-foretag/funrtd on variant _default, documented 2014; Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+[[coding.extend]]
+variable = "257.37076.ipr-monsterskydd"
+variant = "257.553"
+column = "PRODSG"
+list = "Ja/Nej"
+list_members = [["1", "Ja"], ["2", "Nej"]]
+witness = ["2014-01-01", "2014-12-31"]
+periods = [["2004-01-01", "2006-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column PRODSG the meaning of SCB's documentation of scb/innovation-foretag/ipr-monsterskydd in the undocumented CIS2006 round(s). Carry the documented list Ja/Nej (2014) into the same window: every delivered value is in it, per Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for scb/innovation-foretag/ipr-monsterskydd on variant _default, documented 2014; Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+[[coding.extend]]
+variable = "257.32713.ipr-patent"
+variant = "257.553"
+column = "PROPAT"
+list = "Ja eller nej"
+list_members = [["0", "Nej"], ["1", "Ja"]]
+witness = ["2014-01-01", "2014-12-31"]
+periods = [["2004-01-01", "2006-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column PROPAT the meaning of SCB's documentation of scb/innovation-foretag/ipr-patent in the undocumented CIS2006 round(s). Carry the documented list Ja eller nej (2014) into the same window: every delivered value is in it, per Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for scb/innovation-foretag/ipr-patent on variant _default, documented 2014; Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+[[coding.extend]]
+variable = "257.37077.ipr-varumarke"
+variant = "257.553"
+column = "PROTM"
+list = "Ja/Nej"
+list_members = [["1", "Ja"], ["2", "Nej"]]
+witness = ["2014-01-01", "2014-12-31"]
+periods = [["2004-01-01", "2006-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column PROTM the meaning of SCB's documentation of scb/innovation-foretag/ipr-varumarke in the undocumented CIS2006 round(s). Carry the documented list Ja/Nej (2014) into the same window: every delivered value is in it, per Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for scb/innovation-foretag/ipr-varumarke on variant _default, documented 2014; Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+[[coding.extend]]
+variable = "257.36984.stod-for-innovationsverksamhet-eu"
+variant = "257.553"
+column = "FUNEU"
+list = "Ja/Nej"
+list_members = [["1", "Ja"], ["2", "Nej"]]
+witness = ["2014-01-01", "2014-12-31"]
+periods = [["2004-01-01", "2006-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column FUNEU the meaning of SCB's documentation of scb/innovation-foretag/stod-for-innovationsverksamhet-eu in the undocumented CIS2006 round(s). Carry the documented list Ja/Nej (2014) into the same window: every delivered value is in it, per Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for scb/innovation-foretag/stod-for-innovationsverksamhet-eu on variant _default, documented 2014; Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
+
+[[coding.extend]]
+variable = "257.36983.stod-for-innovationsverksamhet-staten"
+variant = "257.553"
+column = "FUNGMT"
+list = "Ja/Nej"
+list_members = [["1", "Ja"], ["2", "Nej"]]
+witness = ["2014-01-01", "2014-12-31"]
+periods = [["2004-01-01", "2006-12-31"]]
+reason = "The #1603 batch-e same-name carry gives column FUNGMT the meaning of SCB's documentation of scb/innovation-foretag/stod-for-innovationsverksamhet-staten in the undocumented CIS2006 round(s). Carry the documented list Ja/Nej (2014) into the same window: every delivered value is in it, per Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
+source = "SCB Registerinformation/Vardemangder for scb/innovation-foretag/stod-for-innovationsverksamhet-staten on variant _default, documented 2014; Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
