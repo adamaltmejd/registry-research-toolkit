@@ -2939,7 +2939,9 @@ This avoids duplicate logical coordinates without claiming that the auxiliary fi
 meaning is unknown or that one delivery supersedes another.
 
 A curated mapping decision may declare `select_owner = true` when the physical delivery
-documents which source question or survey wave owns that column. This selects one
+documents which source question or survey wave owns that column, or when the delivered
+values or a cited maintainer ruling settle the owner (two owners with the same meaning
+carry a warning naming both). This selects one
 already-declared owner for that table, edition, variant and literal representation, and
 drops every other owner of that representation or of the physical column name on the
 variant; it does not extend dates or merge variables. The selected owner must
