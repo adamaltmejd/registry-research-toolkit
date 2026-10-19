@@ -12,6 +12,7 @@ import logging
 import re
 import sqlite3
 import tomllib
+from contextlib import closing
 from dataclasses import dataclass
 from datetime import date
 from hashlib import sha256
@@ -19,6 +20,7 @@ from pathlib import Path
 from typing import NoReturn, cast
 
 from ._curation import curation_error
+from .db import _unlink_wal_sidecars, publish_db
 from .derive.search_index import register_fold_search
 from .errors import EXIT_CONFIG, RegMetaError
 
@@ -902,19 +904,42 @@ def build_doc_db(
     Both default to none, so a library build never reads the repository's
     untracked seed; the ``build-docs`` CLI passes the repository paths.
 
+    The DB is staged beside the destination and installed by ``publish_db``, so
+    a refused build leaves the previous docs DB untouched (#1690).
+
     Returns the path to the created DB.
     """
     db_dir.mkdir(parents=True, exist_ok=True)
     db_path = db_dir / DOC_DB_FILENAME
+    tmp = db_path.with_name(db_path.name + ".tmp")
+    tmp.unlink(missing_ok=True)
+    _unlink_wal_sidecars(tmp)
+    try:
+        # Closing before the cleanup below rolls back an open transaction and
+        # removes its `-journal`, so the unlink leaves no sidecar behind.
+        with closing(sqlite3.connect(tmp)) as conn:
+            total = _write_doc_db(
+                conn, docs_dir, related_documents or {}, related_docs_dir
+            )
+        publish_db(tmp, db_path)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        _unlink_wal_sidecars(tmp)
+        raise
+    log.info("Indexed %d docs from %s → %s", total, docs_dir, db_path)
+    return db_path
 
-    if db_path.exists():
-        db_path.unlink()
 
-    conn = sqlite3.connect(str(db_path))
+def _write_doc_db(
+    conn: sqlite3.Connection,
+    docs_dir: Path,
+    related_documents: dict[str, list[RelatedDocument]],
+    related_docs_dir: Path | None,
+) -> int:
+    """Fill an empty docs DB; return the markdown document count."""
     conn.executescript(DOC_DDL)
 
     source_map = load_doc_sources()
-    related_documents = related_documents or {}
     unmapped_sources: set[str] = set()
 
     total = 0
@@ -994,6 +1019,4 @@ def build_doc_db(
         )
 
     index_docs(conn)
-    conn.close()
-    log.info("Indexed %d docs from %s → %s", total, docs_dir, db_path)
-    return db_path
+    return total

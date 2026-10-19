@@ -1,0 +1,19 @@
+{
+  "note": "Kod_2016_2019 holds Kod for 2016..2019, the catalog's states start in 2018 (a 2018 string state, then an integer state with a classification from 2019), and the mapping's warning states exactly 2016..2017 (#1684). Holdings-scope states show a steward-provenance clone over 2016..2017 carrying that warning's id, copied from the state in force at the table's end (integer, classified), beside the documented states without it. Tal's two tables (2016..2018 and 2019) leave 2017..2019 uncovered at the end; their abutting licences coalesce into one clone over 2017..2019 that copies the nearest state after it (2020, integer), not the one before (string), under one coalesced warning. Fails if no clone is written, it takes other bounds, copies the first state after the gap or the nearest one before it, drops the source's classification, is not marked as the steward's, the warning is not attributed to it, or Tal's licences or warnings stay one per table.",
+  "fixture": "warned-gap",
+  "kind": "steward",
+  "requests": [
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/kod"
+    },
+    {
+      "operation": "warnings",
+      "path": "/api/warnings/scb/example/kod"
+    },
+    {
+      "operation": "states",
+      "path": "/api/states/scb/example/tal"
+    }
+  ]
+}

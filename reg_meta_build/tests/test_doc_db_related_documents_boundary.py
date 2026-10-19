@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import sqlite3
 from hashlib import sha256
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -26,8 +27,6 @@ from _curation_toml_boundary_support import (
 from reg_meta_build.errors import EXIT_CONFIG
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from _curation_toml_boundary_support import CliRun
 
 PDF = b"%PDF-1.4\nfixture\n"
@@ -142,13 +141,22 @@ def test_required_document_without_a_binary_fails_the_build(
     # Fails if a required entry's absent binary only warns and the docs DB ships
     # without the document (#1686), or if the refusal fires only when the whole
     # binary root is absent: the root and the register directory exist here and
-    # only the PDF is missing.
+    # only the PDF is missing. Also fails if the refusal replaces the previous
+    # docs DB (the build deleted it before building and left a schema-only
+    # stub, #1690) or leaves its staging file in the DB directory.
+    _map(package, "testreg", "related.pdf")
+    _binary(package, "testreg", "related.pdf", PDF)
+    previous = _build(package, tmp_path)
+    assert previous.exit_code == 0
+    db_path = Path(previous.payload["db_path"])
+    previous_bytes = db_path.read_bytes()
     _map(package, "testreg", "missing.pdf")
-    (package / "input_data" / "SCB" / "docs" / "testreg").mkdir(parents=True)
-    run = _build(package, tmp_path)
+    run = run_build_docs(package, tmp_path / "docs", tmp_path / "db")
     assert run.exit_code == EXIT_CONFIG
     assert run.payload["error"]["code"] == "related_documents_binary_missing"
     assert "testreg/missing.pdf" in run.payload["error"]["message"]
+    assert db_path.read_bytes() == previous_bytes
+    assert sorted(path.name for path in db_path.parent.iterdir()) == [db_path.name]
 
 
 def test_optional_document_for_an_inactive_register_is_skipped_silently(

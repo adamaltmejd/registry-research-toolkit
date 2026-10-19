@@ -28,6 +28,10 @@ Rules, each refused with a located `RegMetaError`:
   table whose variant set differs carries its own `variants`.
 - `steward_table_disposition_invalid`: every census table is in exactly one
   series or one scope disposition (lookup, exclude, retain_unknown).
+- `inventory_window_invalid`: a mapping's `data_warning` window (#1684) that
+  meets no period the decision's dated tables serve. The generator clips the
+  window to each table and omits it where it misses; the inventory judges each
+  clipped window.
 - `steward_spec_invalid`: everything else, including a column decision naming
   a table outside its series and two decisions for one column of one table.
   Decisions select whole tables. A mapping narrows to part of a table's
@@ -64,7 +68,13 @@ from pydantic import (
 from reg_core_py import parse_fqid
 
 from .errors import EXIT_CONFIG, RegMetaError
-from .inventory import ColumnMapping, EditionRange, edition_bounds
+from .inventory import (
+    WINDOW_INVALID,
+    ColumnMapping,
+    EditionRange,
+    _render,
+    edition_bounds,
+)
 from .slug_grammar import validate_slug
 from .source_evidence import canonical_sha256
 
@@ -119,6 +129,22 @@ def steward_spec_sha256(directory: Path) -> str:
 # October snapshot: Y is LA<Y>), or one term, `vt` / `ht` (VT<Y> / HT<Y>). The
 # anchor is curated against the register's documentation, never inferred.
 EditionSpelling = Literal["annual", "spring", "autumn", "vt", "ht"]
+
+
+def school_year_edition(anchor: str, year: int) -> str:
+    """The school year a bare table year names, under a series' spelling.
+
+    SCB's school registers deliver school years, not calendar years, and a
+    SWECOV table named by ONE year holds one school year — which one depends
+    on the register (grades set in the spring are labelled by the spring year,
+    an October teacher snapshot by the autumn year), so the spelling is curated
+    per series (`edition_spelling`), never inferred."""
+    if anchor == "spring":
+        return f"LA{year - 1}"
+    if anchor == "autumn":
+        return f"LA{year}"
+    return f"{anchor.upper()}{year}"  # a single term: VT<Y> / HT<Y>
+
 
 _ISSUE_REFERENCE = re.compile(r"^(?:[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)?#[1-9][0-9]*$")
 
@@ -511,6 +537,14 @@ class Series(_SpecModel):
             raise ValueError("a series that admits variants names its register")
         return self
 
+    def spelled_edition(self, table: SeriesTable) -> RawEdition:
+        """The table's inventory edition, a bare year spelled by the series'
+        `edition_spelling`."""
+        edition = table.inventory_edition
+        if isinstance(edition, int) and self.edition_spelling != "annual":
+            return school_year_edition(self.edition_spelling, edition)
+        return edition
+
     def table_variants(self) -> dict[str, list[str]]:
         """Table → the variants admissible for it (its own set, else the series')."""
         return {
@@ -668,6 +702,7 @@ def _check_series(path: Path, series: Series) -> None:
                     f"tables {', '.join(refusing)} do not admit; registers found: "
                     f"{registers}",
                 )
+            _check_warning_reach(where, series, entry, mapping)
         if entry.graft_onto is not None:
             if entry.graft_onto not in series.variants:
                 raise _spec_error(
@@ -692,6 +727,36 @@ def _check_series(path: Path, series: Series) -> None:
                     "takes one decision",
                 )
             seen[table, entry.column] = index
+
+
+def _check_warning_reach(
+    where: str, series: Series, entry: SeriesColumn, mapping: ColumnMapping
+) -> None:
+    """A decision's mapping warning (#1684) spans the decision's tables, and the
+    generator clips its window to each table's served period, omitting it where
+    it misses. A window that misses every dated table is an authoring slip, so it
+    refuses under the inventory's own window code."""
+    warning = mapping.data_warning
+    if warning is None or warning.window is None:
+        return
+    try:
+        window = edition_bounds(warning.window)[0]
+    except ValueError as exc:
+        raise _spec_error(
+            WINDOW_INVALID, f"{where}: mapping data_warning window: {exc}"
+        ) from exc
+    decided = set(entry.tables or [table.table for table in series.tables])
+    for table in series.tables:
+        if table.table not in decided or table.edition is None:
+            continue
+        served = mapping.served(edition_bounds_of(series.spelled_edition(table)))
+        if any(lo <= window[1] and window[0] <= hi for lo, hi in served):
+            return
+    raise _spec_error(
+        WINDOW_INVALID,
+        f"{where}: mapping onto {mapping.register_variant} data_warning window "
+        f"{_render((window,))} meets no period its dated tables serve",
+    )
 
 
 def load_steward_spec(directory: Path) -> StewardSpec:

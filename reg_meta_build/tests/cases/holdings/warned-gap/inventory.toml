@@ -1,0 +1,90 @@
+version = 1
+steward = "swecov"
+
+# The delivery holds Kod for 2016..2019, but the catalog's states start in 2018:
+# the 2016..2017 rows were recoded into the current coding by a later delivery
+# (#1684). The warning states exactly those uncovered years, so it licenses them:
+# the flavor clones the state in force at the table's end (2019, the integer
+# state with its classification), not the first state after the gap (2018).
+[[table]]
+id = "Kod_2016_2019"
+edition = { from = 2016, to = 2019 }
+[[table.column]]
+name = "Kod"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/kod"
+representation = "Kod"
+data_warning = { summary = "Kod is recoded for 2016-2017", detail = "The 2016-2017 rows were recoded into the 2018 coding by a later delivery.", window = { from = 2016, to = 2017 } }
+
+# Tal is held in two tables, 2016..2018 and 2019, and the catalog leaves
+# 2017..2019 uncovered at the end. Each table's uncovered days reach its served
+# end, so each licence copies the nearest state after them (2020, integer), not
+# the one before (2016, string). The two licences abut and copy one state, so
+# they coalesce: one clone over 2017..2019, under one warning over those years.
+[[table]]
+id = "Tal_2016_2018"
+edition = { from = 2016, to = 2018 }
+[[table.column]]
+name = "Tal"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/tal"
+representation = "Tal"
+data_warning = { summary = "Tal is held past its documented years", detail = "The rows after 2016 are in the 2020 coding.", window = { from = 2017, to = 2018 } }
+
+[[table]]
+id = "Tal_2019"
+edition = 2019
+[[table.column]]
+name = "Tal"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/tal"
+representation = "Tal"
+data_warning = { summary = "Tal is held past its documented years", detail = "The rows after 2016 are in the 2020 coding.", window = 2019 }
+
+# A rename with a code version change: the catalog documents Omr as KodOld to
+# 2017 (code version a) and KodNew from 2018 (code version b). The table keeps
+# KodNew for 2016..2019, warned 2016..2017. Its clone copies KodNew (b) and sits
+# beside KodOld's state over the same years: states of different code versions
+# may overlap, so this is licensed, unlike the same-version rename that
+# warned-gap-mismatch refuses.
+[[table]]
+id = "Omr_2016_2019"
+edition = { from = 2016, to = 2019 }
+[[table.column]]
+name = "KodNew"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/omr"
+representation = "KodNew"
+data_warning = { summary = "KodNew covers the KodOld years", detail = "The 2016-2017 rows are in the KodNew coding.", window = { from = 2016, to = 2017 } }
+
+# Two clones of one cell that overlap but copy different code versions: Ver is
+# documented as VerA (code version a) to 2013 and VerB (version b) from 2018.
+# Ver_a keeps VerA to 2015 (warned 2014..2015, cloned from VerA), Ver_b keeps
+# VerB from 2015 (warned 2015..2017, cloned from VerB). The clones overlap in
+# 2015, as states of different code versions may: both are licensed, unlike the
+# same-version rename warned-gap-mismatch refuses (Byt).
+[[table]]
+id = "Ver_a"
+edition = { from = 2010, to = 2015 }
+[[table.column]]
+name = "VerA"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/ver"
+representation = "VerA"
+data_warning = { summary = "VerA is held past its documented years", detail = "The 2014-2015 rows are in code version a.", window = { from = 2014, to = 2015 } }
+
+[[table]]
+id = "Ver_b"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "VerB"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/ver"
+representation = "VerB"
+data_warning = { summary = "VerB covers its earlier years", detail = "The 2015-2017 rows are in code version b.", window = { from = 2015, to = 2017 } }

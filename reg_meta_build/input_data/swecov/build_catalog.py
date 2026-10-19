@@ -60,7 +60,7 @@ from reg_meta_build.steward_spec import (
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from reg_meta_build.inventory import ColumnMapping, EditionRange
+    from reg_meta_build.inventory import ColumnMapping, EditionRange, MappingWarning
 
 DEFAULT_CSV = max(
     Path(__file__).parent.glob("SWECOV_variables_full_*.csv"),
@@ -1940,7 +1940,11 @@ def _steward_load_db(db_path: Path):
 
 
 def _inventory_period_records(
-    records: list[dict], edition: object, *, assess_ranges: bool = False
+    records: list[dict],
+    edition: object,
+    *,
+    assess_ranges: bool = False,
+    licensed: tuple[tuple[str, str], ...] = (),
 ) -> tuple[list[dict], str | None]:
     """Choose already-declared owners by their complete delivery windows.
 
@@ -1949,8 +1953,10 @@ def _inventory_period_records(
     cover its whole edition). The year-independent edition `_default` admits
     only year-independent states, and a finite edition only dated ones: neither
     scope stands in for the other. Distinct owners active together in one
-    variant stay ambiguous.
+    variant stay ambiguous. `licensed` days (a mapping warning's, #1684) need
+    no owner coverage.
     """
+    from reg_meta_build._resolved_common import remaining_windows
     from reg_meta_build.inventory import _merge
     from reg_meta_build.inventory_coverage import _covers
 
@@ -1966,7 +1972,15 @@ def _inventory_period_records(
         and not isinstance(edition, (str, int))
     ):
         return records, None
-    bounds = () if independent else edition_bounds_of(edition)
+    bounds = (
+        ()
+        if independent
+        else tuple(
+            part
+            for lo, hi in edition_bounds_of(edition)
+            for part in remaining_windows(licensed, lo, hi)
+        )
+    )
     grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for record in records:
         grouped[(record["coord"], record["vslug"])].append(record)
@@ -2137,7 +2151,16 @@ _PIVOT_REASON = (
 def _inventory_mapping_records(
     mapping: ColumnMapping, select_owner: bool, records: list[dict], edition: object
 ) -> tuple[list[dict], str | None]:
-    """The delivered records a reviewed mapping pins, or a stale-target code."""
+    """The delivered records a reviewed mapping pins, or a stale-target code.
+
+    A warned mapping (#1684) whose owner leaves part of the reach uncovered is
+    admitted when its warning, clipped to the table, states exactly those days
+    (`inventory_coverage.warning_gap_problem`, the rule extend-db refuses by);
+    the owner must then cover the rest. A mismatch is
+    `inventory_coverage_warning_invalid`. An unwarned gap stays stale."""
+    from reg_meta_build.inventory import _merge
+    from reg_meta_build.inventory_coverage import uncovered_days, warning_gap_problem
+
     owner = mapping.variable.rsplit("/", 1)[1]
     selected = [
         r
@@ -2146,7 +2169,41 @@ def _inventory_mapping_records(
         and r["col"] == mapping.representation
         and (not select_owner or r["vslug"] == owner)
     ]
-    admitted, issue = _inventory_period_records(selected, edition, assess_ranges=True)
+    licensed: tuple[tuple[str, str], ...] = ()
+    warning = mapping.data_warning
+    # A warning whose window misses this table is not emitted for it
+    # (`_warning_line`), so the table reviews as unwarned: a gap stays stale.
+    if (
+        warning is not None
+        and edition != YEAR_INDEPENDENT_EDITION
+        and (warning.window is None or _warning_window(warning, edition) is not None)
+    ):
+        served = edition_bounds_of(edition)
+        # simplify: coverage here is the owner's delivered records for the exact
+        # representation spelling (states and the alias windows the records
+        # query admits); extend-db reads `inventory_coverage._load_windows`,
+        # folded by NFC casefold and with its own alias-window admission, and is
+        # the authority. Read `_load_windows` here if the two ever disagree on a
+        # SWECOV decision (a case-only twin or a filtered alias window).
+        covered = _merge(
+            [
+                (r["valid_from"], r["valid_to"])
+                for r in selected
+                if r["vslug"] == owner
+                and r["period_scope"] == "intervals"
+                and r["valid_from"] is not None
+                and r["valid_to"] is not None
+            ]
+        )
+        if gaps := uncovered_days(served, covered):
+            clip = None if warning.window is None else _warning_window(warning, edition)
+            stated = served if clip is None else (clip,)
+            if warning_gap_problem(served, gaps, stated):
+                return [], "inventory_coverage_warning_invalid"
+            licensed = gaps
+    admitted, issue = _inventory_period_records(
+        selected, edition, assess_ranges=True, licensed=licensed
+    )
     owned = [r for r in admitted if r["vslug"] == owner]
     return owned, "stale_declared_mapping_target" if issue or not owned else None
 
@@ -2243,21 +2300,6 @@ def _union_mapping_records(
     return pieces, None
 
 
-def _school_year_edition(anchor: str, year: int) -> str:
-    """The school year a bare table year names, under a series' spelling.
-
-    SCB's school registers deliver school years, not calendar years, and a
-    SWECOV table named by ONE year holds one school year — which one depends
-    on the register (grades set in the spring are labelled by the spring year,
-    an October teacher snapshot by the autumn year), so the spelling is curated
-    per series (`edition_spelling`), never inferred."""
-    if anchor == "spring":
-        return f"LA{year - 1}"
-    if anchor == "autumn":
-        return f"LA{year}"
-    return f"{anchor.upper()}{year}"  # a single term: VT<Y> / HT<Y>
-
-
 def _toml_str(value: str) -> str:
     # JSON string escaping is valid TOML basic-string escaping except U+007F,
     # which JSON leaves raw and TOML forbids in a basic string.
@@ -2269,6 +2311,45 @@ def _raw_window(window: EditionRange | str) -> object:
     if isinstance(window, str):
         return window
     return {"from": window.from_, "to": window.to}
+
+
+def _warning_window(warning: MappingWarning, reach: object) -> tuple[str, str] | None:
+    """A windowed mapping warning's window clipped to what the mapping serves in
+    one table (`reach`: its window, its member's period or the table edition), or
+    None where it misses (a year-independent reach is always missed)."""
+    from reg_meta_build.inventory import _intersect
+
+    assert warning.window is not None
+    if reach == YEAR_INDEPENDENT_EDITION:
+        return None
+    window = edition_bounds_of(_raw_window(warning.window))[0]
+    parts = [
+        clipped
+        for segment in edition_bounds_of(reach)
+        if (clipped := _intersect(segment, window))
+    ]
+    # simplify: across an interrupted edition the clip is its hull, which the
+    # inventory refuses (a warning window lies in one served segment). Emit one
+    # warning per segment if a decision's warning must span such a gap.
+    return (parts[0][0], parts[-1][1]) if parts else None
+
+
+def _warning_line(warning: MappingWarning, reach: object) -> str | None:
+    """A decision's mapping warning (#1684) as one table's `data_warning` line,
+    its window clipped to the table (`_warning_window`), or None where it misses."""
+    from reg_meta_build.inventory import _render_interval
+
+    fields = (
+        f"summary = {_toml_str(warning.summary)}, detail = {_toml_str(warning.detail)}"
+    )
+    if warning.window is None:
+        return f"data_warning = {{ {fields} }}"
+    if (clip := _warning_window(warning, reach)) is None:
+        return None
+    token = _render_interval(*clip)
+    ends = [int(end) if end.isdigit() else end for end in token.split("..")]
+    clipped = ends[0] if len(ends) == 1 else {"from": ends[0], "to": ends[1]}
+    return f"data_warning = {{ {fields}, window = {_toml_edition(clipped)} }}"
 
 
 def _toml_edition(edition: object) -> str:
@@ -2454,9 +2535,8 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
         series = series_of.get(table)
         if series is None:  # a lookup or an exclusion
             continue
-        edition = members[table].inventory_edition
-        if isinstance(edition, int) and series.edition_spelling != "annual":
-            edition = _school_year_edition(series.edition_spelling, edition)
+        edition = series.spelled_edition(members[table])
+        if edition != members[table].inventory_edition:
             n_school_year[series.id] += 1
         # The table maps only onto its own admissible variants, all of the
         # series' register (`steward_series_register_mismatch` at load), so an
@@ -2551,9 +2631,9 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 and _competing_owner(
                     [mapping for mapping, _ in adopted],
                     by_coordcol,
-                    lambda m: column_edition
-                    if m.window is None
-                    else _raw_window(m.window),
+                    lambda m: (
+                        column_edition if m.window is None else _raw_window(m.window)
+                    ),
                 )
             ):
                 mapping_issue = "ambiguous_delivered_owners"
@@ -2565,6 +2645,14 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     declared = [{**r, "window": window} for r in declared]
                 elif windowed:
                     declared = [{**r, "decided": True} for r in declared]
+                if mapping.data_warning is not None:
+                    line = _warning_line(
+                        mapping.data_warning,
+                        column_edition
+                        if mapping.window is None
+                        else _raw_window(mapping.window),
+                    )
+                    declared = [{**r, "data_warning": line} for r in declared]
                 owner = mapping.variable.rsplit("/", 1)[1]
                 # select_owner drops every other owner of the representation and
                 # of the physical name on this variant. Every record on the
@@ -2626,6 +2714,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 )
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
+
             # Union records, windowed records and the plain records of a decision
             # with a window cover only their own part, so they skip the
             # whole-edition owner check. On their variants they decide over their
@@ -2715,6 +2804,8 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     lines.append(f"member = {{ {member.kind} = {value} }}")
                 if (window := r.get("window")) is not None:
                     lines.append(f"window = {_toml_edition(window)}")
+                if (warning := r.get("data_warning")) is not None:
+                    lines.append(warning)
 
     dest = steward_dir / "inventory.toml"
     wl_path = args.csv.parent / "derived" / "inventory_worklist.json"

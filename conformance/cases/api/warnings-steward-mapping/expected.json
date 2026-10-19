@@ -1,0 +1,47 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "source_availability_limitation",
+        "steward_delivery_limitation"
+      ],
+      "/data/*/variable_fqid": [
+        null,
+        "scb/example/legacy"
+      ],
+      "/data/*/variant": [
+        null,
+        "old"
+      ],
+      "/data/*/delivery_column_name": [
+        null,
+        "Legacy"
+      ],
+      "/data/*/valid_from": [
+        null,
+        "2016-01-01"
+      ],
+      "/data/*/valid_to": [
+        null,
+        "2016-12-31"
+      ],
+      "/data/*/summary": [
+        "Example documentation is incomplete",
+        "Legacy is recoded for 2016"
+      ],
+      "/data/*/refs": [
+        [],
+        []
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/*/code": [
+        "source_availability_limitation"
+      ]
+    }
+  }
+]

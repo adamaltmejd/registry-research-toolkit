@@ -2601,9 +2601,17 @@ only, a table only a subset of its series' variants, and a curated mapping only 
 variant every table it covers admits (`steward_series_register_mismatch`); since the
 generator maps a table only onto its own admissible variants, auto-mapped columns cannot
 leave the register. Everything else the loader refuses is `steward_spec_invalid`,
-located by file and entry. Flavor content is still drawn from a census holding and table
-selection, not from series membership: an excluded re-delivery still documents its
-columns.
+located by file and entry. A curated mapping's `data_warning` (#1684, "Inventory TOML"
+below) spans the decision's tables: the generator clips its window to the period the
+mapping serves in each table and omits it where it misses, and the loader refuses a
+window that meets no dated table of the decision as `inventory_window_invalid`. The
+generator reviews a warned mapping by the extend-db rule
+(`inventory_coverage.warning_gap_problem`): where the owner leaves part of a table's
+served period uncovered, it admits the mapping only if the table-clipped window states
+exactly those days, and lists a mismatch as `inventory_coverage_warning_invalid`. An
+unwarned mapping with uncovered years stays `stale_declared_mapping_target`. Flavor
+content is still drawn from a census holding and table selection, not from series
+membership: an excluded re-delivery still documents its columns.
 
 ### Inventory TOML
 
@@ -2667,6 +2675,84 @@ the whole-edition rule unchanged. `holding_mapping` stores the window's ISO boun
 `window_lo`/`window_hi`, separate from a member's period: a one-year window is not a
 year member, which belongs to a member set and labels the manifest entry. A CHECK keeps
 a window off member mappings.
+
+A mapping may carry a steward-scoped `data_warning` (#1684):
+`data_warning = { summary = "…", detail = "…", window = … }`. The author writes both
+texts; the optional `window` uses the column-window grammar and narrows the warning to
+part of what the mapping serves (`ColumnMapping.served`: its window, its year or month
+member's period, else the edition). It lies inside one served segment, and a
+year-independent table takes no warning window; both refuse as
+`inventory_window_invalid` beside the column-window lines. A global variable warning
+would reach every reader of the global catalog; this one is written only into the
+steward's flavor. `compile_holdings`, the one step extend-db and the synthetic harness
+share, builds a `DataWarning` per warned mapping and served segment at the canonical
+cell (variable, variant, canonical representation, window ∩ segment), coalescing one
+cell's overlapping or abutting rows with the same texts into one, code
+`steward_delivery_limitation`, no source refs (the curated mapping is the witness). It
+merges them with the base's stored warnings and rewrites both warning tables through
+`write_data_warnings`, so base rows keep their content and the flavored
+`validate_built_db` checks every row. A warning without a window in a year-independent
+table is one row without bounds, which `held()` shows only to a period-free holdings
+query. A warning is keyed by the logical cell, so it reaches every partition shard and
+projection serving that cell (`simplify:` in `mapping_data_warnings`). No reader
+changes: holdings `/api/warnings` and `states` warning ids attribute it like any
+column-scoped warning, and the order manifest carries no warning field.
+
+A mapping warning also licenses held days the catalog does not cover. The steward may
+hold years of a column that no catalog state documents (SoS registers whose later
+deliveries recoded earlier years). `compile_holdings` computes, for each warned mapping
+in a dated table, the served days that the cell's catalog windows leave uncovered (U:
+states and alias windows, folded by column, the windows `inventory_coverage` reads).
+With U empty the warning is an ordinary caveat. Otherwise the warning must state exactly
+U, which must be one leading or trailing interval of the served period; a window without
+bounds states the whole served period. Anything else refuses as
+`inventory_coverage_warning_invalid`, located at the mapping, naming U and the stated
+window. U licenses a copy of the cell's state in force at the end of the served period
+(the extract is in the coding current at extraction), or, where U reaches that end, of
+the nearest state after U, else before it. When more than one state qualifies (code
+versions in force together at that end), the source is ambiguous and the build refuses
+rather than picking one.
+
+The licences of one cell, code version and source state coalesce where they overlap or
+abut, and each run becomes one cloned state over their union. An annual table per year,
+each warned for its year, gives one state over the years, not one per table; two
+partition shards or projections licensing one gap give one state. The mapping warnings
+coalesce the same way: one cell's warnings with the same summary and detail that overlap
+or abut are one `data_warning` row over their union (`mapping_data_warnings`), so
+`states` shows a coalesced clone with one warning id.
+
+Each coalesced clone must then pass the rule `ResolvedVariable` applies at catalog
+formation: no two states of one variant and code version overlap. The check runs before
+the INSERT, under the same code, and covers two kinds of state. Against the catalog's
+states of every column of the cell, a warning cannot license years another column
+already documents. A rename the table maps under its new column (KodOld to 2017, KodNew
+from 2018, the table keeping KodNew over 2016..2019) refuses, naming the overlapping
+state's column and bounds; the curator maps that column's representation instead. This
+also covers a clone starting on another column's state start, which would otherwise fail
+the unique index unlocated. Against the other clones, two clones that copy different
+states never overlap: one day of a cell takes one coding. A rename across undocumented
+transition years (Old to 2013, New from 2018; one table keeping Old to 2015 warned
+2014..2015, another keeping New from 2015 warned 2015..2017) refuses, naming both tables
+and columns and both clones' bounds. A state of another code version may overlap a
+clone, as it may overlap a catalog state. A clone extends the cell's states only at the
+uncovered days; it never stands in for a state the catalog has.
+
+The clone's id is the catalog's own state id (`_storage_id`, in the provider's band)
+over the clone's start, so it names no steward; `pooled = 0` and
+`provenance = "steward:<id>"` mark it as the steward's word, not the catalog's. Its
+`state_classification` and classification-conformance rows are copied under the clone's
+id; its lineage is not, since that would invent evidence. The derived tables read the
+states, so the clones are followed by a full `derive`, and extend-db derives twice
+(`simplify:` in `compile_holdings`). The warning row covers at least the clone's days,
+so `states` attributes the warning to the clone. Where a same-text caveat of the cell on
+another table abuts U, the rows coalesce and the warning also reaches the adjacent
+catalog state. An order over U is served from the table.
+
+An unwarned mapping with uncovered served days is not refused by extend-db:
+`inventory_coverage` is a candidate emitter for the catalog, not a holdings validation
+gate, and the inventory states holdings, not coverage. Such a gap still surfaces at
+order time as a `coverage_gap` finding for the uncovered years. The warning is what
+turns a gap into a licensed holding, so the rule binds only a mapping that carries one.
 
 A refusal is a configuration error (exit 10) that names the file and each offending
 `table[...]`, `column[...]` or field, under one code per rule family:
@@ -2883,8 +2969,11 @@ including when the whole `input_data/SCB/docs` root is absent, refuses the build
 `related_documents_binary_missing` naming each `register/filename`, so a release cannot
 ship a docs asset silently missing a document (#1686). There is no opt-out: a checkout
 without the gitignored PDFs cannot run `build-docs` against the repository map. A
-`required = false` entry with no binary and an unregistered PDF are warnings. This
-indexing does not interpret documents to change catalog facts.
+`required = false` entry with no binary and an unregistered PDF are warnings. The build
+stages `reg_meta_docs.db.tmp` beside the destination and installs it through
+`publish_db`, so a refusal leaves the previous docs DB untouched and a successful
+rebuild retains the replaced generation as `.prev` (#1690). This indexing does not
+interpret documents to change catalog facts.
 
 `doc_db.py` owns the build and FTS creation. The reader's docs schema gate is
 `DOC_SCHEMA` in `crates/reg-catalog/src/docs.rs`, which mirrors `DOC_SCHEMA_VERSION`.
