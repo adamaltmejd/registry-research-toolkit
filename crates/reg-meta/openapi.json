@@ -7,7 +7,7 @@
   "paths": {
     "/api/catalog": {
       "get": {
-        "description": "The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`.",
+        "description": "The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a name, case-insensitive (a slug is not a name); a retired FQID answers for its successor, under the successor's `fqid`.",
         "operationId": "show_without_ref",
         "parameters": [
           {
@@ -69,7 +69,7 @@
     },
     "/api/catalog/{ref}": {
       "get": {
-        "description": "The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`.",
+        "description": "The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a name, case-insensitive (a slug is not a name); a retired FQID answers for its successor, under the successor's `fqid`.",
         "operationId": "show",
         "parameters": [
           {
@@ -281,7 +281,7 @@
     },
     "/api/coverage/{ref}": {
       "get": {
-        "description": "The calendar years a register or a variable (a FQID or a bare name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found.",
+        "description": "The calendar years a register or a variable (a FQID or a name, case-insensitive; a slug is not a name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found.",
         "operationId": "coverage",
         "parameters": [
           {
@@ -649,7 +649,7 @@
     },
     "/api/docs/search": {
       "get": {
-        "description": "Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or a bare name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches.",
+        "description": "Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or name, case-insensitive; a slug is not a name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches.",
         "operationId": "docs_search",
         "parameters": [
           {
@@ -1139,7 +1139,7 @@
     },
     "/api/schema/{ref}": {
       "get": {
-        "description": "The delivered columns of a register, or of one variable (a FQID or a bare name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page.",
+        "description": "The delivered columns of a register, or of one variable (a FQID or a name, case-insensitive; a slug is not a name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page.",
         "operationId": "schema",
         "parameters": [
           {
@@ -1243,7 +1243,7 @@
     },
     "/api/search": {
       "get": {
-        "description": "Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a bare name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page.",
+        "description": "Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a register name, case-insensitive; a slug is not a name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page.",
         "operationId": "search",
         "parameters": [
           {
@@ -1362,7 +1362,7 @@
     },
     "/api/states/{ref}": {
       "get": {
-        "description": "A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or a bare name.",
+        "description": "A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or name, case-insensitive (a slug is not a name).",
         "operationId": "states",
         "parameters": [
           {
@@ -1474,7 +1474,7 @@
     },
     "/api/values/{ref}": {
       "get": {
-        "description": "A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or a bare name.",
+        "description": "A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or name, case-insensitive (a slug is not a name).",
         "operationId": "values",
         "parameters": [
           {

@@ -1,7 +1,7 @@
 [
   {
     "name": "search",
-    "description": "Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a bare name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page.",
+    "description": "Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a register name, case-insensitive; a slug is not a name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page.",
     "inputSchema": {
       "$defs": {
         "Scope": {
@@ -532,7 +532,7 @@
   },
   {
     "name": "show",
-    "description": "The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a bare name; a retired FQID answers for its successor, under the successor's `fqid`.",
+    "description": "The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a name, case-insensitive (a slug is not a name); a retired FQID answers for its successor, under the successor's `fqid`.",
     "inputSchema": {
       "$defs": {
         "Scope": {
@@ -1929,7 +1929,7 @@
   },
   {
     "name": "states",
-    "description": "A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or a bare name.",
+    "description": "A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or name, case-insensitive (a slug is not a name).",
     "inputSchema": {
       "$defs": {
         "Scope": {
@@ -2403,7 +2403,7 @@
   },
   {
     "name": "values",
-    "description": "A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or a bare name.",
+    "description": "A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or name, case-insensitive (a slug is not a name).",
     "inputSchema": {
       "$defs": {
         "Scope": {
@@ -2741,7 +2741,7 @@
   },
   {
     "name": "docs",
-    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `docs_search` (q?, register?, scope?, limit?, cursor?): Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or a bare name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches.\n- `docs_get` (identifier, scope?): One documentation entry by variable name or filename (with or without `.md`): its register, tags and source, a 500-character `excerpt` and the full markdown `body`.\n- `docs_related` (ref, scope?): A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID (`scb/aes`) or the register's name, case-insensitive, matched as `show` matches a register name; a bare slug (`aes`) resolves only where it is also the name.",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `docs_search` (q?, register?, scope?, limit?, cursor?): Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or name, case-insensitive; a slug is not a name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches.\n- `docs_get` (identifier, scope?): One documentation entry by variable name or filename (with or without `.md`): its register, tags and source, a 500-character `excerpt` and the full markdown `body`.\n- `docs_related` (ref, scope?): A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID (`scb/aes`) or the register's name, case-insensitive, matched as `show` matches a register name; a bare slug (`aes`) resolves only where it is also the name.",
     "inputSchema": {
       "$defs": {
         "Scope": {
@@ -3108,7 +3108,7 @@
   },
   {
     "name": "schema",
-    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `schema` (ref, period?, variant?, scope?, limit?, cursor?): The delivered columns of a register, or of one variable (a FQID or a bare name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page.\n- `diff` (ref, from, to, variant?, scope?): A register's columns between two periods, per variant: the variables added at `to`, removed since `from`, and changed in type, width or column (a variable compares by its first column in each period). Variants without changes are left out.\n- `coded_variables` (scope?, limit?, cursor?): The variables with coded value sets, by common name: each name's distinct codes over every coded state under it, its registers and its coded states, ordered by distinct codes (ties by name); pass `next_cursor` back as `cursor` for the next page.",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `schema` (ref, period?, variant?, scope?, limit?, cursor?): The delivered columns of a register, or of one variable (a FQID or a name, case-insensitive; a slug is not a name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page.\n- `diff` (ref, from, to, variant?, scope?): A register's columns between two periods, per variant: the variables added at `to`, removed since `from`, and changed in type, width or column (a variable compares by its first column in each period). Variants without changes are left out.\n- `coded_variables` (scope?, limit?, cursor?): The variables with coded value sets, by common name: each name's distinct codes over every coded state under it, its registers and its coded states, ordered by distinct codes (ties by name); pass `next_cursor` back as `cursor` for the next page.",
     "inputSchema": {
       "$defs": {
         "Scope": {
@@ -3687,7 +3687,7 @@
   },
   {
     "name": "coverage",
-    "description": "The calendar years a register or a variable (a FQID or a bare name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found.",
+    "description": "The calendar years a register or a variable (a FQID or a name, case-insensitive; a slug is not a name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found.",
     "inputSchema": {
       "$defs": {
         "Scope": {

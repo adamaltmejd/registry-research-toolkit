@@ -47,7 +47,7 @@ codes! {
     InvalidParameter "invalid_parameter" "usage" 422 0 ["parameter"]
         "Correct the named parameter; see /openapi.json for the accepted parameters.";
     InvalidRef "invalid_ref" "usage" 422 0 ["ref"]
-        "Pass an FQID or a bare name of a kind this operation takes.";
+        "Pass an FQID or a name (case-insensitive, not a slug) of a kind this operation takes.";
     InvalidPeriod "invalid_period" "usage" 422 0 ["parameter"]
         "Use the period grammar, for example 2019, 2015..2019 or 2019-03.";
     InvalidCursor "invalid_cursor" "usage" 422 0 []

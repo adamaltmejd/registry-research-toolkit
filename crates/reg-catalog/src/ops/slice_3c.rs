@@ -12,11 +12,11 @@ pub const OPERATIONS: &[Operation] = &[
         name: "schema",
         paths: &["/api/schema/{ref}"],
         tool: Some("schema"),
-        description: "The delivered columns of a register, or of one variable (a FQID or \
-            a bare name): one row per register variant, window and column, with its type, \
-            width and concept group. `period` (2019, 2015..2019) keeps rows overlapping \
-            its years; `variant` keeps one variant (a slug); pass `next_cursor` back as \
-            `cursor` for the next page.",
+        description: "The delivered columns of a register, or of one variable (a FQID or a \
+            name, case-insensitive; a slug is not a name): one row per register variant, \
+            window and column, with its type, width and concept group. `period` (2019, \
+            2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a \
+            slug); pass `next_cursor` back as `cursor` for the next page.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("period", Type::Period),
@@ -69,10 +69,11 @@ pub const OPERATIONS: &[Operation] = &[
         name: "coverage",
         paths: &["/api/coverage/{ref}"],
         tool: Some("coverage"),
-        description: "The calendar years a register or a variable (a FQID or a bare \
-            name) is delivered in: their span and gaps, and the years per register \
-            variant, or for a variable the columns delivered each year. An open-ended \
-            delivery counts its opening year; a ref with no dated delivery is not found.",
+        description: "The calendar years a register or a variable (a FQID or a name, \
+            case-insensitive; a slug is not a name) is delivered in: their span and gaps, \
+            and the years per register variant, or for a variable the columns delivered \
+            each year. An open-ended delivery counts its opening year; a ref with no dated \
+            delivery is not found.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("scope", Type::Scope),

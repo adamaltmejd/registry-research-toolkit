@@ -128,7 +128,8 @@ impl Param {
 #[derive(Clone, Copy)]
 pub enum Type {
     String,
-    /// A FQID or a bare name.
+    /// A FQID or a bare name: a name matched case-insensitively (`fold_identity`), never
+    /// a slug.
     Ref,
     /// The FQID/project period grammar.
     Period,
