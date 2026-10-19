@@ -60,3 +60,31 @@ register_variant = "scb/example/annual"
 variable = "scb/example/omr"
 representation = "KodNew"
 data_warning = { summary = "KodNew covers the KodOld years", detail = "The 2016-2017 rows are in the KodNew coding.", window = { from = 2016, to = 2017 } }
+
+# Two clones of one cell that overlap but copy different code versions: Ver is
+# documented as VerA (code version a) to 2013 and VerB (version b) from 2018.
+# Ver_a keeps VerA to 2015 (warned 2014..2015, cloned from VerA), Ver_b keeps
+# VerB from 2015 (warned 2015..2017, cloned from VerB). The clones overlap in
+# 2015, as states of different code versions may: both are licensed, unlike the
+# same-version rename warned-gap-mismatch refuses (Byt).
+[[table]]
+id = "Ver_a"
+edition = { from = 2010, to = 2015 }
+[[table.column]]
+name = "VerA"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/ver"
+representation = "VerA"
+data_warning = { summary = "VerA is held past its documented years", detail = "The 2014-2015 rows are in code version a.", window = { from = 2014, to = 2015 } }
+
+[[table]]
+id = "Ver_b"
+edition = { from = 2015, to = 2019 }
+[[table.column]]
+name = "VerB"
+[[table.column.mapping]]
+register_variant = "scb/example/annual"
+variable = "scb/example/ver"
+representation = "VerB"
+data_warning = { summary = "VerB covers its earlier years", detail = "The 2015-2017 rows are in code version b.", window = { from = 2015, to = 2017 } }

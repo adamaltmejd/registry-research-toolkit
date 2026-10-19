@@ -2743,9 +2743,10 @@ over the clone's start, so it names no steward; `pooled = 0` and
 `state_classification` and classification-conformance rows are copied under the clone's
 id; its lineage is not, since that would invent evidence. The derived tables read the
 states, so the clones are followed by a full `derive`, and extend-db derives twice
-(`simplify:` in `compile_holdings`). The warning row and the clone cover the same days,
-so `states` attributes the warning to the clone only, and an order over U is served from
-the table.
+(`simplify:` in `compile_holdings`). The warning row covers at least the clone's days,
+so `states` attributes the warning to the clone. Where a same-text caveat of the cell on
+another table abuts U, the rows coalesce and the warning also reaches the adjacent
+catalog state. An order over U is served from the table.
 
 An unwarned mapping with uncovered served days is not refused by extend-db:
 `inventory_coverage` is a candidate emitter for the catalog, not a holdings validation

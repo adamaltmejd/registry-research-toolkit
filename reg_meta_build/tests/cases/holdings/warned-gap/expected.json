@@ -2,6 +2,8 @@
   "warnings": [
     "steward_delivery_limitation",
     "steward_delivery_limitation",
+    "steward_delivery_limitation",
+    "steward_delivery_limitation",
     "steward_delivery_limitation"
   ],
   "tables": [
@@ -45,6 +47,28 @@
       "partition": null,
       "projection": null,
       "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Ver_a",
+      "scope": "intervals",
+      "edition": {
+        "from": 2010,
+        "to": 2015
+      },
+      "partition": null,
+      "projection": null,
+      "retain_unknown_reason": null
+    },
+    {
+      "physical_id": "Ver_b",
+      "scope": "intervals",
+      "edition": {
+        "from": 2015,
+        "to": 2019
+      },
+      "partition": null,
+      "projection": null,
+      "retain_unknown_reason": null
     }
   ],
   "periods": [
@@ -67,6 +91,16 @@
       "physical_id": "Tal_2019",
       "lo": "2019-01-01",
       "hi": "2019-12-31"
+    },
+    {
+      "physical_id": "Ver_a",
+      "lo": "2010-01-01",
+      "hi": "2015-12-31"
+    },
+    {
+      "physical_id": "Ver_b",
+      "lo": "2015-01-01",
+      "hi": "2019-12-31"
     }
   ],
   "columns": [
@@ -88,6 +122,16 @@
     {
       "physical_id": "Tal_2019",
       "name": "Tal",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Ver_a",
+      "name": "VerA",
+      "unmapped_reason": null
+    },
+    {
+      "physical_id": "Ver_b",
+      "name": "VerB",
       "unmapped_reason": null
     }
   ],
@@ -123,6 +167,22 @@
       "variable": "scb/example/tal",
       "representation_literal": "Tal",
       "representation_canonical": "Tal"
+    },
+    {
+      "physical_id": "Ver_a",
+      "name": "VerA",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/ver",
+      "representation_literal": "VerA",
+      "representation_canonical": "VerA"
+    },
+    {
+      "physical_id": "Ver_b",
+      "name": "VerB",
+      "register_variant": "scb/example/annual",
+      "variable": "scb/example/ver",
+      "representation_literal": "VerB",
+      "representation_canonical": "VerB"
     }
   ],
   "states": [
@@ -195,6 +255,38 @@
       "register_variant": "scb/example/annual",
       "delivery_column_name": "Tal",
       "valid_from": "2020-01-01",
+      "valid_to": "2025-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/ver",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "VerA",
+      "valid_from": "2010-01-01",
+      "valid_to": "2013-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/ver",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "VerA",
+      "valid_from": "2014-01-01",
+      "valid_to": "2015-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/ver",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "VerB",
+      "valid_from": "2015-01-01",
+      "valid_to": "2017-12-31",
+      "pooled": 0
+    },
+    {
+      "variable": "scb/example/ver",
+      "register_variant": "scb/example/annual",
+      "delivery_column_name": "VerB",
+      "valid_from": "2018-01-01",
       "valid_to": "2025-12-31",
       "pooled": 0
     }
