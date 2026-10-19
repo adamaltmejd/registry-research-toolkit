@@ -24,12 +24,6 @@ variable = "manad"
 description = "Månad (månadsdata finns från 2000)"
 provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
-[[enrichment.description]]
-register = "scb/utrikeshandel"
-variable = "vikt-kg"
-description = "Statistiskt värde i Kilo"
-provenance = "Utkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
 [[variant]]
 native_id = "188.258"
 slug = "varu-landfordelat-intrastat"
