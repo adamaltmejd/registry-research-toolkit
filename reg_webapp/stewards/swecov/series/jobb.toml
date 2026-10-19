@@ -133,8 +133,8 @@ edition = 2021
 [[column]]
 column = "AstSni92"
 tables = ["JOBB1996"]
-mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/naringsgren-huvud-jobbreg-1996", representation = "AstSni" }]
-reason = "Same SCB variable as the catalog owner: SCB documents the workplace SNI92 industry for edition 1996 under the column AstSni, and LISA bakgrundsfakta 1990–2017 p. 41 dates AstSNI92 to 1990–2001 (described pp. 158–159); SWECOV holds it as AstSni92, and the table holds no AstSni column (#1603; maintainer ruling 2026-10-15)."
+mappings = [{ register_variant = "scb/rams/jobbregistret", variable = "scb/rams/naringsgren-huvud-sni92", representation = "AstSni" }]
+reason = "Same SCB variable as the catalog owner scb/rams/naringsgren-huvud-sni92, whose 1996 jobbregistret state is SCB's AstSni column (#1620): SCB documents the workplace SNI92 industry for edition 1996 under the column AstSni, and LISA bakgrundsfakta 1990–2017 p. 41 dates AstSNI92 to 1990–2001 (described pp. 158–159); SWECOV holds it as AstSni92, and the table holds no AstSni column (#1603; maintainer ruling 2026-10-15)."
 
 [[column]]
 column = "LonFInkJan"
