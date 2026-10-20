@@ -1138,17 +1138,15 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   `reg-meta.vqv.uk` (the global catalog) and on `data.swecov.se`, whose SWECOV artifact
   is public. Both workers forward `/mcp` (`ROUTE_MCP`), and `fly.toml` and
   `fly.swecov.toml` pass `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside
-  the loopback names. Only `fly.swecov.toml` passes `REG_META_WEBAPP_ORIGIN`
-  (`--webapp-origin`), the webapp `show`'s root reports; the global catalog has none.
-  `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
-  Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
-  request came through the edge with a shared secret (`EDGE_TOKEN` on the worker,
-  `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only such a request is
-  keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
-  keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret
-  every edge `/mcp` client shares the proxy's bucket. After each edge deploy,
-  `container-build.yml` sends `initialize`, `tools/list` and one `search` to that host's
-  public `/mcp`.
+  the loopback names. `/mcp` and the project POSTs share one rate limit per client
+  address (60 a minute; Cost protection, below). Behind Fly the peer is Fly's proxy, so
+  the worker proves a request came through the edge with a shared secret (`EDGE_TOKEN`
+  on the worker, `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only
+  such a request is keyed on its `CF-Connecting-IP`. Any other request, a direct-origin
+  hit included, is keyed on its peer, so a forged `CF-Connecting-IP` buys nothing.
+  Without the secret every edge `/mcp` client shares the proxy's bucket. After each edge
+  deploy, `container-build.yml` sends `initialize`, `tools/list` and one `search` to
+  that host's public `/mcp`.
 - **Apps**: `reg-webapp-global` serves `reg-meta.vqv.uk`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O

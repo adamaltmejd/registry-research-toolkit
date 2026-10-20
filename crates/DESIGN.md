@@ -190,12 +190,8 @@ Rules:
 agents need no install and no 1.2 GB download. Its rate limits are sized for tool calls,
 separately from the SPA's. A steward catalog is served over hosted MCP when its artifact
 is already public, as SWECOV's is (data.swecov.se); a private steward catalog stays on
-local `reg-meta mcp`. A published server admits its MCP host (`--public-host`). Where
-the deployment hosts a webapp it also names that origin (`--webapp-origin`), and
-`show`'s root reports it as the catalog's webapp, where a drafted project is opened and
-ordered. They are separate settings because a catalog's MCP can be published without a
-webapp: the global catalog's is (maintainer, 2026-10-20, #1709), so its root reports
-none.
+local `reg-meta mcp`. A published server knows its origin (`--public-host`) and `show`'s
+root reports it as the catalog's webapp, where a drafted project is opened and ordered.
 
 ## A provider-neutral substrate
 

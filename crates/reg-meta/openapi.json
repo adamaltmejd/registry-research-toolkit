@@ -1748,7 +1748,7 @@
       },
       "CatalogIdentity": {
         "type": "object",
-        "description": "The serving catalog: its steward `id` (`global` for the global catalog), its\nbranding where the server loads it, its webapp origin where the deployment hosts\none, and the two versions a `project_data.json` drafted here carries:\n`reg_meta_version` and `project_schema_version` (the document's `schema_version`,\nnot the catalog database's).",
+        "description": "The serving catalog: its steward `id` (`global` for the global catalog), its\nbranding where the server loads it, its webapp origin where the server is\npublished, and the two versions a `project_data.json` drafted here carries:\n`reg_meta_version` and `project_schema_version` (the document's `schema_version`,\nnot the catalog database's).",
         "required": [
           "id",
           "reg_meta_version",

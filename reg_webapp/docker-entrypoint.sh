@@ -21,8 +21,7 @@ READY_DEADLINE=60
 MAX_TIME=10
 
 # `/mcp` admits the public host's `Host` header only where the deployment names one
-# (fly.toml and fly.swecov.toml both do); `show`'s root reports the webapp origin only
-# where the deployment hosts a webapp (fly.swecov.toml; the global catalog has none).
+# (fly.toml and fly.swecov.toml both do).
 # `--mmap-size 0`: on Fly's throttled rootfs, mmap read-around inflates cold reads.
 # Measured 2026-10-09 (0.44.0, 15-request cold mix): 592 MB / 34 s with the default
 # mmap vs 320 MB / 21 s without; warm latency is unchanged (#1296).
@@ -30,9 +29,6 @@ set -- serve --db /opt/reg_meta --catalog "$REG_META_CATALOG" \
     --stewards /opt/reg_webapp/stewards --host 0.0.0.0 --port "$PORT" --mmap-size 0
 if [ -n "${REG_META_PUBLIC_HOST:-}" ]; then
     set -- "$@" --public-host "$REG_META_PUBLIC_HOST"
-fi
-if [ -n "${REG_META_WEBAPP_ORIGIN:-}" ]; then
-    set -- "$@" --webapp-origin "$REG_META_WEBAPP_ORIGIN"
 fi
 # The served files' digest, computed when the image was built (Dockerfile), so the
 # server does not hash ~640 MB on the throttled rootfs before it binds.

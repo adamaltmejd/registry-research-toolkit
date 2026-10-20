@@ -41,8 +41,8 @@ pub struct Root {
 }
 
 /// The serving catalog: its steward `id` (`global` for the global catalog), its
-/// branding where the server loads it, its webapp origin where the deployment hosts
-/// one, and the two versions a `project_data.json` drafted here carries:
+/// branding where the server loads it, its webapp origin where the server is
+/// published, and the two versions a `project_data.json` drafted here carries:
 /// `reg_meta_version` and `project_schema_version` (the document's `schema_version`,
 /// not the catalog database's).
 #[derive(Serialize, ToSchema)]
@@ -420,7 +420,7 @@ fn root(server: &Server, conn: &Connection, scope: Scope) -> Result<Root, Error>
         project_schema_version: reg_core::project::SCHEMA_VERSION,
         name: steward.map(|s| s.name.clone()),
         long_name: steward.map(|s| s.long_name.clone()),
-        webapp: server.webapp.clone(),
+        webapp: server.origin.clone(),
     };
     Ok(Root { catalog, children })
 }
