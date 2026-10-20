@@ -2835,7 +2835,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — antal anställda i eget företag"
+value = "Senaste arbetsplats — antal anställda på arbetsplatsen"
 
 [[errata.field]]
 variable = "351.32894"
