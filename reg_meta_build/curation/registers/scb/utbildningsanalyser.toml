@@ -5006,6 +5006,454 @@ source_editions = ["Hösten 2015"]
 expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "F32b_05" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Om uppgiftslämnaren planerar att \"Studera på universitet/högskola eller yrkeshögskola\"." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Framtidsplaner_Studera på universitet/högskola eller yrkeshögskola" }, { name = "operational_definition", status = "value", value = "Till dem som inte arbetar:\nVad planerar du att göra det närmaste året?\nSvarsalternativ Läsa på yrkeshögskola" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Fråga 32b" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
 
 [[errata.field]]
+variable = "366.38917"
+variant = "366.1439"
+column = "F7h_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av annan/okänd anledning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Annan/okänd anledning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Annan/okänd anledning\nAnnan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Annan/okänd anledning — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38917"
+variant = "366.1439"
+column = "F7h_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av annan/okänd anledning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Annan/okänd anledning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Annan/okänd anledning\nHandledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Annan/okänd anledning — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38917"
+variant = "366.1439"
+column = "F7h_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av annan/okänd anledning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Annan/okänd anledning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Annan/okänd anledning\nNej, aldrig/inte aktuellt" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Annan/okänd anledning — Nej, aldrig/inte aktuellt"
+
+[[errata.field]]
+variable = "366.38917"
+variant = "366.1439"
+column = "F7h_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av annan/okänd anledning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Annan/okänd anledning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Annan/okänd anledning\nPerson utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Annan/okänd anledning — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38911"
+variant = "366.1439"
+column = "F7b_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av etnisk tillhörighet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Etnisk tillhörighet\nAnnan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38911"
+variant = "366.1439"
+column = "F7b_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av etnisk tillhörighet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Etnisk tillhörighet\nHandledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38911"
+variant = "366.1439"
+column = "F7b_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av etnisk tillhörighet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Etnisk tillhörighet\nNej, aldrig/inte aktuellt" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet — Nej, aldrig/inte aktuellt"
+
+[[errata.field]]
+variable = "366.38911"
+variant = "366.1439"
+column = "F7b_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av etnisk tillhörighet" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Etnisk tillhörighet\nPerson utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38915"
+variant = "366.1439"
+column = "F7f_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av funktionsnedsättning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Funktionsnedsättning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Funktionsnedsättning\nAnnan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Funktionsnedsättning — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38915"
+variant = "366.1439"
+column = "F7f_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av funktionsnedsättning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Funktionsnedsättning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Funktionsnedsättning\nHandledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Funktionsnedsättning — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38915"
+variant = "366.1439"
+column = "F7f_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av funktionsnedsättning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Funktionsnedsättning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Funktionsnedsättning\nNej, aldrig/inte aktuellt" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Funktionsnedsättning — Nej, aldrig/inte aktuellt"
+
+[[errata.field]]
+variable = "366.38915"
+variant = "366.1439"
+column = "F7f_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av funktionsnedsättning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Funktionsnedsättning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Funktionsnedsättning\nPerson utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Funktionsnedsättning — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38912"
+variant = "366.1439"
+column = "F7c_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av kön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Kön" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Kön\nAnnan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Kön — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38912"
+variant = "366.1439"
+column = "F7c_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av kön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Kön" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Kön\nHandledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Kön — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38912"
+variant = "366.1439"
+column = "F7c_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av kön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Kön" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Kön\nNej, aldrig/inte aktuellt" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Kön — Nej, aldrig/inte aktuellt"
+
+[[errata.field]]
+variable = "366.38912"
+variant = "366.1439"
+column = "F7c_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av kön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Kön" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Kön\nPerson utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Kön — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38913"
+variant = "366.1439"
+column = "F7d_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av könsöverskridande identitet eller uttryck" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Könsöverskridande identitet eller uttryck\nAnnan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38913"
+variant = "366.1439"
+column = "F7d_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av könsöverskridande identitet eller uttryck" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Könsöverskridande identitet eller uttryck\nHandledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38913"
+variant = "366.1439"
+column = "F7d_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av könsöverskridande identitet eller uttryck" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Könsöverskridande identitet eller uttryck\nNej, aldrig/inte aktuellt" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck — Nej, aldrig/inte aktuellt"
+
+[[errata.field]]
+variable = "366.38913"
+variant = "366.1439"
+column = "F7d_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av könsöverskridande identitet eller uttryck" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Könsöverskridande identitet eller uttryck\nPerson utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38910"
+variant = "366.1439"
+column = "F7a_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av religion eller trosuppfattning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Religion eller trosuppfattning\nAnnan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38910"
+variant = "366.1439"
+column = "F7a_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av religion eller trosuppfattning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Religion eller trosuppfattning\nHandledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38910"
+variant = "366.1439"
+column = "F7a_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av religion eller trosuppfattning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Religion eller trosuppfattning\nNej, aldrig/inte aktuellt" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning — Nej, aldrig/inte aktuellt"
+
+[[errata.field]]
+variable = "366.38910"
+variant = "366.1439"
+column = "F7a_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av religion eller trosuppfattning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Religion eller trosuppfattning\nPerson utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38914"
+variant = "366.1439"
+column = "F7e_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av sexuell läggning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Sexuell läggning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Sexuell läggning\nAnnan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Sexuell läggning — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38914"
+variant = "366.1439"
+column = "F7e_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av sexuell läggning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Sexuell läggning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Sexuell läggning\nHandledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Sexuell läggning — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38914"
+variant = "366.1439"
+column = "F7e_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av sexuell läggning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Sexuell läggning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Sexuell läggning\nNej, aldrig/inte aktuellt" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Sexuell läggning — Nej, aldrig/inte aktuellt"
+
+[[errata.field]]
+variable = "366.38914"
+variant = "366.1439"
+column = "F7e_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av sexuell läggning" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Sexuell läggning" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Sexuell läggning\nPerson utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Sexuell läggning — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38916"
+variant = "366.1439"
+column = "F7g_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av ålder" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Ålder" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Ålder\nAnnan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Ålder — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38916"
+variant = "366.1439"
+column = "F7g_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av ålder" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Ålder" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Ålder\nHandledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Ålder — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38916"
+variant = "366.1439"
+column = "F7g_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av ålder" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Ålder" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Ålder\nNej, aldrig/inte aktuellt" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Ålder — Nej, aldrig/inte aktuellt"
+
+[[errata.field]]
+variable = "366.38916"
+variant = "366.1439"
+column = "F7g_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Variabler som beskriver kränkande särbehandling under utbildningen på grund av ålder" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kränkande särbehandling under utbildningen - Ålder" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand upplevt att du blivit särbehandlad på ett kränkande sätt, i så fall av vilken/vilka anledningar och av vem/vilka?\n- Ålder\nPerson utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Kränkande särbehandling under utbildningen - Ålder — Av person utanför lärosätet"
+
+[[errata.field]]
 variable = "366.38918"
 variant = "366.1439"
 column = "F8_06"
@@ -5076,6 +5524,174 @@ field = "name"
 value = "Negativ särbehandling under utbildningen — Vilken/vilka former av negativ särbehandling utsattes du för under forskarutbildningen?\n- Mina handlingar eller yttranden ignorerades"
 
 [[errata.field]]
+variable = "366.38921"
+variant = "366.1439"
+column = "F12a_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom fysisk beröring och tafsande" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Fysisk beröring, tafsande\n- Annan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38921"
+variant = "366.1439"
+column = "F12a_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom fysisk beröring och tafsande" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Fysisk beröring, tafsande\n- Handledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38921"
+variant = "366.1439"
+column = "F12a_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom fysisk beröring och tafsande" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Fysisk beröring, tafsande\n- Nej, aldrig" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande — Nej, aldrig"
+
+[[errata.field]]
+variable = "366.38921"
+variant = "366.1439"
+column = "F12a_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom fysisk beröring och tafsande" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Fysisk beröring, tafsande\n- Person utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38923"
+variant = "366.1439"
+column = "F12c_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom kommentarer, bilder, texter, blickar, kroppsspråk eller liknande" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande\n- Annan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38923"
+variant = "366.1439"
+column = "F12c_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom kommentarer, bilder, texter, blickar, kroppsspråk eller liknande" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande\n- Handledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38923"
+variant = "366.1439"
+column = "F12c_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom kommentarer, bilder, texter, blickar, kroppsspråk eller liknande" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande\n- Nej, aldrig" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande — Nej, aldrig"
+
+[[errata.field]]
+variable = "366.38923"
+variant = "366.1439"
+column = "F12c_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom kommentarer, bilder, texter, blickar, kroppsspråk eller liknande" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande\n- Person utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande — Av person utanför lärosätet"
+
+[[errata.field]]
+variable = "366.38922"
+variant = "366.1439"
+column = "F12b_02"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom sexuellt övergrepp" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Sexuellt övergrepp\n- Annan person på lärosätet, t.ex. forskarstuderande eller studenter" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Av annan person på lärosätet"
+
+[[errata.field]]
+variable = "366.38922"
+variant = "366.1439"
+column = "F12b_01"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom sexuellt övergrepp" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Sexuellt övergrepp\n- Handledare och/eller lärare" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Av handledare och/eller lärare"
+
+[[errata.field]]
+variable = "366.38922"
+variant = "366.1439"
+column = "F12b_04"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom sexuellt övergrepp" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Sexuellt övergrepp\n- Nej, aldrig" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Nej, aldrig"
+
+[[errata.field]]
+variable = "366.38922"
+variant = "366.1439"
+column = "F12b_03"
+edition = "13104"
+expected_fields = [{ name = "definition", status = "value", value = "Sexuellt kränkande handlingar under utbildningen, såsom sexuellt övergrepp" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp" }, { name = "operational_definition", status = "value", value = "Har du någon gång i din roll som doktorand blivit behandlad på ett sexuellt kränkande sätt,\ni så fall på vilket/vilka sätt och av vem/vilka?\n- Sexuellt övergrepp\n- Person utanför lärosätet" }]
+expected_period_text = "2018"
+expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Av person utanför lärosätet"
+
+[[errata.field]]
 variable = "366.15699"
 variant = "366.1350"
 column = "F4b_12"
@@ -5101,7 +5717,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Krav för att ta examen — F26_1 Vad skulle krävas för att du skulle överväga att skaffa dig en sådan lärarexamen? - Ändrade privata/sociala förhållanden"
+value = "Krav för att ta examen — Ändrade privata/sociala förhållanden"
 
 [[errata.field]]
 variable = "366.41941"
@@ -5115,7 +5731,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Krav för att ta examen — F26_2 Vad skulle krävas för att du skulle överväga att skaffa dig en sådan lärarexamen? - Att lönen ökar med minst 10%"
+value = "Krav för att ta examen — Att lönen ökar med minst 10%"
 
 [[errata.field]]
 variable = "366.41941"
@@ -5129,7 +5745,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Krav för att ta examen — F26_3 Vad skulle krävas för att du skulle överväga att skaffa dig en sådan lärarexamen? - Förbättrade arbetsförhållanden inom grund- eller gymnasieutbildning"
+value = "Krav för att ta examen — Förbättrade arbetsförhållanden inom grund- eller gymnasieutbildning"
 
 [[errata.field]]
 variable = "366.41941"
@@ -5143,7 +5759,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Krav för att ta examen — F26_4 Vad skulle krävas för att du skulle överväga att skaffa dig en sådan lärarexamen? - Förbättrat studiestöd i form av lån eller bidrag"
+value = "Krav för att ta examen — Förbättrat studiestöd i form av lån eller bidrag"
 
 [[errata.field]]
 variable = "366.41941"
@@ -5157,7 +5773,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Krav för att ta examen — F26_5 Vad skulle krävas för att du skulle överväga att skaffa dig en sådan lärarexamen? - Bättre möjligheter till distansutbildning"
+value = "Krav för att ta examen — Bättre möjligheter till distansutbildning"
 
 [[errata.field]]
 variable = "366.41941"
@@ -5171,7 +5787,21 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Krav för att ta examen — F26_6 Vad skulle krävas för att du skulle överväga att skaffa dig en sådan lärarexamen? - Bättre möjligheter att kunna kombinera studier med arbete"
+value = "Krav för att ta examen — Bättre möjligheter att kunna kombinera studier med arbete"
+
+[[errata.field]]
+variable = "366.41941"
+variant = "366.1533"
+column = "KravExam7"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Krav för att ta examen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Krav för att ta examen" }, { name = "operational_definition", status = "value", value = "F26_7 Vad skulle krävas för att du skulle överväga att skaffa dig en sådan lärarexamen? - Enklare kunna komplettera min nuvarande utbildning med det jag saknar för att få en sådan behörighet" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Krav för att ta examen — Enklare kunna komplettera nuvarande utbildning för att få behörighet"
 
 [[errata.field]]
 variable = "366.41941"
@@ -5185,7 +5815,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Krav för att ta examen — F26_8 Vad skulle krävas för att du skulle överväga att skaffa dig en sådan lärarexamen? - Annat"
+value = "Krav för att ta examen — Annat"
 
 [[errata.field]]
 variable = "366.41885"
@@ -5498,6 +6128,34 @@ value = "Skäl arbete som lärare — F8_9 Vilka är de viktigaste skälen till 
 [[errata.field]]
 variable = "366.41928"
 variant = "366.1533"
+column = "SkalByt1"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Skäl byta arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl byta arbete som lärare" }, { name = "operational_definition", status = "value", value = "F19_1 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Svårt att få förlängd tjänst/tillsvidaretjänst" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skäl byta arbete som lärare — Svårt att få förlängd tjänst/tillsvidaretjänst"
+
+[[errata.field]]
+variable = "366.41928"
+variant = "366.1533"
+column = "SkalByt10"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Skäl byta arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl byta arbete som lärare" }, { name = "operational_definition", status = "value", value = "F19_10 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Lite flexibilitet i dispositionen av egen arbetstid" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skäl byta arbete som lärare — Lite flexibilitet i dispositionen av egen arbetstid"
+
+[[errata.field]]
+variable = "366.41928"
+variant = "366.1533"
 column = "SkalByt11"
 edition = "14883"
 expected_fields = [{ name = "definition", status = "value", value = "Skäl byta arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl byta arbete som lärare" }, { name = "operational_definition", status = "value", value = "F19_11 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Lite tid att planera arbetet" }]
@@ -5507,7 +6165,35 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_11 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Lite tid att planera arbetet"
+value = "Skäl byta arbete som lärare — Lite tid att planera arbetet"
+
+[[errata.field]]
+variable = "366.41928"
+variant = "366.1533"
+column = "SkalByt12"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Skäl byta arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl byta arbete som lärare" }, { name = "operational_definition", status = "value", value = "F19_12 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Svårt att kunna medverka i eller påverka beslut" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skäl byta arbete som lärare — Svårt att kunna medverka i eller påverka beslut"
+
+[[errata.field]]
+variable = "366.41928"
+variant = "366.1533"
+column = "SkalByt13"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Skäl byta arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl byta arbete som lärare" }, { name = "operational_definition", status = "value", value = "F19_13 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Dåliga möjligheter till kompetensutveckling" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skäl byta arbete som lärare — Dåliga möjligheter till kompetensutveckling"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5521,7 +6207,21 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_14 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Stora barn-/elev-/studerandegrupper"
+value = "Skäl byta arbete som lärare — Stora barn-/elev-/studerandegrupper"
+
+[[errata.field]]
+variable = "366.41928"
+variant = "366.1533"
+column = "SkalByt15"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Skäl byta arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl byta arbete som lärare" }, { name = "operational_definition", status = "value", value = "F19_15 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Mycket administrativa arbetsuppgifter" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skäl byta arbete som lärare — Mycket administrativa arbetsuppgifter"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5535,7 +6235,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_16 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Dåligt handledarstöd"
+value = "Skäl byta arbete som lärare — Dåligt handledarstöd"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5549,7 +6249,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_17 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Privata/sociala skäl"
+value = "Skäl byta arbete som lärare — Privata/sociala skäl"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5563,7 +6263,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_18 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Annat"
+value = "Skäl byta arbete som lärare — Annat"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5577,7 +6277,21 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_2 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Ville prova på ett annat yrke"
+value = "Skäl byta arbete som lärare — Ville prova på ett annat yrke"
+
+[[errata.field]]
+variable = "366.41928"
+variant = "366.1533"
+column = "SkalByt3"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Skäl byta arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl byta arbete som lärare" }, { name = "operational_definition", status = "value", value = "F19_3 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - För liten/för stor tjänstgöringsomfattning" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skäl byta arbete som lärare — För liten/för stor tjänstgöringsomfattning"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5591,7 +6305,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_4 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Låg lön"
+value = "Skäl byta arbete som lärare — Låg lön"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5605,7 +6319,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_5 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Bristande karriärmöjligheter i yrket"
+value = "Skäl byta arbete som lärare — Bristande karriärmöjligheter i yrket"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5619,7 +6333,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_6 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Mycket övertidsarbete"
+value = "Skäl byta arbete som lärare — Mycket övertidsarbete"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5633,7 +6347,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_7 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Fysiska arbetsmiljön"
+value = "Skäl byta arbete som lärare — Fysiska arbetsmiljön"
 
 [[errata.field]]
 variable = "366.41928"
@@ -5647,7 +6361,21 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Skäl byta arbete som lärare — F19_8 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Psykosociala arbetsmiljön"
+value = "Skäl byta arbete som lärare — Psykosociala arbetsmiljön"
+
+[[errata.field]]
+variable = "366.41928"
+variant = "366.1533"
+column = "SkalByt9"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Skäl byta arbete som lärare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl byta arbete som lärare" }, { name = "operational_definition", status = "value", value = "F19_9 Vilka är orsakerna till att du de senaste 12 månaderna allvarligt har övervägt att byta till ett arbete utanför skolväsendet? - Arbetsledningen/brister i arbetsorganisationen" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skäl byta arbete som lärare — Arbetsledningen/brister i arbetsorganisationen"
 
 [[errata.field]]
 variable = "366.41912"
@@ -5759,7 +6487,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Karriärvägar — F22_1 Hur vikigt anser du det vara, för egen del, att nedanstående karriärvägar finns eller inrättas inom skolväsendet? - Läromedelsansvarig"
+value = "Karriärvägar — Läromedelsansvarig"
 
 [[errata.field]]
 variable = "366.41933"
@@ -5773,7 +6501,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Karriärvägar — F22_2 Hur vikigt anser du det vara, för egen del, att nedanstående karriärvägar finns eller inrättas inom skolväsendet? - Utbildningsansvarig"
+value = "Karriärvägar — Utbildningsansvarig"
 
 [[errata.field]]
 variable = "366.41933"
@@ -5787,7 +6515,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Karriärvägar — F22_3 Hur vikigt anser du det vara, för egen del, att nedanstående karriärvägar finns eller inrättas inom skolväsendet? - Pedagogik- eller ämnesexpert"
+value = "Karriärvägar — Pedagogik- eller ämnesexpert"
 
 [[errata.field]]
 variable = "366.41933"
@@ -5801,7 +6529,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Karriärvägar — F22_4 Hur vikigt anser du det vara, för egen del, att nedanstående karriärvägar finns eller inrättas inom skolväsendet? - Speciella tjänster för lärare med längre utbildning"
+value = "Karriärvägar — Speciella tjänster för lärare med längre utbildning"
 
 [[errata.field]]
 variable = "366.41933"
@@ -5815,7 +6543,21 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Karriärvägar — F22_5 Hur vikigt anser du det vara, för egen del, att nedanstående karriärvägar finns eller inrättas inom skolväsendet? - Handledareansvarig/ansvarig för lärarstuderande"
+value = "Karriärvägar — Handledareansvarig/ansvarig för lärarstuderande"
+
+[[errata.field]]
+variable = "366.41933"
+variant = "366.1533"
+column = "KarrVag6"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Karriärvägar" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Karriärvägar" }, { name = "operational_definition", status = "value", value = "F22_6 Hur vikigt anser du det vara, för egen del, att nedanstående karriärvägar finns eller inrättas inom skolväsendet? - Ansvarig för kontakter och samarbete med forskning, andra skolor, andra organisationer eller myndigheter" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Karriärvägar — Ansvarig för kontakter och samarbete med forskning, andra skolor, andra organisationer eller myndigheter"
 
 [[errata.field]]
 variable = "366.41933"
@@ -5829,7 +6571,147 @@ expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Karriärvägar — F22_7 Hur vikigt anser du det vara, för egen del, att nedanstående karriärvägar finns eller inrättas inom skolväsendet? - Ansvarig för internationella frågor"
+value = "Karriärvägar — Ansvarig för internationella frågor"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak1"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_1 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Arbetets innehåll" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Arbetets innehåll"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak10"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_10 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Arbetsledningen/arbetets organisation" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Arbetsledningen/arbetets organisation"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak2"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_2 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Möjligheter till kompetensutveckling" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Möjligheter till kompetensutveckling"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak3"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_3 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Lönen" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Lönen"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak4"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_4 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Yrkets status" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Yrkets status"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak5"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_5 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Karriärmöjligheter i yrket" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Karriärmöjligheter i yrket"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak6"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_6 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Arbesbelastning i yrket" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Arbetsbelastning i yrket"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak7"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_7 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Möjligheter till medverkan/påverkan vid beslut" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Möjligheter till medverkan/påverkan vid beslut"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak8"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_8 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Fysiska arbetsmiljön" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Fysiska arbetsmiljön"
+
+[[errata.field]]
+variable = "366.41922"
+variant = "366.1533"
+column = "ArbFak9"
+edition = "14883"
+expected_fields = [{ name = "definition", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande huvudsakliga arbete jämfört med tidigare" }, { name = "operational_definition", status = "value", value = "F16_9 Hur är följande faktorer i ditt nuvarande huvudsakliga arbete inom skolväsendet i förhållande till ditt tidigare arbete utanför skolväsendet? - Psykosociala arbetsmiljön" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Nuvarande huvudsakliga arbete jämfört med tidigare — Psykosociala arbetsmiljön"
 
 [[errata.field]]
 variable = "366.41923"
@@ -6613,7 +7495,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — F20d_04"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under HT2021"
 
 [[errata.field]]
 variable = "366.46051"
@@ -6627,7 +7509,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — F20d"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under VT2020 - VT2021"
 
 [[errata.field]]
 variable = "366.46051"
@@ -6641,7 +7523,21 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — F20d_02"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Inte under någon period (VT2020 - mars 2022)"
+
+[[errata.field]]
+variable = "366.46051"
+variant = "366.1649"
+column = "F20d_03"
+edition = "18504"
+expected_fields = [{ name = "definition", status = "value", value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans" }, { name = "operational_definition", status = "value", value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46051"
@@ -6655,7 +7551,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — F20d_01"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Vet inte"
 
 [[errata.field]]
 variable = "366.46051"
@@ -6669,7 +7565,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — F20d_02"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Inte under någon period (VT2020 - mars 2022)"
 
 [[errata.field]]
 variable = "366.46051"
@@ -6683,7 +7579,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — F20d_01"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Vet inte"
 
 [[errata.field]]
 variable = "366.46051"
@@ -6697,7 +7593,21 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — F20d_04"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under HT2021"
+
+[[errata.field]]
+variable = "366.46051"
+variant = "366.1648"
+column = "F20d_03"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans" }, { name = "operational_definition", status = "value", value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans av t.ex. lektor eller lärare med ansvar för digitalisering eller IKT - pedagogik under januari - mars 2022" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under januari - mars 2022"
 
 [[errata.field]]
 variable = "366.46051"
@@ -6711,7 +7621,147 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — F20d"
+value = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under VT2020 - VT2021"
+
+[[errata.field]]
+variable = "366.46054"
+variant = "366.1648"
+column = "F19_02"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Skolan har vid behov ordnat att elever fick komma till skolan och använda dator/bredband på plats - inte under någon period (VT2020 - mars 2022)" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat att elever fick komma till skolan — Inte under någon period (VT2020 - mars 2022)"
+
+[[errata.field]]
+variable = "366.46054"
+variant = "366.1648"
+column = "F19_01"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Skolan har vid behov ordnat att elever fick komma till skolan och använda dator/bredband på plats om man inte visste och svarade \"Vet inte\"" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat att elever fick komma till skolan — Vet inte"
+
+[[errata.field]]
+variable = "366.46054"
+variant = "366.1648"
+column = "F19_04"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Skolan har vid behov ordnat att elever fick komma till skolan och använda dator/bredband på plats under HT2021" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat att elever fick komma till skolan — Under HT2021"
+
+[[errata.field]]
+variable = "366.46054"
+variant = "366.1648"
+column = "F19_03"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Skolan har vid behov ordnat att elever fick komma till skolan och använda dator/bredband på plats under januari - mars 2022" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat att elever fick komma till skolan — Under januari - mars 2022"
+
+[[errata.field]]
+variable = "366.46054"
+variant = "366.1648"
+column = "F19"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat att elever fick komma till skolan" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Skolan har vid behov ordnat att elever fick komma till skolan och använda dator/bredband på plats under VT2020 - VT2021" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat att elever fick komma till skolan — Under VT2020 - VT2021"
+
+[[errata.field]]
+variable = "366.46053"
+variant = "366.1648"
+column = "F18_02"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Inte under någon period (VT2020 - mars 2022) har skolan vid behov ordnat bredband hemma hos elever, köpt mobilt bredband eller köpt datavolym till elevers telefoner" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat bredband hos elever — Inte under någon period (VT2020 - mars 2022)"
+
+[[errata.field]]
+variable = "366.46053"
+variant = "366.1648"
+column = "F18_04"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Skolan har vid behov ordnat bredband hemma hos elever, köpt mobilt bredband eller köpt datavolym till elevers telefoner under HT2021" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat bredband hos elever — Under HT2021"
+
+[[errata.field]]
+variable = "366.46053"
+variant = "366.1648"
+column = "F18_03"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Skolan har vid behov ordnat bredband hemma hos elever, köpt mobilt bredband eller köpt datavolym till elevers telefoner under januari - mars 2022" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat bredband hos elever — Under januari - mars 2022"
+
+[[errata.field]]
+variable = "366.46053"
+variant = "366.1648"
+column = "F18"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Skolan har vid behov ordnat bredband hemma hos elever, köpt mobilt bredband eller köpt datavolym till elevers telefoner under VT2020 - VT2021" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat bredband hos elever — Under VT2020 - VT2021"
+
+[[errata.field]]
+variable = "366.46053"
+variant = "366.1648"
+column = "F18_01"
+edition = "18503"
+expected_fields = [{ name = "definition", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skolan har vid behov ordnat bredband hos elever" }, { name = "operational_definition", status = "value", value = "Vid undervisning på distans: Uppgift saknas om skolan har vid behov ordnat bredband hemma hos elever, köpt mobilt bredband eller köpt datavolym till elevers telefoner (\"Vet inte\")" }]
+expected_period_text = "Höstterminen 2021 - Vårterminen 2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-07-01", end = "2022-06-30" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Skolan har vid behov ordnat bredband hos elever — Vet inte"
 
 [[errata.field]]
 variable = "366.37047"
@@ -7092,6 +8142,90 @@ field = "name"
 value = "Plats för vistelse utomlands, eftergy utb minst 2 år — Om något av fritextsvaren ändå passade in på ett fast svarsalternativ så har det fasta svarsalternativet ändrats från kod 3 till kod 1 eller 2."
 
 [[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "F6_03"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Har du tillbringat minst 2 sammanhängande veckor utomlands inom ramen för dina studier inom någon av följande utbildningar?\nHit räknas t.ex. utbytesprogram inom EU, individuellt eller i grupp.\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning.\nHär kan du markera flera alternativ.\nSvarsalternativ: Ja, inom 2- till 3-årig gymnasieutbildning\nRäkna inte med utlandsvistelser inom en fullföljd yrkesutbildning 2 till 3 år, den tas upp i fråga 3" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom 2- till 3-årig gymnasieutbildning"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "F6_04"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Har du tillbringat minst 2 sammanhängande veckor utomlands inom ramen för dina studier inom någon av följande utbildningar?\nHit räknas t.ex. utbytesprogram inom EU, individuellt eller i grupp.\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning.\nHär kan du markera flera alternativ.\nSvarsalternativ: Ja, inom 4-årig gymnasieutbildning\nHit räknas även tekniskt basår och påbyggnadsutbildning för vuxna utöver 3-årig gymnasieutbildning" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom 4-årig gymnasieutbildning"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "F6_02"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Har du tillbringat minst 2 sammanhängande veckor utomlands inom ramen för dina studier inom någon av följande utbildningar?\nHit räknas t.ex. utbytesprogram inom EU, individuellt eller i grupp.\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning.\nHär kan du markera flera alternativ.\nSvarsalternativ: Ja, inom gymnasieutbildning kortare än 2 år" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom gymnasieutbildning kortare än 2 år"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "F6_06"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Har du tillbringat minst 2 sammanhängande veckor utomlands inom ramen för dina studier inom någon av följande utbildningar?\nHit räknas t.ex. utbytesprogram inom EU, individuellt eller i grupp.\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning.\nHär kan du markera flera alternativ.\nSvarsalternativ: Ja, inom högskole-/universitetsutbildning eller annan eftergymnasial utbildning motsvarande heltidsstudier kortare än 2 år\nHit räknas 30 till 119 avklarade hp (högskolepoäng)\nHit räknas t.ex. kvalificerad yrkesutbildning och yrkeshögskoleutbildning" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom eftergymnasial utbildning kortare än 2 år"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "F6_05"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Har du tillbringat minst 2 sammanhängande veckor utomlands inom ramen för dina studier inom någon av följande utbildningar?\nHit räknas t.ex. utbytesprogram inom EU, individuellt eller i grupp.\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning.\nHär kan du markera flera alternativ.\nSvarsalternativ: Ja, inom vuxenutbildning eller på folkhögskola motsvarande grundskola eller 2- till 3-årig gymnasieskola" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom vuxenutbildning eller folkhögskola"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "F6_07"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Har du tillbringat minst 2 sammanhängande veckor utomlands inom ramen för dina studier inom någon av följande utbildningar?\nHit räknas t.ex. utbytesprogram inom EU, individuellt eller i grupp.\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning.\nHär kan du markera flera alternativ.\nSvarsalternativ: Nej" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Svar: nej"
+
+[[errata.field]]
 variable = "366.36329"
 variant = "366.1350"
 column = "F4b_07"
@@ -7301,3 +8435,144 @@ reason = "The #1640 errata.delivered entry adds this item's second-wave availabi
 evidence = "Availability from the #1640 errata.delivered entry for this column (#1603; maintainer orderable rule 2026-10-16); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "a078af323212879181f67ec292d11ebb05b0a0e436550bc4508a25c06c8c71f1"
 expected_diagnostic_sha256 = "8901e1ab5c05a61f406819e7d50232b19dc05d81c0872f02c532b253297b0865"
+
+# #1261: siblings SCB names with the bare family label get their subquestion as a name.
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "F6_01"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Har du tillbringat minst 2 sammanhängande veckor utomlands inom ramen för dina studier inom någon av följande utbildningar?\nHit räknas t.ex. utbytesprogram inom EU, individuellt eller i grupp.\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning.\nHär kan du markera flera alternativ.\nSvarsalternativ: Ja, på högstadiet (grundskolan årskurs 7-9)" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, på högstadiet (grundskolan årskurs 7-9)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "IVETMOB"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Inom ramen för din yrkesutbildning i gymnasieskolan, tillbringade du minst 2 sammanhängande veckor utomlands som studerande, t.ex. som lärling, trainee eller praktikant?\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning." }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Gymnasial yrkesutbildning, som lärling/trainee/praktikant (IVETMOB)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "MobEftergy"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Mobilitet inom ramen för eftergymnasial utbildning\nHärledd variabel\nHärledd av frågorna 1, 6, 9, 10" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Härledd: eftergymnasial utbildning"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "MobFullfLangEftergy"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Mobilitet inom ramen för fullföljd eftergymnasial utbildning på minst två år, mobilitet minst två veckor\nHärledd variabel av frågorna 9, 10" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Härledd: fullföljd eftergymnasial utbildning minst 2 år, minst 2 veckor"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "MobFullfLangEftergyMin3"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Mobilitet inom ramen för fullföljd eftergymnasial utbildning på minst två år, mobilitet minst 3 månader\nHärledd variabel av frågorna 9, 10, 11" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Härledd: fullföljd eftergymnasial utbildning minst 2 år, minst 3 månader"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "MobGrundskola"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Mobilitet inom ramen för grundskolan\nHärledd variabel av frågorna 1 och 6" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Härledd: grundskolan"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "MobGym"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Mobilitet inom ramen för gymnasieskolan\nHärledd av frågorna 1, 2, 3, 5, 6, 8" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Härledd: gymnasieskolan"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "SECMOB"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Härledd av frågorna 1, 3, 6" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Härledd: SECMOB (av frågorna 1, 3, 6)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "TERMOB"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Härledd variabel av frågorna 9, 10" }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Härledd: TERMOB (av frågorna 9, 10)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "366.36194"
+variant = "366.1320"
+column = "F3"
+edition = "11264"
+expected_fields = [{ name = "definition", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Utlandsvistelse inom olika utbildningsformer" }, { name = "operational_definition", status = "value", value = "Inom ramen för din yrkesutbildning i gymnasieskolan, tillbringade du minst 2 sammanhängande veckor utomlands som studerande, t.ex. som lärling, trainee eller praktikant?\nRäkna även med perioder utomlands under skollov, om studierna räknas till din utbildning." }]
+expected_period_text = "2014"
+expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+field = "name"
+value = "Utlandsvistelse inom olika utbildningsformer — Gymnasial yrkesutbildning, som lärling/trainee/praktikant (F3)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"

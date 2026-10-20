@@ -8723,7 +8723,35 @@ expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Faktorinkomst — CFAKT03"
+value = "Faktorinkomst — oklar definition (CFAKT03)"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "ISU733"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomsten (definition 3) är summan av produktionsfaktorerna\narbetskraft och kapital. Variabeln utgör summan av:\n-kapital\n-lön\n-företagarinkomst\n-inkomst av tillfällig förvärvsverksamhet\n-inkomst av eget hem och fritidsfastighet\n(beräknat som ränta på eget kapital med löpande\nmedelränta,\n-inkomst av kapital exklusive extra avdrag" }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Faktorinkomst — definition 3, eget hem som ränta på eget kapital med medelränta (ISU733)"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "ISU734"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomsten (definition 4) är summan av produktionsfaktorerna arbetskraft och kapital. Variabeln utgör summan av:\n-lön\n-företagarinkomst\n-inkomst av tillfällig förvärvsverksamhet\n-inkomst av eget hem och fritidsfastighet\n(beräknat som ränta på eget kapital = 3%)\n-inkomst av kapital exklusive extra avdrag" }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Faktorinkomst — definition 4, eget hem som ränta på eget kapital 3 % (ISU734)"
 
 [[errata.field]]
 variable = "97.75"
@@ -8765,7 +8793,49 @@ expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Företagarinkomst — CFTAG03"
+value = "Företagarinkomst — oklar definition (CFTAG03)"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "ISU702"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Företagarinkomsten(taxeringmässiga alternativ 2 rörelse, jordbruk- och hyresfastighet) beräknas som summan av de taxeringsmässiga överskott och underskott som redovisats i förvärvskällorna inkomst av rörelse jordbruks- och hyresfastighet." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Företagarinkomst — taxeringsmässigt alternativ 2, rörelse, jordbruk och hyresfastighet (ISU702)"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "ISU703"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Summan av företagarinkomsterna (definition 1 röresle, jordbruk och hyresfastighet) för rörelse och\nhyresfastighet beräknas som summan av de taxeringsmässiga överskott och underskott som redovisats i förvärvskällorna inkomst av rörelse och hyresfastighet.\nFöretagarinkomsten för jordbruksfastighet beräknas summan av det taxeringsmässiga över/underskottet med\ntillägg för särskilt investeringsavdrag samt\navdrag samt förändring av skogskontomedel." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Företagarinkomst — definition 1, rörelse, jordbruk och hyresfastighet (ISU703)"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "ISU704"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Summan av företagarinkomsterna (definition 2 röresle, jordbruk och hyresfastighet) identisk med\ndefinition 1,jordbruksfastighet beräknas summan av det taxeringsmässiga över/underskottet med\ntillägg för särskilt investeringsavdrag samt\navdrag samt förändring av skogskontomedel." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Företagarinkomst — definition 2, rörelse, jordbruk och hyresfastighet (ISU704)"
 
 [[errata.field]]
 variable = "97.4719"
@@ -9160,6 +9230,20 @@ field = "name"
 value = "Reavinst, näringsfastighet — Uppgifter från deklarationsbilagor från Skatteverket.\n\nFörekomst 2."
 
 [[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "ISU1161"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Variabeln utgör summan av alla inkomster under\ninkomst av tjänst:\nlön + ersättning, kostnadsersättning, pension.\nlivränta och periodiskt understöd.\nI variabeln kan max 5 delposter ingå." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Inkomst av tjänst — summa av högst 5 delposter"
+
+[[errata.field]]
 variable = "97.19806"
 variant = "97.99"
 column = "AHY17"
@@ -9171,7 +9255,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1996-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Underlag för fastighetsavgift avseende hyreshus — AHY17"
+value = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,7 %, värdeår före 1983 (AHY17)"
 
 [[errata.field]]
 variable = "97.19806"
@@ -9185,7 +9269,35 @@ expected_period = { kind = "intervals", intervals = [{ start = "1997-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Underlag för fastighetsavgift avseende hyreshus — AHY17"
+value = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,7 %, värdeår före 1983 (AHY17)"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AHY075"
+edition = "15459"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshus med bostäder med värdeår 1987 - 1990 är fastighetsskatten 0,75%, det gäller även nybyggnation med värdeår 1991 - 1992. Underlaget utgörs av taxeringsvärdet." }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — skatt 0,75 %, värdeår 1987–1990, nybyggnation 1991–1992 (AHY075)"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AHY15"
+edition = "15459"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshusenhet med byggnad som huvudsakligen innehåller bostäder med värdeår 1986 eller tidigare är skattesatsen 1,5%. Underlaget utgörs av taxeringsvärdet." }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,5 %, värdeår 1986 eller tidigare (AHY15)"
 
 [[errata.field]]
 variable = "97.19806"
@@ -9199,7 +9311,77 @@ expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Underlag för fastighetsavgift avseende hyreshus — AHY17"
+value = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,7 %, värdeår före 1983 (AHY17)"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR02"
+edition = "3105"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Näringsgren för individ — största anställningen, SNI2002"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR02"
+edition = "3742"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Näringsgren för individ — största anställningen, SNI2002"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR02"
+edition = "3998"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Näringsgren för individ — största anställningen, SNI2002"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR02"
+edition = "3818"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Näringsgren för individ — största anställningen, SNI2002"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR07"
+edition = "3897"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+noted = "2026-10-02"
+field = "name"
+value = "Näringsgren för individ — största anställningen, SNI2007"
 
 [[errata.field]]
 variable = "97.40365"
@@ -10039,3 +10221,1642 @@ valid_to = "2013-12-31"
 reason = "The exact supplied window has no own usable stored response domain. Stratum changes in the complete observed history, and later BAAVK windows lack their own code lists; ordinary neighboring lists cannot establish historical encoding. Preserve every original, physical column, type, period, operation and association; leave only this effective domain unavailable and retain all known domains elsewhere."
 evidence = "Complete accepted HEK6native-family160-original review plus actual recursive prerequisite/support, own bound coding multiplicity and all three canonical books. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json; Batch52-HEK-membership-pair-review.json; Batch52-HEK-HUT-source-proof.json. No raw source fact or positive earlier domain is corrected."
 expected_evidence_sha256 = "86edc72b8f99e8ad1c177a372469fdbabe2dd1d9a2bcfd054097d887db65b9af"
+
+# #1261: siblings SCB names with the bare family label get their subquestion as a name.
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "3105"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "3742"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "3818"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "3897"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "3998"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "4233"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2011"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "4933"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "5814"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2013"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "6129"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "6182"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "6198"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "12271"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "14913"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "14993"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "1999"
+expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "15459"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "16160"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "1997"
+expected_scope = { kind = "intervals", intervals = [{ start = "1997", end = "1997" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1997-01-01", end = "1997-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "CFAKT"
+edition = "17528"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomst är summan av löneinkomst, företagarinkomst, inkomst från fåmansföretag, ränta och utdelning samt kapitalvinst." }]
+expected_period_text = "1996"
+expected_scope = { kind = "intervals", intervals = [{ start = "1996", end = "1996" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1996-01-01", end = "1996-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "2804"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "3702"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto\nCFAKT = TLONT + CMIX + CKAP + KVBRUT." }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "3860"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto\nCFAKT = TLONT + CMIX + CKAP + KVBRUT." }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "3879"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "3997"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto\nCFAKT = TLONT + CMIX + CKAP + KVBRUT." }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "4935"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto\nCFAKT = TLONT + CMIX + CKAP + KVBRUT." }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "5823"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto\nCFAKT = TLONT + CMIX + CKAP + KVBRUT." }]
+expected_period_text = "2013"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "6131"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "6180"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "6197"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "14912"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "14977"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "1999"
+expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "15462"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "16132"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto" }]
+expected_period_text = "1997"
+expected_scope = { kind = "intervals", intervals = [{ start = "1997", end = "1997" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1997-01-01", end = "1997-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.93"
+column = "CFAKTZ"
+edition = "16243"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av löneinkomst, blandad inkomst, kapitalinkomst och kapitalvinst, aktier, fastigheter mm - brutto. Summerad för hushållet." }]
+expected_period_text = "1996"
+expected_scope = { kind = "intervals", intervals = [{ start = "1996", end = "1996" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1996-01-01", end = "1996-12-31" }] }
+field = "name"
+value = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.85"
+variant = "97.99"
+column = "ISU732"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomsten (definition 2) är summan av produktionsfaktorerna arbetskraft och kapital. Variabeln utgör summan av:\n-Lön\n-Företagarinkomst\n-Inkomst av tillfällig förvärvsverksamhet\n-Inkomst av eget hem och fritidsfastighet\n(taxeringsmässig beräkning)\n-inkomst av kapital exkl extra avdrag" }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Faktorinkomst — definition 2, eget hem taxeringsmässigt (ISU732)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "3105"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "3742"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "3818"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "3897"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "3998"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "4233"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2011"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "4933"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "5814"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2013"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "6129"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "6182"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "6198"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "12271"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2003"
+expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "14913"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "14993"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "1999"
+expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "15459"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Summan av företagarinkomsterna för rörelse och\nhyresfastighet beräknas som summan av de\ntaxeringsmässiga överskott och underskott som\nredovisats i förvärvskällorna inkomst av rörelse och hyresfastighet.\nFöretagarinkomsten för jordbruksfastighet beräknas som summan av det taxeringsmässiga över/underskottet med tillägg för särskilt investeringsavdrag." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "16160"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "1997"
+expected_scope = { kind = "intervals", intervals = [{ start = "1997", end = "1997" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1997-01-01", end = "1997-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "CFTAG"
+edition = "17528"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Näringsinkomst (företagarinkomst) beräknas som inkomst/underskott av näringsverksamhet." }]
+expected_period_text = "1996"
+expected_scope = { kind = "intervals", intervals = [{ start = "1996", end = "1996" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1996-01-01", end = "1996-12-31" }] }
+field = "name"
+value = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "2804"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "3702"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "3860"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "3879"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "3997"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "4935"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "5823"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2013"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "6131"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "6180"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "6197"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "14912"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "2000"
+expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "14977"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "1999"
+expected_scope = { kind = "intervals", intervals = [{ start = "1999", end = "1999" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1999-01-01", end = "1999-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "15462"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "16132"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning och verkliga underskott i näringsverksamhet" }]
+expected_period_text = "1997"
+expected_scope = { kind = "intervals", intervals = [{ start = "1997", end = "1997" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1997-01-01", end = "1997-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.93"
+column = "CFTAGZ"
+edition = "16243"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Härledd variabel.\nSumman av inkomst av aktiv/passiv näringsverksamhet, skattepliktig inkomst som grundar egenavgifter, egen pensionsförsäkringspremie i näringsverksamhet, utnyttjad underskott från tidigare år, kostnad för resor bostad-arbete, sjukpenning" }]
+expected_period_text = "1996"
+expected_scope = { kind = "intervals", intervals = [{ start = "1996", end = "1996" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1996-01-01", end = "1996-12-31" }] }
+field = "name"
+value = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "ISU701"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Företagarinkomsten(taxeringmässiga alternativ 1 rörelse och jordbruk) beräknas som summan av de\ntaxeringsmässiga överskott och underskott som\nredovisats i förvärvskällorna inkomst av rörelse och jordbruksfastighet." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Företagarinkomst — taxeringsmässigt alternativ 1, rörelse och jordbruk (ISU701)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "IRR716"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Resultatet av bedriven verksamhet, rörelse positiv eller negativ. Utgörs av taxerad inkomst av/underskott av rörelse. Företagarinkomsten kan vara negativ." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Företagarinkomst — rörelse (IRR716)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "IJB719"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Resultatet av bedriven verksamhet jordbruk, positiv eller negativ. Utgörs av taxerad inkomst av/underskott av jordbruksfastighet. Företagarinkomsten kan vara negativ" }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Företagarinkomst — jordbruksfastighet (IJB719)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.4502"
+variant = "97.99"
+column = "IFA707"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Företagarinkomst från hyresfastighet.\nResultatet av bedriven verksamhet, positiv eller\nnegativ. Utgörs av taxerad inkomst av/underskott av annan fastighet än jordbruksfastighet\nexklusive schablonbeskattade fastigheter (egna hem och fritidsfastigheter, typkod 13 och 16).\nföretagarinkomsten kan vara negativ." }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Företagarinkomst — hyresfastighet (IFA707)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "ISU003"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Gäller A-inkomst.Till intäkt av tjänst hänförs: Avlöning, arvode, traktamente, sportler och annan förmån i penningar, bostad eller annat, som utgått för tjänsten; pension och i den mån icke annat följer, stadgas livränta, som utgått pga sjuk-, olycksfalls- eller skadeförsäkring eller anoorledes än på grund av försäkring, ävensom ersättning, som i annan form än livränta utgått på grund av sjuk- eller olycksfallsförsäkring, tagen i samband med tjänst - dock icke ers, som avser sjukvårds- eller läkarekostnader - samt undantagsförmåner, periodiskt undersötd eller därmed jämf periodisk intäkt. Som intäkt av tjänst räknas även vinstandel, återbäring eller vid återköp av försäkring uppburet belopp - vilket utgått på grund av pensionsförsäkring eller sådan sjuk- eller olycksfallsförsäkring, i samband med tjänst. Från intäkterna får vissa avdrag göras. Kvarstår benämns som inkomst av tjänst. I Inkomst av tjänst som anges i inkomstlängd ingår även inkomst av tillfällig förvärvsverksamhet" }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — A-inkomst"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "ITP073"
+edition = "16154"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Gäller B-inkomst.Till intäkt av tjänst hänförs: Avlöning, arvode, traktamente, sportler och annan förmån i penningar, bostad eller annat, som utgått för tjänsten; pension och i den mån icke annat följer, stadgas livränta, som utgått pga sjuk-, olycksfalls- eller skadeförsäkring eller anoorledes än på grund av försäkring, ävensom ersättning, som i annan form än livränta utgått på grund av sjuk- eller olycksfallsförsäkring, tagen i samband med tjänst - dock icke ers, som avser sjukvårds- eller läkarekostnader - samt undantagsförmåner, periodiskt undersötd eller därmed jämf periodisk intäkt. Som intäkt av tjänst räknas även vinstandel, återbäring eller vid återköp av försäkring uppburet belopp - vilket utgått på grund av pensionsförsäkring eller sådan sjuk- eller olycksfallsförsäkring, i samband med tjänst. Från intäkterna får vissa avdrag göras. Kvarstår benämns som inkomst av tjänst. I Inkomst av tjänst som anges i inkomstlängd ingår även inkomst av tillfällig förvärvsverksamhet" }]
+expected_period_text = "1975"
+expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — B-inkomst"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "3105"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "3742"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "3818"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "3897"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "3998"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "4233"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2011"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "4933"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "5814"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2013"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "6129"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "6182"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.1173"
+variant = "97.99"
+column = "TTJ"
+edition = "6198"
+expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Beräknat med utgångspunkt från deklarerade belopp." }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Inkomst av tjänst — beräknad från deklarerade belopp"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AFA02"
+edition = "3105"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Underlag för fastighetsavgift med 0,2 % avseende hyreshus." }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AFA02"
+edition = "3742"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Underlag för fastighetsavgift med 0,2 % avseende hyreshus." }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AFA02"
+edition = "3818"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Underlag för fastighetsavgift med 0,2 % avseende hyreshus." }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AFA02"
+edition = "3998"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Underlag för fastighetsavgift med 0,2 % avseende hyreshus." }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AFA02"
+edition = "4233"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Underlag för fastighetsavgift med 0,2 % avseende hyreshus." }]
+expected_period_text = "2011"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AFA02"
+edition = "4933"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Underlag för fastighetsavgift med 0,2 % avseende hyreshus." }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AHY02"
+edition = "3897"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Underlag för fastighetsavgift med 0,2 % avseende hyreshus." }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AHY02)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AFAHHALV"
+edition = "5814"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Underlag för fastighetsavgift med 0,15 % avseende hyreshus." }]
+expected_period_text = "2013"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,15 % (AFAHHALV)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AHY085"
+edition = "15459"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshusenheter med bostäder med värdeår 1985 - 1988 är skattesatsen 0,85%. Underlaget utgörs av taxeringsvärdet." }]
+expected_period_text = "1998"
+expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — skatt 0,85 %, värdeår 1985–1988 (AHY085)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AHY085"
+edition = "16160"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshusenheter med bostäder med värdeår 1985 - 1988 är skattesatsen 0,85%. Underlaget utgörs av taxeringsvärdet." }]
+expected_period_text = "1997"
+expected_scope = { kind = "intervals", intervals = [{ start = "1997", end = "1997" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1997-01-01", end = "1997-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — skatt 0,85 %, värdeår 1985–1988 (AHY085)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.19806"
+variant = "97.99"
+column = "AHY085"
+edition = "17528"
+expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshusenheter med bostäder med värdeår 1985 - 1988 är skattesatsen 0,85%. Underlaget utgörs av taxeringsvärdet." }]
+expected_period_text = "1996"
+expected_scope = { kind = "intervals", intervals = [{ start = "1996", end = "1996" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "1996-01-01", end = "1996-12-31" }] }
+field = "name"
+value = "Underlag för fastighetsavgift avseende hyreshus — skatt 0,85 %, värdeår 1985–1988 (AHY085)"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "3105"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "3742"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "3818"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "3897"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "3998"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "4233"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2011"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "4933"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "5814"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2013"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "6129"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "6182"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BKUNGR"
+edition = "6198"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — största anställningen"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "3105"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2008"
+expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "3742"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2009"
+expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "3818"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2010 preliminär"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "3897"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2007"
+expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "3998"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2010"
+expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "4233"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2011"
+expected_scope = { kind = "intervals", intervals = [{ start = "2011", end = "2011" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2011-01-01", end = "2011-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "4933"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2012"
+expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "5814"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = "2013"
+expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "6129"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2006"
+expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "6182"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2005"
+expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "97.2702"
+variant = "97.99"
+column = "BNGR"
+edition = "6198"
+expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002. Består av näringsgren från kontrolluppgifter och från Företagsdatabasen. Uppdaterad med näringsidkare (till skillnad från Näringsgren för individ - BKUNGR). Uppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet." }]
+expected_period_text = "2004"
+expected_scope = { kind = "intervals", intervals = [{ start = "2004", end = "2004" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2004-01-01", end = "2004-12-31" }] }
+field = "name"
+value = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare"
+evidence = "A sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+noted = "2026-10-20"

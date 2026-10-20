@@ -1805,8 +1805,9 @@ every entry.
 
 A written variable whose name is longer than the reader's 200-character search query cap
 is a located `variable_name_over_search_cap` error, never a catalog `data_warning`
-(#1261): the server cannot find it by exact name. Curation shortens the name to its
-label and leaves the longer text in the definition fields; the cap does not move.
+(#1261): the server cannot find it by exact name. Curation shortens the name, for a
+family of subquestions under one label to `<label> — <short subquestion>`, and leaves
+the full question in the definition fields; the cap does not move.
 
 ## Strict and diagnostic builds
 

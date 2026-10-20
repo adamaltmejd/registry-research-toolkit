@@ -2226,8 +2226,8 @@ def _resolve(
                                 subject=f"{register.provider}/{register.slug}/{variable.slug}",
                                 detail=f"The variable name has {len(variable.name)} characters; "
                                 f"search queries are capped at {SEARCH_QUERY_MAX_CHARS}, so the "
-                                "server cannot find it by exact name. Curate a shorter name "
-                                "and move the rest to the description.",
+                                "server cannot find it by exact name. Shorten the name; longer "
+                                "text belongs in the definition or description.",
                                 fields=("name",),
                             )
                         )
