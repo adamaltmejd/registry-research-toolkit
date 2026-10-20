@@ -2210,8 +2210,9 @@ def _resolve(
                     diagnostic=diagnostic,
                 ):
                     issue(value)
-                # Report only, never a refusal (#1261): the server cannot find a
-                # name longer than its search query cap by exact name.
+                # A refusal (#1261): the server cannot find a name longer than its
+                # search query cap by exact name. Curation shortens the name; the
+                # cap stays.
                 for variable in lineage.variables:
                     if (
                         variable.name is not None
@@ -2221,7 +2222,7 @@ def _resolve(
                         issue(
                             ResolutionDiagnostic(
                                 code="variable_name_over_search_cap",
-                                severity="warning",
+                                severity="error",
                                 subject=f"{register.provider}/{register.slug}/{variable.slug}",
                                 detail=f"The variable name has {len(variable.name)} characters; "
                                 f"search queries are capped at {SEARCH_QUERY_MAX_CHARS}, so the "

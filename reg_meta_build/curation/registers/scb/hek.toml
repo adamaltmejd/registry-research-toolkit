@@ -8726,34 +8726,6 @@ field = "name"
 value = "Faktorinkomst — CFAKT03"
 
 [[errata.field]]
-variable = "97.85"
-variant = "97.99"
-column = "ISU733"
-edition = "16154"
-expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomsten (definition 3) är summan av produktionsfaktorerna\narbetskraft och kapital. Variabeln utgör summan av:\n-kapital\n-lön\n-företagarinkomst\n-inkomst av tillfällig förvärvsverksamhet\n-inkomst av eget hem och fritidsfastighet\n(beräknat som ränta på eget kapital med löpande\nmedelränta,\n-inkomst av kapital exklusive extra avdrag" }]
-expected_period_text = "1975"
-expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Faktorinkomst — Faktorinkomsten (definition 3) är summan av produktionsfaktorerna\narbetskraft och kapital. Variabeln utgör summan av:\n-kapital\n-lön\n-företagarinkomst\n-inkomst av tillfällig förvärvsverksamhet\n-inkomst av eget hem och fritidsfastighet\n(beräknat som ränta på eget kapital med löpande\nmedelränta,\n-inkomst av kapital exklusive extra avdrag"
-
-[[errata.field]]
-variable = "97.85"
-variant = "97.99"
-column = "ISU734"
-edition = "16154"
-expected_fields = [{ name = "definition", status = "value", value = "Inkomst av arbete och kapital" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Faktorinkomst" }, { name = "operational_definition", status = "value", value = "Faktorinkomsten (definition 4) är summan av produktionsfaktorerna arbetskraft och kapital. Variabeln utgör summan av:\n-lön\n-företagarinkomst\n-inkomst av tillfällig förvärvsverksamhet\n-inkomst av eget hem och fritidsfastighet\n(beräknat som ränta på eget kapital = 3%)\n-inkomst av kapital exklusive extra avdrag" }]
-expected_period_text = "1975"
-expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Faktorinkomst — Faktorinkomsten (definition 4) är summan av produktionsfaktorerna arbetskraft och kapital. Variabeln utgör summan av:\n-lön\n-företagarinkomst\n-inkomst av tillfällig förvärvsverksamhet\n-inkomst av eget hem och fritidsfastighet\n(beräknat som ränta på eget kapital = 3%)\n-inkomst av kapital exklusive extra avdrag"
-
-[[errata.field]]
 variable = "97.75"
 variant = "97.99"
 column = "CARB03"
@@ -8794,48 +8766,6 @@ evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/2
 noted = "2026-10-02"
 field = "name"
 value = "Företagarinkomst — CFTAG03"
-
-[[errata.field]]
-variable = "97.4502"
-variant = "97.99"
-column = "ISU702"
-edition = "16154"
-expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Företagarinkomsten(taxeringmässiga alternativ 2 rörelse, jordbruk- och hyresfastighet) beräknas som summan av de taxeringsmässiga överskott och underskott som redovisats i förvärvskällorna inkomst av rörelse jordbruks- och hyresfastighet." }]
-expected_period_text = "1975"
-expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Företagarinkomst — Företagarinkomsten(taxeringmässiga alternativ 2 rörelse, jordbruk- och hyresfastighet) beräknas som summan av de taxeringsmässiga överskott och underskott som redovisats i förvärvskällorna inkomst av rörelse jordbruks- och hyresfastighet."
-
-[[errata.field]]
-variable = "97.4502"
-variant = "97.99"
-column = "ISU703"
-edition = "16154"
-expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Summan av företagarinkomsterna (definition 1 röresle, jordbruk och hyresfastighet) för rörelse och\nhyresfastighet beräknas som summan av de taxeringsmässiga överskott och underskott som redovisats i förvärvskällorna inkomst av rörelse och hyresfastighet.\nFöretagarinkomsten för jordbruksfastighet beräknas summan av det taxeringsmässiga över/underskottet med\ntillägg för särskilt investeringsavdrag samt\navdrag samt förändring av skogskontomedel." }]
-expected_period_text = "1975"
-expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Företagarinkomst — Summan av företagarinkomsterna (definition 1 röresle, jordbruk och hyresfastighet) för rörelse och\nhyresfastighet beräknas som summan av de taxeringsmässiga överskott och underskott som redovisats i förvärvskällorna inkomst av rörelse och hyresfastighet.\nFöretagarinkomsten för jordbruksfastighet beräknas summan av det taxeringsmässiga över/underskottet med\ntillägg för särskilt investeringsavdrag samt\navdrag samt förändring av skogskontomedel."
-
-[[errata.field]]
-variable = "97.4502"
-variant = "97.99"
-column = "ISU704"
-edition = "16154"
-expected_fields = [{ name = "definition", status = "value", value = "Inkomst eller underskott av näringsverksamhet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Företagarinkomst" }, { name = "operational_definition", status = "value", value = "Summan av företagarinkomsterna (definition 2 röresle, jordbruk och hyresfastighet) identisk med\ndefinition 1,jordbruksfastighet beräknas summan av det taxeringsmässiga över/underskottet med\ntillägg för särskilt investeringsavdrag samt\navdrag samt förändring av skogskontomedel." }]
-expected_period_text = "1975"
-expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Företagarinkomst — Summan av företagarinkomsterna (definition 2 röresle, jordbruk och hyresfastighet) identisk med\ndefinition 1,jordbruksfastighet beräknas summan av det taxeringsmässiga över/underskottet med\ntillägg för särskilt investeringsavdrag samt\navdrag samt förändring av skogskontomedel."
 
 [[errata.field]]
 variable = "97.4719"
@@ -9230,20 +9160,6 @@ field = "name"
 value = "Reavinst, näringsfastighet — Uppgifter från deklarationsbilagor från Skatteverket.\n\nFörekomst 2."
 
 [[errata.field]]
-variable = "97.1173"
-variant = "97.99"
-column = "ISU1161"
-edition = "16154"
-expected_fields = [{ name = "definition", status = "value", value = "Inkomst av tjänst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Inkomst av tjänst" }, { name = "operational_definition", status = "value", value = "Variabeln utgör summan av alla inkomster under\ninkomst av tjänst:\nlön + ersättning, kostnadsersättning, pension.\nlivränta och periodiskt understöd.\nI variabeln kan max 5 delposter ingå." }]
-expected_period_text = "1975"
-expected_scope = { kind = "intervals", intervals = [{ start = "1975", end = "1975" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1975-01-01", end = "1975-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Inkomst av tjänst — Variabeln utgör summan av alla inkomster under\ninkomst av tjänst:\nlön + ersättning, kostnadsersättning, pension.\nlivränta och periodiskt understöd.\nI variabeln kan max 5 delposter ingå."
-
-[[errata.field]]
 variable = "97.19806"
 variant = "97.99"
 column = "AHY17"
@@ -9274,34 +9190,6 @@ value = "Underlag för fastighetsavgift avseende hyreshus — AHY17"
 [[errata.field]]
 variable = "97.19806"
 variant = "97.99"
-column = "AHY075"
-edition = "15459"
-expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshus med bostäder med värdeår 1987 - 1990 är fastighetsskatten 0,75%, det gäller även nybyggnation med värdeår 1991 - 1992. Underlaget utgörs av taxeringsvärdet." }]
-expected_period_text = "1998"
-expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Underlag för fastighetsavgift avseende hyreshus — Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshus med bostäder med värdeår 1987 - 1990 är fastighetsskatten 0,75%, det gäller även nybyggnation med värdeår 1991 - 1992. Underlaget utgörs av taxeringsvärdet."
-
-[[errata.field]]
-variable = "97.19806"
-variant = "97.99"
-column = "AHY15"
-edition = "15459"
-expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshusenhet med byggnad som huvudsakligen innehåller bostäder med värdeår 1986 eller tidigare är skattesatsen 1,5%. Underlaget utgörs av taxeringsvärdet." }]
-expected_period_text = "1998"
-expected_scope = { kind = "intervals", intervals = [{ start = "1998", end = "1998" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1998-01-01", end = "1998-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Underlag för fastighetsavgift avseende hyreshus — Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshusenhet med byggnad som huvudsakligen innehåller bostäder med värdeår 1986 eller tidigare är skattesatsen 1,5%. Underlaget utgörs av taxeringsvärdet."
-
-[[errata.field]]
-variable = "97.19806"
-variant = "97.99"
 column = "AHY17"
 edition = "15459"
 expected_fields = [{ name = "definition", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för fastighetsavgift avseende hyreshus" }, { name = "operational_definition", status = "value", value = "Statlig fastighetsskatt betalas av den som äger fastighet eller är jämställd med ägare till fastighet. Fastighetsskatt betalas för fastigheter som vid fastighetstaxeringen betecknas som småhusenhet, hyreshusenhet eller lantbruksenhet under vissa villkor. För hyreshusenheter med bostäder med värdeår före 1983 är skattesatsen 1,7 %. Underlaget utgörs av taxeringsvärdet." }]
@@ -9312,76 +9200,6 @@ evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/2
 noted = "2026-10-02"
 field = "name"
 value = "Underlag för fastighetsavgift avseende hyreshus — AHY17"
-
-[[errata.field]]
-variable = "97.2702"
-variant = "97.99"
-column = "BKUNGR02"
-edition = "3105"
-expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
-expected_period_text = "2008"
-expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Näringsgren för individ — Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten."
-
-[[errata.field]]
-variable = "97.2702"
-variant = "97.99"
-column = "BKUNGR02"
-edition = "3742"
-expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
-expected_period_text = "2009"
-expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Näringsgren för individ — Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten."
-
-[[errata.field]]
-variable = "97.2702"
-variant = "97.99"
-column = "BKUNGR02"
-edition = "3998"
-expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
-expected_period_text = "2010"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Näringsgren för individ — Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten."
-
-[[errata.field]]
-variable = "97.2702"
-variant = "97.99"
-column = "BKUNGR02"
-edition = "3818"
-expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
-expected_period_text = "2010 preliminär"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Näringsgren för individ — Näringsgren enligt SNI2002.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten."
-
-[[errata.field]]
-variable = "97.2702"
-variant = "97.99"
-column = "BKUNGR07"
-edition = "3897"
-expected_fields = [{ name = "definition", status = "value", value = "Näringsgren för individ." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Näringsgren för individ" }, { name = "operational_definition", status = "value", value = "Näringsgren enligt SNI2007.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten." }]
-expected_period_text = "2007"
-expected_scope = { kind = "intervals", intervals = [{ start = "2007", end = "2007" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2007-01-01", end = "2007-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Näringsgren för individ — Näringsgren enligt SNI2007.\nUppgiften visar näringsgrenstillhörighet för företagets huvudsakliga verksamhet (även om den lokala verksamheten är en annan). Klassificering på näringsgren har skett efter den anställning som givit den största inkomsten."
 
 [[errata.field]]
 variable = "97.40365"

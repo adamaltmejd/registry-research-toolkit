@@ -2660,34 +2660,6 @@ field = "name"
 value = "Kön — pers7_kon"
 
 [[errata.field]]
-variable = "367.38726"
-variant = "367.1321"
-column = "flex4"
-edition = "12440"
-expected_fields = [{ name = "definition", status = "value", value = "Orsak varierad arbetstid" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak varierad arbetstid" }, { name = "operational_definition", status = "value", value = "Frågan var \"Beror variationen i veckoarbetstid främst på att kraven på dina arbetsinsatser varierar eller beror det främst på att du själv kanbestämma och föredrar att jobba mer under vissa tider och mindre under andra?\"" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
-evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsak varierad arbetstid — Frågan var \"Beror variationen i veckoarbetstid främst på att kraven på dina arbetsinsatser varierar eller beror det främst på att du själv kanbestämma och föredrar att jobba mer under vissa tider och mindre under andra?\""
-
-[[errata.field]]
-variable = "367.38726"
-variant = "367.1321"
-column = "flex3"
-edition = "12440"
-expected_fields = [{ name = "definition", status = "value", value = "Orsak varierad arbetstid" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak varierad arbetstid" }, { name = "operational_definition", status = "value", value = "Frågan var:\"Beror det på att din arbetstid är schemalagd på ett sådant sätt att arbetstiden varierar från vecka till vecka eller att du har koncentrerad deltid eller liknande?\"" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
-evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsak varierad arbetstid — Frågan var:\"Beror det på att din arbetstid är schemalagd på ett sådant sätt att arbetstiden varierar från vecka till vecka eller att du har koncentrerad deltid eller liknande?\""
-
-[[errata.field]]
 variable = "367.38719"
 variant = "367.1321"
 column = "fr11_1"

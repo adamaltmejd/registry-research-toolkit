@@ -1659,7 +1659,7 @@ source = "codeless_overlap.toml#/resolve/0"  # v18 accepted-codeless:0:*, 5 case
 [[errata.column]]
 variant = "aku-januari-2021"
 column = "COVIDA"
-name = "Du sa tidigare att du <<’har sökt arbete´ om Arbl3=1>><<kommer att börja arbeta inom 3 månader’ om Arbl2=1>><<’vill arbeta’ om Arbl4=1>> men inte kunde arbeta under <<vecka>> eller börja arbeta inom 14 dagar>>. Var anledningen till att du inte kunde börja arbeta på något sätt kopplat till coronapandemin?"
+name = "Coronapandemin som skäl till att inte kunna börja arbeta"
 definition = "Du sa tidigare att du <<’har sökt arbete´ om Arbl3=1>><<kommer att börja arbeta inom 3 månader’ om Arbl2=1>><<’vill arbeta’ om Arbl4=1>> men inte kunde arbeta under <<vecka>> eller börja arbeta inom 14 dagar>>. Var anledningen till att du inte kunde börja arbeta på något sätt kopplat till coronapandemin?"
 data_type = "decimal"
 is_sensitive = true
@@ -1715,7 +1715,7 @@ data_warning = "Question wording and delivered floating-point storage are docume
 [[errata.column]]
 variant = "aku-januari-2021"
 column = "COVIDEJSOK"
-name = "Du sa tidigare att du hade kunnat arbeta under <<vecka>> (om du haft ett arbete) men att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+name = "Coronapandemin som skäl till att inte söka arbete, trots möjlighet att arbeta"
 definition = "Du sa tidigare att du hade kunnat arbeta under <<vecka>> (om du haft ett arbete) men att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
 data_type = "decimal"
 is_sensitive = true
@@ -1787,7 +1787,7 @@ data_warning = "Question wording and delivered floating-point storage are docume
 [[errata.column]]
 variant = "aku-april-2005-dec-2020"
 column = "COVIDA"
-name = "Du sa tidigare att du <<’har sökt arbete´ om Arbl3=1>><<kommer att börja arbeta inom 3 månader’ om Arbl2=1>><<’vill arbeta’ om Arbl4=1>> men inte kunde arbeta under <<vecka>> eller börja arbeta inom 14 dagar>>. Var anledningen till att du inte kunde börja arbeta på något sätt kopplat till coronapandemin?"
+name = "Coronapandemin som skäl till att inte kunna börja arbeta"
 definition = "Du sa tidigare att du <<’har sökt arbete´ om Arbl3=1>><<kommer att börja arbeta inom 3 månader’ om Arbl2=1>><<’vill arbeta’ om Arbl4=1>> men inte kunde arbeta under <<vecka>> eller börja arbeta inom 14 dagar>>. Var anledningen till att du inte kunde börja arbeta på något sätt kopplat till coronapandemin?"
 data_type = "decimal"
 is_sensitive = true
@@ -1843,7 +1843,7 @@ data_warning = "Question wording and delivered floating-point storage are docume
 [[errata.column]]
 variant = "aku-april-2005-dec-2020"
 column = "COVIDEJSOK"
-name = "Du sa tidigare att du hade kunnat arbeta under <<vecka>> (om du haft ett arbete) men att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
+name = "Coronapandemin som skäl till att inte söka arbete, trots möjlighet att arbeta"
 definition = "Du sa tidigare att du hade kunnat arbeta under <<vecka>> (om du haft ett arbete) men att du inte har sökt arbete. Var anledningen till att du inte sökte arbete på något sätt kopplat till coronapandemin?"
 data_type = "decimal"
 is_sensitive = true
@@ -1909,6 +1909,175 @@ source = "steward-holdings"
 evidence = "SWECOV holds COVIDTARB in AKU_2020 (float storage); P1105_Variabellista 2022.xlsx (AKU sheet) lists it for 2020-2021 under view AKU_2020. Name, definition and flags copied from the aku-januari-2021 entry so both states belong to one variable (#1302 B6)."
 noted = "2026-10-12"
 data_warning = "Question wording and delivered floating-point storage are documented; stored response-code meanings are unavailable."
+
+# #1261: SCB's names for these two embed the whole question and pass the 200-character search cap.
+[[errata.field]]
+variable = "122.46751"
+variant = "122.1628"
+column = "UarbSokSattk"
+edition = "19243"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46751"
+variant = "122.1628"
+column = "UarbSokSattk"
+edition = "19479"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
+expected_period_text = "2024"
+expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+field = "name"
+value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46751"
+variant = "122.1628"
+column = "UarbSokSattk"
+edition = "19484"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46751"
+variant = "122.1628"
+column = "UarbSokSattk"
+edition = "19485"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46751"
+variant = "122.1628"
+column = "UarbSokSattk"
+edition = "19684"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
+expected_period_text = "2025"
+expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-12-31" }] }
+field = "name"
+value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46751"
+variant = "122.1628"
+column = "UarbSokSattk"
+edition = "20279"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
+expected_period_text = "2026"
+expected_scope = { kind = "intervals", intervals = [{ start = "2026", end = "2026" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2026-01-01", end = "2026-12-31" }] }
+field = "name"
+value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46866"
+variant = "122.1628"
+column = "SysSokSattk"
+edition = "19243"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
+expected_period_text = "2021"
+expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+field = "name"
+value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46866"
+variant = "122.1628"
+column = "SysSokSattk"
+edition = "19479"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
+expected_period_text = "2024"
+expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+field = "name"
+value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46866"
+variant = "122.1628"
+column = "SysSokSattk"
+edition = "19484"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
+expected_period_text = "2023"
+expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+field = "name"
+value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46866"
+variant = "122.1628"
+column = "SysSokSattk"
+edition = "19485"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
+expected_period_text = "2022"
+expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
+field = "name"
+value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46866"
+variant = "122.1628"
+column = "SysSokSattk"
+edition = "19684"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
+expected_period_text = "2025"
+expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-12-31" }] }
+field = "name"
+value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
+
+[[errata.field]]
+variable = "122.46866"
+variant = "122.1628"
+column = "SysSokSattk"
+edition = "20279"
+expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
+expected_period_text = "2026"
+expected_scope = { kind = "intervals", intervals = [{ start = "2026", end = "2026" }] }
+expected_period = { kind = "intervals", intervals = [{ start = "2026-01-01", end = "2026-12-31" }] }
+field = "name"
+value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
+evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
+noted = "2026-10-20"
 
 [[variable]]
 native_id = "122.COVIDA"

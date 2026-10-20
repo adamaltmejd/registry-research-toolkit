@@ -3457,20 +3457,6 @@ value = "Skäl till att arbetet inte överensstämmer med utbildningen — Varf�
 [[errata.field]]
 variable = "111.37054"
 variant = "111.123"
-column = "F5_03"
-edition = "11643"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildingen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildningen" }, { name = "operational_definition", status = "value", value = "Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nSaknade den certifiering, yrkesprov, gesällprov eller liknande som krävdes" }]
-expected_period_text = "Våren 2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl till att arbetet inte överensstämmer med utbildningen — Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nSaknade den certifiering, yrkesprov, gesällprov eller liknande som krävdes"
-
-[[errata.field]]
-variable = "111.37054"
-variant = "111.123"
 column = "F5_02"
 edition = "11643"
 expected_fields = [{ name = "definition", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildingen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildningen" }, { name = "operational_definition", status = "value", value = "Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nSaknade den erfarenhet som krävdes" }]
@@ -3537,62 +3523,6 @@ evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/2
 noted = "2026-10-02"
 field = "name"
 value = "Skäl till att arbetet inte överensstämmer med utbildningen — F5_6"
-
-[[errata.field]]
-variable = "111.37054"
-variant = "111.123"
-column = "F5_1"
-edition = "15321"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildingen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildningen" }, { name = "operational_definition", status = "value", value = "Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nFanns inga arbeten att söka inom det området" }]
-expected_period_text = "Våren 2020"
-expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl till att arbetet inte överensstämmer med utbildningen — Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nFanns inga arbeten att söka inom det området"
-
-[[errata.field]]
-variable = "111.37054"
-variant = "111.123"
-column = "F5_1"
-edition = "18866"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildingen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildningen" }, { name = "operational_definition", status = "value", value = "Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nFanns inga arbeten att söka inom det området" }]
-expected_period_text = "Våren 2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl till att arbetet inte överensstämmer med utbildningen — Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nFanns inga arbeten att söka inom det området"
-
-[[errata.field]]
-variable = "111.37054"
-variant = "111.123"
-column = "F5_3"
-edition = "15321"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildingen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildningen" }, { name = "operational_definition", status = "value", value = "Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nSaknade den certifiering, yrkesprov, gesällprov eller liknande som krävdes" }]
-expected_period_text = "Våren 2020"
-expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl till att arbetet inte överensstämmer med utbildningen — Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nSaknade den certifiering, yrkesprov, gesällprov eller liknande som krävdes"
-
-[[errata.field]]
-variable = "111.37054"
-variant = "111.123"
-column = "F5_3"
-edition = "18866"
-expected_fields = [{ name = "definition", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildingen" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl till att arbetet inte överensstämmer med utbildningen" }, { name = "operational_definition", status = "value", value = "Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nSaknade den certifiering, yrkesprov, gesällprov eller liknande som krävdes" }]
-expected_period_text = "Våren 2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl till att arbetet inte överensstämmer med utbildningen — Varför har du ett arbete som inte överensstämmer med det området som din utbildning var inriktad mot?\nSaknade den certifiering, yrkesprov, gesällprov eller liknande som krävdes"
 
 [[errata.field]]
 variable = "111.37054"
@@ -4073,20 +4003,6 @@ value = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskap
 [[errata.field]]
 variable = "111.29907"
 variant = "111.1091"
-column = "F19_06"
-edition = "17802"
-expected_fields = [{ name = "definition", status = "value", value = "Färdighetsträning - använda kritiskt tänkande" }, { name = "description", status = "value", value = "Hur bedömer personen den färdighetsträning man fick i den utbildning som avslutades när det gäller att använda använda kritiskt tänkande." }, { name = "name", status = "value", value = "Färdighetsträning - använda kritiskt tänkande" }, { name = "operational_definition", status = "value", value = "F19_6: Hur nöjd eller missnöjd är du med den färdighetsträning du fick under din universitets- eller högskoleutbildning när det gäller att …använda kritiskt tänkande?" }]
-expected_period_text = "Vårterminen 2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Färdighetsträning - använda kritiskt tänkande — Hur nöjd eller missnöjd är du med den färdighetsträning du fick under din universitets- eller högskoleutbildning när det gäller att …använda kritiskt tänkande?"
-
-[[errata.field]]
-variable = "111.29907"
-variant = "111.1091"
 column = "F19_07"
 edition = "17802"
 expected_fields = [{ name = "definition", status = "value", value = "Färdighetsträning - använda kritiskt tänkande" }, { name = "description", status = "value", value = "Hur bedömer personen den färdighetsträning man fick i den utbildning som avslutades när det gäller att använda använda kritiskt tänkande." }, { name = "name", status = "value", value = "Färdighetsträning - använda kritiskt tänkande" }, { name = "operational_definition", status = "value", value = "F19_7: Hur nöjd eller missnöjd är du med den färdighetsträning du fick under din universitets- eller högskoleutbildning när det gäller att … använda yrkesspecifika kunskaper." }]
@@ -4265,20 +4181,6 @@ evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/2
 noted = "2026-10-02"
 field = "name"
 value = "Skäl varför arbete inte överensstämmer med utbildningen — Vad är skälet till att ditt arbete inte alls överensstämmer med din YH-utbildning? Har även en annan utbildning och arbetar inom det området"
-
-[[errata.field]]
-variable = "111.39569"
-variant = "111.1677"
-column = "F12_04"
-edition = "18492"
-expected_fields = [{ name = "definition", status = "value", value = "Vad är skälet till att ditt arbete inte alls överensstämmer med din YH-utbildning?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Skäl varför arbete inte överensstämmer med utbildningen" }, { name = "operational_definition", status = "value", value = "Vad är skälet till att ditt arbete inte alls överensstämmer med din YH-utbildning? Nuvarande arbete är mer attraktivt (arbetsvillkor, lön, karriär etc.)" }]
-expected_period_text = "Hösten 2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Skäl varför arbete inte överensstämmer med utbildningen — Vad är skälet till att ditt arbete inte alls överensstämmer med din YH-utbildning? Nuvarande arbete är mer attraktivt (arbetsvillkor, lön, karriär etc.)"
 
 [[errata.field]]
 variable = "111.39569"
@@ -4507,20 +4409,6 @@ value = "Orsak till att examenskrav inte nåtts — F3_5. Vilken/vilka är orsak
 [[errata.field]]
 variable = "111.29889"
 variant = "111.1091"
-column = "F3_07"
-edition = "11641"
-expected_fields = [{ name = "definition", status = "value", value = "Vad individen anser är orsaken till att han/hon ej nått examenskraven" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till att examenskrav inte nåtts" }, { name = "operational_definition", status = "value", value = "F3_7. Vilken/vilka är orsakerna till att du inte har tillräckligt med poäng för att ta ut något examensbevis? - Tappade motivationen/trivdes inte med att studera" }]
-expected_period_text = "Vårterminen 2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsak till att examenskrav inte nåtts — F3_7. Vilken/vilka är orsakerna till att du inte har tillräckligt med poäng för att ta ut något examensbevis? - Tappade motivationen/trivdes inte med att studera"
-
-[[errata.field]]
-variable = "111.29889"
-variant = "111.1091"
 column = "F3_08"
 edition = "11641"
 expected_fields = [{ name = "definition", status = "value", value = "Vad individen anser är orsaken till att han/hon ej nått examenskraven" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak till att examenskrav inte nåtts" }, { name = "operational_definition", status = "value", value = "F3_8. Vilken/vilka är orsakerna till att du inte har tillräckligt med poäng för att ta ut något examensbevis? - Ekonomiska skäl" }]
@@ -4545,48 +4433,6 @@ evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/2
 noted = "2026-10-02"
 field = "name"
 value = "Nytta med olika typer av ämnen i arbetet — Vilken nytta har du haft av yrkesämnena när du utför dina huvudsakliga arbetsuppgifter?\n\nImputerat värde om värde saknas i fråga 10."
-
-[[errata.field]]
-variable = "111.37053"
-variant = "111.1091"
-column = "F13_02"
-edition = "11641"
-expected_fields = [{ name = "definition", status = "value", value = "Orsaker till att arbetet inte överensstämmer med det område som utbildningen var inriktad mot" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsaker till ej överenstämmande arbete" }, { name = "operational_definition", status = "value", value = "F13_2: Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade den erfarenhet som krävdes" }]
-expected_period_text = "Vårterminen 2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade den erfarenhet som krävdes"
-
-[[errata.field]]
-variable = "111.37053"
-variant = "111.1091"
-column = "F13_03"
-edition = "11641"
-expected_fields = [{ name = "definition", status = "value", value = "Orsaker till att arbetet inte överensstämmer med det område som utbildningen var inriktad mot" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsaker till ej överenstämmande arbete" }, { name = "operational_definition", status = "value", value = "F13_3: Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade den legitimation eller liknande som krävdes" }]
-expected_period_text = "Vårterminen 2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade den legitimation eller liknande som krävdes"
-
-[[errata.field]]
-variable = "111.37053"
-variant = "111.1091"
-column = "F13_04"
-edition = "11641"
-expected_fields = [{ name = "definition", status = "value", value = "Orsaker till att arbetet inte överensstämmer med det område som utbildningen var inriktad mot" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsaker till ej överenstämmande arbete" }, { name = "operational_definition", status = "value", value = "F13_4: Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade kontakter till arbetsgivare" }]
-expected_period_text = "Vårterminen 2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade kontakter till arbetsgivare"
 
 [[errata.field]]
 variable = "111.37053"
@@ -4619,48 +4465,6 @@ value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna
 [[errata.field]]
 variable = "111.37053"
 variant = "111.1091"
-column = "F8_02"
-edition = "17802"
-expected_fields = [{ name = "definition", status = "value", value = "Orsaker till att arbetet inte överensstämmer med det område som utbildningen var inriktad mot" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsaker till ej överenstämmande arbete" }, { name = "operational_definition", status = "value", value = "F8_2: Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade den erfarenhet som krävdes" }]
-expected_period_text = "Vårterminen 2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade den erfarenhet som krävdes"
-
-[[errata.field]]
-variable = "111.37053"
-variant = "111.1091"
-column = "F8_03"
-edition = "17802"
-expected_fields = [{ name = "definition", status = "value", value = "Orsaker till att arbetet inte överensstämmer med det område som utbildningen var inriktad mot" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsaker till ej överenstämmande arbete" }, { name = "operational_definition", status = "value", value = "F8_3: Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade den legitimation eller liknande som krävdes" }]
-expected_period_text = "Vårterminen 2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade den legitimation eller liknande som krävdes"
-
-[[errata.field]]
-variable = "111.37053"
-variant = "111.1091"
-column = "F8_04"
-edition = "17802"
-expected_fields = [{ name = "definition", status = "value", value = "Orsaker till att arbetet inte överensstämmer med det område som utbildningen var inriktad mot" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsaker till ej överenstämmande arbete" }, { name = "operational_definition", status = "value", value = "F8_4: Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade kontakter till arbetsgivare" }]
-expected_period_text = "Vårterminen 2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Saknade kontakter till arbetsgivare"
-
-[[errata.field]]
-variable = "111.37053"
-variant = "111.1091"
 column = "F8_05"
 edition = "17802"
 expected_fields = [{ name = "definition", status = "value", value = "Orsaker till att arbetet inte överensstämmer med det område som utbildningen var inriktad mot" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsaker till ej överenstämmande arbete" }, { name = "operational_definition", status = "value", value = "F8_5: Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Ville arbeta med annat" }]
@@ -4671,20 +4475,6 @@ evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/2
 noted = "2026-10-02"
 field = "name"
 value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Ville arbeta med annat"
-
-[[errata.field]]
-variable = "111.37053"
-variant = "111.1091"
-column = "F8_06"
-edition = "17802"
-expected_fields = [{ name = "definition", status = "value", value = "Orsaker till att arbetet inte överensstämmer med det område som utbildningen var inriktad mot" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsaker till ej överenstämmande arbete" }, { name = "operational_definition", status = "value", value = "F8_6: Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Fick förändrade arbetsuppgifter pga. pandemin" }]
-expected_period_text = "Vårterminen 2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-06-30" }] }
-evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Orsaker till ej överenstämmande arbete — Vilken/vilka är orsakerna till att du har ett arbete som inte överensstämmer med det område som din utbildning var inriktad mot? - Fick förändrade arbetsuppgifter pga. pandemin"
 
 [[errata.field]]
 variable = "111.37053"

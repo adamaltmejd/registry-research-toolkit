@@ -1804,9 +1804,9 @@ as a number; a present pointer precedes a missing one. The build report's issues
 every entry.
 
 A written variable whose name is longer than the reader's 200-character search query cap
-is a `variable_name_over_search_cap` warning issue in the report ledger, never a refusal
-and never a catalog `data_warning` (#1261): the server cannot find it by exact name
-until its name is curated shorter.
+is a located `variable_name_over_search_cap` error, never a catalog `data_warning`
+(#1261): the server cannot find it by exact name. Curation shortens the name to its
+label and leaves the longer text in the definition fields; the cap does not move.
 
 ## Strict and diagnostic builds
 
