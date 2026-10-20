@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from collections import defaultdict
 from datetime import date
-from functools import cached_property
+from functools import cached_property, lru_cache
 from typing import TYPE_CHECKING, Annotated, Literal, Self
 
 from pydantic import (
@@ -121,11 +121,36 @@ def parent_fact_projection(parent: SourceParentObservation) -> ParentFactProject
         variant=parent.variant,
         edition=parent.edition,
         fields=tuple(
-            FieldExpectation(name=name, status=field.status, value=field.value)
+            _parent_field(name, field.status, field.value)
             for name in SourceFields.model_fields
             if (field := getattr(parent.fields, name)) is not None
         ),
     )
+
+
+# Captured fields are interned: compile captures every source field of each
+# guarded record (and its parents), and the real seed's cases retain ~18M
+# expectations over far fewer distinct values; one instance each kept compile's
+# heap above the 24 GB machine (#1544). Safe because the models are frozen.
+# `typed` keeps `True` and `1` apart. The two forms stay separate because pydantic
+# equality compares fields_set: a parent field always sets `value`, an absent
+# captured field never does.
+# simplify: unbounded, one entry per distinct (name, status, value) in the process;
+# bound or clear it per build if a long-lived process ever compiles many catalogs.
+@lru_cache(maxsize=None, typed=True)
+def _parent_field(
+    name: str, status: str, value: FieldScalar | None
+) -> FieldExpectation:
+    return FieldExpectation(name=name, status=status, value=value)
+
+
+@lru_cache(maxsize=None, typed=True)
+def _captured_field(
+    name: str, status: str, value: FieldScalar | None
+) -> FieldExpectation:
+    if status == "absent":
+        return FieldExpectation.model_construct(name=name, status="absent")
+    return FieldExpectation.model_construct(name=name, status=status, value=value)
 
 
 class GuardValidationContext:
@@ -1988,11 +2013,9 @@ def capture_expectations(
             # pinned), and an unknown name fails at getattr. The keyword sets match
             # the validating calls, so fields_set, equality and dumps are unchanged.
             fields=tuple(
-                FieldExpectation.model_construct(name=name, status="absent")
+                _captured_field(name, "absent", None)
                 if field is None
-                else FieldExpectation.model_construct(
-                    name=name, status=field.status, value=field.value
-                )
+                else _captured_field(name, field.status, field.value)
                 for name in fields
                 for field in (getattr(record.fields, name),)
             ),
