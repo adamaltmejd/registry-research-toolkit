@@ -2121,8 +2121,8 @@ def _fold_case_twins(
 # conflates genuinely identical cells.
 #
 # A wide-pivot member (DIA1..30 → representation DIA) maps only through a curated
-# decision naming its `member` index (#1495): exact names, never the suffix rule
-# below, which only detects. The decision is the column's one mapping; the
+# decision naming its `member` index (#1495): exact names, never a suffix rule.
+# The decision is the column's one mapping; the
 # inventory's member-set rules check the set. A member with no decision is an
 # unresolved column like any other.
 
@@ -2483,7 +2483,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     "code": "stale_declared_mapping_physical_coordinate",
                 }
             )
-    n_cols = n_mapped = n_unresolved = n_unmapped = 0
+    n_cols = n_mapped = n_unmapped = 0
     # Tables re-spelled per series edition_spelling (printed).
     n_school_year: dict[str, int] = defaultdict(int)
     # The header predates the steward spec. It stays verbatim so a regeneration
@@ -2655,11 +2655,9 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                         "code": mapping_issue,
                     }
                 )
-                n_unresolved += 1
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
             if not recs:
-                n_unresolved += 1
                 worklist["unresolved"].append(
                     {
                         "table": table,
@@ -2734,7 +2732,6 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                         ],
                     }
                 )
-                n_unresolved += 1
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
             n_mapped += 1
@@ -2796,7 +2793,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
     )
     print(
         f"  columns: {n_cols}  mapped: {n_mapped}"
-        f"  unresolved: {n_unresolved}  curated-unmapped: {n_unmapped}"
+        f"  curated-unmapped: {n_unmapped}"
     )
     for series_id, n in sorted(n_school_year.items()):
         print(f"  edition_spelling {series_id}: {n} tables re-spelled")

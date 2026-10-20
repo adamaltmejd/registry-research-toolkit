@@ -2636,8 +2636,8 @@ name concrete variants. `_default` is never a finite or unknown-scope sentinel. 
 unknown tables come from the spec's `retain_unknown` entries plus the raw census, not
 invented finite entries. Partitions use the slug grammar (`_default`, `class` and
 period-shaped values are rejected); they name shards of a delivery, not populations a
-researcher selects. An unmapped column keeps its authored reason where one is given;
-none is synthesized.
+researcher selects. An unmapped column keeps its authored reason, which every unmapped
+column in a placed table carries; none is synthesized.
 
 A mapping may carry a wide-pivot `member` index (#1495): `{ position = N }`,
 `{ year = YYYY }` or `{ month = "YYYY-MM" }`. A wide pivot delivers one variable as N
