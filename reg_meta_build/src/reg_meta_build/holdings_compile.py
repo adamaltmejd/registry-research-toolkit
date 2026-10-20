@@ -20,7 +20,6 @@ from .holdings_accounting import (
 from .inventory import (
     ColumnMapping,
     DeliveryInventory,
-    InventoryColumn,
     _edition_intervals,
     _location,
     _merge,
@@ -469,7 +468,10 @@ def compile_holdings(
             scope, partition, reason = table.period_scope, table.partition, None
             source_ref = f"policy/inventory.toml:table[{index}]"
             periods = edition_bounds(table.edition) if scope == "intervals" else ()
-            columns = table.columns
+            columns = tuple(
+                (column.name, column.unmapped_reason, column.mappings)
+                for column in table.columns
+            )
         else:
             index, entry = unknown[physical_id]
             edition, scope, partition, reason = (
@@ -480,9 +482,10 @@ def compile_holdings(
             )
             source_ref = f"{scope_locator(steward)}:retain_unknown[{index}]"
             periods = ()
+            # A retained-unknown table is disposed as a whole by its
+            # `retain_unknown_reason`; its columns carry no reason of their own.
             columns = tuple(
-                InventoryColumn(name=name)
-                for name in sorted(accounting.columns[physical_id])
+                (name, None, ()) for name in sorted(accounting.columns[physical_id])
             )
         conn.execute(
             "INSERT INTO holding_table(table_id, physical_id, scope, edition_json, partition, retain_unknown_reason, source_ref) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -505,16 +508,14 @@ def compile_holdings(
             if physical_id in logical
             else {}
         )
-        for column in sorted(columns, key=lambda c: c.name):
+        for name, unmapped_reason, mappings in sorted(columns, key=lambda c: c[0]):
             column_id += 1
             conn.execute(
                 "INSERT INTO holding_column(column_id, table_id, name, unmapped_reason) VALUES (?, ?, ?, ?)",
-                (column_id, table_id, column.name, column.unmapped_reason),
+                (column_id, table_id, name, unmapped_reason),
             )
-            literals = (
-                literal_columns[column.name].mappings if physical_id in logical else ()
-            )
-            for literal, mapping in zip(literals, column.mappings, strict=True):
+            literals = literal_columns[name].mappings if physical_id in logical else ()
+            for literal, mapping in zip(literals, mappings, strict=True):
                 member = mapping.member
                 lo, hi = (member and member.bounds()) or (None, None)
                 window_lo, window_hi = (

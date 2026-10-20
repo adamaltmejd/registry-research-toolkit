@@ -1805,21 +1805,6 @@ def cmd_flavor(args: argparse.Namespace) -> None:
 # --- steward inventory resolution ------------------------------------------
 
 
-def _steward_pivot_base(col: str) -> str | None:
-    """Concept base of a wide-pivot column (`DIA1..30`, `Hushallsid_2011`,
-    `LonFInkJan`) — the stem with its trailing index / year / month token
-    stripped. Returns None when there is no such token. A bare stem is NOT yet a
-    pivot: the caller only collapses onto the base when ≥2 sibling columns in the
-    same holding share it (a true wide pivot has many indexed members), which
-    keeps a lone digit-suffixed column from spuriously over-admitting a base."""
-    months = "Jan|Feb|Mars|Mar|Apr|Maj|Juni|Juli|Aug|Sep|Okt|Nov|Dec"
-    for pat in (rf"(?:{months})$", r"_?\d{4}$", r"\d+$"):
-        m = re.search(pat, col)
-        if m and m.start() > 0:
-            return col[: m.start()].rstrip("_")
-    return None
-
-
 def _steward_load_db(db_path: Path):
     """Build the column-resolution index from a FLAVORED DB.
 
@@ -2138,14 +2123,8 @@ def _fold_case_twins(
 # A wide-pivot member (DIA1..30 → representation DIA) maps only through a curated
 # decision naming its `member` index (#1495): exact names, never the suffix rule
 # below, which only detects. The decision is the column's one mapping; the
-# inventory's member-set rules check the set.
-# simplify: a detected member with no decision is left UNMAPPED with
-# `_PIVOT_REASON` as an interim hold, so the gap stays explicit; delete the
-# branch once no SWECOV pivot member is left uncurated.
-_PIVOT_REASON = (
-    "Wide-pivot member of {base}: the inventory has no cell shape for N physical"
-    " columns serving one variable (#1495)."
-)
+# inventory's member-set rules check the set. A member with no decision is an
+# unresolved column like any other.
 
 
 def _inventory_mapping_records(
@@ -2504,7 +2483,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     "code": "stale_declared_mapping_physical_coordinate",
                 }
             )
-    n_cols = n_mapped = n_pivot = n_unresolved = n_unmapped = 0
+    n_cols = n_mapped = n_unresolved = n_unmapped = 0
     # Tables re-spelled per series edition_spelling (printed).
     n_school_year: dict[str, int] = defaultdict(int)
     # The header predates the steward spec. It stays verbatim so a regeneration
@@ -2543,17 +2522,6 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
         # auto-mapped column cannot pull the series into a second register.
         coords = set(table_variants[table])
         cols = sorted(census[table])
-        base_counts: dict[str, int] = defaultdict(int)
-        for c in cols:
-            b = _steward_pivot_base(LOPNR_PREFIX.sub("", c))
-            if b:
-                base_counts[b] += 1
-        # The unsuffixed base as a physical column is a pivot member too: a lone
-        # `ersk1` beside `ersk` is a pivot of `ersk` (#1302 C5). Counting only;
-        # `ersk` itself still maps directly when the catalog matches it.
-        for c in cols:
-            if (s := LOPNR_PREFIX.sub("", c)) in base_counts:
-                base_counts[s] += 1
         lines += ["", "[[table]]", f"id = {_toml_str(table)}"]
         lines.append(f"edition = {_toml_edition(edition)}")
         if edition == YEAR_INDEPENDENT_EDITION:
@@ -2691,18 +2659,6 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                 lines += ["", "[[table.column]]", f"name = {_toml_str(col)}"]
                 continue
             if not recs:
-                base = _steward_pivot_base(LOPNR_PREFIX.sub("", col))
-                if base and base_counts[base] >= 2:
-                    hit = any(by_coordcol[(coord, base.upper())] for coord in coords)
-                    if hit:
-                        n_pivot += 1  # simplify: pivots stay unmapped (header)
-                        lines += [
-                            "",
-                            "[[table.column]]",
-                            f"name = {_toml_str(col)}",
-                            f"unmapped_reason = {_toml_str(_PIVOT_REASON.format(base=base))}",
-                        ]
-                        continue
                 n_unresolved += 1
                 worklist["unresolved"].append(
                     {
@@ -2819,6 +2775,14 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
             f"positive delivery-owner scope or a case-only twin decision; see "
             f"{wl_path}. Inventory not replaced."
         )
+    # The inventory refuses a column with neither a mapping nor an
+    # unmapped_reason (#1294), so an unresolved column needs a decision first.
+    if worklist["unresolved"]:
+        raise SystemExit(
+            f"{len(worklist['unresolved'])} physical column(s) resolve to no "
+            f"catalog variable and need a spec decision (a mapping, unmap or "
+            f"hold); see {wl_path}. Inventory not replaced."
+        )
     dest.write_text("\n".join(lines) + "\n", encoding="utf-8")
     n_excluded = len(excluded & set(census))
     n_tables = (
@@ -2831,7 +2795,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
         f" {len(worklist['retained_unknown'])} retained unknown)"
     )
     print(
-        f"  columns: {n_cols}  mapped: {n_mapped}  pivot-unmapped: {n_pivot}"
+        f"  columns: {n_cols}  mapped: {n_mapped}"
         f"  unresolved: {n_unresolved}  curated-unmapped: {n_unmapped}"
     )
     for series_id, n in sorted(n_school_year.items()):

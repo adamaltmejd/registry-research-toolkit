@@ -210,16 +210,16 @@ def _resolved_records(tmp_path: Path, db: Path, columns: list[str]) -> list[dict
     """Every resolution record `cmd_inventory` holds for `columns`, read through a
     table of an edition (2017) that no window in these databases covers: each
     column that resolves is refused with its records as `candidate_records`, and
-    a column that resolves to nothing is emitted unmapped and refuses nothing."""
-    try:
-        steward = _run_inventory(tmp_path, db, "T2017", columns)
-    except SystemExit:
-        entries = _inventory_worklist(tmp_path)["mapping_scope_needed"]
-        assert {entry["code"] for entry in entries} == {"no_covering_delivery_owner"}
-        return [record for entry in entries for record in entry["candidate_records"]]
-    table = load_delivery_inventory(steward / "inventory.toml").tables[0]
-    assert [column.mappings for column in table.columns] == [()] * len(columns)
-    return []
+    a column that resolves to nothing goes to the unresolved worklist."""
+    with pytest.raises(SystemExit, match="Inventory not replaced"):
+        _run_inventory(tmp_path, db, "T2017", columns)
+    worklist = _inventory_worklist(tmp_path)
+    entries = worklist["mapping_scope_needed"]
+    if not entries:
+        assert [entry["column"] for entry in worklist["unresolved"]] == columns
+        return []
+    assert {entry["code"] for entry in entries} == {"no_covering_delivery_owner"}
+    return [record for entry in entries for record in entry["candidate_records"]]
 
 
 def test_inventory_dated_alias_intersects_states_even_if_literal_was_canonical(

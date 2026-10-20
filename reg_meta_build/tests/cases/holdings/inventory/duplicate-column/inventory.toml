@@ -12,3 +12,4 @@ variable = "scb/lisa/kon"
 representation = "Kon"
 [[table.column]]
 name = "Kon"
+unmapped_reason = "Owner not yet curated"
