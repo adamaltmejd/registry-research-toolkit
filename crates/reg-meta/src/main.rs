@@ -166,6 +166,7 @@ async fn main() {
                 catalog,
                 docs,
                 steward: Some(steward),
+                origin: public_host.as_ref().map(|host| format!("https://{host}")),
                 version: VERSION,
             };
             serve(
@@ -181,6 +182,7 @@ async fn main() {
                 catalog,
                 docs,
                 steward: None,
+                origin: None,
                 version: VERSION,
             };
             mcp::stdio(Arc::new(server)).await;

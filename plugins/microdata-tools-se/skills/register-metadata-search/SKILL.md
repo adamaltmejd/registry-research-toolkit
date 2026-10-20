@@ -8,8 +8,10 @@ description: Query Swedish register metadata (SCB, Socialstyrelsen and other hol
 
 # Register metadata queries
 
-The plugin's `catalog` MCP server (hosted at `https://catalog.swecov.se/mcp`) answers
-questions about Swedish administrative registers. It holds structural metadata —
+The plugin's `catalog` MCP server answers questions about Swedish administrative
+registers. It is the global catalog (`https://catalog.swecov.se/mcp`) unless the user
+points it at a steward's catalog, such as SWECOV's (`https://data.swecov.se/mcp`);
+`show` with no `ref` names the catalog it serves. It holds structural metadata —
 registers, variables, value codes, classifications, documentation — not microdata.
 
 ## Tools
@@ -27,7 +29,7 @@ Each tool's parameters are in its MCP schema; this is what each one is for.
   | `resolve`  | Delivered column names (data-file headers) to the variables that deliver them.                                                 |
   | `graph`    | `operation`: `graph` (succession graph) or `lineage` (source states feeding a variable).                                       |
   | `docs`     | `operation`: `docs_search`, `docs_get` (one documentation entry) or `docs_related` (a register's rehosted PDFs).               |
-  | `order`    | `operation`: `validate` or `order` a `project_data.json` document (`project` argument).                                        |
+  | `order`    | `operation`: `validate` or `order` a `project_data.json` document (`project` argument); see the `register-project` skill.      |
 
 ## Conventions
 
@@ -39,8 +41,10 @@ Each tool's parameters are in its MCP schema; this is what each one is for.
   `2019-01-01..2019-06-30`. `diff` takes `from` and `to` in the same grammar.
 - **Paging.** Open-ended lists return `{"items": [...], "next_cursor": ...}`. Pass
   `next_cursor` back as `cursor`; `limit` defaults to 50 (max 200).
-- **Scope.** Leave `scope` unset. The hosted catalog serves `reference`; `holdings`
-  needs a steward catalog and fails with `scope_unavailable` there.
+- **Scope.** Leave `scope` unset: a steward catalog answers from `holdings` (what the
+  steward holds), the global catalog from `reference`. On a steward catalog, repeat with
+  `scope: "reference"` when asked what exists beyond the holdings; `holdings` fails with
+  `scope_unavailable` on the global catalog.
 
 ## Responses
 

@@ -135,8 +135,10 @@ the Dockerfile with `curl`, SHA-256 verification against GitHub's asset digests,
 x86_64 with SHA-256 checksums, used only for local `reg-meta mcp`; the catalog is
 downloaded with `curl` and `zstd`. There is no PyPI package and no `fetch` run mode.
 Windows agents use hosted MCP; a local Windows binary is added only if it builds and
-runs without special effort. The `microdata-tools-se` plugin declares the MCP server:
-the hosted endpoint by default, the local binary as the alternative.
+runs without special effort. The `microdata-tools-se` plugin declares one hosted MCP
+server whose URL is a user setting: the global catalog by default, a hosted steward
+catalog (`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the
+agent's MCP configuration by hand.
 
 ## Agent and web interface
 
@@ -186,8 +188,10 @@ Rules:
 
 **Hosted MCP.** `serve` exposes `/mcp` at catalog.swecov.se, so agents need no install
 and no 1.2 GB download. Its rate limits are sized for tool calls, separately from the
-SPA's. Private steward catalogs are never served there; they stay on local
-`reg-meta mcp`.
+SPA's. A steward catalog is served over hosted MCP when its artifact is already public,
+as SWECOV's is (data.swecov.se); a private steward catalog stays on local
+`reg-meta mcp`. A published server knows its origin (`--public-host`) and `show`'s root
+reports it as the catalog's webapp, where a drafted project is opened and ordered.
 
 ## A provider-neutral substrate
 
@@ -434,6 +438,14 @@ complete status, a `generation_id` and, for a steward, a slug steward id. Anythi
 fails before serving, with no fallback. The file is opened read-only and `immutable=1`:
 published files are replaced by rename, never changed in place. The docs database beside
 it is optional; only docs operations need it.
+
+**Three layers.** `reference` is everything in the catalog; `holdings` is what the
+steward holds; a project is what one user has: a `project_data.json` against a steward
+(`steward: <id>`, ordered from its holdings) or against the global catalog
+(`steward: global`, ordered from the register holders). The project layer is the user's
+file, read and validated client-side; the server has no project scope. Validation and
+order answer for the catalog that serves them, so a project is checked on its own
+steward's server: another catalog's answer differs without failing.
 
 A steward artifact defaults to `holdings` scope, a catalog artifact to `reference`;
 explicit `holdings` on a catalog is `scope_unavailable`. Reference means every node of

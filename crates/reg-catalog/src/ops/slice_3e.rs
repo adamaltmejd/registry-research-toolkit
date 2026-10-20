@@ -11,13 +11,9 @@ pub const OPERATIONS: &[Operation] = &[
         name: "validate",
         paths: &["/api/project/validate"],
         tool: Some("order"),
-        description: "Validate a `project_data.json` document (the JSON body; the `project` \
-            argument over MCP): every issue, with `ok` false when one is an error. A \
-            `schema_version` other than 3.0.0 is reported alone; then the document's \
-            structure, then each source's variant and period and each binding's variable, \
-            availability in the period (a narrower availability is an `info` clip), \
-            representation and value set, and on a steward catalog what the steward holds. \
-            An invalid project is a result, not an error.",
+        description: "Validate a `project_data.json` document (the JSON body; the \
+            `project` argument over MCP): every issue, `ok` false when one is an error. To \
+            draft a project, use the `register-project` skill of the microdata-tools-se plugin.",
         params: &[Param::required("project", Type::Project)],
         // simplify: unused, a body operation is answered uncached; give `Operation` a
         // method if a cached POST ever appears.
@@ -29,15 +25,9 @@ pub const OPERATIONS: &[Operation] = &[
         name: "order",
         paths: &["/api/project/order"],
         tool: Some("order"),
-        description: "The order manifest of a `project_data.json` document (the JSON body; \
-            the `project` argument over MCP): per source and binding, each table and \
-            column that delivers it, clipped to where the binding is available (each \
-            clip listed), from the steward's holdings on a steward catalog and by \
-            canonical column on the global catalog. A project `validate` rejects \
-            structurally is `project_invalid`; any finding that leaves part of the \
-            request undeliverable blocks the whole order (`order_blocked`, with every \
-            finding). POST /api/project/order/manifest serves the same manifest as the \
-            exact `order.json` bytes.",
+        description: "Preview the order manifest of a `project_data.json` document: the \
+            table and column delivering each binding, clipped where unavailable; a \
+            partly undeliverable request is `order_blocked`.",
         params: &[Param::required("project", Type::Project)],
         // simplify: unused, as `validate`'s.
         cache: Cache::Revalidate,

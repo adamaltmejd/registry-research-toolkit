@@ -20,7 +20,7 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
 
 [env]
   # The hosted MCP endpoint (crates/DESIGN.md, "Hosted MCP"): `/mcp` admits this
-  # `Host` besides loopback. Only the global catalog serves it. The edge token
+  # `Host` besides loopback; fly.swecov.toml names data.swecov.se. The edge token
   # (REG_META_EDGE_TOKEN, a Fly secret matching the edge worker's EDGE_TOKEN)
   # lets `/mcp` rate-limit each edge client by its own address.
   REG_META_PUBLIC_HOST = "catalog.swecov.se"

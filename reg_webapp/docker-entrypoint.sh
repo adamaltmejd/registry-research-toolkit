@@ -21,7 +21,7 @@ READY_DEADLINE=60
 MAX_TIME=10
 
 # `/mcp` admits the public host's `Host` header only where the deployment names one
-# (the global catalog; the SWECOV deployment serves no public MCP).
+# (fly.toml and fly.swecov.toml both do).
 # `--mmap-size 0`: on Fly's throttled rootfs, mmap read-around inflates cold reads.
 # Measured 2026-10-09 (0.44.0, 15-request cold mix): 592 MB / 34 s with the default
 # mmap vs 320 MB / 21 s without; warm latency is unchanged (#1296).

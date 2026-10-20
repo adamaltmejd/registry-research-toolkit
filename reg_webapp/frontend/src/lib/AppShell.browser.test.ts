@@ -23,6 +23,11 @@ vi.mock("./api", async (importOriginal) => {
 function rootShow(...providers: string[]): RootShow {
   return {
     kind: "root",
+    catalog: {
+      id: "global",
+      reg_meta_version: "0.0.0",
+      project_schema_version: "3.0.0",
+    },
     children: providers.map((fqid) => ({
       kind: "provider" as const,
       fqid,

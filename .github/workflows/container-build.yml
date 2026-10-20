@@ -672,10 +672,12 @@ jobs:
       # public host, or the tool stops answering.
       - name: Public MCP smoke
         if: steps.head.outputs.skip != 'true'
-        run: |
+        env:
+          EDGE_HOST: catalog.swecov.se
+        run: &public-mcp-smoke |
           set -euo pipefail
           rpc() {
-            curl -sfS https://catalog.swecov.se/mcp \
+            curl -sfS "https://$EDGE_HOST/mcp" \
               -H 'accept: application/json, text/event-stream' \
               -H 'content-type: application/json' \
               -H 'mcp-protocol-version: 2025-11-25' \
@@ -743,7 +745,7 @@ jobs:
           [ "$code" = 422 ] || { echo "FATAL: the empty order answered $code" >&2; cat ordered.json >&2; exit 1; }
           jq -e '.error.code == "order_blocked" and any(.error.fields.findings[]; .code == "project_empty")' ordered.json
 
-  # Edge worker (SPA + /api passthrough) for data.swecov.se. Separate Worker
+  # Edge worker (SPA + /api and /mcp passthrough) for data.swecov.se. Separate Worker
   # deployment from catalog.swecov.se so each origin can bump its own cache
   # generation after its own Fly deploy succeeds.
   edge-deploy-swecov:
@@ -810,3 +812,10 @@ jobs:
           EDGE_HOST: data.swecov.se
           DEPLOY_VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
         run: *edge-cache-probe
+      # The SWECOV catalog's hosted MCP endpoint (crates/DESIGN.md, "Hosted MCP"),
+      # the same smoke as the global one.
+      - name: SWECOV public MCP smoke
+        if: steps.head.outputs.skip != 'true'
+        env:
+          EDGE_HOST: data.swecov.se
+        run: *public-mcp-smoke

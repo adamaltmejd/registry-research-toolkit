@@ -26,7 +26,10 @@ pub const CONTRACT_VERSION: &str = "4.0.0";
 pub const SCHEMA: (u32, u32) = (12, 0);
 const DB_FILENAME: &str = "reg_meta.db";
 
-/// The read scope; every read takes it.
+/// `holdings`: what this steward holds, the default on a steward catalog and
+/// unavailable on the global one. `reference`: every register in the catalog. Answer
+/// from the default; repeat with `reference` when asked what exists elsewhere or when
+/// holdings comes up empty, and say the data exists but is not held.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, ToSchema)]
 #[serde(rename_all = "lowercase")]
 pub enum Scope {

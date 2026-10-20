@@ -23,6 +23,11 @@ vi.mock("./api", async (importOriginal) => {
 function catalogRoot(): RootShow {
   return {
     kind: "root",
+    catalog: {
+      id: "global",
+      reg_meta_version: "0.0.0",
+      project_schema_version: "3.0.0",
+    },
     children: [
       { kind: "provider", fqid: "scb", name: "SCB" },
       { kind: "provider", fqid: "sos", name: "SoS" },

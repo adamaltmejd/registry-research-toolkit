@@ -1,12 +1,14 @@
 # microdata-tools-se
 
 Agent plugin for working with Swedish administrative register microdata (SCB,
-Socialstyrelsen, and other holders). It declares one MCP server and bundles one skill:
+Socialstyrelsen, and other holders). It declares the hosted catalog MCP server and
+bundles two skills:
 
-  | Component                  | Purpose                                                                        |
-  | -------------------------- | ------------------------------------------------------------------------------ |
-  | `catalog` MCP server       | The hosted register metadata catalog at `https://catalog.swecov.se/mcp`.       |
-  | `register-metadata-search` | Skill: how to query variables, value codes and schemas with the catalog tools. |
+  | Component                  | Purpose                                                                                                                                |
+  | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+  | `catalog` MCP server       | The hosted register metadata catalog: `https://catalog.swecov.se/mcp` (every register) by default, or SWECOV's holdings (below).       |
+  | `register-metadata-search` | Skill: how to query variables, value codes and schemas with the catalog tools.                                                         |
+  | `register-project`         | Skill, loaded on demand: drafting a `project_data.json` for ordering in the catalog's webapp, and answering questions about a project. |
 
 Nothing to install beyond the plugin: the tools run on the hosted server.
 
@@ -32,6 +34,24 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 
 Then open the Codex plugin marketplace, find `microdata-tools-se` under
 `registry-research-toolkit`, and install it.
+
+## SWECOV's catalog
+
+SWECOV's catalog answers from what SWECOV holds, at `https://data.swecov.se/mcp`.
+
+- **Claude Code:** set the plugin's `catalog_url` setting (asked when the plugin is
+  enabled, and in `/config`) to `https://data.swecov.se/mcp`.
+
+- **Codex:** the plugin also declares a `swecov` server, off by default. Turn it on in
+  `~/.codex/config.toml`:
+
+  ```toml
+  [plugins."microdata-tools-se@registry-research-toolkit".mcp_servers.swecov]
+  enabled = true
+  ```
+
+  The `enabled` field of a plugin's MCP server is read from Codex's source, not its
+  documentation; recheck it after a Codex upgrade.
 
 ## Local catalog
 

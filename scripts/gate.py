@@ -143,8 +143,15 @@ def frontend() -> None:
         sys.exit(f"gate: {wasm.name} is over its gzipped budget; see WASM_GZ_BUDGET")
     for script in ("check", "lint", "test", "build", "gen:types"):
         run(["bun", "run", script], cwd=FRONTEND)
-    # A diff means the SPA's types drifted from the committed API contract.
-    run("git diff --exit-code -- src/lib/api-types-rust.ts", cwd=FRONTEND)
+    # A diff means the SPA's types, or the plugin's project_data.json schema, drifted
+    # from the committed API contract. `ls-files` fails on an untracked one, which
+    # `git diff` ignores.
+    generated = (
+        "src/lib/api-types-rust.ts"
+        " ../../plugins/microdata-tools-se/skills/register-project/project_data.schema.json"
+    )
+    run(f"git ls-files --error-unmatch -- {generated}", cwd=FRONTEND)
+    run(f"git diff --exit-code -- {generated}", cwd=FRONTEND)
     # The built app's bootstrap: mounts, serves the .wasm, alerts without it.
     run(["bun", "scripts/smoke_build.ts"], cwd=FRONTEND)
 

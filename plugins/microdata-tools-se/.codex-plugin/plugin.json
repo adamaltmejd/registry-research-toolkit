@@ -1,7 +1,7 @@
 {
   "name": "microdata-tools-se",
   "description": "Tooling for working with Swedish administrative register microdata — register metadata search through the hosted catalog MCP server.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se",
@@ -16,6 +16,11 @@
     "catalog": {
       "type": "http",
       "url": "https://catalog.swecov.se/mcp"
+    },
+    "swecov": {
+      "type": "http",
+      "url": "https://data.swecov.se/mcp",
+      "enabled": false
     }
   },
   "interface": {
