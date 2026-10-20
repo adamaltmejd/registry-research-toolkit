@@ -1,6 +1,8 @@
 // Edge router: origin paths pass through to the incoming hostname's zone
 // origin (the matching Fly app running `reg-meta serve`), everything else is
-// the SPA (static assets with single-page-application fallback).
+// the SPA (static assets with single-page-application fallback). A deployment
+// without an ASSETS binding (wrangler.jsonc, the global catalog's MCP-only host)
+// forwards `/mcp` alone and answers everything else 404.
 //
 // `fetch(request)` on the same zone is a subrequest to the DNS origin — it does
 // NOT re-enter this worker, and it runs through Cloudflare's cache, so the
@@ -8,10 +10,11 @@
 // caching exactly as a classic proxied origin (#220).
 
 interface Env {
-  ASSETS: Fetcher;
+  ASSETS?: Fetcher;
   DEPLOY_VERSION: string;
   // "true" where the deployment's catalog is served over hosted MCP: the global
   // catalog and a steward whose artifact is public (crates/DESIGN.md, "Hosted MCP").
+  // An MCP-only deployment (no ASSETS) sets it too.
   ROUTE_MCP?: string;
   // Secret (`wrangler secret put EDGE_TOKEN`), equal to the origin's
   // REG_META_EDGE_TOKEN: it proves a request came through this worker, so the
@@ -19,7 +22,7 @@ interface Env {
   EDGE_TOKEN?: string;
 }
 
-// LOCKSTEP: must match assets.run_worker_first in wrangler.jsonc (same set,
+// LOCKSTEP: must match assets.run_worker_first in wrangler.swecov.jsonc (same set,
 // glob syntax there): the paths `reg-meta serve` answers. `/mcp` joins only where
 // ROUTE_MCP is set — a POST (never a navigation) reaches the worker even without
 // run_worker_first, so a worker without it must refuse to forward it here.
@@ -45,25 +48,26 @@ const VERSION_PARAM = "__edge_v";
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    const toOrigin =
-      ORIGIN_PATHS.some((re) => re.test(url.pathname)) ||
-      (env.ROUTE_MCP === "true" && MCP_PATH.test(url.pathname));
+    const mcp = env.ROUTE_MCP === "true" && MCP_PATH.test(url.pathname);
+    const toOrigin = mcp || (env.ASSETS && ORIGIN_PATHS.some((re) => re.test(url.pathname)));
     if (toOrigin) {
       url.searchParams.set(VERSION_PARAM, env.DEPLOY_VERSION);
       const forwarded = new Request(url, request);
       if (env.EDGE_TOKEN) forwarded.headers.set("x-edge-token", env.EDGE_TOKEN);
       return fetch(forwarded);
     }
+    if (!env.ASSETS) return notFound();
     const response = await env.ASSETS.fetch(request);
     if (
       ASSETS_PATH.test(url.pathname) &&
       response.headers.get("content-type")?.startsWith("text/html")
     ) {
-      return new Response("Not found", {
-        status: 404,
-        headers: { "cache-control": "no-store" },
-      });
+      return notFound();
     }
     return response;
   },
 } satisfies ExportedHandler<Env>;
+
+function notFound(): Response {
+  return new Response("Not found", { status: 404, headers: { "cache-control": "no-store" } });
+}

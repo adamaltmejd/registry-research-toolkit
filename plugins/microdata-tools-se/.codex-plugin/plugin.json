@@ -1,7 +1,7 @@
 {
   "name": "microdata-tools-se",
   "description": "Tooling for working with Swedish administrative register microdata — register metadata search through the hosted catalog MCP server.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se",
@@ -15,7 +15,7 @@
   "mcpServers": {
     "catalog": {
       "type": "http",
-      "url": "https://catalog.swecov.se/mcp"
+      "url": "https://reg-meta.vqv.uk/mcp"
     },
     "swecov": {
       "type": "http",
@@ -26,7 +26,7 @@
   "interface": {
     "displayName": "Microdata Tools SE",
     "shortDescription": "SCB metadata search",
-    "longDescription": "Query Swedish register metadata (SCB, Socialstyrelsen and other holders) through the hosted catalog MCP server at catalog.swecov.se.",
+    "longDescription": "Query Swedish register metadata (SCB, Socialstyrelsen and other holders) through the hosted catalog MCP server at reg-meta.vqv.uk.",
     "developerName": "Adam Altmejd",
     "category": "research",
     "capabilities": ["Interactive"],

@@ -339,9 +339,10 @@ If one failed, fix the cause on main and upload by hand from the release commit:
 
 ### 11. Verify the deployed artifacts
 
-`GET /api/context` on `catalog.swecov.se` and `data.swecov.se` must report the
-generation recorded in step 8, with default scope `reference` (catalog) and `holdings`
-(steward); on the catalog, `GET /api/catalog?scope=holdings` must refuse with
+`GET /api/context` on `data.swecov.se` must report the generation recorded in step 8,
+with default scope `holdings`. The global catalog has no public `/api`: over
+`https://reg-meta.vqv.uk/mcp`, `show` with no `ref` must carry that generation in its
+`meta` with scope `reference`, and `show` with `scope: "holdings"` must refuse with
 `scope_unavailable`. Spot-check a scoped catalog or search read and a known order, and
 record what the checks exercised. Never regenerate or commit an inventory after
 publication.

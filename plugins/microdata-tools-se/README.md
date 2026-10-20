@@ -6,7 +6,7 @@ bundles two skills:
 
   | Component                  | Purpose                                                                                                                                |
   | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-  | `catalog` MCP server       | The hosted register metadata catalog: `https://catalog.swecov.se/mcp` (every register) by default, or SWECOV's holdings (below).       |
+  | `catalog` MCP server       | The hosted register metadata catalog: `https://reg-meta.vqv.uk/mcp` (every register) by default, or SWECOV's holdings (below).         |
   | `register-metadata-search` | Skill: how to query variables, value codes and schemas with the catalog tools.                                                         |
   | `register-project`         | Skill, loaded on demand: drafting a `project_data.json` for ordering in the catalog's webapp, and answering questions about a project. |
 

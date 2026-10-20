@@ -31,7 +31,7 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 
 then install `microdata-tools-se` from the plugin marketplace UI.
 
-The plugin connects to the hosted catalog MCP server at `https://catalog.swecov.se/mcp`
+The plugin connects to the hosted catalog MCP server at `https://reg-meta.vqv.uk/mcp`
 (or SWECOV's, `https://data.swecov.se/mcp`, as a setting) and bundles two skills:
 `register-metadata-search`, which documents its tools, and `register-project`, for
 drafting a `project_data.json`. Nothing else to install.
@@ -43,13 +43,13 @@ drafting a `project_data.json`. Nothing else to install.
 Point any MCP client at the hosted catalog server:
 
 ```text
-https://catalog.swecov.se/mcp
+https://reg-meta.vqv.uk/mcp
 ```
 
 SWECOV's catalog, which answers from SWECOV's holdings, is at
 `https://data.swecov.se/mcp`. The agent plugin above does this for you (its catalog URL
-is a setting). The catalogs are browsable at <https://catalog.swecov.se> and
-<https://data.swecov.se>.
+is a setting). SWECOV's catalog is browsable at <https://data.swecov.se>; the global
+catalog's webapp runs locally only (`reg_webapp/dev/dev.sh`).
 
 ### Local server
 

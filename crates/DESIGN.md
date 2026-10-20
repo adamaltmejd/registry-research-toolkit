@@ -186,7 +186,7 @@ Rules:
   context. Fine-grained HTTP routes for the SPA map onto the same operations.
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
 
-**Hosted MCP.** `serve` exposes `/mcp` at catalog.swecov.se, so agents need no install
+**Hosted MCP.** `serve` exposes the global catalog's `/mcp` at reg-meta.vqv.uk, so agents need no install
 and no 1.2 GB download. Its rate limits are sized for tool calls, separately from the
 SPA's. A steward catalog is served over hosted MCP when its artifact is already public,
 as SWECOV's is (data.swecov.se); a private steward catalog stays on local

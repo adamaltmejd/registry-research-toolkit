@@ -9,7 +9,7 @@ description: Query Swedish register metadata (SCB, Socialstyrelsen and other hol
 # Register metadata queries
 
 The plugin's `catalog` MCP server answers questions about Swedish administrative
-registers. It is the global catalog (`https://catalog.swecov.se/mcp`) unless the user
+registers. It is the global catalog (`https://reg-meta.vqv.uk/mcp`) unless the user
 points it at a steward's catalog, such as SWECOV's (`https://data.swecov.se/mcp`);
 `show` with no `ref` names the catalog it serves. It holds structural metadata —
 registers, variables, value codes, classifications, documentation — not microdata.
