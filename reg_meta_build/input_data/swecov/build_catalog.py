@@ -3071,7 +3071,8 @@ def main() -> None:
         "--out",
         type=Path,
         required=True,
-        help="output dir for inventory.toml (the candidate's policy/)",
+        help="scratch output dir for inventory.toml and the derived/ worklists;"
+        " copy inventory.toml into the candidate's policy/ to accept it",
     )
     errata_p = sub.add_parser(
         "errata",
@@ -3083,7 +3084,8 @@ def main() -> None:
         "--out",
         type=Path,
         required=True,
-        help="dir holding the generated inventory.toml (the candidate's policy/)",
+        help="the inventory step's scratch --out (holds inventory.toml); the"
+        " worklist is written under its derived/",
     )
     args = parser.parse_args()
     {

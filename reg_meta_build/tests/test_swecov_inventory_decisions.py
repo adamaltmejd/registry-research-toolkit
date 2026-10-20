@@ -220,7 +220,7 @@ def test_unmap_refuses_blank_reason_before_writing(
             decisions='[[column]]\ncolumn = "T_kolumn"\nunmap = "  "\n',
         )
     assert not (tmp_path / "steward/inventory.toml").exists()
-    assert not (tmp_path / "derived").exists()
+    assert not (tmp_path / "steward/derived").exists()
 
 
 @pytest.mark.parametrize(
