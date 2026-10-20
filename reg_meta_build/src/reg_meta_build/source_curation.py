@@ -139,14 +139,14 @@ def parent_fact_projection(parent: SourceParentObservation) -> ParentFactProject
 # bound or clear it per build if a long-lived process ever compiles many catalogs.
 @lru_cache(maxsize=None, typed=True)
 def _parent_field(
-    name: str, status: str, value: FieldScalar | None
+    name: str, status: ExpectedFieldState, value: FieldScalar | None
 ) -> FieldExpectation:
     return FieldExpectation(name=name, status=status, value=value)
 
 
 @lru_cache(maxsize=None, typed=True)
 def _captured_field(
-    name: str, status: str, value: FieldScalar | None
+    name: str, status: ExpectedFieldState, value: FieldScalar | None
 ) -> FieldExpectation:
     if status == "absent":
         return FieldExpectation.model_construct(name=name, status="absent")
