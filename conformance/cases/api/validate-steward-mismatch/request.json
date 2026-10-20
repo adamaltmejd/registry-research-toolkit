@@ -1,0 +1,30 @@
+{
+  "note": "Fails if `validate` answers `ok` for a document of another steward (#1703): `validate-case-twin`'s document, `ok` on its own steward's catalog, with steward `global`. The only issue must be the located `steward_mismatch` error, with `order`'s refusal message (`order-errors`).",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "3.0.0",
+        "steward": "global",
+        "reg_meta_version": "5.1.0",
+        "name": "Synthetic validation",
+        "sources": [
+          {
+            "name": "source",
+            "register_variant": "scb/example/annual",
+            "period": 2019,
+            "bindings": [
+              {
+                "variable": "scb/example/value",
+                "type": "numeric",
+                "representation": "value"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

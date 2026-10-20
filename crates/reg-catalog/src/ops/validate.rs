@@ -36,6 +36,17 @@ pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value
                 steward: server.catalog.is_steward(),
                 issues: Vec::new(),
             };
+            // Each catalog answers from its own holdings, so a document of another
+            // steward would validate here as confidently and wrongly as it would
+            // order; `order` refuses it with the same message.
+            if project.steward != server.catalog.name() {
+                semantic.push(
+                    IssueLevel::Error,
+                    "steward_mismatch",
+                    "/steward".into(),
+                    steward_mismatch(&project.steward, server.catalog.name()),
+                );
+            }
             for (i, source) in project.sources.iter().enumerate() {
                 semantic.source(&format!("/sources/{i}"), source)?;
             }
@@ -57,6 +68,17 @@ pub(super) fn project(params: &Params) -> Result<Result<ProjectData, ValidationR
         .filter(Value::is_object)
         .ok_or_else(|| Error::invalid_parameter("project"))?;
     Ok(check(&raw))
+}
+
+/// The `steward_mismatch` message, `validate`'s issue and `order`'s refusal.
+pub(super) fn steward_mismatch(wanted: &str, served: &str) -> String {
+    let wanted = quote(wanted);
+    format!(
+        "this project's steward is {wanted} and this deployment serves the {} steward; \
+         order the project from the deployment that serves {wanted}. Its steward is \
+         provenance — no deployment rewrites it to match its own",
+        quote(served)
+    )
 }
 
 /// The representations the steward holds variable `id` in under `variant`, in

@@ -195,15 +195,9 @@ fn materialize(server: &Server, params: &Params) -> Result<Manifest, Error> {
     // Provenance is checked before anything resolves; no deployment rewrites it.
     let steward = catalog.name();
     if project.steward != steward {
-        let wanted = quote(&project.steward);
         return Err(blocked(vec![Blocking::whole(
             "steward_mismatch",
-            format!(
-                "this project's steward is {wanted} and this deployment serves the {} \
-                 steward; order the project from the deployment that serves {wanted}. Its \
-                 steward is provenance — no deployment rewrites it to match its own",
-                quote(steward)
-            ),
+            validate::steward_mismatch(&project.steward, steward),
         )]));
     }
     if project.sources.iter().all(|s| s.bindings.is_empty()) {

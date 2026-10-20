@@ -149,7 +149,7 @@ codes are additive.
   | `missing_required_field`               | A required field (top level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                                                          |
   | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null, a non-string `representation`). An int is a JSON integer that fits `i64`.                                                                                                                                                                                                |
   | `invalid_enum_value`                   | `type`, `id_subtype` or `numeric_subtype` is outside its allowed set.                                                                                                                                                                                                                                                                            |
-  | `invalid_slug`                         | `steward` is not a slug (`^[a-z](?:-?[a-z0-9])*$`, not `class`). Any slug is accepted; whether a deployment serves it is the order's `steward_mismatch`.                                                                                                                                                                                         |
+  | `invalid_slug`                         | `steward` is not a slug (`^[a-z](?:-?[a-z0-9])*$`, not `class`). Any slug is accepted; whether a deployment serves it is the semantic layer's and the order's `steward_mismatch`.                                                                                                                                                                |
   | `unexpected_field`                     | An unknown key on a closed object, whatever its value.                                                                                                                                                                                                                                                                                           |
   | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `value_set` is not `class/<slug>`, or a `register_variant` is not `<provider>/<register>/<variant>`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                                                          |
   | `fqid_register_variant_mismatch`       | A binding's provider and register differ from its source's `register_variant`. The variant lives once, on the source.                                                                                                                                                                                                                            |
@@ -185,11 +185,12 @@ MONA rebuild. The structural layer never materializes defaults; it only checks s
 `value_set_missing`, `period_outside_state_validity`, `range_period_partially_covered`,
 `binding_state_drifts_within_period`, `binding_value_set_version_ambiguous`,
 `binding_representation_unknown`, `deprecated_traversal`, `variable_replaced`,
-`fqid_outside_steward_catalog` and `representation_outside_steward_catalog`, plus two
-order codes under their own names, `representation_unresolved` and
-`period_not_orderable` ([../DESIGN.md](../DESIGN.md), "Project semantic validation").
-The version decision adds `unsupported_schema_version`. All belong to the same stable
-registry.
+`fqid_outside_steward_catalog` and `representation_outside_steward_catalog`, plus three
+order codes under their own names, `steward_mismatch` (at `/steward`: a document of
+another steward would validate against the wrong holdings), `representation_unresolved`
+and `period_not_orderable` ([../DESIGN.md](../DESIGN.md), "Project semantic
+validation"). The version decision adds `unsupported_schema_version`. All belong to the
+same stable registry.
 
 ## One grammar
 
