@@ -266,9 +266,11 @@ def run_inventory(
 
 
 def inventory_worklist(tmp_path: Path) -> dict:
-    """The worklist `run_inventory` leaves beside its CSV, written on every run."""
+    """The worklist `run_inventory` leaves under its `--out`, written on every run."""
     return json.loads(
-        (tmp_path / "derived" / "inventory_worklist.json").read_text(encoding="utf-8")
+        (tmp_path / "steward" / "derived" / "inventory_worklist.json").read_text(
+            encoding="utf-8"
+        )
     )
 
 

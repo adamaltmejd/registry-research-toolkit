@@ -2808,7 +2808,7 @@ def write_inventory(args: argparse.Namespace, db: Path) -> StewardSpec:
                     lines.append(warning)
 
     dest = steward_dir / "inventory.toml"
-    wl_path = args.csv.parent / "derived" / "inventory_worklist.json"
+    wl_path = args.out / "derived" / "inventory_worklist.json"
     wl_path.parent.mkdir(parents=True, exist_ok=True)
     wl_path.write_text(
         json.dumps(worklist, ensure_ascii=False, indent=1), encoding="utf-8"
@@ -2876,7 +2876,8 @@ def _check_storage_types(
         load_inventory(args.out / "inventory.toml"),
         storage,
     )
-    dest = args.csv.parent / "derived" / "storage_type_findings.tsv"
+    dest = args.out / "derived" / "storage_type_findings.tsv"
+    dest.parent.mkdir(parents=True, exist_ok=True)
     write_storage_findings(findings, dest)
     counts = {
         kind: sum(item.kind == kind for item in findings)
@@ -2935,7 +2936,7 @@ def cmd_errata(args: argparse.Namespace) -> None:
     finally:
         conn.close()
 
-    dest = args.csv.parent / "derived" / "errata_worklist.toml"
+    dest = args.out / "derived" / "errata_worklist.toml"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(errata_worklist(report), encoding="utf-8")
     print(f"wrote {dest}")
@@ -3074,7 +3075,7 @@ def main() -> None:
     )
     errata_p = sub.add_parser(
         "errata",
-        help="write derived/errata_worklist.toml: candidate reg_meta_build/curation/registers/scb/<slug>.toml entries"
+        help="write <--out>/derived/errata_worklist.toml: candidate reg_meta_build/curation/registers/scb/<slug>.toml entries"
         " for the columns the generated inventory holds in editions the FLAVORED"
         " --db has no window for",
     )
