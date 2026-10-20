@@ -2399,8 +2399,9 @@ semantic applicability at query time. Four relations hold the facts:
   disjoint; year-independent and unknown tables have none. Holes are preserved: a range
   or list table is never expanded into annual tables or clipped to metadata validity.
 - `holding_column`: the literal, case-preserving column name and a nullable authored
-  `unmapped_reason`. A column with no mapping records possession without admission; a
-  reason cannot accompany mappings.
+  `unmapped_reason`. A column with no mapping records possession without admission. In a
+  placed table every column maps or carries a reason, never both (#1294); only a
+  retained-unknown table's columns go without, disposed by the table's reason.
 - `holding_mapping`: the column's existing `variable_id` and `variant_id` and the
   required `representation_literal` and `representation_canonical`. The authored binding
   identity is kept, including a literal `same_as` source; it is never replaced by a
@@ -2635,8 +2636,8 @@ name concrete variants. `_default` is never a finite or unknown-scope sentinel. 
 unknown tables come from the spec's `retain_unknown` entries plus the raw census, not
 invented finite entries. Partitions use the slug grammar (`_default`, `class` and
 period-shaped values are rejected); they name shards of a delivery, not populations a
-researcher selects. An unmapped column keeps its authored reason where one is given;
-none is synthesized.
+researcher selects. An unmapped column keeps its authored reason, which every unmapped
+column in a placed table carries; none is synthesized.
 
 A mapping may carry a wide-pivot `member` index (#1495): `{ position = N }`,
 `{ year = YYYY }` or `{ month = "YYYY-MM" }`. A wide pivot delivers one variable as N
@@ -2762,7 +2763,8 @@ missing or unknown keys, contract version, slug and FQID shape), `inventory_no_t
 `inventory_table_no_columns`, `inventory_duplicate_table`, `inventory_duplicate_column`,
 `inventory_duplicate_mapping`, `inventory_edition_invalid`,
 `inventory_period_scope_invalid`, `inventory_unmapped_reason_invalid`,
-`inventory_member_invalid` (a member set's own rules below),
+`inventory_column_unaccounted` (a column with neither a mapping nor an
+`unmapped_reason`, #1294), `inventory_member_invalid` (a member set's own rules below),
 `inventory_projection_invalid` (a projection's own rules below),
 `inventory_window_invalid` (a column window's own rules below) and
 `inventory_cell_conflict` (the one-to-one rule below). When several lines fail, the code
@@ -2880,8 +2882,7 @@ therefore never also serves another variant. Readers clip a member's held period
 declared paired: a shared position is the slot key (`kva_typN` beside `opN`), which is
 all an order needs. A steward spec states a member only as a curated mapping decision
 naming its `member`; that decision is the column's one mapping, and the generator emits
-it verbatim. A pivot the generator detects by name but no decision covers stays unmapped
-with an interim reason.
+it verbatim. A member no decision covers is an unresolved column like any other.
 
 ### Holdings curation rules
 
@@ -2913,12 +2914,13 @@ without a reviewable curation line saying so.
 
 Inventory generation retains accepted catalog placement bounds and resolves each finite
 table edition through positively covering declared owners. Missing coverage or
-simultaneous owners produces a worklist before the inventory can be replaced. Each
-literal representation must cover the edition; sibling spellings cannot supply its
-dates. Source-backed stock-file overrides may name an exact snapshot date, including
-October school censuses, while retaining the original catalog state windows. A source
-snapshot date alone does not establish the delivery date of a derived geocoded extract.
-A cumulative register's stock file is not a one-year edition: when the source documents
+simultaneous owners produces a worklist before the inventory can be replaced, and so
+does a column that resolves to no owner and has no spec decision. Each literal
+representation must cover the edition; sibling spellings cannot supply its dates.
+Source-backed stock-file overrides may name an exact snapshot date, including October
+school censuses, while retaining the original catalog state windows. A source snapshot
+date alone does not establish the delivery date of a derived geocoded extract. A
+cumulative register's stock file is not a one-year edition: when the source documents
 one cumulative register version, the override spans that version's start through the
 stock date (Flergenerationsregistret: 1961 through the snapshot year). Older cumulative
 snapshots are then excluded as superseded. Without that documentation the name-derived

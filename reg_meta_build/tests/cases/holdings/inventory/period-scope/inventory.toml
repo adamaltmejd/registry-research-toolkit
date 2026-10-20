@@ -6,6 +6,7 @@ id = "SoS_Patientregister.csv"
 edition = "_default"
 [[table.column]]
 name = "Diagnos"
+unmapped_reason = "Owner not yet curated"
 
 [[table]]
 id = "Catalogue.csv"
@@ -13,6 +14,7 @@ edition = 2019
 period_scope = "year_independent"
 [[table.column]]
 name = "Diagnos"
+unmapped_reason = "Owner not yet curated"
 
 [[table]]
 id = "Lookup.csv"

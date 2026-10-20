@@ -1,0 +1,26 @@
+version = 1
+steward = "swecov"
+
+[[table]]
+id = "FHM_NVR_Barn"
+edition = 2021
+[[table.column]]
+name = "Vaccinationsdatum"
+[[table.column.mapping]]
+register_variant = "fohm/nvr/_default"
+variable = "fohm/nvr/vaccinationsdatum"
+representation = "Vaccinationsdatum"
+[[table.column]]
+name = "Dos"
+[[table.column]]
+name = "Spare"
+unmapped_reason = "Owner not yet curated"
+[[table.column]]
+name = "Vaccin"
+
+[[table]]
+id = "FHM_NVR_Covid"
+edition = 2021
+[[table.column]]
+name = "Lopnr"
+unmapped_reason = "Owner not yet curated"

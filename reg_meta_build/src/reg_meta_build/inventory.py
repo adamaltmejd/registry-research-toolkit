@@ -58,6 +58,7 @@ _TABLE_NO_COLUMNS = "inventory_table_no_columns"
 _DUPLICATE_COLUMN = "inventory_duplicate_column"
 _DUPLICATE_MAPPING = "inventory_duplicate_mapping"
 _UNMAPPED_REASON = "inventory_unmapped_reason_invalid"
+_UNACCOUNTED = "inventory_column_unaccounted"
 _EDITION = "inventory_edition_invalid"
 _PERIOD_SCOPE = "inventory_period_scope_invalid"
 _CELL_CONFLICT = "inventory_cell_conflict"
@@ -464,8 +465,10 @@ class ColumnMapping(_InventoryModel):
 class InventoryColumn(_InventoryModel):
     """One literal, case-preserving physical column of a delivered table.
 
-    `mappings` may be empty: an unresolved column is still inventoried, so it
-    stays in the coverage denominator without being admitted or orderable.
+    A column either maps or carries an `unmapped_reason`; a mapping-less column
+    stays in the coverage denominator without being admitted or orderable. One
+    with neither would drop out of the holdings catalog unexplained (#1294), so
+    it is refused.
     Several mappings let one physical column serve several register variants
     (the combined Utrikeshandel table), unless one of them is a wide-pivot
     member: a member column carries exactly that one mapping
@@ -485,6 +488,16 @@ class InventoryColumn(_InventoryModel):
                 _UNMAPPED_REASON, "unmapped_reason must be nonblank"
             )
         return value
+
+    @model_validator(mode="after")
+    def _check_accounted(self) -> InventoryColumn:
+        if self.unmapped_reason is None and not self.mappings:
+            raise _InventoryGuardError(
+                _UNACCOUNTED,
+                "column has neither a mapping nor an unmapped_reason — map it or "
+                "state why it stays unmapped",
+            )
+        return self
 
     @model_validator(mode="after")
     def _check_unique_mappings(self) -> InventoryColumn:

@@ -1,0 +1,19 @@
+{
+  "note": "#1294: a held column with neither a mapping nor an unmapped_reason would drop out of the holdings catalog unexplained (all twelve columns of two NVR tables once took fohm/nvr with them). Each such column is named; the mapped and the reasoned columns beside them, and the fully reasoned second table, are the allowed twins. The compile case unmapped-column admits a reasoned mapping-less column end to end.",
+  "fails_if": "load_inventory admits a column with neither a mapping nor an unmapped_reason, or names a mapped or reasoned column beside it",
+  "error": {
+    "code": "inventory_column_unaccounted",
+    "locators": [
+      "table['FHM_NVR_Barn'].column['Dos']",
+      "table['FHM_NVR_Barn'].column['Vaccin']"
+    ],
+    "message_contains": [
+      "column has neither a mapping nor an unmapped_reason"
+    ],
+    "message_excludes": [
+      "Vaccinationsdatum",
+      "Spare",
+      "FHM_NVR_Covid"
+    ]
+  }
+}

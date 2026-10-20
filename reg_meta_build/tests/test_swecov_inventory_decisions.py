@@ -55,7 +55,7 @@ def test_mapping_decision_preserves_physical_column_with_checked_representation(
         tmp_path,
         flavored_db,
         "T2019",
-        ["Physical", "Unknown"],
+        ["Physical"],
         decisions=_mapping_decision(),
     )
     table = load_delivery_inventory(steward / "inventory.toml").tables[0]
@@ -64,7 +64,6 @@ def test_mapping_decision_preserves_physical_column_with_checked_representation(
     assert len(physical.mappings) == 1
     assert physical.mappings[0].representation == "T_kolumn"
     assert str(physical.mappings[0].variable) == "inera/bestallda-prover/t-kolumn"
-    assert next(c for c in table.columns if c.name == "Unknown").mappings == ()
 
 
 _RANGE = "{ from = 2018, to = 2019 }"
@@ -197,7 +196,7 @@ def test_unmap_preserves_exact_reason_without_other_changes(
         tmp_path,
         flavored_db,
         "T2019",
-        ["T_kolumn", "Unknown"],
+        ["T_kolumn"],
         decisions=f'[[column]]\ncolumn = "T_kolumn"\nunmap = {json.dumps(reason)}\n',
     )
     (table,) = load_delivery_inventory(steward / "inventory.toml").tables
@@ -205,7 +204,7 @@ def test_unmap_preserves_exact_reason_without_other_changes(
     assert [
         (column.name, column.mappings, column.unmapped_reason)
         for column in table.columns
-    ] == [("T_kolumn", (), reason), ("Unknown", (), None)]
+    ] == [("T_kolumn", (), reason)]
 
 
 def test_unmap_refuses_blank_reason_before_writing(

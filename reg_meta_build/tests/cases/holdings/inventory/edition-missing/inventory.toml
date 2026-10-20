@@ -5,9 +5,11 @@ steward = "swecov"
 id = "Holdings_Extract.csv"
 [[table.column]]
 name = "Diagnos"
+unmapped_reason = "Owner not yet curated"
 
 [[table]]
 id = "Fractional.csv"
 edition = 2019.5
 [[table.column]]
 name = "Diagnos"
+unmapped_reason = "Owner not yet curated"

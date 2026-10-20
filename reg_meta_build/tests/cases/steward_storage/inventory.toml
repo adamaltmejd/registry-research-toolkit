@@ -28,6 +28,7 @@ representation = "AGREES"
 
 [[table.column]]
 name = "RENAMED"
+unmapped_reason = "Owner not yet curated"
 
 [[table]]
 id = "CIS2020"
