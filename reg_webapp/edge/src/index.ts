@@ -10,8 +10,8 @@
 interface Env {
   ASSETS: Fetcher;
   DEPLOY_VERSION: string;
-  // "true" in wrangler.jsonc only: the global catalog is the hosted MCP endpoint
-  // (crates/DESIGN.md, "Hosted MCP"); a steward deployment serves none.
+  // "true" where the deployment's catalog is served over hosted MCP: the global
+  // catalog and a steward whose artifact is public (crates/DESIGN.md, "Hosted MCP").
   ROUTE_MCP?: string;
   // Secret (`wrangler secret put EDGE_TOKEN`), equal to the origin's
   // REG_META_EDGE_TOKEN: it proves a request came through this worker, so the
@@ -22,7 +22,7 @@ interface Env {
 // LOCKSTEP: must match assets.run_worker_first in wrangler.jsonc (same set,
 // glob syntax there): the paths `reg-meta serve` answers. `/mcp` joins only where
 // ROUTE_MCP is set — a POST (never a navigation) reaches the worker even without
-// run_worker_first, so the steward worker must refuse to forward it here.
+// run_worker_first, so a worker without it must refuse to forward it here.
 const ORIGIN_PATHS = [/^\/api(\/|$)/, /^\/openapi\.json$/];
 const MCP_PATH = /^\/mcp$/;
 // Hashed static assets (assets.run_worker_first has `/assets/*` too): a miss is a

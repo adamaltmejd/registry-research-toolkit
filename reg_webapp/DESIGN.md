@@ -1129,18 +1129,18 @@ plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
   which `container-build.yml`'s edge jobs build themselves. The Rust server answers
   every route the SPA calls.
 - **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
-  `catalog.swecov.se`. The global worker forwards `/mcp` (`ROUTE_MCP` in
-  `wrangler.jsonc` only; the SWECOV worker does not, since a steward catalog is never
-  served over hosted MCP), and `fly.toml` passes `REG_META_PUBLIC_HOST`, which rmcp's
-  allowed hosts admit beside the loopback names. `/mcp` and the project POSTs share one
-  rate limit per client address (60 a minute; Cost protection, below). Behind Fly the
-  peer is Fly's proxy, so the worker proves a request came through the edge with a
-  shared secret (`EDGE_TOKEN` on the worker, `REG_META_EDGE_TOKEN` on the Fly app, sent
-  as `x-edge-token`); only such a request is keyed on its `CF-Connecting-IP`. Any other
-  request, a direct-origin hit included, is keyed on its peer, so a forged
-  `CF-Connecting-IP` buys nothing. Without the secret every edge `/mcp` client shares
-  the proxy's bucket. After each global edge deploy, `container-build.yml` sends
-  `initialize`, `tools/list` and one `search` to the public `/mcp`.
+  `catalog.swecov.se` and on `data.swecov.se`, whose SWECOV artifact is public. Both
+  workers forward `/mcp` (`ROUTE_MCP`), and `fly.toml` and `fly.swecov.toml` pass
+  `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
+  `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
+  Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
+  request came through the edge with a shared secret (`EDGE_TOKEN` on the worker,
+  `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only such a request is
+  keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
+  keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret
+  every edge `/mcp` client shares the proxy's bucket. After each edge deploy,
+  `container-build.yml` sends `initialize`, `tools/list` and one `search` to that host's
+  public `/mcp`.
 - **Apps**: `reg-webapp-global` serves `catalog.swecov.se`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O

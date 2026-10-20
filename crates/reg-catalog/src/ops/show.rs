@@ -32,10 +32,30 @@ pub enum Show {
     ClassificationFamily(Family),
 }
 
-/// The catalog root: the providers in scope and the classification root.
+/// The catalog root: which catalog answered, the providers in scope and the
+/// classification root.
 #[derive(Serialize, ToSchema)]
 pub struct Root {
+    catalog: CatalogIdentity,
     children: Vec<RootChild>,
+}
+
+/// The serving catalog: its steward `id` (`global` for the global catalog), its
+/// branding where the server loads it, its webapp origin where the server is
+/// published, and the two versions a `project_data.json` drafted here carries:
+/// `reg_meta_version` and `project_schema_version` (the document's `schema_version`,
+/// not the catalog database's).
+#[derive(Serialize, ToSchema)]
+pub struct CatalogIdentity {
+    id: String,
+    reg_meta_version: &'static str,
+    project_schema_version: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    long_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    webapp: Option<String>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -310,7 +330,7 @@ pub fn show(server: &Server, scope: Scope, params: &Params) -> Result<Value, Err
     let value = params.get("ref").copied();
     let not_found = || refs::not_found(value.unwrap_or_default());
     let show = match refs::resolve(&conn, scope, value)? {
-        Target::Root => Show::Root(root(&conn, scope)?),
+        Target::Root => Show::Root(root(server, &conn, scope)?),
         Target::Provider { id, slug } => Show::Provider(provider(&conn, scope, id, &slug)?),
         Target::Register { id, provider, slug } => {
             Show::Register(register(&conn, scope, id, &provider, &slug)?)
@@ -378,7 +398,7 @@ pub(super) fn rows<T>(
         .collect::<rusqlite::Result<_>>()?)
 }
 
-fn root(conn: &Connection, scope: Scope) -> Result<Root, Error> {
+fn root(server: &Server, conn: &Connection, scope: Scope) -> Result<Root, Error> {
     let sql = format!(
         "SELECT slug, name FROM provider p WHERE {} ORDER BY slug",
         held::provider(scope, "p.provider_id")
@@ -393,7 +413,16 @@ fn root(conn: &Connection, scope: Scope) -> Result<Root, Error> {
         fqid: "class".to_owned(),
         name: "Classifications".to_owned(),
     });
-    Ok(Root { children })
+    let steward = server.steward.as_ref();
+    let catalog = CatalogIdentity {
+        id: server.catalog.name().to_owned(),
+        reg_meta_version: server.version,
+        project_schema_version: reg_core::project::SCHEMA_VERSION,
+        name: steward.map(|s| s.name.clone()),
+        long_name: steward.map(|s| s.long_name.clone()),
+        webapp: server.origin.clone(),
+    };
+    Ok(Root { catalog, children })
 }
 
 fn provider(conn: &Connection, scope: Scope, id: i64, slug: &str) -> Result<Provider, Error> {

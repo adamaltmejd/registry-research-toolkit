@@ -1,7 +1,7 @@
 {
   "name": "microdata-tools-se",
   "description": "Tooling for working with Swedish administrative register microdata — register metadata search through the hosted catalog MCP server.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se"
@@ -10,10 +10,19 @@
   "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
   "license": "MIT",
   "keywords": ["sweden", "microdata", "registry", "scb", "mona", "mcp", "statistics", "research"],
+  "userConfig": {
+    "catalog_url": {
+      "type": "string",
+      "title": "Catalog MCP URL",
+      "description": "The catalog the agent answers from: https://catalog.swecov.se/mcp (every register) or https://data.swecov.se/mcp (SWECOV's holdings).",
+      "default": "https://catalog.swecov.se/mcp",
+      "required": false
+    }
+  },
   "mcpServers": {
     "catalog": {
       "type": "http",
-      "url": "https://catalog.swecov.se/mcp"
+      "url": "${user_config.catalog_url}"
     }
   }
 }

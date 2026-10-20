@@ -45,8 +45,10 @@ Point any MCP client at the hosted catalog server:
 https://catalog.swecov.se/mcp
 ```
 
-The agent plugin above does this for you. The same catalog is browsable at
-<https://catalog.swecov.se>.
+SWECOV's catalog, which answers from SWECOV's holdings, is at
+`https://data.swecov.se/mcp`. The agent plugin above does this for you (its catalog URL
+is a setting). The catalogs are browsable at <https://catalog.swecov.se> and
+<https://data.swecov.se>.
 
 ### Local server
 
