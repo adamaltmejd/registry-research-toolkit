@@ -4897,22 +4897,53 @@
     }
   },
   {
-    "name": "validate",
-    "description": "Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the `register-project` skill of the microdata-tools-se plugin.",
+    "name": "order",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `validate` (project): Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the `register-project` skill of the microdata-tools-se plugin.\n- `order` (project): Preview the order manifest of a `project_data.json` document: the table and column delivering each binding, clipped where unavailable; a partly undeliverable request is `order_blocked`.",
     "inputSchema": {
       "properties": {
+        "operation": {
+          "enum": [
+            "validate",
+            "order"
+          ],
+          "type": "string"
+        },
         "project": {
           "description": "A project_data.json document",
           "type": "object"
         }
       },
       "required": [
-        "project"
+        "operation"
       ],
       "type": "object"
     },
     "outputSchema": {
       "$defs": {
+        "ClipReport": {
+          "description": "An availability clip: the binding asked for `requested_period` and is ordered\nfor `ordered_period`, where it is available.",
+          "properties": {
+            "ordered_period": {
+              "type": "string"
+            },
+            "requested_period": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            },
+            "variable": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "variable",
+            "requested_period",
+            "ordered_period"
+          ],
+          "type": "object"
+        },
         "Error": {
           "description": "The error document `{code, class, message, remediation, fields}`.",
           "properties": {
@@ -4949,6 +4980,36 @@
           ],
           "type": "string"
         },
+        "LogicalCoordinate": {
+          "description": "The project-side coordinate of an entry.",
+          "properties": {
+            "provider": {
+              "type": "string"
+            },
+            "register": {
+              "type": "string"
+            },
+            "representation": {
+              "description": "The canonical delivery column the slice resolved to.",
+              "type": "string"
+            },
+            "variable": {
+              "description": "The binding's variable FQID.",
+              "type": "string"
+            },
+            "variant": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "provider",
+            "register",
+            "variant",
+            "variable",
+            "representation"
+          ],
+          "type": "object"
+        },
         "Meta": {
           "description": "The response `meta` (`shape.Meta`).",
           "properties": {
@@ -4968,6 +5029,202 @@
             "scope"
           ],
           "type": "object"
+        },
+        "OrderEntry": {
+          "description": "One resolved binding: what was asked for and what the steward delivers.",
+          "properties": {
+            "logical": {
+              "$ref": "#/$defs/LogicalCoordinate"
+            },
+            "physical": {
+              "$ref": "#/$defs/PhysicalCoordinate"
+            },
+            "requested_period": {
+              "description": "The days this entry serves: the request clipped by availability, a column\nwindow and a year or month member. It does not choose the output file; the\ntable's edition does.",
+              "type": "string"
+            },
+            "source": {
+              "description": "The project source's name.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "logical",
+            "requested_period",
+            "physical"
+          ],
+          "type": "object"
+        },
+        "OrderManifest": {
+          "description": "The order manifest: machine-written here, machine-read by the steward-side\nextract system, never hand-edited.",
+          "properties": {
+            "clips": {
+              "description": "Every availability clip, also when nothing blocked.",
+              "items": {
+                "$ref": "#/$defs/ClipReport"
+              },
+              "type": "array"
+            },
+            "entries": {
+              "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column.",
+              "items": {
+                "$ref": "#/$defs/OrderEntry"
+              },
+              "type": "array"
+            },
+            "provenance": {
+              "$ref": "#/$defs/OrderProvenance"
+            },
+            "version": {
+              "description": "The manifest contract version, 1.",
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "version",
+            "provenance",
+            "entries",
+            "clips"
+          ],
+          "type": "object"
+        },
+        "OrderProvenance": {
+          "description": "Which project, against which catalog, for which deployment: the manifest is\nself-contained offline.",
+          "properties": {
+            "artifact_kind": {
+              "description": "`catalog` or `steward`.",
+              "type": "string"
+            },
+            "catalog_generation_id": {
+              "type": "string"
+            },
+            "catalog_schema_version": {
+              "type": "string"
+            },
+            "mode": {
+              "description": "`steward_holdings` (a steward's compiled holdings grounded the entries) or\n`global_fallback` (canonical resolution alone, blank `table`).",
+              "type": "string"
+            },
+            "project_hash": {
+              "description": "SHA-256 of the project's canonical JSON.",
+              "type": "string"
+            },
+            "project_name": {
+              "type": "string"
+            },
+            "project_reg_meta_version": {
+              "type": "string"
+            },
+            "project_schema_version": {
+              "type": "string"
+            },
+            "steward": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "steward",
+            "project_name",
+            "project_schema_version",
+            "project_reg_meta_version",
+            "project_hash",
+            "catalog_schema_version",
+            "catalog_generation_id",
+            "artifact_kind"
+          ],
+          "type": "object"
+        },
+        "PhysicalCoordinate": {
+          "description": "The steward-side coordinate of an entry; in the global fallback `table` is\nblank, `column` the canonical column and `edition` the requested period.",
+          "properties": {
+            "column": {
+              "type": "string"
+            },
+            "edition": {
+              "description": "The table's edition, rendered as a period. With the table and the variant it\nnames the output file: one file per table edition, whatever periods its\nentries request.",
+              "type": "string"
+            },
+            "member": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/PivotMember",
+                  "description": "The column's wide-pivot member index; absent for a plain column."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "partition": {
+              "description": "The table's disjoint-partition label; absent when it has none.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "projection": {
+              "description": "The table's projection token (#1634): the table is a declared projection\nof another table's delivery, extracted as its own file; absent otherwise.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "table": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "edition",
+            "table",
+            "column"
+          ],
+          "type": "object"
+        },
+        "PivotMember": {
+          "description": "A wide-pivot member index (#1495): one of N physical columns that together\ndeliver one representation. A position member serves the table's whole edition;\na year or month member serves only that period, so it is ordered only when the\nslice reaches it. Members order by index, so `DIA2` precedes `DIA10`.",
+          "oneOf": [
+            {
+              "properties": {
+                "position": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "position"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "year": {
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "year"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "`YYYY-MM`.",
+              "properties": {
+                "month": {
+                  "description": "`YYYY-MM`.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "month"
+              ],
+              "type": "object"
+            }
+          ]
         },
         "Scope": {
           "description": "`holdings`: what this steward holds, the default on a steward catalog and\nunavailable on the global one. `reference`: every register in the catalog. Answer\nfrom the default; repeat with `reference` when asked what exists elsewhere or when\nholdings comes up empty, and say the data exists but is not held.",
@@ -5037,6 +5294,21 @@
           "properties": {
             "data": {
               "$ref": "#/$defs/Validation"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/OrderManifest"
             },
             "meta": {
               "$ref": "#/$defs/Meta"

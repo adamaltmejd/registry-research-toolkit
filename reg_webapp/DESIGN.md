@@ -1354,12 +1354,11 @@ synthetic success is not a real-corpus or deployment claim.
 
 ## Project operations (the Rust server)
 
-The project editor POSTs the WHOLE serialized draft, a raw object, to two operations
-(`crates/reg-catalog/src/ops/slice_3e.rs`): `validate`, also the `validate` MCP tool,
-and `order`, HTTP only (`crates/DESIGN.md`, "Hosted MCP"). The body is parsed strictly
-(`ops/body.rs`: one UTF-8 JSON object, no byte-order mark, no duplicate key at any
-depth, `serde_json`'s depth limit); anything else is `malformed_request` (400) before
-the operation runs. Unknown keys survive the parse, so `validate` reports each as
+The project editor POSTs the WHOLE serialized draft, a raw object, to two operations of
+the `order` MCP tool (`crates/reg-catalog/src/ops/slice_3e.rs`). The body is parsed
+strictly (`ops/body.rs`: one UTF-8 JSON object, no byte-order mark, no duplicate key at
+any depth, `serde_json`'s depth limit); anything else is `malformed_request` (400)
+before the operation runs. Unknown keys survive the parse, so `validate` reports each as
 `unexpected_field`. Neither operation takes a `scope`: a project is read in the
 artifact's own identity, and a `scope` parameter is `invalid_parameter`.
 

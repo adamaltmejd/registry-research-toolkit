@@ -34,8 +34,7 @@ then install `microdata-tools-se` from the plugin marketplace UI.
 The plugin connects to the hosted catalog MCP server at `https://reg-meta.vqv.uk/mcp`
 (or SWECOV's, `https://data.swecov.se/mcp`, as a setting) and bundles two skills:
 `register-metadata-search`, which documents its tools, and `register-project`, for
-drafting and checking a project's register data (`project_data.json`). Nothing else to
-install.
+drafting a `project_data.json`. Nothing else to install.
 
 ## Quick start
 
