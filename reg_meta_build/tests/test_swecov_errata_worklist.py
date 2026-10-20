@@ -98,7 +98,7 @@ def _errata_text(
     _held(steward_dir, holdings, variant, narrowing)
     csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
     build_catalog.cmd_errata(argparse.Namespace(csv=csv_path, db=db, out=steward_dir))
-    return (csv_path.parent / "derived" / "errata_worklist.toml").read_text(
+    return (steward_dir / "derived" / "errata_worklist.toml").read_text(
         encoding="utf-8"
     )
 
@@ -126,7 +126,7 @@ def test_errata_rejects_incompatible_catalog_schema(
     with pytest.raises(RegMetaError) as exc_info:
         _errata_text(tmp_path, db, {2021: ("T_kolumn",)})
     assert exc_info.value.code == "schema_incompatible"
-    assert not (tmp_path / "derived/errata_worklist.toml").exists()
+    assert not (tmp_path / "steward/derived/errata_worklist.toml").exists()
 
 
 def test_errata_worklist_splits_version_missing_from_column_missing(
@@ -422,7 +422,7 @@ def test_errata_worklist_judges_each_windowed_variant_of_a_column_alone(
     )
     csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
     build_catalog.cmd_errata(argparse.Namespace(csv=csv_path, db=db, out=steward_dir))
-    text = (csv_path.parent / "derived" / "errata_worklist.toml").read_text(
+    text = (steward_dir / "derived" / "errata_worklist.toml").read_text(
         encoding="utf-8"
     )
 

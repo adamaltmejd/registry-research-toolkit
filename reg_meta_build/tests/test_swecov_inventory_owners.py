@@ -198,7 +198,7 @@ def test_unavailable_inventory_owner_writes_worklist_without_replacing_inventory
             argparse.Namespace(csv=csv, spec=steward, out=steward), db
         )
     assert previous.read_text() == "previous inspected inventory"
-    worklist = json.loads((tmp_path / "derived/inventory_worklist.json").read_text())
+    worklist = json.loads((steward / "derived/inventory_worklist.json").read_text())
     assert worklist["mapping_scope_needed"][0]["code"] == "no_covering_delivery_owner"
     assert (
         worklist["mapping_scope_needed"][0]["candidate_records"][0]["valid_to"]

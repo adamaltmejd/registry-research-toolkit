@@ -21,9 +21,9 @@ The inventory command checks storage types against the inventory it writes: each
 type is compared with the MONA storage-schema export (`--storage-csv`, required) under
 the physical columns the inventory maps to that type's variable. The global catalog
 build reads no steward input, so that check is where SWECOV storage meets curated global
-types: it writes `derived/storage_type_findings.tsv` and warns in the run summary when
-storage disagrees with a curated type, a steward-held column lacks one, or a curated
-entry matches no storage column. Curation decides the fix.
+types: it writes `derived/storage_type_findings.tsv` under `--out` and warns in the run
+summary when storage disagrees with a curated type, a steward-held column lacks one, or
+a curated entry matches no storage column. Curation decides the fix.
 
 SWECOV remains the proving steward while the workflow is tested pre-v1. Extracting its
 branding and delivery pipeline into a steward-owned system is separate from this runtime

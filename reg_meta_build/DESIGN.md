@@ -217,7 +217,8 @@ Authority depends on the fact and scope, rather than a universal file ordering:
 - The steward refresh (`build_catalog.py inventory`) cross-checks every curated type and
   steward-held column against the steward's storage-schema export, on every register
   that curates one, whether or not the generated inventory maps it, and writes
-  `derived/storage_type_findings.tsv`. An entry is compared only with its own cells: the
+  `derived/storage_type_findings.tsv` under its `--out`, never beside the census, which
+  lives in the private inputs repo. An entry is compared only with its own cells: the
   physical columns the inventory maps to its variable on its variant under its column,
   read under each cell's physical header (a renamed column, a pseudonymised key, every
   member of a wide pivot; column names fold). A mint covers only its own versions and
