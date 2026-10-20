@@ -42,7 +42,7 @@
         {"name": "ATC", "deldatamangd": "PAR_OV", "label": "ATC", "description": "Läkemedel", "data_from": 2011, "data_to": 2020},
         {"name": "ATC", "deldatamangd": "PAR_SV", "label": "ATC", "description": "Läkemedel", "data_from": 2001, "data_to": 2020},
         {"name": "KVA", "deldatamangd": "PAR_OV", "label": "KVA", "description": "Åtgärd", "data_from": 2001, "data_to": 2010},
-        {"name": "KVA", "deldatamangd": "PAR_OV", "label": "KVA", "description": "Åtgärd", "data_from": 2011, "data_to": 2020},
+        {"name": "KVA", "deldatamangd": "PAR_OV", "label": "KVA", "description": "Åtgärd", "data_from": 2012, "data_to": 2020},
         {"name": "KVA", "deldatamangd": "PAR_SV", "label": "KVA", "description": "Åtgärd", "data_from": 2001, "data_to": 2020},
         {"name": "DIA", "deldatamangd": "PAR_OV", "label": "DIA", "description": "Diagnos", "data_from": "2011 och 2013", "data_to": "2011 och 2013"},
         {"name": "DIA", "deldatamangd": "PAR_SV", "label": "DIA", "description": "Diagnos", "data_from": 2001, "data_to": 2020}

@@ -474,54 +474,6 @@
       ]
     },
     {
-      "table": "warnings",
-      "where": {
-        "code": [
-          "nonconforming_classification_codes",
-          "sentinel_classification_codes"
-        ]
-      },
-      "fields": [
-        "variable",
-        "code",
-        "valid_from",
-        "valid_to"
-      ],
-      "rows": [
-        [
-          "extended",
-          "nonconforming_classification_codes",
-          "2020-01-01",
-          "2020-12-31"
-        ],
-        [
-          "scoped",
-          "sentinel_classification_codes",
-          "2020-01-01",
-          "2020-06-30"
-        ],
-        [
-          "scoped",
-          "sentinel_classification_codes",
-          "2020-07-01",
-          "2020-12-31"
-        ],
-        [
-          "sentinel",
-          "nonconforming_classification_codes",
-          "2020-01-01",
-          "2020-12-31"
-        ],
-        [
-          "sentinel",
-          "sentinel_classification_codes",
-          "2020-01-01",
-          "2020-12-31"
-        ]
-      ],
-      "note": "SCOPED's warning stays one per sentinel period: conformance reports per binding segment, before the state merge joins the two periods."
-    },
-    {
       "table": "issues",
       "where": {
         "severity": "error"

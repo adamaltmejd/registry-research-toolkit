@@ -24,7 +24,7 @@
           "2021-01-01",
           "2021-12-31",
           "missing_coding_period",
-          "Accepted while the 2021 delivery stays uncoded.",
+          "The supplied evidence does not establish the stored response codes for this period. Other documented periods retain their known domains.",
           "curation/registers/scb/sample.toml#/acknowledge/2"
         ],
         [
@@ -34,7 +34,7 @@
           "2021-01-01",
           "2021-12-31",
           "missing_coding_period",
-          "Accepted while OTHER stays uncoded.",
+          "The supplied evidence does not establish the stored response codes for this period. Other documented periods retain their known domains.",
           "curation/registers/scb/sample.toml#/acknowledge/1"
         ]
       ],

@@ -195,8 +195,19 @@ BUILD_ONLY_CODES = frozenset(
         "conflicting_variable_fact",
         "source_metadata_conflict",
         "unresolved_lineage_ambiguous_source_variant",
+        # The value-set view lists these codes itself (#1708).
+        "sentinel_classification_codes",
+        "nonconforming_classification_codes",
+        # About a derived sibling group, not the source data (#1708).
+        "ambiguous_sibling_shape",
+        # Support metadata that binds to no variable, like `unknown_support_key`.
+        "ambiguous_support_target",
     }
 )
+
+# Diagnostics a researcher reads as one limitation (#1708), by their public code.
+# The build keeps the original code: acknowledgements name it.
+PUBLIC_CODES = {"no_supported_states": "unsupported_occurrence"}
 
 WARNING_SUMMARIES = {
     "retained_unattached_source_relationship": "A source code crosswalk has no established variable link",
@@ -219,6 +230,14 @@ WARNING_SUMMARIES = {
     "supported_erroneous_coding_association": "A conflicting source coding association was retained but not applied",
     "curated_state_omission": "An unsupported delivery interpretation has been withheld",
     "omitted_columnless_occurrence": "Some source records cannot be linked to a delivered column",
+    "unsupported_occurrence": "A source delivery has no established column or period and is withheld",
+    "unresolved_flag": "The variable is withheld because its identifier or sensitivity status is unknown",
+    "unsupported_representation_coding": "The source lists disagree about the stored response codes",
+    "conflicting_coding_labels": "The source response lists carry different titles",
+    "unassigned_original_columns": "Some delivered source columns have no established catalog variable",
+    "unresolved_member_list": "The source response list has no enumerable codes",
+    "unknown_code_validity": "The validity periods of the source response codes are unknown",
+    "unknown_data_type": "The stored data type is not documented",
 }
 
 
@@ -241,7 +260,32 @@ WARNING_DETAILS = {
     "supported_erroneous_coding_association": "An exact reviewed source coding association is retained as evidence but is not applied to the response domain.",
     "curated_state_omission": "An exact reviewed delivery interpretation lacks sufficient support and has been withheld. The original source records remain available.",
     "omitted_columnless_occurrence": "The original source records have no usable physical column identity and are retained without attachment to a delivered column.",
+    "unsupported_occurrence": "The source records do not establish a delivered column, period or availability for this delivery. The delivery is withheld, and so is the variable when no other delivery remains; no period has been inferred.",
+    "unresolved_flag": "The source does not establish whether this variable identifies a person, or whether it is sensitive; the warning's fields name which. The catalog cannot represent an unknown status, so the variable and the output that depends on it are withheld.",
+    "unsupported_representation_coding": "Overlapping source response lists for this column disagree about the stored codes or are incomplete. No single list has been chosen as the stored coding.",
+    "conflicting_coding_labels": "The source response lists agree on codes and labels but carry different list titles or version names. The response domain is kept; it has no common title.",
+    "unassigned_original_columns": "The reviewed column ownership covers only part of the source variable's original columns. The remaining columns are retained without a catalog variable identity.",
+    "unresolved_member_list": "The source refers to a response list for this column but its members cannot be enumerated. No finite response domain has been assumed.",
+    "unknown_code_validity": "The source response codes are retained, but the periods in which each code is valid are not documented.",
+    "unknown_data_type": "The source does not state how the column is stored. Its documented values do not establish the type, so none has been assumed.",
+    "source_availability_limitation": "The source documents how this delivery relates to its editions or periods only in part. The summary states what has been assumed.",
+    "response_domain_assumption": "The applied response codes or their meanings rest on a reviewed assumption the source does not fully document. The summary states the assumption.",
+    "assumed_storage_type": "The stored data type or value meaning rests on a reviewed assumption the source does not fully document. The summary states the assumption.",
+    "reference_period_assumption": "The reference period of this delivery rests on a reviewed assumption the source does not state directly. The summary states the assumption.",
 }
+
+
+def _public_text(code: str, curated: str | None = None) -> tuple[str, str]:
+    """The published summary and detail of a user-facing code, never curator
+    rationale. An assumption warning's `curated` summary replaces the code's."""
+    summary = curated or WARNING_SUMMARIES.get(code)
+    detail = WARNING_DETAILS.get(code)
+    if summary is None or detail is None:
+        raise ValueError(
+            f"data warning code {code!r} has no published summary and detail: add "
+            "it to WARNING_SUMMARIES and WARNING_DETAILS, or to BUILD_ONLY_CODES"
+        )
+    return summary, detail
 
 
 def diagnostic_data_warning(
@@ -253,7 +297,26 @@ def diagnostic_data_warning(
     column: str | None = None,
     reason: str | None = None,
 ) -> DataWarning:
-    """Project a settled diagnostic at a positively established catalog coordinate."""
+    """Project a settled diagnostic at a positively established catalog coordinate.
+
+    A catalog warning publishes its code's own text; the reviewer's `reason` is
+    rationale and reaches only a build-only warning, which stays in the report."""
+    code = PUBLIC_CODES.get(issue.code, issue.code)
+    if code in BUILD_ONLY_CODES:
+        summary = WARNING_SUMMARIES.get(
+            code, "The source has an acknowledged data limitation"
+        )
+        detail = (
+            issue.detail
+            if code == "retained_unattached_source_relationship"
+            else reason
+            or WARNING_DETAILS.get(
+                code,
+                "An exact reviewed source limitation is acknowledged; the original diagnostic remains in the build report.",
+            )
+        )
+    else:
+        summary, detail = _public_text(code)
     payload = {
         "register_fqid": str(parse_fqid("/".join(register))),
         "variable_fqid": str(parse_fqid("/".join(owner))) if owner else None,
@@ -261,18 +324,10 @@ def diagnostic_data_warning(
         "delivery_column_name": column,
         "valid_from": issue.valid_from,
         "valid_to": issue.valid_to,
-        "code": issue.code,
+        "code": code,
         "severity": issue.severity,
-        "summary": WARNING_SUMMARIES.get(
-            issue.code, "The source has an acknowledged data limitation"
-        ),
-        "detail": issue.detail
-        if issue.code == "retained_unattached_source_relationship"
-        else reason
-        or WARNING_DETAILS.get(
-            issue.code,
-            "An exact reviewed source limitation is acknowledged; the original diagnostic remains in the build report.",
-        ),
+        "summary": summary,
+        "detail": detail,
         "diagnostic_detail_sha256": sha256(issue.detail.encode("utf-8")).hexdigest(),
         "fields": list(issue.fields),
         "refs": [r.model_dump(mode="json") for r in issue.refs],
@@ -524,8 +579,10 @@ def scope_data_warnings(
             reason=reviewed_reasons.get(issue.acknowledged_by),
         )
         keep_warning(warnings, warning)
+    # Equal assumption warnings of one cell over all its occurrences and
+    # states: each span with the refs of the occurrence it came from (#1708).
     assumption_payloads = {}
-    assumption_refs = defaultdict(dict)
+    assumption_spans = defaultdict(list)
     annotated = {
         evaluation.case_id: evaluation.decision
         for evaluation in result.evaluations
@@ -598,70 +655,87 @@ def scope_data_warnings(
             if state.variant.slug == native_variant.slug
             and state.delivery_column_name == column.value
         )
-        for case_id, summary, detail, fields, exact in applicable:
+        for case_id, summary, rationale, fields, exact in applicable:
+            code = (
+                "reference_period_assumption"
+                if "reference_period" in fields
+                else "source_metadata_conflict"
+                if annotated[case_id].kind == "source_warning"
+                else "assumed_storage_type"
+                if "data_type" in fields
+                else "source_identity_assumption"
+                if "identity" in fields
+                else "source_availability_limitation"
+                if "availability" in fields
+                else "response_domain_assumption"
+            )
+            # The rationale stays with a build-only warning, in the report.
+            summary, detail = (
+                (summary, rationale)
+                if code in BUILD_ONLY_CODES
+                else _public_text(code, summary)
+            )
+            payload = {
+                "register_fqid": str(
+                    parse_fqid(
+                        f"{variable.register_ref.provider}/{variable.register_ref.slug}"
+                    )
+                ),
+                "variable_fqid": str(
+                    parse_fqid(
+                        f"{variable.register_ref.provider}/"
+                        f"{variable.register_ref.slug}/{variable.slug}"
+                    )
+                ),
+                "variant": native_variant.slug,
+                "delivery_column_name": column.value,
+                "code": code,
+                "severity": "warning",
+                "summary": summary,
+                "detail": detail,
+                "diagnostic_detail_sha256": sha256(detail.encode("utf-8")).hexdigest(),
+                "fields": list(fields),
+                "withheld_output": [],
+                "acknowledged_by": None,
+            }
+            token = canonical_sha256(payload)
+            assumption_payloads[token] = payload
+            refs = frozenset(
+                (record.source, locator.semantic_record_key)
+                for record in occurrence.source_records
+                for locator in record.locators
+            )
             for state in states:
                 if state.valid_from is None or state.valid_to is None:
                     continue
                 for lo, hi in exact:
                     lo = max(lo, date.fromisoformat(state.valid_from).toordinal())
                     hi = min(hi, date.fromisoformat(state.valid_to).toordinal())
-                    if lo > hi:
-                        continue
-                    payload = {
-                        "register_fqid": str(
-                            parse_fqid(
-                                f"{variable.register_ref.provider}/"
-                                f"{variable.register_ref.slug}"
+                    if lo <= hi:
+                        assumption_spans[token].append(
+                            (
+                                date.fromordinal(lo).isoformat(),
+                                date.fromordinal(hi).isoformat(),
+                                case_id,
+                                refs,
                             )
-                        ),
-                        "variable_fqid": str(
-                            parse_fqid(
-                                f"{variable.register_ref.provider}/"
-                                f"{variable.register_ref.slug}/{variable.slug}"
-                            )
-                        ),
-                        "variant": state.variant.slug,
-                        "delivery_column_name": state.delivery_column_name,
-                        "valid_from": date.fromordinal(lo).isoformat(),
-                        "valid_to": date.fromordinal(hi).isoformat(),
-                        "code": "reference_period_assumption"
-                        if "reference_period" in fields
-                        else "source_metadata_conflict"
-                        if annotated[case_id].kind == "source_warning"
-                        else "assumed_storage_type"
-                        if "data_type" in fields
-                        else "source_identity_assumption"
-                        if "identity" in fields
-                        else "source_availability_limitation"
-                        if "availability" in fields
-                        else "response_domain_assumption",
-                        "severity": "warning",
-                        "summary": summary,
-                        "detail": detail,
-                        "diagnostic_detail_sha256": sha256(
-                            detail.encode("utf-8")
-                        ).hexdigest(),
-                        "fields": list(fields),
-                        "refs": [],
-                        "withheld_output": [],
-                        "acknowledged_by": None,
-                        "case_id": case_id,
-                    }
-                    token = canonical_sha256(payload)
-                    assumption_payloads[token] = payload
-                    for record in occurrence.source_records:
-                        for locator in record.locators:
-                            ref = (record.source, locator.semantic_record_key)
-                            assumption_refs[token][ref] = {
-                                "source": ref[0],
-                                "semantic_record_key": list(ref[1]),
-                            }
-    for token, payload in sorted(assumption_payloads.items()):
-        payload["refs"] = [
-            assumption_refs[token][ref] for ref in sorted(assumption_refs[token])
-        ]
-        warning = DataWarning.model_validate_json(
-            json.dumps({"warning_id": warning_identity(payload), **payload})
-        )
-        keep_warning(warnings, warning)
+                        )
+    for token, spans in sorted(assumption_spans.items()):
+        # One warning per contiguous window; a gap between windows stays a gap.
+        for lo, hi in _merge([(f, t) for f, t, _, _ in spans]):
+            within = [s for s in spans if s[0] <= hi and s[1] >= lo]
+            payload = {
+                **assumption_payloads[token],
+                "valid_from": lo,
+                "valid_to": hi,
+                "refs": [
+                    {"source": ref[0], "semantic_record_key": list(ref[1])}
+                    for ref in sorted(set().union(*(s[3] for s in within)))
+                ],
+                "case_id": min((s[2] for s in within), key=_pointer_key),
+            }
+            warning = DataWarning.model_validate_json(
+                json.dumps({"warning_id": warning_identity(payload), **payload})
+            )
+            keep_warning(warnings, warning)
     return tuple(warnings[k] for k in sorted(warnings))
