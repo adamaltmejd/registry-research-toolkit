@@ -33,8 +33,8 @@ together, reading actual files rather than a saved version list:
 - `wasm-bindgen`, pinned in three places that move together: the `=` pin in
   `crates/reg-core-wasm/Cargo.toml` (and so `Cargo.lock`), the `wasm-bindgen@` tool in
   `ci.yml`'s frontend job, and the same tool in `container-build.yml`'s
-  `edge-deploy-swecov` job (the only one that builds the SPA). The CLI must equal the crate version (a mismatch fails
-  `gen:wasm`).
+  `edge-deploy-swecov` job (the only one that builds the SPA). The CLI must equal the
+  crate version (a mismatch fails `gen:wasm`).
 
 Verify current stable versions and compatibility from package registries and upstream
 release documentation. Distinguish latest stable, latest compatible and a requested LTS

@@ -1117,9 +1117,9 @@ and officially documents the Cloudflare-in-front topology
 (`fly.io/docs/networking/understanding-cloudflare`). Lock-in is nil: the artifact is the
 plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 
-The global catalog has no public website (maintainer, 2026-10-20, #1709): it is not
-what SWECOV offers, so it is not published under swecov.se, and its webapp runs locally
-only (`reg_webapp/dev/dev.sh`). Agents still need its hosted MCP (no install, no 1.2 GB
+The global catalog has no public website (maintainer, 2026-10-20, #1709): it is not what
+SWECOV offers, so it is not published under swecov.se, and its webapp runs locally only
+(`reg_webapp/dev/dev.sh`). Agents still need its hosted MCP (no install, no 1.2 GB
 download), so `reg-webapp-global` serves `/mcp` alone at `reg-meta.vqv.uk`. vqv.uk is
 the maintainer's side-project zone, chosen to keep the personal altmejd.se zone out of
 it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
@@ -1136,17 +1136,17 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   worker forwards none of it.
 - **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
   `reg-meta.vqv.uk` (the global catalog) and on `data.swecov.se`, whose SWECOV artifact
-  is public. Both workers forward `/mcp` (`ROUTE_MCP`), and `fly.toml` and `fly.swecov.toml` pass
-  `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
-  `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
-  Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
-  request came through the edge with a shared secret (`EDGE_TOKEN` on the worker,
-  `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only such a request is
-  keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
-  keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. Without the secret
-  every edge `/mcp` client shares the proxy's bucket. After each edge deploy,
-  `container-build.yml` sends `initialize`, `tools/list` and one `search` to that host's
-  public `/mcp`.
+  is public. Both workers forward `/mcp` (`ROUTE_MCP`), and `fly.toml` and
+  `fly.swecov.toml` pass `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside
+  the loopback names. `/mcp` and the project POSTs share one rate limit per client
+  address (60 a minute; Cost protection, below). Behind Fly the peer is Fly's proxy, so
+  the worker proves a request came through the edge with a shared secret (`EDGE_TOKEN`
+  on the worker, `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only
+  such a request is keyed on its `CF-Connecting-IP`. Any other request, a direct-origin
+  hit included, is keyed on its peer, so a forged `CF-Connecting-IP` buys nothing.
+  Without the secret every edge `/mcp` client shares the proxy's bucket. After each edge
+  deploy, `container-build.yml` sends `initialize`, `tools/list` and one `search` to
+  that host's public `/mcp`.
 - **Apps**: `reg-webapp-global` serves `reg-meta.vqv.uk`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
@@ -1240,22 +1240,22 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   is read from the image config's `.created`, and a digest shared with any kept tag is
   never deleted).
 - **Cloudflare zones**: `reg-meta.vqv.uk` (zone vqv.uk, global catalog MCP) and
-  `data.swecov.se` (zone swecov.se, SWECOV flavor), orange-cloud A/AAAA → each hostname's matching Fly app shared IPv4 +
-  dedicated IPv6, plus `_fly-ownership` TXT records (prove ownership behind the proxy)
-  and grey-cloud `_acme-challenge` CNAMEs (DNS-01 cert issuance — the reliable path
-  behind a proxy; never proxy a hostname pointing at `*.fly.dev`: Fly's edge has no cert
-  for the custom SNI → 525). SSL mode Full (strict). No dedicated IPv4 — the free shared
-  IPv4 works behind the proxy.
+  `data.swecov.se` (zone swecov.se, SWECOV flavor), orange-cloud A/AAAA → each
+  hostname's matching Fly app shared IPv4 + dedicated IPv6, plus `_fly-ownership` TXT
+  records (prove ownership behind the proxy) and grey-cloud `_acme-challenge` CNAMEs
+  (DNS-01 cert issuance — the reliable path behind a proxy; never proxy a hostname
+  pointing at `*.fly.dev`: Fly's edge has no cert for the custom SNI → 525). SSL mode
+  Full (strict). No dedicated IPv4 — the free shared IPv4 works behind the proxy.
 - **Edge workers** (`reg_webapp/edge/`, Workers free plan): one Worker source, two
   configs. `wrangler.jsonc` (`reg-webapp-global-edge`, `reg-meta.vqv.uk/*`) has no
   assets binding: it forwards `/mcp` to the origin with the edge token and answers
   anything else with a `no-store` 404. `wrangler.swecov.jsonc` is a static-assets worker
-  on `data.swecov.se/*` serving the SPA `dist/` with `single-page-application`
-  deep-link fallback. Separate Worker names give each hostname its own `EDGE_TOKEN` and
+  on `data.swecov.se/*` serving the SPA `dist/` with `single-page-application` deep-link
+  fallback. Separate Worker names give each hostname its own `EDGE_TOKEN` and
   `DEPLOY_VERSION`, deployed after its own Fly origin. On the SPA worker, origin paths
-  (`/api/*`, `/openapi.json` and `/mcp`) are `run_worker_first` +
-  `fetch(request)` passthrough to the incoming hostname's zone origin (Fly), so the
-  origin ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
+  (`/api/*`, `/openapi.json` and `/mcp`) are `run_worker_first` + `fetch(request)`
+  passthrough to the incoming hostname's zone origin (Fly), so the origin
+  ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
   `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
   navigations without invoking the worker, shadowing `/api` deep-opens. The assets layer
   reads `frontend/public/_headers` (copied into `dist/`): hashed `/assets/*` files are
@@ -1292,23 +1292,24 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   global `edge-deploy` job deploys the MCP-only worker on the same pushes and checks
   first that the token can see zone vqv.uk (`CLOUDFLARE_API_TOKEN` repo secret, "Edit
   Cloudflare Workers" template scoped to the account, swecov.se and vqv.uk). Each job
-  `needs:` its origin deploy — on a contract-changing push
-  the SPA never goes live before the origin serves the new endpoints (deploy-skew guard;
-  skew 404s are NOT negatively cached: the Cache Rule's Edge TTL is "bypass if no
-  cache-control", and the origin only stamps 200s). After each edge deploy a probe
-  asserts a catalog read returns `CF-Cache-Status: HIT` with a young `Age` (a stale
-  `Age` means cache-key versioning broke) and an edge 304 — the #220 gate as a standing
-  regression check against silent Cache Rule / zone drift. It reads `/api/search`, the
-  cacheable Rust route (`/api/context` is `no-cache`). Manual fallback: build the SPA,
-  then `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
+  `needs:` its origin deploy — on a contract-changing push the SPA never goes live
+  before the origin serves the new endpoints (deploy-skew guard; skew 404s are NOT
+  negatively cached: the Cache Rule's Edge TTL is "bypass if no cache-control", and the
+  origin only stamps 200s). After each edge deploy a probe asserts a catalog read
+  returns `CF-Cache-Status: HIT` with a young `Age` (a stale `Age` means cache-key
+  versioning broke) and an edge 304 — the #220 gate as a standing regression check
+  against silent Cache Rule / zone drift. It reads `/api/search`, the cacheable Rust
+  route (`/api/context` is `no-cache`). Manual fallback: build the SPA, then
+  `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
   `wrangler.swecov.jsonc`'s header — the config's literal `"dev"` default must not
   ship). After the global edge deploy, only the `/mcp` smoke runs: there is no SPA or
   `/api` to probe on reg-meta.vqv.uk.
-- **Zone rules (dashboard, free plan, zone swecov.se)**: a Cache Rule making `/api/*` on the hostname
-  cache-eligible (Cloudflare never caches extensionless API paths by default, even with
-  `Cache-Control: public` — without the rule every read is `cf-cache-status: DYNAMIC`),
-  and the free plan's one WAF rate-limiting rule (path-only match — free-tier rate
-  limiting can't match hostname; 100 req/10s/IP → block, burst-verified to 429).
+- **Zone rules (dashboard, free plan, zone swecov.se)**: a Cache Rule making `/api/*` on
+  the hostname cache-eligible (Cloudflare never caches extensionless API paths by
+  default, even with `Cache-Control: public` — without the rule every read is
+  `cf-cache-status: DYNAMIC`), and the free plan's one WAF rate-limiting rule (path-only
+  match — free-tier rate limiting can't match hostname; 100 req/10s/IP → block,
+  burst-verified to 429).
 - **#220 gate: PASSED (2026-06-11)** — 20 slash-bearing FQID paths (3-segment bindings,
   `/states` suffixes, `/variants`) round-trip the edge cache byte-identical to origin,
   MISS→HIT per URL, ETag→body mapping consistent, and conditional GETs answer 304 from
