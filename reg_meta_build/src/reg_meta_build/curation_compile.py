@@ -1384,6 +1384,8 @@ def compile_parallel_representations(
         return (), ()
     cases = []
     diagnostics = []
+    # Entries of one register capture overlapping originals and support.
+    projections: dict[Any, Any] = {}
     corrections = tuple(
         case
         for case in ownership_cases
@@ -1693,6 +1695,7 @@ def compile_parallel_representations(
             originals,
             fields=tuple(SourceFields.model_fields),
             parents=use_effective,
+            projections=projections,
         )
         guard = PeerGuard(
             guard_id=ref,
@@ -1730,6 +1733,7 @@ def compile_parallel_representations(
                     correction_support,
                     fields=tuple(SourceFields.model_fields),
                     parents=True,
+                    projections=projections,
                 )
                 if use_effective
                 else (),
