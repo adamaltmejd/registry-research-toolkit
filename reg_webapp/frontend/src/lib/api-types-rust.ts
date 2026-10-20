@@ -253,7 +253,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description The order manifest of a `project_data.json` document (the JSON body; the `project` argument over MCP): per source and binding, each table and column that delivers it, clipped to where the binding is available (each clip listed), from the steward's holdings on a steward catalog and by canonical column on the global catalog. A project `validate` rejects structurally is `project_invalid`; any finding that leaves part of the request undeliverable blocks the whole order (`order_blocked`, with every finding). POST /api/project/order/manifest serves the same manifest as the exact `order.json` bytes. */
+        /** @description Preview the order manifest of a `project_data.json` document: the table and column delivering each binding, clipped where unavailable; a partly undeliverable request is `order_blocked`. */
         post: operations["order"];
         delete?: never;
         options?: never;
@@ -322,7 +322,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, with `ok` false when one is an error. A `schema_version` other than 3.0.0 is reported alone; then the document's structure, then each source's variant and period and each binding's variable, availability in the period (a narrower availability is an `info` clip), representation and value set, and on a steward catalog what the steward holds. An invalid project is a result, not an error. */
+        /** @description Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the microdata-tools-se plugin's project skill. */
         post: operations["validate"];
         delete?: never;
         options?: never;
@@ -439,6 +439,21 @@ export interface components {
         Axis: {
             label: string;
             name: string;
+        };
+        /**
+         * @description The serving catalog: its steward `id` (`global` for the global catalog), its
+         *     branding where the server loads it, its webapp origin where the server is
+         *     published, and the two versions a `project_data.json` drafted here carries:
+         *     `reg_meta_version` and `project_schema_version` (the document's `schema_version`,
+         *     not the catalog database's).
+         */
+        CatalogIdentity: {
+            id: string;
+            long_name?: string | null;
+            name?: string | null;
+            project_schema_version: string;
+            reg_meta_version: string;
+            webapp?: string | null;
         };
         /** @description One differing field: `data_type`, `data_length` or `column`. */
         Change: {
@@ -1252,8 +1267,12 @@ export interface components {
             /** @description One row per requested name, in request order. */
             columns: components["schemas"]["Resolution"][];
         };
-        /** @description The catalog root: the providers in scope and the classification root. */
+        /**
+         * @description The catalog root: which catalog answered, the providers in scope and the
+         *     classification root.
+         */
         Root: {
+            catalog: components["schemas"]["CatalogIdentity"];
             children: components["schemas"]["RootChild"][];
         };
         RootChild: {
@@ -1311,7 +1330,10 @@ export interface components {
             next_cursor?: string | null;
         };
         /**
-         * @description The read scope; every read takes it.
+         * @description `holdings`: what this steward holds, the default on a steward catalog and
+         *     unavailable on the global one. `reference`: every register in the catalog. Answer
+         *     from the default; repeat with `reference` when asked what exists elsewhere or when
+         *     holdings comes up empty, and say the data exists but is not held.
          * @enum {string}
          */
         Scope: "holdings" | "reference";
