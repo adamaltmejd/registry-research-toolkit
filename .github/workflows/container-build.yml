@@ -517,23 +517,17 @@ jobs:
           FLY_APP: reg-webapp-swecov
         run: *prune-registry
 
-  # Edge worker (SPA + /api and /mcp passthrough) for catalog.swecov.se. Runs AFTER the
-  # global origin deploy (deploy-skew guard): on a contract-changing push the SPA
-  # must not go live before the origin serves the new endpoints. `needs.deploy`
-  # being skipped (edge-only change → no image rebuild) is fine; a FAILED
-  # image build/deploy blocks the edge ship. Image-affecting changes also run
-  # this job even when nothing edge-side changed: the deploy ships a fresh
-  # DEPLOY_VERSION cache generation (#318), without which the edge would keep
-  # serving pre-deploy /api/* payloads for up to the 24h TTL.
+  # Edge worker for the global catalog's hosted MCP on reg-meta.vqv.uk: `/mcp` only,
+  # no SPA and no `/api` (reg_webapp/DESIGN.md → "Deployment"). Runs AFTER the global
+  # origin deploy, so the worker never forwards to an origin that does not yet admit
+  # the public host. `needs.deploy` being skipped (edge-only change → no image
+  # rebuild) is fine; a FAILED image build/deploy blocks the edge ship.
   edge-deploy:
     needs: [changes, build-image, deploy, wait-ci, schema-guard]
-    # Also gated on the pending-bump guard (#448), now its OWN `schema-guard` job:
-    # during a pending-bump window an edge-only main push consults `schema-guard`
-    # directly (it ran because the edge filter matched, even though build-image was
-    # skipped), so the edge correctly waits for the owed release alongside the origin
-    # — closing the prior edge-only gap where a skipped build-image left the verdict
-    # empty. A guard FAILURE also blocks the edge: build-image being skipped is
-    # tolerated below, so a failed guard must not fall through to an empty output.
+    # Also gated on the pending-bump guard (#448): during a pending-bump window the
+    # edge waits for the owed release alongside the origin. A guard FAILURE also
+    # blocks the edge: build-image being skipped is tolerated below, so a failed
+    # guard must not fall through to an empty output.
     if: >-
       !cancelled() && github.event_name != 'pull_request' &&
       needs.wait-ci.result == 'success' &&
@@ -549,33 +543,10 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v7.0.1
-      # Node as well as bun: `openapi-typescript` and `vite` are
-      # `#!/usr/bin/env node` launchers, so the runner's ambient node would
-      # otherwise build the deployed bundle. Same pin as ci.yml.
-      - uses: actions/setup-node@v7.0.0
-        with:
-          node-version: "26.8.1"
       # Pinned to the same bun as ci.yml's frontend job — bump both together.
-      # A floating toolchain here would make the production SPA bundle
-      # non-reproducible and untested by CI.
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.4.2"
-      # reg-core-wasm (`bun run gen:wasm`): the same toolchain and pinned
-      # wasm-bindgen CLI as ci.yml's frontend job — bump all three together.
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2.9.2
-      - uses: taiki-e/install-action@v2.87.26
-        with:
-          tool: wasm-bindgen@0.2.129
-      - run: bun install --frozen-lockfile
-        working-directory: reg_webapp/frontend
-      # Build the reg-core module, regenerate types from the committed contracts
-      # (no-op on a clean tree; ci.yml gates drift), then build.
-      - run: bun run gen:wasm && bun run gen:types && bun run build
-        working-directory: reg_webapp/frontend
       # Same stale-deploy guard as the origin job (see comment there).
       - name: Skip unless HEAD of main
         id: head
@@ -587,12 +558,19 @@ jobs:
             echo "::notice::skipping edge deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
             echo "skip=true" >> "$GITHUB_OUTPUT"
           fi
+      # The worker's route lives in zone vqv.uk, which the token must list under its
+      # Zone Resources; wrangler's own refusal names neither the zone nor the fix.
+      - name: Check the Cloudflare token reaches zone vqv.uk
+        if: steps.head.outputs.skip != 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          count=$(curl -sS -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            'https://api.cloudflare.com/client/v4/zones?name=vqv.uk' | jq '.result | length')
+          [ "$count" = 1 ] || { echo "::error::CLOUDFLARE_API_TOKEN cannot see zone vqv.uk: add vqv.uk to the token's Zone Resources" >&2; exit 1; }
       # wrangler reads CLOUDFLARE_API_TOKEN from the env; exact-pinned so no
-      # wrangler release lands unreviewed. DEPLOY_VERSION is the /api/* cache
-      # generation (#318) — the worker stamps it into every origin-bound URL,
-      # orphaning all pre-deploy edge-cache entries. The expression mirrors
-      # IMAGE_TAG: dispatch runs get a -<run_id> suffix so a same-SHA rebuild
-      # (data-only reg_meta release) still busts the cache.
+      # wrangler release lands unreviewed. The DEPLOY_VERSION expression mirrors
+      # IMAGE_TAG: dispatch runs get a -<run_id> suffix.
       - if: steps.head.outputs.skip != 'true'
         run: >-
           bunx wrangler@4.130.0 deploy --config reg_webapp/edge/wrangler.jsonc
@@ -600,80 +578,16 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
-      # The SPA mounts only once reg-core's .wasm loads, so the deployed one must
-      # answer 200 as application/wasm (WebAssembly.instantiateStreaming refuses
-      # any other type).
-      # This probe and the cache probe below are anchored: edge-deploy-swecov runs
-      # them against its own EDGE_HOST.
-      # Both probes wait for the new worker version (#1491): `wrangler deploy`
-      # returns before every PoP serves it, so the first request can reach the
-      # previous version. The worker exposes no version header, so each probe
-      # retries on its own signal of the new version (the .wasm hashed for this
-      # build; a young cache entry under this DEPLOY_VERSION) for a bounded
-      # window, then fails naming what it expected and what it last saw.
-      - name: Edge .wasm probe
-        if: steps.head.outputs.skip != 'true'
-        working-directory: reg_webapp/frontend
-        env:
-          EDGE_HOST: catalog.swecov.se
-        run: &edge-wasm-probe |
-          window=180 interval=10
-          wasm=$(cd dist && ls assets/*.wasm)
-          deadline=$((SECONDS + window))
-          # Before the new assets reach a PoP, the hashed path answers the worker's
-          # no-store 404: retry anything but 200 application/wasm.
-          while :; do
-            read -r code type < <(curl -m 15 -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
-            echo "$wasm: $code $type"
-            [ "$code" = 200 ] && [ "$type" = application/wasm ] && break
-            [ "$SECONDS" -lt "$deadline" ] || { echo "FATAL: expected this build's $wasm as 200 application/wasm within ${window}s, last saw $code $type" >&2; exit 1; }
-            sleep "$interval"
-          done
-      # Standing #220 regression probe: the /api/* Cache Rule and the ETag
-      # contract are zone-dashboard state (click-ops, no IaC) — assert after
-      # every edge deploy that a search read still caches (MISS/HIT family,
-      # not DYNAMIC) and revalidates with an edge 304. Catches silent Cache
-      # Rule deletion / zone drift that nothing else in CI would notice.
-      # Also asserts the HIT is YOUNG (#318): this deploy started a new cache
-      # generation, so any reachable entry must have been populated after it —
-      # an old Age means DEPLOY_VERSION stopped reaching the cache key and the
-      # stale-24h window is back.
-      - name: Edge cache probe (#220 + #318)
-        if: steps.head.outputs.skip != 'true'
-        env:
-          EDGE_HOST: catalog.swecov.se
-          DEPLOY_VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-        run: &edge-cache-probe |
-          window=180 interval=10
-          url="https://$EDGE_HOST/api/search?q=inkomst"
-          deadline=$((SECONDS + window))
-          # One request per attempt, so status and Age come from the same isolate.
-          # A MISS (the new cache key's first read warms it) or an old HIT (a PoP
-          # still on the previous worker version) retries until the window ends.
-          while :; do
-            IFS='|' read -r code status age < <(curl -m 15 -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
-            echo "$code cf-cache-status: $status, age: ${age:-0}s"
-            [ "$status" = HIT ] && [ "${age:-0}" -le 600 ] && break
-            if [ "$SECONDS" -ge "$deadline" ]; then
-              [ "$status" = HIT ] || { echo "FATAL: /api/* not edge-cached within ${window}s, last saw $code $status (Cache Rule missing?)" >&2; exit 1; }
-              echo "FATAL: expected a young HIT under DEPLOY_VERSION $DEPLOY_VERSION within ${window}s, last saw a HIT ${age}s old — the new worker version is not served everywhere, or #318 DEPLOY_VERSION cache-key versioning is broken" >&2
-              exit 1
-            fi
-            sleep "$interval"
-          done
-          etag=$(curl -m 15 -sfo /dev/null -w '%header{etag}' "$url")
-          code=$(curl -m 15 -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
-          echo "If-None-Match -> $code"
-          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
       # Public-host MCP smoke: the hosted
       # endpoint answers JSON-RPC through the edge — `initialize`, `tools/list`
       # naming `search`, and one `search` call that is not a tool error. Fails
       # when the worker stops routing /mcp, the origin's allowed hosts drop the
-      # public host, or the tool stops answering.
+      # public host, or the tool stops answering. Anchored: edge-deploy-swecov runs
+      # it against its own EDGE_HOST.
       - name: Public MCP smoke
         if: steps.head.outputs.skip != 'true'
         env:
-          EDGE_HOST: catalog.swecov.se
+          EDGE_HOST: reg-meta.vqv.uk
         run: &public-mcp-smoke |
           set -euo pipefail
           rpc() {
@@ -688,66 +602,13 @@ jobs:
           rpc tools/list '{}' | jq -e '[.result.tools[].name] | index("search")'
           rpc tools/call '{"name": "search", "arguments": {"q": "inkomst", "limit": 1}}' \
             | jq -e '.result.isError == false'
-      # Public docs smoke: the docs pages'
-      # operations answer through the edge — a search hit, that hit's document, and
-      # AES's first related PDF. Fails when the deployed image lacks a compatible
-      # docs database (`docs_unavailable`) or a docs route stops answering.
-      - name: Public docs smoke
-        if: steps.head.outputs.skip != 'true'
-        run: |
-          set -euo pipefail
-          api=https://catalog.swecov.se/api/docs
-          filename=$(curl -sfS "$api/search?q=inkomst&limit=1" | jq -er '.data.items[0].filename')
-          curl -sfS "$api/doc/$(jq -rn --arg f "$filename" '$f | @uri')" | jq -e --arg f "$filename" '.data.filename == $f'
-          pdf=$(curl -sfS "$api/related/scb/aes" | jq -er '.data[0].filename | @uri')
-          type=$(curl -sfS -o /dev/null -w '%{content_type}' "$api/file/scb/aes/$pdf")
-          echo "related document: $type"
-          [ "$type" = "application/pdf" ] || { echo "FATAL: related document is $type" >&2; exit 1; }
-      # Public catalog smoke: the catalog
-      # pages' reads answer through the edge from the Rust server — the root, a
-      # register, one of its variables and that variable's states, one of its
-      # concept groups and a classification. Fails when the worker stops
-      # routing /api/catalog or /api/states, or `show` or `states` stops
-      # answering a kind the SPA renders.
-      - name: Public catalog smoke
-        if: steps.head.outputs.skip != 'true'
-        run: |
-          set -euo pipefail
-          api=https://catalog.swecov.se/api
-          get() { curl -sfS "$api/$1"; }
-          get catalog | jq -e '.data.kind == "root"'
-          register=$(get catalog/scb/lisa)
-          jq -e '.data.kind == "register"' <<<"$register"
-          variable=$(jq -er '.data.children[0].fqid' <<<"$register")
-          get "catalog/$variable" | jq -e '.data.kind == "variable"'
-          get "states/$variable?limit=1" | jq -e '.data.items | length == 1'
-          group=$(jq -er '.data.groups[0].fqid' <<<"$register")
-          get "catalog/$group" | jq -e '.data.kind == "concept_group"'
-          classification=$(get catalog/class | jq -er '.data.children[0].fqid')
-          get "catalog/$classification" | jq -e '.data.kind == "classification"'
-      # Public project smoke: the project
-      # editor's POSTs answer through the edge from the Rust server — an empty
-      # project validates clean, and its order download is refused with the
-      # located `order_blocked` document. Fails when the worker stops routing
-      # /api/project, the write limit or the body parse refuses a plain request,
-      # or either operation stops answering its document.
-      - name: Public project smoke
-        if: steps.head.outputs.skip != 'true'
-        run: |
-          set -euo pipefail
-          api=https://catalog.swecov.se/api/project
-          project='{"schema_version": "3.0.0", "steward": "global", "reg_meta_version": "5.1.0", "name": "smoke", "sources": []}'
-          post() { curl -sS -o "$2" -w '%{http_code}' -H 'content-type: application/json' -d "$project" "$api/$1"; }
-          code=$(post validate validated.json)
-          [ "$code" = 200 ] || { echo "FATAL: validate answered $code" >&2; cat validated.json >&2; exit 1; }
-          jq -e '.data.ok == true' validated.json
-          code=$(post order/manifest ordered.json)
-          [ "$code" = 422 ] || { echo "FATAL: the empty order answered $code" >&2; cat ordered.json >&2; exit 1; }
-          jq -e '.error.code == "order_blocked" and any(.error.fields.findings[]; .code == "project_empty")' ordered.json
 
-  # Edge worker (SPA + /api and /mcp passthrough) for data.swecov.se. Separate Worker
-  # deployment from catalog.swecov.se so each origin can bump its own cache
-  # generation after its own Fly deploy succeeds.
+  # Edge worker (SPA + /api and /mcp passthrough) for data.swecov.se. Runs AFTER the
+  # SWECOV origin deploy (deploy-skew guard): on a contract-changing push the SPA
+  # must not go live before the origin serves the new endpoints. Image-affecting
+  # changes also run this job even when nothing edge-side changed: the deploy ships a
+  # fresh DEPLOY_VERSION cache generation (#318), without which the edge would keep
+  # serving pre-deploy /api/* payloads for up to the 24h TTL.
   edge-deploy-swecov:
     needs: [changes, build-swecov-image, deploy-swecov, wait-ci, schema-guard]
     if: >-
@@ -800,18 +661,69 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
+      # The SPA mounts only once reg-core's .wasm loads, so the deployed one must
+      # answer 200 as application/wasm (WebAssembly.instantiateStreaming refuses
+      # any other type).
+      # Both probes wait for the new worker version (#1491): `wrangler deploy`
+      # returns before every PoP serves it, so the first request can reach the
+      # previous version. The worker exposes no version header, so each probe
+      # retries on its own signal of the new version (the .wasm hashed for this
+      # build; a young cache entry under this DEPLOY_VERSION) for a bounded
+      # window, then fails naming what it expected and what it last saw.
       - name: SWECOV edge .wasm probe
         if: steps.head.outputs.skip != 'true'
         working-directory: reg_webapp/frontend
         env:
           EDGE_HOST: data.swecov.se
-        run: *edge-wasm-probe
+        run: |
+          window=180 interval=10
+          wasm=$(cd dist && ls assets/*.wasm)
+          deadline=$((SECONDS + window))
+          # Before the new assets reach a PoP, the hashed path answers the worker's
+          # no-store 404: retry anything but 200 application/wasm.
+          while :; do
+            read -r code type < <(curl -m 15 -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
+            echo "$wasm: $code $type"
+            [ "$code" = 200 ] && [ "$type" = application/wasm ] && break
+            [ "$SECONDS" -lt "$deadline" ] || { echo "FATAL: expected this build's $wasm as 200 application/wasm within ${window}s, last saw $code $type" >&2; exit 1; }
+            sleep "$interval"
+          done
+      # Standing #220 regression probe: the /api/* Cache Rule and the ETag
+      # contract are zone-dashboard state (click-ops, no IaC) — assert after
+      # every edge deploy that a search read still caches (MISS/HIT family,
+      # not DYNAMIC) and revalidates with an edge 304. Catches silent Cache
+      # Rule deletion / zone drift that nothing else in CI would notice.
+      # Also asserts the HIT is YOUNG (#318): this deploy started a new cache
+      # generation, so any reachable entry must have been populated after it —
+      # an old Age means DEPLOY_VERSION stopped reaching the cache key and the
+      # stale-24h window is back.
       - name: SWECOV edge cache probe (#220 + #318)
         if: steps.head.outputs.skip != 'true'
         env:
           EDGE_HOST: data.swecov.se
           DEPLOY_VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-        run: *edge-cache-probe
+        run: |
+          window=180 interval=10
+          url="https://$EDGE_HOST/api/search?q=inkomst"
+          deadline=$((SECONDS + window))
+          # One request per attempt, so status and Age come from the same isolate.
+          # A MISS (the new cache key's first read warms it) or an old HIT (a PoP
+          # still on the previous worker version) retries until the window ends.
+          while :; do
+            IFS='|' read -r code status age < <(curl -m 15 -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
+            echo "$code cf-cache-status: $status, age: ${age:-0}s"
+            [ "$status" = HIT ] && [ "${age:-0}" -le 600 ] && break
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              [ "$status" = HIT ] || { echo "FATAL: /api/* not edge-cached within ${window}s, last saw $code $status (Cache Rule missing?)" >&2; exit 1; }
+              echo "FATAL: expected a young HIT under DEPLOY_VERSION $DEPLOY_VERSION within ${window}s, last saw a HIT ${age}s old — the new worker version is not served everywhere, or #318 DEPLOY_VERSION cache-key versioning is broken" >&2
+              exit 1
+            fi
+            sleep "$interval"
+          done
+          etag=$(curl -m 15 -sfo /dev/null -w '%header{etag}' "$url")
+          code=$(curl -m 15 -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
+          echo "If-None-Match -> $code"
+          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
       # The SWECOV catalog's hosted MCP endpoint (crates/DESIGN.md, "Hosted MCP"),
       # the same smoke as the global one.
       - name: SWECOV public MCP smoke

@@ -8,8 +8,8 @@ description: Draft a project_data.json register data order with the catalog MCP 
 
 A `project_data.json` lists the register columns a study orders: each source is one
 register variant over a period, and each binding is one variable delivered from it. The
-agent drafts and checks the file; the user orders in the webapp. The document's schema
-is [project_data.schema.json](project_data.schema.json), generated from the server's API
+agent drafts and checks the file. The document's schema is
+[project_data.schema.json](project_data.schema.json), generated from the server's API
 contract.
 
 The catalog server's `search`, `show`, `states` and `coverage` tools are described in
@@ -18,10 +18,9 @@ the `register-metadata-search` skill.
 ## Drafting a project
 
 1. Call `show` with no `ref`. `data.catalog` names the catalog this server serves: its
-   `id`, `reg_meta_version`, `project_schema_version` and, on a hosted server, the
-   `webapp` origin. Set the document's `steward` to `id`, `reg_meta_version` to
-   `reg_meta_version` and `schema_version` to `project_schema_version`. Never write
-   these from memory.
+   `id`, `reg_meta_version` and `project_schema_version`. Set the document's `steward`
+   to `id`, `reg_meta_version` to `reg_meta_version` and `schema_version` to
+   `project_schema_version`. Never write these from memory.
 2. Find each variable with `search` and `show`, then `states` for the register variant
    that delivers it over the study period. A source's `register_variant` is the
    three-part `<provider>/<register>/<variant>`; a binding's `variable` is the
@@ -36,9 +35,7 @@ the `register-metadata-search` skill.
    holdings; another server refuses the document with `steward_mismatch`. Fix every
    issue whose `level` is `error` and validate again until `ok` is true; report the
    warnings to the user.
-5. Save the file as `project_data.json` and tell the user to open it at
-   `<webapp>/project` (Open, then Download order.json). Without a `webapp` origin the
-   server is local; name the catalog `id` instead.
+5. Save the file as `project_data.json`.
 
 ## Questions about my project
 

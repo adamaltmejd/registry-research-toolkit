@@ -186,12 +186,16 @@ Rules:
   context. Fine-grained HTTP routes for the SPA map onto the same operations.
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
 
-**Hosted MCP.** `serve` exposes `/mcp` at catalog.swecov.se, so agents need no install
-and no 1.2 GB download. Its rate limits are sized for tool calls, separately from the
-SPA's. A steward catalog is served over hosted MCP when its artifact is already public,
-as SWECOV's is (data.swecov.se); a private steward catalog stays on local
-`reg-meta mcp`. A published server knows its origin (`--public-host`) and `show`'s root
-reports it as the catalog's webapp, where a drafted project is opened and ordered.
+**Hosted MCP.** `serve` exposes the global catalog's `/mcp` at reg-meta.vqv.uk, so
+agents need no install and no 1.2 GB download. Its rate limits are sized for tool calls,
+separately from the SPA's. A steward catalog is served over hosted MCP when its artifact
+is already public, as SWECOV's is (data.swecov.se); a private steward catalog stays on
+local `reg-meta mcp`. A published server admits its MCP host (`--public-host`).
+
+**Hosted MCP has no webapp handoff** (maintainer, 2026-10-20, #1709). Ordering happens
+in a steward webapp; `show`'s root names none. The `order` tool stays: researchers
+describe data they already hold on MONA as a `project_data.json`, and the mock-data
+tools need the binding → table/column layout it computes.
 
 ## A provider-neutral substrate
 

@@ -139,8 +139,8 @@ ships as a container image built from the newest `reg_meta/v*` release's assets.
   rules stabilize ([`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md), "Build
   performance").
 - **Agents and the SPA are the users.** One operation set, exposed over HTTP and MCP
-  (hosted at catalog.swecov.se and local `reg-meta mcp`); there is no query CLI and no
-  human-oriented output. The interface rules are in
+  (hosted at reg-meta.vqv.uk and data.swecov.se, and local `reg-meta mcp`); there is no
+  query CLI and no human-oriented output. The interface rules are in
   [`crates/DESIGN.md`](crates/DESIGN.md), "Agent and web interface".
 
 ### Accepted source revisions and catalog generations

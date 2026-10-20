@@ -142,7 +142,7 @@ jobs:
           bun-version: "1.4.2"
       # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
       # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
-      # both together with container-build.yml's edge jobs; a mismatch fails the
+      # both together with container-build.yml's edge-deploy-swecov job; a mismatch fails the
       # bindgen run).
       - uses: dtolnay/rust-toolchain@stable
         with:
