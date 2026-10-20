@@ -322,7 +322,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the microdata-tools-se plugin's project skill. */
+        /** @description Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the `register-project` skill of the microdata-tools-se plugin. */
         post: operations["validate"];
         delete?: never;
         options?: never;

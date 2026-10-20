@@ -1,8 +1,9 @@
 # Privacy Policy
 
-`microdata-tools-se` is a plugin bundle for Codex and Claude Code. It ships a skill and
-declares one MCP server, the hosted register metadata catalog at
-`https://catalog.swecov.se/mcp`, operated by the plugin author.
+`microdata-tools-se` is a plugin bundle for Codex and Claude Code. It ships skills and
+connects to a hosted register metadata catalog operated by the plugin author: the global
+catalog at `https://catalog.swecov.se/mcp` by default, or SWECOV's at
+`https://data.swecov.se/mcp` when you select it.
 
 ## Data handling
 

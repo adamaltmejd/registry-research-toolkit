@@ -4904,7 +4904,7 @@
   },
   {
     "name": "order",
-    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `validate` (project): Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the microdata-tools-se plugin's project skill.\n- `order` (project): Preview the order manifest of a `project_data.json` document: the table and column delivering each binding, clipped where unavailable; a partly undeliverable request is `order_blocked`.",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `validate` (project): Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the `register-project` skill of the microdata-tools-se plugin.\n- `order` (project): Preview the order manifest of a `project_data.json` document: the table and column delivering each binding, clipped where unavailable; a partly undeliverable request is `order_blocked`.",
     "inputSchema": {
       "properties": {
         "operation": {
