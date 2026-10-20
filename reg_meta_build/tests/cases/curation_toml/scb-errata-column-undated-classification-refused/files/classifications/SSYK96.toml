@@ -1,0 +1,5 @@
+[classification]
+short_name = "SSYK96"
+slug = "ssyk96"
+name = "SSYK 96"
+codes_file = "ssyk96.csv"

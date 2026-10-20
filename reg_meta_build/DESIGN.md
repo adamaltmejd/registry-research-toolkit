@@ -1140,7 +1140,10 @@ A steward holding dated at dataset grain (`holdings_period`) converts to exactly
 pooled-range occurrence over that range (Y-212): the delivery list says the column is
 held somewhere inside the range, never that it exists in every wave, so the entry is
 never expanded into per-edition claims. The legacy undated `all_versions` form keeps its
-unknown scope until the curation rewrites those entries with their ranges.
+unknown scope until the curation rewrites those entries with their ranges. It may not
+declare a `classification`, refused at load (#1630): with no period the binding can only
+raise `unsupported_classification_scope`, whose sole evidence is the record anchoring
+the addition, so the warning would land on that record's native variable.
 
 Copied coding takes the donor's coding records at the declared occurrence scope. It
 carries no fingerprint of its own, because a pin could only compare the build with
