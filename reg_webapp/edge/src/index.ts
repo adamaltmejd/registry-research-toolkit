@@ -18,7 +18,9 @@ interface Env {
   ROUTE_MCP?: string;
   // Secret (`wrangler secret put EDGE_TOKEN`), equal to the origin's
   // REG_META_EDGE_TOKEN: it proves a request came through this worker, so the
-  // origin rate-limits `/mcp` by the request's CF-Connecting-IP.
+  // origin rate-limits `/mcp` by the request's CF-Connecting-IP. Without it the
+  // worker refuses every forward: the origin would put every edge client in the
+  // Fly proxy's one bucket.
   EDGE_TOKEN?: string;
 }
 
@@ -51,9 +53,15 @@ export default {
     const mcp = env.ROUTE_MCP === "true" && MCP_PATH.test(url.pathname);
     const toOrigin = mcp || (env.ASSETS && ORIGIN_PATHS.some((re) => re.test(url.pathname)));
     if (toOrigin) {
+      if (!env.EDGE_TOKEN) {
+        return new Response("Edge misconfigured: EDGE_TOKEN is not set", {
+          status: 503,
+          headers: { "cache-control": "no-store" },
+        });
+      }
       url.searchParams.set(VERSION_PARAM, env.DEPLOY_VERSION);
       const forwarded = new Request(url, request);
-      if (env.EDGE_TOKEN) forwarded.headers.set("x-edge-token", env.EDGE_TOKEN);
+      forwarded.headers.set("x-edge-token", env.EDGE_TOKEN);
       return fetch(forwarded);
     }
     if (!env.ASSETS) return notFound();

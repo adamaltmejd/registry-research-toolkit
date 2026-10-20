@@ -1143,10 +1143,11 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   the worker proves a request came through the edge with a shared secret (`EDGE_TOKEN`
   on the worker, `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only
   such a request is keyed on its `CF-Connecting-IP`. Any other request, a direct-origin
-  hit included, is keyed on its peer, so a forged `CF-Connecting-IP` buys nothing.
-  Without the secret every edge `/mcp` client shares the proxy's bucket. After each edge
-  deploy, `container-build.yml` sends `initialize`, `tools/list` and one `search` to
-  that host's public `/mcp`.
+  hit included, is keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. A
+  worker without the secret refuses every forward with a `no-store` 503, rather than put
+  every edge client in the proxy's one bucket. After each edge deploy,
+  `container-build.yml` sends `initialize`, `tools/list` and one `search` to that host's
+  public `/mcp`.
 - **Apps**: `reg-webapp-global` serves `reg-meta.vqv.uk`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/1GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
