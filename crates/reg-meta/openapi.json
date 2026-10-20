@@ -994,7 +994,7 @@
     },
     "/api/project/validate": {
       "post": {
-        "description": "Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the `register-project` skill of the microdata-tools-se plugin.",
+        "description": "Validate a `project_data.json` document (the JSON body): every issue, `ok` false when one is an error.",
         "operationId": "validate",
         "requestBody": {
           "content": {
@@ -1748,7 +1748,7 @@
       },
       "CatalogIdentity": {
         "type": "object",
-        "description": "The serving catalog: its steward `id` (`global` for the global catalog), its\nbranding where the server loads it, its webapp origin where the server is\npublished, and the two versions a `project_data.json` drafted here carries:\n`reg_meta_version` and `project_schema_version` (the document's `schema_version`,\nnot the catalog database's).",
+        "description": "The serving catalog: its steward `id` (`global` for the global catalog), its\nbranding where the server loads it, and the two versions a `project_data.json` drafted here carries:\n`reg_meta_version` and `project_schema_version` (the document's `schema_version`,\nnot the catalog database's).",
         "required": [
           "id",
           "reg_meta_version",
@@ -1775,12 +1775,6 @@
           },
           "reg_meta_version": {
             "type": "string"
-          },
-          "webapp": {
-            "type": [
-              "string",
-              "null"
-            ]
           }
         }
       },

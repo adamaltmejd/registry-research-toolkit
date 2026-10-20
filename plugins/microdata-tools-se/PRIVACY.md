@@ -9,8 +9,8 @@ catalog at `https://reg-meta.vqv.uk/mcp` by default, or SWECOV's at
 
 - **Queries leave your machine.** When your agent calls a catalog tool, the tool's
   arguments are sent to the hosted server: search terms, register and variable names,
-  column names passed to `resolve`, and any `project_data.json` document passed to
-  `order`. Do not put personal data or confidential material in these arguments.
+  and column names passed to `resolve`. Do not put personal data or confidential
+  material in these arguments.
 - The server answers from register metadata only (schemas, value codes, documentation),
   not microdata.
 - The catalog server does not log tool arguments; it keeps a short-lived

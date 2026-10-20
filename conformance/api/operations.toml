@@ -204,20 +204,18 @@ row has a status."""
 name = "validate"
 slice = "3e"
 http = ["POST /api/project/validate"]
-tool = "order"
 params = { project = "project" }
 result = "today's validation result {ok, issues}"
-note = "An invalid project is a 200 with `ok: false`, as today."
+note = "An invalid project is a 200 with `ok: false`, as today. HTTP only: MCP is catalog lookup only, and projects are drafted and ordered in a steward webapp."
 
 [[operation]]
 name = "order"
 slice = "3e"
 http = ["POST /api/project/order"]
-tool = "order"
 params = { project = "project" }
 result = "the order manifest"
 errors = ["project_invalid", "order_blocked"]
-note = "The manifest's exact bytes come from the download route below."
+note = "The manifest's exact bytes come from the download route below. HTTP only, as `validate`."
 
 [[operation]]
 name = "docs_search"

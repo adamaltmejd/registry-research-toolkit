@@ -152,7 +152,7 @@ definitions, and the MCP tool schemas are built from the same utoipa OpenAPI doc
 so the transports cannot drift. OpenAPI and MCP `tools/list` are the self-description;
 there is no `describe` operation. A former CLI use has a transport: agents call MCP
 tools, the Docker bake and the publish workflow use `curl` and a started `serve`, and an
-order is `POST /api/project/order` or the `order` tool.
+order is `POST /api/project/order`.
 
 Rules:
 
@@ -190,8 +190,13 @@ Rules:
 agents need no install and no 1.2 GB download. Its rate limits are sized for tool calls,
 separately from the SPA's. A steward catalog is served over hosted MCP when its artifact
 is already public, as SWECOV's is (data.swecov.se); a private steward catalog stays on
-local `reg-meta mcp`. A published server knows its origin (`--public-host`) and `show`'s
-root reports it as the catalog's webapp, where a drafted project is opened and ordered.
+local `reg-meta mcp`. A published server admits its MCP host (`--public-host`).
+
+**MCP is catalog lookup only** (maintainer, 2026-10-20, #1709). Project drafting and
+ordering happen in a steward webapp: `validate` and `order` are HTTP routes for its
+project editor and no MCP tool, and the plugin bundles no project skill. The hosted
+global catalog has no webapp, so a project drafted over its MCP would have nowhere to be
+ordered. Revisit when the global catalog has a user-facing ordering path.
 
 ## A provider-neutral substrate
 
