@@ -307,7 +307,7 @@ const windowBlocked = $derived(
 );
 
 // `requestError` closes the gate too: `/order` can fail-close a project that
-// VALIDATES clean (a steward-provenance mismatch, an uncovered period), and an
+// VALIDATES clean (an uncovered period), and an
 // enabled accent CTA that can only repeat the same 422 reads as "ready". Any
 // edit re-runs validation, which clears `requestError` and reopens the gate.
 const canDownloadOrder = $derived(

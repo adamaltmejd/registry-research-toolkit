@@ -1,0 +1,17 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues": [
+        {
+          "code": "steward_mismatch",
+          "level": "error",
+          "message": "this project's steward is 'global' and this deployment serves the 'swecov' steward; order the project from the deployment that serves 'global'. Its steward is provenance — no deployment rewrites it to match its own",
+          "path": "/steward",
+          "successor_fqid": null
+        }
+      ]
+    }
+  }
+]

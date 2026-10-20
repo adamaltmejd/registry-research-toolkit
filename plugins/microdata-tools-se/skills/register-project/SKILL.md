@@ -33,10 +33,9 @@ the `register-metadata-search` skill.
    with `invalid_period`.
 4. Call `order` with `operation: "validate"` and the document as `project`, on the same
    server whose `show` root gave the `steward`. Each catalog validates against its own
-   holdings, so another server's `validate` returns a different, equally confident
-   answer for the same document (`order` there refuses with `steward_mismatch`). Fix
-   every issue whose `level` is `error` and validate again until `ok` is true; report
-   the warnings to the user.
+   holdings; another server refuses the document with `steward_mismatch`. Fix every
+   issue whose `level` is `error` and validate again until `ok` is true; report the
+   warnings to the user.
 5. Save the file as `project_data.json` and tell the user to open it at
    `<webapp>/project` (Open, then Download order.json). Without a `webapp` origin the
    server is local; name the catalog `id` instead.

@@ -629,7 +629,10 @@ steward rather than a register, and ordering it may deserve its own access decis
 The validate operation runs the supported-version decision, then the structural
 validator ([reg-core/DESIGN.md](reg-core/DESIGN.md)), then the semantic layer here, and
 concatenates their issues. A failing project is a result, not an error. A structural
-failure skips the semantic layer, so a rejected document costs no catalog read.
+failure skips the semantic layer, so a rejected document costs no catalog read. A
+document whose `steward` is not the serving catalog's is one `steward_mismatch` error at
+`/steward` and nothing else, as `order` refuses it: every other issue would come from
+another steward's holdings.
 
 Per source variant and binding:
 
