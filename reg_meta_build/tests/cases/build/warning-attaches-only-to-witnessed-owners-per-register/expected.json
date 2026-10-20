@@ -43,7 +43,7 @@
       "where": {"register": "alternatives"},
       "fields": ["variable", "variant", "column", "valid_from", "valid_to", "code", "detail", "detail_hash_of"],
       "rows": [
-        ["income", null, null, "2021-01-01", "2021-12-31", "missing_coding_period", "Accepted while the alternatives stay uncoded.", "issue"]
+        ["income", null, null, "2021-01-01", "2021-12-31", "missing_coding_period", "The supplied evidence does not establish the stored response codes for this period. Other documented periods retain their known domains.", "issue"]
       ],
       "note": "alternatives: member 3002 is delivered through First and Second, but the variable's 2021 state names only First, so the delivery witnesses do not match one state: the warning keeps its variable and period and names no variant or column."
     },

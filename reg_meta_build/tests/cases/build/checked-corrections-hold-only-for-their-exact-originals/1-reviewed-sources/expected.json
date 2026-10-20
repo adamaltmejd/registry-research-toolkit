@@ -118,23 +118,24 @@
       "rows": [
         ["atc-outpatient", "par-ov", "2001-01-01", "2020-12-31"],
         ["atc-inpatient", "par-sv", "2001-01-01", "2020-12-31"],
-        ["kva-outpatient", "par-ov", "2001-01-01", "2020-12-31"],
+        ["kva-outpatient", "par-ov", "2001-01-01", "2010-12-31"],
+        ["kva-outpatient", "par-ov", "2012-01-01", "2020-12-31"],
         ["kva-inpatient", "par-sv", "2001-01-01", "2020-12-31"]
       ],
-      "note": "The outpatient 2001-2010 and 2011-2020 deliveries state identical facts, so they merge into one state (#1296 2d); the report keeps one warning per source period."
+      "note": "ATC's outpatient 2001-2010 and 2011-2020 deliveries state identical facts, so they merge into one state (#1296 2d); KVA's 2001-2010 and 2012-2020 leave 2011 undelivered, so they stay two."
     },
     {
       "table": "report_warnings",
       "where": {"register": "par", "code": "source_identity_assumption"},
-      "fields": ["variable", "variant", "valid_from", "summary"],
+      "fields": ["variable", "variant", "valid_from", "valid_to", "summary"],
       "rows": [
-        ["atc-outpatient", "par-ov", "2001-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
-        ["atc-outpatient", "par-ov", "2011-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
-        ["atc-inpatient", "par-sv", "2001-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
-        ["kva-outpatient", "par-ov", "2001-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
-        ["kva-outpatient", "par-ov", "2011-01-01", "Separate source-defined clinical contexts; no equivalence inferred."],
-        ["kva-inpatient", "par-sv", "2001-01-01", "Separate source-defined clinical contexts; no equivalence inferred."]
-      ]
+        ["atc-outpatient", "par-ov", "2001-01-01", "2020-12-31", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["atc-inpatient", "par-sv", "2001-01-01", "2020-12-31", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["kva-outpatient", "par-ov", "2001-01-01", "2010-12-31", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["kva-outpatient", "par-ov", "2012-01-01", "2020-12-31", "Separate source-defined clinical contexts; no equivalence inferred."],
+        ["kva-inpatient", "par-sv", "2001-01-01", "2020-12-31", "Separate source-defined clinical contexts; no equivalence inferred."]
+      ],
+      "note": "One warning per contiguous window of equal warnings (#1708): ATC's two adjacent outpatient deliveries give one, 2001-2020; KVA's gap at 2011 stays a gap, so it gives two. Fails if `scope_data_warnings` emits a warning per occurrence or state again (ATC gains a 2011 row) or joins windows across a gap (one KVA row over 2001-2020)."
     },
     {
       "table": "states",

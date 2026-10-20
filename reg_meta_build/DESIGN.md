@@ -1767,13 +1767,27 @@ carry an explicit `data_warning` summary. Omitted annotations are silent. Only
 applicable guarded decisions emit assumption warnings. Identity annotations retain the
 annotated source members; coding annotations use their exact native column and authored
 window; errata annotations follow the actual added occurrence, not its supporting native
-anchor. The writer validates each complete warning payload and stores it in an indexed
+anchor. Equal warnings of one cell (code, variable, variant, column, summary, detail)
+are one warning per contiguous window over all its occurrences and states: adjacent or
+overlapping periods join, a gap stays a gap, and the window cites every record behind it
+(#1708). The writer validates each complete warning payload and stores it in an indexed
 `data_warning` table. No assumption is discovered by parsing evidence prose.
+
+A catalog warning's text is published, never curator rationale (#1708). Its detail is
+its code's template (`WARNING_DETAILS`); an assumption warning's summary is the curated
+`data_warning`, any other its code's `WARNING_SUMMARIES` entry. A user-facing code
+without both entries fails the build. The reviewer's `reason` and `provenance` stay in
+the curation entry the warning's `acknowledged_by` or `case_id` names, and in the detail
+of a build-only warning. Diagnostics a researcher reads as one limitation share a public
+code (`PUBLIC_CODES`: `no_supported_states` publishes as `unsupported_occurrence`); the
+build keeps the original code, which acknowledgements name.
 
 The build report (`events.jsonl.gz`, kind `data_warning`) keeps every warning the build
 forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CODES`
 (identity and lineage bookkeeping, set-aside item validity, columnless occurrences and
-curator identity rationale; maintainer decision, #1296) never reach `data_warning`, and
+curator identity rationale, maintainer decision #1296; sentinel and nonconforming
+classification codes, which the value-set view lists itself, derived sibling-group shape
+and support metadata bound to no variable, #1708) never reach `data_warning`, and
 `validate_built_db` refuses an artifact that holds one or whose row does not hash to its
 `warning_id`.
 

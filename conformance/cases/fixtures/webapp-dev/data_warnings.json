@@ -25,16 +25,16 @@
     "delivery_column_name": "Forsamling",
     "valid_from": "2006-01-01",
     "valid_to": "2019-12-31",
-    "code": "nonconforming_classification_codes",
+    "code": "unknown_code_validity",
     "severity": "warning",
-    "summary": "The delivered domain includes nonstandard classification codes.",
-    "detail": "Source codes and labels are retained alongside the claimed classification.",
+    "summary": "The validity periods of the source response codes are unknown",
+    "detail": "The source response codes are retained, but the periods in which each code is valid are not documented.",
     "fields": [],
     "refs": [],
     "withheld_output": [],
     "acknowledged_by": null,
     "case_id": null,
-    "diagnostic_detail_sha256": "5d9a26e2fed266c3af26cabc7c1a09985b02c67d51b2428adee3e289fbc4ab99",
-    "warning_id": "d8f64eedca1291fac1d0a875c44455e4d3e2573ef9eef4e13750e019efb27dc4"
+    "diagnostic_detail_sha256": "012c0dc60215a682ecbe1aa3409075ea1f264e2b053ce130fcd1ab72131e0329",
+    "warning_id": "0b9baacf859c964f6c6baf81c6c74adeef86db9f5445816a40aec68dfbdf8bfa"
   }
 ]
