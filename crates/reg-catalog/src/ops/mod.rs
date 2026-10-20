@@ -46,14 +46,15 @@ use crate::{CONTRACT_VERSION, Catalog, Code, Docs, Error, Scope};
 
 /// What a running server answers from: the admitted catalog and its docs database
 /// (when present), its steward branding (`serve` only: `mcp` loads none, so `show`'s
-/// root omits the branding there), its public origin (`serve --public-host`, the
-/// webapp and `/mcp` origin; none for `mcp` or an unpublished server) and the
+/// root omits the branding there), its webapp origin (`serve --webapp-origin`, where a
+/// drafted project is opened and ordered; none for `mcp` or a deployment without a
+/// hosted webapp) and the
 /// server's version (`reg_meta_version`).
 pub struct Server {
     pub catalog: Catalog,
     pub docs: Option<Docs>,
     pub steward: Option<Steward>,
-    pub origin: Option<String>,
+    pub webapp: Option<String>,
     pub version: &'static str,
 }
 

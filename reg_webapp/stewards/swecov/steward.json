@@ -1,6 +1,5 @@
 {
   "id": "swecov",
   "name": "SWECOV",
-  "long_name": "SWECOV register-data catalog",
-  "hostname": "data.swecov.se"
+  "long_name": "SWECOV register-data catalog"
 }

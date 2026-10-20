@@ -2,7 +2,8 @@
 //!
 //! ```text
 //! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N [--host ADDR]
-//!                [--public-host HOST] [--write-limit N] [--mmap-size BYTES]
+//!                [--public-host HOST] [--webapp-origin URL] [--write-limit N]
+//!                [--mmap-size BYTES]
 //! reg-meta mcp --db DIR [--catalog NAME]
 //! ```
 //!
@@ -11,7 +12,9 @@
 //! `DIR/<catalog>/steward.json` under `--stewards` and serves every registered
 //! operation and download, `/openapi.json` and MCP at `/mcp` on `--host` (default
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
-//! names. `/mcp` and every POST share one rate limit per client address, keyed with
+//! names. `--webapp-origin` is the hosted webapp where a drafted project is opened
+//! (`show`'s root reports it); it is deployment configuration, apart from the `/mcp`
+//! host, because a catalog's MCP can be published without a webapp. `/mcp` and every POST share one rate limit per client address, keyed with
 //! the edge token in `REG_META_EDGE_TOKEN` (`limit.rs`): `--write-limit` tokens
 //! (default 60), refilled one a second. `--mmap-size` sets each SQLite connection's
 //! `PRAGMA mmap_size` (default 2 GiB, `reg_catalog::DEFAULT_MMAP_SIZE`; 0 disables
@@ -53,6 +56,7 @@ enum Mode {
         port: u16,
         host: IpAddr,
         public_host: Option<String>,
+        webapp_origin: Option<String>,
         write_limit: u64,
     },
     Mcp,
@@ -70,6 +74,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     let mode = args.next();
     let (mut db, mut catalog, mut stewards, mut port) = (None, None, None, None);
     let (mut host, mut public_host, mut write_limit, mut mmap_size) = (None, None, None, None);
+    let mut webapp_origin = None;
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--db" => &mut db,
@@ -78,6 +83,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
             "--port" => &mut port,
             "--host" => &mut host,
             "--public-host" => &mut public_host,
+            "--webapp-origin" => &mut webapp_origin,
             "--write-limit" => &mut write_limit,
             "--mmap-size" => &mut mmap_size,
             _ => return Err(Error::invalid_parameter(&flag)),
@@ -99,6 +105,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 None => Ipv4Addr::LOCALHOST.into(),
             },
             public_host,
+            webapp_origin,
             write_limit: match write_limit {
                 Some(limit) => limit
                     .parse()
@@ -115,6 +122,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 ("--port", &port),
                 ("--host", &host),
                 ("--public-host", &public_host),
+                ("--webapp-origin", &webapp_origin),
                 ("--write-limit", &write_limit),
                 ("--mmap-size", &mmap_size),
             ];
@@ -158,6 +166,7 @@ async fn main() {
             port,
             host,
             public_host,
+            webapp_origin,
             write_limit,
         } => {
             let steward =
@@ -166,7 +175,7 @@ async fn main() {
                 catalog,
                 docs,
                 steward: Some(steward),
-                origin: public_host.as_ref().map(|host| format!("https://{host}")),
+                webapp: webapp_origin,
                 version: VERSION,
             };
             serve(
@@ -182,7 +191,7 @@ async fn main() {
                 catalog,
                 docs,
                 steward: None,
-                origin: None,
+                webapp: None,
                 version: VERSION,
             };
             mcp::stdio(Arc::new(server)).await;

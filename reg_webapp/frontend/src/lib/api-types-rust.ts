@@ -442,8 +442,8 @@ export interface components {
         };
         /**
          * @description The serving catalog: its steward `id` (`global` for the global catalog), its
-         *     branding where the server loads it, its webapp origin where the server is
-         *     published, and the two versions a `project_data.json` drafted here carries:
+         *     branding where the server loads it, its webapp origin where the deployment hosts
+         *     one, and the two versions a `project_data.json` drafted here carries:
          *     `reg_meta_version` and `project_schema_version` (the document's `schema_version`,
          *     not the catalog database's).
          */

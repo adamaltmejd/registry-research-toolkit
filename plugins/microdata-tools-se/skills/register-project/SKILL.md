@@ -18,10 +18,10 @@ the `register-metadata-search` skill.
 ## Drafting a project
 
 1. Call `show` with no `ref`. `data.catalog` names the catalog this server serves: its
-   `id`, `reg_meta_version`, `project_schema_version` and, on a hosted server, the
-   `webapp` origin. Set the document's `steward` to `id`, `reg_meta_version` to
-   `reg_meta_version` and `schema_version` to `project_schema_version`. Never write
-   these from memory.
+   `id`, `reg_meta_version`, `project_schema_version` and, where the catalog has a
+   hosted webapp, its `webapp` origin. Set the document's `steward` to `id`,
+   `reg_meta_version` to `reg_meta_version` and `schema_version` to
+   `project_schema_version`. Never write these from memory.
 2. Find each variable with `search` and `show`, then `states` for the register variant
    that delivers it over the study period. A source's `register_variant` is the
    three-part `<provider>/<register>/<variant>`; a binding's `variable` is the
@@ -38,7 +38,8 @@ the `register-metadata-search` skill.
    warnings to the user.
 5. Save the file as `project_data.json` and tell the user to open it at
    `<webapp>/project` (Open, then Download order.json). Without a `webapp` origin the
-   server is local; name the catalog `id` instead.
+   catalog has no hosted webapp: tell the user to open the file in a local webapp for
+   the catalog `id`.
 
 ## Questions about my project
 
