@@ -39,17 +39,17 @@ pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value
             // Each catalog answers from its own holdings, so a document of another
             // steward is refused alone, as `order` refuses it: its source issues
             // would come from the wrong holdings.
-            if project.steward != server.catalog.name() {
+            if project.steward == server.catalog.name() {
+                for (i, source) in project.sources.iter().enumerate() {
+                    semantic.source(&format!("/sources/{i}"), source)?;
+                }
+            } else {
                 semantic.push(
                     IssueLevel::Error,
                     "steward_mismatch",
                     "/steward".into(),
                     steward_mismatch(&project.steward, server.catalog.name()),
                 );
-            } else {
-                for (i, source) in project.sources.iter().enumerate() {
-                    semantic.source(&format!("/sources/{i}"), source)?;
-                }
             }
             ValidationResult {
                 issues: semantic.issues,
