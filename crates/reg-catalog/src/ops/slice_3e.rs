@@ -1,6 +1,6 @@
-//! Slice 3e's operations, `validate` and `order`, and the order manifest download.
-//! HTTP only, for a steward webapp's project editor: MCP is catalog lookup only
-//! (`crates/DESIGN.md`, "Hosted MCP").
+//! Slice 3e's operations: `validate` (also the `validate` MCP tool), and `order` and the
+//! order manifest download, HTTP only for a steward webapp's project editor: ordering
+//! happens in a steward webapp, not over MCP (`crates/DESIGN.md`, "Hosted MCP").
 
 use super::order::{self, Manifest};
 use super::validate::validate;
@@ -11,9 +11,10 @@ pub const OPERATIONS: &[Operation] = &[
     Operation {
         name: "validate",
         paths: &["/api/project/validate"],
-        tool: None,
-        description: "Validate a `project_data.json` document (the JSON body): every \
-            issue, `ok` false when one is an error.",
+        tool: Some("validate"),
+        description: "Validate a `project_data.json` document (the JSON body; the \
+            `project` argument over MCP): every issue, `ok` false when one is an error. To \
+            draft a project, use the `register-project` skill of the microdata-tools-se plugin.",
         params: &[Param::required("project", Type::Project)],
         // simplify: unused, a body operation is answered uncached; give `Operation` a
         // method if a cached POST ever appears.

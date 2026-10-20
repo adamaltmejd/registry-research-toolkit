@@ -192,11 +192,12 @@ separately from the SPA's. A steward catalog is served over hosted MCP when its 
 is already public, as SWECOV's is (data.swecov.se); a private steward catalog stays on
 local `reg-meta mcp`. A published server admits its MCP host (`--public-host`).
 
-**MCP is catalog lookup only** (maintainer, 2026-10-20, #1709). Project drafting and
-ordering happen in a steward webapp: `validate` and `order` are HTTP routes for its
-project editor and no MCP tool, and the plugin bundles no project skill. The hosted
-global catalog has no webapp, so a project drafted over its MCP would have nowhere to be
-ordered. Revisit when the global catalog has a user-facing ordering path.
+**MCP covers catalog lookup and project-file validation; ordering happens in a steward
+webapp** (maintainer, 2026-10-20, #1709). The `validate` tool checks a
+`project_data.json` the plugin's `register-project` skill drafts; `order` and its
+manifest download are HTTP routes for a steward webapp's project editor and no MCP tool.
+The hosted global catalog has no webapp, so `show`'s root names none. Revisit when the
+global catalog has a user-facing ordering path.
 
 ## A provider-neutral substrate
 

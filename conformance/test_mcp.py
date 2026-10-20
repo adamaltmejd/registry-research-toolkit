@@ -80,6 +80,7 @@ EQUIVALENCE = {
     # `resolve-columns` sends `columns` as a JSON array, `resolve-errors` 201 of them
     # and a repeated scalar as an array.
     "resolve": ("resolve-columns", "resolve-errors"),
+    "validate": ("validate-unavailable-everywhere", "validate-scope-rejected"),
 }
 READER = {"fixture": "reader"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.

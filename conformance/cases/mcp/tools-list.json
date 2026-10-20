@@ -4895,5 +4895,176 @@
       ],
       "type": "object"
     }
+  },
+  {
+    "name": "validate",
+    "description": "Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the `register-project` skill of the microdata-tools-se plugin.",
+    "inputSchema": {
+      "properties": {
+        "project": {
+          "description": "A project_data.json document",
+          "type": "object"
+        }
+      },
+      "required": [
+        "project"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "IssueLevel": {
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "type": "string"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            },
+            "scope": {
+              "$ref": "#/$defs/Scope"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "scope"
+          ],
+          "type": "object"
+        },
+        "Scope": {
+          "description": "`holdings`: what this steward holds, the default on a steward catalog and\nunavailable on the global one. `reference`: every register in the catalog. Answer\nfrom the default; repeat with `reference` when asked what exists elsewhere or when\nholdings comes up empty, and say the data exists but is not held.",
+          "enum": [
+            "holdings",
+            "reference"
+          ],
+          "type": "string"
+        },
+        "Validation": {
+          "description": "The validation result: `ok` when no issue is an error.",
+          "properties": {
+            "issues": {
+              "description": "In emission order: per source, its variant and period, then per binding.",
+              "items": {
+                "$ref": "#/$defs/ValidationIssue"
+              },
+              "type": "array"
+            },
+            "ok": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "ok",
+            "issues"
+          ],
+          "type": "object"
+        },
+        "ValidationIssue": {
+          "description": "One finding about the document.",
+          "properties": {
+            "code": {
+              "description": "A stable identifier, such as `period_outside_state_validity`.",
+              "type": "string"
+            },
+            "level": {
+              "$ref": "#/$defs/IssueLevel"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "description": "An RFC 6901 JSON pointer into the document; empty for the whole document.",
+              "type": "string"
+            },
+            "successor_fqid": {
+              "description": "The successor a `variable_replaced` finding names; null otherwise.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "level",
+            "code",
+            "path",
+            "message",
+            "successor_fqid"
+          ],
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Validation"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
   }
 ]

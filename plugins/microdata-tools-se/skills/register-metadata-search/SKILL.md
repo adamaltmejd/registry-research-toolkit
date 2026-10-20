@@ -29,6 +29,7 @@ Each tool's parameters are in its MCP schema; this is what each one is for.
   | `resolve`  | Delivered column names (data-file headers) to the variables that deliver them.                                                 |
   | `graph`    | `operation`: `graph` (succession graph) or `lineage` (source states feeding a variable).                                       |
   | `docs`     | `operation`: `docs_search`, `docs_get` (one documentation entry) or `docs_related` (a register's rehosted PDFs).               |
+  | `validate` | Check a `project_data.json` document (`project` argument); see the `register-project` skill.                                   |
 
 ## Conventions
 
