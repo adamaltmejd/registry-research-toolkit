@@ -12,6 +12,7 @@ from collections import defaultdict
 from datetime import date
 from functools import cached_property, lru_cache
 from typing import TYPE_CHECKING, Annotated, Literal, Self
+from weakref import WeakValueDictionary
 
 from pydantic import (
     BaseModel,
@@ -1979,10 +1980,20 @@ __all__ = [
 ]
 
 
+# Interned: compiled cases retain ~1.8M refs to ~170k distinct records on the real
+# seed (#1544). Weak values, so the table holds only refs something still uses.
+_RECORD_REFS: WeakValueDictionary[tuple[str, tuple[str, ...]], SourceRecordRef] = (
+    WeakValueDictionary()
+)
+
+
 def record_ref(record: SourceRecord) -> SourceRecordRef:
-    return SourceRecordRef(
-        source=record.source, semantic_record_key=record.locators[0].semantic_record_key
-    )
+    key = (record.source, record.locators[0].semantic_record_key)
+    if (ref := _RECORD_REFS.get(key)) is None:
+        ref = _RECORD_REFS[key] = SourceRecordRef(
+            source=key[0], semantic_record_key=key[1]
+        )
+    return ref
 
 
 def capture_expectations(
@@ -2002,6 +2013,19 @@ def capture_expectations(
     and `parents`. Entries hold their record so its id cannot be reused.
     """
     grouped = defaultdict(dict)
+    # Records share decoded parent payloads; project each once per call. Entries
+    # hold their parent so its id cannot be reused.
+    # simplify: per call, not interned by value. At real-seed compile end ~175k
+    # parent projections (21k distinct) and ~900k record expectations (193k
+    # distinct) stay live, about 1 GB; intern them by value if the scopes phase
+    # runs short of memory again.
+    parent_facts: dict[int, tuple[SourceParentObservation, ParentFactProjection]] = {}
+
+    def parent_projection(parent: SourceParentObservation) -> ParentFactProjection:
+        if (hit := parent_facts.get(id(parent))) is None:
+            hit = parent_facts[id(parent)] = (parent, parent_fact_projection(parent))
+        return hit[1]
+
     for record in records:
         key = (id(record), fields, parents)
         if projections is not None and (hit := projections.get(key)) is not None:
@@ -2023,7 +2047,7 @@ def capture_expectations(
             edition_scope=record.edition_scope,
             edition_period_scope=record.edition_period_scope,
             parent_facts=tuple(
-                parent_fact_projection(parent) for parent in record.parent_facts
+                parent_projection(parent) for parent in record.parent_facts
             )
             if parents
             else None,

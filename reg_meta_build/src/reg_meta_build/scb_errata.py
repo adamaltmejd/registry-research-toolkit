@@ -1516,7 +1516,8 @@ def convert_column_entry(
     # reads the same slice.
     guards = []
     for ref in sorted(references, key=str):
-        anchor = next(record for record in anchors if record_ref(record) == ref)
+        # The first anchor with this ref: `by_ref` lists a ref's records by position.
+        anchor = context.by_ref[ref][0][1]
         guards.append(
             PeerGuard(
                 guard_id=f"{case_id}:edition:{ref.semantic_record_key!r}",
