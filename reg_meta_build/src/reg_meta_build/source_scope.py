@@ -1039,7 +1039,11 @@ def resolve_source_scope(
         )
         if not evidence_matches:
             reason = "has changed original or coding evidence."
-        elif not distinct and len(dict.fromkeys(named)) == 1:
+        elif (
+            not distinct
+            and decision.expected_diagnostic_sha256 is not None
+            and len(dict.fromkeys(named)) == 1
+        ):
             reason = "names one issue whose diagnostic digest differs."
         else:
             reason = (
