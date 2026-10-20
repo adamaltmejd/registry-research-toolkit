@@ -35,28 +35,22 @@ reason = "The server's release version and the catalog's schema version are buil
 case = "*/*/context"
 paths = ["/meta/generation", "/data/reg_meta_version", "/data/schema_version"]
 
-[[exception]]
-name = "show-root-catalog"
-reason = "`show` with no ref gained `data.catalog`, the serving catalog's identity (steward id, branding, webapp origin and the versions a drafted project_data.json carries), which the pinned release does not serve. `meta.generation` differs as in derived-generation. Delete at the re-pin to the first release that serves it (0.56.0)."
-case = "*/*/show-root"
-paths = ["/meta/generation", "/data/catalog"]
-
 # The pinned release: its artifacts, and its tag's `reg-meta` binary as the baseline,
 # which reads the originals, so code under change never derives what it is
 # compared against. `sha256` is the GitHub release asset digest (of the `.zst`), checked
 # while the asset streams into the cache.
 [release]
-tag = "reg_meta/v0.55.0"
+tag = "reg_meta/v0.56.0"
 
 [[release.asset]]
 catalog = "global"
 name = "reg_meta.db.zst"
-sha256 = "d66ef80f3940aed841be0847fda040928820afb0158469e39f2501277cedc345"
+sha256 = "0b66de9e673761e80e24097fd5e75a5703ed35e9e23dab1c7393edf12ce9f164"
 
 [[release.asset]]
 catalog = "swecov"
 name = "reg_meta_swecov.db.zst"
-sha256 = "02e130f75a30fcbac640c391e68a34ffe207cfa93ea38ff685c80d941365529a"
+sha256 = "572a67e1fbcfa0074733391ee492c1e31e36e414a8b79937326fc44aded47186"
 
 # The docs database is optional enrichment for `search` and required by `docs`; it is
 # placed beside both catalogs so the two read the same documentation.
