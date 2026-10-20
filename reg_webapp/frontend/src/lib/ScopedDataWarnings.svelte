@@ -19,10 +19,10 @@ let {
   representation?: string | null;
   registerOnly?: boolean;
   framed?: boolean;
-  /** Fold the list into one counted disclosure. A variable page passes it with
-   * `registerOnly` (#1300): its register's unassigned warnings name no variable
-   * (ownership was not established, so none is inferred), so they read as one line
-   * instead of a second warning list. */
+  /** Fold the list into one counted disclosure. The variable and register pages
+   * pass it with `registerOnly` (#1300, #1708): unassigned warnings name no
+   * variable (ownership was not established, so none is inferred), and a register
+   * can carry hundreds, so they read as one line instead of an expanded list. */
   collapsed?: boolean;
 } = $props();
 const resource = asyncResource(() =>
@@ -52,7 +52,7 @@ const warnings = $derived(
       <summary>
         {warnings.length} data {warnings.length === 1 ? "warning" : "warnings"} not assigned to a variable
       </summary>
-      <p class="muted">The register records these limitations without naming the variable they concern. They may or may not apply to this one.</p>
+      <p class="muted">The register records these limitations without naming the variable they concern, so they may apply to any of its variables.</p>
       <DataWarnings {warnings} title={null} />
     </details>
   {/if}

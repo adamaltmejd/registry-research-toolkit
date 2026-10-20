@@ -1067,7 +1067,7 @@ async function addSelected(): Promise<void> {
       )}
       <h2>{nodeLabel(node)}</h2>
       {#if node.purpose}<p class="purpose-text">{node.purpose}</p>{/if}
-      <ScopedDataWarnings fqid={node.fqid} registerOnly />
+      <ScopedDataWarnings fqid={node.fqid} registerOnly collapsed />
       {#if node.tags && node.tags.length > 0}
         <div class="tag-strip" aria-label="Thematic tags">
           {#each node.tags as tag (tag.slug)}
