@@ -36,7 +36,15 @@ beforeEach(() => {
   vi.mocked(getContext).mockReset();
   vi.mocked(getShow).mockReset();
   vi.mocked(getContext).mockResolvedValue(context);
-  vi.mocked(getShow).mockResolvedValue({ kind: "root", children: [] });
+  vi.mocked(getShow).mockResolvedValue({
+    kind: "root",
+    catalog: {
+      id: "global",
+      reg_meta_version: "0.0.0",
+      project_schema_version: "3.0.0",
+    },
+    children: [],
+  });
   vi.mocked(validateProject).mockReset();
   vi.mocked(validateProject).mockResolvedValue({ ok: true, issues: [] });
 });
