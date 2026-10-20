@@ -37,8 +37,8 @@ pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value
                 issues: Vec::new(),
             };
             // Each catalog answers from its own holdings, so a document of another
-            // steward would validate here as confidently and wrongly as it would
-            // order; `order` refuses it with the same message.
+            // steward is refused alone, as `order` refuses it: its source issues
+            // would come from the wrong holdings.
             if project.steward != server.catalog.name() {
                 semantic.push(
                     IssueLevel::Error,
@@ -46,9 +46,10 @@ pub fn validate(server: &Server, _scope: Scope, params: &Params) -> Result<Value
                     "/steward".into(),
                     steward_mismatch(&project.steward, server.catalog.name()),
                 );
-            }
-            for (i, source) in project.sources.iter().enumerate() {
-                semantic.source(&format!("/sources/{i}"), source)?;
+            } else {
+                for (i, source) in project.sources.iter().enumerate() {
+                    semantic.source(&format!("/sources/{i}"), source)?;
+                }
             }
             ValidationResult {
                 issues: semantic.issues,

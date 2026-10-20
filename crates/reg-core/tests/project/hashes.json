@@ -43,7 +43,7 @@
   "conformance/cases/api/validate-representation-pin-selects/request.json#/requests/0/body": "cc59c81e433c819298da44c524ee8df2b336c4f5ffc836db60dc4aafce8a3dba",
   "conformance/cases/api/validate-representation-unknown/request.json#/requests/0/body": "f4b058263d3f6e88fae493c919f427a2f2956de148286dae3e118ad4855d5172",
   "conformance/cases/api/validate-sequential-rename/request.json#/requests/0/body": "5e8e363289df9502e7d4d8357dc7b50999b173fc0df7eaee9c45b601d40d80d9",
-  "conformance/cases/api/validate-steward-mismatch/request.json#/requests/0/body": "ac1c965a086f762a84260a2aac73086c073ed6922a508bd8225d7ea2585f1e3f",
+  "conformance/cases/api/validate-steward-mismatch/request.json#/requests/0/body": "93275fb7670fb5662ba949c8cab8d9f3f40ddeba4a96be40da0a6086c15f0bda",
   "conformance/cases/api/validate-unavailable-everywhere/request.json#/requests/0/body": "c2f71f7f8b3a420ca48b26cbcb0cbc8f93bb04d17a0b942f2df4ac6e9f5ca59f",
   "conformance/cases/api/validate-unheld-and-unavailable/request.json#/requests/0/body": "d343c857b1f406596df27cffbcda7052aa84a9aa5b016e577f47e034493bed6a",
   "conformance/cases/api/validate-unheld-representation/request.json#/requests/0/body": "1d215da170a10c9c4070f663d7cbaeccd648e503b537cccda144b17c8d486bb8",

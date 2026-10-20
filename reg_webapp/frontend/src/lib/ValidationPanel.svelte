@@ -231,8 +231,8 @@ const LEVEL_LABEL: Record<Level, string> = {
   {/if}
 
   <!-- The summary is suppressed while a request error stands: `/order` can
-       fail-close a project that VALIDATES clean (a steward-provenance mismatch,
-       an uncovered period), and "Draft valid" directly under "Order blocked"
+       fail-close a project that VALIDATES clean (an uncovered period),
+       and "Draft valid" directly under "Order blocked"
        tells the researcher two contradictory things at once. -->
   {#if requestError}
     <!-- the banner above is the current status -->
