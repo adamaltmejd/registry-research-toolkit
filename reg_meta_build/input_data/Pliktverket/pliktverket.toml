@@ -607,7 +607,7 @@ column = "gckap"
 definition = "Inskrivningsprovsvärde, verbal förmåga (Skala 1-9)"
 data_type = "integer"
 is_sensitive = true
-data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is co-delivered in PV_1997_2010; INSARK ownership records the single-register delivery decision (#1579)."
+data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is delivered together with INSARK in PV_1997_2010 and is listed under INSARK."
 
 [[register.variable]]
 name = "Inskrivningsprov/G-faktor/Provgrupp"
@@ -615,7 +615,7 @@ column = "gkap"
 definition = "Inskrivningsprov/G-faktor/Provgrupp (Skala 1-9)"
 data_type = "integer"
 is_sensitive = true
-data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is co-delivered in PV_1997_2010; INSARK ownership records the single-register delivery decision (#1579)."
+data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is delivered together with INSARK in PV_1997_2010 and is listed under INSARK."
 
 [[register.variable]]
 name = "Inskrivningsprovsvärde, spatial förmåga"
@@ -623,14 +623,14 @@ column = "gvkap"
 definition = "Inskrivningsprovsvärde, spatial förmåga (Skala 1-9)"
 data_type = "integer"
 is_sensitive = true
-data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is co-delivered in PV_1997_2010; INSARK ownership records the single-register delivery decision (#1579)."
+data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is delivered together with INSARK in PV_1997_2010 and is listed under INSARK."
 
 [[register.variable]]
 name = "Iprovsdatum"
 column = "pkapdat"
 definition = "Iprovsdatum (YYYY-MM-DD TT:MM)"
 data_type = "datetime"
-data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is co-delivered in PV_1997_2010; INSARK ownership records the single-register delivery decision (#1579)."
+data_warning = "Provider field documentation (pliktverket_variabler.xls, Mönstringsregister rows 91-96) attributes this column to INSIPROV. It is delivered together with INSARK in PV_1997_2010 and is listed under INSARK."
 
 [[register.variable]]
 name = "SIPE, social mognad"
@@ -706,7 +706,7 @@ column = "anvpsyk"
 definition = "Signaturkod för den inskrivningspsykolog som gjorde bedömningen (kort alfanumerisk kod, cirka 200 olika värden 1997-2010). Identifierar bedömaren, inte den mönstrande."
 data_type = "text"
 is_sensitive = true
-data_warning = "Not in the provider's field documentation. The meaning is inferred from the column name and the code pattern (a MONA aggregate count: about 200 distinct short codes); maintainer decision OP-2026-10-13-G."
+data_warning = "Not in the provider's field documentation. The meaning is inferred from the column name and the code pattern (the delivered data hold about 200 distinct short codes)."
 
 [[register]]
 key = "insiprov"

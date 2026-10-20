@@ -330,7 +330,7 @@ data_type = "decimal"
 is_sensitive = true
 is_identifier = true
 variants = ["FHM_CovidWGS"]
-data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. The sensitivity and identifier flags are assigned by the catalog; the source does not document them."
 description = "Literal SWECOV project pseudonym. The physical float storage declaration does not establish FOHM original PersonNr encoding or identifier width."
 
 [[register.variable]]
@@ -339,7 +339,7 @@ column = "Provdatum"
 data_type = "date"
 is_sensitive = true
 variants = ["FHM_CovidWGS"]
-data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. The sensitivity and identifier flags are assigned by the catalog; the source does not document them."
 
 [[register.variable]]
 name = "Lineage"
@@ -347,7 +347,7 @@ column = "Lineage"
 data_type = "text"
 is_sensitive = true
 variants = ["FHM_CovidWGS"]
-data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. The sensitivity and identifier flags are assigned by the catalog; the source does not document them."
 
 [[register.variable]]
 name = "Gisaid"
@@ -356,7 +356,7 @@ data_type = "text"
 is_sensitive = true
 is_identifier = true
 variants = ["FHM_CovidWGS"]
-data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. The sensitivity and identifier flags are assigned by the catalog; the source does not document them."
 
 [[register.variable]]
 name = "SmiLab_nr"
@@ -365,5 +365,5 @@ data_type = "text"
 is_sensitive = true
 is_identifier = true
 variants = ["FHM_CovidWGS"]
-data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. Sensitivity and identifier flags are maintainer policy."
+data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. The sensitivity and identifier flags are assigned by the catalog; the source does not document them."
 

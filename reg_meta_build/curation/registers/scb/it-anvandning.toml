@@ -653,7 +653,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "AgKat"
 data_type = "text"
@@ -687,7 +687,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "BGrupp"
 data_type = "text"
@@ -831,7 +831,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017, ITftg_Stora_2015, ITftg_Stora_2016, ITftg_Stora_2017 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds and of the micro- and large-enterprise deliveries for 2015–2017; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "FEStat"
 data_type = "text"
@@ -843,7 +843,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds and of the micro-enterprise deliveries for 2015–2017; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "FETyp"
 data_type = "text"
@@ -855,7 +855,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017, ITftg_Stora_2015, ITftg_Stora_2016, ITftg_Stora_2017 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds and of the micro- and large-enterprise deliveries for 2015–2017; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "FtgStat"
 data_type = "text"
@@ -1187,7 +1187,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011, ITftg_Mikro_2014, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017, ITftg_Mikro_2019 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds and of the micro-enterprise deliveries for 2014–2017 and 2019; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "JEAnt"
 data_type = "text"
@@ -1199,7 +1199,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2008, ITftg_2009, ITftg_Mikro_2013, ITftg_Mikro_2014, ITftg_Mikro_2015, ITftg_Mikro_2016, ITftg_Mikro_2017, ITftg_Mikro_2019 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2008 and 2009 rounds and of the micro-enterprise deliveries for 2013–2017 and 2019; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "JERel"
 data_type = "text"
@@ -1211,7 +1211,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "JurForm"
 data_type = "text"
@@ -1234,7 +1234,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2011 round; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "KommunSate"
 data_type = "text"
@@ -1246,7 +1246,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "Lansate"
 data_type = "text"
@@ -1280,7 +1280,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2008, ITftg_2009 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2008 and 2009 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "Oms2"
 data_type = "text"
@@ -1292,7 +1292,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "Oms2_ny"
 data_type = "text"
@@ -1766,7 +1766,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "Sektor"
 data_type = "text"
@@ -1778,7 +1778,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2010, ITftg_2011 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "SGrupp"
 data_type = "text"
@@ -12260,7 +12260,7 @@ evidence = "Explicit user decisions2/3/4/5,2026-10-01. Exact frozen Batch41 code
 # #1302: survey-design columns of IT-användning i företag held by SWECOV; undocumented, so name = column.
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2008, ITftg_2009 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2008 and 2009 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "lillan"
 data_type = "text"
@@ -12272,7 +12272,7 @@ evidence = "SWECOV holds lillan in ITftg_2008..ITftg_2011, ITftg_Stora_2013..201
 noted = "2026-10-12"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of ITftg_2008, ITftg_2009 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the 2008 and 2009 rounds; the value is not stated here."
 variant = "it-anvandning-i-foretag"
 column = "storaN"
 data_type = "text"
@@ -12326,7 +12326,7 @@ versions = ["2011"]
 source = "steward-holdings"
 evidence = "SWECOV holds AWSEU in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSEU with a verified native-question link, and later years attach the name to different questions (19120 in 2013; 34111 in 2015; 19119 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s AWSEU kan avse webbeställningar från kunder i övriga EU eller i resten av världen; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen AWSEU kan avse webbeställningar från kunder i övriga EU eller i resten av världen; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12340,7 +12340,7 @@ versions = ["2011"]
 source = "steward-holdings"
 evidence = "SWECOV holds AWSHM in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSHM with a verified native-question link, and later years attach the name to different questions (19119 in 2013; 34106 in 2015; 19121 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s AWSHM kan avse webbeställningar från kunder i Sverige eller i övriga EU; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen AWSHM kan avse webbeställningar från kunder i Sverige eller i övriga EU; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12354,7 +12354,7 @@ versions = ["2011"]
 source = "steward-holdings"
 evidence = "SWECOV holds AWSWW in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSWW with a verified native-question link, and later years attach the name to different questions (19121 in 2013; 34110 in 2015; 19120 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s AWSWW kan avse webbeställningar från kunder i resten av världen eller i Sverige; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen AWSWW kan avse webbeställningar från kunder i resten av världen eller i Sverige; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12368,7 +12368,7 @@ versions = ["2011"]
 source = "steward-holdings"
 evidence = "SWECOV holds AXSEU in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSEU with a verified native-question link, and later years attach the name to two questions (26893 in 2013; 34108 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s AXSEU kan avse EDI-beställningar från kunder i övriga EU enligt 2013 års fråga (26893) eller enligt frågan från 2015 (34108); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen AXSEU kan avse EDI-beställningar från kunder i övriga EU enligt 2013 års fråga (26893) eller enligt frågan från 2015 (34108); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12382,7 +12382,7 @@ versions = ["2011"]
 source = "steward-holdings"
 evidence = "SWECOV holds AXSHM in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSHM with a verified native-question link, and later years attach the name to two questions (26892 in 2013; 34109 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s AXSHM kan avse EDI-beställningar från kunder i Sverige enligt 2013 års fråga (26892) eller enligt frågan från 2015 (34109); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen AXSHM kan avse EDI-beställningar från kunder i Sverige enligt 2013 års fråga (26892) eller enligt frågan från 2015 (34109); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12396,7 +12396,7 @@ versions = ["2011"]
 source = "steward-holdings"
 evidence = "SWECOV holds AXSWW in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSWW with a verified native-question link, and later years attach the name to two questions (26894 in 2013; 34107 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s AXSWW kan avse EDI-beställningar från kunder i resten av världen enligt 2013 års fråga (26894) eller enligt frågan från 2015 (34107); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen AXSWW kan avse EDI-beställningar från kunder i resten av världen enligt 2013 års fråga (26894) eller enligt frågan från 2015 (34107); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12410,7 +12410,7 @@ versions = ["2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds FIXBB in ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the catalog has no supported delivery for FIXBB in 2016, and the adjacent years attach the name to two source questions (15902: DSL through the telephone network; 30783: any fixed broadband, FIXBB 2014-2015 and 2017-2025), both using code 9 with different meanings (not answered vs should not answer). The 2017 and 2018 deliveries are documented through 30783 once 15902 is withdrawn there ([[errata.support]] contradictory_question, #1603 batch-e). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s FIXBB kan avse DSL-anslutning via telefonnätet (15902) eller all slags fast bredbandsanslutning (30783), med olika betydelse för kod 9; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen FIXBB kan avse DSL-anslutning via telefonnätet (15902) eller all slags fast bredbandsanslutning (30783), med olika betydelse för kod 9; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12424,7 +12424,7 @@ versions = ["2009", "2010", "2011", "2012"]
 source = "steward-holdings"
 evidence = "SWECOV holds GDIST in ITftg_2009..ITftg_2012. Previously unmapped because the 2009–2012 business-survey metadata contain no exact literal GDIST with a verified native-question link, and later years attach the name to two questions (19132 in 2013–2014; 38332 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s GDIST kan avse sysselsatta (19132) eller anställda (38332) som regelbundet arbetar utanför företaget; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen GDIST kan avse sysselsatta (19132) eller anställda (38332) som regelbundet arbetar utanför företaget; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12438,7 +12438,7 @@ versions = ["2012", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds GSOLOTH in ITftg_2012, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2012 and 2016 metadata link GSOLOTH to no question (maintainer review 2026-10-01), and SCB attaches the name to energy-saving IT solutions (38333; 2013-2014 and 2017-2020) and to electronic public procurement in other EU countries (28818; 2015). The 2017 deliveries are documented through 38333 once 28818 is withdrawn there ([[errata.support]] contradictory_question, #1603 batch-e). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s GSOLOTH kan avse energibesparande it-lösningar (38333) eller elektronisk offentlig upphandling i övriga EU-länder (28818); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen GSOLOTH kan avse energibesparande it-lösningar (38333) eller elektronisk offentlig upphandling i övriga EU-länder (28818); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12452,7 +12452,7 @@ versions = ["2009", "2010", "2011", "2012", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds GUSENRG in ITftg_2009..ITftg_2012, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2009–2012 and 2016 metadata contain no exact literal GUSENRG with a verified native-question link, and later years attach the name to two questions (19139 in 2013–2015; 38331 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s GUSENRG kan avse miljöpolicy för minskad energianvändning vid it-användning enligt frågan 2013–2015 (19139) eller frågan från 2017 (38331); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen GUSENRG kan avse miljöpolicy för minskad energianvändning vid it-användning enligt frågan 2013–2015 (19139) eller frågan från 2017 (38331); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12466,7 +12466,7 @@ versions = ["2011", "2012", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds IGOV2PREU in ITftg_2011, ITftg_2012 and ITftg_Stora_2016. Previously unmapped because the 2011, 2012 and 2016 metadata contain no exact literal IGOV2PREU with a verified native-question link, and later years attach the name to two questions (26879 in 2013; 28818 in 2017–2018). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s IGOV2PREU kan avse anbud i (26879) eller erbjudanden via (28818) myndigheters elektroniska upphandlingssystem i övriga EU-länder; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen IGOV2PREU kan avse anbud i (26879) eller erbjudanden via (28818) myndigheters elektroniska upphandlingssystem i övriga EU-länder; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12480,7 +12480,7 @@ versions = ["2014", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds INV3R_PAP in ITftg_Mikro_2014, ITftg_Stora_2014 and ITftg_Stora_2016. Previously unmapped because the 2014 and 2016 metadata link INV3R_PAP to no question, and the 2017 export assigns it to native questions 35491 and 38334 with different supplier/denominator and reference-year wording (maintainer review 2026-10-01). The 2017 deliveries are not minted: two documented SCB owners, unsettled (#1603 batch-e). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s INV3R_PAP kan avse andel automatiskt processbara e-fakturor med olika avsändarkrets och referensår (35491 eller 38334); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen INV3R_PAP kan avse andel automatiskt processbara e-fakturor med olika avsändarkrets och referensår (35491 eller 38334); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12494,7 +12494,7 @@ versions = ["2014", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds INV3R_PMP in ITftg_Mikro_2014, ITftg_Stora_2014 and ITftg_Stora_2016. Previously unmapped because the 2014 and 2016 metadata link INV3R_PMP to no question, and the 2017 export assigns it to native questions 35490 and 38335 with different supplier/denominator and reference-year wording (maintainer review 2026-10-01). The 2017 deliveries are not minted: two documented SCB owners, unsettled (#1603 batch-e). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s INV3R_PMP kan avse andel fakturor som inte kan processas automatiskt, med olika avsändarkrets och referensår (35490 eller 38335); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen INV3R_PMP kan avse andel fakturor som inte kan processas automatiskt, med olika avsändarkrets och referensår (35490 eller 38335); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12508,7 +12508,7 @@ versions = ["2012"]
 source = "steward-holdings"
 evidence = "SWECOV holds PMD in ITftg_2012. Previously unmapped because the 2012 business-survey metadata contain no exact literal PMD with a verified native-question link, and later years attach the name to two questions (28819 in 2013; 25333 from 2019). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s PMD kan avse bärbara enheter med mobil anslutning till anställda (28819) eller mobil bredbandsanslutning via 3G/4G (25333); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen PMD kan avse bärbara enheter med mobil anslutning till anställda (28819) eller mobil bredbandsanslutning via 3G/4G (25333); vilken betydelse den har är inte fastställd."
 
 [[errata.delivered]]
 data_warning = "SCB documents no column EMPIUSEPCT on IT-användning i företag for 2008-2012. The meaning and unit are assumed from SCB's 2013 documentation of native 17675 (andel sysselsatta som använder dator med internetuppkoppling), the nearest edition with the same delivered name; it is not confirmed for these rounds."
@@ -12534,7 +12534,7 @@ versions = ["2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds UTVEXF2 in ITftg_Stora_2016 beside UTVSUP2, which the catalog already places on native 17642 for 2016. SCB attaches UTVEXF2 to 17642 in 2017, while the name continues UTVEXF (17641, 2013-2015), so the same-name carry would give one table two columns for one variable. Contradicting evidence: minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema (varchar); flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s UTVEXF2 i 2016 kan avse andel årsverken i programvaruutveckling - övriga (17642) eller för extern försäljning (17641); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen UTVEXF2 i 2016 kan avse andel årsverken i programvaruutveckling - övriga (17642) eller för extern försäljning (17641); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12548,7 +12548,7 @@ versions = ["2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds UTVEGANV2 in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the question represented by UTVEGANV2, and adjacent years attach the name to two questions (17641 in 2017; 38383 in 2018). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s UTVEGANV2 kan avse andel årsverken i programvaruutveckling för extern försäljning (17641) eller med karaktär av investering (38383); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen UTVEGANV2 kan avse andel årsverken i programvaruutveckling för extern försäljning (17641) eller med karaktär av investering (38383); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12562,7 +12562,7 @@ versions = ["2008", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds WEBACC in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBACC with a verified native-question link, and later years attach the name to two questions (16914 in 2013–2021; 46822 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s WEBACC kan avse produktkatalog eller prislista (16914) eller beskrivning av varor och tjänster med prisinformation (46822) på företagets webbplats; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen WEBACC kan avse produktkatalog eller prislista (16914) eller beskrivning av varor och tjänster med prisinformation (46822) på företagets webbplats; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12576,7 +12576,7 @@ versions = ["2008", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds WEBCTM in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBCTM with a verified native-question link, and later years attach the name to two questions (16915 in 2013–2021; 46823 in 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s WEBCTM kan avse kundanpassning av produkter (16915) eller avgränsning av sökningar (46823) på företagets webbplats; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen WEBCTM kan avse kundanpassning av produkter (16915) eller avgränsning av sökningar (46823) på företagets webbplats; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12590,7 +12590,7 @@ versions = ["2008", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds WEBPER in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBPER with a verified native-question link, and later years attach the name to two questions (16919 in 2013–2021; 46824 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s WEBPER kan avse individuellt anpassat innehåll för återkommande besökare (16919) eller kundigenkänning via inloggning (46824) på företagets webbplats; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen WEBPER kan avse individuellt anpassat innehåll för återkommande besökare (16919) eller kundigenkänning via inloggning (46824) på företagets webbplats; vilken betydelse den har är inte fastställd."
 
 [[variable]]
 native_id = "258.AWSEU"
@@ -12707,7 +12707,7 @@ versions = ["2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds EMPIUSEPCT in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the exact question represented by EMPIUSEPCT, and other years attach the name to two questions (17675 in 2013–2015 and 2017–2019; 41949 from 2020). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] EMPIUSEPCT entries (2008–2012 carry; 2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s EMPIUSEPCT kan avse andel sysselsatta som arbetar vid internetanslutna datorer (17675) eller andel anställda som i arbetet använder dator, mobiltelefon, surfplatta eller liknande (41949); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen EMPIUSEPCT kan avse andel sysselsatta som arbetar vid internetanslutna datorer (17675) eller andel anställda som i arbetet använder dator, mobiltelefon, surfplatta eller liknande (41949); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12721,7 +12721,7 @@ versions = ["2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds EMPMD1PCT in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the exact question represented by EMPMD1PCT, and SCB attaches the name to 28822 (2014–2015, 2017–2018) and in 2017 also to 23393. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] EMPMD1PCT entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s EMPMD1PCT kan avse andel anställda med andra bärbara enheter med mobil internetanslutning (28822) eller användning av mobiltelefon med 3G/4G för internetuppkoppling (23393); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen EMPMD1PCT kan avse andel anställda med andra bärbara enheter med mobil internetanslutning (28822) eller användning av mobiltelefon med 3G/4G för internetuppkoppling (23393); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12735,7 +12735,7 @@ versions = ["2010", "2012"]
 source = "steward-holdings"
 evidence = "SWECOV holds ITERP1 in ITftg_2010 and ITftg_2012. Previously unmapped because the 2010 and 2012 business-survey metadata contain no exact literal ITERP1 with a verified native-question link, and later years attach the name to two questions (28811 in 2013–2021; 46790 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] ITERP1 entries (2014; 2015) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s ITERP1 kan avse användning av ERP-system för att dela information mellan funktioner inom företaget enligt frågan 2013–2021 (28811) eller enligt frågan från 2023 (46790); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen ITERP1 kan avse användning av ERP-system för att dela information mellan funktioner inom företaget enligt frågan 2013–2021 (28811) eller enligt frågan från 2023 (46790); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12749,7 +12749,7 @@ versions = ["2008", "2009", "2010", "2012"]
 source = "steward-holdings"
 evidence = "SWECOV holds SISC in ITftg_2008, ITftg_2009, ITftg_2010 and ITftg_2012. Previously unmapped because the 2008–2010 and 2012 business-survey metadata contain no exact literal SISC with a verified native-question link, and later years attach the name to three questions (16946 in 2014–2015; 28804 in 2017; 46794 in 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] SISC entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s SISC kan avse elektronisk delning av lagertillgång via automatiserat informationsutbyte (16946) eller med kunder eller leverantörer (28804), eller elektronisk delning av data i distributionskedjan (46794); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen SISC kan avse elektronisk delning av lagertillgång via automatiserat informationsutbyte (16946) eller med kunder eller leverantörer (28804), eller elektronisk delning av data i distributionskedjan (46794); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12763,7 +12763,7 @@ versions = ["2008", "2011", "2012", "2016"]
 source = "steward-holdings"
 evidence = "SWECOV holds WEBORD in ITftg_2008, ITftg_2011, ITftg_2012, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008, 2011, 2012 and 2016 metadata contain no exact literal WEBORD with a verified native-question link, and later years attach the name to two questions (26864 in 2013–2021; 16917 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] WEBORD entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s WEBORD kan avse möjlighet att beställa eller boka på företagets webbplats enligt frågan 2013–2021 (26864) eller enligt frågan från 2023 (16917); SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen WEBORD kan avse möjlighet att beställa eller boka på företagets webbplats enligt frågan 2013–2021 (26864) eller enligt frågan från 2023 (16917); vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "it-anvandning-i-foretag"
@@ -12777,4 +12777,4 @@ versions = ["2017"]
 source = "steward-holdings"
 evidence = "SWECOV holds UTVSUP2 in ITftg_Stora_2017. Previously unmapped because SCB's 2017 documentation has no UTVSUP2 row and attaches 17642, which UTVSUP2 carries in 2016 (delivered) and 2018, to UTVEXF2, which ITftg_Stora_2017 also holds, so carrying UTVSUP2 to 17642 would give one table two columns for one variable. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] UTVSUP2 entry (2016) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s UTVSUP2 i 2017 kan avse andel årsverken i programvaruutveckling - övriga (17642), som kolumnnamnet betyder 2016 och 2018, men SCB knyter 2017 den frågan till UTVEXF2, som samma tabell också levererar; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen UTVSUP2 i 2017 kan avse andel årsverken i programvaruutveckling - övriga (17642), som kolumnnamnet betyder 2016 och 2018, men SCB knyter 2017 den frågan till UTVEXF2, som samma tabell också levererar; vilken betydelse den har är inte fastställd."

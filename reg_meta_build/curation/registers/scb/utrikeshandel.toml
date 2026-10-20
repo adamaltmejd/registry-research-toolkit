@@ -397,7 +397,7 @@ noted = "2026-10-15"
 # owner in 1999-2010, is withdrawn per edition (#1671).
 
 [[errata.delivered]]
-data_warning = "SCB documents no statistical-value column Varde on this variant before 2011; for 1999-2010 it documents Varde as invoiced value. The meaning is taken from SCB's 2011 documentation of statistiskt-varde, which SCB's P1105 delivery variable list and an aggregate check against SCB's published totals support; it is not confirmed by SCB's Registerinformation for these editions."
+data_warning = "SCB documents no statistical-value column Varde on this variant before 2011; for 1999-2010 it documents Varde as invoiced value. The meaning is taken from SCB's 2011 documentation of statistiskt-varde, which SCB's delivery variable list and a comparison of delivered totals with SCB's published totals support; it is not confirmed by SCB's Registerinformation for these editions."
 variant = "varu-landfordelat-intrastat"
 column = "Varde"
 measurement_unit = "Kronor (SEK)"

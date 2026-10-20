@@ -2251,7 +2251,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row; the value is not stated here."
 variant = "_default"
 column = "FAIa"
 data_type = "integer"
@@ -2263,7 +2263,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FCo"
 data_type = "decimal"
@@ -2660,7 +2660,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row; the value is not stated here."
 variant = "_default"
 column = "FCoop"
 data_type = "integer"
@@ -2793,7 +2793,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row; the value is not stated here."
 variant = "_default"
 column = "FEffect"
 data_type = "integer"
@@ -2992,7 +2992,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row; the value is not stated here."
 variant = "_default"
 column = "FEStat"
 data_type = "text"
@@ -3026,7 +3026,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row; the value is not stated here."
 variant = "_default"
 column = "FFAc"
 data_type = "integer"
@@ -3368,7 +3368,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FInonab"
 data_type = "decimal"
@@ -3402,7 +3402,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FInpcsW"
 data_type = "decimal"
@@ -3513,7 +3513,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FMareur"
 data_type = "decimal"
@@ -3525,7 +3525,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FMarloc"
 data_type = "decimal"
@@ -3537,7 +3537,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FMarnat"
 data_type = "decimal"
@@ -3549,7 +3549,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FMaroth"
 data_type = "decimal"
@@ -3616,7 +3616,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FNewFrm"
 data_type = "decimal"
@@ -3628,7 +3628,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "FNewMkt"
 data_type = "decimal"
@@ -4091,7 +4091,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row of CIS2006 (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row of the CIS2006 wave; the value is not stated here."
 variant = "_default"
 column = "Frdeng"
 data_type = "decimal"
@@ -4444,7 +4444,7 @@ evidence = "SWECOV's survey-wave delivery lists hold the column on this variant 
 noted = "2026-06-14"
 
 [[errata.column]]
-data_warning = "In SWECOV's extract this column holds a single value in every delivered row (aggregate check on MONA, reported as a conclusion only; Operator 2026-10-19, warn-not-hold, #1603 batch-g A5); the value is not stated here."
+data_warning = "In the deliveries reviewed, this column holds a single value in every row; the value is not stated here."
 variant = "_default"
 column = "FtgStat"
 data_type = "text"
@@ -14068,7 +14068,7 @@ holdings_period = "2020-2020"
 source = "steward-holdings"
 evidence = "SWECOV holds COOP_NO in CIS2020. Previously unmapped because COOP_NO and COOP_OTH both exist in CIS2020; source question 39102 names COOP_OTH, and the questionnaire separately includes a no-cooperation option, so the meaning of the delivered COOP_NO is not established. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s COOP_NO kan avse samarbete inom övriga aktiviteter (39102) eller frågeblankettens alternativ om inget samarbete; SWECOV fastställer inte vilken betydelse den levererade kolumnen har."
+data_warning = "Den levererade kolumnen COOP_NO kan avse samarbete inom övriga aktiviteter (39102) eller frågeblankettens alternativ om inget samarbete; vilken betydelse den har är inte fastställd."
 
 [[errata.column]]
 variant = "_default"
@@ -14082,7 +14082,7 @@ holdings_period = "2002-2002"
 source = "steward-holdings"
 evidence = "SWECOV holds STRAT in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2022. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s STRAT i CIS2002 kan avse urvalsstratum (462), som kolumnnamnet betyder från 2022, men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilken stratifiering värdet följer."
+data_warning = "Den levererade kolumnen STRAT i CIS2002 kan avse urvalsstratum (462), som kolumnnamnet betyder från 2022, men det är inte fastställt att kolumnen har den betydelsen eller vilken stratifiering värdet följer."
 
 # #1603 batch-e / #1495: CIS prior-wave employee counts. Each wave table also delivers the
 # previous wave's reference-year count; one variable per reference year (the register's
@@ -14242,7 +14242,7 @@ versions = ["2000 - 2002"]
 source = "steward-holdings"
 evidence = "SWECOV holds HO in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2014 (and carried by [[errata.delivered]] into 2004 - 2006 to 2010 - 2012). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] HO entry (2004 - 2006 to 2010 - 2012) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s HO i CIS2002 kan avse var huvudkontoret är beläget (37075), som kolumnnamnet betyder i katalogen från 2004–2006 (i SCB:s dokumentation från 2014–2016), men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilken kodning värdet följer."
+data_warning = "Den levererade kolumnen HO i CIS2002 kan avse var huvudkontoret är beläget (37075), som kolumnnamnet betyder i katalogen från 2004–2006 (i SCB:s dokumentation från 2014–2016), men det är inte fastställt att kolumnen har den betydelsen eller vilken kodning värdet följer."
 
 [[errata.column]]
 variant = "_default"
@@ -14256,7 +14256,7 @@ versions = ["2000 - 2002"]
 source = "steward-holdings"
 evidence = "SWECOV holds LILLAN in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2020 (and carried by [[errata.delivered]] into 2014 - 2016 and 2016 - 2018). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] LillaN entry (2014 - 2016, 2016 - 2018) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s LILLAN i CIS2002 kan avse antal element per stratum i urvalet (5697), som kolumnnamnet LillaN betyder i katalogen från 2014–2016 (i SCB:s dokumentation från 2020–2022), men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilken stratifiering värdet följer."
+data_warning = "Den levererade kolumnen LILLAN i CIS2002 kan avse antal element per stratum i urvalet (5697), som kolumnnamnet LillaN betyder i katalogen från 2014–2016 (i SCB:s dokumentation från 2020–2022), men det är inte fastställt att kolumnen har den betydelsen eller vilken stratifiering värdet följer."
 
 [[errata.column]]
 variant = "_default"
@@ -14270,7 +14270,7 @@ versions = ["2000 - 2002"]
 source = "steward-holdings"
 evidence = "SWECOV holds WEIGHT in CIS2002. Previously unmapped because the supplied 2002–2004 source metadata do not establish this column's native question or production vintage; questionnaire concepts alone do not identify its delivery role, and the name is documented only from 2022 (and carried by [[errata.delivered]] into 2004 - 2006 to 2012 - 2014). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] WEIGHT entry (2004 - 2006 to 2012 - 2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). Operator under maintainer delegation 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
 noted = "2026-10-16"
-data_warning = "SWECOV:s WEIGHT i CIS2002 kan avse bortfallskompenserad vikt (49567), som kolumnnamnet betyder i katalogen från 2004–2006 (i SCB:s dokumentation från 2022–2024), men SWECOV fastställer inte att den levererade kolumnen har den betydelsen eller vilket urval och vilken bortfallsjustering vikten avser."
+data_warning = "Den levererade kolumnen WEIGHT i CIS2002 kan avse bortfallskompenserad vikt (49567), som kolumnnamnet betyder i katalogen från 2004–2006 (i SCB:s dokumentation från 2022–2024), men det är inte fastställt att kolumnen har den betydelsen eller vilket urval och vilken bortfallsjustering vikten avser."
 
 [[variable]]
 native_id = "257.emp02"
@@ -14308,7 +14308,7 @@ slug = "emp2020-enligt-leverans"
 # same-name rule; replaces the CIS2002 EMP mint.
 
 [[errata.delivered]]
-data_warning = "Betydelsen och enheten antas från SCB:s EMP (antal anställda, variabel 690), som SCB dokumenterar först från 2020–2022; för den här omgången dokumenterar SCB inte kolumnen, och SWECOV fastställer inte att värdet har samma källa och årgång."
+data_warning = "Betydelsen och enheten antas från SCB:s EMP (antal anställda, variabel 690), som SCB dokumenterar först från 2020–2022; för den här omgången dokumenterar SCB inte kolumnen, och det är inte fastställt att värdet har samma källa och årgång."
 variant = "_default"
 column = "EMP"
 measurement_unit = "Antal"
