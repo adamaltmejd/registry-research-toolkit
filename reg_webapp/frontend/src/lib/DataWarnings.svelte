@@ -31,11 +31,48 @@ function unavailableLabel(field: string): string {
   if (field.endsWith("delivery_column_name")) return "delivery column";
   return field.replace(/^state\./, "").replaceAll("_", " ");
 }
+
+// A withheld variable is named by its FQID. It was not published, so there is no
+// catalog page to link to: show the identifier. (`curation/` paths are labelled
+// by `unavailableLabel`.)
+function unavailableItems(
+  withheld: readonly string[],
+): { label: string; fqid: boolean }[] {
+  const items = new Map<string, { label: string; fqid: boolean }>();
+  for (const field of withheld) {
+    const fqid =
+      !field.startsWith("curation/") && /^[^/:]+(\/[^/:]+)+$/.test(field);
+    const label = fqid ? field : unavailableLabel(field);
+    items.set(label, { label, fqid });
+  }
+  return [...items.values()];
+}
+
+// The API returns warnings in `warning_id` (hash) order; a reader scans by period.
+// An open start sorts first and an open end last. `sort` is stable, so warnings
+// with the same window keep the API order.
+const ordered = $derived(
+  [...warnings].sort(
+    (a, b) =>
+      compareBound(a.valid_from, b.valid_from, -1) ||
+      compareBound(a.valid_to, b.valid_to, 1),
+  ),
+);
+function compareBound(
+  a: string | null | undefined,
+  b: string | null | undefined,
+  open: -1 | 1,
+): number {
+  if (a === b) return 0;
+  if (a == null) return open;
+  if (b == null) return -open;
+  return a < b ? -1 : 1;
+}
 </script>
 
 {#snippet content()}
     <ul class="warnings">
-      {#each warnings as warning (warning.warning_id)}
+      {#each ordered as warning (warning.warning_id)}
         <li>
           <Tag tone={warning.severity === "error" ? "error" : "warn"}>
             {#snippet glyph()}▲{/snippet}
@@ -52,12 +89,14 @@ function unavailableLabel(field: string): string {
             </p>
           {/if}
           {#if warning.withheld_output.length > 0}
-            <p class="scope">Unavailable metadata: {[...new Set(warning.withheld_output.map(unavailableLabel))].join(", ")}</p>
+            <p class="scope">
+              <span>Unavailable metadata:
+                {#each unavailableItems(warning.withheld_output) as item, i (item.label)}{#if i > 0}, {/if}{#if item.fqid}variable <code>{item.label}</code>{:else}{item.label}{/if}{/each}</span>
+            </p>
           {/if}
-          <TechnicalDetails>
-            {#if warning.detail !== warning.summary}<p>{warning.detail}</p>{/if}
-            <p class="scope">Diagnostic SHA256: <code>{warning.diagnostic_detail_sha256}</code></p>
-          </TechnicalDetails>
+          {#if warning.detail !== warning.summary}
+            <TechnicalDetails><p>{warning.detail}</p></TechnicalDetails>
+          {/if}
         </li>
       {/each}
     </ul>

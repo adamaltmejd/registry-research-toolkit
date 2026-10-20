@@ -34,13 +34,36 @@ it("shows the limitation, delivery scope and unavailable metadata", async () => 
   await expect
     .element(page.getByText("Warning", { exact: true }))
     .toBeVisible();
-  await expect
-    .element(page.getByText(warning.diagnostic_detail_sha256))
-    .not.toBeVisible();
-  await page.getByText("Technical details", { exact: true }).click();
-  await expect
-    .element(page.getByText(warning.diagnostic_detail_sha256))
-    .toBeVisible();
+});
+
+// Fails if the list reverts to the API's `warning_id` (hash) order: the input is
+// in id order, the reader needs window order with an open start first.
+it("orders warnings by window start, then end", async () => {
+  const at = (id: string, from: string | null, to: string | null) => ({
+    ...warning,
+    warning_id: id.repeat(64),
+    summary: `Window ${from ?? "open"}–${to ?? "open"}`,
+    valid_from: from,
+    valid_to: to,
+  });
+  await render(DataWarnings, {
+    warnings: [
+      at("a", "2015-01-01", "2016-12-31"),
+      at("b", "2010-01-01", "2014-12-31"),
+      at("c", "2010-01-01", "2011-12-31"),
+      at("d", null, "2009-12-31"),
+    ],
+  });
+  const summaries = page
+    .getByRole("listitem")
+    .elements()
+    .map((item) => item.querySelector("p")?.textContent);
+  expect(summaries).toEqual([
+    "Window open–2009-12-31",
+    "Window 2010-01-01–2011-12-31",
+    "Window 2010-01-01–2014-12-31",
+    "Window 2015-01-01–2016-12-31",
+  ]);
 });
 
 it("does not invent a start year for a warning with only an end date", async () => {
