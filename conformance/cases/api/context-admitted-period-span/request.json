@@ -1,5 +1,5 @@
 {
-  "note": "Served as the swecov steward. Fails if the context drops the steward's `order_instructions` from steward.json (serde ignores an unknown field, so a removed struct field loads silently); `context-catalog-kind` pins its absence for global.",
+  "note": "Served as the swecov steward. Fails if the admitted steward's period span stops being its first and last held year, or if the context drops the steward's `order_instructions` from steward.json (serde ignores an unknown field, so a removed struct field loads silently); `context-catalog-kind` pins its absence for global.",
   "fixture": "period-bounds",
   "requests": [{"operation": "context", "path": "/api/context"}]
 }
