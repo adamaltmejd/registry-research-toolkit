@@ -108,9 +108,9 @@ def _first_sentence(text: str) -> str:
             word = line[:end].rsplit(" ", 1)[-1]
             if "." in word or len(word) == 1 or word.casefold() in _ABBREVIATIONS:
                 continue
-            return line[:end]
+            return line[:end].rstrip()
         return line[: end + 1]
-    return line.removesuffix(".")
+    return line.removesuffix(".").rstrip()
 
 
 def source_name(occurrences: Iterable[EffectiveOccurrence]) -> str | None:
