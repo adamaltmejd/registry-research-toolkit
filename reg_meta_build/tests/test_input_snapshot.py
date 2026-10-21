@@ -15,6 +15,7 @@ from _csv_fixtures import write_scb_input
 from _snapshot_fixtures import scb_inventory
 from reg_meta_build.input_snapshot import (
     SnapshotError,
+    load_manifest,
     measure_git_history,
     prepare_snapshot,
     restore_snapshot,
@@ -365,3 +366,27 @@ def test_inventory_requires_complete_listing_pairing_and_archive_coverage(
     inventory = scb_inventory(tmp_path / "second", source_dir)
     with pytest.raises(SnapshotError, match="unlisted CSV"):
         prepare_snapshot(inventory, tmp_path / "snapshot-2", converter_commit="d" * 40)
+
+
+def test_reprepared_value_dictionary_keeps_every_existing_entry(tmp_path: Path) -> None:
+    # Fails if a re-prepare after an appended value row rewrites or drops an existing
+    # dictionary entry instead of only adding the new one (content keys must be stable).
+    source_dir = write_scb_input(tmp_path / "source")
+    inventory = scb_inventory(tmp_path, source_dir)
+
+    def value_dictionary(snapshot: Path) -> set[str]:
+        prepare_snapshot(inventory, snapshot, converter_commit="9" * 40)
+        values = next(
+            item
+            for item in load_manifest(snapshot).files
+            if item.name == "Vardemangder.csv"
+        )
+        path = next(
+            group.dictionary.path for group in values.groups if group.name == "value"
+        )
+        return set((snapshot / path).read_text(encoding="utf-8").splitlines())
+
+    initial = value_dictionary(tmp_path / "initial")
+    with (source_dir / "Vardemangder.csv").open("ab") as handle:
+        handle.write(b"NEW|NEW|007|New label|999999|0007\r\n")
+    assert initial < value_dictionary(tmp_path / "update")

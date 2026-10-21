@@ -264,6 +264,7 @@ def test_existing_tests_use_public_boundaries(python_test_files):
         "from reg_meta_build import queries as q\ndel q.registry['search']",
         "from reg_meta_build import queries as q\nq.registry['search'].handler = fake",
         "from reg_meta_build import queries as q\ndel q.search",
+        "from reg_meta_build import queries as q\n(q.search, local.value) = (fake, value)",
         "from reg_meta_build import queries as q\nsetattr(q, 'search', fake)",
         "from reg_meta_build import queries as q\ndelattr(q, 'search')",
         "from reg_meta_build import queries as q\nfrom builtins import setattr as mutate\nmutate(q, 'search', fake)",

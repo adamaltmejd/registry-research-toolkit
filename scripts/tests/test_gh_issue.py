@@ -17,13 +17,20 @@ from _scripts_support import load_scripts_module
 
 gi = load_scripts_module("gh_issue")
 
-MAINT = "adamaltmejd"
+# Not the repo owner the fallback would find, so every view test also proves the env
+# override wins: fails if `maintainer_login()` ignores `REGISTRY_MAINTAINER_LOGIN`.
+MAINT = "test-maintainer"
 
 
 @pytest.fixture(autouse=True)
 def _pin_maintainer(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Pin the maintainer via the env override so no test needs a live `gh repo view`."""
+    """Pin the maintainer via the env override so no test needs a live `gh repo view`.
+
+    The repo-owner fallback is pinned too, to an owner other than MAINT, so an override
+    that stops winning fails the view tests instead of shelling out to `gh`.
+    """
     monkeypatch.setenv("REGISTRY_MAINTAINER_LOGIN", MAINT)
+    monkeypatch.setenv("GITHUB_REPOSITORY", "theowner/therepo")
 
 
 # --- maintainer_login ----------------------------------------------------------------
@@ -54,14 +61,17 @@ def _stub_view(monkeypatch: pytest.MonkeyPatch, payload: dict | None) -> None:
     """Stub `gh issue view`: payload=None models a non-zero exit (a genuinely missing
     number). A PR number does NOT error — it resolves with returncode 0 and a payload —
     so a PR case is modelled by passing a PR-shaped payload, never by payload=None.
+
+    Like `gh`, the stub returns only the `--json` fields the argv requests, so a view
+    test fails if the gate stops requesting a field it surfaces (`state`, `comments`).
     """
 
     def fake_run(cmd, capture_output, text, check):
         if payload is None:
             return types.SimpleNamespace(returncode=1, stdout="", stderr="not found")
-        return types.SimpleNamespace(
-            returncode=0, stdout=json.dumps(payload), stderr=""
-        )
+        requested = cmd[cmd.index("--json") + 1].split(",")
+        shown = {key: value for key, value in payload.items() if key in requested}
+        return types.SimpleNamespace(returncode=0, stdout=json.dumps(shown), stderr="")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
 
