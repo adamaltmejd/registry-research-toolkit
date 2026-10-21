@@ -4,8 +4,8 @@ name: Registry Research Toolkit
 description: >-
   Design language for the reg_webapp catalog and project-authoring SPA. Ink on neutral
   paper, with one colour — pine — for what belongs to the open project; every other
-  colour carries a meaning (status, node type, data). Schibsted Grotesk for UI text,
-  IBM Plex Mono for every machine identifier. Dense, keyboard-first, light-first and
+  colour carries a meaning (status, node type, data). Schibsted Grotesk for UI text, IBM
+  Plex Mono for every machine identifier. Dense, keyboard-first, light-first and
   dark-ready through semantic role tokens. Time is the axis every relation is drawn on.
 
 colors:
@@ -237,20 +237,20 @@ periods and editions, and collect columns into a `project_data.json`. Their task
 reading, not being persuaded: they want density, exactness, stable positions, and
 machine identifiers that look like machine identifiers.
 
-**The project is the primary object.** Browsing exists to collect columns for a
-project, so the interface tells you, everywhere, what you have already collected and
-whether a column covers the study window you set.
+**The project is the primary object.** Browsing exists to collect columns for a project,
+so the interface tells you, everywhere, what you have already collected and whether a
+column covers the study window you set.
 
 The look is ink on neutral paper, with one colour for what is yours. The base is
 monochrome: near-black text and rules on a near-white sheet. Colour appears only where
-it carries meaning — pine for everything that belongs to the open project, the status set
-for verdicts, the node-type hues where types actually vary, the facet and edge colours
-inside graphs. It never decorates.
+it carries meaning — pine for everything that belongs to the open project, the status
+set for verdicts, the node-type hues where types actually vary, the facet and edge
+colours inside graphs. It never decorates.
 
 Personality: quiet, exact, archival. The nearest relatives are Linear and Observable,
 not a marketing site and not a broadsheet. The app-level identity is spent on the
-typeface pairing, the pine accent and the time components; the win condition for any
-new view is that it is indistinguishable in language from the best existing view.
+typeface pairing, the pine accent and the time components; the win condition for any new
+view is that it is indistinguishable in language from the best existing view.
 
 Planned axis: per-provider themes. A provider theme (SCB, Socialstyrelsen,
 Försäkringskassan, …) is a remap of the `accent*` roles under a `[data-provider]`
@@ -266,10 +266,10 @@ pure role remaps.
 - **Sheet and surfaces:** `bg` is the canvas, `surface` where work happens (the detail
   pane, inputs, chips, dialogs), `surface-sunken` the selected item in a browse column
   and inset wells, `surface-hover` every hover.
-- **Ink (`text`, `text-muted`, `text-faint`):** `text` for everything read;
-  `text-muted` for labels, descriptions and unselected list items (6.4:1 on white);
-  `text-faint` only for things that may recede — hints, brand subtitles,
-  out-of-window chips — never for text that must be read (3.2:1).
+- **Ink (`text`, `text-muted`, `text-faint`):** `text` for everything read; `text-muted`
+  for labels, descriptions and unselected list items (6.4:1 on white); `text-faint` only
+  for things that may recede — hints, brand subtitles, out-of-window chips — never for
+  text that must be read (3.2:1).
 - **Rules:** `border` is the hairline between rows and columns. `border-strong` is an
   ink hairline and means structure: the rule above a section, a default button's border,
   a column chip's stroke, the axis of a graph.
@@ -277,8 +277,8 @@ pure role remaps.
   this is yours, or this is where you are. Primary button fill (`accent-fg` text), the
   bar and count on a column item that has something in the project, the selected row's
   bar, the focus ring, the study-window bounds. `accent-bg` is the wash: selected
-  variable rows, the study-window band, the active segment. `accent-soft` is the
-  project banner's fill and the current lane in a graph. `accent-ink` is pine as text
+  variable rows, the study-window band, the active segment. `accent-soft` is the project
+  banner's fill and the current lane in a graph. `accent-ink` is pine as text
   (in-project counts, window years on an axis). Never use pine for a verdict, a type or
   decoration; `ok` is a verdict, `accent` is ownership.
 - **Status (`err`, `warn`, `info`, `ok` and their `-bg` tints):** the only other
@@ -321,8 +321,8 @@ mono or in a chip.
 Hierarchy is size and weight. Labels and headings are **sentence case with normal
 tracking**; nothing is underlined except a ghost button's label, which takes a 2 px
 `accent` underline. Line length stays under 60 characters for prose in a pane; tables,
-lanes and identifiers are exempt. Swedish text with å/ä/ö is the norm, so both
-families ship the latin and latin-ext subsets.
+lanes and identifiers are exempt. Swedish text with å/ä/ö is the norm, so both families
+ship the latin and latin-ext subsets.
 
 ## Layout
 
@@ -339,19 +339,19 @@ The target shell is a top bar and three browse columns, not a rail. The current
   in-project mark on the right when it has one. Below the single narrow breakpoint
   (`breakpoint-narrow`) the columns stack, one at a time, with a back affordance. Do not
   mint new breakpoints.
-- **Detail pane:** breadcrumb path in `mono`, `h1`, member-of line, facets as a
-  labelled row, the actions row, then definitions, then the `Timeline`, then the list of
+- **Detail pane:** breadcrumb path in `mono`, `h1`, member-of line, facets as a labelled
+  row, the actions row, then definitions, then the `Timeline`, then the list of
   variables or columns. Padding `spacing.5`.
 
-Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the
-gap, never by margins on children. Density is tuned for scanning long lists: rows are
-5–6 px of vertical padding, panes 24 px, and there is no marketing whitespace. Every
-rendered change is designed for 375, 768, 1280 and 1920 px wide; the page body never
-scrolls horizontally.
+Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
+never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
+of vertical padding, panes 24 px, and there is no marketing whitespace. Every rendered
+change is designed for 375, 768, 1280 and 1920 px wide; the page body never scrolls
+horizontally.
 
-**No counters.** A number appears only when it is actionable: how many of something
-are in the project, how many results a filter leaves. Totals for their own sake
-("6 367 variables") are left out.
+**No counters.** A number appears only when it is actionable: how many of something are
+in the project, how many results a filter leaves. Totals for their own sake ("6 367
+variables") are left out.
 
 ## Time
 
@@ -378,9 +378,9 @@ are separated by hairlines. A 40 % ink scrim sits behind dialogs and the drawer.
 glows, gradients, blobs, textures or glass.
 
 Stacking runs bottom-up: in-page positioned bits (1-4), the mobile drawer's scrim (55)
-and the drawer itself (60), popovers and the palette (65), then a modal dialog's scrim
-(70) and the dialog (71). A dialog is portalled to `<body>` and must name a layer above
-the shell — a modal the app can paint through is not a modal.
+and the drawer itself (60), popovers and the palette (65), then a modal dialog's scrim (70)
+and the dialog (71). A dialog is portalled to `<body>` and must name a layer above the
+shell — a modal the app can paint through is not a modal.
 
 ## Shapes
 
@@ -398,10 +398,10 @@ Motion explains where things come from; state changes are near-instant.
   ring.
 - `--duration-base` (200 ms, `--ease-out` arriving / `--ease-in` leaving): popovers and
   the command palette (fade + 4 px rise from the trigger), disclosures (height), a
-  status row appearing (fade + 4 px rise), the selection bar moving between column
-  items (translate), skeleton-to-content (crossfade).
-- `--duration-slow` (320 ms, `--ease-out` / `--ease-in`): the drawer (translate from
-  the leading edge), a dialog (fade + scale from 98 %), a detail pane changing subject
+  status row appearing (fade + 4 px rise), the selection bar moving between column items
+  (translate), skeleton-to-content (crossfade).
+- `--duration-slow` (320 ms, `--ease-out` / `--ease-in`): the drawer (translate from the
+  leading edge), a dialog (fade + scale from 98 %), a detail pane changing subject
   (crossfade).
 - Nothing animates on page load. No springs, bounces, parallax or hover lifts. Under
   `prefers-reduced-motion: reduce` every transition becomes an opacity fade at
@@ -423,14 +423,14 @@ new is styled: `Button`, `ProjectBanner`, `Search`, `ColumnList`, `ColumnChip`,
 replaced, and must not grow new visual language meanwhile.
 
 - **Buttons:** `primary` is the pine fill with `accent-fg` text and there is at most one
-  per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box and
-  a 2 px `accent` underline; `danger` is the `err` fill for destructive actions only.
-  There is no success variant. A button says what happens: "Add column to project",
-  never "Submit".
+  per pane; `default` is `surface` with a `border-strong` hairline; `ghost` has no box
+  and a 2 px `accent` underline; `danger` is the `err` fill for destructive actions
+  only. There is no success variant. A button says what happens: "Add column to
+  project", never "Submit".
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, warnings, save state — on `accent-soft` with a 3 px `accent`
-  leading bar. The study window is the period picker. With no project open it is a single
-  "Create a project" link and nothing in the catalog is tinted.
+  leading bar. The study window is the period picker. With no project open it is a
+  single "Create a project" link and nothing in the catalog is tinted.
 - **ColumnList:** a `label` header, then items, one selected (2 px `accent` bar on
   `surface-sunken` at weight 600). An item with something in the project carries a 6 px
   `accent` dot and the count in `accent-ink` `mono` — the only number in the list.
@@ -456,8 +456,8 @@ replaced, and must not grow new visual language meanwhile.
 - Do keep pine for ownership and reserve every other chromatic color for a meaning
   (status, type, data). Do not tint headings or emphasis.
 - Do pair every status with a glyph and text. Don't rely on hue.
-- Do chip every column name and never a variable name. Do use mono for identifiers
-  only. Don't set labels, headings or copy in mono.
+- Do chip every column name and never a variable name. Do use mono for identifiers only.
+  Don't set labels, headings or copy in mono.
 - Do write labels and headings in sentence case at normal tracking. Don't use uppercase
   tracked eyebrows, numbered section markers, middle-dot meta strings, or trailing
   arrows on links and buttons.
