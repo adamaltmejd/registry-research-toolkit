@@ -125,6 +125,7 @@ def _setup(*, code="01"):
             sentinel_members=(("99", "Source label"),),
             reason="Reviewed scoped sentinel",
             provenance="accepted fixture",
+            published="curated:coding.sentinel",
         ),
     )
     return record, case, coding, {"fixture": classification}

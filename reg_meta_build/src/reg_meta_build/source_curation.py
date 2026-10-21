@@ -582,6 +582,15 @@ class CuratedOccurrenceAddition(_CurationModel):
         return self
 
 
+# What the catalog publishes for a curated fact (#1708): a constant
+# `errata:<class>` or `curated:<kind>` head, then locator lines built from the
+# entry's checked fields, never curator text. No line is blank: a state joins
+# its elements with a blank line.
+type PublishedProvenance = Annotated[
+    str, Field(pattern=r"^(errata|curated):[^\s][^\n]*(\n[^\s][^\n]*)*$")
+]
+
+
 type OccurrenceEffect = (
     CheckedFieldChange
     | CheckedPeriodChange
@@ -602,6 +611,9 @@ class OccurrenceCorrectionDecision(_CurationModel):
     effects: tuple[OccurrenceEffect, ...]
     reason: str = Field(min_length=1)
     provenance: str = Field(min_length=1)
+    # What its fact effects publish; None for routing, which claims no fact, and
+    # for provider-authored records, whose facts are the provider's own.
+    published: PublishedProvenance | None
 
     @model_validator(mode="after")
     def _nonempty(self) -> Self:
@@ -1218,6 +1230,7 @@ class CodingDecision(_ColumnDecision, CodingWindow):
 
     kind: Literal["coding"] = "coding"
     data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")] | None = None
+    published: PublishedProvenance
     selection: (
         CodingSelection
         | DocumentedCodingSelection
@@ -1260,6 +1273,7 @@ class ClassificationDecision(_ColumnDecision):
     """
 
     kind: Literal["classification"] = "classification"
+    published: PublishedProvenance
     classification: str = Field(min_length=1)
     expected_classification: str = Field(pattern=r"^[0-9a-f]{64}$")
     sentinel_members: tuple[tuple[str, str], ...] = Field(min_length=1)

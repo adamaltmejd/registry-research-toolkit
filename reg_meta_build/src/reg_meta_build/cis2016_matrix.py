@@ -463,6 +463,17 @@ def convert_matrix(
                     effects=tuple(effects),
                     reason=reason,
                     provenance=answer_provenance,
+                    published="\n".join(
+                        (
+                            "curated:matrix-answer",
+                            f"Document: {evidence.url}",
+                            f"SHA256: {evidence.sha256}",
+                            "Pages: "
+                            + ", ".join(
+                                f"{c}={answer.source_pages[c]}" for c in answer.columns
+                            ),
+                        )
+                    ),
                 ),
             )
         )

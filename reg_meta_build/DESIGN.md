@@ -1778,14 +1778,20 @@ of a build-only warning. Diagnostics a researcher reads as one limitation share 
 code (`PUBLIC_CODES`: `no_supported_states` publishes as `unsupported_occurrence`); the
 build keeps the original code, which acknowledgements name. Published provenance (state,
 classification link, alias window, sentinel certificate, source relationship) follows
-the same rule: it carries a decision's `errata:<class>` line and its structured source
-locators (`Document:`, `SHA256:`, `Pages:`, `Source rows:`, `Rows:`, a matrix's
-`evidence:` and `source_pages:`) and storage-type facts, never the case pointer, the
-reason or free-text evidence, which go to the case event in the build ledger. A
-correction citing no locator publishes nothing, so equal neighbouring states pool. A
-curated alias window keeps the `curated:alias-window` head, since non-NULL provenance is
-what makes it additive; a book's override binding publishes
-`curated:override -> <slug>`; a source relationship names its declaration row.
+the same rule. A decision carries a `published` value built only from its checked
+fields, never parsed from its text: a constant head (`errata:<class>` for an errata
+class, else `curated:<table>` of its curation entry, such as `curated:errata.field`,
+`curated:coding.choice` or `curated:matrix-answer`), then its source locators
+(`Document:`, `SHA256:`, `Pages:`, `Source rows:`, `Rows:`) and storage-type facts. The
+case pointer, the reason and free-text evidence go to the case event in the build
+ledger. Only a fact effect publishes it (a field, period or added occurrence; a coding,
+classification, representation or alias decision), so equally curated spans pool and a
+curated span never pools with an uncurated neighbour. Routing (identity, variant
+assignment, edition rebind, source use) claims no fact and publishes nothing, and nor
+does a thin provider's authored record, whose facts are the provider's own. A curated
+alias window's `curated:alias-window` head is also what makes it additive; a book's
+override binding publishes `curated:override -> <slug>`; a source relationship names its
+declaration row.
 
 The build report (`events.jsonl.gz`, kind `data_warning`) keeps every warning the build
 forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CODES`

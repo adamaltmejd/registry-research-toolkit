@@ -80,6 +80,7 @@ def test_missing_binding_or_guard_is_fatal_not_a_content_waiver() -> None:
             ),
             reason="Reviewed",
             provenance="fixture",
+            published="curated:coding.choice",
             **window,
         ),
     )
@@ -150,6 +151,7 @@ def test_selection_applies_beside_a_known_empty_competitor() -> None:
             ),
             reason="Reviewed",
             provenance="fixture",
+            published="curated:coding.choice",
             **window,
         ),
     )
