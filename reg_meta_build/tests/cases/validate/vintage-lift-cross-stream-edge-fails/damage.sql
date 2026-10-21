@@ -4,9 +4,9 @@ INSERT INTO classification (short_name, name, slug) VALUES ('SNI2002', 'SNI 2002
 INSERT INTO classification (short_name, name, slug) VALUES ('SNI2007', 'SNI 2007', 'sni2007');
 INSERT INTO classification_replaced_by (predecessor_slug, successor_slug, effective_year, note)
 VALUES ('sni2002', 'sni2007', 2007, 'derived:vintage_chain');
-INSERT INTO variable (register_id, provider_key, slug, name)
-VALUES (1, 'stream-pred', 'individ-sni-2002', 'Näringsgren'),
-       (1, 'stream-succ', 'foretag-sni-2007', 'Näringsgren');
+INSERT INTO variable (register_id, provider_key, slug, name, source_name)
+VALUES (1, 'stream-pred', 'individ-sni-2002', 'Näringsgren', 'Näringsgren'),
+       (1, 'stream-succ', 'foretag-sni-2007', 'Näringsgren', 'Näringsgren');
 INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from, valid_to, value_set_version_label)
 SELECT (SELECT COALESCE(MAX(state_id), 0) + 1 FROM variable_state), variable_id, 10, '2002-01-01', '2006-12-31', '' FROM variable WHERE slug = 'individ-sni-2002';
 INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from, valid_to, value_set_version_label)

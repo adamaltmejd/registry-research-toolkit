@@ -70,9 +70,9 @@ def _owner_db(
     with closing(sqlite3.connect(db, autocommit=True)) as conn:
         for variable_id, (owner, windows) in enumerate(owners.items(), start=910):
             conn.execute(
-                "INSERT INTO variable(variable_id,register_id,provider_key,slug,name) "
-                f"VALUES (?,{REGISTER_ID},?,?,?)",
-                (variable_id, owner, owner, owner),
+                "INSERT INTO variable(variable_id,register_id,provider_key,slug,name,"
+                f"source_name) VALUES (?,{REGISTER_ID},?,?,?,?)",
+                (variable_id, owner, owner, owner, owner),
             )
             for window in windows:
                 start, end = window or (None, None)
@@ -617,7 +617,8 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         )
         conn.execute(
             "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-            f"name) VALUES (920, {REGISTER_ID}, 'lopnr', 'lopnr', 'Lopnr')"
+            f"name, source_name) VALUES (920, {REGISTER_ID}, 'lopnr', 'lopnr', "
+            "'Lopnr', 'Lopnr')"
         )
         for variant, start, end in (
             (
@@ -669,7 +670,8 @@ def test_inventory_maps_a_column_by_the_union_of_split_variants(
         if beside in _COMPETITOR:
             conn.execute(
                 "INSERT INTO variable (variable_id, register_id, provider_key, slug, "
-                f"name) VALUES (921, {REGISTER_ID}, 'annan', 'annan', 'Annan')"
+                f"name, source_name) VALUES (921, {REGISTER_ID}, 'annan', 'annan', "
+                "'Annan', 'Annan')"
             )
             conn.execute(
                 "INSERT INTO variable_state (state_id, variable_id, "

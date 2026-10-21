@@ -4,8 +4,8 @@ UPDATE register_variant SET panel_entity_key = 'kon' WHERE register_variant_id =
 -- A sos (provider 2) register 500 whose variant 5000 keys its panel on `sosvar`
 -- (source_id 500.LOPNR).
 INSERT INTO register (register_id, provider_id, slug, name) VALUES (500, 2, 'dors', 'Dodsorsaker');
-INSERT INTO variable (register_id, provider_key, name, slug)
-VALUES (500, CAST('LOPNR' AS TEXT), 'Lopnummer', 'sosvar');
+INSERT INTO variable (register_id, provider_key, name, source_name, slug)
+VALUES (500, CAST('LOPNR' AS TEXT), 'Lopnummer', 'Lopnummer', 'sosvar');
 INSERT INTO register_variant (register_variant_id, register_id, slug, name, panel_entity_key)
 VALUES (5000, 500, 'grund', 'G', 'sosvar');
 INSERT INTO variable_state (state_id, variable_id, register_variant_id, valid_from, valid_to, data_type, delivery_column_name)

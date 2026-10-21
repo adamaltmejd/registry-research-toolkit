@@ -777,7 +777,7 @@ CREATE TABLE variable (
     -- worklist generators match on. It differs from `name`, the display name,
     -- only where the collision ladder named sibling variables apart (#1764);
     -- NULL exactly when `name` is.
-    source_name TEXT,
+    source_name TEXT CHECK ((source_name IS NULL) = (name IS NULL)),
     definition TEXT,
     description TEXT,
     operational_definition TEXT,

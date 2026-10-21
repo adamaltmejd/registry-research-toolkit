@@ -241,9 +241,9 @@ def test_errata_column_misses_are_inspection_items_not_delivered_candidates(
         label="UPDATE variable SET source_label = 'scb-errata' "
         "WHERE variable_id = :t_kolumn",
         stateless="INSERT INTO variable "
-        "(variable_id, register_id, provider_key, slug, name, source_label) "
+        "(variable_id, register_id, provider_key, slug, name, source_name, source_label) "
         "VALUES (906, :register, 'Errata_utan_variant', 'errata-utan-variant', "
-        "'Errata utan variant', 'scb-errata')",
+        "'Errata utan variant', 'Errata utan variant', 'scb-errata')",
     )
 
     text = _errata_text(
