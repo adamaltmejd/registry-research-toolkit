@@ -24,19 +24,15 @@ whitespace other than U+0020, marks, controls and format characters appear as `\
 (astral characters as surrogate pairs); printable letters, numbers, punctuation and
 symbols appear as is.
 
-## Generation
+## Provenance
 
-The generated files are written by `crates/reg-core/tools/gen_fold_corpus.py` from
-today's Python reader (`reg_meta.queries` and `str.lower`). Expected values are
-therefore the Python behavior `reg-core` must keep. Regenerating is deterministic for a
-given Python version; a changed expected value is a content change, reviewed in the
-diff.
+The generated files are frozen data. They were written by a generator, since deleted,
+from the retired Python reader (`reg_meta.queries` and `str.lower`), so expected values
+are the Python behavior `reg-core` must keep. They cannot be regenerated: a changed or
+added expected value is a hand edit and a content change, reviewed in the diff, with its
+source named in the commit.
 
-```sh
-uv run python crates/reg-core/tools/gen_fold_corpus.py
-```
-
-Selection per fold, over assigned scalars excluding private use:
+Selection per fold, as generated, over assigned scalars excluding private use:
 
 - every scalar the fold changes (for `fts_match_query`: every scalar it rejects among
   marks, separators, controls, format characters and connector punctuation, the classes

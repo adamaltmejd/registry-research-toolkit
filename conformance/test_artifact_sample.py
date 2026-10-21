@@ -6,7 +6,7 @@ import json
 
 import pytest
 from artifact_requests import assert_sampled_agreement, server_client
-from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, build_reader_artifact
+from reader_artifacts import CASES, FIXTURE_IMPORT_DATE, cached_reader_artifact
 
 
 def _without_nulls(value):
@@ -21,14 +21,13 @@ def _without_nulls(value):
 @pytest.mark.parametrize(
     "case", sorted((CASES / "artifact_sample").iterdir()), ids=lambda p: p.name
 )
-def test_sampled_order_and_search_contracts(case, tmp_path, request):
+def test_sampled_order_and_search_contracts(case, request):
     spec = json.loads((case / "request.json").read_text())
     expected = json.loads((case / "expected.json").read_text())
     fixture = spec["fixture"]
     if fixture.startswith("artifact_sample/"):
         fixture = CASES / fixture
-    path = build_reader_artifact(
-        tmp_path / "artifact",
+    path = cached_reader_artifact(
         fixture,
         spec["artifact"],
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
