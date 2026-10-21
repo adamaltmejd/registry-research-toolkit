@@ -326,7 +326,8 @@ families ship the latin and latin-ext subsets.
 
 ## Layout
 
-The shell is a top bar and three browse columns, not a rail.
+The target shell is a top bar and three browse columns, not a rail. The current
+`AppShell` rail is a stepping stone (see Components) until it is replaced.
 
 - **Top bar:** brand (name in `h3`, product line in `mono` `text-faint` under it), one
   search bar (the command bar, `Meta/Ctrl+K`, shown as `⌘K` on macOS), and the

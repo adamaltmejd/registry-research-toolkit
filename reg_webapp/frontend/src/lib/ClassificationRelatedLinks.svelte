@@ -71,7 +71,6 @@ const hasDerivedRefs = $derived(
   }
   .link-label {
     margin: 0 0 var(--space-2);
-    color: var(--text-faint);
   }
   .derived-links ul {
     display: grid;
