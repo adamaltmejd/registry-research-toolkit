@@ -985,8 +985,8 @@ def load_slug_dir(
     DESIGN.md § "Slug immutability"), so a leftover untracked file from a prior
     build is not part of the in-memory baseline. Loading it would inflate
     ``snapshot_payload`` with phantom variable slugs and false-fail the
-    ``precheck-slugs`` snapshot diff (the recurring ``git clean -fdX`` footgun). A pinned (curating/frozen) zone's committed ``<provider>.auto.toml``
-    IS the baseline and still loads. Mirrors the freeze gate in
+    ``precheck-slugs`` snapshot diff. A pinned (curating/frozen) zone's committed
+    ``<provider>.auto.toml`` IS the baseline and still loads. Mirrors the freeze gate in
     ``populate_variable_slugs``. Non-auto provider TOMLs are state-independent and
     always load.
     """

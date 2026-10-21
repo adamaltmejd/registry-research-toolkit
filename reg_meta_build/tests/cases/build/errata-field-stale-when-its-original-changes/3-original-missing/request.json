@@ -2,7 +2,8 @@
   "replaces": [
     "test_curation_compile_occurrence_corrections.py::test_checked_occurrence_corrections_fail_closed_on_source_changes[missing]"
   ],
-  "fails_if": "`compile_occurrence_corrections` accepts an entry whose pinned edition no longer delivers the column, so the `[[errata.field]]` entry still applies",
+  "note": "The entry lists editions 99 and 100; only 99 stops delivering the column. The entry is stale at its own location, the report names edition 99, and edition 100 keeps its delivered name.",
+  "fails_if": "`compile_occurrence_corrections` checks a multi-edition `[[errata.field]]` entry only over the union of its selected originals, so the missing edition 99 is silently dropped and edition 100 is renamed 'Reviewed label' with no stale issue; or the stale report does not name edition 99",
   "sources": {
     "description": "Edition 99 (CVID 20) is no longer delivered.",
     "scb": {
