@@ -142,6 +142,7 @@ def _state_from_segment(
                     correction.attribution
                     for occurrence in segment.effective_occurrences
                     for correction in occurrence.corrections
+                    if correction.attribution is not None
                 }
                 | set(matched.provenance if matched else ())
                 | (
@@ -1099,6 +1100,7 @@ def form_native_variable(
                                 correction.attribution
                                 for occurrence in segment.effective_occurrences
                                 for correction in occurrence.corrections
+                                if correction.attribution is not None
                             }
                         )
                     ),

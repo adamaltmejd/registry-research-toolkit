@@ -38,6 +38,7 @@ from reg_meta_build.source_curation import (
 )
 from reg_meta_build.source_effects import _require_checked
 from reg_meta_build.source_intervals import coding_scope_bounds
+from reg_meta_build.source_occurrences import published_provenance
 from reg_meta_build.source_records import ScopeInterval, SourceFields, TemporalScope
 from reg_meta_build.source_value_bindings import _member_scope
 
@@ -1109,7 +1110,16 @@ def apply_coding_choices(
                     segments=tuple(
                         replace(
                             segment,
-                            provenance=(case.case_id,),
+                            provenance=tuple(
+                                filter(
+                                    None,
+                                    (
+                                        published_provenance(
+                                            decision.provenance, case.case_id
+                                        ),
+                                    ),
+                                )
+                            ),
                         )
                         for segment in selected.segments
                     ),

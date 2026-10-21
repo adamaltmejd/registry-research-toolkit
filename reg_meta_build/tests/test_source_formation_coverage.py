@@ -134,15 +134,15 @@ def test_formation_coverage_claims_carry_the_delivered_type_and_attributions():
         source_occurrence(_record(edition, TemporalScope(kind="not_applicable"))),
         corrections=(
             AppliedCorrection(
-                case_id="fix-one", effect_index=0, provenance="fixture:fix-one"
+                case_id="fix-one", effect_index=0, provenance="Rows: fixture:fix-one"
             ),
         ),
     )
     formed = _form(corrected, ())
     assert formed.variable is not None
-    assert formed.variable.states[0].provenance == "fix-one"
+    assert formed.variable.states[0].provenance == "Rows: fixture:fix-one"
     (obligation,) = formed.coverage
     assert (obligation.variant, obligation.column) == ("people", "VALUE")
     assert (obligation.valid_from, obligation.valid_to) == ("2020-01-01", "2020-12-31")
     assert obligation.data_type_claim == ("value", "integer")
-    assert obligation.attributions == ("fix-one",)
+    assert obligation.attributions == ("Rows: fixture:fix-one",)

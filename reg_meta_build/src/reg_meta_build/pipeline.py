@@ -1472,7 +1472,7 @@ def _resolve(
                                         ),
                                     ),
                                     withheld_output=("catalog_relationship",),
-                                    case_id=relationship.provenance,
+                                    case_id=relationship.case_id,
                                 )
                                 retained_relationship_issues[
                                     relationship.register_ref

@@ -647,6 +647,41 @@
       "note": "One bound state per sentinel register: sentinel's 2020-01-01..06-30 half and substantive's 2019 state stay unbound."
     },
     {
+      "table": "states",
+      "where": {
+        "provenance": {
+          "contains": [
+            "https://example.org/official.pdf",
+            "SHA256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "Pages: 12"
+          ]
+        }
+      },
+      "fields": [
+        "register",
+        "valid_from"
+      ],
+      "rows": [
+        [
+          "part",
+          "2020-01-01"
+        ],
+        [
+          "pdf",
+          "2020-01-01"
+        ],
+        [
+          "pdfconflict",
+          "2020-01-01"
+        ],
+        [
+          "pooled",
+          "2010-01-01"
+        ]
+      ],
+      "note": "A documented state's provenance names the PDF, its digest and page; pdfconflict's non-overlapping first half keeps its first entry's. The filter matches the entries' own authored URL, digest and page, not generated prose."
+    },
+    {
       "table": "report_warnings",
       "where": {
         "register": "warning"

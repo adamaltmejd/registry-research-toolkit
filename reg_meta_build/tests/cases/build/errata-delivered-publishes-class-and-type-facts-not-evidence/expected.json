@@ -9,10 +9,10 @@
       "table": "states",
       "where": {"variable": "v5"},
       "fields": ["variable", "column", "valid_from", "valid_to", "provenance"],
-      "note": "The delivered 2020 state names the class and case, not the evidence",
+      "note": "The delivered 2020 state names the class and storage-type facts, not the evidence or the case",
       "rows": [
         ["v5", "Q", "2018-01-01", "2018-12-31", null],
-        ["v5", "Q", "2020-01-01", "2020-12-31", "errata:omitted-column-in-version\ncuration/registers/scb/sample.toml#/errata.delivered/1\nCurated data_type: none\nDocumented Datatyp: 2018=integer"]
+        ["v5", "Q", "2020-01-01", "2020-12-31", "errata:omitted-column-in-version\nCurated data_type: none\nDocumented Datatyp: 2018=integer"]
       ]
     },
     {

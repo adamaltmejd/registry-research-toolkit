@@ -246,8 +246,8 @@ def _entries(kind: str, registers: Sequence[RegisterCuration]) -> list[_Curation
 def _state_provenance(class_name: str, evidence: str) -> str:
     """The decision's provenance: class first, evidence after it.
 
-    The catalog publishes only the class line (`AppliedCorrection.attribution`);
-    the evidence reaches the build ledger. The catalog contract also defines
+    The catalog publishes only the class line and the source-locator lines
+    (`published_provenance`); the evidence reaches the build ledger. The catalog contract also defines
     `scoped-attributions` and `overlapping-attributions` provenance forms, which
     readers still parse; the build emits neither today, and a curator may not
     claim either name as a correction class.

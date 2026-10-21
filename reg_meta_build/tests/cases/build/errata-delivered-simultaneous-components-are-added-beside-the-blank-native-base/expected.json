@@ -51,7 +51,7 @@
       "where": {
         "variable": "a",
         "valid_from": "2021-01-01",
-        "provenance": {"contains": "errata:omitted-column-in-version\ncuration/"}
+        "provenance": {"contains": "errata:omitted-column-in-version\nCurated data_type: "}
       },
       "fields": ["variable", "valid_from"],
       "rows": [
@@ -63,7 +63,7 @@
       "where": {
         "variable": "b",
         "valid_from": "2021-01-01",
-        "provenance": {"contains": "errata:omitted-column-in-version\ncuration/"}
+        "provenance": {"contains": "errata:omitted-column-in-version\nCurated data_type: "}
       },
       "fields": ["variable", "valid_from"],
       "rows": [
@@ -75,7 +75,7 @@
       "where": {
         "variable": "c",
         "valid_from": "2021-01-01",
-        "provenance": {"contains": "errata:omitted-column-in-version\ncuration/"}
+        "provenance": {"contains": "errata:omitted-column-in-version\nCurated data_type: "}
       },
       "fields": ["variable", "valid_from"],
       "rows": [

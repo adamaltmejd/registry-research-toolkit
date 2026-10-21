@@ -43,16 +43,16 @@
     },
     {
       "table": "alias_windows",
-      "where": {"provenance": {"contains": "curation/registers/scb/owned.toml#/representation.alias_window/1"}},
+      "where": {"register": "owned", "provenance": {"contains": "curated:alias-window"}},
       "fields": ["register", "column", "valid_from"],
       "rows": [
         ["owned", "OLD", "2019-01-01"]
       ],
-      "note": "A curated window carries its entry's case pointer as provenance, which the reader reads as an additive representation."
+      "note": "A curated window carries the `curated:alias-window` head as provenance, which the reader reads as an additive representation."
     },
     {
       "table": "alias_windows",
-      "where": {"provenance": {"contains": "curation/registers/scb/aliased.toml#/representation.alias_window/1"}},
+      "where": {"register": "aliased", "provenance": {"contains": "curated:alias-window"}},
       "fields": ["register", "column", "valid_from"],
       "rows": [
         ["aliased", "first", "2021-01-01"]

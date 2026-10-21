@@ -52,12 +52,14 @@
       ]
     },
     {
-      "note": "Step 1's three corrections, under their reversed locators, in locator order.",
-      "table": "states",
-      "where": {"register": "compose"},
-      "fields": ["provenance"],
+      "note": "Step 1's three corrections, under their reversed locators.",
+      "table": "case_uses",
+      "where": {"case_id": {"contains": "compose.toml"}},
+      "fields": ["case_id", "key", "variable"],
       "rows": [
-        ["curation/registers/scb/compose.toml#/errata.field/1\n\ncuration/registers/scb/compose.toml#/errata.field/2\n\ncuration/registers/scb/compose.toml#/errata.field/3"]
+        ["curation/registers/scb/compose.toml#/errata.field/1", "member:101", "scb/compose/answer"],
+        ["curation/registers/scb/compose.toml#/errata.field/2", "member:101", "scb/compose/answer"],
+        ["curation/registers/scb/compose.toml#/errata.field/3", "member:101", "scb/compose/answer"]
       ]
     },
     {
