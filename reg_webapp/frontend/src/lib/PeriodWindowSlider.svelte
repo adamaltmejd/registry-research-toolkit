@@ -68,14 +68,6 @@ interface Props {
   // show an honest cue naming the real value instead of presenting the window as
   // if it were selected.
   subAnnualPeriod: string | null;
-  // false = no `?period` nor window chosen — suppress the not-delivered
-  // availability GAP (the selection-vs-coverage deviation), which would otherwise
-  // flag a span the user never chose (#639). Independent of the #671 up-front
-  // `unavailable` band, which renders regardless (a passive "no data here", not a
-  // selection warning) — that's how #671 surfaces coverage without resurrecting
-  // the #639 alarm. The coverage band still renders too (an FYI of where data
-  // exists, not a deviation claim).
-  hasSelection: boolean;
   // Whether the user has ACTUALLY chosen a year-window value distinct from the
   // project window (an explicit year `?period`, or a live thumb drag) — gates the
   // USER-deviation hint (Fix B, refined by Fix 3). FALSE for the untouched
@@ -83,8 +75,6 @@ interface Props {
   // below, a default-seed deviation is silenced ONLY when the seed is a true
   // within-window narrowing (window∩coverage). A DISJOINT window/coverage default
   // seed snaps OUTSIDE the window, so the hint fires even without `userChosen`.
-  // Distinct from `hasSelection`, which is true whenever a window is set and so
-  // can't tell the default from a real choice.
   userChosen: boolean;
   // Emitted with the live selection as the thumbs move (the picker holds it and
   // submits the wire on Apply).
@@ -101,7 +91,6 @@ let {
   coverage,
   vintageYear,
   subAnnualPeriod,
-  hasSelection,
   userChosen,
   onchange,
   onreset,
@@ -209,29 +198,25 @@ const unavailable = $derived.by(() => {
 });
 
 // The not-delivered gaps of the ACTIVE selection (fires relative to the active
-// selection, per the spec), as greyed cells over the fill — against the vintage-
-// projected `effectiveCoverage`, so a selection past an open-ended coverage's
-// vintage ceiling gaps too (#631). With the thumbs hard-clamped to coverage
-// (#671), the DEFAULT seed never overruns coverage, so this fires only for an
-// explicit out-of-coverage `?period` the URL carries (the consumer's source of
-// truth, rendered honestly past the clamp). SUPPRESSED for a sub-annual `?period`:
-// the shown span is then the window PROJECTION, not the real selection, so a gap
-// against it is meaningless (a genuinely-covered `HT2020` would otherwise show
-// unrelated "Not delivered" warnings) — the sub-annual cue already points the
-// user at the real value (Codex P2). Also SUPPRESSED on the no-op full-history
-// default (`!hasSelection`): no `?period`/window means the thumbs sit at the seed
-// the user never chose, so a residual gap there would flag a span they never
-// selected (#639 — the up-front `unavailable` band carries the "no data" message
-// instead, without the selection-gap alarm).
+// selection, per the spec), as greyed cells over the fill — against the shared
+// `bandEdges`, so a selection past an open-ended coverage's vintage ceiling gaps
+// too (#631) and the gaps can't drift from the band. With the thumbs
+// hard-clamped to the band (#671), every seed (the default, a sub-annual window
+// projection) stays inside it, so this fires only for an explicit out-of-coverage
+// year `?period` the URL carries (the consumer's source of truth, rendered
+// honestly past the clamp). An INVERTED coverage has no band (Fix D) and so no
+// gaps — a gap label against the inverted edges would contradict the readout.
+// simplify: an explicit `?period` before an inverted coverage's start loses the
+// honest "Not delivered before <from>" (a `userChosen`-gated open-end branch
+// would keep it); add that branch if inverted coverage stops being a rare
+// data anomaly.
 const gaps = $derived(
-  subAnnualPeriod !== null || !hasSelection
-    ? []
-    : notDeliveredGaps({ from, to }, effectiveCoverage).map((g) => ({
-        left: leftPct(g.from),
-        width: widthPct(g.from, g.to),
-        from: g.from,
-        to: g.to,
-      })),
+  notDeliveredGaps({ from, to }, bandEdges).map((g) => ({
+    left: leftPct(g.from),
+    width: widthPct(g.from, g.to),
+    from: g.from,
+    to: g.to,
+  })),
 );
 
 // ── Deviation states ─────────────────────────────────────────────────────────
@@ -267,31 +252,27 @@ const userDeviation = $derived(
 
 // AVAILABILITY deviation: coverage doesn't cover the active selection. SOFTENED
 // (advisory, not amber) when no window is set — the spec's "softened when no
-// window is set". `hasGaps` drives both the greyed track and the note; it is
-// empty for a sub-annual `?period` (gaps are suppressed at the source above).
+// window is set". `hasGaps` drives both the greyed track and the note.
 const hasGaps = $derived(gaps.length > 0);
 const availabilitySoft = $derived(hasGaps && projectWindow === null);
 
-/** The human note for a not-delivered gap relative to the EFFECTIVE coverage
- * (before / after the band, or both) — so an open-ended coverage's "after" note
- * names the VINTAGE ceiling (`effectiveCoverage.to`), not the raw open end (#631).
- * `effectiveCoverage` is non-null whenever `hasGaps`, and a gap can only fire
- * against a FINITE side (after vintage-projection the end is always finite), so a
- * `before`/`after` note implies that side is non-null. */
+/** The human note for a not-delivered gap relative to the band edges (before /
+ * after the band, or both) — the same `bandEdges` the gaps read, so an
+ * open-ended coverage's "after" note names the VINTAGE ceiling, not the raw open
+ * end (#631). `bandEdges` is non-null whenever `hasGaps`. */
 const availabilityNote = $derived.by(() => {
-  if (!hasGaps || effectiveCoverage === null) {
+  if (!hasGaps || bandEdges === null) {
     return "";
   }
-  const before =
-    effectiveCoverage.from !== null && from < effectiveCoverage.from;
-  const after = effectiveCoverage.to !== null && to > effectiveCoverage.to;
+  const before = from < bandEdges.from;
+  const after = to > bandEdges.to;
   if (before && after) {
-    return `Not delivered before ${effectiveCoverage.from} or after ${effectiveCoverage.to}`;
+    return `Not delivered before ${bandEdges.from} or after ${bandEdges.to}`;
   }
   if (before) {
-    return `Not delivered before ${effectiveCoverage.from}`;
+    return `Not delivered before ${bandEdges.from}`;
   }
-  return `Not delivered after ${effectiveCoverage.to}`;
+  return `Not delivered after ${bandEdges.to}`;
 });
 
 // "Coverage through <year>" (M21/#671): when coverage is OPEN-ended ("still

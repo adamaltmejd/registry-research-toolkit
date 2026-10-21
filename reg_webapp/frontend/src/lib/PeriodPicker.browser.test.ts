@@ -531,14 +531,13 @@ describe("PeriodPicker — window slider (#615)", () => {
       .toBeVisible();
   });
 
-  // Coverage that opens after the vintage inverts (Fix D): there is no band, so
-  // the seed is the window or the full track, wholly before the coverage start.
-  // That seed is not a selection the user made, so it must not read as "not
-  // delivered". The only way either gap suppression in PeriodWindowSlider bites.
-  it("INVERTED coverage, no window: the full-track seed reports no gap", async () => {
-    // Fails if the slider stops suppressing the gap when nothing is selected.
+  it("INVERTED coverage: a ?period past both ends names no gap the readout contradicts", async () => {
+    // Coverage opening after the vintage (2025 on a 2024 catalog) inverts to no
+    // band (Fix D). Fails if the gaps or their label read the vintage-projected
+    // coverage instead of the band: the inverted 2025..2024 then emits "Not
+    // delivered before 2025 or after 2024" beside a "data 2025–…" readout.
     const screen = await render(PeriodPicker, {
-      period: null,
+      period: "2020..2026",
       window: null,
       coverage: { from: 2025, to: null } as Coverage,
       vintageYear: 2024,
@@ -546,23 +545,9 @@ describe("PeriodPicker — window slider (#615)", () => {
       onclear: vi.fn(),
     });
     await expect
-      .element(screen.getByRole("slider", { name: "To year" }))
+      .element(screen.getByText("2020–2026", { exact: true }))
       .toBeVisible();
-    expect(screen.getByText(/Not delivered/).query()).toBeNull();
-  });
-
-  it("INVERTED coverage, sub-annual ?period: the window projection reports no gap", async () => {
-    // Fails if the slider stops suppressing the gap for a sub-annual ?period,
-    // whose shown span is the window projection, not the selection.
-    const screen = await render(PeriodPicker, {
-      period: "HT2020",
-      window: WINDOW,
-      coverage: { from: 2025, to: null } as Coverage,
-      vintageYear: 2024,
-      onsubmit: vi.fn(),
-      onclear: vi.fn(),
-    });
-    await expect.element(screen.getByText(/Active period/)).toBeVisible();
+    await expect.element(screen.getByText("data 2025–…")).toBeVisible();
     expect(screen.getByText(/Not delivered/).query()).toBeNull();
   });
 

@@ -202,11 +202,6 @@ const sliderSelection = $derived<ProjectStudyWindow>(
   ),
 );
 
-/** Whether the slider shows a real user-meaningful selection. */
-const hasSliderSelection = $derived(
-  activeYearSelection !== null || pending !== null,
-);
-
 /** Whether the user has actually chosen a year-window value distinct from the
  * project window. The untouched coverage-clamped default seed is not a user
  * deviation. */
@@ -389,7 +384,6 @@ function submit(event: SubmitEvent): void {
       coverage={boundedCoverage}
       vintageYear={ceilingYear}
       {subAnnualPeriod}
-      hasSelection={hasSliderSelection}
       {userChosen}
       onchange={(next) => {
         pending = next;
