@@ -260,11 +260,12 @@ def _copied_tree(tmp_path: Path) -> Path:
     return tree
 
 
-def test_resolve_key_ignores_release_version_bumps_only(tmp_path: Path) -> None:
-    # Fails if the resolve key holds a workspace member's own version (a release
-    # bump would miss the bundle its candidate resolved) or drops a third-party pin
-    # (a dependency change would place a stale resolution), or if the build key
-    # stops holding the raw lock (the release build would hit the candidate's entry).
+def test_build_keys_hold_only_the_runtime_lock_closure(tmp_path: Path) -> None:
+    # Fails if the build or resolve key holds a workspace member's own version (a
+    # release bump would miss the bundle its candidate resolved; the release build
+    # still misses on HEAD and the raw `__version__`) or a dev-only pin (a pytest bump
+    # cost a full real-seed build), or drops a transitive runtime pin (a dependency
+    # change would place a stale resolution).
     tree = _copied_tree(tmp_path)
     lock = tree / "uv.lock"
 
@@ -285,18 +286,19 @@ def test_resolve_key_ignores_release_version_bumps_only(tmp_path: Path) -> None:
         assert code == 0, out
         return out["key"], out["resolve_key"]
 
-    build, resolve = keys()
+    def bumped(package: str) -> tuple[str, str]:
+        pin = f'name = "{package}"\nversion = "'
+        assert pin in text
+        lock.write_text(text.replace(pin, pin + "9"))
+        return keys()
+
     text = lock.read_text()
-    member = 'name = "reg-meta-build"\nversion = "'
-    lock.write_text(text.replace(member, member + "9"))
-    bumped_build, bumped_resolve = keys()
-    third_party = 'name = "openpyxl"\nversion = "'
-    lock.write_text(text.replace(third_party, third_party + "9"))
-    assert (bumped_build != build, bumped_resolve, keys()[1] != resolve) == (
-        True,
-        resolve,
-        True,
-    )
+    unchanged = keys()
+    released, dev_only = bumped("reg-meta-build"), bumped("pytest")
+    # `pydantic-core` is reached only through `pydantic`.
+    transitive = bumped("pydantic-core")
+    assert (released, dev_only) == (unchanged, unchanged)
+    assert [a != b for a, b in zip(transitive, unchanged, strict=True)] == [True, True]
     # Fails if the resolve key holds the mode: the strict release build would miss
     # the bundle its diagnostic candidate resolved. The build key keeps it.
     # (Scoped, so the strict key needs no committed HEAD.)
@@ -375,10 +377,13 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
 
     bump(uv_lock, "reg-meta-build")
     bump(cargo_lock, "reg-meta")
+    # Fails if the key holds a dev-only pin: a pytest bump re-prepared 14 GB.
+    bump(uv_lock, "pytest")
     released = key()
-    # Fails if that leaves out a third-party pin: a dependency bump in either lock
-    # would hit a preparation made with the old dependency.
-    bump(uv_lock, "openpyxl")
+    # Fails if that leaves out a third-party runtime pin: a dependency bump in either
+    # lock, one `uv.lock` reaches only through `openpyxl` included, would hit a
+    # preparation made with the old dependency.
+    bump(uv_lock, "et-xmlfile")
     uv_bumped = key()
     bump(cargo_lock, "serde")
     assert (released, uv_bumped != released, key() != uv_bumped) == (

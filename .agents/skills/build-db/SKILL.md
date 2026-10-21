@@ -50,14 +50,17 @@ The cache lives under `$REG_REAL_SEED_CACHE`, else
 build entries (about 1.4 GB each) and any entry used in the last 6 hours.
 
 A build also has a resolve key: the builder's own resolve-code fingerprint, `uv.lock`,
-the curation digest, the prepared pins, mode, registers and runtime, but not HEAD. The
-fingerprint and the key leave out the workspace's own version numbers, so a release bump
-commit still reuses its candidate's bundle. A full miss stores the resolve bundle beside
-the build entry (about 0.3–0.4 GB at real scale, eight kept). A later build miss whose
-resolve key hits, such as one after a schema-, derive-, writer- or validator-only
-change, runs only `materialize-db` from that bundle, and its result says
-`"phased": true`. If `materialize-db` refuses the bundle, the cache drops it and builds
-in full; a stale bundle is never placed.
+the curation digest, the prepared pins, registers and runtime, but not HEAD or the mode.
+The fingerprint and the key leave out the workspace's own version numbers, so a release
+bump commit still reuses its candidate's bundle. Every key holds `uv.lock` only as the
+locked runtime closure of `reg-meta-build`, so a dev-only dependency bump (pytest, ruff,
+hypothesis, ...) misses no entry; a runtime dependency bump, transitive ones included,
+misses all of them. A full miss stores the resolve bundle beside the build entry (about
+0.3–0.4 GB at real scale, eight kept). A later build miss whose resolve key hits, such
+as one after a schema-, derive-, writer- or validator-only change, runs only
+`materialize-db` from that bundle, and its result says `"phased": true`. If
+`materialize-db` refuses the bundle, the cache drops it and builds in full; a stale
+bundle is never placed.
 
 `build --verify` rebuilds uncached and compares database bytes and decompressed
 event-ledger bytes with the stored entry. Exit 1 means the key misses an input: report
