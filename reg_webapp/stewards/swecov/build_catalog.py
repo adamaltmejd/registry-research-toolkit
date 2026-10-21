@@ -1281,6 +1281,13 @@ def _column_worklist(
 
 
 def cmd_grafts(args: argparse.Namespace) -> None:
+    docs_root = args.lisa_docs_dir
+    # A wrong path would silently tag every column `steward-holdings`.
+    if not docs_root.is_dir() or not any(d.is_dir() for d in docs_root.iterdir()):
+        raise SystemExit(
+            f"--lisa-docs-dir {docs_root} is not a directory of "
+            "<register>/*.md subdirectories"
+        )
     derived = args.out / "derived"
     enriched = json.loads((derived / "holdings_enriched.json").read_text())
     ge = json.loads((derived / "global_enrichment.json").read_text())
@@ -1294,16 +1301,11 @@ def cmd_grafts(args: argparse.Namespace) -> None:
     # with ingested docs (lisa) can be discriminated; a column in any other register
     # falls through as `steward-holdings`. `--lisa-docs-dir` holds one
     # `<register>/*.md` directory per documented register.
-    docs_root = args.lisa_docs_dir
-    doc_cols: dict[str, set[str]] = {}
-    if docs_root.is_dir():
-        for d in docs_root.iterdir():
-            if d.is_dir():
-                doc_cols[d.name] = {
-                    _norm_alnum(p.stem)
-                    for p in d.glob("*.md")
-                    if not p.stem.startswith("_")
-                }
+    doc_cols: dict[str, set[str]] = {
+        d.name: {_norm_alnum(p.stem) for p in d.glob("*.md") if not p.stem.startswith("_")}
+        for d in docs_root.iterdir()
+        if d.is_dir()
+    }
 
     # register -> [(mapping, csv_holding, set(column names in this holding))]
     by_reg: dict[str, list] = defaultdict(list)

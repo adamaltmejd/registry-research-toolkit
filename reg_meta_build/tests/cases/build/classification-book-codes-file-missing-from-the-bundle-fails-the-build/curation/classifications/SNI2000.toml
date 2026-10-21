@@ -1,0 +1,5 @@
+[classification]
+short_name = "SNI2000"
+slug = "sni2000"
+name = "SNI 2000"
+codes_file = "sni2000.csv"

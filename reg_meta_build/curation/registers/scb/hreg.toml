@@ -302,7 +302,7 @@ definition = "Programmets suninriktning på 3-siffernivå (SUN2000)"
 data_type = "text"
 holdings_period = "2007-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema catalog/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
 noted = "2026-09-30"
 
 [[errata.column]]
@@ -313,7 +313,7 @@ definition = "Programmets sunnivå på 3-siffernivå (SUN2020)"
 data_type = "text"
 holdings_period = "2007-2024"
 source = "steward-holdings"
-evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema catalog/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+evidence = "SWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
 noted = "2026-09-30"
 
 [[enrichment.description]]

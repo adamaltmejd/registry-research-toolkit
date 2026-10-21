@@ -51,6 +51,7 @@ def _grafts_text(
         json.dumps({"gapfill": gapfill}), encoding="utf-8"
     )
     docs = tmp_path / "docs"
+    (docs / "lisa").mkdir(parents=True)
     for column in doc_columns:
         page = docs / "lisa" / f"{column}.md"
         page.parent.mkdir(parents=True, exist_ok=True)
@@ -143,6 +144,18 @@ def test_an_scb_documented_column_is_the_same_entry_under_the_other_source(
     # Sectioned by source, each section saying what still has to be curated in it.
     assert "# ── source = scb-docs: 1 column(s)" in text
     assert "narrow `all_versions` to the years its doc page carries" in text
+
+
+def test_a_docs_dir_without_register_subdirectories_is_refused(tmp_path: Path) -> None:
+    """Pointing `--lisa-docs-dir` at one register's pages (`lisa/` itself) instead of
+    their parent finds no register, which would tag every column
+    `steward-holdings`. Fails if the scan reads the wrong root as "no docs"."""
+    pages = tmp_path / "lisa"
+    pages.mkdir()
+    (pages / "Ssyk4_J16.md").write_text("# Ssyk4_J16\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="--lisa-docs-dir"):
+        build_catalog.cmd_grafts(argparse.Namespace(lisa_docs_dir=pages))
 
 
 @pytest.mark.parametrize(
