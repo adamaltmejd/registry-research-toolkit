@@ -17,8 +17,8 @@ packages or deploy merely because an upgrade is complete.
 Renovate (`renovate.json`) opens the routine dependency PRs: tools, frontend, CI and dev
 deps nightly; the builder's runtime deps and Cargo weekly, plus a separate weekly
 lockfile-maintenance PR (the weekly ones are proven by the next curation real-seed
-build). This skill is for repairing a red Renovate PR (`renovate-autofix.yml` has Sonnet
-propose a patch from it, without running code) and for manual, larger upgrades.
+build). This skill is for an Operator session repairing a red Renovate PR locally, on
+its branch, and for manual, larger upgrades.
 
 ## Establish the candidate
 
