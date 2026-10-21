@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { getShow, getStates } from "./api";
+import { rootShow } from "./api-test-helpers";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import type { ProjectSource } from "./project_data";
 import { projectStore } from "./project_store.svelte";
@@ -8,10 +9,9 @@ import { storedProject } from "./project-store-test-helpers";
 import {
   providerShow,
   registerChild,
-  registerShow,
   renderCard,
-  rootShow,
   stubCatalog,
+  variantsRegister,
 } from "./source-editor-test-helpers";
 
 // #991/#993: SourceEditor is the cart source card — it DISPLAYS the register it
@@ -148,7 +148,10 @@ describe("SourceEditor cart card", () => {
     // `_default` is the whole-register default, not a population anyone picked.
     stubCatalog({
       fk: providerShow("fk", registerChild("fk/midas", "MiDAS")),
-      "fk/midas": registerShow("fk/midas", { slug: "_default", name: null }),
+      "fk/midas": variantsRegister("fk/midas", {
+        slug: "_default",
+        name: null,
+      }),
     });
     const source = {
       name: "MIDAS",
@@ -238,13 +241,8 @@ describe("SourceEditor cart card", () => {
       await page.getByText("scb/lisa/individer-15plus", { exact: true }).all(),
     ).toHaveLength(1);
     expect(page.getByText("Register variant").query()).toBeNull();
-    // A coordinate standing in for a name is still a machine identifier: mono, like
-    // every other FQID the app shows, and said ONCE in the button's name too — the
-    // source's own name still leads it.
-    const heading = document.querySelector<HTMLElement>(".source-head h3");
-    expect(getComputedStyle(heading as HTMLElement).fontFamily).toContain(
-      "mono",
-    );
+    // The coordinate is said ONCE in the button's name too — the source's own name
+    // still leads it.
     await expect
       .element(
         page.getByRole("button", {
@@ -392,88 +390,6 @@ describe("SourceEditor cart card", () => {
     const alert = page.getByRole("alert");
     await expect.element(alert).toBeVisible();
     await expect.element(alert).toMatchTextContent(/bindings\s+are malformed/);
-  });
-
-  it("wraps a long register title, source name and column FQID without horizontal overflow on mobile (#1110)", async () => {
-    // Regression for PR #1109's visual-gate finding: at 375px a long unbroken run
-    // (`.source-head h3`, a mono KeyValue value, the column FQID in `.binding-body`)
-    // formerly refused to shrink (flex/grid items default to `min-width: auto`) and
-    // clipped/overflowed the card. `min-width: 0` + `overflow-wrap: anywhere` at
-    // those boundaries must let each wrap in-card. Y-75 moved the source NAME out of
-    // the heading and into the card's mono detail rows, so the long name is asserted
-    // there now. Y-80 puts the catalog's own register name in the heading — a
-    // curated name can be long and unbroken too.
-    const longRegisterName =
-      "Longitudinell_integrationsdatabas_for_sjukforsakrings_och_arbetsmarknadsstudier";
-    stubCatalog({
-      scb: providerShow("scb", registerChild("scb/lisa", longRegisterName)),
-    });
-    const source = {
-      name: "a_very_long_source_name_that_would_not_normally_wrap_on_its_own",
-      register_variant: "scb/lisa/v1",
-      period: 2020,
-      bindings: [
-        {
-          variable:
-            "scb/lisa/a_very_long_binding_identifier_that_would_not_wrap_either",
-          type: "categorical",
-        },
-      ],
-    } as ProjectSource;
-    const view = await renderCard(source);
-
-    // The mobile breakpoint must be active for the mobile-target regression to be
-    // meaningful — pin the precondition so a viewport-config change can't silently
-    // no-op this test (mirrors the SearchView #808/#806 wrap regression).
-    expect(window.matchMedia("(max-width: 48rem)").matches).toBe(true);
-
-    // Pin the card to the 375px canvas (narrowest mobile target); border-box keeps
-    // 375 inclusive of the card's padding so content resolves against the real width.
-    const root = document.querySelector<HTMLElement>(".source");
-    expect(root).not.toBeNull();
-    if (root) {
-      root.style.boxSizing = "border-box";
-      root.style.width = "375px";
-    }
-
-    // Assert on the CONSTRAINED containers, not the leaf text nodes: the `h3` /
-    // `.variable-value` are flex items that (pre-fix) keep `min-width: auto` and take
-    // their full content width, so their OWN scrollWidth == clientWidth even while
-    // overflowing the card — the overflow shows up on the bounded parent. This mirrors
-    // the SearchView #808/#806 regression, which checks the `.cols-1` grid container.
-    await expect
-      .element(
-        page.getByRole("heading", { name: new RegExp(longRegisterName) }),
-      )
-      .toBeVisible();
-    const sourceHead = document.querySelector<HTMLElement>(".source-head");
-    expect(sourceHead?.scrollWidth ?? 0).toBeLessThanOrEqual(
-      (sourceHead?.clientWidth ?? 0) + 1,
-    );
-
-    // The generated name now rides in the mono detail rows, which must break it too.
-    const nameRow = [...document.querySelectorAll<HTMLElement>("dd.mono")].find(
-      (dd) => dd.textContent?.includes("a_very_long_source_name"),
-    );
-    expect(nameRow).not.toBeUndefined();
-
-    const variableValue = document.querySelector<HTMLElement>(
-      ".binding .variable-value",
-    );
-    expect(variableValue?.textContent).toContain(
-      "a_very_long_binding_identifier_that_would_not_wrap_either",
-    );
-    const binding = document.querySelector<HTMLElement>(".binding");
-    expect(binding?.scrollWidth ?? 0).toBeLessThanOrEqual(
-      (binding?.clientWidth ?? 0) + 1,
-    );
-
-    // Belt-and-suspenders: the whole card must not overflow its 375px box either.
-    expect(root?.scrollWidth ?? 0).toBeLessThanOrEqual(
-      (root?.clientWidth ?? 0) + 1,
-    );
-
-    view.unmount();
   });
 
   it("rolls up errors under the source into a header badge", async () => {

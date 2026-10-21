@@ -1,6 +1,7 @@
 // Shared fixtures (axis + variable-state builders) for the split catalog unit tests:
 // catalog.{browse,picker,picker-filters,resolve,value-sets}.test.ts.
 import type { VariableStateModel } from "./api";
+import { variableState } from "./api-test-helpers";
 
 // #819: a group's axis is now `{name, label}`. Tests key on the stable name and
 // don't assert the label here, so default the label to the name. Wraps the bare
@@ -11,36 +12,5 @@ export function ax(...names: string[]): { name: string; label: string }[] {
 
 // Minimal VariableStateModel — only the fields deriveType/distinctVersions read.
 export function state(over: Partial<VariableStateModel>): VariableStateModel {
-  return {
-    warning_ids: [],
-    state_id: "1",
-    period_scope: "intervals",
-    variant: "v",
-    variant_label: null,
-    register_variant_id: "1",
-    valid_from: "",
-    valid_to: "",
-    data_type: null,
-    data_length: null,
-    delivery_column_name: null,
-    source_register_text: null,
-    provenance: null,
-    pooled: false,
-    value_set_version_label: "",
-    value_set_id: null,
-    value_set: null,
-    value_set_summary: null,
-    is_identifier: false,
-    classifications: [],
-    coding_window_from: null,
-    definition: null,
-    description: null,
-    measurement_unit: null,
-    name: null,
-    operational_definition: null,
-    period_token: null,
-    variant_family: null,
-    variant_family_label: null,
-    ...over,
-  };
+  return variableState(over);
 }

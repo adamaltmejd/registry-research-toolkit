@@ -2,12 +2,9 @@ import type { ComponentProps } from "svelte";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
+import { registerShow } from "./api-test-helpers";
 import { resetCatalogNames } from "./catalog_names.svelte";
-import {
-  delivery,
-  registerShow,
-  variableChild,
-} from "./catalog-node-view-test-helpers";
+import { delivery, variableChild } from "./catalog-node-view-test-helpers";
 import ProjectEditor from "./ProjectEditor.svelte";
 import ProjectEditorLifecycleHarness from "./ProjectEditorLifecycleHarness.svelte";
 import type { RawDraft } from "./project_data";
@@ -15,11 +12,6 @@ import { projectStore, setPersistence } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
 import { projectSchemaVersion } from "./reg_core";
 import { variant } from "./variants-test-helpers";
-
-vi.mock("./api", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("./api")>()),
-  getDataWarnings: vi.fn().mockResolvedValue([]),
-}));
 
 // #991/#993: /project is a READ-ONLY data-order CART. The page shows the picked
 // sources/bindings read-only, supports delete + project-name edit + Open/Download +

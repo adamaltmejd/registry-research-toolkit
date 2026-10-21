@@ -12,6 +12,7 @@ import type {
   VariantModel,
 } from "./api";
 import { getShow, getStates } from "./api";
+import { registerShow, variableState } from "./api-test-helpers";
 import CatalogNodeView from "./CatalogNodeView.svelte";
 import { variant } from "./variants-test-helpers";
 
@@ -51,25 +52,6 @@ export function variableChild(
   deliveries: VariableDeliveryModel[] = [],
 ): VariableChild {
   return { fqid, name, coverage: null, deliveries };
-}
-
-/** A register `show` node (`scb/lisa`, "LISA"); `fields` overrides any part of it.
- * Its one variant is `_default` unless `fields.variants` names others: the register
- * page reads its variants off the node itself. */
-export function registerShow(
-  fields: Partial<Omit<RegisterShow, "kind">>,
-): RegisterShow {
-  return {
-    kind: "register",
-    fqid: "scb/lisa",
-    name: "LISA",
-    purpose: null,
-    tags: [],
-    groups: [],
-    variants: [variant("_default")],
-    children: [],
-    ...fields,
-  };
 }
 
 // A register node whose children carry Y-82 `deliveries` — the LISA shape the
@@ -161,37 +143,15 @@ export function columnState(
   column: string,
   { id = 1, from = "1990-01-01", to = "9999-12-31" } = {},
 ): VariableStateModel {
-  return {
-    warning_ids: [],
+  return variableState({
     state_id: String(id),
-    period_scope: "intervals",
-    period_token: null,
     variant,
-    variant_label: null,
-    variant_family: null,
-    variant_family_label: null,
-    register_variant_id: "1",
     valid_from: from,
     valid_to: to,
-    coding_window_from: null,
-    name: null,
-    definition: null,
-    description: null,
-    operational_definition: null,
-    measurement_unit: null,
     data_type: "int",
-    data_length: null,
     delivery_column_name: column,
-    source_register_text: null,
-    provenance: null,
-    pooled: false,
-    value_set_version_label: "",
     value_set_id: "7",
-    value_set: null,
-    value_set_summary: null,
-    is_identifier: false,
-    classifications: [],
-  };
+  });
 }
 
 /** `show` returns the register node, and each staged add's `period` states read

@@ -2,17 +2,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { VariableStateModel } from "./api";
-import {
-  getDocsForVariable,
-  getGraph,
-  getLineage,
-  getStates,
-  getValues,
-} from "./api";
+import { getStates } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import {
   leaf,
   pickerStates,
+  resetLeaf,
   SEED,
   state,
 } from "./binding-leaf-view-test-helpers";
@@ -35,51 +30,7 @@ vi.mock("./api", async (importOriginal) => {
   };
 });
 
-beforeEach(() => {
-  vi.mocked(getStates).mockReset();
-  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
-    const variant =
-      typeof params?.variant === "string" ? params.variant : undefined;
-    return pickerStates.filter(
-      (s) => variant === undefined || s.variant === variant,
-    );
-  });
-  // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
-  // itself and the header derives no qualifier. Member-identity cases override it.
-  vi.mocked(getGraph).mockReset();
-  vi.mocked(getGraph).mockResolvedValue({
-    nodes: [],
-    edges: [],
-    focus_id: null,
-  } as never);
-  vi.mocked(getLineage).mockReset();
-  vi.mocked(getLineage).mockResolvedValue({
-    edges: [],
-    warnings: [],
-    registers: [],
-  });
-  vi.mocked(getValues).mockReset();
-  vi.mocked(getValues).mockResolvedValue({
-    items: [],
-    next_cursor: null,
-    total: 0,
-  });
-  vi.mocked(getDocsForVariable).mockReset();
-  vi.mocked(getDocsForVariable).mockResolvedValue({
-    items: [],
-    next_cursor: null,
-    total: 0,
-    register_ingested: true,
-  });
-  // No `?period` — the embedded states drive the plan.
-  window.history.pushState({}, "", "/__reset__");
-  router.navigate("/catalog/scb/lisa/kon");
-  windowStore.set(null);
-  projectStore.newProject({
-    reg_meta_version: "reg_meta/v1.0.0",
-    steward: "global",
-  });
-});
+beforeEach(resetLeaf);
 
 describe("BindingLeafView period-scoped value-set history (#744)", () => {
   it("narrows the value-set list to the active variant modifier, keeping a period-only outside-period scope (Codex P2)", async () => {

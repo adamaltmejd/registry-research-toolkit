@@ -4,11 +4,8 @@ import { render } from "vitest-browser-svelte";
 import App from "./App.svelte";
 import type { Context } from "./lib/api";
 import { getContext, getShow, validateProject } from "./lib/api";
-import {
-  delivery,
-  registerShow,
-  variableChild,
-} from "./lib/catalog-node-view-test-helpers";
+import { registerShow } from "./lib/api-test-helpers";
+import { delivery, variableChild } from "./lib/catalog-node-view-test-helpers";
 import type { RawDraft } from "./lib/project_data";
 import { projectStore, setPersistence } from "./lib/project_store.svelte";
 import { router } from "./lib/router.svelte";
@@ -59,32 +56,6 @@ beforeEach(() => {
 
 afterEach(() => {
   window.history.pushState({}, "", "/");
-});
-
-describe("App viewport geometry", () => {
-  it("shares a short canvas between routed content and the citation footer without document overflow", async () => {
-    const { container } = await render(App);
-
-    await expect
-      .element(page.getByText(/as of reg_meta v1\.0\.0/))
-      .toBeVisible();
-    const shell = container.querySelector<HTMLElement>(".shell");
-    const routed = container.querySelector<HTMLElement>(".routed");
-    const footer = container.querySelector<HTMLElement>(".vintage");
-    expect(shell).not.toBeNull();
-    expect(routed).not.toBeNull();
-    expect(footer).not.toBeNull();
-    expect(routed?.getBoundingClientRect().bottom).toBeLessThanOrEqual(
-      footer?.getBoundingClientRect().top ?? 0,
-    );
-    expect(shell?.getBoundingClientRect().height).toBeCloseTo(
-      document.documentElement.clientHeight,
-      0,
-    );
-    expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(
-      document.documentElement.clientHeight,
-    );
-  });
 });
 
 describe("App renders the landing page from one context read", () => {

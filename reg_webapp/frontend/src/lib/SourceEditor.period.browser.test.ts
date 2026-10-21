@@ -6,6 +6,7 @@ import { state } from "./catalog-test-helpers";
 import type { ProjectSource } from "./project_data";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { holdRestore } from "./restore-test-helpers.svelte";
 import {
   renderCard,
   seedSource,
@@ -162,44 +163,38 @@ describe("SourceEditor source period (Y-81)", () => {
   // flight is checked against a draft the lifecycle has not finished loading.
   it("holds the write until the app-owned draft restore has settled, freezing the fields meanwhile", async () => {
     const source = seedSource(2020);
-    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
-    const restoring = vi.spyOn(projectStore, "restored", "get");
-    restoring.mockReturnValue(gate);
-    try {
-      await renderCard(source);
+    const release = holdRestore();
+    await renderCard(source);
 
-      const from = page.getByRole("textbox", { name: "From" });
-      const apply = page.getByRole("button", { name: /Apply period/ });
-      await from.fill("1990");
-      await apply.click();
+    const from = page.getByRole("textbox", { name: "From" });
+    const apply = page.getByRole("button", { name: /Apply period/ });
+    await from.fill("1990");
+    await apply.click();
 
-      // Still restoring: the wait says so (a4) rather than nothing at all, and the
-      // fields freeze on what THIS press captured (a1/a3) — the value it typed
-      // before the press is what the eventual write uses, not a `2020` a second
-      // press could otherwise queue behind it.
-      await expect
-        .element(page.getByText("Waiting for the project to load…"))
-        .toBeVisible();
-      await expect.element(from).toHaveAttribute("readonly");
-      await expect.element(apply).toHaveAttribute("aria-disabled", "true");
-      expect(storedProject()?.sources?.[0]?.period).toBe(2020);
-      expect(page.getByText(/Period set to/).query()).toBeNull();
+    // Still restoring: the wait says so (a4) rather than nothing at all, and the
+    // fields freeze on what THIS press captured (a1/a3) — the value it typed
+    // before the press is what the eventual write uses, not a `2020` a second
+    // press could otherwise queue behind it.
+    await expect
+      .element(page.getByText("Waiting for the project to load…"))
+      .toBeVisible();
+    await expect.element(from).toHaveAttribute("readonly");
+    await expect.element(apply).toHaveAttribute("aria-disabled", "true");
+    expect(storedProject()?.sources?.[0]?.period).toBe(2020);
+    expect(page.getByText(/Period set to/).query()).toBeNull();
 
-      // …and once the gate opens it lands, checked against the settled draft, with
-      // the fields live again.
-      release();
-      await expect
-        .element(page.getByText("Period set to 1990–2020."))
-        .toBeVisible();
-      expect(storedProject()?.sources?.[0]?.period).toEqual({
-        from: 1990,
-        to: 2020,
-      });
-      await expect.element(from).not.toHaveAttribute("readonly");
-      await expect.element(apply).toHaveAttribute("aria-disabled", "false");
-    } finally {
-      restoring.mockRestore();
-    }
+    // …and once the gate opens it lands, checked against the settled draft, with
+    // the fields live again.
+    release();
+    await expect
+      .element(page.getByText("Period set to 1990–2020."))
+      .toBeVisible();
+    expect(storedProject()?.sources?.[0]?.period).toEqual({
+      from: 1990,
+      to: 2020,
+    });
+    await expect.element(from).not.toHaveAttribute("readonly");
+    await expect.element(apply).toHaveAttribute("aria-disabled", "false");
   });
 
   // a1/a3: the fields staying editable through the wait let a second Apply queue
@@ -209,39 +204,33 @@ describe("SourceEditor source period (Y-81)", () => {
   // makes a second press a no-op instead.
   it("ignores a second Apply held on the same restore gate, so a landed write is never re-checked as stale", async () => {
     const source = seedSource(2020);
-    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
-    const restoring = vi.spyOn(projectStore, "restored", "get");
-    restoring.mockReturnValue(gate);
-    try {
-      await renderCard(source);
+    const release = holdRestore();
+    await renderCard(source);
 
-      await page.getByRole("textbox", { name: "From" }).fill("1990");
-      const apply = page.getByRole("button", { name: /Apply period/ });
-      await apply.click();
-      await expect
-        .element(page.getByText("Waiting for the project to load…"))
-        .toBeVisible();
-      // A second press while the first still holds the gate: nothing new to
-      // contribute, and it must not queue a write of its own. `force` bypasses
-      // Playwright's own actionability wait (which already refuses to click an
-      // `aria-disabled` element) — the guard under test is `applyPeriod`'s own,
-      // for whatever got a click event through regardless.
-      await apply.click({ force: true });
+    await page.getByRole("textbox", { name: "From" }).fill("1990");
+    const apply = page.getByRole("button", { name: /Apply period/ });
+    await apply.click();
+    await expect
+      .element(page.getByText("Waiting for the project to load…"))
+      .toBeVisible();
+    // A second press while the first still holds the gate: nothing new to
+    // contribute, and it must not queue a write of its own. `force` bypasses
+    // Playwright's own actionability wait (which already refuses to click an
+    // `aria-disabled` element) — the guard under test is `applyPeriod`'s own,
+    // for whatever got a click event through regardless.
+    await apply.click({ force: true });
 
-      release();
-      await expect
-        .element(page.getByText("Period set to 1990–2020."))
-        .toBeVisible();
-      expect(storedProject()?.sources?.[0]?.period).toEqual({
-        from: 1990,
-        to: 2020,
-      });
-      // A second queued write would have found the draft already moved by the
-      // first and raised the staleness alert instead.
-      expect(page.getByRole("alert").query()).toBeNull();
-    } finally {
-      restoring.mockRestore();
-    }
+    release();
+    await expect
+      .element(page.getByText("Period set to 1990–2020."))
+      .toBeVisible();
+    expect(storedProject()?.sources?.[0]?.period).toEqual({
+      from: 1990,
+      to: 2020,
+    });
+    // A second queued write would have found the draft already moved by the
+    // first and raised the staleness alert instead.
+    expect(page.getByRole("alert").query()).toBeNull();
   });
 
   it("retires a stale confirmation once a later Apply finds nothing to change", async () => {
@@ -321,22 +310,16 @@ describe("SourceEditor source period (Y-81)", () => {
     // gone before it settles — the researcher left /project — must not have its
     // late continuation write into the draft behind them.
     const source = seedSource(2020);
-    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
-    const restoring = vi.spyOn(projectStore, "restored", "get");
-    restoring.mockReturnValue(gate);
-    try {
-      const view = await renderCard(source);
+    const release = holdRestore();
+    const view = await renderCard(source);
 
-      await page.getByRole("textbox", { name: "From" }).fill("1990");
-      await page.getByRole("button", { name: /Apply period/ }).click();
-      view.unmount();
-      release();
+    await page.getByRole("textbox", { name: "From" }).fill("1990");
+    await page.getByRole("button", { name: /Apply period/ }).click();
+    view.unmount();
+    release();
 
-      await new Promise((r) => setTimeout(r, 100));
-      expect(storedProject()?.sources?.[0]?.period).toBe(2020);
-    } finally {
-      restoring.mockRestore();
-    }
+    await new Promise((r) => setTimeout(r, 100));
+    expect(storedProject()?.sources?.[0]?.period).toBe(2020);
   });
 
   // A TOKEN period — a different vocabulary nothing in the SPA authors (Y-101).

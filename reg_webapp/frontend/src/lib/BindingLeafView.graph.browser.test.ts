@@ -2,25 +2,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import type { GraphState, RelationshipGraph, VariableGraphNode } from "./api";
-import {
-  getDocsForVariable,
-  getGraph,
-  getLineage,
-  getStates,
-  getValues,
-} from "./api";
+import { getGraph } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import {
   leaf,
   node,
-  pickerStates,
+  resetLeaf,
   SEED,
   single,
   state,
 } from "./binding-leaf-view-test-helpers";
-import { projectStore } from "./project_store.svelte";
-import { router } from "./router.svelte";
-import { windowStore } from "./window.svelte";
 
 // Split from BindingLeafView.browser.test.ts by contract surface: picker graph mounting and graph-focus member identity.
 // Siblings: BindingLeafView{,.graph,.rows,.technical-details,.provenance,.period}.browser.test.ts.
@@ -81,51 +72,7 @@ function graph(
   return { nodes: [focus], edges: [], focus_id: focusId };
 }
 
-beforeEach(() => {
-  vi.mocked(getStates).mockReset();
-  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
-    const variant =
-      typeof params?.variant === "string" ? params.variant : undefined;
-    return pickerStates.filter(
-      (s) => variant === undefined || s.variant === variant,
-    );
-  });
-  // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
-  // itself and the header derives no qualifier. Member-identity cases override it.
-  vi.mocked(getGraph).mockReset();
-  vi.mocked(getGraph).mockResolvedValue({
-    nodes: [],
-    edges: [],
-    focus_id: null,
-  } as never);
-  vi.mocked(getLineage).mockReset();
-  vi.mocked(getLineage).mockResolvedValue({
-    edges: [],
-    warnings: [],
-    registers: [],
-  });
-  vi.mocked(getValues).mockReset();
-  vi.mocked(getValues).mockResolvedValue({
-    items: [],
-    next_cursor: null,
-    total: 0,
-  });
-  vi.mocked(getDocsForVariable).mockReset();
-  vi.mocked(getDocsForVariable).mockResolvedValue({
-    items: [],
-    next_cursor: null,
-    total: 0,
-    register_ingested: true,
-  });
-  // No `?period` — the embedded states drive the plan.
-  window.history.pushState({}, "", "/__reset__");
-  router.navigate("/catalog/scb/lisa/kon");
-  windowStore.set(null);
-  projectStore.newProject({
-    reg_meta_version: "reg_meta/v1.0.0",
-    steward: "global",
-  });
-});
+beforeEach(resetLeaf);
 
 describe("BindingLeafView representation picker (#678)", () => {
   it("mounts the picker graph when no delivery-column rows are selectable", async () => {

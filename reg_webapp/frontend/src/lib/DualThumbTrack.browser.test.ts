@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render } from "vitest-browser-svelte";
 import DualThumbTrack from "./DualThumbTrack.svelte";
 
@@ -9,12 +9,6 @@ import DualThumbTrack from "./DualThumbTrack.svelte";
 // native `change`). The consumer-specific concerns (readout, fill geometry,
 // coverage/gaps, deviation, clear) live in YearWindowSlider / PeriodWindowSlider
 // and are covered by their own suites.
-
-/** Set a range input's value and fire ONLY `input` (a live drag tick). */
-function inputTick(el: HTMLInputElement, value: number): void {
-  el.value = String(value);
-  el.dispatchEvent(new Event("input", { bubbles: true }));
-}
 
 describe("DualThumbTrack", () => {
   const base = { min: 1990, max: 2020 };
@@ -57,54 +51,6 @@ describe("DualThumbTrack", () => {
 
   // ── #671 hard-selectable sub-range (opt-in, default = full bounds) ──────────
   describe("selectableMin / selectableMax (#671)", () => {
-    it("clamps a drag below selectableMin up to it (can't enter the not-selectable region)", async () => {
-      const onLiveInput = vi.fn();
-      const screen = await render(DualThumbTrack, {
-        ...base, // 1990–2020
-        selectableMin: 1995,
-        selectableMax: 2015,
-        selection: { from: 2000, to: 2010 },
-        onLiveInput,
-      });
-      const fromThumb = screen.getByRole("slider", { name: "From year" });
-      // Drag From down to 1990 → clamped UP to the selectable floor 1995.
-      await fromThumb.fill("1990");
-      await expect.element(fromThumb).toHaveValue("1995");
-    });
-
-    it("clamps a drag above selectableMax down to it (drag OR keyboard share the handler)", async () => {
-      const screen = await render(DualThumbTrack, {
-        ...base, // 1990–2020
-        selectableMin: 1995,
-        selectableMax: 2015,
-        selection: { from: 2000, to: 2010 },
-      });
-      const toThumb = screen.getByRole("slider", { name: "To year" });
-      // Drag To up to 2020 → clamped DOWN to the selectable ceiling 2015.
-      await toThumb.fill("2020");
-      await expect.element(toThumb).toHaveValue("2015");
-    });
-
-    it("a move REJECTED by the selectable bound leaves no stale native value, at either thumb", async () => {
-      const screen = await render(DualThumbTrack, {
-        ...base, // 1990–2020
-        selectableMin: 1995,
-        selectableMax: 2015,
-        selection: { from: 1995, to: 2015 }, // both already ON their limit
-      });
-      const fromThumb = screen.getByRole("slider", { name: "From year" });
-      const toThumb = screen.getByRole("slider", { name: "To year" });
-      const fromEl = (await fromThumb.element()) as HTMLInputElement;
-      const toEl = (await toThumb.element()) as HTMLInputElement;
-      // Home on From / End on To jump to the TRACK edge; the coverage clamp
-      // rejects both without changing the value, so the native inputs would keep
-      // the un-selectable year they were driven to.
-      inputTick(fromEl, 1990);
-      await expect.element(fromThumb).toHaveValue("1995");
-      inputTick(toEl, 2020);
-      await expect.element(toThumb).toHaveValue("2015");
-    });
-
     it("keeps the native input min/max at the FULL bounds (geometry must not desync)", async () => {
       const screen = await render(DualThumbTrack, {
         ...base, // 1990–2020

@@ -1,24 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import {
-  getDocsForVariable,
-  getGraph,
-  getLineage,
-  getStates,
-  getValues,
-  getWarnings,
-} from "./api";
+import { getStates, getWarnings } from "./api";
 import BindingLeafView from "./BindingLeafView.svelte";
 import {
   leaf,
   pickerStates,
+  resetLeaf,
   SEED,
   state,
 } from "./binding-leaf-view-test-helpers";
 import { expectStagedAddColumnVisible } from "./picker-test-helpers";
 import { projectStore } from "./project_store.svelte";
 import { storedProject } from "./project-store-test-helpers";
+import { holdRestore } from "./restore-test-helpers.svelte";
 import { router } from "./router.svelte";
 import { windowStore } from "./window.svelte";
 
@@ -87,51 +82,7 @@ const openEndedStates = [
   }),
 ];
 
-beforeEach(() => {
-  vi.mocked(getStates).mockReset();
-  vi.mocked(getStates).mockImplementation(async (_fqid, params) => {
-    const variant =
-      typeof params?.variant === "string" ? params.variant : undefined;
-    return pickerStates.filter(
-      (s) => variant === undefined || s.variant === variant,
-    );
-  });
-  // The graph fetch: an EMPTY graph by default (no nodes) → the picker uses the list
-  // itself and the header derives no qualifier. Member-identity cases override it.
-  vi.mocked(getGraph).mockReset();
-  vi.mocked(getGraph).mockResolvedValue({
-    nodes: [],
-    edges: [],
-    focus_id: null,
-  } as never);
-  vi.mocked(getLineage).mockReset();
-  vi.mocked(getLineage).mockResolvedValue({
-    edges: [],
-    warnings: [],
-    registers: [],
-  });
-  vi.mocked(getValues).mockReset();
-  vi.mocked(getValues).mockResolvedValue({
-    items: [],
-    next_cursor: null,
-    total: 0,
-  });
-  vi.mocked(getDocsForVariable).mockReset();
-  vi.mocked(getDocsForVariable).mockResolvedValue({
-    items: [],
-    next_cursor: null,
-    total: 0,
-    register_ingested: true,
-  });
-  // No `?period` — the embedded states drive the plan.
-  window.history.pushState({}, "", "/__reset__");
-  router.navigate("/catalog/scb/lisa/kon");
-  windowStore.set(null);
-  projectStore.newProject({
-    reg_meta_version: "reg_meta/v1.0.0",
-    steward: "global",
-  });
-});
+beforeEach(resetLeaf);
 
 describe("BindingLeafView representation picker (#678)", () => {
   it("selecting rows + Apply commits the right staged diff", async () => {
@@ -180,36 +131,30 @@ describe("BindingLeafView representation picker (#678)", () => {
     // Same wait, the other way out of it: the leaf is gone before the gate
     // settles, so the late continuation must not mutate the draft from a page the
     // researcher has left.
-    const { promise: gate, resolve: release } = Promise.withResolvers<void>();
-    const restoring = vi.spyOn(projectStore, "restored", "get");
-    restoring.mockReturnValue(gate);
-    try {
-      const view = await render(BindingLeafView, {
-        fqidPath: "scb/lisa/kon",
-        ...leaf(pickerStates),
-        regMetaVersion: SEED.regMetaVersion,
-        steward: SEED.steward,
-        windowMinYear: SEED.windowMinYear,
-        vintageYear: 2024,
-      });
+    const release = holdRestore();
+    const view = await render(BindingLeafView, {
+      fqidPath: "scb/lisa/kon",
+      ...leaf(pickerStates),
+      regMetaVersion: SEED.regMetaVersion,
+      steward: SEED.steward,
+      windowMinYear: SEED.windowMinYear,
+      vintageYear: 2024,
+    });
 
-      await page.getByRole("checkbox", { name: /Kon/ }).click();
-      await page.getByRole("button", { name: "Add to project" }).click();
-      await expect
-        .element(page.getByRole("button", { name: "Applying..." }))
-        .toBeVisible();
+    await page.getByRole("checkbox", { name: /Kon/ }).click();
+    await page.getByRole("button", { name: "Add to project" }).click();
+    await expect
+      .element(page.getByRole("button", { name: "Applying..." }))
+      .toBeVisible();
 
-      view.unmount();
-      release();
-      // A fixed wait, not `vi.waitFor`: the assertion is that NOTHING happens, and
-      // an unguarded Add needs several microtask hops (its add resolutions)
-      // to reach the mutation — a poll would pass on the first tick, before the
-      // continuation it is meant to catch has run.
-      await new Promise((r) => setTimeout(r, 100));
-      expect(storedProject()?.sources).toHaveLength(0);
-    } finally {
-      restoring.mockRestore();
-    }
+    view.unmount();
+    release();
+    // A fixed wait, not `vi.waitFor`: the assertion is that NOTHING happens, and
+    // an unguarded Add needs several microtask hops (its add resolutions)
+    // to reach the mutation — a poll would pass on the first tick, before the
+    // continuation it is meant to catch has run.
+    await new Promise((r) => setTimeout(r, 100));
+    expect(storedProject()?.sources).toHaveLength(0);
   });
 
   it("applying one folded variant-family row adds each concrete era source", async () => {
