@@ -2317,7 +2317,7 @@ def _warning_window(warning: MappingWarning, reach: object) -> tuple[str, str] |
 def _warning_line(warning: MappingWarning, reach: object) -> str | None:
     """A decision's mapping warning (#1684) as one table's `data_warning` line,
     its window clipped to the table (`_warning_window`), or None where it misses."""
-    from reg_meta_build.inventory import _render_interval
+    from reg_core_py import render
 
     fields = (
         f"summary = {_toml_str(warning.summary)}, detail = {_toml_str(warning.detail)}"
@@ -2326,7 +2326,7 @@ def _warning_line(warning: MappingWarning, reach: object) -> str | None:
         return f"data_warning = {{ {fields} }}"
     if (clip := _warning_window(warning, reach)) is None:
         return None
-    token = _render_interval(*clip)
+    token = render([clip])
     ends = [int(end) if end.isdigit() else end for end in token.split("..")]
     clipped = ends[0] if len(ends) == 1 else {"from": ends[0], "to": ends[1]}
     return f"data_warning = {{ {fields}, window = {_toml_edition(clipped)} }}"
