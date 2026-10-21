@@ -746,15 +746,6 @@ to = "scb/aes/fedreason-01b"
 effective_year = 2016
 note = "fedreason_01 (VarId 35190, 'do the job better and/or improve career prospects', 2011–2012) split in 2016 into FEDREASON_01A (do the job better) and FEDREASON_01B (career prospects)"
 
-#    FoB: the 1960 TrangBo (norm 1) continues as the explicit norm-1 TrangBo1
-#    from 1965, when SCB added the separate norm-2 TrangBo2 (not a successor).
-[[edge]]
-type = "replaced_by"
-from = "scb/fob/trangboddhet"
-to = "scb/fob/trangbo"
-effective_year = 1965
-note = "Trångboddhet (VarId 42217) delivered as TrangBo in 1960 and as the explicitly norm-1 TrangBo1 from 1965, when a separate norm-2 measure was added; 4/4 codes"
-
 #    Gymnasieskola sökande: meritvärde recut from 16 to 17 best grades.
 [[edge]]
 type = "replaced_by"
@@ -812,13 +803,6 @@ note = "Sammanräknad förvärvsinkomst (CSFVI, VarId 99) alternative-maximum co
 
 [[edge]]
 type = "replaced_by"
-from = "scb/iot/sammanraknad-forvarvsinkomst-summerade-inkomstslag-utan-b-tjanst"
-to = "scb/iot/sammanraknad-forvarvsinkomst-summerade-ab-inkomster"
-effective_year = 1979
-note = "Sammanräknad förvärvsinkomst (CSFVI, VarId 99) recut to include B-inkomst av tjänst"
-
-[[edge]]
-type = "replaced_by"
 from = "scb/iot/sammanraknad-forvarvsinkomst-deklarerade-delbelopp"
 to = "scb/iot/sammanraknad-forvarvsinkomst"
 effective_year = 2017
@@ -864,7 +848,7 @@ type = "replaced_by"
 from = "scb/iot/pensionsbeloppskontroll-per-person-hushall-alternativa-pensionssummor-ku"
 to = "scb/iot/pensionsbeloppskontroll-per-person-hushall-komponentbas-2019"
 effective_year = 2019
-note = "Pensionsbeloppskontroll, hushåll (PKONTRHB, VarId 21783) moved to the 2019 pension-input component basis (SCB 2019 DOKSTAR pp19-20)"
+note = "Pensionsbeloppskontroll, per person (PKONTRHB, VarId 21783, bostadshushåll variant) moved to the 2019 pension-input component basis (SCB 2019 DOKSTAR pp19-20)"
 
 [[edge]]
 type = "replaced_by"
@@ -907,14 +891,6 @@ from = "scb/iot/loneinkomst-deklarerade-tjanstposter"
 to = "scb/iot/loneinkomst-deklarerade-tjanstposter-delpension"
 effective_year = 1979
 note = "Löneinkomst (TLONT, VarId 1198) recut to also deduct delpension"
-
-#    Lärarregistret: tjänstgöringsomfattning moved from skola to skolenhet.
-[[edge]]
-type = "replaced_by"
-from = "scb/lararreg/omfattx"
-to = "scb/lararreg/omfatt"
-effective_year = 1999
-note = "Tjänstgöringsomfattning (VarId 109) recut from per skola (Omfattx, 1996–1999) to per skolenhet (Omfatt, 1999–)"
 
 #    LINDA: BNGR coding SNI92 → combined SNI2002/SNI92 (2002) → SNI2002 (2003).
 [[edge]]
