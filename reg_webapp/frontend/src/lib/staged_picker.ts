@@ -418,7 +418,7 @@ export function sourcePeriodsFromDraft(
   return out;
 }
 
-export function stagedRemoveForCommitted(
+function stagedRemoveForCommitted(
   committed: PickerCommittedRow,
 ): StagedRemove[] {
   return committed.removals && committed.removals.length > 0
@@ -473,7 +473,7 @@ export const ADD_WINDOW_REQUIRED_MESSAGE =
  * validator would catch. All-or-nothing so one such row can't half-apply a batch —
  * the caller keeps the draft unchanged and asks for a period instead
  * (`ADD_PERIOD_REQUIRED_MESSAGE`). */
-export function finalAddPeriodWires(
+function finalAddPeriodWires(
   existing: Iterable<PickerSourcePeriod>,
   adds: readonly PickerAddPeriod[],
 ): string[] | null {
