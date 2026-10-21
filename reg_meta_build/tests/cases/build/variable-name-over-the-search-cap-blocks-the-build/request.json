@@ -1,6 +1,6 @@
 {
-  "note": "A strict build over register 1 (a register list keeps a strict build from needing a clean checkout) of two variables whose delivered names sit at the reader's 200-character search cap (ATCAP, 200) and one past it (OVERCAP, 201). The longer one is reported as a build warning; neither is refused.",
-  "fails_if": "the over-cap check stops reporting a name longer than SEARCH_QUERY_MAX_CHARS (OVERCAP gets no `variable_name_over_search_cap` warning), counts the cap itself as over (ATCAP warns too), or reports it as an error, so the strict build stops completing",
+  "note": "A strict build over register 1 (a register list keeps a strict build from needing a clean checkout) of two variables whose delivered names sit at the reader's 200-character search cap (ATCAP, 200) and one past it (OVERCAP, 201). The longer one is a located build error, so the strict build is blocked; the name at the cap is not refused.",
+  "fails_if": "the over-cap check stops refusing a name longer than SEARCH_QUERY_MAX_CHARS (OVERCAP gets no `variable_name_over_search_cap` error, or only a warning, so the strict build completes), or counts the cap itself as over (ATCAP is refused too)",
   "registers": ["1"],
   "diagnostic": false,
   "sources": {

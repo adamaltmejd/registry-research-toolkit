@@ -1,0 +1,15 @@
+{
+  "status": "blocked",
+  "result": {"database": null},
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"code": "variable_name_over_search_cap"},
+      "fields": ["severity", "subject", "fields"],
+      "rows": [
+        ["error", "scb/sample/overcap", ["name"]]
+      ],
+      "note": "Only OVERCAP (201 characters) is refused; ATCAP at exactly the 200-character cap is its allowed twin."
+    }
+  ]
+}

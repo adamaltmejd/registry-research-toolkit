@@ -1715,7 +1715,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Sysselsättningsstatus — Har du haft ett avlönat arbete någon gång tidigare? Ta även med arbete inom eget företag."
+value = "Sysselsättningsstatus — någon gång haft avlönat arbete"
 
 [[errata.field]]
 variable = "351.4677"
@@ -1729,7 +1729,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Sysselsättningsstatus — Har du haft ett betalt arbete under de senaste 12 månaderna? Ta även med arbete i eget företag."
+value = "Sysselsättningsstatus — haft betalt arbete senaste 12 månaderna"
 
 [[errata.field]]
 variable = "351.4677"
@@ -1743,7 +1743,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Sysselsättningsstatus — Hur gammal var du när du slutade på ditt senaste avlönade arbete eller ?"
+value = "Sysselsättningsstatus — ålder när senaste avlönade arbete upphörde"
 
 [[errata.field]]
 variable = "351.4677"
@@ -1757,7 +1757,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Sysselsättningsstatus — Hur många företag, offentliga arbetsgivare eller organisationer har du arbetat för under de senaste 5 åren? Räkna med ditt eget/egna företag om du är eller varit egen företagare."
+value = "Sysselsättningsstatus — antal arbetsgivare senaste 5 åren"
 
 [[errata.field]]
 variable = "351.4677"
@@ -1771,7 +1771,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Sysselsättningsstatus — Ungefär hur många år har du totalt haft betalt arbete? Räkna bara med år då du haft heltids- eller deltidsarbete minst 6 månader."
+value = "Sysselsättningsstatus — antal år med betalt arbete totalt"
 
 [[errata.field]]
 variable = "351.4677"
@@ -1785,7 +1785,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Sysselsättningsstatus — Vilket påstående beskriver bäst din nuvarande situation? Om mer än ett alternativ stämmer, välj det som bäst beskriver hur det ser ut för dig."
+value = "Sysselsättningsstatus — nuvarande situation"
 
 [[errata.field]]
 variable = "351.4677"
@@ -1799,7 +1799,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Sysselsättningsstatus — Vilket år slutade du på ditt senaste avlönade arbete?"
+value = "Sysselsättningsstatus — år när senaste avlönade arbete upphörde"
 
 [[errata.field]]
 variable = "351.32872"
@@ -2121,7 +2121,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda eller räkna ut bråktal, decimaler eller procent?"
+value = "Hur ofta brukar du på arbetet... — använda eller räkna ut bråktal, decimaler eller procent"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2135,7 +2135,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda enkel algebra eller enkla formler?"
+value = "Hur ofta brukar du på arbetet... — använda enkel algebra eller enkla formler"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2149,7 +2149,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda e-post?"
+value = "Hur ofta brukar du på arbetet... — använda e-post"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2163,7 +2163,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda ett ordbehandlingsprogram, t.ex. Word?"
+value = "Hur ofta brukar du på arbetet... — använda ordbehandlingsprogram"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2177,7 +2177,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda Internet för att bättre förstå problem relaterade till ditt arbete?"
+value = "Hur ofta brukar du på arbetet... — använda Internet för att förstå problem relaterade till arbetet"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2191,7 +2191,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda kalkylprogram, t.ex. Excel?"
+value = "Hur ofta brukar du på arbetet... — använda kalkylprogram"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2205,7 +2205,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda miniräknare - vanlig eller på datorn?"
+value = "Hur ofta brukar du på arbetet... — använda miniräknare"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2219,7 +2219,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda programmeringsspråk för att programmera eller skriva maskinkod?"
+value = "Hur ofta brukar du på arbetet... — använda programmeringsspråk"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2233,7 +2233,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... använda skicklighet och noggrannhet med dina händer eller fingrar?"
+value = "Hur ofta brukar du på arbetet... — använda skicklighet och noggrannhet med händer eller fingrar"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2247,7 +2247,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... delta i diskussioner i realtid på Internet, t.ex. konferenser online eller chattgrupper?"
+value = "Hur ofta brukar du på arbetet... — delta i diskussioner i realtid på Internet"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2261,7 +2261,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... fylla i formulär med efterfrågade uppgifter (t.ex. ansökan om tillstånd hos olika myndigheter)?"
+value = "Hur ofta brukar du på arbetet... — fylla i formulär med efterfrågade uppgifter"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2275,7 +2275,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... förhandla med andra antingen inom eller utanför företaget eller organisationen?"
+value = "Hur ofta brukar du på arbetet... — förhandla med andra inom eller utanför företaget eller organisationen"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2289,7 +2289,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... ge råd till andra?"
+value = "Hur ofta brukar du på arbetet... — ge råd till andra"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2303,7 +2303,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... göra diagram, grafer eller tabeller?"
+value = "Hur ofta brukar du på arbetet... — göra diagram, grafer eller tabeller"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2317,7 +2317,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... hålla tal, föredrag eller presentera muntligt inför minst fem personer?"
+value = "Hur ofta brukar du på arbetet... — hålla tal, föredrag eller presentera muntligt inför minst fem personer"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2331,7 +2331,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... instruera, lära eller undervisa andra, individuellt eller i grupp?"
+value = "Hur ofta brukar du på arbetet... — instruera, lära eller undervisa andra"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2345,7 +2345,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... läsa artiklar i facktidskrifter, läroböcker eller vetenskapliga rapporter?"
+value = "Hur ofta brukar du på arbetet... — läsa artiklar i facktidskrifter, läroböcker eller vetenskapliga rapporter"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2359,7 +2359,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... läsa artiklar i tidningar, tidskrifter eller nyhetsbrev?"
+value = "Hur ofta brukar du på arbetet... — läsa artiklar i tidningar, tidskrifter eller nyhetsbrev"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2373,7 +2373,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... läsa brev, PM eller e-post?"
+value = "Hur ofta brukar du på arbetet... — läsa brev, PM eller e-post"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2387,7 +2387,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... läsa bruksanvisningar eller instruktioner?"
+value = "Hur ofta brukar du på arbetet... — läsa bruksanvisningar eller instruktioner"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2401,7 +2401,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... läsa böcker?"
+value = "Hur ofta brukar du på arbetet... — läsa böcker"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2415,7 +2415,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... läsa diagram, kartor eller tabeller?"
+value = "Hur ofta brukar du på arbetet... — läsa diagram, kartor eller tabeller"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2429,7 +2429,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... läsa fakturor, räkningar, kontoutdrag eller andra ekonomiska redovisningar?"
+value = "Hur ofta brukar du på arbetet... — läsa fakturor, räkningar, kontoutdrag eller andra ekonomiska redovisningar"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2443,7 +2443,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... läsa manualer eller referensmaterial?"
+value = "Hur ofta brukar du på arbetet... — läsa manualer eller referensmaterial"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2457,7 +2457,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... planera andras arbetsuppgifter?"
+value = "Hur ofta brukar du på arbetet... — planera andras arbetsuppgifter"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2471,7 +2471,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... planera din tid?"
+value = "Hur ofta brukar du på arbetet... — planera din tid"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2485,7 +2485,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... räkna fram priser, kostnader eller budgetar?"
+value = "Hur ofta brukar du på arbetet... — räkna fram priser, kostnader eller budgetar"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2499,7 +2499,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... skriva artiklar för tidningar, tidskrifter eller nyhetsbrev?"
+value = "Hur ofta brukar du på arbetet... — skriva artiklar för tidningar, tidskrifter eller nyhetsbrev"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2513,7 +2513,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... skriva rapporter?"
+value = "Hur ofta brukar du på arbetet... — skriva rapporter"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2527,7 +2527,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... sälja en vara eller tjänst?"
+value = "Hur ofta brukar du på arbetet... — sälja en vara eller tjänst"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2541,7 +2541,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ... utföra transaktioner på Internet till exempel köpa eller sälja varor och tjänster eller ordna bankaffärer?"
+value = "Hur ofta brukar du på arbetet... — utföra transaktioner på Internet"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2555,7 +2555,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — ...använda mer avancerad matematik eller statistik t.ex. funktioner, avancerad algebra, trigonometri eller regressionsanalys?"
+value = "Hur ofta brukar du på arbetet... — använda mer avancerad matematik eller statistik"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2569,7 +2569,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Använder du dator i ditt nuvarande arbete? Använde du dator i ditt senaste arbete?"
+value = "Hur ofta brukar du på arbetet... — använder dator i arbetet"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2583,7 +2583,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Följande frågor handlar om problemlösning som du utför på ditt nuvarande arbete. Tänk på ”problemlösning” som något som händer när du kommer i kontakt med en ny eller svår situation som kräver att du funderar ett tag över vad du ska göra härnäst. Hur ofta ställs du inför relativt enkla problem som det inte tar mer än 5 minuter att hitta en bra lösning för? /Följande frågor handlar om problemlösning som du utförde på ditt senaste arbete. Tänk på ”problemlösning” som något som händer när du kommer i kontakt med en ny eller svår situation som kräver att du funderar ett tag över vad du ska göra härnäst. Hur ofta ställdes du inför relativt enkla problem som det inte tog mer än 5 minuter att hitta en bra lösning för?"
+value = "Hur ofta brukar du på arbetet... — ställas inför relativt enkla problem (högst 5 minuter att lösa)"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2597,7 +2597,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Har brist på datorkunskap påverkat dina chanser för att bli anställd, befordrad eller få löneförhöjning?"
+value = "Hur ofta brukar du på arbetet... — brist på datorkunskap påverkat anställning, befordran eller löneförhöjning"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2611,7 +2611,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Hur ofta ingår det vanligtvis i ditt nuvarande arbete att ... /Hur ofta ingick det vanligtvis i ditt senaste arbete att.... ... arbeta fysiskt under en längre period?"
+value = "Hur ofta brukar du på arbetet... — arbeta fysiskt under en längre period"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2625,7 +2625,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Hur ofta ingår det vanligtvis i ditt nuvarande arbete att .../ Hur ofta ingick det vanligtvis i ditt senaste arbete att ... ... utbyta information om arbetet med arbetskamrater?"
+value = "Hur ofta brukar du på arbetet... — utbyta information om arbetet med arbetskamrater"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2639,7 +2639,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Hur ofta ingår det vanligtvis i ditt nuvarande arbete att .../ Hur ofta ingick det vanligtvis i ditt senaste arbete att ... ... övertala eller påverka andra?"
+value = "Hur ofta brukar du på arbetet... — övertala eller påverka andra"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2653,7 +2653,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Hur ofta ingår det vanligtvis i ditt nuvarande arbete att .../Hur ofta ingick det vanligtvis i ditt senaste arbete att... planera dina egna arbetsuppgifter?"
+value = "Hur ofta brukar du på arbetet... — planera dina egna arbetsuppgifter"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2667,7 +2667,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Hur ofta ställs du inför svårare problem som det tar minst 30 minuter att hitta en bra lösning för? De 30 minuterna avser endast tiden det tar att TÄNKA ut lösningen och inte tiden som behövs för att genomföra uppgiften./Hur ofta ställdes du inför svårare problem som det tog minst 30 minuter att hitta en bra lösning för? De 30 minuterna avser endast tiden det tog att TÄNKA ut lösningen och inte tiden som behövdes för att genomföra uppgiften."
+value = "Hur ofta brukar du på arbetet... — ställas inför svårare problem (minst 30 minuter att lösa)"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2681,7 +2681,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Hur stor del av din tid på ditt nuvarande arbete ägnar du vanligen åt att ... / Hur stor del av din tid på ditt senaste arbete ägnade du vanligen åt att ...samarbeta eller arbeta i grupp med arbetskamrater?"
+value = "Hur ofta brukar du på arbetet... — andel av tiden: samarbeta eller arbeta i grupp med arbetskamrater"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2695,7 +2695,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Känner du att du har de kunskaper som krävs för att kunna klara av mer utmanande uppgifter än dem du utför i ditt nuvarande arbete?"
+value = "Hur ofta brukar du på arbetet... — har kunskaper för mer utmanande uppgifter"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2709,7 +2709,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Känner du att du skulle behöva mer kunskaper eller utbildning för att klara av dina nuvarande arbetsuppgifter?"
+value = "Hur ofta brukar du på arbetet... — behöver mer kunskaper eller utbildning för nuvarande arbetsuppgifter"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2723,7 +2723,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — skriva brev, PM eller e-post?"
+value = "Hur ofta brukar du på arbetet... — skriva brev, PM eller e-post"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2737,7 +2737,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Tycker du att du har de datorkunskaper som behövs för att utföra ditt nuvarande arbete bra?Tycker du att du hade de datorkunskaper som behövdes för att utföra ditt senaste arbete bra?"
+value = "Hur ofta brukar du på arbetet... — har datorkunskaper som behövs i arbetet"
 
 [[errata.field]]
 variable = "351.32889"
@@ -2751,7 +2751,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Hur ofta brukar du på arbetet... — Vilken datorkunskap är nödvändig för att kunna utföra ditt nuvarande arbete? Vilken datorkunskap var nödvändig för att kunna utföra ditt senaste arbete?"
+value = "Hur ofta brukar du på arbetet... — datorkunskap som är nödvändig i arbetet"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2765,7 +2765,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Det gäller fortfarande det företag du lämnade inom de 12 senaste månaderna: när du började arbeta med ditt företag vilket år var det? /Det gäller fortfarande det företag som du lämnade innan du senast slutade arbeta: när du började arbeta med ditt företag eller vilket år var det?/ Det gäller fortfarande det företag som du lämnade: när du började arbeta med ditt företag eller vilket år var det?"
+value = "Senaste arbetsplats — år vid början i eget företag"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2779,7 +2779,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Det gäller fortfarande det företag du lämnade inom de 12 senaste månaderna: Hur gammal var du när du började arbeta med ditt företag? /Det gäller fortfarande det företag som du lämnade innan du senast slutade arbeta: Hur gammal var du när du började arbeta med ditt företag?/ Det gäller fortfarande det företag som du lämnade: Hur gammal var du när du började arbeta med ditt företag?"
+value = "Senaste arbetsplats — ålder vid början i eget företag"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2793,7 +2793,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Frågan gäller det arbete du har lämnat inom de 12 senaste månaderna: Hur gammal var du när du började arbeta för din senaste arbetsgivare? /Frågan gäller fortfarande det arbete du lämnade innan du senast slutade arbeta: Hur gammal var du när du började arbeta för din senaste arbetsgivare?/ Frågan gäller fortfarande det arbete du lämnade:Hur gammal var du när du började arbeta för din senaste arbetsgivaret?"
+value = "Senaste arbetsplats — ålder vid början hos senaste arbetsgivare"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2807,7 +2807,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Frågan gäller fortfarande det arbete du har lämnat inom de 12 senaste månaderna: Vilket år var det?/ Frågan gäller fortfarande det arbete du lämnade innan du senast slutade arbeta:Vilket år var det? /Frågan gäller fortfarande det arbete du lämnade under: Vilket år var det?"
+value = "Senaste arbetsplats — år vid början hos senaste arbetsgivare"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2821,7 +2821,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Hade du några anställda i ditt företag? Räkna också med familjemedlemmar som arbetat med eller utan lön i företaget."
+value = "Senaste arbetsplats — hade anställda i eget företag"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2835,7 +2835,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Hur många anställda hade du på din arbetsplats? Var det ..."
+value = "Senaste arbetsplats — antal anställda på arbetsplatsen"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2849,7 +2849,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Hur många personer arbetade för din arbetsgivare på din arbetsplats? Var det ..."
+value = "Senaste arbetsplats — antal personer som arbetade för arbetsgivaren på arbetsplatsen"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2863,7 +2863,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Hur många timmar arbetade du vanligtvis per vecka på detta arbete? Räkna med normal avlönad eller oavlönad övertid, men räkna inte med lunchrast eller andra raster."
+value = "Senaste arbetsplats — vanlig arbetstid, timmar per vecka"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2877,7 +2877,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Inom vilken arbetsmarknadssektor arbetade du? Var det ..."
+value = "Senaste arbetsplats — arbetsmarknadssektor"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2891,7 +2891,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Var du anställd eller var du egen företagare?"
+value = "Senaste arbetsplats — anställd eller egen företagare"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2905,7 +2905,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Vilken typ av anställning hade du? Var det ..."
+value = "Senaste arbetsplats — typ av anställning"
 
 [[errata.field]]
 variable = "351.32894"
@@ -2919,7 +2919,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Senaste arbetsplats — Vilket var det huvudsakliga skälet till att du slutade på ditt senaste arbete?"
+value = "Senaste arbetsplats — huvudsakligt skäl till att arbetet upphörde"
 
 [[errata.field]]
 variable = "351.32901"
@@ -3185,7 +3185,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Ange hur många timmar det i genomsnitt tar att framställa en enhet?"
+value = "Nuvarande arbetsplats - lön — genomsnittligt antal timmar för att framställa en enhet"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3199,7 +3199,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Får du några andra ersättningar, utöver din ordinarie lön, som inte betalas ut varje månad? Ta t.ex. med en extra månadslön, vinstandelar, annan årlig bonus, eller semesterlön."
+value = "Nuvarande arbetsplats - lön — får andra ersättningar utöver ordinarie lön"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3213,7 +3213,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur mycket lön får du ungefär före skatt per dag?"
+value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per dag"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3227,7 +3227,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur mycket lön får du ungefär före skatt per månad?"
+value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per månad"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3241,7 +3241,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur mycket lön får du ungefär före skatt per timme?"
+value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per timme"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3255,7 +3255,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur mycket lön får du ungefär före skatt per två veckor?"
+value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per två veckor"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3269,7 +3269,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur mycket lön får du ungefär före skatt per vecka?"
+value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per vecka"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3283,7 +3283,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur mycket lön får du ungefär före skatt per år?"
+value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per år"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3297,7 +3297,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur vill du beskriva hur du vanligtvis får din lön före skatt? Är det ..."
+value = "Nuvarande arbetsplats - lön — sätt att få lön"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3311,7 +3311,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur mycket fick du sammanlagt i andra ersättningar före skatt, utöver din ordinarie lön, under föregående år?"
+value = "Nuvarande arbetsplats - lön — andra ersättningar före skatt under föregående år"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3325,7 +3325,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Hur mycket lön får du normalt före skatt per timme? Uppskatta så gott du kan. Förutom grundlön ta med regelbundet utbetalda tillägg (mer-/ övertidsersättning, restidsersättning, tillägg för obekväm arbetstid och skift, provision m.m.). Ersättningar som årlig bonus skall inte räknas med."
+value = "Nuvarande arbetsplats - lön — lön före skatt per timme (inkl. regelbundna tillägg)"
 
 [[errata.field]]
 variable = "351.32907"
@@ -3339,7 +3339,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
-value = "Nuvarande arbetsplats - lön — Under förra året; hur mycket tog du ut i lön före skatt per år från ditt nuvarande företag?"
+value = "Nuvarande arbetsplats - lön — uttagen lön före skatt från eget företag förra året"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

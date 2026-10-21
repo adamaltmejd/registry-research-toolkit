@@ -2671,7 +2671,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Orsak varierad arbetstid — Frågan var \"Beror variationen i veckoarbetstid främst på att kraven på dina arbetsinsatser varierar eller beror det främst på att du själv kanbestämma och föredrar att jobba mer under vissa tider och mindre under andra?\""
+value = "Orsak varierad arbetstid — varierande krav på arbetsinsats eller egen vald variation"
 
 [[errata.field]]
 variable = "367.38726"
@@ -2685,7 +2685,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Orsak varierad arbetstid — Frågan var:\"Beror det på att din arbetstid är schemalagd på ett sådant sätt att arbetstiden varierar från vecka till vecka eller att du har koncentrerad deltid eller liknande?\""
+value = "Orsak varierad arbetstid — schemalagd varierande arbetstid eller koncentrerad deltid"
 
 [[errata.field]]
 variable = "367.38719"
