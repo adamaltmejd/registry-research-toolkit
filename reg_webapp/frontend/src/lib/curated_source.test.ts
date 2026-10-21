@@ -21,8 +21,8 @@ describe("matrixAnswerSource", () => {
       sha256: SHA,
       pages: { SAMARB_A: 14, SAMARB_B: 12 },
     });
-    expect(pagesLabel([14])).toBe("p. 14");
-    expect(pagesLabel([14, 12, 14])).toBe("pp. 12, 14");
+    expect(pagesLabel([14])).toBe("p. 14");
+    expect(pagesLabel([14, 12, 14])).toBe("pp. 12, 14");
   });
 
   it("refuses another curated head and a malformed locator", () => {

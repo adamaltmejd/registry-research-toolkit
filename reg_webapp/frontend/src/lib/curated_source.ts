@@ -44,10 +44,11 @@ export function matrixAnswerSource(
   return { documentUrl, sha256, pages };
 }
 
-/** "p. 12" for one page, "pp. 12, 14" for several distinct pages. */
+/** "p. 12" for one page, "pp. 12, 14" for several distinct pages; a no-break
+ * space keeps "p." with its number. */
 export function pagesLabel(pages: number[]): string {
   const distinct = [...new Set(pages)].sort((a, b) => a - b);
   return distinct.length === 1
-    ? `p. ${distinct[0]}`
-    : `pp. ${distinct.join(", ")}`;
+    ? `p. ${distinct[0]}`
+    : `pp. ${distinct.join(", ")}`;
 }

@@ -860,7 +860,9 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
         <dt class="micro-label">Delivery column</dt>
         <dd><code>{technicalState.delivery_column_name}</code></dd>
       {/if}
-      {#if hasMatrixSources}
+      <!-- Waits for the document lookup so the link never swaps target under the
+           cursor (provider URL → rehosted PDF). -->
+      {#if hasMatrixSources && !citedDocumentsResource.loading}
         <dt class="micro-label">Source</dt>
         <dd>
           {#each matrixSources as source (`${source.sha256} ${source.pages}`)}
@@ -1060,6 +1062,9 @@ async function applyStaged(payload: PickerApplyPayload): Promise<boolean> {
   .matrix-source {
     margin: 0;
     overflow-wrap: anywhere;
+  }
+  .matrix-source a {
+    font-weight: 600;
   }
   .correction-evidence {
     margin: var(--space-1) 0 0;
