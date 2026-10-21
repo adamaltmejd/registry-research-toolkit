@@ -3465,7 +3465,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1978-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3479,7 +3479,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1979-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3493,7 +3493,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1980-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3507,7 +3507,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1981-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3521,7 +3521,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1982-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3535,7 +3535,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1983-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3549,7 +3549,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1984-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3563,7 +3563,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1985-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3577,7 +3577,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1986-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3591,7 +3591,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1987-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3605,7 +3605,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1988-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3619,7 +3619,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1989-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3633,7 +3633,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1990-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3647,7 +3647,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1991-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3661,7 +3661,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1992-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3675,7 +3675,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1993-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3689,7 +3689,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1994-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (Stad2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3703,7 +3703,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1978-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3717,7 +3717,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1979-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3731,7 +3731,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1980-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3745,7 +3745,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1981-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3759,7 +3759,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1982-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3773,7 +3773,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1983-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3787,7 +3787,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1984-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3801,7 +3801,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1985-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3815,7 +3815,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1986-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3829,7 +3829,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1987-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3843,7 +3843,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1988-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3857,7 +3857,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1989-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3871,7 +3871,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1990-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3885,7 +3885,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1991-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3899,7 +3899,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1992-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3913,7 +3913,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1993-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3927,7 +3927,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1994-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (Stad5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3941,7 +3941,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1978-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3955,7 +3955,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1979-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3969,7 +3969,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1980-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3983,7 +3983,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1981-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -3997,7 +3997,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1982-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4011,7 +4011,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1983-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4025,7 +4025,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1984-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4039,7 +4039,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1985-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4053,7 +4053,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1986-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4067,7 +4067,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1987-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4081,7 +4081,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1988-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4095,7 +4095,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1989-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4109,7 +4109,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1990-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4123,7 +4123,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1991-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4137,7 +4137,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1992-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4151,7 +4151,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1993-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4165,7 +4165,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1994-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (Stad4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4179,7 +4179,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1978-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4193,7 +4193,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1979-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4207,7 +4207,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1980-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4221,7 +4221,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1981-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4235,7 +4235,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1982-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4249,7 +4249,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1983-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4263,7 +4263,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1984-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4277,7 +4277,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1985-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4291,7 +4291,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1986-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4305,7 +4305,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1987-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4319,7 +4319,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1988-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4333,7 +4333,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1989-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4347,7 +4347,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1990-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4361,7 +4361,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1991-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4375,7 +4375,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1992-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4389,7 +4389,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1993-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4403,7 +4403,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1994-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (Stad6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4417,7 +4417,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1978-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4431,7 +4431,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1979-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4445,7 +4445,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1980-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4459,7 +4459,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1981-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4473,7 +4473,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1982-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4487,7 +4487,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1983-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4501,7 +4501,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1984-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4515,7 +4515,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1985-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4529,7 +4529,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1986-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4543,7 +4543,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1987-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4557,7 +4557,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1988-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4571,7 +4571,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1989-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4585,7 +4585,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1990-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4599,7 +4599,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1991-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4613,7 +4613,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1992-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4627,7 +4627,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1993-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4641,7 +4641,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1994-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (Stad3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4655,7 +4655,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1995-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (NivaKod2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4669,7 +4669,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1996-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (NivaKod2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4683,7 +4683,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1997-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens andra tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — andra tjänst (NivaKod2)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4697,7 +4697,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1995-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (NivaKod5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4711,7 +4711,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1996-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (NivaKod5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4725,7 +4725,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1997-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens femte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — femte tjänst (NivaKod5)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4739,7 +4739,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1995-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (NivaKod4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4753,7 +4753,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1996-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (NivaKod4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4767,7 +4767,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1997-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens fjärde tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — fjärde tjänst (NivaKod4)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4781,7 +4781,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1995-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (NivaKod6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4795,7 +4795,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1996-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (NivaKod6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4809,7 +4809,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1997-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens sjätte tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — sjätte tjänst (NivaKod6)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4823,7 +4823,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1995-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (NivaKod3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4837,7 +4837,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1996-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (NivaKod3)"
 
 [[errata.field]]
 variable = "232.8703"
@@ -4851,7 +4851,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "1997-07-01", end
 evidence = "Complete accepted source audit: Lärarreg11 native families/1108 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Lararreg11-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Tjänstgöringsnivå — Avser personens tredje tjänst.\nIngen rangordning finns mellan en persons olika tjänster."
+value = "Tjänstgöringsnivå — tredje tjänst (NivaKod3)"
 
 [[errata.field]]
 variable = "232.13671"

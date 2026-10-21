@@ -5017,7 +5017,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end
 evidence = "Complete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Ålder — Hur gammal var du när du fick det arbetet?"
+value = "Ålder — Hur gammal var du när du fick det arbetet? (F18_2)"
 
 [[errata.field]]
 variable = "366.46048"

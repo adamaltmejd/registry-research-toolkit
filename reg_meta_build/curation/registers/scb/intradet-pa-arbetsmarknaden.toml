@@ -2491,7 +2491,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den fysiska arbetsmiljön?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den fysiska arbetsmiljön? (F16_04)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2505,7 +2505,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… lönen?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… lönen? (F16_02)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2519,7 +2519,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… arbetstiderna?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… arbetstiderna? (F16_03)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2533,7 +2533,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den psykiska arbetsmiljön?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den psykiska arbetsmiljön? (F16_05)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2547,7 +2547,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …göra karriär?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …göra karriär? (F17_02)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2561,7 +2561,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med familj?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med familj? (F17_03)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2575,7 +2575,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med fritidsintressen?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med fritidsintressen? (F17_04)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2589,7 +2589,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… lönen?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… lönen? (F11_02)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2603,7 +2603,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… arbetstiderna?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… arbetstiderna? (F11_03)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2631,7 +2631,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den fysiska arbetsmiljön?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den fysiska arbetsmiljön? (F11_05)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2645,7 +2645,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den psykiska arbetsmiljön?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den psykiska arbetsmiljön? (F11_06)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2673,7 +2673,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …göra karriär?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …göra karriär? (F12_03)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2687,7 +2687,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med familj?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med familj? (F12_04)"
 
 [[errata.field]]
 variable = "111.5215"
@@ -2701,7 +2701,7 @@ expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end
 evidence = "Complete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 noted = "2026-10-02"
 field = "name"
-value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med fritidsintressen?"
+value = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med fritidsintressen? (F12_05)"
 
 [[errata.field]]
 variable = "111.5250"
