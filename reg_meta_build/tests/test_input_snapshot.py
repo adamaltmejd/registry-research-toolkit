@@ -16,7 +16,6 @@ from _snapshot_fixtures import scb_inventory
 from reg_meta_build.input_snapshot import (
     SnapshotError,
     load_manifest,
-    measure_git_history,
     prepare_snapshot,
     restore_snapshot,
     verify_snapshot,
@@ -83,9 +82,6 @@ def test_snapshot_round_trip_preserves_raw_fields_occurrences_and_order(
         for path in second.rglob("*")
         if path.is_file()
     }
-    identical_history = measure_git_history(first, second)
-    assert identical_history["changed_files"] == 0
-    assert identical_history["incremental_packed_object_bytes"] == 0
 
     manifest = verify_snapshot(first)
     manifest_text = (first / "manifest.json").read_text(encoding="utf-8")

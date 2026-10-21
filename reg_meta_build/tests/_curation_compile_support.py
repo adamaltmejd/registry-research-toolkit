@@ -6,7 +6,7 @@ from dataclasses import replace
 from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any, cast
 
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
+from _registerinformation_rows import REGISTERINFORMATION_HEADER, var_row
 from reg_meta_build.curation_compile import (
     compile_occurrence_corrections,
 )

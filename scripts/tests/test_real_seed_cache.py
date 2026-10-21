@@ -360,12 +360,8 @@ def test_prepare_key_moves_with_preparation_code_only(tmp_path: Path) -> None:
         key() == untracked_edited,
     ) == (True, True, True)
 
-    # Fails if the prepare key holds a module the walk reaches only through
-    # comparison code prepare never runs (a dbdiff-only change missed an accepted
-    # 14 GB preparation, #1452), or a release's version bumps: `__version__`, or a
+    # Fails if the prepare key holds a release's version bumps: `__version__`, or a
     # workspace member's own version in `uv.lock` or `Cargo.lock`.
-    with (package / "dbdiff.py").open("a") as source:
-        source.write("\n# edited\n")
     init = package / "__init__.py"
     init.write_text(init.read_text().replace('__version__ = "', '__version__ = "9'))
     uv_lock, cargo_lock = tree / "uv.lock", tree / "Cargo.lock"

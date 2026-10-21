@@ -31,7 +31,7 @@ from dataclasses import replace
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
+from _registerinformation_rows import REGISTERINFORMATION_HEADER, var_row
 from reg_meta_build.curation_compile import compile_period_families
 from reg_meta_build.curation_tree import load_register_files
 from reg_meta_build.resolved_catalog import ResolvedRegister, ResolvedVariant

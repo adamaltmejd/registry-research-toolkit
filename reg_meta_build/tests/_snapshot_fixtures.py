@@ -1,5 +1,5 @@
-"""Shared fixtures for SCB snapshot, bundle and build-lock tests: inventories, Git and
-a copied builder checkout that runs the prototype CLI as a real subprocess."""
+"""Shared fixtures for SCB snapshot and bundle tests: inventories, Git and a copied
+builder checkout that runs the prototype CLI as a real subprocess."""
 
 from __future__ import annotations
 

@@ -8,16 +8,15 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import (
+from _csv_fixtures import write_scb_input
+from _input_repo_fixtures import write_input_bundle, write_scb_snapshot
+from _lisa_fixtures import write_lisa_workbook
+from _registerinformation_rows import (
     REGISTERINFORMATION_HEADER,
     replace_registerinformation_cell,
     scb_interpretation_rows,
     var_row,
-    write_input_bundle,
-    write_scb_input,
-    write_scb_snapshot,
 )
-from _lisa_fixtures import write_lisa_workbook
 from _source_inspection_fixtures import field_text
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
 from reg_meta_build.input_snapshot import (

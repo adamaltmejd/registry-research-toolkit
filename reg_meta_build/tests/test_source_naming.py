@@ -6,8 +6,8 @@ import hashlib
 from typing import TYPE_CHECKING, Any, Literal
 
 import pytest
-from _csv_fixtures import REGISTERINFORMATION_HEADER, var_row
 from _curation_fixtures import write_fdb_partition_curation
+from _registerinformation_rows import REGISTERINFORMATION_HEADER, var_row
 from pydantic import ValidationError
 from reg_meta_build.curation_compile import convert_column_partitions
 from reg_meta_build.curation_tree import load_curation_tree

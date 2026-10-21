@@ -6,12 +6,12 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import (
+from _csv_fixtures import write_scb_input
+from _input_repo_fixtures import (
     omit_scb_snapshot_file,
     repin_input_bundle,
     sparsify_scb_values,
     write_input_bundle,
-    write_scb_input,
     write_scb_snapshot,
 )
 from reg_meta_build.input_snapshot import (

@@ -29,7 +29,7 @@ from reg_meta_build.dbdiff import main
 from test_cli_cases import CASES, Artifacts
 
 if TYPE_CHECKING:
-    from _build_case_runner import PreparedCache
+    from _build_case_sources import PreparedCache
 
 # Declared without a FOREIGN KEY clause (db.py's search table).
 _UNDECLARED = {
