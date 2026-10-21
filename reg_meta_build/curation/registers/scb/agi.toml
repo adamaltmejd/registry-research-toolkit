@@ -934,38 +934,8 @@ refs = [
 ]
 fields = ["coding"]
 valid_from = "2021-01-01"
-valid_to = "2021-12-31"
-reason = "The #1603 batch-e same-name carry gives this column 2020's meaning for 2021; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ERSATTNINGS_KOD on individuppgifter-agi under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "857341abf6858272a046e43f22611385fb28632697d5df531f0c30affdfc9ee1"
-expected_diagnostic_sha256 = "8e4c794822d614a884313280ed10ec4b791745c13710ba746323ecd7d059b6be"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/agi/ersattningskod"
-refs = [
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:15110\",\"variable:6112\",\"member:706531\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:17968\",\"variable:6112\",\"member:834268\"]}",
-]
-fields = ["coding"]
-valid_from = "2022-01-01"
-valid_to = "2022-12-31"
-reason = "The #1603 batch-e same-name carry gives this column 2020's meaning for 2022; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
-evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ERSATTNINGS_KOD on individuppgifter-agi under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "857341abf6858272a046e43f22611385fb28632697d5df531f0c30affdfc9ee1"
-expected_diagnostic_sha256 = "f2607e0d68ef142ed4a3db86b862047f2ed6b3e7d76e22eba54cc8159dea540d"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/agi/ersattningskod"
-refs = [
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:15110\",\"variable:6112\",\"member:706531\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:392\",\"variant:1519\",\"edition:17968\",\"variable:6112\",\"member:834268\"]}",
-]
-fields = ["coding"]
-valid_from = "2023-01-01"
 valid_to = "2023-12-31"
-reason = "The #1603 batch-e same-name carry gives this column 2020's meaning for 2023; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
+reason = "The #1603 batch-e same-name carry gives this column 2020's meaning for 2021-2023; its code list is not carried because no conclusion yet confirms the delivered values (maintainer decision 2026-10-16: meaning only). Leave only the coding of the added window unavailable."
 evidence = "Availability from the #1603 batch-e same-name errata.delivered entry for column ERSATTNINGS_KOD on individuppgifter-agi under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule); the nearest documented edition's code list is deliberately not carried."
-expected_evidence_sha256 = "857341abf6858272a046e43f22611385fb28632697d5df531f0c30affdfc9ee1"
-expected_diagnostic_sha256 = "d3ac18885a73c1f7bcb8d72205a62fb04079ee56b111d98c766ecd41629cf61a"
+expected_evidence_sha256 = "2a19b30d7399a457fef89935c6f35713612a40ca31e481e47026295f35f66ebc"
+expected_diagnostic_sha256 = "18c78920c4b332d5c680f42a1f435543aa68fa7b766c9a3ed1fde7dba54aab13"

@@ -676,6 +676,25 @@ expected_diagnostic_sha256 = "59bddebb99322de59b9a188a6255c56cc7376df74a3fd5da5f
 code = "missing_coding_period"
 subject = "scb/fek/naringsgren"
 refs = [
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11291\",\"variable:4027\",\"member:460489\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11292\",\"variable:4027\",\"member:460654\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11293\",\"variable:4027\",\"member:460879\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11296\",\"variable:4027\",\"member:461003\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11298\",\"variable:4027\",\"member:461252\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11299\",\"variable:4027\",\"member:461355\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11305\",\"variable:4027\",\"member:461615\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11310\",\"variable:4027\",\"member:461755\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11720\",\"variable:4027\",\"member:482848\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11721\",\"variable:4027\",\"member:483025\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11722\",\"variable:4027\",\"member:483200\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11726\",\"variable:4027\",\"member:483238\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11898\",\"variable:4027\",\"member:494761\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:13149\",\"variable:4027\",\"member:585468\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:14409\",\"variable:4027\",\"member:655768\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:16311\",\"variable:4027\",\"member:787585\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:18177\",\"variable:4027\",\"member:842108\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:18736\",\"variable:4027\",\"member:883906\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:9938\",\"variable:4027\",\"member:442568\"]}",
   "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:282\",\"edition:5440\",\"variable:4027\",\"member:334322\"]}",
   "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:283\",\"edition:5446\",\"variable:4027\",\"member:334564\"]}",
   "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:433\",\"edition:5456\",\"variable:4027\",\"member:334803\"]}",
@@ -692,12 +711,12 @@ refs = [
   "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:283\",\"edition:11371\",\"variable:4027\",\"member:463605\"]}",
 ]
 fields = ["coding"]
-valid_from = "2003-01-01"
+valid_from = "1997-01-01"
 valid_to = "2007-12-31"
-reason = "These exact historical fields have no own bound source domain. Later industry lists mix classification versions and cannot establish this window; other fields also lack their own stored encoding. Preserve all original facts and known domains outside these windows; leave the exact coding unavailable, without domain borrowing."
-evidence = "Complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
-expected_evidence_sha256 = "c5dc71ec1907ad826d2c4ff18df788456d2df21be47bf72defcc6c4c24e57375"
-expected_diagnostic_sha256 = "4e60a72ec2745afb4b09d58318b7c92e02c4d5dfbbde02116b918c2c165ad1ed"
+reason = "These exact source windows (1997-2007) have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage: for 2003-2007 the later industry lists mix classification versions, and the other fields also lack their own stored encoding. No domain is borrowed or invented."
+evidence = "1997-2002: FE1997-FE2002 historical classification occurrence attached to FEK (#1579, D6/OP-2026-10-13-E). SCB documents no code list for these FE years; the occurrence is recorded without inheriting the later FEK code lists (fou.toml precedent). 2003-2007: complete selected native-family replay with actual source-support and panel prerequisites; own bound membership and active-domain review Batch52-CFL-FEK-own-binding-review.json and Batch52-CFL-FEK-active-domain-review.json. Standing retained-unavailable source-limit policy."
+expected_evidence_sha256 = "5aa569021c1c3ecbb69591f76a73b4d0f56690e893f528294df39313d6a56bb1"
+expected_diagnostic_sha256 = "1bb76507dafe65b43b307b5d8a41045e244729f94b4d30c0e04fe134bbca3e35"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -1519,38 +1538,6 @@ columns_ref = "2026-10-13 one-register batch (#1579). Native family 168.4275 in 
 variable = "168.4279"
 columns = { "fgr0140" = "168.4279", "lgr0140" = "168.4279", "vgr0140" = "168.4279" }
 columns_ref = "2026-10-13 one-register batch (#1579). Native family 168.4279 in reg_meta 0.49.0: one exported name (Rörelseresultat) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/fek/naringsgren"
-refs = [
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11291\",\"variable:4027\",\"member:460489\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11292\",\"variable:4027\",\"member:460654\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11293\",\"variable:4027\",\"member:460879\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11296\",\"variable:4027\",\"member:461003\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11298\",\"variable:4027\",\"member:461252\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11299\",\"variable:4027\",\"member:461355\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11305\",\"variable:4027\",\"member:461615\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11310\",\"variable:4027\",\"member:461755\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11720\",\"variable:4027\",\"member:482848\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11721\",\"variable:4027\",\"member:483025\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11722\",\"variable:4027\",\"member:483200\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11726\",\"variable:4027\",\"member:483238\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:11898\",\"variable:4027\",\"member:494761\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:13149\",\"variable:4027\",\"member:585468\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:14409\",\"variable:4027\",\"member:655768\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:16311\",\"variable:4027\",\"member:787585\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:18177\",\"variable:4027\",\"member:842108\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:18736\",\"variable:4027\",\"member:883906\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:168\",\"variant:241\",\"edition:9938\",\"variable:4027\",\"member:442568\"]}",
-]
-fields = ["coding"]
-valid_from = "1997-01-01"
-valid_to = "2002-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "FE1997-FE2002 historical classification occurrence attached to FEK (#1579, D6/OP-2026-10-13-E). SCB documents no code list for these FE years; the occurrence is recorded without inheriting the later FEK code lists (fou.toml precedent)."
-expected_evidence_sha256 = "bd3d615f9bd4975bbbc360f21ff7208fa04ee6fa6371b6fd336b50c24fb492bb"
-expected_diagnostic_sha256 = "80307764539ff69a9242e9b73c89a6e01c7ba432951f1678330281d0fee93840"
 
 [[acknowledge]]
 code = "missing_coding_period"

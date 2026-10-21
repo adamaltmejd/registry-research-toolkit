@@ -144,15 +144,24 @@ code = "missing_coding_period"
 subject = "scb/utrikeshandel/spin2015"
 refs = [
   "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}",
+  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}",
   "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:393\",\"edition:10076\",\"variable:36002\",\"member:453892\"]}",
 ]
 fields = ["coding"]
-valid_from = "2017-01-01"
+valid_from = "2010-01-01"
 valid_to = "2017-12-31"
-reason = "These exact source windows have no own bound stored-code domain. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. No domain is borrowed or invented."
-evidence = "Complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
-expected_evidence_sha256 = "e58a0869c2c53713c89b21839392330be7f2d3dc8917c61ea725246e0ba21cf2"
-expected_diagnostic_sha256 = "8acafa2b73553942ff3bb469749c70b7b14a71d112f05d74df103323077a60f1"
+reason = "No own bound stored-code domain covers 2010-2017. For 2010-2016 the #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits, and errata.delivered deliberately copies no coding across editions; for 2017 later source lists, modern classification books and neighbouring fields do not establish the historical encoding, special tokens or effective vintage. Preserve all source facts, physical histories and known value sets outside the window; leave only the exact coding unavailable. Carrying a neighbouring year's list into it would assert membership nobody has checked; no domain is borrowed or invented."
+evidence = "2010-2016: availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review. 2017: complete implicated native families with actual auxiliary joins and recursive panel prerequisites, and own bound-value audit Batch52-domain99-own-binding-review.json. Every selected missing-domain window has zero own bound claims. Standing retained-unavailable historical coding policy, exact full-original and diagnostic guards."
+expected_evidence_sha256 = "ef3f406966dad58232b529c690744b5adbee87a5b202176254a5dd87db29dd07"
+expected_diagnostic_sha256 = "4e3bb396e5b62270330d7870623e8255edc20f50ffa2c6555195cbef5d8b2ef7"
 
 # #1302: SPIN2002 product code held by SWECOV on the intrastat variant.
 
@@ -699,29 +708,6 @@ reason = "The #1603 errata.delivered entry adds this column's availability for S
 evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
 expected_evidence_sha256 = "a8cb7ad4fb7a9d8459397bec302906a6747e4c4a74b4d1b20cad7a2e8048b2da"
 expected_diagnostic_sha256 = "3a3e5f8130040e20ce3a246c9c47d9436f15fb845bce1abc3d1a10ed06c236e2"
-
-[[acknowledge]]
-code = "missing_coding_period"
-subject = "scb/utrikeshandel/spin2015"
-refs = [
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:10079\",\"variable:36002\",\"member:453894\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:11755\",\"variable:36002\",\"member:485786\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13056\",\"variable:36002\",\"member:578416\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:13821\",\"variable:36002\",\"member:628782\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:15843\",\"variable:36002\",\"member:758967\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18034\",\"variable:36002\",\"member:835118\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:18595\",\"variable:36002\",\"member:874400\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19034\",\"variable:36002\",\"member:913572\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:19733\",\"variable:36002\",\"member:976699\"]}",
-  "{\"source\":\"scb-registerinformation\",\"semantic_record_key\":[\"register:188\",\"variant:258\",\"edition:20301\",\"variable:36002\",\"member:1044034\"]}",
-]
-fields = ["coding"]
-valid_from = "2010-01-01"
-valid_to = "2016-12-31"
-reason = "The #1603 errata.delivered entry adds this column's availability for SWECOV-held editions SCB's export omits; errata.delivered deliberately copies no coding across editions, and no own bound list covers the added window. Leave only the coding of the added window unavailable; carrying a neighbouring year's list into it would assert membership nobody has checked."
-evidence = "Availability from the #1603 A2 errata.delivered entry for this column (maintainer ruling 2026-10-15); coding left unavailable pending a per-variable coding review."
-expected_evidence_sha256 = "a699172f65afa9b93a94879f4412125fabb7d2b659c3204eee4013bc7c869ca4"
-expected_diagnostic_sha256 = "b2b6df77695e3322eabef88986aa7fee2cdf5db04a69eb9e94eca30d356182b4"
 
 # ── #1603 B4: SWECOV UHV_1997–UHV_2004 SITC5 ──
 
