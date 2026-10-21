@@ -42,6 +42,7 @@
   "conformance/cases/api/validate-replacement-hint/request.json#/requests/0/body": "d9dc6248c7bde1808698a7ffbde1f0618abb0460dd13565a42bf3b18ac5abd1c",
   "conformance/cases/api/validate-representation-pin-selects/request.json#/requests/0/body": "cc59c81e433c819298da44c524ee8df2b336c4f5ffc836db60dc4aafce8a3dba",
   "conformance/cases/api/validate-representation-unknown/request.json#/requests/0/body": "f4b058263d3f6e88fae493c919f427a2f2956de148286dae3e118ad4855d5172",
+  "conformance/cases/api/validate-sensitive-variable/request.json#/requests/0/body": "ff6a78b707bc6453da79cc1dc8376c364eb8d229c5f94e21dd37fa13939d17b4",
   "conformance/cases/api/validate-sequential-rename/request.json#/requests/0/body": "5e8e363289df9502e7d4d8357dc7b50999b173fc0df7eaee9c45b601d40d80d9",
   "conformance/cases/api/validate-steward-mismatch/request.json#/requests/0/body": "93275fb7670fb5662ba949c8cab8d9f3f40ddeba4a96be40da0a6086c15f0bda",
   "conformance/cases/api/validate-unavailable-everywhere/request.json#/requests/0/body": "c2f71f7f8b3a420ca48b26cbcb0cbc8f93bb04d17a0b942f2df4ac6e9f5ca59f",

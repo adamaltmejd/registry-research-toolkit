@@ -238,6 +238,10 @@ export const KNOWN_CODES: Record<string, CodeInfo> = {
       "The steward holds this variable, but not the chosen representation (see the message for what it does supply)",
     hint: "warning",
   },
+  variable_sensitive: {
+    label: "The column is a sensitive variable",
+    hint: "warning",
+  },
   binding_state_drifts_within_period: {
     label: "The period crosses a state transition (per-state subsets returned)",
     hint: "info",

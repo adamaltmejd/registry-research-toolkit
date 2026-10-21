@@ -43,6 +43,13 @@ reg_webapp/
 `stewards/` is deployment data, not server source: `reg-meta serve --stewards DIR` reads
 `DIR/<catalog>/steward.json` and nothing else.
 
+`steward.json` holds `id`, `name`, `long_name` and an optional `order_instructions`:
+plain text on how a researcher hands a project to the steward. `/api/context` serves it
+under `steward`, and /project shows it under the two downloads. A deployment that takes
+no orders (global) omits it and the page shows nothing. SWECOV's text asks for
+`project_data.json` only, because the data managers review the project and generate
+`order.json` themselves.
+
 ## Boot seam (artifact admission)
 
 The Rust server admits its catalog at startup and refuses to serve otherwise

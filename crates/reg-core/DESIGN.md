@@ -187,12 +187,12 @@ MONA rebuild. The structural layer never materializes defaults; it only checks s
 `value_set_missing`, `period_outside_state_validity`, `range_period_partially_covered`,
 `binding_state_drifts_within_period`, `binding_value_set_version_ambiguous`,
 `binding_representation_unknown`, `deprecated_traversal`, `variable_replaced`,
-`fqid_outside_steward_catalog` and `representation_outside_steward_catalog`, plus three
-order codes under their own names, `steward_mismatch` (at `/steward`: a document of
-another steward would validate against the wrong holdings), `representation_unresolved`
-and `period_not_orderable` ([../DESIGN.md](../DESIGN.md), "Project semantic
-validation"). The version decision adds `unsupported_schema_version`. All belong to the
-same stable registry.
+`variable_sensitive`, `fqid_outside_steward_catalog` and
+`representation_outside_steward_catalog`, plus three order codes under their own names,
+`steward_mismatch` (at `/steward`: a document of another steward would validate against
+the wrong holdings), `representation_unresolved` and `period_not_orderable`
+([../DESIGN.md](../DESIGN.md), "Project semantic validation"). The version decision adds
+`unsupported_schema_version`. All belong to the same stable registry.
 
 ## One grammar
 

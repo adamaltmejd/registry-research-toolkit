@@ -1546,6 +1546,11 @@ export interface components {
             id: string;
             long_name: string;
             name: string;
+            /**
+             * @description How a researcher hands a project to this steward for ordering, plain text shown
+             *     beside the downloads; absent when the deployment takes no orders.
+             */
+            order_instructions?: string | null;
         };
         Summary: {
             added: number;

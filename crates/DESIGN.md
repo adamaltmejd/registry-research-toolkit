@@ -674,6 +674,9 @@ Per source variant and binding:
   inside the request.
 - `deprecated_traversal` (info) and `variable_replaced` (info, with `successor_fqid`
   when the successor is a binding) are hints; the binding stays valid.
+- `variable_sensitive` (warning) marks a binding whose variable is `is_sensitive`. It is
+  flagged, never blocked (#1547): the steward decides whether to share it, and every
+  client of `validate` (the SPA's cart, MCP) sees the same warning.
 - A binding's `value_set` must name a known classification, else `value_set_missing`.
 
 A clean validation means the project resolves; it is never proof of physical order

@@ -5698,6 +5698,13 @@
           },
           "name": {
             "type": "string"
+          },
+          "order_instructions": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "How a researcher hands a project to this steward for ordering, plain text shown\nbeside the downloads; absent when the deployment takes no orders."
           }
         }
       },
