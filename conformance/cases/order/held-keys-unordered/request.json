@@ -1,0 +1,41 @@
+{
+  "note": "Only non-key columns are ordered: Extra (Narrow's own cell, annual) and Payment (VB's, monthly). Each file gains its table's held row keys under its variant as key entries: Narrow its identifiers Child and Id (Id shared with its parent Wide, still carried), VB its panel keys Month and Recipient. Fails if a file lacks a held key, if a key is invented that the table does not hold under the variant (Child for VB, Region anywhere), if a key-only file is emitted (Wide), or if an auto-added key is not marked `key`.",
+  "fixture": "projection-order",
+  "artifact": "steward",
+  "project": {
+    "schema_version": "3.0.0",
+    "steward": "swecov",
+    "reg_meta_version": "reg_meta/v0.40.1",
+    "name": "Reader case",
+    "sources": [
+      {
+        "name": "Annual",
+        "register_variant": "scb/example/annual",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/extra",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      },
+      {
+        "name": "Monthly",
+        "register_variant": "scb/example/monthly",
+        "period": 2018,
+        "bindings": [
+          {
+            "variable": "scb/example/payment",
+            "type": "numeric",
+            "numeric_subtype": "integer"
+          }
+        ]
+      }
+    ]
+  },
+  "observe": [
+    "entries",
+    "clips"
+  ]
+}

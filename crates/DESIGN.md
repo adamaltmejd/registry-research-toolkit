@@ -551,12 +551,26 @@ the source's; [reg-core/DESIGN.md](reg-core/DESIGN.md)):
    projection contributes at least one cell its parent does not serve anywhere in that
    file, key or non-key, from any source or period; its shared key cells then come along
    with it. A projection file whose ordered cells its parent all serves is not emitted,
-   its shared keys included, so no file holds only keys its parent's file also holds. A
-   projection file can still lack a key when the order binds none, as any table's file
-   does when only a non-key column is ordered. Entries carry the literal physical table
-   and column; the canonical representation is a join key, not an output substitute.
-   Entries keep project order, then table, edition, member index and column, so members
-   order by index (`DIA2` before `DIA10`), not by name.
+   its shared keys included, so no file holds only keys its parent's file also holds.
+   Entries carry the literal physical table and column; the canonical representation is
+   a join key, not an output substitute. Entries keep project order, then table,
+   edition, member index and column, so members order by index (`DIA2` before `DIA10`),
+   not by name.
+5. **Held keys.** On a steward artifact every emitted file then carries its table's held
+   row keys, whether or not the order binds them: each column of the file's table that
+   maps a key of the file's variant (the key test of step 3: the variant's panel keys
+   and every identifier, so a linking id such as a household or firm id comes along too)
+   and that no entry of the file already extracts, under whatever variable, gains an
+   entry marked `key: true`. A file is emitted only for an ordered entry, so keys never
+   make a file on their own, and only what the table holds is added: a key the table
+   does not map under the variant is not invented. A key entry takes the source of the
+   file's first entry and requests the union of the file's entries' `requested_period`,
+   so a later row filter is not widened; a year or month member or a windowed key column
+   requests that union inside its own period and is left out where the union does not
+   reach it, as an ordered member is; a year-independent file's keys request `_default`.
+   Key entries follow every ordered entry, by table, variant, edition, member index and
+   column. An ordered key stays an ordered entry, unmarked. The global fallback has no
+   physical table and adds none.
 
 **Fail closed, in one pass.** A blocked order lists every finding across every binding
 (`steward_mismatch`, `project_empty`, `period_not_orderable`, `variable_unresolved`,
@@ -570,20 +584,21 @@ a header-only manifest.
 artifact kind, project name, schema version, declared reg_meta version and SHA-256 of
 the project's canonical JSON, catalog schema version and `generation_id`), the entries
 (logical coordinate with the canonical representation, the clipped `requested_period`,
-and the physical edition, table, column, optional partition, optional projection token
-and optional `member` index) and the clips. It is written here and read offline by the
-steward-side extract system, so it is self-contained. That system is the planned MONA
-extract runner (#707): a data manager runs it inside MONA, it writes the files there,
-and nothing row-level leaves. Its bytes are sorted keys, two-space indent, UTF-8 and a
-trailing newline, byte-identical across runs; periods render through the shared grammar.
-No timestamps: the only time-shaped values come from the artifact and the project.
-Version 1 stays in definition until the first external reader: shape changes stay in
-version 1, and from that reader on an incompatible change bumps it. `partition`,
-`projection` (the table's token) and `member` (`{"position": N}`, `{"year": YYYY}` or
-`{"month": "YYYY-MM"}`) are the only optional fields; absent means none, so an inventory
-without partitions, projections or pivot members produces the bytes it did before any
-existed. The parent (`projection_of`) is not in the manifest: the token is the
-placement.
+the physical edition, table, column, optional partition, optional projection token and
+optional `member` index, and `key: true` on a held key no binding ordered) and the
+clips. It is written here and read offline by the steward-side extract system, so it is
+self-contained. That system is the planned MONA extract runner (#707): a data manager
+runs it inside MONA, it writes the files there, and nothing row-level leaves. Its bytes
+are sorted keys, two-space indent, UTF-8 and a trailing newline, byte-identical across
+runs; periods render through the shared grammar. No timestamps: the only time-shaped
+values come from the artifact and the project. Version 1 stays in definition until the
+first external reader: shape changes stay in version 1, and from that reader on an
+incompatible change bumps it. `partition`, `projection` (the table's token), `member`
+(`{"position": N}`, `{"year": YYYY}` or `{"month": "YYYY-MM"}`) and `key` are the only
+optional fields; absent means none (an ordered entry for `key`), so an inventory without
+partitions, projections or pivot members, and an order that binds every held key,
+produces the bytes it did before any existed. The parent (`projection_of`) is not in the
+manifest: the token is the placement.
 
 **Extraction keeps delivery topology.** One output file per ordered variant, physical
 table and table edition (`physical.edition`, #1661). `physical.table` is the unique
@@ -603,9 +618,11 @@ placement is the partition, the projection or neither, named in slug spelling
 partition, `<register>_<variant>_<token>_<period>.csv` for a projection). What goes in
 as two tables comes out as two files: shard identity (reporter stream, municipality) may
 exist in no column, so a union would destroy information, and a projection may have a
-finer grain than its parent. Each file carries its own keys; the user joins a projection
-file to its parent's on the shared key. A multi-period range is one file, since v1 has
-no row filter.
+finer grain than its parent. Each file carries its own keys, ordered or added as held
+keys (step 5), so a researcher who orders one non-key column still gets a joinable file;
+the user joins a projection file to its parent's on the shared key. The extract runner
+writes a key entry's column like any other and may tell it apart by `key`. A
+multi-period range is one file, since v1 has no row filter.
 
 Design limit: sibling projections cannot share a key the parent lacks. Two projections
 of one parent that both map a key the parent does not map (a child id two narrow

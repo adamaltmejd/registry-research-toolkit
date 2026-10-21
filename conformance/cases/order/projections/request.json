@@ -1,5 +1,5 @@
 {
-  "note": "Narrow is a declared projection of Wide (#1634): both map the key Id, only Narrow maps Extra. Fails if the order drops Narrow's own Id (its file would carry no row key), emits Id from Narrow alone, drops Extra (the cell the parent does not serve), or omits Narrow's projection token.",
+  "note": "Narrow is a declared projection of Wide (#1634): both map the key Id, only Narrow maps Extra. Fails if the order drops Narrow's own Id (its file would carry no row key), emits Id from Narrow alone, drops Extra (the cell the parent does not serve), omits Narrow's unordered held key Child (added as a key entry), or omits Narrow's projection token.",
   "fixture": "projection-order",
   "artifact": "steward",
   "project": {

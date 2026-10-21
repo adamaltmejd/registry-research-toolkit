@@ -3532,6 +3532,10 @@
           "physical"
         ],
         "properties": {
+          "key": {
+            "type": "boolean",
+            "description": "A held key column of the output file that no binding ordered (the row key, or\nany identifier, linking ids included: [`IS_KEY`]), carried so every file joins\non its keys; absent on an ordered entry."
+          },
           "logical": {
             "$ref": "#/components/schemas/LogicalCoordinate"
           },
@@ -3570,7 +3574,7 @@
             "items": {
               "$ref": "#/components/schemas/OrderEntry"
             },
-            "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column."
+            "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column; then each file's\nheld row keys no binding ordered (`key`), by table, variant, edition, member\nindex and column."
           },
           "provenance": {
             "$ref": "#/components/schemas/OrderProvenance"
