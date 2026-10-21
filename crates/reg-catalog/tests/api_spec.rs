@@ -76,9 +76,9 @@ fn param_schema(ty: &str) -> Value {
 /// parameters, every served download a `[[download]]` row with the same route and
 /// media type, taking its operation's parameters plus its route's other
 /// placeholders, and `meta.contract_version` is the table's. A parameter the route
-/// names is a path parameter; a `project` one is the request body of a POST route. Fails when a route, parameter, its location or
-/// optionality, or a media type drifts on either side. (Completeness per slice joins
-/// when slice 3a's last operation ships.)
+/// names is a path parameter; a `project` one is the request body of a POST route.
+/// Fails when a route, parameter, its location or optionality, or a media type drifts
+/// on either side, or when a route of the table is not served.
 #[test]
 fn openapi_matches_operations_toml() {
     let table = spec("operations.toml");
@@ -173,10 +173,16 @@ fn openapi_matches_operations_toml() {
                 .collect();
             assert_body(&route, operation, rows[name]);
             assert_eq!(served_params(operation), expected, "{route}");
-            served.insert(name.to_owned());
+            served.insert(route);
         }
     }
-    assert!(served.contains("context") && served.contains("search"));
+    let table_routes: BTreeSet<String> = rows
+        .values()
+        .flat_map(|row| row["http"].as_array().unwrap())
+        .map(|route| route.as_str().unwrap().to_owned())
+        .chain(downloads.keys().map(|&route| route.to_owned()))
+        .collect();
+    assert_eq!(served, table_routes);
 }
 
 /// A served operation's path and query parameters as `{in, required, schema}` by name.

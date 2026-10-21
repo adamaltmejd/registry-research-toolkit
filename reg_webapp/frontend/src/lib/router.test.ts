@@ -194,12 +194,11 @@ describe("onNavClick", () => {
     expect(event.defaultPrevented).toBe(false);
   });
 
-  it("ignores a same-origin link to a non-SPA path (backend routes, /docs)", () => {
-    // /api/* and the FastAPI docs are server routes — intercepting them would
-    // pushState-route to the SPA not-found instead of hitting the backend.
+  it("ignores a same-origin link to a non-SPA path (server routes)", () => {
+    // /api/* and /openapi.json are server routes — intercepting them would
+    // pushState-route to the SPA not-found instead of hitting the server.
     expect(clickAnchor("/api/project/validate").defaultPrevented).toBe(false);
     expect(clickAnchor("/openapi.json").defaultPrevented).toBe(false);
-    expect(clickAnchor("/docs").defaultPrevented).toBe(false);
   });
 });
 

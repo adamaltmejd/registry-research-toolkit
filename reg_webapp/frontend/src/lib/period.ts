@@ -244,8 +244,8 @@ export function periodCoverageUnion(
 // ── Query-string builder ─────────────────────────────────────────────────────
 
 /** Build a `?query` string from the resolution params, omitting undefined /
- * empty values and emitting a SINGLE value per param (NOT FastAPI deepObject —
- * the backend reads one `?period=`/`?variant=`/`?value_set_version=` each).
+ * empty values and emitting a SINGLE value per param (no repeated or nested
+ * keys — the server reads one `?period=`/`?variant=`/`?value_set_version=` each).
  * Returns the query WITHOUT a leading `?` (the empty string when no params), so
  * callers do `pathname + (q ? "?" + q : "")`. */
 export function queryFromParams(params: ResolutionParams): string {

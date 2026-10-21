@@ -365,12 +365,8 @@ def _ready(process, log, deadline):
     client = None
     while time.monotonic() < deadline:
         if client is None and (match := LISTENING.search(log.read_bytes())):
-            # A connection per request: uvicorn closes one after an unhandled
-            # exception's 500, and the next step must not inherit that reset.
             client = httpx2.Client(
-                base_url=f"http://127.0.0.1:{int(match[1])}",
-                timeout=60,
-                limits=httpx2.Limits(max_keepalive_connections=0),
+                base_url=f"http://127.0.0.1:{int(match[1])}", timeout=60
             )
         if client is not None:
             try:

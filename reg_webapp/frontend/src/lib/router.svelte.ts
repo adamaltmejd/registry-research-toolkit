@@ -297,7 +297,7 @@ export function onNavClick(event: MouseEvent): void {
     return;
   }
   // Only intercept paths the SPA router OWNS (root + `/catalog/...`). A
-  // same-origin link to a BACKEND route (`/api/...`, `/docs`, `/openapi.json`)
+  // same-origin link to a SERVER route (`/api/...`, `/openapi.json`)
   // or any other path must fall through to the browser — pushState-routing it
   // would render the SPA not-found instead of hitting the server.
   if (parseRoute(anchor.pathname).name === "not-found") {
