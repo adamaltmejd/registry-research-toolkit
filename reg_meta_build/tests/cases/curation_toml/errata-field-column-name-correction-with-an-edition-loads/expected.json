@@ -10,7 +10,7 @@
           {
             "field": "column_name",
             "column": "ANSWER",
-            "edition": "2020",
+            "editions": ["2020"],
             "value": "PHYSICAL",
             "expected_records": null
           }

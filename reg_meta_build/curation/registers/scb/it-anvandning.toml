@@ -5933,11 +5933,9 @@ ref = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes co
 variable = "258.44742"
 variant = "258.556"
 column = "E_AI_AOS"
-edition = "17809"
+editions = ["17809", "18927", "19517"]
 expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+expected_period_text = { 17809 = "2021", 18927 = "2023", 19517 = "2024" }
 field = "name"
 value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
 evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
@@ -5947,67 +5945,9 @@ noted = "2026-09-30"
 variable = "258.44742"
 variant = "258.556"
 column = "E_AI_AOS"
-edition = "17809"
+editions = ["17809", "18927", "19517"]
 expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
-field = "definition"
-value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
-evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.44742"
-variant = "258.556"
-column = "E_AI_AOS"
-edition = "18927"
-expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
-field = "name"
-value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
-evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.44742"
-variant = "258.556"
-column = "E_AI_AOS"
-edition = "18927"
-expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
-field = "definition"
-value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
-evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.44742"
-variant = "258.556"
-column = "E_AI_AOS"
-edition = "19517"
-expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
-field = "name"
-value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
-evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.44742"
-variant = "258.556"
-column = "E_AI_AOS"
-edition = "19517"
-expected_fields = [{ name = "definition", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "AI-mjukvara eller system förvärvades som kommersiell mjukvara eller system modifierades av egen personal" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+expected_period_text = { 17809 = "2021", 18927 = "2023", 19517 = "2024" }
 field = "definition"
 value = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)."
 evidence = "SCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
@@ -6138,25 +6078,9 @@ source = "Same native258.19054/variant556/columnNgS1, exact2021 members826701 an
 variable = "258.16088"
 variant = "258.557"
 column = "H13antal"
-edition = "11917"
+editions = ["11917", "12613"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Hur många personer under 16 år finns i hushållet?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Antal personer under 16 år i hushållet" }, { name = "operational_definition", status = "value", value = "antal i hushållet under 16 år" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
-expected_period_text = "2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
-field = "measurement_unit"
-value = "Antal personer"
-evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.16088"
-variant = "258.557"
-column = "H13antal"
-edition = "12613"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Hur många personer under 16 år finns i hushållet?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Antal personer under 16 år i hushållet" }, { name = "operational_definition", status = "value", value = "antal i hushållet under 16 år" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 11917 = "2017", 12613 = "2018" }
 field = "measurement_unit"
 value = "Antal personer"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
@@ -6166,25 +6090,9 @@ noted = "2026-09-30"
 variable = "258.1378"
 variant = "258.557"
 column = "Fodelsear"
-edition = "1715"
+editions = ["1715", "2757"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Födelseår beräknas utifrån personnummer." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelseår" }, { name = "operational_definition", status = "value", value = "Kommer från ordinarie AKU" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
-expected_period_text = "2008"
-expected_scope = { kind = "intervals", intervals = [{ start = "2008", end = "2008" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2008-01-01", end = "2008-12-31" }] }
-field = "measurement_unit"
-value = "År"
-evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.1378"
-variant = "258.557"
-column = "Fodelsear"
-edition = "2757"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Födelseår beräknas utifrån personnummer." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Födelseår" }, { name = "operational_definition", status = "value", value = "Kommer från ordinarie AKU" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
-expected_period_text = "2009"
-expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2009-01-01", end = "2009-12-31" }] }
+expected_period_text = { 1715 = "2008", 2757 = "2009" }
 field = "measurement_unit"
 value = "År"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
@@ -6194,11 +6102,9 @@ noted = "2026-09-30"
 variable = "258.17581"
 variant = "258.556"
 column = "UTVANTP"
-edition = "5213"
+editions = ["5213"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Anger hur många antal årsverken som utfördes av egen personal som arbetar med programvaruutveckling (under föregående kalenderår)." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Antal årsverken utförda av egen personal som arbetar med programvaruutveckling" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
+expected_period_text = { 5213 = "2013" }
 field = "measurement_unit"
 value = "Årspersoner"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
@@ -6208,39 +6114,9 @@ noted = "2026-09-30"
 variable = "258.16088"
 variant = "258.557"
 column = "H13"
-edition = "13562"
+editions = ["13562", "14842", "17768"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Hur många personer under 16 år finns i hushållet?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Antal personer under 16 år i hushållet" }, { name = "operational_definition", status = "value", value = "antal i hushållet under 16 år" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
-expected_period_text = "2019"
-expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
-field = "measurement_unit"
-value = "Antal personer"
-evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.16088"
-variant = "258.557"
-column = "H13"
-edition = "14842"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Hur många personer under 16 år finns i hushållet?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Antal personer under 16 år i hushållet" }, { name = "operational_definition", status = "value", value = "antal i hushållet under 16 år" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
-expected_period_text = "2020"
-expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
-field = "measurement_unit"
-value = "Antal personer"
-evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.16088"
-variant = "258.557"
-column = "H13"
-edition = "17768"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Hur många personer under 16 år finns i hushållet?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Antal personer under 16 år i hushållet" }, { name = "operational_definition", status = "value", value = "antal i hushållet under 16 år" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal" }]
-expected_period_text = "2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+expected_period_text = { 13562 = "2019", 14842 = "2020", 17768 = "2021" }
 field = "measurement_unit"
 value = "Antal personer"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
@@ -6250,11 +6126,9 @@ noted = "2026-09-30"
 variable = "258.35520"
 variant = "258.557"
 column = "D5"
-edition = "12032"
+editions = ["12032"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Ungefär hur mycket har du betalat sammanlagt för de varor och tjänster du köpt eller beställt via internet de senaste tre månaderna? Räkna inte med aktier, fonder eller andra finansiella tjänster.\n\n1. Mindre än 500 kr\n2. 500 - 999 kr\n3. 1 000 - 4 999 kr\n4. 5 000 - 9 999 kr\n5. 10 000 kr eller mer\n8. Vet inte (Ej utskrivet i WinDATI)" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur mycket betalat sammanlagt för köp över internet" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Kronor" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+expected_period_text = { 12032 = "2016" }
 field = "measurement_unit"
 value = "Kronor (SEK)"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
@@ -6490,25 +6364,9 @@ expected_fields = [{ name = "name", status = "value", value = "Sysselsättningst
 variable = "258.31026"
 variant = "258.557"
 column = "vikt_hus_SE"
-edition = "19400"
+editions = ["19400", "20119"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Värdet för vikten som avser individer divideras med antalet personer i hushållet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Urvalsvikt för bostadshushåll" }, { name = "operational_definition", status = "value", value = "Vikt som används för att räkna upp resultaten till hela befolkningen för respektive urvalsgrupp" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "(antal i populationen/antal svarande) per stratum" }]
-expected_period_text = "2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
-field = "measurement_unit"
-value = "Kvot"
-evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "258.31026"
-variant = "258.557"
-column = "vikt_hus_SE"
-edition = "20119"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Värdet för vikten som avser individer divideras med antalet personer i hushållet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Urvalsvikt för bostadshushåll" }, { name = "operational_definition", status = "value", value = "Vikt som används för att räkna upp resultaten till hela befolkningen för respektive urvalsgrupp" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "(antal i populationen/antal svarande) per stratum" }]
-expected_period_text = "2025"
-expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-12-31" }] }
+expected_period_text = { 19400 = "2024", 20119 = "2025" }
 field = "measurement_unit"
 value = "Kvot"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."

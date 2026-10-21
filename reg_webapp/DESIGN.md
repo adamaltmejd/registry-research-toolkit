@@ -1063,12 +1063,16 @@ one-sided `until <year>` form when the start is unknown (#658).
   disclosure names the catalog interval as provider-documented and renders each exact
   source-edition/evidence association separately. Correction-only overlap records show
   the corrected interval and exact associations without claiming provider attribution;
-  resolution-only gaps are listed separately as inferred and unattributed. The
-  disclosure remains collapsed and ordinary states add no row. Concept groups still use
-  the component for key / facets / source. One component keeps the summary + styling
-  consistent across call sites; callers omit it entirely when there's nothing to demote.
-  `LineageDetails` follows the same omit-when-empty rule: with no provenance, warnings,
-  loading state, or error, it renders nothing.
+  resolution-only gaps are listed separately as inferred and unattributed. A curated
+  matrix answer (`curated:matrix-answer` provenance) adds a Source row: the cited PDF
+  and the page of the state's column. The leaf fetches the register's related documents
+  only then, and links the one whose SHA256 the provenance names; without a match it
+  links the provider URL. That is one citation, not the register's document list, which
+  stays off variable pages. The disclosure remains collapsed and ordinary states add no
+  row. Concept groups still use the component for key / facets / source. One component
+  keeps the summary + styling consistent across call sites; callers omit it entirely
+  when there's nothing to demote. `LineageDetails` follows the same omit-when-empty
+  rule: with no provenance, warnings, loading state, or error, it renders nothing.
 
 ### Picker graph ownership (#904, #1057)
 

@@ -7,11 +7,9 @@ native_id = "1"
 variable = "1.5"
 variant = "1.2"
 column = "ANSWER"
-edition = "99"
+editions = ["99"]
 expected_fields = [{ name = "name", status = "value", value = "GenericVar" }, { name = "definition", status = "absent" }, { name = "description", status = "absent" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2009"
-expected_scope = { kind = "intervals", intervals = [{ start = "2009", end = "2009" }] }
-expected_period = { kind = "not_applicable" }
+expected_period_text = { 99 = "2009" }
 evidence = "Exact supplied definition establishes the reviewed correction."
 noted = "2026-09-30"
 field = "classification_declared"

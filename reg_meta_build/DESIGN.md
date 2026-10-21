@@ -924,23 +924,36 @@ Register `[[errata.field]]` entries correct reviewed source-backed text in `name
 variable/variant/column coordinates. Unit corrections additionally pin the supplied unit
 and both coverage fields. They reconcile literal wording only when the source definition
 positively establishes the same quantity; they do not convert values, merge differing
-scales or infer absent units. A `source_attribution` correction requires an exact
-edition, all supplied fields and complete original-record expectations, including
-parents. It can normalize an abbreviation explicitly defined in the source to the
-existing variant name; it does not introduce inferred aliases. The catalog stores the
-interpreted attribution while immutable source evidence retains the original text.
+scales or infer absent units. A `source_attribution` correction requires exact editions,
+all supplied fields and complete original-record expectations, including parents. It can
+normalize an abbreviation explicitly defined in the source to the existing variant name;
+it does not introduce inferred aliases. The catalog stores the interpreted attribution
+while immutable source evidence retains the original text.
+
+One `[[errata.field]]` entry states one correction across SCB editions:
+`editions = [...]` lists them in numeric order and `expected_period_text` pins each
+edition's text, keyed by edition. The entry applies to each listed edition as if entered
+once per edition: each is selected and guarded on its own, and one stale edition stales
+the entry at its locator, with the report naming the edition. Only entries identical in
+every other guard share one; an `expected_records` pin covers all listed editions'
+originals together. An SCB edition's scopes are a function of its period text
+(`scb_edition_scopes`, which the reader also uses), so an entry with editions pins no
+`expected_scope` or `expected_period`: a source change that moves an edition's scopes
+changes its text. An entry without editions (SOS, thin providers) pins both scopes and
+no text.
+
 `[[errata.occurrence_period]]` entries require one exact native source edition for SCB.
 SOS rows lack that coordinate and instead require both literal supplied coverage fields
 alongside the exact native variable, subset and column. Both entry types guard the
-original edition text, both original scopes and all four supplied prose fields,
-including absent or unknown values. Complete native-family support and peer guards
-retain unrelated editions. Period entries carry explicit replacement `TemporalScope`
-values; omitting an interval's `end` in TOML means an open end, while unknown and pooled
-scopes retain their labels and bounds. These entries emit existing checked field/period
-effects and never rewrite the original source records. A finite scoped name correction
-selects exact original source scopes and carries those same scopes into its conditional
-replay effect. A monthly row sharing an annual row's semantic reference cannot inherit
-that name correction.
+original edition text, both original scopes (a field entry's follow from its edition
+text) and all four supplied prose fields, including absent or unknown values. Complete
+native-family support and peer guards retain unrelated editions. Period entries carry
+explicit replacement `TemporalScope` values; omitting an interval's `end` in TOML means
+an open end, while unknown and pooled scopes retain their labels and bounds. These
+entries emit existing checked field/period effects and never rewrite the original source
+records. A finite scoped name correction selects exact original source scopes and
+carries those same scopes into its conditional replay effect. A monthly row sharing an
+annual row's semantic reference cannot inherit that name correction.
 
 `[[errata.occurrence_carry]]` (#1633) is not a period correction.
 `[[errata.occurrence_period]]` corrects how a source's own coverage was read and
@@ -985,18 +998,19 @@ which a carry does not copy (revisit if a thin column needs one).
 `[[errata.flags]]` authors `is_sensitive` and `is_identifier` for a variable whose
 source and auxiliary joins state neither, which `unresolved_flag` otherwise withholds
 (#1621). Both values are required; nothing defaults. The entry names one exact
-occurrence (variable, variant, column, edition) with the same original-scope and prose
-guards as `[[errata.field]]`, guards both source flags as absent, and pins the native
-family's originals with `expected_evidence_sha256`; a changed original stales it at its
-locator. It emits two checked field changes on that occurrence. The column decides which
-owner it reaches: when a member's columns are split among owners, the entry decides only
-the owner of the column it names, so each split owner needs its own entry, and a sibling
-column's flags are never inferred (#1627). Flags reconcile over all of a variable's
-occurrences and support, so one stated pair decides them, and the existing rules still
-apply: a sensitivity claim from any source only ratchets up, and an identifier claim
-that disagrees reconciles to unknown and withholds the variable again. A later auxiliary
-flag is therefore never silently overridden, and no separate refusal is owed. Undeclared
-variables keep the `unresolved_flag` ratchet.
+occurrence (variable, variant, column, edition) with the edition text, both original
+scopes and the prose guards of `[[errata.field]]`, guards both source flags as absent,
+and pins the native family's originals with `expected_evidence_sha256`; a changed
+original stales it at its locator. It emits two checked field changes on that
+occurrence. The column decides which owner it reaches: when a member's columns are split
+among owners, the entry decides only the owner of the column it names, so each split
+owner needs its own entry, and a sibling column's flags are never inferred (#1627).
+Flags reconcile over all of a variable's occurrences and support, so one stated pair
+decides them, and the existing rules still apply: a sensitivity claim from any source
+only ratchets up, and an identifier claim that disagrees reconciles to unknown and
+withholds the variable again. A later auxiliary flag is therefore never silently
+overridden, and no separate refusal is owed. Undeclared variables keep the
+`unresolved_flag` ratchet.
 
 The one way a disagreeing identifier claim resolves is an authored correction of one
 occurrence (#1662): an `[[errata.field]]` entry with `field = "identifier"` and an

@@ -6,11 +6,13 @@
         "code": "stale_curation_entry"
       },
       "fields": [
-        "locator"
+        "locator",
+        "detail"
       ],
       "rows": [
         [
-          "curation/registers/scb/sample.toml#/errata.field/1"
+          "curation/registers/scb/sample.toml#/errata.field/1",
+          "curation/registers/scb/sample.toml#/errata.field/1: edition 99: literal source coordinate has no originals or differs from the guarded prose/scopes"
         ]
       ]
     },

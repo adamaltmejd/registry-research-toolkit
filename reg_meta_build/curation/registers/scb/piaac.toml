@@ -1271,11 +1271,9 @@ expected_fields_sha256 = "ae4e60367e1651c2645c1cd9f27dca2a89a51f4fc2df8918fc6e09
 variable = "351.4677"
 variant = "351.1205"
 column = "C_Q08a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Sysselsättningsstatus" }, { name = "description", status = "value", value = "Beskriver om personen har sysselsättning eller ej" }, { name = "name", status = "value", value = "Sysselsättningsstatus" }, { name = "operational_definition", status = "value", value = "Har du haft ett avlönat arbete någon gång tidigare? Ta även med arbete inom eget företag." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1285,11 +1283,9 @@ value = "Sysselsättningsstatus — någon gång haft avlönat arbete"
 variable = "351.4677"
 variant = "351.1205"
 column = "C_Q08b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Sysselsättningsstatus" }, { name = "description", status = "value", value = "Beskriver om personen har sysselsättning eller ej" }, { name = "name", status = "value", value = "Sysselsättningsstatus" }, { name = "operational_definition", status = "value", value = "Har du haft ett betalt arbete under de senaste 12 månaderna? Ta även med arbete i eget företag." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1299,11 +1295,9 @@ value = "Sysselsättningsstatus — haft betalt arbete senaste 12 månaderna"
 variable = "351.4677"
 variant = "351.1205"
 column = "C_Q08c1"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Sysselsättningsstatus" }, { name = "description", status = "value", value = "Beskriver om personen har sysselsättning eller ej" }, { name = "name", status = "value", value = "Sysselsättningsstatus" }, { name = "operational_definition", status = "value", value = "Hur gammal var du när du slutade på ditt senaste avlönade arbete eller ?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1313,11 +1307,9 @@ value = "Sysselsättningsstatus — ålder när senaste avlönade arbete upphör
 variable = "351.4677"
 variant = "351.1205"
 column = "C_Q10a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Sysselsättningsstatus" }, { name = "description", status = "value", value = "Beskriver om personen har sysselsättning eller ej" }, { name = "name", status = "value", value = "Sysselsättningsstatus" }, { name = "operational_definition", status = "value", value = "Hur många företag, offentliga arbetsgivare eller organisationer har du arbetat för under de\nsenaste 5 åren? Räkna med ditt eget/egna företag om du är eller varit egen företagare." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1327,11 +1319,9 @@ value = "Sysselsättningsstatus — antal arbetsgivare senaste 5 åren"
 variable = "351.4677"
 variant = "351.1205"
 column = "C_Q09"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Sysselsättningsstatus" }, { name = "description", status = "value", value = "Beskriver om personen har sysselsättning eller ej" }, { name = "name", status = "value", value = "Sysselsättningsstatus" }, { name = "operational_definition", status = "value", value = "Ungefär hur många år har du totalt haft betalt arbete? Räkna bara med år då du haft heltids-\neller deltidsarbete minst 6 månader." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1341,11 +1331,9 @@ value = "Sysselsättningsstatus — antal år med betalt arbete totalt"
 variable = "351.4677"
 variant = "351.1205"
 column = "C_Q07"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Sysselsättningsstatus" }, { name = "description", status = "value", value = "Beskriver om personen har sysselsättning eller ej" }, { name = "name", status = "value", value = "Sysselsättningsstatus" }, { name = "operational_definition", status = "value", value = "Vilket påstående beskriver bäst din nuvarande situation? Om mer än ett alternativ stämmer,\nvälj det som bäst beskriver hur det ser ut för dig." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1355,11 +1343,9 @@ value = "Sysselsättningsstatus — nuvarande situation"
 variable = "351.4677"
 variant = "351.1205"
 column = "C_Q08c2"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Sysselsättningsstatus" }, { name = "description", status = "value", value = "Beskriver om personen har sysselsättning eller ej" }, { name = "name", status = "value", value = "Sysselsättningsstatus" }, { name = "operational_definition", status = "value", value = "Vilket år slutade du på ditt senaste avlönade arbete?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1369,11 +1355,9 @@ value = "Sysselsättningsstatus — år när senaste avlönade arbete upphörde"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q03c"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda eller räkna ut bråktal, decimaler eller procent?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1383,11 +1367,9 @@ value = "Hur ofta brukar du på arbetet... — använda eller räkna ut bråktal
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q03g"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda enkel algebra eller enkla formler?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1397,11 +1379,9 @@ value = "Hur ofta brukar du på arbetet... — använda enkel algebra eller enkl
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q05a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda e-post?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1411,11 +1391,9 @@ value = "Hur ofta brukar du på arbetet... — använda e-post"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q05f"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda ett ordbehandlingsprogram, t.ex. Word?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1425,11 +1403,9 @@ value = "Hur ofta brukar du på arbetet... — använda ordbehandlingsprogram"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q05c"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda Internet för att bättre förstå problem relaterade till ditt arbete?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1439,11 +1415,9 @@ value = "Hur ofta brukar du på arbetet... — använda Internet för att först
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q05e"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda kalkylprogram, t.ex. Excel?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1453,11 +1427,9 @@ value = "Hur ofta brukar du på arbetet... — använda kalkylprogram"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q03d"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda miniräknare - vanlig eller på datorn?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1467,11 +1439,9 @@ value = "Hur ofta brukar du på arbetet... — använda miniräknare"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q05g"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda programmeringsspråk för att programmera eller skriva maskinkod?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1481,11 +1451,9 @@ value = "Hur ofta brukar du på arbetet... — använda programmeringsspråk"
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q06c"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... använda skicklighet och noggrannhet med dina händer eller fingrar?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1495,11 +1463,9 @@ value = "Hur ofta brukar du på arbetet... — använda skicklighet och noggrann
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q05h"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... delta i diskussioner i realtid på Internet, t.ex. konferenser online eller chattgrupper?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1509,11 +1475,9 @@ value = "Hur ofta brukar du på arbetet... — delta i diskussioner i realtid p�
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q02d"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... fylla i formulär med efterfrågade uppgifter (t.ex. ansökan om tillstånd hos olika myndigheter)?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1523,11 +1487,9 @@ value = "Hur ofta brukar du på arbetet... — fylla i formulär med efterfråga
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q04b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... förhandla med andra antingen inom eller utanför företaget eller organisationen?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1537,11 +1499,9 @@ value = "Hur ofta brukar du på arbetet... — förhandla med andra inom eller u
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q02e"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... ge råd till andra?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1551,11 +1511,9 @@ value = "Hur ofta brukar du på arbetet... — ge råd till andra"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q03f"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... göra diagram, grafer eller tabeller?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1565,11 +1523,9 @@ value = "Hur ofta brukar du på arbetet... — göra diagram, grafer eller tabel
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q02c"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... hålla tal, föredrag eller presentera muntligt inför minst fem personer?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1579,11 +1535,9 @@ value = "Hur ofta brukar du på arbetet... — hålla tal, föredrag eller prese
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q02b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... instruera, lära eller undervisa andra, individuellt eller i grupp?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1593,11 +1547,9 @@ value = "Hur ofta brukar du på arbetet... — instruera, lära eller undervisa 
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q01d"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... läsa artiklar i facktidskrifter, läroböcker eller vetenskapliga rapporter?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1607,11 +1559,9 @@ value = "Hur ofta brukar du på arbetet... — läsa artiklar i facktidskrifter,
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q01c"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... läsa artiklar i tidningar, tidskrifter eller nyhetsbrev?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1621,11 +1571,9 @@ value = "Hur ofta brukar du på arbetet... — läsa artiklar i tidningar, tidsk
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q01b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... läsa brev, PM eller e-post?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1635,11 +1583,9 @@ value = "Hur ofta brukar du på arbetet... — läsa brev, PM eller e-post"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q01a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... läsa bruksanvisningar eller instruktioner?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1649,11 +1595,9 @@ value = "Hur ofta brukar du på arbetet... — läsa bruksanvisningar eller inst
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q01e"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... läsa böcker?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1663,11 +1607,9 @@ value = "Hur ofta brukar du på arbetet... — läsa böcker"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q01h"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... läsa diagram, kartor eller tabeller?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1677,11 +1619,9 @@ value = "Hur ofta brukar du på arbetet... — läsa diagram, kartor eller tabel
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q01g"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... läsa fakturor, räkningar, kontoutdrag eller andra ekonomiska redovisningar?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1691,11 +1631,9 @@ value = "Hur ofta brukar du på arbetet... — läsa fakturor, räkningar, konto
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q01f"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... läsa manualer eller referensmaterial?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1705,11 +1643,9 @@ value = "Hur ofta brukar du på arbetet... — läsa manualer eller referensmate
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q03b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... planera andras arbetsuppgifter?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1719,11 +1655,9 @@ value = "Hur ofta brukar du på arbetet... — planera andras arbetsuppgifter"
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q03c"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... planera din tid?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1733,11 +1667,9 @@ value = "Hur ofta brukar du på arbetet... — planera din tid"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q03b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... räkna fram priser, kostnader eller budgetar?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1747,11 +1679,9 @@ value = "Hur ofta brukar du på arbetet... — räkna fram priser, kostnader ell
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q02b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... skriva artiklar för tidningar, tidskrifter eller nyhetsbrev?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1761,11 +1691,9 @@ value = "Hur ofta brukar du på arbetet... — skriva artiklar för tidningar, t
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q02c"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... skriva rapporter?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1775,11 +1703,9 @@ value = "Hur ofta brukar du på arbetet... — skriva rapporter"
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q02d"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... sälja en vara eller tjänst?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1789,11 +1715,9 @@ value = "Hur ofta brukar du på arbetet... — sälja en vara eller tjänst"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q05d"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "... utföra transaktioner på Internet till exempel köpa eller sälja varor och tjänster eller ordna\n bankaffärer?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1803,11 +1727,9 @@ value = "Hur ofta brukar du på arbetet... — utföra transaktioner på Interne
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q03h"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "...använda mer avancerad matematik eller statistik t.ex. funktioner, avancerad algebra,\ntrigonometri eller regressionsanalys?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1817,11 +1739,9 @@ value = "Hur ofta brukar du på arbetet... — använda mer avancerad matematik 
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q04"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Använder du dator i ditt nuvarande arbete?\nAnvände du dator i ditt senaste arbete?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1831,11 +1751,9 @@ value = "Hur ofta brukar du på arbetet... — använder dator i arbetet"
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q05a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Följande frågor handlar om problemlösning som du utför på ditt nuvarande arbete. Tänk på\n ”problemlösning” som något som händer när du kommer i kontakt med en ny eller svår situation\n som kräver att du funderar ett tag över vad du ska göra härnäst. Hur ofta ställs du inför relativt\n enkla problem som det inte tar mer än 5 minuter att hitta en bra lösning för? /Följande frågor handlar om problemlösning som du utförde på ditt senaste arbete. Tänk på ”problemlösning” som något som händer när du kommer i kontakt med en ny eller svår situation som kräver att du funderar ett tag över vad du ska göra härnäst. Hur ofta ställdes du inför relativt enkla problem som det inte tog mer än 5 minuter att hitta en bra lösning för?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1845,11 +1763,9 @@ value = "Hur ofta brukar du på arbetet... — ställas inför relativt enkla pr
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q08"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Har brist på datorkunskap påverkat dina chanser för att bli anställd, befordrad eller få\nlöneförhöjning?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1859,11 +1775,9 @@ value = "Hur ofta brukar du på arbetet... — brist på datorkunskap påverkat 
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q06b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Hur ofta ingår det vanligtvis i ditt nuvarande arbete att ... /Hur ofta ingick det vanligtvis i ditt senaste arbete att....\n... arbeta fysiskt under en längre period?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1873,11 +1787,9 @@ value = "Hur ofta brukar du på arbetet... — arbeta fysiskt under en längre p
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q02a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Hur ofta ingår det vanligtvis i ditt nuvarande arbete att .../ Hur ofta ingick det vanligtvis i ditt senaste arbete att ...\n... utbyta information om arbetet med arbetskamrater?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1887,11 +1799,9 @@ value = "Hur ofta brukar du på arbetet... — utbyta information om arbetet med
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q04a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Hur ofta ingår det vanligtvis i ditt nuvarande arbete att .../ Hur ofta ingick det vanligtvis i ditt senaste arbete att ...\n... övertala eller påverka andra?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1901,11 +1811,9 @@ value = "Hur ofta brukar du på arbetet... — övertala eller påverka andra"
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q03a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Hur ofta ingår det vanligtvis i ditt nuvarande arbete att .../Hur ofta ingick det vanligtvis i ditt senaste arbete att... planera dina egna arbetsuppgifter?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1915,11 +1823,9 @@ value = "Hur ofta brukar du på arbetet... — planera dina egna arbetsuppgifter
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q05b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Hur ofta ställs du inför svårare problem som det tar minst 30 minuter att hitta en bra lösning\n för? De 30 minuterna avser endast tiden det tar att TÄNKA ut lösningen och inte tiden som\n behövs för att genomföra uppgiften./Hur ofta ställdes du inför svårare problem som det tog minst 30 minuter att hitta en bra lösning\n för? De 30 minuterna avser endast tiden det tog att TÄNKA ut lösningen och inte tiden som\nbehövdes för att genomföra uppgiften." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1929,11 +1835,9 @@ value = "Hur ofta brukar du på arbetet... — ställas inför svårare problem 
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q01b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Hur stor del av din tid på ditt nuvarande arbete ägnar du vanligen åt att ... / Hur stor del av din tid på ditt senaste arbete ägnade du vanligen åt att ...samarbeta eller arbeta i grupp med arbetskamrater?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1943,11 +1847,9 @@ value = "Hur ofta brukar du på arbetet... — andel av tiden: samarbeta eller a
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q07a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Känner du att du har de kunskaper som krävs för att kunna klara av mer utmanande uppgifter\n än dem du utför i ditt nuvarande arbete?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1957,11 +1859,9 @@ value = "Hur ofta brukar du på arbetet... — har kunskaper för mer utmanande 
 variable = "351.32889"
 variant = "351.1205"
 column = "F_Q07b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Känner du att du skulle behöva mer kunskaper eller utbildning för att klara av dina nuvarande\n arbetsuppgifter?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1971,11 +1871,9 @@ value = "Hur ofta brukar du på arbetet... — behöver mer kunskaper eller utbi
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q02a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "skriva brev, PM eller e-post?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1985,11 +1883,9 @@ value = "Hur ofta brukar du på arbetet... — skriva brev, PM eller e-post"
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q07"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Tycker du att du har de datorkunskaper som behövs för att utföra ditt nuvarande arbete bra?Tycker du att du hade de datorkunskaper som behövdes för att utföra ditt senaste arbete bra?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -1999,11 +1895,9 @@ value = "Hur ofta brukar du på arbetet... — har datorkunskaper som behövs i 
 variable = "351.32889"
 variant = "351.1205"
 column = "G_Q06"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Frågor om dina arbetsuppgifter på ditt nuvarande arbete, eller frågor om dina arbetsuppgifter på ditt senaste arbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Hur ofta brukar du på arbetet..." }, { name = "operational_definition", status = "value", value = "Vilken datorkunskap är nödvändig för att kunna utföra ditt nuvarande arbete? Vilken datorkunskap var nödvändig för att kunna utföra ditt senaste arbete?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2013,11 +1907,9 @@ value = "Hur ofta brukar du på arbetet... — datorkunskap som är nödvändig 
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q05b2"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Det gäller fortfarande det företag du lämnade inom de 12 senaste månaderna:  när du började arbeta med ditt företag vilket år var det? /Det gäller fortfarande det företag som du lämnade innan du senast slutade arbeta: när du började arbeta med ditt företag eller vilket år var det?/ Det gäller fortfarande det företag som du lämnade: när du  började arbeta med ditt företag eller vilket år var det?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2027,11 +1919,9 @@ value = "Senaste arbetsplats — år vid början i eget företag"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q05b1"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Det gäller fortfarande det företag du lämnade inom de 12 senaste månaderna: Hur gammal var\n du när du började arbeta med ditt företag? /Det gäller fortfarande det företag som du lämnade innan du senast slutade arbeta: Hur gammal var du när du började arbeta med ditt företag?/ Det gäller fortfarande det företag som du lämnade: Hur gammal var du när du  började arbeta med ditt företag?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2041,11 +1931,9 @@ value = "Senaste arbetsplats — ålder vid början i eget företag"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q05a1"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Frågan gäller det arbete du har lämnat inom de 12 senaste månaderna: Hur gammal\n var du när du började arbeta för din senaste arbetsgivare? /Frågan gäller fortfarande det arbete du lämnade innan du senast slutade arbeta: Hur gammal var du när du började arbeta för din senaste arbetsgivare?/ Frågan gäller fortfarande det arbete du lämnade:Hur gammal var du när du  började arbeta för din senaste arbetsgivaret?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2055,11 +1943,9 @@ value = "Senaste arbetsplats — ålder vid början hos senaste arbetsgivare"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q05a2"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Frågan gäller fortfarande det arbete du har lämnat inom de 12 senaste månaderna: Vilket år var det?/ Frågan gäller fortfarande det arbete du lämnade innan du senast slutade arbeta:Vilket år var det? /Frågan gäller fortfarande det arbete du lämnade under: Vilket år var det?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2069,11 +1955,9 @@ value = "Senaste arbetsplats — år vid början hos senaste arbetsgivare"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q07a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Hade du några anställda i ditt företag? Räkna också med familjemedlemmar som arbetat med\neller utan lön i företaget." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2083,11 +1967,9 @@ value = "Senaste arbetsplats — hade anställda i eget företag"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q07b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Hur många anställda hade du på din arbetsplats? Var det ..." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2097,11 +1979,9 @@ value = "Senaste arbetsplats — antal anställda på arbetsplatsen"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q06"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Hur många personer arbetade för din arbetsgivare på din arbetsplats? Var det ..." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2111,11 +1991,9 @@ value = "Senaste arbetsplats — antal personer som arbetade för arbetsgivaren 
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q09"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Hur många timmar arbetade du vanligtvis per vecka på detta arbete? Räkna med normal avlönad  eller oavlönad övertid, men räkna inte med lunchrast eller andra raster." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2125,11 +2003,9 @@ value = "Senaste arbetsplats — vanlig arbetstid, timmar per vecka"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q03"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Inom vilken arbetsmarknadssektor arbetade du? Var det ..." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2139,11 +2015,9 @@ value = "Senaste arbetsplats — arbetsmarknadssektor"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q04"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Var du anställd eller var du egen företagare?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2153,11 +2027,9 @@ value = "Senaste arbetsplats — anställd eller egen företagare"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q08"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Vilken typ av anställning hade du? Var det ..." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2167,11 +2039,9 @@ value = "Senaste arbetsplats — typ av anställning"
 variable = "351.32894"
 variant = "351.1205"
 column = "E_Q10"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Senaste arbetsplats" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Senaste arbetsplats" }, { name = "operational_definition", status = "value", value = "Vilket var det huvudsakliga skälet till att du slutade på ditt senaste arbete?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2181,11 +2051,9 @@ value = "Senaste arbetsplats — huvudsakligt skäl till att arbetet upphörde"
 variable = "351.32907"
 variant = "351.1205"
 column = "D_S16a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Ange hur många timmar det i genomsnitt tar att framställa en enhet?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2195,11 +2063,9 @@ value = "Nuvarande arbetsplats - lön — genomsnittligt antal timmar för att f
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q17a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Får du några andra ersättningar, utöver din ordinarie lön, som inte betalas ut varje månad?\nTa t.ex. med en extra månadslön, vinstandelar, annan årlig bonus, eller semesterlön." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2209,11 +2075,9 @@ value = "Nuvarande arbetsplats - lön — får andra ersättningar utöver ordin
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q16d2"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur mycket lön får du ungefär före skatt per dag?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2223,11 +2087,9 @@ value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per dag"
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q16d5"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur mycket lön får du ungefär före skatt per månad?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2237,11 +2099,9 @@ value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per måna
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q16d1"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur mycket lön får du ungefär före skatt per timme?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2251,11 +2111,9 @@ value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per timme
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q16d4"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur mycket lön får du ungefär före skatt per två veckor?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2265,11 +2123,9 @@ value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per två 
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q16d3"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur mycket lön får du ungefär före skatt per vecka?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2279,11 +2135,9 @@ value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per vecka
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q16d6"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur mycket lön får du ungefär före skatt per år?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2293,11 +2147,9 @@ value = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per år"
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q16a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur vill du beskriva hur du vanligtvis får din lön före skatt? Är det ..." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2307,11 +2159,9 @@ value = "Nuvarande arbetsplats - lön — sätt att få lön"
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q17b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur mycket fick du sammanlagt i andra ersättningar före skatt, utöver din ordinarie lön, under  föregående år?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2321,11 +2171,9 @@ value = "Nuvarande arbetsplats - lön — andra ersättningar före skatt under 
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q16b"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Hur mycket lön får du normalt före skatt per timme? Uppskatta så gott du kan. Förutom grundlön  ta med regelbundet utbetalda tillägg (mer-/ övertidsersättning, restidsersättning, tillägg för obekväm arbetstid och skift, provision m.m.). Ersättningar som årlig bonus skall inte räknas med." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"
@@ -2335,11 +2183,9 @@ value = "Nuvarande arbetsplats - lön — lön före skatt per timme (inkl. rege
 variable = "351.32907"
 variant = "351.1205"
 column = "D_Q18a"
-edition = "6196"
+editions = ["6196"]
 expected_fields = [{ name = "definition", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Nuvarande arbetsplats - lön" }, { name = "operational_definition", status = "value", value = "Under förra året; hur mycket tog du ut i lön före skatt per år från ditt nuvarande företag?" }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
+expected_period_text = { 6196 = "2012" }
 evidence = "Complete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
 noted = "2026-10-01"
 field = "name"

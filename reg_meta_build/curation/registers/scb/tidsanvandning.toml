@@ -1613,11 +1613,9 @@ expected_fields_sha256 = "9eb1baa148747bb58c430e6aeac5b43d3eb40a0af3f9c07654f0bb
 variable = "367.44"
 variant = "367.1321"
 column = "pers2_kon"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Personens kön." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kön" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1627,11 +1625,9 @@ value = "Kön — pers2_kon"
 variable = "367.44"
 variant = "367.1321"
 column = "pers3_kon"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Personens kön." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kön" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1641,11 +1637,9 @@ value = "Kön — pers3_kon"
 variable = "367.44"
 variant = "367.1321"
 column = "pers4_kon"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Personens kön." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kön" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1655,11 +1649,9 @@ value = "Kön — pers4_kon"
 variable = "367.44"
 variant = "367.1321"
 column = "pers5_kon"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Personens kön." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kön" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1669,11 +1661,9 @@ value = "Kön — pers5_kon"
 variable = "367.44"
 variant = "367.1321"
 column = "pers6_kon"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Personens kön." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kön" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1683,11 +1673,9 @@ value = "Kön — pers6_kon"
 variable = "367.44"
 variant = "367.1321"
 column = "pers7_kon"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Personens kön." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Kön" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1697,11 +1685,9 @@ value = "Kön — pers7_kon"
 variable = "367.38726"
 variant = "367.1321"
 column = "flex4"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak varierad arbetstid" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak varierad arbetstid" }, { name = "operational_definition", status = "value", value = "Frågan var \"Beror variationen i veckoarbetstid främst på att kraven på dina arbetsinsatser varierar eller beror det främst på att du själv kanbestämma och föredrar att jobba mer under vissa tider och mindre under andra?\"" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1711,11 +1697,9 @@ value = "Orsak varierad arbetstid — varierande krav på arbetsinsats eller ege
 variable = "367.38726"
 variant = "367.1321"
 column = "flex3"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Orsak varierad arbetstid" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Orsak varierad arbetstid" }, { name = "operational_definition", status = "value", value = "Frågan var:\"Beror det på att din arbetstid är schemalagd på ett sådant sätt att arbetstiden varierar från vecka till vecka eller att du har koncentrerad deltid eller liknande?\"" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1725,11 +1709,9 @@ value = "Orsak varierad arbetstid — schemalagd varierande arbetstid eller konc
 variable = "367.38719"
 variant = "367.1321"
 column = "fr11_1"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande använde dator (PC eller Mac) i hemmet under dagboksdagen? Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande använde dator i hemmet under dagboksdagen" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1739,11 +1721,9 @@ value = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_1"
 variable = "367.38719"
 variant = "367.1321"
 column = "fr11_2"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande använde dator (PC eller Mac) i hemmet under dagboksdagen? Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande använde dator i hemmet under dagboksdagen" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1753,11 +1733,9 @@ value = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_2"
 variable = "367.38719"
 variant = "367.1321"
 column = "fr11_3"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande använde dator (PC eller Mac) i hemmet under dagboksdagen? Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande använde dator i hemmet under dagboksdagen" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1767,11 +1745,9 @@ value = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_3"
 variable = "367.38719"
 variant = "367.1321"
 column = "fr11_4"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande använde dator (PC eller Mac) i hemmet under dagboksdagen? Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande använde dator i hemmet under dagboksdagen" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1781,11 +1757,9 @@ value = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_4"
 variable = "367.38719"
 variant = "367.1321"
 column = "fr11_5"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande använde dator (PC eller Mac) i hemmet under dagboksdagen? Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande använde dator i hemmet under dagboksdagen" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1795,11 +1769,9 @@ value = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_5"
 variable = "367.38719"
 variant = "367.1321"
 column = "fr11_6"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande använde dator (PC eller Mac) i hemmet under dagboksdagen? Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande använde dator i hemmet under dagboksdagen" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1809,11 +1781,9 @@ value = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_6"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_1"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1823,11 +1793,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_1"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_2"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1837,11 +1805,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_2"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_3"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1851,11 +1817,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_3"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_4"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1865,11 +1829,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_4"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_5"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1879,11 +1841,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_5"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_6"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1893,11 +1853,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_6"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_7"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1907,11 +1865,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_7"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_8"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1921,11 +1877,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_8"
 variable = "367.38720"
 variant = "367.1321"
 column = "fr12_9"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om den svarande var uppkopplad mot internet. Flera alternativ var möjliga." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Om den svarande var uppkopplad mot internet" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1935,11 +1889,9 @@ value = "Om den svarande var uppkopplad mot internet — fr12_9"
 variable = "367.3195"
 variant = "367.1321"
 column = "HREG"
-edition = "14334"
+editions = ["14334"]
 expected_fields = [{ name = "definition", status = "value", value = "Indelning i icke geografiskt sammanhängande områden med homogent befolkningsunderlag." }, { name = "description", status = "value", value = "H-regioner (H=Homogena med avseende på befolkningsunderlaget) är en indelning i grupper av kommuner efter lokalt och regionalt befolkningsunderlag, längs skalan storstad till glesbygd." }, { name = "name", status = "value", value = "H-region" }, { name = "operational_definition", status = "value", value = "Har en annan värdemängd jämfört med HREG2" }]
-expected_period_text = "1990/91"
-expected_scope = { kind = "intervals", intervals = [{ start = "1990", end = "1990" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1990-01-01", end = "1990-12-31" }] }
+expected_period_text = { 14334 = "1990/91" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1949,11 +1901,9 @@ value = "H-region — HREG"
 variable = "367.3195"
 variant = "367.1321"
 column = "hreg"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Indelning i icke geografiskt sammanhängande områden med homogent befolkningsunderlag." }, { name = "description", status = "value", value = "H-regioner (H=Homogena med avseende på befolkningsunderlaget) är en indelning i grupper av kommuner efter lokalt och regionalt befolkningsunderlag, längs skalan storstad till glesbygd." }, { name = "name", status = "value", value = "H-region" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1963,11 +1913,9 @@ value = "H-region — HREG"
 variable = "367.3195"
 variant = "367.1321"
 column = "HREG"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Indelning i icke geografiskt sammanhängande områden med homogent befolkningsunderlag." }, { name = "description", status = "value", value = "H-regioner (H=Homogena med avseende på befolkningsunderlaget) är en indelning i grupper av kommuner efter lokalt och regionalt befolkningsunderlag, längs skalan storstad till glesbygd." }, { name = "name", status = "value", value = "H-region" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1977,11 +1925,9 @@ value = "H-region — HREG"
 variable = "367.18102"
 variant = "367.1321"
 column = "carbh09"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Summan av lön, företagarinkomst, sjukpenning, föräldrapenning och ersättning i samband med militärtjänstgöring, familj." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Arbetsinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -1991,11 +1937,9 @@ value = "Arbetsinkomst, familj — carbh09"
 variable = "367.18102"
 variant = "367.1321"
 column = "carbh10"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Summan av lön, företagarinkomst, sjukpenning, föräldrapenning och ersättning i samband med militärtjänstgöring, familj." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Arbetsinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2005,11 +1949,9 @@ value = "Arbetsinkomst, familj — carbh10"
 variable = "367.18102"
 variant = "367.1321"
 column = "carbh11"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Summan av lön, företagarinkomst, sjukpenning, föräldrapenning och ersättning i samband med militärtjänstgöring, familj." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Arbetsinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2019,11 +1961,9 @@ value = "Arbetsinkomst, familj — carbh11"
 variable = "367.1198"
 variant = "367.1321"
 column = "tlont09"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Löneinkomst" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löneinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2033,11 +1973,9 @@ value = "Löneinkomst — tlont09"
 variable = "367.1198"
 variant = "367.1321"
 column = "tlont10"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Löneinkomst" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löneinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2047,11 +1985,9 @@ value = "Löneinkomst — tlont10"
 variable = "367.1198"
 variant = "367.1321"
 column = "tlont11"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Löneinkomst" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löneinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2061,11 +1997,9 @@ value = "Löneinkomst — tlont11"
 variable = "367.1618"
 variant = "367.1321"
 column = "tlonth09"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Variabeln är beräknad som bruttoinkomsten av tjänst, punkt 1 i deklarationsblanketten, med avdrag för sociala ersättningar och med tillägg för den ersättning för tjänsteresor som överstiger yrkat avdrag härför. Därutöver tillkommer inkomst från fåmansföretag som redovisas som inkomst av tjänst samt sjöinkomst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löneinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2075,11 +2009,9 @@ value = "Löneinkomst, familj — tlonth09"
 variable = "367.1618"
 variant = "367.1321"
 column = "tlonth10"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Variabeln är beräknad som bruttoinkomsten av tjänst, punkt 1 i deklarationsblanketten, med avdrag för sociala ersättningar och med tillägg för den ersättning för tjänsteresor som överstiger yrkat avdrag härför. Därutöver tillkommer inkomst från fåmansföretag som redovisas som inkomst av tjänst samt sjöinkomst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löneinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2089,11 +2021,9 @@ value = "Löneinkomst, familj — tlonth10"
 variable = "367.1618"
 variant = "367.1321"
 column = "tlonth11"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Variabeln är beräknad som bruttoinkomsten av tjänst, punkt 1 i deklarationsblanketten, med avdrag för sociala ersättningar och med tillägg för den ersättning för tjänsteresor som överstiger yrkat avdrag härför. Därutöver tillkommer inkomst från fåmansföretag som redovisas som inkomst av tjänst samt sjöinkomst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Löneinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2103,11 +2033,9 @@ value = "Löneinkomst, familj — tlonth11"
 variable = "367.125"
 variant = "367.1321"
 column = "cfviki09"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst, näringsverksamhet och kapital i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvs- och kapitalinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2117,11 +2045,9 @@ value = "Sammanräknad förvärvs- och kapitalinkomst — cfviki09"
 variable = "367.125"
 variant = "367.1321"
 column = "cfvikih09"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst, näringsverksamhet och kapital i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvs- och kapitalinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2131,11 +2057,9 @@ value = "Sammanräknad förvärvs- och kapitalinkomst — cfvikih09"
 variable = "367.125"
 variant = "367.1321"
 column = "cfviki10"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst, näringsverksamhet och kapital i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvs- och kapitalinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2145,11 +2069,9 @@ value = "Sammanräknad förvärvs- och kapitalinkomst — cfviki10"
 variable = "367.125"
 variant = "367.1321"
 column = "cfvikih10"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst, näringsverksamhet och kapital i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvs- och kapitalinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2159,11 +2081,9 @@ value = "Sammanräknad förvärvs- och kapitalinkomst — cfvikih10"
 variable = "367.125"
 variant = "367.1321"
 column = "cfviki11"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst, näringsverksamhet och kapital i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvs- och kapitalinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2173,11 +2093,9 @@ value = "Sammanräknad förvärvs- och kapitalinkomst — cfviki11"
 variable = "367.125"
 variant = "367.1321"
 column = "cfvikih11"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst, näringsverksamhet och kapital i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvs- och kapitalinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2187,11 +2105,9 @@ value = "Sammanräknad förvärvs- och kapitalinkomst — cfvikih11"
 variable = "367.99"
 variant = "367.1321"
 column = "csfvi09"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvsinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2201,11 +2117,9 @@ value = "Sammanräknad förvärvsinkomst — csfvi09"
 variable = "367.99"
 variant = "367.1321"
 column = "csfvi10"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvsinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2215,11 +2129,9 @@ value = "Sammanräknad förvärvsinkomst — csfvi10"
 variable = "367.99"
 variant = "367.1321"
 column = "csfvi11"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvsinkomst" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2229,11 +2141,9 @@ value = "Sammanräknad förvärvsinkomst — csfvi11"
 variable = "367.1290"
 variant = "367.1321"
 column = "csfvih09"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Summan av inkomst av tjänst och inkomst av näringsverksamhet.\nAnger beloppet summerat över familj enligt den koppling som finns i Registret över totalbefolkningen (RTB)." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvsinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2243,11 +2153,9 @@ value = "Sammanräknad förvärvsinkomst, familj — csfvih09"
 variable = "367.1290"
 variant = "367.1321"
 column = "csfvih10"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Summan av inkomst av tjänst och inkomst av näringsverksamhet.\nAnger beloppet summerat över familj enligt den koppling som finns i Registret över totalbefolkningen (RTB)." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvsinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2257,11 +2165,9 @@ value = "Sammanräknad förvärvsinkomst, familj — csfvih10"
 variable = "367.1290"
 variant = "367.1321"
 column = "csfvih11"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Summan av inkomst av tjänst och inkomst av näringsverksamhet.\nAnger beloppet summerat över familj enligt den koppling som finns i Registret över totalbefolkningen (RTB)." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Sammanräknad förvärvsinkomst, familj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2271,11 +2177,9 @@ value = "Sammanräknad förvärvsinkomst, familj — csfvih11"
 variable = "367.36451"
 variant = "367.1321"
 column = "_26"
-edition = "14334"
+editions = ["12440", "14334"]
 expected_fields = [{ name = "definition", status = "value", value = "Annat hemarbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Annat hemarbete" }, { name = "operational_definition", status = "value", value = "Är en underkategori till _2 Hemarbete. Här hamnar hemarbete som inte kan klassificeras till till någon annan hemarbeteaktivitet." }]
-expected_period_text = "1990/91"
-expected_scope = { kind = "intervals", intervals = [{ start = "1990", end = "1990" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1990-01-01", end = "1990-12-31" }] }
+expected_period_text = { 12440 = "2000/01", 14334 = "1990/91" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2285,11 +2189,9 @@ value = "Annat hemarbete — _26"
 variable = "367.36451"
 variant = "367.1321"
 column = "_2611"
-edition = "14334"
+editions = ["12440", "14334"]
 expected_fields = [{ name = "definition", status = "value", value = "Annat hemarbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Annat hemarbete" }, { name = "operational_definition", status = "value", value = "Är en underkategori till Annat hemarbete. Är dock identisk med kategorin ovanför. Dvs. Annat hemarbete. Anledningen att det finns två av samma variabel är att alla aktiviteter ska finnas på den allra mest detaljerade nivån. I vissa fall är de innehåller aktiviteterna flera underkategorier och ibland endast en underkategori. Här hamnar allt som hemarbete som inte kan klassificeras." }]
-expected_period_text = "1990/91"
-expected_scope = { kind = "intervals", intervals = [{ start = "1990", end = "1990" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1990-01-01", end = "1990-12-31" }] }
+expected_period_text = { 12440 = "2000/01", 14334 = "1990/91" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2299,11 +2201,9 @@ value = "Annat hemarbete — _2611"
 variable = "367.36451"
 variant = "367.1321"
 column = "_26"
-edition = "12440"
-expected_fields = [{ name = "definition", status = "value", value = "Annat hemarbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Annat hemarbete" }, { name = "operational_definition", status = "value", value = "Är en underkategori till _2 Hemarbete. Här hamnar hemarbete som inte kan klassificeras till till någon annan hemarbeteaktivitet." }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+editions = ["11265"]
+expected_fields = [{ name = "definition", status = "value", value = "Annat hemarbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Annat hemarbete" }, { name = "operational_definition", status = "absent" }]
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2313,39 +2213,9 @@ value = "Annat hemarbete — _26"
 variable = "367.36451"
 variant = "367.1321"
 column = "_2611"
-edition = "12440"
-expected_fields = [{ name = "definition", status = "value", value = "Annat hemarbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Annat hemarbete" }, { name = "operational_definition", status = "value", value = "Är en underkategori till Annat hemarbete. Är dock identisk med kategorin ovanför. Dvs. Annat hemarbete. Anledningen att det finns två av samma variabel är att alla aktiviteter ska finnas på den allra mest detaljerade nivån. I vissa fall är de innehåller aktiviteterna flera underkategorier och ibland endast en underkategori. Här hamnar allt som hemarbete som inte kan klassificeras." }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
-evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Annat hemarbete — _2611"
-
-[[errata.field]]
-variable = "367.36451"
-variant = "367.1321"
-column = "_26"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Annat hemarbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Annat hemarbete" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
-evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Annat hemarbete — _26"
-
-[[errata.field]]
-variable = "367.36451"
-variant = "367.1321"
-column = "_2611"
-edition = "11265"
-expected_fields = [{ name = "definition", status = "value", value = "Annat hemarbete" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Annat hemarbete" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2355,11 +2225,9 @@ value = "Annat hemarbete — _2611"
 variable = "367.36453"
 variant = "367.1321"
 column = "_30"
-edition = "14334"
+editions = ["14334"]
 expected_fields = [{ name = "definition", status = "value", value = "Resor i sb med personliga behov" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Resor i sb med personliga behov" }, { name = "operational_definition", status = "value", value = "Är identisk med _3010. Att värdet finns med två gånger beror på uppbyggnaden av kodlistan med olika nivåer. Ibland kan en nivå ha samma värde som en undernivå." }]
-expected_period_text = "1990/91"
-expected_scope = { kind = "intervals", intervals = [{ start = "1990", end = "1990" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1990-01-01", end = "1990-12-31" }] }
+expected_period_text = { 14334 = "1990/91" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2369,25 +2237,9 @@ value = "Resor i sb med personliga behov — _30"
 variable = "367.36453"
 variant = "367.1321"
 column = "_30"
-edition = "11265"
+editions = ["11265", "12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Resor i sb med personliga behov" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Resor i sb med personliga behov" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
-evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Resor i sb med personliga behov — _30"
-
-[[errata.field]]
-variable = "367.36453"
-variant = "367.1321"
-column = "_30"
-edition = "12440"
-expected_fields = [{ name = "definition", status = "value", value = "Resor i sb med personliga behov" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Resor i sb med personliga behov" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 11265 = "2010/11", 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2397,11 +2249,9 @@ value = "Resor i sb med personliga behov — _30"
 variable = "367.749"
 variant = "367.1321"
 column = "aldgrp2"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Gruppering av åldrar, åldern beräknad vid angiven tidpunkt." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Åldersgrupp" }, { name = "operational_definition", status = "value", value = "Utgår från ALD (År för deltagande (2010 eller 2011) - Personnr vilket efter justering är detsamma som BALD d.v.s. ålder vid årets slut)." }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2411,11 +2261,9 @@ value = "Åldersgrupp — ALDGRP2"
 variable = "367.749"
 variant = "367.1321"
 column = "ALDGRP2"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Gruppering av åldrar, åldern beräknad vid angiven tidpunkt." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Åldersgrupp" }, { name = "operational_definition", status = "value", value = "Åldersindelning av UP=1 och 2. Utgår från ALD (År för deltagande (2010 eller 2011) - Personnr vilket efter justering är detsamma som BALD d.v.s. ålder vid årets slut)." }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2425,11 +2273,9 @@ value = "Åldersgrupp — ALDGRP2"
 variable = "367.241"
 variant = "367.1321"
 column = "bald"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "value", value = "ålder vid årets slut, (slutet av 2000 TAomgång 1-2, slutet av 2001 TAomg 3-8)" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2439,11 +2285,9 @@ value = "Ålder 31/12 — BALD"
 variable = "367.241"
 variant = "367.1666"
 column = "AlderSlut"
-edition = "18374"
+editions = ["18374"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "value", value = "Variabeln är härledd från personnumret i det register variabeln hämtas från." }]
-expected_period_text = "2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
+expected_period_text = { 18374 = "2021" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2453,11 +2297,9 @@ value = "Ålder 31/12 — Variabeln är härledd från personnumret i det regist
 variable = "367.241"
 variant = "367.1321"
 column = "BALD"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2467,11 +2309,9 @@ value = "Ålder 31/12 — BALD"
 variable = "367.241"
 variant = "367.1321"
 column = "pers2_ald"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2481,11 +2321,9 @@ value = "Ålder 31/12 — pers2_ald"
 variable = "367.241"
 variant = "367.1321"
 column = "pers3_ald"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2495,11 +2333,9 @@ value = "Ålder 31/12 — pers3_ald"
 variable = "367.241"
 variant = "367.1321"
 column = "pers4_ald"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2509,11 +2345,9 @@ value = "Ålder 31/12 — pers4_ald"
 variable = "367.241"
 variant = "367.1321"
 column = "pers5_ald"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2523,11 +2357,9 @@ value = "Ålder 31/12 — pers5_ald"
 variable = "367.241"
 variant = "367.1321"
 column = "pers6_ald"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2537,11 +2369,9 @@ value = "Ålder 31/12 — pers6_ald"
 variable = "367.241"
 variant = "367.1321"
 column = "pers7_ald"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Ålder i antal år vid årets slut." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Ålder 31/12" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2551,11 +2381,9 @@ value = "Ålder 31/12 — pers7_ald"
 variable = "367.36359"
 variant = "367.1321"
 column = "samvaro"
-edition = "12440"
+editions = ["12440"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2000/01"
-expected_scope = { kind = "intervals", intervals = [{ start = "2000", end = "2000" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2000-01-01", end = "2000-12-31" }] }
+expected_period_text = { 12440 = "2000/01" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2565,11 +2393,9 @@ value = "Närvarande person — SAMVARO"
 variable = "367.36359"
 variant = "367.1321"
 column = "SAMVARO"
-edition = "14334"
+editions = ["14334"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "1990/91"
-expected_scope = { kind = "intervals", intervals = [{ start = "1990", end = "1990" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "1990-01-01", end = "1990-12-31" }] }
+expected_period_text = { 14334 = "1990/91" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2579,11 +2405,9 @@ value = "Närvarande person — SAMVARO"
 variable = "367.36359"
 variant = "367.1321"
 column = "pers2"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2593,11 +2417,9 @@ value = "Närvarande person — pers2"
 variable = "367.36359"
 variant = "367.1321"
 column = "pers3"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2607,11 +2429,9 @@ value = "Närvarande person — pers3"
 variable = "367.36359"
 variant = "367.1321"
 column = "pers4"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2621,11 +2441,9 @@ value = "Närvarande person — pers4"
 variable = "367.36359"
 variant = "367.1321"
 column = "pers5"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2635,11 +2453,9 @@ value = "Närvarande person — pers5"
 variable = "367.36359"
 variant = "367.1321"
 column = "pers6"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2649,11 +2465,9 @@ value = "Närvarande person — pers6"
 variable = "367.36359"
 variant = "367.1321"
 column = "pers7"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2663,11 +2477,9 @@ value = "Närvarande person — pers7"
 variable = "367.36359"
 variant = "367.1321"
 column = "pers8"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Om hushållsmedlemen var närvarande vid aktiviteten" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Närvarande person" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2677,11 +2489,9 @@ value = "Närvarande person — pers8"
 variable = "367.35581"
 variant = "367.1321"
 column = "pers2_reltyp"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Relation till urvalspersonen i hushållet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Relation till urvalsperson" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2691,11 +2501,9 @@ value = "Relation till urvalsperson — pers2_reltyp"
 variable = "367.35581"
 variant = "367.1321"
 column = "pers3_reltyp"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Relation till urvalspersonen i hushållet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Relation till urvalsperson" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2705,11 +2513,9 @@ value = "Relation till urvalsperson — pers3_reltyp"
 variable = "367.35581"
 variant = "367.1321"
 column = "pers4_reltyp"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Relation till urvalspersonen i hushållet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Relation till urvalsperson" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2719,11 +2525,9 @@ value = "Relation till urvalsperson — pers4_reltyp"
 variable = "367.35581"
 variant = "367.1321"
 column = "pers5_reltyp"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Relation till urvalspersonen i hushållet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Relation till urvalsperson" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2733,11 +2537,9 @@ value = "Relation till urvalsperson — pers5_reltyp"
 variable = "367.35581"
 variant = "367.1321"
 column = "pers6_reltyp"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Relation till urvalspersonen i hushållet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Relation till urvalsperson" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2747,11 +2549,9 @@ value = "Relation till urvalsperson — pers6_reltyp"
 variable = "367.35581"
 variant = "367.1321"
 column = "pers7_reltyp"
-edition = "11265"
+editions = ["11265"]
 expected_fields = [{ name = "definition", status = "value", value = "Relation till urvalspersonen i hushållet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Relation till urvalsperson" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2010/11"
-expected_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2010" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2010-01-01", end = "2010-12-31" }] }
+expected_period_text = { 11265 = "2010/11" }
 evidence = "Complete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
 noted = "2026-10-02"
 field = "name"

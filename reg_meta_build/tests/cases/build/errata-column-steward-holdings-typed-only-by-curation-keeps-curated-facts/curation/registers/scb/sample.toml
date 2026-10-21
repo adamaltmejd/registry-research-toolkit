@@ -137,11 +137,9 @@ noted = "2026-10-15"
 variable = "1.29"
 variant = "1.2"
 column = "OTHERW"
-edition = "2020"
+editions = ["2020"]
 expected_fields = {{expected_fields key=member:127}}
-expected_period_text = {{period_text key=member:127}}
-expected_scope = {{edition_scope key=member:127}}
-expected_period = {{period_scope key=member:127}}
+expected_period_text = { 2020 = {{period_text key=member:127}} }
 evidence = "Reviewed: the 2020 row's column is delivered as ZED."
 noted = "2026-10-15"
 field = "column_name"

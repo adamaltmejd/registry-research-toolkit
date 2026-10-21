@@ -503,13 +503,19 @@ def _complete_original_expectations(records: list[RecordExpectation]) -> bool:
     )
 
 
-class _OccurrenceCorrectionEntry(_CurationModel):
+def _scope_value(value):
+    if isinstance(value, dict):
+        return TemporalScope.model_validate_json(json.dumps(_scope_shape(value)))
+    return value
+
+
+class _GuardedOccurrenceEntry(_CurationModel):
+    """An exact original occurrence and its prose guards, before any period guard."""
+
     variable: str
     variant: str
     column: str
     expected_fields: list[FieldExpectation]
-    expected_scope: TemporalScope
-    expected_period: TemporalScope
     evidence: str
     noted: str
 
@@ -521,13 +527,6 @@ class _OccurrenceCorrectionEntry(_CurationModel):
     @classmethod
     def _noted(cls, value: str) -> str:
         return ErrataClassificationReferenceEntry._noted(value)
-
-    @field_validator("expected_scope", "expected_period", mode="before")
-    @classmethod
-    def _scope(cls, value):
-        if isinstance(value, dict):
-            return TemporalScope.model_validate_json(json.dumps(_scope_shape(value)))
-        return value
 
     @field_validator("expected_fields")
     @classmethod
@@ -554,6 +553,15 @@ class _OccurrenceCorrectionEntry(_CurationModel):
         return value
 
 
+class _OccurrenceCorrectionEntry(_GuardedOccurrenceEntry):
+    expected_scope: TemporalScope
+    expected_period: TemporalScope
+
+    _scope = field_validator("expected_scope", "expected_period", mode="before")(
+        _scope_value
+    )
+
+
 class _EditionCorrectionEntry(_OccurrenceCorrectionEntry):
     """A correction that may pin the native edition and the original period text.
 
@@ -566,13 +574,33 @@ class _EditionCorrectionEntry(_OccurrenceCorrectionEntry):
     _edition = field_validator("edition")(_require_trimmed)
 
 
-class ErrataFieldEntry(_EditionCorrectionEntry):
+def edition_order(edition: str) -> tuple[int, str]:
+    """Numeric order for SCB's decimal edition ids, total for any string."""
+    return len(edition), edition
+
+
+class ErrataFieldEntry(_GuardedOccurrenceEntry):
+    """One correction, applied to each listed SCB edition as if entered once per edition.
+
+    An SCB edition's scopes are a function of its period text (`scb_edition_scopes`),
+    so an entry with `editions` pins each edition's text and no scopes. Without
+    editions (SOS, thin providers) it pins the original's scopes instead.
+    """
+
+    editions: list[str] | None = Field(default=None, min_length=1)
+    expected_period_text: dict[str, str] | None = None
+    expected_scope: TemporalScope | None = None
+    expected_period: TemporalScope | None = None
     expected_records: list[RecordExpectation] | None = Field(default=None, min_length=1)
     authority_records: list[RecordExpectation] | None = Field(
         default=None, min_length=1
     )
     expected_evidence_sha256: str | None = Field(
         default=None, pattern=r"^[0-9a-f]{64}$"
+    )
+
+    _scope = field_validator("expected_scope", "expected_period", mode="before")(
+        _scope_value
     )
 
     @field_validator("expected_records", "authority_records", mode="before")
@@ -615,6 +643,30 @@ class ErrataFieldEntry(_EditionCorrectionEntry):
 
     @model_validator(mode="after")
     def _changed_text(self) -> ErrataFieldEntry:
+        if self.editions is not None:
+            for edition in self.editions:
+                _require_trimmed(edition)
+            if self.editions != sorted(set(self.editions), key=edition_order):
+                raise ValueError("editions must be unique and in numeric order")
+            if (
+                self.expected_period_text is None
+                or list(self.expected_period_text) != self.editions
+            ):
+                raise ValueError(
+                    "expected_period_text must pin each listed edition's text, in editions order"
+                )
+            if self.expected_scope is not None or self.expected_period is not None:
+                raise ValueError(
+                    "an edition's scopes follow from its period text; drop expected_scope and expected_period"
+                )
+        elif (
+            self.expected_period_text is not None
+            or self.expected_scope is None
+            or self.expected_period is None
+        ):
+            raise ValueError(
+                "without editions, guard expected_scope and expected_period and no period text"
+            )
         if (self.authority_records is None) != (self.expected_evidence_sha256 is None):
             raise ValueError("name authority requires complete peers and evidence hash")
         if self.authority_records is not None and (
@@ -627,12 +679,16 @@ class ErrataFieldEntry(_EditionCorrectionEntry):
             SourceFields.model_fields
         )
         if self.field == "column_name":
-            if not full_fields or self.edition is None:
+            if not full_fields or self.editions is None:
                 raise ValueError(
                     "column corrections require complete source fields and an exact edition"
                 )
         elif self.field == "source_attribution":
-            if not full_fields or self.edition is None or self.expected_records is None:
+            if (
+                not full_fields
+                or self.editions is None
+                or self.expected_records is None
+            ):
                 raise ValueError(
                     "source attribution corrections require complete original records and an exact edition"
                 )
@@ -887,7 +943,7 @@ class ErrataOccurrencePeriodEntry(_EditionCorrectionEntry):
     edition_period_scope: TemporalScope
 
     _scopes = field_validator("edition_scope", "edition_period_scope", mode="before")(
-        _OccurrenceCorrectionEntry._scope
+        _scope_value
     )
 
     @model_validator(mode="after")
@@ -923,9 +979,7 @@ class ErrataOccurrenceCarryEntry(_OccurrenceCorrectionEntry):
     carry_scope: TemporalScope
     data_warning: Annotated[str, Field(min_length=1, pattern=r"\S")]
 
-    _carry_scope = field_validator("carry_scope", mode="before")(
-        _OccurrenceCorrectionEntry._scope
-    )
+    _carry_scope = field_validator("carry_scope", mode="before")(_scope_value)
 
     @model_validator(mode="after")
     def _finite_carry(self) -> ErrataOccurrenceCarryEntry:
@@ -1903,9 +1957,9 @@ def _prepared_coding_authority(value: object) -> object:
         return value
     value = json.loads(json.dumps(value))
     if value.get("source_scope") is not None:
-        value["source_scope"] = _OccurrenceCorrectionEntry._scope(
-            value["source_scope"]
-        ).model_dump(mode="json")
+        value["source_scope"] = _scope_value(value["source_scope"]).model_dump(
+            mode="json"
+        )
     return PreparedCodingAuthority.model_validate_json(json.dumps(value))
 
 

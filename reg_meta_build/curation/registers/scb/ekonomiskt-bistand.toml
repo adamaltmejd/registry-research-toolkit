@@ -456,11 +456,9 @@ expected_evidence_sha256 = "029f5afd802f4f5e21b842fce83cf7ddb650c495661dabf4acf6
 variable = "22.7521"
 variant = "22.73"
 column = "IBelApr"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i april månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i april" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -470,11 +468,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7532"
 variant = "22.73"
 column = "IBelAug"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i augusti månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i augusti" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -484,11 +480,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7536"
 variant = "22.73"
 column = "IBelDec"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av  introduktionsersättning i december månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i december" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -498,11 +492,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7519"
 variant = "22.73"
 column = "IBelFeb"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i februari månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i februari" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -512,11 +504,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7518"
 variant = "22.73"
 column = "IBelJan"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i januari månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i januari" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -526,11 +516,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7531"
 variant = "22.73"
 column = "IBelJul"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i juli månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i juli" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -540,11 +528,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7530"
 variant = "22.73"
 column = "IBelJun"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i juni månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i juni" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -554,11 +540,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7529"
 variant = "22.73"
 column = "IBelMaj"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i maj månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i maj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -568,11 +552,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7520"
 variant = "22.73"
 column = "IBelMar"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i mars månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i mars" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -582,11 +564,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7535"
 variant = "22.73"
 column = "IBelNov"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av  introduktionsersättning i november månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i november" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -596,11 +576,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7534"
 variant = "22.73"
 column = "IBelOkt"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av  introduktionsersättning i oktober månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i oktober" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -610,11 +588,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7533"
 variant = "22.73"
 column = "IBelSep"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av introduktionsersättning i september månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Introduktionsersättning i september" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -624,11 +600,9 @@ value = "Belopp för introduktionsersättning under den levererade månaden."
 variable = "22.7509"
 variant = "22.73"
 column = "SBelApr"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i april månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i april" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -638,11 +612,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7513"
 variant = "22.73"
 column = "SBelAug"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i augusti månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i augusti" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -652,11 +624,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7507"
 variant = "22.73"
 column = "SBelFeb"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i februari månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i februari" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -666,11 +636,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7506"
 variant = "22.73"
 column = "SBelJan"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i januari månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i januari" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -680,11 +648,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7512"
 variant = "22.73"
 column = "SBelJul"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i juli månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i juli" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -694,11 +660,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7511"
 variant = "22.73"
 column = "SBelJun"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i juni månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i juni" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -708,11 +672,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7510"
 variant = "22.73"
 column = "SBelMaj"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i maj månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i maj" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -722,11 +684,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7508"
 variant = "22.73"
 column = "SBelMar"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i mars månad" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i mars" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -736,11 +696,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7516"
 variant = "22.73"
 column = "SBelNov"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i november månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i november" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -750,11 +708,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7515"
 variant = "22.73"
 column = "SBelOkt"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i oktober månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i oktober" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"
@@ -764,11 +720,9 @@ value = "Belopp för socialbidrag under den levererade månaden."
 variable = "22.7514"
 variant = "22.73"
 column = "SBelSep"
-edition = "678"
+editions = ["678"]
 expected_fields = [{ name = "definition", status = "value", value = "Utbetalt belopp i form av ekonomiskt bistånd (socialbidrag) i september månad." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Socialbidrag i september" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2006"
-expected_scope = { kind = "intervals", intervals = [{ start = "2006", end = "2006" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2006-01-01", end = "2006-12-31" }] }
+expected_period_text = { 678 = "2006" }
 evidence = "The existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
 noted = "2026-10-02"
 field = "definition"

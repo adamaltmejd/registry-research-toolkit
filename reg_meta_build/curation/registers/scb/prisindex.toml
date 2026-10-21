@@ -744,11 +744,9 @@ stored_role = "label"
 variable = "296.73"
 variant = "296.1085"
 column = "Ar"
-edition = "11108"
+editions = ["11108"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "Period" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "Anger det kalenderår som statistiken avser." }, { name = "representation", status = "absent" }]
-expected_period_text = "Utdata 2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
+expected_period_text = { 11108 = "Utdata 2017" }
 evidence = "The exact exported name and definition identify calendar year, and the operational definition explicitly states the calendar year represented by the statistics. Its2017 input-delivery peer saysÅr while its output-delivery unit says genericPeriod. Normalize only this exact generic period wording to the supported calendar-year unit; preserve both complete originals, source periods and all source coding. No month/quarter/year conversion or date-precision equivalence is claimed."
 noted = "2026-10-02"
 field = "measurement_unit"

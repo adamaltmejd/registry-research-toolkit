@@ -20,11 +20,9 @@ noted = "2026-10-08"
 variable = "8.8"
 variant = "8.10"
 column = "VALUE"
-edition = "820"
+editions = ["820"]
 expected_fields = {{expected_fields key=member:801 fields=name,definition,description,operational_definition,coverage_from,coverage_to,classification_declared,representation,data_type,measurement_unit}}
-expected_period_text = {{period_text key=member:801}}
-expected_scope = {{edition_scope key=member:801}}
-expected_period = {{period_scope key=member:801}}
+expected_period_text = { 820 = {{period_text key=member:801}} }
 evidence = "Independent supplied source correction"
 noted = "2026-10-08"
 field = "measurement_unit"
