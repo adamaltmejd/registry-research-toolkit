@@ -2774,15 +2774,15 @@ only the rows of its requested period instead of the whole table. It is curated 
 table, never inferred from a column name. The `encoding` is the value's shape whatever
 its storage type (MONA stores a year as a float, a date as `int` `yyyymmdd` or as text);
 the extract runner reads the storage type from the database at run time. The column must
-be one the table lists, exactly as spelled, and a year-independent table takes none
-(`inventory_period_column_invalid`); the column need not be mapped.
-`holding_table.period_column`/`period_encoding` store it, with CHECKs that both or
-neither are set and only on a dated table. The bump is minor (12.1.0): a 12.0 reader
-ignores the column and orders the whole table, as it does today; the manifest's row
-filter and the reader gate that needs 12.1 come together later. It widens a base table,
-so a 12.0 base cannot be derived up to it: derive rebuilds only the derived tables.
-`validate_built_db` refuses any table missing a column the code's DDL declares, so the
-next steward build rebuilds the global base under 12.1.0.
+be one the table lists, exactly as spelled; a year-independent table takes none, nor
+does a one-token edition, which delivers one period (`inventory_period_column_invalid`);
+the column need not be mapped. `holding_table.period_column`/`period_encoding` store it,
+with CHECKs that both or neither are set and only on a dated table. The bump is minor
+(12.1.0): a 12.0 reader ignores the column and orders the whole table, as it does today;
+the manifest's row filter and the reader gate that needs 12.1 come together later. It
+widens a base table, so a 12.0 base cannot be derived up to it: derive rebuilds only the
+derived tables. `validate_built_db` refuses any table missing a column the code's DDL
+declares, so the next steward build rebuilds the global base under 12.1.0.
 
 A mapping may carry a steward-scoped `data_warning` (#1684):
 `data_warning = { summary = "…", detail = "…", window = … }`. The author writes both

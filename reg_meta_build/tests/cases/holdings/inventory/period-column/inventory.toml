@@ -17,3 +17,11 @@ period_column = { name = "Kod", encoding = "year" }
 [[table.column]]
 name = "Kod"
 unmapped_reason = "Code"
+
+[[table]]
+id = "Lmed2019.csv"
+edition = 2019
+period_column = { name = "EDATUM", encoding = "date" }
+[[table.column]]
+name = "EDATUM"
+unmapped_reason = "Dispensing date"

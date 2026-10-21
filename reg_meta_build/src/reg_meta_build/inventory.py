@@ -621,12 +621,20 @@ class InventoryTable(_InventoryModel):
     @model_validator(mode="after")
     def _check_period_column(self) -> InventoryTable:
         """A period column the table lacks would make the extract fail or filter
-        on nothing; on a year-independent table there is no period to filter."""
+        on nothing. A year-independent table has no period to filter, and a
+        one-token edition delivers one period, which its editions already
+        select: a filter inside it could only drop rows the order asked for."""
         if self.period_column is None:
             return self
         if self.period_scope == "year_independent":
             raise _InventoryGuardError(
                 _PERIOD_COLUMN, "a year-independent table has no period column"
+            )
+        if isinstance(self.edition, str):
+            raise _InventoryGuardError(
+                _PERIOD_COLUMN,
+                f"edition {self.edition!r} delivers one period, so the table has "
+                "no period column — declare one only on a range or list edition",
             )
         if self.period_column.name not in {column.name for column in self.columns}:
             raise _InventoryGuardError(

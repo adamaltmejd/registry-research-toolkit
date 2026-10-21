@@ -270,7 +270,8 @@ def test_a_curated_projection_and_period_column_reach_the_inventory(
         encoding="utf-8",
     )
     series = (
-        one_table_series("T2012") + f'\n[[table]]\ntable = "TKid2012"\nedition = 2012\n'
+        one_table_series("T2012", edition="{ from = 2011, to = 2012 }")
+        + '\n[[table]]\ntable = "TKid2012"\nedition = { from = 2011, to = 2012 }\n'
         f'projection = {{ of = "T2012", token = "{token}" }}\n'
         'period_column = { name = "T_kolumn", encoding = "yyyymmdd" }\n'
     )
