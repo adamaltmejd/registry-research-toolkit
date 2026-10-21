@@ -17,5 +17,5 @@ variant = "people"
 column = "Q"
 versions = ["2020"]
 expected_evidence_sha256 = {{evidence_sha256 source=scb-registerinformation register=1 key=member:5}}
-evidence = "SWECOV extract per Operator ruling #1234\n\nMONA aggregate check"
+evidence = "SWECOV extract per Operator ruling #1234\nRows: secret-row\n\nMONA aggregate check"
 noted = "2026-10-18"

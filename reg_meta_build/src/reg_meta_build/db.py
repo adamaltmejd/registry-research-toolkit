@@ -932,8 +932,9 @@ CREATE TABLE variable_state (
     -- entry only routed. A curated fact carries a constant `errata:<class>` or
     -- `curated:<kind>` head followed by the decision's source locators and
     -- storage-type facts, never curator evidence or a case pointer (#1708), so
-    -- equally corrected spans pool and never with uncorrected ones; when corrected source editions
-    -- overlap a documented claim, `errata:scoped-attributions` carries JSON
+    -- equally corrected spans pool and never with uncorrected ones; when
+    -- corrected source editions overlap a documented claim,
+    -- `errata:scoped-attributions` carries JSON
     -- records pairing each edition set with its class/evidence; correction-only
     -- overlaps use `errata:overlapping-attributions`. A source-less interval
     -- retained by resolution carries `inferred:resolution-gap`, never provider
