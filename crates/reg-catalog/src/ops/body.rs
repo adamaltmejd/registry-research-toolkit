@@ -1,9 +1,8 @@
 //! A POST's JSON body: one UTF-8 JSON object without a byte-order mark, duplicate keys
 //! at any depth (last-wins would silently validate the wrong value) or nesting past
-//! `serde_json`'s depth limit (128 levels; frozen Python's recursion limit allowed about
-//! 1,000, so a project nested between the two is refused here and validated there).
-//! Anything else is `malformed_request`. The HTTP transport applies it to a POST operation's
-//! body; MCP takes the body as an object argument, already parsed.
+//! `serde_json`'s depth limit (128 levels). Anything else is `malformed_request`. The
+//! HTTP transport applies it to a POST operation's body; MCP takes the body as an
+//! object argument, already parsed.
 
 use std::fmt;
 
@@ -12,8 +11,8 @@ use serde_json::{Map, Value};
 
 use crate::{Code, Error};
 
-/// The cap on a request body, POST operations' and `/mcp`'s: the 1 MiB write-body cap
-/// the Python backend's `limits.py` kept before 3e.4.
+/// The cap on a request body, POST operations' and `/mcp`'s, applied behind the rate
+/// limit in `reg-meta`'s `limit.rs`.
 pub const MAX_BYTES: usize = 1024 * 1024;
 
 /// `payload_too_large`: a body over [`MAX_BYTES`].

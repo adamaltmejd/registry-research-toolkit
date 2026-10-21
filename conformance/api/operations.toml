@@ -10,7 +10,6 @@
 #
 # [[operation]]
 #   name     the operation, in reg-catalog and in MCP dispatch.
-#   slice    the stage-3 slice that ported it.
 #   http     its routes, "METHOD /path". `{ref}` spans several path segments (a FQID);
 #            other placeholders are one segment. Query parameters for GET, a JSON body
 #            for POST.
@@ -35,7 +34,6 @@ contract_version = "4.0.0"
 
 [[operation]]
 name = "search"
-slice = "3a"
 http = ["GET /api/search"]
 tool = "search"
 params = { q = "string", type = "enum(register|variable|classification|classification_code|register_value)?", register = "ref?", period = "period?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
@@ -55,7 +53,6 @@ maximum 200 (today 50 on HTTP, none on the CLI)."""
 
 [[operation]]
 name = "context"
-slice = "3a"
 http = ["GET /api/context"]
 params = { scope = "scope?" }
 result = "Context"
@@ -66,7 +63,6 @@ counts serve the SPA shell."""
 
 [[operation]]
 name = "show"
-slice = "3b"
 http = ["GET /api/catalog", "GET /api/catalog/{ref}"]
 tool = "show"
 params = { ref = "ref?", scope = "scope?" }
@@ -80,7 +76,6 @@ Today's `member` focus echo goes (the SPA has the member list)."""
 
 [[operation]]
 name = "states"
-slice = "3b"
 http = ["GET /api/states/{ref}"]
 tool = "states"
 params = { ref = "ref", period = "period?", variant = "string?", value_set_version = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
@@ -94,7 +89,6 @@ shadow."""
 
 [[operation]]
 name = "warnings"
-slice = "3b"
 http = ["GET /api/warnings/{ref}"]
 params = { ref = "ref", period = "period?", variant = "string?", representation = "string?", unassigned_only = "boolean?", scope = "scope?" }
 result = "[today's DataWarning], deduplicated and ordered by warning_id"
@@ -105,7 +99,6 @@ No MCP tool: the SPA's project editor is the consumer."""
 
 [[operation]]
 name = "values"
-slice = "3b"
 http = ["GET /api/values/{ref}"]
 tool = "values"
 params = { ref = "ref", state = "storage_id?", partition = "enum(source_extensions|canonical|nonstandard|sentinels)?", classification = "ref?", column = "string?", alias_window_from = "string?", parent = "string?", q = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
@@ -128,7 +121,6 @@ a non-empty `q` reads the book flat. Default limit 50 \
 
 [[operation]]
 name = "graph"
-slice = "3d"
 http = ["GET /api/graph/{ref}"]
 tool = "graph"
 params = { ref = "ref", scope = "scope?" }
@@ -138,7 +130,6 @@ note = "For a variable, classification or group ref; one route replaces the thre
 
 [[operation]]
 name = "lineage"
-slice = "3d"
 http = ["GET /api/lineage/{ref}"]
 tool = "graph"
 params = { ref = "ref", scope = "scope?" }
@@ -149,7 +140,6 @@ binding node, and /lineage_warnings."""
 
 [[operation]]
 name = "coverage"
-slice = "3c"
 http = ["GET /api/coverage/{ref}"]
 tool = "coverage"
 params = { ref = "ref", scope = "scope?" }
@@ -159,7 +149,6 @@ note = "For a variable or register ref."
 
 [[operation]]
 name = "schema"
-slice = "3c"
 http = ["GET /api/schema/{ref}"]
 tool = "schema"
 params = { ref = "ref", period = "period?", variant = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
@@ -170,7 +159,6 @@ datacolumns`). `--columns-like` and the table-only `--summary`/`--flat` go."""
 
 [[operation]]
 name = "diff"
-slice = "3c"
 http = ["GET /api/diff/{ref}"]
 tool = "schema"
 params = { ref = "ref", from = "period", to = "period", variant = "string?", scope = "scope?" }
@@ -180,7 +168,6 @@ note = "A register's schema between two periods. `--variable` goes; the caller f
 
 [[operation]]
 name = "coded_variables"
-slice = "3c"
 http = ["GET /api/coded-variables"]
 tool = "schema"
 params = { scope = "scope?", limit = "limit?", cursor = "cursor?" }
@@ -190,7 +177,6 @@ note = "`--min-codes` and `--min-registers` go: the page is ordered by distinct 
 
 [[operation]]
 name = "resolve"
-slice = "3c"
 http = ["GET /api/resolve"]
 tool = "resolve"
 params = { columns = "string[]", register = "ref?", scope = "scope?" }
@@ -202,7 +188,6 @@ row has a status."""
 
 [[operation]]
 name = "validate"
-slice = "3e"
 http = ["POST /api/project/validate"]
 tool = "order"
 params = { project = "project" }
@@ -211,7 +196,6 @@ note = "An invalid project is a 200 with `ok: false`, as today."
 
 [[operation]]
 name = "order"
-slice = "3e"
 http = ["POST /api/project/order"]
 tool = "order"
 params = { project = "project" }
@@ -221,7 +205,6 @@ note = "The manifest's exact bytes come from the download route below."
 
 [[operation]]
 name = "docs_search"
-slice = "3b"
 http = ["GET /api/docs/search"]
 tool = "docs"
 params = { q = "string?", register = "ref?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
@@ -232,7 +215,6 @@ catalog without docs answers `docs_unavailable`, replacing `ingested: false`."""
 
 [[operation]]
 name = "docs_get"
-slice = "3b"
 http = ["GET /api/docs/doc/{identifier}"]
 tool = "docs"
 params = { identifier = "string", scope = "scope?" }
@@ -241,7 +223,6 @@ errors = ["docs_unavailable", "not_found", "scope_unavailable"]
 
 [[operation]]
 name = "docs_related"
-slice = "3b"
 http = ["GET /api/docs/related/{ref}"]
 tool = "docs"
 params = { ref = "ref", scope = "scope?" }
@@ -261,8 +242,8 @@ media_type = "application/pdf"
 operation = "docs_related"
 note = "Served inline, as today."
 
-# Shapes for slice 3a. Later slices name today's models above and fix their fields in
-# their own `api` cases.
+# The shapes `result` names. A result described in words above has its fields fixed by
+# its `api` cases.
 
 [shape.Meta]
 contract_version = "string; contract_version above"
