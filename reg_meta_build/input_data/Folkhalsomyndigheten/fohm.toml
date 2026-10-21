@@ -42,7 +42,7 @@ valid_from = "2004-01-01"  # electronic SmiNet in national use since 2004
 purpose = """
 Nationellt övervakningsregister för anmälningspliktiga smittsamma sjukdomar \
 enligt smittskyddslagen. Sammanför klinikers anmälningar med laboratoriernas \
-anmälningar per fall. Central källa för SWECOV (covid-19-fall och provsvar).\
+anmälningar per fall.\
 """
 
 # SmiNet ships as one per-case notification record; modeled as a single
@@ -198,8 +198,8 @@ valid_from = "2013-01-01"  # barnvaccinationsprogrammet fr.o.m. 2013-01-01
 purpose = """
 Nationellt register över vaccinationer inom de nationella vaccinations\
 programmen och mot covid-19. Används för statistik, uppföljning och utvärdering \
-av vaccinationsprogram samt epidemiologisk forskning. Central källa för SWECOV \
-(covid-19-vaccinationer). Täckning: barnvaccinationer fr.o.m. 2013, covid-19 \
+av vaccinationsprogram samt epidemiologisk forskning. \
+Täckning: barnvaccinationer fr.o.m. 2013, covid-19 \
 fr.o.m. 2021, pneumokock (riskgrupper) fr.o.m. 2022, tuberkulos fr.o.m. 2025.\
 """
 
@@ -318,7 +318,7 @@ name = "CovidWGS"
 [[register.variant]]
 key = "FHM_CovidWGS"
 name = "FHM_CovidWGS"
-description = "SWECOV's pooled physical delivery, observed in 2020–2021; per-column annual availability is unknown."
+description = "Pooled physical delivery, observed in 2020–2021; per-column annual availability is unknown."
 valid_from = "2020-01-01"
 valid_to = "2021-12-31"
 period_scope = "pooled"
@@ -331,7 +331,7 @@ is_sensitive = true
 is_identifier = true
 variants = ["FHM_CovidWGS"]
 data_warning = "Only the literal delivered header and storage type are documented. Expanded definitions, response-code meanings and verified Lineage classification are unavailable. The 2020–2021 dates describe the pooled table, not annual per-column availability. The sensitivity and identifier flags are assigned by the catalog; the source does not document them."
-description = "Literal SWECOV project pseudonym. The physical float storage declaration does not establish FOHM original PersonNr encoding or identifier width."
+description = "Project pseudonym, as delivered. The physical float storage declaration does not establish FOHM original PersonNr encoding or identifier width."
 
 [[register.variable]]
 name = "Provdatum"

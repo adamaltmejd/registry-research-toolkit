@@ -513,14 +513,14 @@ type = "replaced_by"
 from = "scb/lisa/ssyk3-j16"
 to = "scb/lisa/ssyk3-2012-j16"
 effective_year = 2014
-note = "Yrke SSYK 96 3-siffer (härledd, J16-ram, 2010–2013) superseded by the SSYK 2012 3-siffer J16 column from årgång 2014 (#400)"
+note = "Yrke SSYK 96 3-siffer (härledd, J16-ram, 2010–2013) superseded by the SSYK 2012 3-siffer J16 column from årgång 2014"
 
 [[edge]]
 type = "replaced_by"
 from = "scb/lisa/ssyk4-j16"
 to = "scb/lisa/ssyk4-2012-j16"
 effective_year = 2014
-note = "Yrke SSYK 96 4-siffer (härledd, J16-ram, 2010–2013) superseded by the SSYK 2012 4-siffer J16 column från årgång 2014 (#400)"
+note = "Yrke SSYK 96 4-siffer (härledd, J16-ram, 2010–2013) superseded by the SSYK 2012 4-siffer J16 column from årgång 2014"
 
 # ── SUN 1996 → 2000 nomenclature split (#579) ──
 #    The 1996 SUN (Svensk utbildningsnomenklatur) was restructured in 2000 into
@@ -683,7 +683,7 @@ to = "scb/rtb/personnr"
 from_column = "PNR"
 to_column = "PersonNr"
 effective_year = 1998
-note = "RTB subject personnummer delivery column renamed PNR → PersonNr (era rename, never co-occurring; replaces the retired column_merge entry, #846)"
+note = "RTB subject personnummer delivery column renamed PNR → PersonNr (era rename, never co-occurring)"
 
 # ── FRIDA firm key: variant-local gap-fill borgnr → persorgnr → borgnr (#846) ──
 #    Reg 121 var 56 ("Person-/organisationsnummer"). In the punktskatter-for-energi
