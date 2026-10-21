@@ -1795,7 +1795,8 @@ locators (`Document:`, `SHA256:`, `Pages:`, `Source rows:`, `Rows:`, a matrix's
 reason or free-text evidence, which go to the case event in the build ledger. A
 correction citing no locator publishes nothing, so equal neighbouring states pool. A
 curated alias window keeps the `curated:alias-window` head, since non-NULL provenance is
-what makes it additive; a source relationship names its declaration row.
+what makes it additive; a book's override binding publishes
+`curated:override -> <slug>`; a source relationship names its declaration row.
 
 The build report (`events.jsonl.gz`, kind `data_warning`) keeps every warning the build
 forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CODES`

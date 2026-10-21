@@ -463,7 +463,8 @@ def apply_classification_cases(
                     date.fromordinal(hi).isoformat(),
                     slug,
                     refs,
-                    (f"{ref}: override -> {slug}",),
+                    # The book entry's TOML pointer stays out of published text (#1708).
+                    (f"curated:override -> {slug}",),
                     inline_only=True,
                     override=True,
                 )
