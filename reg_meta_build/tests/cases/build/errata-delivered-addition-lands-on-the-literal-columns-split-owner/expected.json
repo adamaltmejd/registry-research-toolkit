@@ -20,7 +20,7 @@
       "where": {
         "variable": "a",
         "valid_from": "2021-01-01",
-        "provenance": {"contains": "errata:omitted-column-in-version\naccepted delivery\n"}
+        "provenance": {"contains": "errata:omitted-column-in-version\nCurated data_type: "}
       },
       "fields": ["variable", "valid_from"],
       "rows": [

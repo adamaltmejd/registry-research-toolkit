@@ -1783,7 +1783,16 @@ without both entries fails the build. The reviewer's `reason` and `provenance` s
 the curation entry the warning's `acknowledged_by` or `case_id` names, and in the detail
 of a build-only warning. Diagnostics a researcher reads as one limitation share a public
 code (`PUBLIC_CODES`: `no_supported_states` publishes as `unsupported_occurrence`); the
-build keeps the original code, which acknowledgements name.
+build keeps the original code, which acknowledgements name. Published provenance (state,
+classification link, alias window, sentinel certificate, source relationship) follows
+the same rule: it carries a decision's `errata:<class>` line and its structured source
+locators (`Document:`, `SHA256:`, `Pages:`, `Source rows:`, `Rows:`, a matrix's
+`evidence:` and `source_pages:`) and storage-type facts, never the case pointer, the
+reason or free-text evidence, which go to the case event in the build ledger. A
+correction citing no locator publishes nothing, so equal neighbouring states pool. A
+curated alias window keeps the `curated:alias-window` head, since non-NULL provenance is
+what makes it additive; a book's override binding publishes
+`curated:override -> <slug>`; a source relationship names its declaration row.
 
 The build report (`events.jsonl.gz`, kind `data_warning`) keeps every warning the build
 forms. The catalog keeps only the user-facing ones: `data_warnings.BUILD_ONLY_CODES`
@@ -2141,8 +2150,8 @@ also carry their own type, length, definitions, names and source text, and per-c
 coding windows their own value set and classification links; these override the base
 even when NULL. Per-column windows are clipped to successive base states; shared windows
 must lie inside their state. A window's `provenance` follows the state's: source-derived
-windows leave it NULL, and an exact-edition curated alias carries its correction class,
-evidence and editions and is additive rather than replacing.
+windows leave it NULL, and an exact-edition curated alias carries `curated:alias-window`
+and its source locators and is additive rather than replacing.
 
 **Compiled relations.**
 

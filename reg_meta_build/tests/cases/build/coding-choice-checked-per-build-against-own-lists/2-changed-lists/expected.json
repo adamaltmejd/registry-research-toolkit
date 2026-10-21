@@ -6,7 +6,6 @@
       "where": {"column": "VALUE"},
       "fields": ["code"],
       "rows": [
-        ["01"],
         ["01"]
       ]
     },

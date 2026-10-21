@@ -38,7 +38,11 @@ from reg_meta_build.source_intervals import (
     reconcile_source_fields,
     resolve_occurrence_intervals,
 )
-from reg_meta_build.source_occurrences import EffectiveOccurrence, effective_occurrence
+from reg_meta_build.source_occurrences import (
+    STORAGE_DETAIL_PREFIXES,
+    EffectiveOccurrence,
+    effective_occurrence,
+)
 from reg_meta_build.source_representations import form_representations
 
 if TYPE_CHECKING:
@@ -135,9 +139,10 @@ def _state_from_segment(
         provenance="\n\n".join(
             sorted(
                 {
-                    correction.provenance
+                    correction.attribution
                     for occurrence in segment.effective_occurrences
                     for correction in occurrence.corrections
+                    if correction.attribution is not None
                 }
                 | set(matched.provenance if matched else ())
                 | (
@@ -1092,9 +1097,10 @@ def form_native_variable(
                     attributions=tuple(
                         sorted(
                             {
-                                correction.provenance
+                                correction.attribution
                                 for occurrence in segment.effective_occurrences
                                 for correction in occurrence.corrections
+                                if correction.attribution is not None
                             }
                         )
                     ),
@@ -1145,9 +1151,7 @@ def form_native_variable(
                             for occurrence in segment.effective_occurrences
                             for correction in occurrence.corrections
                             for line in correction.provenance.splitlines()
-                            if line.startswith(
-                                ("Curated data_type: ", "Documented Datatyp: ")
-                            )
+                            if line.startswith(STORAGE_DETAIL_PREFIXES)
                         }
                     )
                     reconciled_detail = (

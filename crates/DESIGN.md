@@ -247,9 +247,11 @@ cannot mix dated and year-independent states. Birth, migration or classification
 never supply a delivery range. `pooled` marks a state spanning a pooled multi-year
 edition with no annual coverage: one state over the whole range, and consumers must not
 infer annual availability inside it. A state's `provenance` is NULL for an ordinary
-provider-documented interval and otherwise names an errata correction (with its evidence
-and exact source editions), a steward row, or `inferred:resolution-gap`. It stays at
-state grain so one corrected edition never relabels a neighboring window.
+provider-documented interval and otherwise names an errata correction class with its
+source locators and storage-type facts, a steward row, or `inferred:resolution-gap`. It
+never carries curator evidence, rationale or a curation case pointer, which stay in the
+build report (#1708). It stays at state grain so one corrected edition never relabels a
+neighboring window.
 
 A state is as long as its facts allow (#1296 2d). Resolution cuts a column wherever the
 set of active source editions or code lists changes, and the builder then merges a run

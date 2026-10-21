@@ -74,7 +74,7 @@
         "provenance": {
           "contains": [
             "Source classification declaration: 'FIX'",
-            "classifications/FIX.toml#/binding/variable/1"
+            "curated:override -> fix"
           ]
         }
       },

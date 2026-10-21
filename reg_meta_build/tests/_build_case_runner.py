@@ -1050,7 +1050,11 @@ _TABLES: dict[str, Callable[[Outcome], list[dict]]] = {
     "issues": _issues,
     "issue_refs": _issue_refs,
     "cases": lambda o: [
-        {"case_id": event["case_id"], "status": event["status"]}
+        {
+            "case_id": event["case_id"],
+            "status": event["status"],
+            "reason": event.get("reason"),
+        }
         for event in o.events
         if event["kind"] == "case"
     ],
@@ -1230,7 +1234,7 @@ FIELDS: dict[str, frozenset[str]] = {
         "valid_from valid_to fields withheld_output",
         "issue_refs": "code severity subject case_id locator detail acknowledged_by "
         "valid_from valid_to fields withheld_output source key ref",
-        "cases": "case_id status",
+        "cases": "case_id status reason",
         "uses": "source native_variable key column_name data_type name description "
         "use variable",
         "case_uses": "case_id source key use variable",

@@ -63,10 +63,7 @@
       "table": "states",
       "where": {
         "variable": "income",
-        "valid_from": "2022-01-01",
-        "provenance": {
-          "contains": "#/representation.parallel/1"
-        }
+        "valid_from": "2022-01-01"
       },
       "fields": [
         "valid_to"

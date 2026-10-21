@@ -8,12 +8,11 @@
       },
       "fields": ["valid_from", "valid_to", "name", "provenance"],
       "rows": [
-        ["2008-01-01", "2008-12-31", "Reviewed label", null],
         [
-          "2009-01-01",
+          "2008-01-01",
           "2009-12-31",
           "Reviewed label",
-          "curation/registers/scb/sample.toml#/errata.field/1: Exact supplied definition establishes the reviewed correction."
+          null
         ]
       ]
     },
@@ -53,7 +52,7 @@
       "rows": [
         [
           "2009-01-01",
-          "curation/registers/scb/unitfix.toml#/errata.field/1: Exact supplied unit establishes the reviewed correction."
+          null
         ]
       ]
     },
@@ -79,19 +78,6 @@
       "rows": [
         ["2009-01-01", "2009-12-31"],
         ["2017-01-01", "2017-12-31"]
-      ]
-    },
-    {
-      "table": "states",
-      "where": {
-        "register": "syd",
-        "provenance": {
-          "contains": "curation/registers/sos/syd.toml#/errata.field/"
-        }
-      },
-      "fields": ["variable", "valid_from"],
-      "rows": [
-        ["distrikt", "2009-01-01"]
       ]
     },
     {
