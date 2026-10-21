@@ -1,6 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
-import { getShow, getStates } from "./api";
 import { resetCatalogNames } from "./catalog_names.svelte";
 import { state } from "./catalog-test-helpers";
 import type { ProjectSource } from "./project_data";
@@ -16,20 +15,6 @@ import {
 // Split from SourceEditor.browser.test.ts by contract surface: the source period
 // (Y-81) and its list segments (Y-101). Sibling: SourceEditor.browser.test.ts.
 
-// Stub the catalog reads the card's names and columns come from (`show`,
-// `states`); keep the rest of api.ts real (the types + path helpers `catalog.ts`
-// uses) — the partial-mock pattern `VariantBrowser` / `CatalogNodeView` use for
-// the same reads.
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return {
-    ...actual,
-    getWarnings: vi.fn().mockResolvedValue([]),
-    getShow: vi.fn(),
-    getStates: vi.fn(),
-  };
-});
-
 beforeEach(() => {
   // projectStore is a module singleton; start each test from a fresh draft so the
   // stable-id mirror (sourceId/bindingId) resolves for index 0.
@@ -40,8 +25,6 @@ beforeEach(() => {
   // The name cache is a session singleton too — a case stubbing a different
   // catalog for the same coordinate must not read the previous case's answer.
   resetCatalogNames();
-  vi.mocked(getShow).mockReset();
-  vi.mocked(getStates).mockReset();
   stubCatalog();
 });
 
@@ -329,7 +312,7 @@ describe("SourceEditor source period (Y-81)", () => {
   // Y-80 rider: the column rows resolve their default name at THIS source's own
   // (variant, period) — the card threads both into BindingEditor, and they have to
   // reach the `states` read as the wire `period` / `variant` a catalog URL spells.
-  // Fails if the columns stop resolving through `getStates` at the card's own
+  // Fails if the columns stop resolving through the `states` read at the card's own
   // coordinate (package C moved the resolve off the catch-all catalog GET).
   it("resolves its columns at its own variant and period, in wire form", async () => {
     const source = {
@@ -341,10 +324,10 @@ describe("SourceEditor source period (Y-81)", () => {
     // Only the resolve at the card's own variant and period, in wire form, names
     // the column; any other coordinate resolves to nothing, so the row would keep
     // its bare FQID.
-    vi.mocked(getStates).mockImplementation(async (fqid, params) =>
+    stubCatalog({}, (fqid, query) =>
       fqid === "scb/lisa/kon" &&
-      params?.period === "1990..2020" &&
-      params?.variant === "arbetsstallen"
+      query.get("period") === "1990..2020" &&
+      query.get("variant") === "arbetsstallen"
         ? [state({ variant: "arbetsstallen", delivery_column_name: "KonArb" })]
         : [],
     );
