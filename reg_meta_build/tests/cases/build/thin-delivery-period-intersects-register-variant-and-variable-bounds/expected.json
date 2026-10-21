@@ -12,7 +12,7 @@
       "table": "cases",
       "fields": ["case_id", "status"],
       "rows": [
-        ["accepted-authored:Forsakringskassan/fk.toml:r:COL", "applicable"]
+        ["accepted-authored:providers/fk.toml:r:COL", "applicable"]
       ]
     }
   ]

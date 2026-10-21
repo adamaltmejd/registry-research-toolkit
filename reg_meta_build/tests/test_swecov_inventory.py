@@ -20,6 +20,7 @@ from _swecov_fixtures import (
     SPEC,
     build_catalog,
     column as _column,
+    flavor_slug_dir,
     flavored_db_fixture,  # noqa: F401
     inventory_worklist as _inventory_worklist,
     one_table_series,
@@ -403,7 +404,7 @@ def independent_flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
         providers_dir=root / "providers",
         db_dir=tmp_path / "flavored",
         steward="swecov",
-        slug_dir=root.parents[1] / "fqid_slugs" / "swecov",
+        slug_dir=flavor_slug_dir(root),
         diagnostic=True,
     )
     return tmp_path / "flavored" / "reg_meta.db"

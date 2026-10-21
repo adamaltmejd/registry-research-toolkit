@@ -364,7 +364,7 @@
     }
   ],
   "files": {
-    "Forsakringskassan/fk.toml": [
+    "providers/fk.toml": [
       "[[register]]",
       "key = \"openreg\"",
       "name = \"Open\"",

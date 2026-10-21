@@ -1,10 +1,9 @@
 """Curated related documents at the ``reg-meta-build build-docs`` boundary.
 
-``related_documents.toml`` and the binary root ``input_data/SCB/docs`` resolve
-relative to the builder package file and ``build_doc_db`` takes no parameter for
-them, so each case writes a synthetic map and synthetic PDF bytes into a copied
-builder package and runs the CLI against that copy in a subprocess (the copy is
-of whichever package the test process imported). The observable results are the
+``related_documents.toml`` resolves relative to the builder package file, so each
+case writes a synthetic map into a copied builder package, writes synthetic PDF bytes
+under a per-test ``--related-docs-dir``, and runs the CLI against that copy in a
+subprocess (the copy is of whichever package the test process imported). The observable results are the
 CLI exit code and JSON, its stderr warnings, and the built ``reg_meta_docs.db``.
 The entries mirror the deleted ``test_doc_db.py`` cases' ``RelatedDocument``
 literals.
@@ -64,15 +63,18 @@ def _map(
     )
 
 
-def _binary(package: Path, register: str, filename: str, content: bytes) -> None:
-    directory = package / "input_data" / "SCB" / "docs" / register
+def _binary(related: Path, register: str, filename: str, content: bytes) -> None:
+    directory = related / register
     directory.mkdir(parents=True, exist_ok=True)
     (directory / filename).write_bytes(content)
 
 
 def _build(package: Path, tmp_path: Path) -> CliRun:
     write_register_doc(tmp_path / "docs")
-    return run_build_docs(package, tmp_path / "docs", tmp_path / "db")
+    (tmp_path / "related").mkdir(exist_ok=True)
+    return run_build_docs(
+        package, tmp_path / "docs", tmp_path / "related", tmp_path / "db"
+    )
 
 
 def _related(run: CliRun) -> tuple[list[tuple], str]:
@@ -89,7 +91,7 @@ def _related(run: CliRun) -> tuple[list[tuple], str]:
 
 def test_mapped_binary_is_stored_with_its_pins(package: Path, tmp_path: Path) -> None:
     _map(package, "testreg", "related.pdf")
-    _binary(package, "testreg", "related.pdf", PDF)
+    _binary(tmp_path / "related", "testreg", "related.pdf", PDF)
     run = _build(package, tmp_path)
     assert run.exit_code == 0
     assert run.stderr == ""
@@ -116,7 +118,7 @@ def test_missing_optional_and_unmapped_binaries_warn_and_store_nothing(
 ) -> None:
     # Fails if an optional entry's absent binary refuses like a required one's.
     _map(package, "testreg", "missing.pdf", required=False)
-    _binary(package, "testreg", "unmapped.pdf", b"%PDF-1.4\nunmapped\n")
+    _binary(tmp_path / "related", "testreg", "unmapped.pdf", b"%PDF-1.4\nunmapped\n")
     run = _build(package, tmp_path)
     assert run.exit_code == 0
     assert "testreg/unmapped.pdf" in run.stderr
@@ -128,7 +130,7 @@ def test_binary_that_differs_from_its_pins_fails_the_build(
     package: Path, tmp_path: Path
 ) -> None:
     _map(package, "testreg", "related.pdf")
-    _binary(package, "testreg", "related.pdf", b"%PDF-1.4\nchanged\n")
+    _binary(tmp_path / "related", "testreg", "related.pdf", b"%PDF-1.4\nchanged\n")
     run = _build(package, tmp_path)
     assert run.exit_code == EXIT_CONFIG
     assert run.payload["error"]["code"] == "related_documents_binary_mismatch"
@@ -145,13 +147,15 @@ def test_required_document_without_a_binary_fails_the_build(
     # docs DB (the build deleted it before building and left a schema-only
     # stub, #1690) or leaves its staging file in the DB directory.
     _map(package, "testreg", "related.pdf")
-    _binary(package, "testreg", "related.pdf", PDF)
+    _binary(tmp_path / "related", "testreg", "related.pdf", PDF)
     previous = _build(package, tmp_path)
     assert previous.exit_code == 0
     db_path = Path(previous.payload["db_path"])
     previous_bytes = db_path.read_bytes()
     _map(package, "testreg", "missing.pdf")
-    run = run_build_docs(package, tmp_path / "docs", tmp_path / "db")
+    run = run_build_docs(
+        package, tmp_path / "docs", tmp_path / "related", tmp_path / "db"
+    )
     assert run.exit_code == EXIT_CONFIG
     assert run.payload["error"]["code"] == "related_documents_binary_missing"
     assert "testreg/missing.pdf" in run.payload["error"]["message"]
@@ -163,7 +167,6 @@ def test_optional_document_for_an_inactive_register_is_skipped_silently(
     package: Path, tmp_path: Path
 ) -> None:
     _map(package, "future", "future.pdf", required=False)
-    (package / "input_data" / "SCB" / "docs").mkdir(parents=True)
     run = _build(package, tmp_path)
     assert run.exit_code == 0
     assert run.stderr == ""

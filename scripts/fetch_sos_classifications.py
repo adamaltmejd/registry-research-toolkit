@@ -39,17 +39,20 @@ the `code,label` shape, and the build's book reader (`read_code_list`) accepts
 this six-column layout as is. A `manifest.json` records the
 source URL, raw-file sha256, fetch time, and code counts for provenance.
 
+Both directories live in a worktree `<inputs>` of the private inputs repo:
+normalized CSVs go to `--out-dir <inputs>/catalog/source/classifications/sos`
+(the tree `prepare-input-bundle --input-dir <inputs>/catalog/source` reads) and
+raw downloads are cached under `--cache-dir <inputs>/catalog/raw/classification-sources`.
+
 Run (use `--with xlrd` — the historical ICD sources are legacy .xls):
-    uv run --with xlrd python scripts/fetch_sos_classifications.py
+    uv run --with xlrd python scripts/fetch_sos_classifications.py \
+        --out-dir <inputs>/catalog/source/classifications/sos \
+        --cache-dir <inputs>/catalog/raw/classification-sources
 
-    # subset + force re-download of raw sources:
-    uv run --with xlrd python scripts/fetch_sos_classifications.py --only atc icd-8 --force
+    # subset + force re-download of raw sources: add `--only atc icd-8 --force`
 
-    # just show what would be fetched:
+    # just show what would be fetched (needs no directories):
     uv run python scripts/fetch_sos_classifications.py --list
-
-Raw downloads are cached under `--cache-dir` (gitignored); normalized CSVs go
-to `--out-dir` (under the tracked input_data/classifications/ tree).
 """
 
 from __future__ import annotations
@@ -70,13 +73,6 @@ from collections import OrderedDict
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-
-# Repo-relative defaults. input_data/* is gitignored EXCEPT classifications/,
-# so normalized CSVs (committed snapshots) go under classifications/sos/ while
-# the bulky raw sources land in an ignored sibling cache dir.
-_REPO = Path(__file__).resolve().parent.parent
-DEFAULT_OUT_DIR = _REPO / "reg_meta_build/input_data/classifications/sos"
-DEFAULT_CACHE_DIR = _REPO / "reg_meta_build/input_data/_classification_sources"
 
 # eHälsomyndigheten "Ladda ner filer för klassifikationer" samarbetsyta page.
 EHALSA_HOST = "https://samarbetsyta.ehalsomyndigheten.se"
@@ -867,14 +863,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--out-dir",
         type=Path,
-        default=DEFAULT_OUT_DIR,
-        help="normalized CSV output dir",
+        help="normalized CSV output dir (<inputs>/catalog/source/classifications/sos)",
     )
     ap.add_argument(
         "--cache-dir",
         type=Path,
-        default=DEFAULT_CACHE_DIR,
-        help="raw download cache dir",
+        help="raw download cache dir (<inputs>/catalog/raw/classification-sources)",
     )
     ap.add_argument(
         "--only",
@@ -892,6 +886,20 @@ def main(argv: list[str] | None = None) -> int:
         for s in SOURCES:
             print(f"{s.key:12s} {s.name}\n{'':12s} {source_location(s)}")
         return 0
+    # Required unless --list; argparse's `required=True` would also demand them there.
+    missing = [
+        flag
+        for flag, value in (
+            ("--out-dir", args.out_dir),
+            ("--cache-dir", args.cache_dir),
+        )
+        if value is None
+    ]
+    if missing:
+        ap.error(
+            f"{' and '.join(missing)} required: pass directories in a worktree "
+            "of the private inputs repo (see the module docstring)"
+        )
 
     selected = SOURCES
     if args.only:

@@ -120,7 +120,7 @@ class ClassificationMetadata(_CurationModel):
     valid_to: int | None = None
     description: str | None = None
     url: str | None = None
-    # Relative to `input_data/classifications/`; SOS books sit under `sos/`.
+    # Relative to the bundle's `classifications/`; SOS books sit under `sos/`.
     codes_file: str
     sentinel_codes: tuple[SentinelCode, ...] = ()
     # How the book's code tree is read. "parent_code": from the CSV's

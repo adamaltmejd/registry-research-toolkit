@@ -373,26 +373,6 @@ def _read_block_scalar(
 
 
 # ---------------------------------------------------------------------------
-# Docs source dir (in-repo)
-# ---------------------------------------------------------------------------
-
-
-def repo_docs_dir() -> Path | None:
-    """Return the in-repo source-markdown directory, for dev-time builds only.
-
-    Runtime NEVER reads from this — users receive the prebuilt doc DB as a
-    release asset. Only ``reg-meta-build build-docs``
-    uses this, so a maintainer working from a checkout can rebuild the doc DB
-    from ``reg_meta_build/docs/`` without passing ``--docs-dir`` every time.
-    """
-    pkg_dir = Path(__file__).resolve().parent
-    candidate = pkg_dir.parent.parent / "docs"
-    if candidate.is_dir() and any(candidate.iterdir()):
-        return candidate
-    return None
-
-
-# ---------------------------------------------------------------------------
 # Curated source → SCB-PDF map (#372)
 # ---------------------------------------------------------------------------
 
@@ -450,7 +430,7 @@ def load_doc_sources() -> dict[str, dict[str, str]]:
     slug with its trailing `.md` already stripped (the same canonical form
     `build_doc_db` looks up). Empty dict when the file is absent — wheel installs
     don't ship curation (it's a maintainer artifact, like the slug TOMLs), but a
-    build from the in-repo docs MUST find it (the checkout ships it).
+    build from a checkout MUST find it (the checkout ships it).
     """
     path = Path(__file__).resolve().parent.parent.parent / DOC_SOURCES_FILE
     if not path.is_file():
@@ -482,11 +462,6 @@ def load_doc_sources() -> dict[str, dict[str, str]]:
 def repo_related_documents_path() -> Path | None:
     path = Path(__file__).resolve().parent.parent.parent / RELATED_DOCUMENTS_FILE
     return path if path.is_file() else None
-
-
-def repo_related_document_binaries_dir() -> Path | None:
-    path = Path(__file__).resolve().parent.parent.parent / "input_data" / "SCB" / "docs"
-    return path if path.is_dir() else None
 
 
 def _related_documents_invalid(subject: str, message: str) -> NoReturn:
@@ -630,9 +605,10 @@ def load_related_documents(
 ) -> dict[str, list[RelatedDocument]]:
     """Load the curated register-version related-documents map (#740).
 
-    Returns ``{register_slug: [RelatedDocument, ...]}``. The PDF binaries remain
-    gitignored under ``input_data/SCB/docs/<register>/``; this tracked TOML is
-    only the provenance and filename map.
+    Returns ``{register_slug: [RelatedDocument, ...]}``. The PDF binaries live in
+    the private inputs repo under ``catalog/docs/related/<register>/`` (passed to
+    ``build-docs`` as ``--related-docs-dir``); this tracked TOML is only the
+    provenance and filename map.
     """
     if path is None:
         path = repo_related_documents_path()
@@ -793,7 +769,7 @@ def _insert_related_documents(
                         f"byte_size {byte_size} (expected {doc.byte_size})."
                     ),
                     remediation=(
-                        "Verify the gitignored PDF seed. If the replacement is "
+                        "Verify the PDF in the inputs repo. If the replacement is "
                         "intentional and license-compatible, update `sha256`, "
                         "`byte_size`, and usually `fetched` in "
                         "reg_meta_build/related_documents.toml."
@@ -818,30 +794,29 @@ def _insert_related_documents(
             )
             total += 1
 
-    root_note = (
-        " (the binary root input_data/SCB/docs is missing)"
-        if related_docs_dir is None
-        else ""
+    root = (
+        str(related_docs_dir)
+        if related_docs_dir is not None
+        else "the related-document root (none was passed)"
     )
     if missing_required:
         raise curation_error(
             code="related_documents_binary_missing",
             message=(
                 "required related document binaries are missing under "
-                f"input_data/SCB/docs{root_note}: {', '.join(missing_required)}."
+                f"{root}: {', '.join(missing_required)}."
             ),
             remediation=(
-                "Place each PDF at reg_meta_build/input_data/SCB/docs/<register>/"
-                "<filename> before running build-docs, or set `required = false` "
-                "on an intentionally staged entry in "
-                "reg_meta_build/related_documents.toml."
+                "Pass --related-docs-dir <inputs>/catalog/docs/related from a "
+                "worktree of the private inputs repo, with each PDF at "
+                "<register>/<filename>, or set `required = false` on an "
+                "intentionally staged entry in reg_meta_build/related_documents.toml."
             ),
         )
     if missing_optional:
         log.warning(
-            "optional related document map entries with no binary under "
-            "input_data/SCB/docs%s: %s",
-            root_note,
+            "optional related document map entries with no binary under %s: %s",
+            root,
             ", ".join(missing_optional),
         )
     return total
@@ -902,7 +877,8 @@ def build_doc_db(
     Related documents come only from the arguments: the curated map
     (``load_related_documents``) and the directory holding their binaries.
     Both default to none, so a library build never reads the repository's
-    untracked seed; the ``build-docs`` CLI passes the repository paths.
+    untracked seed; the ``build-docs`` CLI passes the repository map and its
+    required ``--related-docs-dir``.
 
     The DB is staged beside the destination and installed by ``publish_db``, so
     a refused build leaves the previous docs DB untouched (#1690).

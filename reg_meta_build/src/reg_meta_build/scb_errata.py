@@ -88,7 +88,7 @@ _RESERVED_CORRECTION_CLASSES = frozenset(
     {"scoped-attributions", "overlapping-attributions"}
 )
 
-# `data_type` vocabulary, shared with `input_data/scb_canonical/scb_canonical.toml`
+# `data_type` vocabulary, shared with `curation/scb_canonical/scb_canonical.toml`
 # (CanonicalScbAdapter). Stored verbatim on the synthetic row; the gate keeps a
 # typo (`txt`, `int`) from shipping a meaningless type. Optional: a steward
 # holdings list often names no type, and an absent one is a NULL state type.

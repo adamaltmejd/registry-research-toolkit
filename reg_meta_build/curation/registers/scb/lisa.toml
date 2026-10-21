@@ -3,10 +3,10 @@ provider = "scb"
 slug = "lisa"
 native_id = "34"
 
-# ══ LISA doc coverage (Y-116, was input_data/scb_canonical/lisa_canonical.toml) ══
+# ══ LISA doc coverage (Y-116, was scb_canonical/lisa_canonical.toml) ══
 # Columns documented in SCB's own doc library (lisa-bakgrundsfakta-1990-2017) but
 # absent from the machine-export catalog. Each entry mirrors one column's doc at
-# reg_meta_build/docs/lisa/<Column>.md — name, definition, documented coverage and
+# inputs:catalog/docs/markdown/lisa/<Column>.md — name, definition, documented coverage and
 # (for categorical columns) the EXISTING catalog classification it links. A
 # doc-coverage diagnostic, not a value-set source: no codes are minted here.
 #
@@ -49,7 +49,7 @@ column = "DispInkKE"
 versions = ["2010", "2011", "2012"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "b16bab1af24fc8b28e294ce43592047bf5d4ff58b3c97716ad6c5ffd1c04fdeb"
-evidence = "SCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See reg_meta_build/docs/lisa/DispInkKE.md."
+evidence = "SCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md."
 noted = "2026-09-11"
 
 [[errata.delivered]]
@@ -58,7 +58,7 @@ column = "DispInkKE04"
 versions = ["2010", "2011", "2012"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "6fb5c9422e082613282dac0e028e037df4cf37e4716492a8594fddc003ceb100"
-evidence = "The 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See reg_meta_build/docs/lisa/DispInkKE.md for the family's delivery span."
+evidence = "The 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md for the family's delivery span."
 noted = "2026-09-11"
 
 # ── Steward-holdings gate content, 2026-09-12 (post-Y-123 build; worklist derived/errata_worklist.toml) ──
@@ -133,7 +133,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2010", "2011", "2012", "2013"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk3_J16 for 2010–2013 — see reg_meta_build/docs/lisa/Ssyk3_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling ssyk3 (Ssyk3, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk3_J16 for 2010–2013 — see inputs:catalog/docs/markdown/lisa/Ssyk3_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling ssyk3 (Ssyk3, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -147,7 +147,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2010", "2011", "2012", "2013"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk4_J16 for 2010–2013 — see reg_meta_build/docs/lisa/Ssyk4_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling ssyk4 (Ssyk4, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk4_J16 for 2010–2013 — see inputs:catalog/docs/markdown/lisa/Ssyk4_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling ssyk4 (Ssyk4, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -160,7 +160,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["2010", "2011", "2012", "2013"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YSEG_J16 for 2010–2013 — see reg_meta_build/docs/lisa/YSEG_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YSEG_J16 for 2010–2013 — see inputs:catalog/docs/markdown/lisa/YSEG_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -173,7 +173,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1990"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Nyk for 1990–1990 — see reg_meta_build/docs/lisa/Nyk.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Nyk for 1990–1990 — see inputs:catalog/docs/markdown/lisa/Nyk.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -186,7 +186,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YrkStallnJ for 2003–2003 — see reg_meta_build/docs/lisa/YrkStallnJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YrkStallnJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/YrkStallnJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -199,7 +199,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstKommunJ for 2003–2003 — see reg_meta_build/docs/lisa/AstKommunJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstKommunJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/AstKommunJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -212,7 +212,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstLanJ for 2003–2003 — see reg_meta_build/docs/lisa/AstLanJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling lan-arbetsstalle (AstLan, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstLanJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/AstLanJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling lan-arbetsstalle (AstLan, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -226,7 +226,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002J for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ (AstSNI92/AstSNI2007/AstSNI69/AstSNI2002, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002J for 2003–2003 — see inputs:catalog/docs/markdown/lisa/AstSNI2002J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ (AstSNI92/AstSNI2007/AstSNI69/AstSNI2002, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -240,7 +240,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002BJ for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002BJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ-sni2002b (AstSNI2002B/Astsni2002B, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002BJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/AstSNI2002BJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ-sni2002b (AstSNI2002B/Astsni2002B, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -254,7 +254,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002GJ for 2003–2003 — see reg_meta_build/docs/lisa/AstSNI2002GJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ-sni2002g (AstSNI2002G/Astsni2002G, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstSNI2002GJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/AstSNI2002GJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling naringsgren-huvud-individ-sni2002g (AstSNI2002G/Astsni2002G, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -268,7 +268,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SektorKodJ for 2003–2003 — see reg_meta_build/docs/lisa/SektorKodJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sektorkod (SektorKod, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SektorKodJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/SektorKodJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sektorkod (SektorKod, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -281,7 +281,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents InstKod7J for 2003–2003 — see reg_meta_build/docs/lisa/InstKod7J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents InstKod7J for 2003–2003 — see inputs:catalog/docs/markdown/lisa/InstKod7J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -294,7 +294,7 @@ is_identifier = true
 is_sensitive = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents CfarNrSregJ for 2003–2003 — see reg_meta_build/docs/lisa/CfarNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling cfar-nummer-3 (CfarNrSreg, is_sensitive=false, is_identifier=true)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents CfarNrSregJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/CfarNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling cfar-nummer-3 (CfarNrSreg, is_sensitive=false, is_identifier=true)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -307,7 +307,7 @@ is_identifier = true
 is_sensitive = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents PeOrgNrSregJ for 2003–2003 — see reg_meta_build/docs/lisa/PeOrgNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling person-orgnr-3 (PeOrgNrSreg, is_sensitive=false, is_identifier=true)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents PeOrgNrSregJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/PeOrgNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling person-orgnr-3 (PeOrgNrSreg, is_sensitive=false, is_identifier=true)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -320,7 +320,7 @@ is_identifier = true
 is_sensitive = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbstIdJ for 2003–2003 — see reg_meta_build/docs/lisa/ArbstIdJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fad-arbetsstalle-id (ArbstId, is_sensitive=false, is_identifier=true)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbstIdJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/ArbstIdJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fad-arbetsstalle-id (ArbstId, is_sensitive=false, is_identifier=true)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -333,7 +333,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["2003"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents LoneInkJ for 2003–2003 — see reg_meta_build/docs/lisa/LoneInkJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling loneink (LoneInk, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents LoneInkJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/LoneInkJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling loneink (LoneInk, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -346,7 +346,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Bdag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-bman (FortPens_Bman, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Bdag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/FortPens_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-bman (FortPens_Bman, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -359,7 +359,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Ndag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-nman (FortPens_Nman, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Ndag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/FortPens_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-nman (FortPens_Nman, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -372,7 +372,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Belopp_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/FortPens_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-belopp (FortPens_Belopp, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Belopp_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/FortPens_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-belopp (FortPens_Belopp, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -385,7 +385,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Bdag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-bman (SjukBidr_Bman, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Bdag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/SjukBidr_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-bman (SjukBidr_Bman, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -398,7 +398,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Ndag_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-nman (SjukBidr_Nman, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Ndag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/SjukBidr_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-nman (SjukBidr_Nman, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -411,7 +411,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Belopp_MiDAS for 1994–2002 — see reg_meta_build/docs/lisa/SjukBidr_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-belopp (SjukBidr_Belopp, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Belopp_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/SjukBidr_Belopp_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-belopp (SjukBidr_Belopp, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -424,7 +424,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ATPFam for 1990–2002 — see reg_meta_build/docs/lisa/ATPFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ATPFam for 1990–2002 — see inputs:catalog/docs/markdown/lisa/ATPFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -437,7 +437,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FolkFam for 1990–2002 — see reg_meta_build/docs/lisa/FolkFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FolkFam for 1990–2002 — see inputs:catalog/docs/markdown/lisa/FolkFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -450,7 +450,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["1994", "1995", "1996"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ALUAMK for 1994–1996 — see reg_meta_build/docs/lisa/ALUAMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling alukas (ALUKAS, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ALUAMK for 1994–1996 — see inputs:catalog/docs/markdown/lisa/ALUAMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling alukas (ALUKAS, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -463,7 +463,7 @@ is_sensitive = false
 is_identifier = false
 versions = ["1994", "1995", "1996", "1997"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AMK for 1994–1997 — see reg_meta_build/docs/lisa/AMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling kas (KAS, is_sensitive=false, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AMK for 1994–1997 — see inputs:catalog/docs/markdown/lisa/AMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling kas (KAS, is_sensitive=false, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -476,7 +476,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1997"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents OTA for 1997–1997 — see reg_meta_build/docs/lisa/OTA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents OTA for 1997–1997 — see inputs:catalog/docs/markdown/lisa/OTA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -489,7 +489,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1990", "1991", "1992", "1993"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukPA for 1990–1993 — see reg_meta_build/docs/lisa/SjukPA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukpenning-ej-arbetsgivarintrade (SjukPP, is_sensitive=true, is_identifier=false)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukPA for 1990–1993 — see inputs:catalog/docs/markdown/lisa/SjukPA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukpenning-ej-arbetsgivarintrade (SjukPP, is_sensitive=true, is_identifier=false)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -502,7 +502,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1997"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents TAE for 1997–1997 — see reg_meta_build/docs/lisa/TAE.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents TAE for 1997–1997 — see inputs:catalog/docs/markdown/lisa/TAE.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -515,7 +515,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1990"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbTid for 1990–1990 — see reg_meta_build/docs/lisa/ArbTid.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbTid for 1990–1990 — see inputs:catalog/docs/markdown/lisa/ArbTid.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -528,7 +528,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see reg_meta_build/docs/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see inputs:catalog/docs/markdown/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -541,7 +541,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see reg_meta_build/docs/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see inputs:catalog/docs/markdown/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -554,7 +554,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["1990", "1991", "1992", "1993", "1994", "1995", "1996", "1997", "1998", "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see reg_meta_build/docs/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see inputs:catalog/docs/markdown/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[errata.column]]
@@ -567,7 +567,7 @@ is_sensitive = true
 is_identifier = false
 versions = ["2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"]
 source = "scb-docs"
-evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see reg_meta_build/docs/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+evidence = "SCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see inputs:catalog/docs/markdown/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
 noted = "2026-06-25"
 
 [[enrichment.description]]

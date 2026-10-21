@@ -37,26 +37,31 @@ def _grafts_text(
 
     The CSV is header-only: with no physical holding to consult, a `mapped`
     holding's single coordinate places every column, which is the path under test.
-    `doc_columns` seeds the ingested-docs tree the scan cross-references — its root
-    is two levels above the CSV, the repo layout `reg_meta_build/docs/<register>/`.
+    `doc_columns` seeds the ingested-docs tree the scan cross-references
+    (`--lisa-docs-dir`, laid out `<register>/<column>.md`).
     """
-    base = tmp_path / "input_data" / "swecov"
-    (base / "derived").mkdir(parents=True)
-    csv_path = base / "SWECOV_variables_2025-12-11.csv"
+    out = tmp_path / "out"
+    (out / "derived").mkdir(parents=True)
+    csv_path = tmp_path / "SWECOV_variables_2025-12-11.csv"
     csv_path.write_text("Category,Detail,Table\n", encoding="utf-8")
-    (base / "derived" / "holdings_enriched.json").write_text(
+    (out / "derived" / "holdings_enriched.json").write_text(
         json.dumps(enriched), encoding="utf-8"
     )
-    (base / "derived" / "global_enrichment.json").write_text(
+    (out / "derived" / "global_enrichment.json").write_text(
         json.dumps({"gapfill": gapfill}), encoding="utf-8"
     )
+    docs = tmp_path / "docs"
     for column in doc_columns:
-        page = tmp_path / "docs" / "lisa" / f"{column}.md"
+        page = docs / "lisa" / f"{column}.md"
         page.parent.mkdir(parents=True, exist_ok=True)
         page.write_text(f"# {column}\n", encoding="utf-8")
 
-    build_catalog.cmd_grafts(argparse.Namespace(csv=csv_path, db=db, spec=SPEC_DIR))
-    return (base / "derived" / "column_candidates.toml").read_text(encoding="utf-8")
+    build_catalog.cmd_grafts(
+        argparse.Namespace(
+            csv=csv_path, db=db, spec=SPEC_DIR, out=out, lisa_docs_dir=docs
+        )
+    )
+    return (out / "derived" / "column_candidates.toml").read_text(encoding="utf-8")
 
 
 def _gapfill(register: str, column: str, **extra: str) -> dict:

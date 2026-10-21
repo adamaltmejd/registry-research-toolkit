@@ -2,7 +2,7 @@
 # codes 00, 11–15, 21–25) and "RAMS SektorKod fr.o.m. 1993" is NOT INSEKT — it
 # is the LISA/RAMS ownership-sector code, bound to SEKTOR2000 by label
 # collision. Codes 1993– per SCB's LISA library
-# (reg_meta_build/docs/lisa/SektorKod.md: 11 = Statlig förvaltning,
+# (inputs:catalog/docs/markdown/lisa/SektorKod.md: 11 = Statlig förvaltning,
 # 12 = Statliga affärsverk, 13 = Kommunal förvaltning [export label; the LISA
 # background text writes "Primärkommunal förvaltning"], 14 = Landsting,
 # 15 = Övriga offentliga institutioner, 21 = Aktiebolag ej offentligt ägda

@@ -12,7 +12,7 @@ stewards/<id>/
 A series is the unit a steward delivers: one register's tables across years.
 Membership in a series is the only authority for which tables share decisions;
 nothing groups tables by name. The steward generator
-(`input_data/<steward>/build_catalog.py`) is the only reader and the only
+(`reg_webapp/stewards/<steward>/build_catalog.py`) is the only reader and the only
 producer of `inventory.toml`, so the rules below are checked when it loads the
 spec. The inventory contract (`inventory.py`) does not change: series exist
 only here and in the generator.

@@ -1,0 +1,12 @@
+{
+  "note": "The prepared root was prepared from a curation tree with no UMU provider TOML; the build's curation tree has one. The build must not resolve against the stale prepared copy of the authored sources.",
+  "fails_if": "the build stops calling `check_authored_sources` after opening the prepared root (an authored-source edit after `prepare-sources` then builds silently from the stale prepared records), or the guard compares only the authored sources the prepared root pins as present",
+  "sources": {
+    "description": "The SCB sample only; no authored thin provider at preparation.",
+    "scb": {
+      "registerinformation": [
+        {"cvid": 1001, "var_id": 101, "colname": "VALUE"}
+      ]
+    }
+  }
+}

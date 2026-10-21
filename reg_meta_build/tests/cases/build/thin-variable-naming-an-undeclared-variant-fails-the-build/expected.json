@@ -3,7 +3,7 @@
     "code": "thin_declaration_invalid",
     "exit_code": 10,
     "message_contains": [
-      "accepted-authored:Forsakringskassan/fk.toml:r:COL: unknown declared variant 'w'"
+      "accepted-authored:providers/fk.toml:r:COL: unknown declared variant 'w'"
     ]
   }
 }

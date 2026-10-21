@@ -42,7 +42,12 @@ from _csv_fixtures import (
     var_row,
     write_scb_input,
 )
-from _pipeline_catalog_support import prepare_accepted, report_events
+from _pipeline_catalog_support import (
+    prepare_accepted,
+    report_events,
+    write_authored,
+    write_delivered,
+)
 from _sos_fixtures import (
     SosRegister,
     SosSubset,
@@ -156,12 +161,7 @@ def write_sources(spec: dict, source: Path) -> None:
         + (("unika",) if unika is not None else ())
         + (("vardemangder", "valid_dates") if values else ()),
     )
-    for relative, text in spec.get("files", {}).items():
-        path = source / relative
-        path.parent.mkdir(parents=True, exist_ok=True)
-        if not isinstance(text, str):
-            text = "\n".join(text) + "\n"
-        path.write_text(text, encoding="utf-8")
+    write_delivered(spec, source)
     for register in spec.get("sos", ()):
         workbook_spec = SosRegister(
             abbrev=register["abbrev"],
@@ -309,9 +309,13 @@ class PreparedCache:
             staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=self.root))
             try:
                 write_sources(spec, staging / "source")
-                _, commit, digest = prepare_accepted(staging, staging / "source")
+                write_authored(spec, staging / "authored")
+                _, commit, digest = prepare_accepted(
+                    staging, staging / "source", staging / "authored"
+                )
                 # Only the accepted prepared repository is read after preparation.
                 shutil.rmtree(staging / "source")
+                shutil.rmtree(staging / "authored")
                 shutil.rmtree(staging / "inputs")
                 (staging / "selection.json").write_text(
                     json.dumps({"commit": commit, "digest": digest}), encoding="utf-8"
@@ -1516,9 +1520,11 @@ def run_step(
     if not isinstance(fails_if, str) or not fails_if.strip():
         raise ValueError(f"{step}/request.json: fails_if must be a non-empty string")
     expected = json.loads((step / "expected.json").read_text(encoding="utf-8"))
-    built = cache.get(source_spec(request["sources"]))
+    built_spec = source_spec(request["sources"])
+    built = cache.get(built_spec)
     authored = cache.get(source_spec(request.get("authored_from", request["sources"])))
     curation = render_curation(step / "curation", scratch / "curation", authored, built)
+    write_authored(built_spec, curation)
     output, report = scratch / "reg_meta.db", scratch / "report"
     registers = tuple(request.get("registers", ()))
     rebuild = bool(expected.get("rebuilt_identical"))

@@ -129,8 +129,9 @@ def slug_dir_curates_canonical_scb(slug_dir: Path) -> bool:
 
     The build's stale-seed preflight (#556) calls this: a curated canonical-band
     register id (`[2^61, 2^62)`, #444) means the build MUST mint that register
-    from the committed ``input_data/scb_canonical/`` seed, so a missing seed dir
-    is a hard error rather than a silently-skipped adapter. Reads ONLY the
+    from the canonical seed (``curation/scb_canonical/`` plus the bundle's code
+    lists), so a missing seed is a hard error rather than a silently-skipped
+    adapter. Reads ONLY the
     hand-curated ``scb.toml`` (maintainer intent), never the build-generated
     ``scb.auto.toml``. Checks each entry's register-id component — the first
     dotted segment of its key — which uniformly covers register / variant /

@@ -1,10 +1,10 @@
 """Shared support for the SWECOV steward-flavor generator tests (`test_swecov_*.py`).
 
-The generator (`input_data/swecov/build_catalog.py`) is tracked but maintainer-run:
-its CSV/workbook inputs are confidential and stay untracked, so these tests feed it
-SYNTHETIC columns and a synthetic `holdings_enriched.json` — no real delivery data,
-no `derived/` artifact of the maintainer's, no network. Loaded by path because
-`input_data/` is a seed area, not an importable package.
+The generator (`reg_webapp/stewards/swecov/build_catalog.py`) is tracked but
+maintainer-run: its CSV/workbook inputs are confidential and live outside the repo, so
+these tests feed it SYNTHETIC columns and a synthetic `holdings_enriched.json` — no real
+delivery data, no `derived/` artifact of the maintainer's, no network. Loaded by path
+because the steward directory is not an importable package.
 
 Its public contract is the `cmd_*` entry points, called in-process with an
 `argparse.Namespace`, and the argparse CLI itself (`run_generator`). The authored
@@ -27,6 +27,7 @@ import sys
 import tomllib
 from collections import defaultdict
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from _extend_db_support import BASE_FIXTURE
@@ -36,16 +37,31 @@ from reg_meta_build.extend_db import extend_db
 from reg_meta_build.id import mint
 from reg_meta_build.steward_spec import load_steward_spec
 
+if TYPE_CHECKING:
+    from types import ModuleType
+
 GENERATOR = (
-    Path(__file__).resolve().parents[1] / "input_data" / "swecov" / "build_catalog.py"
+    Path(__file__).resolve().parents[2]
+    / "reg_webapp"
+    / "stewards"
+    / "swecov"
+    / "build_catalog.py"
 )
-_spec = importlib.util.spec_from_file_location("swecov_build_catalog", GENERATOR)
-assert _spec and _spec.loader
-build_catalog = importlib.util.module_from_spec(_spec)
-# Registered before exec: the module defines `@dataclass`es, which resolve their
-# annotations through `sys.modules[cls.__module__]`.
-sys.modules[_spec.name] = build_catalog
-_spec.loader.exec_module(build_catalog)
+
+
+def load_generator(path: Path, name: str) -> ModuleType:
+    """The generator at `path`, imported as module `name`."""
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    # Registered before exec: the module defines `@dataclass`es, which resolve
+    # their annotations through `sys.modules[cls.__module__]`.
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+build_catalog = load_generator(GENERATOR, "swecov_build_catalog")
 
 # The committed steward spec the loaded generator runs under, read through its
 # public model.
@@ -234,18 +250,36 @@ def flavored_db_fixture(tmp_path_factory: pytest.TempPathFactory) -> Path:
 def run_flavor(
     tmp_path: Path, enriched: dict[str, dict], spec: Path = SPEC_DIR
 ) -> Path:
-    """Run `cmd_flavor` in a synthetic package layout; return its input root
-    (`providers/` and, two levels up, `fqid_slugs/swecov/`)."""
-    base = tmp_path / "input_data" / "swecov"
-    derived = base / "derived"
+    """Run `cmd_flavor` of a generator copied into a synthetic repo at `tmp_path`
+    (`copied_generator`), so its slug pins land in that repo's
+    `reg_meta_build/fqid_slugs/swecov/`, not the checkout's; `enriched` is the
+    `--out` dir's `derived/holdings_enriched.json`. Returns the `--out` dir
+    (`providers/`)."""
+    out = tmp_path / "out"
+    derived = out / "derived"
     derived.mkdir(parents=True)
     (derived / "holdings_enriched.json").write_text(
         json.dumps(enriched), encoding="utf-8"
     )
-    build_catalog.cmd_flavor(
-        argparse.Namespace(csv=base / "SWECOV_variables_2025-12-11.csv", spec=spec)
+    flavor_generator(tmp_path).cmd_flavor(
+        argparse.Namespace(
+            csv=tmp_path / "SWECOV_variables_2025-12-11.csv", spec=spec, out=out
+        )
     )
-    return base
+    return out
+
+
+def flavor_generator(root: Path) -> ModuleType:
+    """The generator copied into the synthetic repo at `root` (once), imported."""
+    generator = root / "reg_webapp" / "stewards" / "swecov" / "build_catalog.py"
+    if not generator.exists():
+        copied_generator(root)
+    return load_generator(generator, f"swecov_build_catalog_{abs(hash(root))}")
+
+
+def flavor_slug_dir(out: Path) -> Path:
+    """The slug pins `run_flavor` (whose `--out` is `out`) wrote."""
+    return out.parent / "reg_meta_build" / "fqid_slugs" / "swecov"
 
 
 DEFAULT_VARIANT = "inera/bestallda-prover/_default"
@@ -340,9 +374,11 @@ def inventory_worklist(tmp_path: Path) -> dict:
 
 
 def copied_generator(root: Path) -> Path:
-    """A copy of the generator in its repo layout, so its default `--csv` reads
-    beside the copy; returns the copied generator."""
-    generator = root / "reg_meta_build" / "input_data" / "swecov" / "build_catalog.py"
+    """A copy of the generator in its repo layout under `root`, so the paths it
+    derives from its own location (the slug pins under
+    `reg_meta_build/fqid_slugs/<steward>/`) stay under `root`; returns the copied
+    generator."""
+    generator = root / "reg_webapp" / "stewards" / "swecov" / "build_catalog.py"
     generator.parent.mkdir(parents=True)
     shutil.copyfile(GENERATOR, generator)
     return generator

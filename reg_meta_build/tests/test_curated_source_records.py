@@ -10,9 +10,7 @@ from reg_meta_build.slug_grammar import derive_variable_slug
 
 def test_fohm_thin_slug_entries_follow_authored_columns() -> None:
     root = Path(__file__).parents[1]
-    source = tomllib.loads(
-        (root / "input_data/Folkhalsomyndigheten/fohm.toml").read_text()
-    )
+    source = tomllib.loads((root / "curation/providers/fohm.toml").read_text())
     for register, columns in (
         ("sminet", {"provtagningsdatum", "statistikdatum"}),
         ("nvr", {"nplid"}),

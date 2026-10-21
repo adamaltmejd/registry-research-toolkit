@@ -16,7 +16,7 @@ name = "International Standard Classification of Education 2011 — Level"
 name_en = "International Standard Classification of Education 2011 — Level"
 publisher = "UNESCO"          # optional, like name_en, valid_to, description and url
 valid_from = 2011
-codes_file = "isced2011.csv"  # under input_data/classifications/; SOS books under sos/
+codes_file = "isced2011.csv"  # under the bundle's classifications/; SOS books under sos/
 sentinel_codes = [            # optional
   { code = "-1", meaning = "Uppgift saknas" },
 ]
@@ -41,8 +41,9 @@ one file. Succession between classifications is not declared here: it lives in
 
 ## How it works
 
-Every CSV under `reg_meta_build/input_data/classifications/` (tracked in git;
-SCB-sourced CSVs live at the top level, SOS CSVs under `sos/`) is prepared as a
+Every CSV under the input bundle's `classifications/` (captured from
+`catalog/source/classifications/` in the private registry-catalog-inputs repository;
+SCB-sourced CSVs at the top level, SOS CSVs under `sos/`) is prepared as a
 classification book; each classification file names its book in `codes_file`. At build
 time:
 
@@ -97,13 +98,13 @@ KS87-P's cells are KS87 chapter numbers, and no chapter is a row of that book.
 
 1. Find SCB's authoritative code list (often a downloadable Excel/CSV on the
    classification's documentation page).
-2. Save as `reg_meta_build/input_data/classifications/<short_name>.csv` with the header
-   above and commit it.
+2. Save as `catalog/source/classifications/<short_name>.csv` in the inputs repository
+   with the header above and commit it there.
 3. Set `codes_file = "<short_name>.csv"` in the matching
    `reg_meta_build/curation/classifications/<short_name>.toml`.
-4. Run `reg-meta-build build-db --input-dir reg_meta_build/input_data/`. Build output
-   reports per-classification canonical coverage and persisted per-state conformance
-   evidence for observed non-canonical codes.
+4. Capture a new input bundle from that commit, prepare it and build (the `build-db`
+   skill has the commands). Build output reports per-classification canonical coverage
+   and persisted per-state conformance evidence for observed non-canonical codes.
 5. Spot-check with `reg-meta get classification <SHORT_NAME> --codes --only-valid` and
    review conformance rows for data-quality issues (mislabeled codes, truncated labels,
    etc.).
@@ -152,8 +153,9 @@ label variant becomes its own `value_code` row, all marked `is_valid=1`).
 These are provider-seeded entries (`label_source = "sos"`): they seed canonical codes
 via `codes_file`. PR2 wired SOS→classification linkage via the `external_classification`
 resolver, so SOS variable_states can now carry a `classification_id` — the entries are
-no longer canonical-only. CSVs live under `input_data/classifications/sos/`;
-`manifest.json` there records the per-system source URL, sha256, and counts.
+no longer canonical-only. CSVs live under the inputs repository's
+`catalog/source/classifications/sos/`; `manifest.json` there records the per-system
+source URL, sha256, and counts.
 
   | short_name   | canonical codes | publisher                               | notes                                                    |
   | ------------ | --------------: | --------------------------------------- | -------------------------------------------------------- |
@@ -174,19 +176,24 @@ no longer canonical-only. CSVs live under `input_data/classifications/sos/`;
 The SOS CSVs are produced by `scripts/fetch_sos_classifications.py` (committed; the SOS
 analog of `scripts/extract_lkf.py`). This script is run on demand by a maintainer — it
 is NOT executed automatically at build time. The resulting CSVs and `manifest.json` are
-committed under `input_data/classifications/sos/`.
+committed under the inputs repository's `catalog/source/classifications/sos/`; the raw
+downloads go to its `catalog/raw/classification-sources/` (`--cache-dir`).
 
 Per-system source URLs and sha256 digests are stored in
-`input_data/classifications/sos/manifest.json`. On each run the script merge-writes that
-manifest, so counts and hashes stay current.
+`catalog/source/classifications/sos/manifest.json`. On each run the script merge-writes
+that manifest, so counts and hashes stay current.
 
 **Refresh caveat:** a bare run fetches all configured source keys, including
 `landskoder` (ISO-3166 country codes) — which we deliberately do NOT seed as a
-classification. To refresh only the 11 seeded keys without touching unrelated entries,
-pass `--only` with the relevant key names:
+classification. Bundle capture takes every CSV under `catalog/source/classifications/`,
+so a stray `landskoder.csv` there would enter the next bundle. To refresh only the 11
+seeded keys without touching unrelated entries, pass `--only` with the relevant key
+names:
 
 ```bash
 uv run python scripts/fetch_sos_classifications.py \
+    --out-dir <inputs>/catalog/source/classifications/sos \
+    --cache-dir <inputs>/catalog/raw/classification-sources \
     --only atc icd-10-se icd-11-se kva icf ksi \
              icd-8 icd-9-ks87 ks87-p drg mdc
 ```
@@ -393,8 +400,9 @@ Edge cases:
   `RAMS SektorKod fr.o.m. 1993`: the LISA/RAMS ownership-sector code (00, 11–15, 21–25
   per the observed `Sektor 2000 / Sektorkod` value set; pre-2000 extras
   19/20/29/30/40/60/99 and 0/000/'' stay nonconforming). Labels from SCB's LISA library
-  (`docs/lisa/SektorKod.md`, Kod 1993–) with the export spellings for 00/13/14/15/21/25,
-  corroborated by SSD RAMS/YrkesReg "arbetsställets sektortillhörighet" value texts.
+  (`inputs:catalog/docs/markdown/lisa/SektorKod.md`, Kod 1993–) with the export
+  spellings for 00/13/14/15/21/25, corroborated by SSD RAMS/YrkesReg "arbetsställets
+  sektortillhörighet" value texts.
 - `JURFORM 2020` is identical to `JURFORM 2000` except code `84` changed from
   "Landsting" to "Regioner".
 - `AGARKAT` 2000 and 2020 differ only in code `30/3` Region(kontrollerade) rename.
@@ -434,7 +442,7 @@ Re-run extraction:
 
 ```bash
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
-    --out reg_meta_build/input_data/classifications/
+    --out <inputs>/catalog/source/classifications/
 
 # Optional: also download PDFs for OCR / cross-checking:
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \

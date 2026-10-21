@@ -414,6 +414,18 @@ A branch name is not a pin: selection names the exact accepted commit and manife
 digest. Preparing a candidate never commits it, replaces accepted inputs or changes the
 active catalog.
 
+Every third-party or private input lives there; this repository holds code and authored
+curation only, and no reader defaults to a path inside the package. `catalog/source/` is
+the tree a bundle is captured from (classification books, the SCB canonical code lists,
+the Socialstyrelsen workbooks); `catalog/docs/` holds the `build-docs` inputs. The
+maintainer-authored sources (the thin-provider declarations in
+`curation/providers/<slug>.toml` and `curation/scb_canonical/scb_canonical.toml`) are
+curation, not deliveries. `prepare-sources --curation-dir` reads them and records each
+as a `curation` inventory entry with its SHA-256, so the prepared root carries them like
+any other source. `build-db` and `check-curation` refuse a prepared root whose pinned
+authored sources differ from the curation tree (`prepared_authored_source_stale`): an
+edit to one of these files needs a fresh prepare, and a stale root cannot build.
+
 Raw archives can remain compressed outside Git; the original SCB exports are release
 `scb-raw-2026-03` of the inputs repository. The lossless compact SCB snapshot keeps
 original dictionaries, associations and ordering without versioning the wasteful
@@ -477,10 +489,11 @@ missing row also invalidates an omission claim covering that row.
 ### Curation source and layout
 
 Tracked TOML in this repository is the only curation input. The build reads it directly.
-It is not part of the input bundle, and no preparation depends on it, so a curation edit
-never forces a re-prepare. Curation compiles in-process on every build; there is no
-stored selection. The build summary records a hash of the curation tree. An optional
-decision dump serves inspection.
+It is not part of the input bundle, and apart from the authored sources under
+`providers/` and `scb_canonical/` (see "Input storage and preparation") no preparation
+depends on it, so any other curation edit never forces a re-prepare. Curation compiles
+in-process on every build; there is no stored selection. The build summary records a
+hash of the curation tree. An optional decision dump serves inspection.
 
 The target layout:
 
@@ -2325,7 +2338,7 @@ stage.
 ```text
 reg-meta-build prepare-input-bundle --input-dir DIR --scb-snapshot DIR ...
 reg-meta-build verify-input-bundle --input-bundle DIR ...
-reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir NEW_DIR
+reg-meta-build prepare-sources --input-bundle DIR --input-commit SHA --input-manifest-sha256 SHA256 --output-dir NEW_DIR [--curation-dir DIR]
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR [--curation-dir DIR]
 reg-meta-build build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --diagnostic --diagnostic-db-path NEW.db
 reg-meta-build --db NEW_DIR build-db --prepared DIR --input-commit SHA --input-manifest-sha256 SHA256 --report-dir DIR --registers SPEC[,SPEC...]
@@ -3003,15 +3016,15 @@ parses frontmatter, cleans markdown for FTS, resolves source URLs/titles from
 warnings rather than invented links. Related binaries are checked against tracked hashes
 and sizes before being stored verbatim; license metadata determines whether
 redistribution is permitted. A `required` entry (the default) whose binary is absent,
-including when the whole `input_data/SCB/docs` root is absent, refuses the build with
+including when the whole `--related-docs-dir` root is absent, refuses the build with
 `related_documents_binary_missing` naming each `register/filename`, so a release cannot
-ship a docs asset silently missing a document (#1686). There is no opt-out: a checkout
-without the gitignored PDFs cannot run `build-docs` against the repository map. A
-`required = false` entry with no binary and an unregistered PDF are warnings. The build
-stages `reg_meta_docs.db.tmp` beside the destination and installs it through
-`publish_db`, so a refusal leaves the previous docs DB untouched and a successful
-rebuild retains the replaced generation as `.prev` (#1690). This indexing does not
-interpret documents to change catalog facts.
+ship a docs asset silently missing a document (#1686). There is no opt-out: without the
+inputs repository's `catalog/docs/related/` you cannot run `build-docs` against the
+repository map. A `required = false` entry with no binary and an unregistered PDF are
+warnings. The build stages `reg_meta_docs.db.tmp` beside the destination and installs it
+through `publish_db`, so a refusal leaves the previous docs DB untouched and a
+successful rebuild retains the replaced generation as `.prev` (#1690). This indexing
+does not interpret documents to change catalog facts.
 
 `doc_db.py` owns the build and FTS creation. The reader's docs schema gate is
 `DOC_SCHEMA` in `crates/reg-catalog/src/docs.rs`, which mirrors `DOC_SCHEMA_VERSION`.

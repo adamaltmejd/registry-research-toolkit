@@ -183,7 +183,7 @@
     "scb_canonical/scb_canonical.toml": "[[register]]\nkey = \"rowvalid\"\nname = \"Row validity\"\nvalid_from = \"1990-01-01\"\nvalid_to = \"1990-12-31\"\n[[register.variable]]\nname = \"Rowvalid\"\ncolumn = \"ROWVALID\"\ndata_type = \"text\"\nvalue_set = \"row-list\"\n\n[[register]]\nkey = \"named\"\nname = \"Named list\"\nvalid_from = \"2020-01-01\"\nvalid_to = \"2020-12-31\"\n[[register.variable]]\nname = \"Named\"\ncolumn = \"NAMED\"\ndata_type = \"text\"\nvalue_set = \"named-list\"\n\n",
     "scb_canonical/row-list.csv": ["code,label,label_en,parent_code,valid_from,valid_to", "02,Second,,,2008-11-19,"],
     "scb_canonical/named-list.csv": ["code,label", "01,First"],
-    "Forsakringskassan/fk.toml": ["[[register]]", "key = \"fkreg\"", "name = \"FK register\"", "valid_from = \"2020-01-01\"", "valid_to = \"2020-12-31\"", "[[register.variable]]", "name = \"Fkvar\"", "column = \"FKVAR\"", "data_type = \"text\"", "value_set = \"fk-list\"", "[[register.variable]]", "name = \"Fkcanon\"", "column = \"FKCANON\"", "data_type = \"text\"", "value_set = \"named-list\""],
+    "providers/fk.toml": ["[[register]]", "key = \"fkreg\"", "name = \"FK register\"", "valid_from = \"2020-01-01\"", "valid_to = \"2020-12-31\"", "[[register.variable]]", "name = \"Fkvar\"", "column = \"FKVAR\"", "data_type = \"text\"", "value_set = \"fk-list\"", "[[register.variable]]", "name = \"Fkcanon\"", "column = \"FKCANON\"", "data_type = \"text\"", "value_set = \"named-list\""],
     "Forsakringskassan/fk-list.csv": ["code,label", "01,First"],
     "SCB/Identifierare.csv": "VarID|Variabelnamn|Variabeldefinition\r\n4901|Idjoin|Identifierare\r\n"
   }

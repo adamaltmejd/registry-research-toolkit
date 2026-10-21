@@ -2,16 +2,15 @@
 
 ``builder_copy`` / ``run_build_docs`` run the ``reg-meta-build build-docs`` CLI in a
 subprocess against a copy of the imported builder package. The curated doc files
-(``doc_sources.toml``, ``related_documents.toml``) and the related-document binary
-root (``input_data/SCB/docs``) resolve relative to the package file, so the cases
-write synthetic files into the copy; nothing under the real checkout is read.
+(``doc_sources.toml``, ``related_documents.toml``) resolve relative to the package
+file, so the cases write synthetic files into the copy; the related-document binary
+root is the explicit ``--related-docs-dir``. Nothing under the real checkout is read.
 """
 
 from __future__ import annotations
 
 import json
 import os
-import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -26,8 +25,8 @@ if TYPE_CHECKING:
 def builder_copy(tmp_path: Path) -> Path:
     """The package root (``<copy>/reg_meta_build``) of a copied builder checkout.
 
-    The copy carries no ``doc_sources.toml``, ``related_documents.toml`` or
-    ``input_data/`` until a case writes them.
+    The copy carries no ``doc_sources.toml`` or ``related_documents.toml`` until a
+    case writes them.
     """
     return copied_builder_checkout(tmp_path) / "reg_meta_build"
 
@@ -36,7 +35,6 @@ def reset_doc_curation(package_root: Path) -> None:
     """Remove every doc curation input a previous case wrote into the copy."""
     for name in ("doc_sources.toml", "related_documents.toml"):
         (package_root / name).unlink(missing_ok=True)
-    shutil.rmtree(package_root / "input_data", ignore_errors=True)
 
 
 @dataclass(frozen=True)
@@ -46,7 +44,9 @@ class CliRun:
     stderr: str
 
 
-def run_build_docs(package_root: Path, docs_dir: Path, db_dir: Path) -> CliRun:
+def run_build_docs(
+    package_root: Path, docs_dir: Path, related_docs_dir: Path, db_dir: Path
+) -> CliRun:
     """Run ``python -m reg_meta_build build-docs`` against the copied package."""
     completed = subprocess.run(
         [
@@ -56,6 +56,8 @@ def run_build_docs(package_root: Path, docs_dir: Path, db_dir: Path) -> CliRun:
             "build-docs",
             "--docs-dir",
             str(docs_dir),
+            "--related-docs-dir",
+            str(related_docs_dir),
             "--db",
             str(db_dir),
         ],

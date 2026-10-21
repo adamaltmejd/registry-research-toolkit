@@ -396,7 +396,7 @@ name = "ADE"
 definition = "ADE"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -407,7 +407,7 @@ name = "ADECU"
 definition = "ADECU"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -418,7 +418,7 @@ name = "ADEFEDI"
 definition = "ADEFEDI"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -429,7 +429,7 @@ name = "ADEFPRO"
 definition = "ADEFPRO"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -440,7 +440,7 @@ name = "ADEFXML"
 definition = "ADEFXML"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -451,7 +451,7 @@ name = "ADEGOV"
 definition = "ADEGOV"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -462,7 +462,7 @@ name = "ADEGOV1"
 definition = "ADEGOV1"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -473,7 +473,7 @@ name = "ADEINFO"
 definition = "ADEINFO"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -484,7 +484,7 @@ name = "ADEPAY"
 definition = "ADEPAY"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -495,7 +495,7 @@ name = "ADEPAY1"
 definition = "ADEPAY1"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -506,7 +506,7 @@ name = "ADESU"
 definition = "ADESU"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -517,7 +517,7 @@ name = "ADETDOC"
 definition = "ADETDOC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -528,7 +528,7 @@ name = "AEBCLS"
 definition = "AEBCLS"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -539,7 +539,7 @@ name = "AEBEU"
 definition = "AEBEU"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -550,7 +550,7 @@ name = "AEBHM"
 definition = "AEBHM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -561,7 +561,7 @@ name = "AEBWW"
 definition = "AEBWW"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -572,7 +572,7 @@ name = "AESELL"
 definition = "AESELL"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -583,7 +583,7 @@ name = "AESHM"
 definition = "AESHM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -594,7 +594,7 @@ name = "AESPEU"
 definition = "AESPEU"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -605,7 +605,7 @@ name = "AESPHM"
 definition = "AESPHM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -616,7 +616,7 @@ name = "AESPWEB"
 definition = "AESPWEB"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -627,7 +627,7 @@ name = "AESPWW"
 definition = "AESPWW"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -638,7 +638,7 @@ name = "AESPXML"
 definition = "AESPXML"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -649,7 +649,7 @@ name = "AESVALPCT"
 definition = "AESVALPCT"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -661,7 +661,7 @@ name = "AgKat"
 definition = "AgKat"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -672,7 +672,7 @@ name = "AnstS"
 definition = "AnstS"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -683,7 +683,7 @@ name = "Ar"
 definition = "Ar"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -695,7 +695,7 @@ name = "BGrupp"
 definition = "BGrupp"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -706,7 +706,7 @@ name = "blankettnr"
 definition = "blankettnr"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -717,7 +717,7 @@ name = "BlNr"
 definition = "BlNr"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -728,7 +728,7 @@ name = "DIGSIGN"
 definition = "DIGSIGN"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -739,7 +739,7 @@ name = "DOM"
 definition = "DOM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -750,7 +750,7 @@ name = "DOMANN"
 definition = "DOMANN"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -761,7 +761,7 @@ name = "DOME"
 definition = "DOME"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -772,7 +772,7 @@ name = "DOMHEM"
 definition = "DOMHEM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -783,7 +783,7 @@ name = "DOMS"
 definition = "DOMS"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -794,7 +794,7 @@ name = "EMPCUSEPCT"
 definition = "EMPCUSEPCT"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -805,7 +805,7 @@ name = "EMPIACC3GPCT"
 definition = "EMPIACC3GPCT"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -816,7 +816,7 @@ name = "EXTRA"
 definition = "EXTRA"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -827,7 +827,7 @@ name = "FENr"
 definition = "FENr"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -839,7 +839,7 @@ name = "FEStat"
 definition = "FEStat"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -851,7 +851,7 @@ name = "FETyp"
 definition = "FETyp"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -863,7 +863,7 @@ name = "FtgStat"
 definition = "FtgStat"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -874,7 +874,7 @@ name = "GCOP"
 definition = "GCOP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -885,7 +885,7 @@ name = "GSOLNRG"
 definition = "GSOLNRG"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -896,7 +896,7 @@ name = "HRS"
 definition = "HRS"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -907,7 +907,7 @@ name = "IBK"
 definition = "IBK"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -918,7 +918,7 @@ name = "IEDU"
 definition = "IEDU"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -929,7 +929,7 @@ name = "IGOV2AL"
 definition = "IGOV2AL"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -940,7 +940,7 @@ name = "IGOV2PRXCCS"
 definition = "IGOV2PRXCCS"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -951,7 +951,7 @@ name = "IGOV2PRXNAW"
 definition = "IGOV2PRXNAW"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -962,7 +962,7 @@ name = "IGOV2PRXOTH"
 definition = "IGOV2PRXOTH"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -973,7 +973,7 @@ name = "IGOV2PRXXPS"
 definition = "IGOV2PRXXPS"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -984,7 +984,7 @@ name = "IGOVAL"
 definition = "IGOVAL"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -995,7 +995,7 @@ name = "IGOVBCMP"
 definition = "IGOVBCMP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1006,7 +1006,7 @@ name = "IGOVBNAW"
 definition = "IGOVBNAW"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1017,7 +1017,7 @@ name = "IGOVBPAP"
 definition = "IGOVBPAP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1028,7 +1028,7 @@ name = "IGOVBSEC"
 definition = "IGOVBSEC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1039,7 +1039,7 @@ name = "IGOVDCE"
 definition = "IGOVDCE"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1050,7 +1050,7 @@ name = "IGOVDCT"
 definition = "IGOVDCT"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1061,7 +1061,7 @@ name = "IGOVDSC"
 definition = "IGOVDSC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1072,7 +1072,7 @@ name = "IGOVDVAT"
 definition = "IGOVDVAT"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1083,7 +1083,7 @@ name = "IGOVFM"
 definition = "IGOVFM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 # #1509: the filter question parenting IGOVIF/IGOVFM/IGOVRT/IGOVAL/IGOVPR.
@@ -1106,7 +1106,7 @@ name = "IGOVIF"
 definition = "IGOVIF"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1117,7 +1117,7 @@ name = "IGOVPR"
 definition = "IGOVPR"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1128,7 +1128,7 @@ name = "IGOVRT"
 definition = "IGOVRT"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1139,7 +1139,7 @@ name = "INTRA"
 definition = "INTRA"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1150,7 +1150,7 @@ name = "INV3SBG"
 definition = "INV3SBG"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1161,7 +1161,7 @@ name = "INVREC"
 definition = "INVREC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1172,7 +1172,7 @@ name = "INVSND"
 definition = "INVSND"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1183,7 +1183,7 @@ name = "ITERP"
 definition = "ITERP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1195,7 +1195,7 @@ name = "JEAnt"
 definition = "JEAnt"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1207,7 +1207,7 @@ name = "JERel"
 definition = "JERel"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1219,7 +1219,7 @@ name = "JurForm"
 definition = "JurForm"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1230,7 +1230,7 @@ name = "KOM"
 definition = "KOM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1242,7 +1242,7 @@ name = "KommunSate"
 definition = "KommunSate"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1254,7 +1254,7 @@ name = "Lansate"
 definition = "Lansate"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1265,7 +1265,7 @@ name = "MAXSPD"
 definition = "MAXSPD"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1276,7 +1276,7 @@ name = "MOB"
 definition = "MOB"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1288,7 +1288,7 @@ name = "Oms2"
 definition = "Oms2"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1300,7 +1300,7 @@ name = "Oms2_ny"
 definition = "Oms2_ny"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1311,7 +1311,7 @@ name = "OmsAr"
 definition = "OmsAr"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1322,7 +1322,7 @@ name = "OmsMnKr"
 definition = "OmsMnKr"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1333,7 +1333,7 @@ name = "OSOPEN"
 definition = "OSOPEN"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1344,7 +1344,7 @@ name = "PHD"
 definition = "PHD"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1355,7 +1355,7 @@ name = "PHRS"
 definition = "PHRS"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1366,7 +1366,7 @@ name = "PMC"
 definition = "PMC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1377,7 +1377,7 @@ name = "PMD_APP"
 definition = "PMD_APP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1388,7 +1388,7 @@ name = "PMD_DOC"
 definition = "PMD_DOC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1399,7 +1399,7 @@ name = "PMD_EM"
 definition = "PMD_EM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1410,7 +1410,7 @@ name = "PMD_OCOST"
 definition = "PMD_OCOST"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1421,7 +1421,7 @@ name = "PMD_OCP"
 definition = "PMD_OCP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1432,7 +1432,7 @@ name = "PMD_ONEED"
 definition = "PMD_ONEED"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1443,7 +1443,7 @@ name = "PMD_OOTH"
 definition = "PMD_OOTH"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1454,7 +1454,7 @@ name = "PMD_OSEC"
 definition = "PMD_OSEC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1465,7 +1465,7 @@ name = "PMD_OTEC"
 definition = "PMD_OTEC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1476,7 +1476,7 @@ name = "PMD_WEB"
 definition = "PMD_WEB"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1487,7 +1487,7 @@ name = "PostNr"
 definition = "PostNr"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1498,7 +1498,7 @@ name = "Q13E_SCAN"
 definition = "Q13E_SCAN"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1509,7 +1509,7 @@ name = "Q13E_SIV"
 definition = "Q13E_SIV"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1520,7 +1520,7 @@ name = "RA"
 definition = "RA"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1531,7 +1531,7 @@ name = "RFAC"
 definition = "RFAC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1542,7 +1542,7 @@ name = "RFASPRI"
 definition = "RFASPRI"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1553,7 +1553,7 @@ name = "RFID"
 definition = "RFID"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1564,7 +1564,7 @@ name = "RFMC"
 definition = "RFMC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1575,7 +1575,7 @@ name = "RFPRI"
 definition = "RFPRI"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1586,7 +1586,7 @@ name = "RFPSDP"
 definition = "RFPSDP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1597,7 +1597,7 @@ name = "RMFC"
 definition = "RMFC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1608,7 +1608,7 @@ name = "RMPA"
 definition = "RMPA"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1619,7 +1619,7 @@ name = "RMSM"
 definition = "RMSM"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1630,7 +1630,7 @@ name = "SECCONT"
 definition = "SECCONT"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1641,7 +1641,7 @@ name = "SECCTP"
 definition = "SECCTP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1652,7 +1652,7 @@ name = "SECICNFA"
 definition = "SECICNFA"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1663,7 +1663,7 @@ name = "SECIDD"
 definition = "SECIDD"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1674,7 +1674,7 @@ name = "SECIUSA"
 definition = "SECIUSA"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1685,7 +1685,7 @@ name = "SECIUSF"
 definition = "SECIUSF"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1696,7 +1696,7 @@ name = "SECLOG"
 definition = "SECLOG"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1707,7 +1707,7 @@ name = "SECOSBU"
 definition = "SECOSBU"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1718,7 +1718,7 @@ name = "SECPOL"
 definition = "SECPOL"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1729,7 +1729,7 @@ name = "SECPRO"
 definition = "SECPRO"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1740,7 +1740,7 @@ name = "SECSPSW"
 definition = "SECSPSW"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1751,7 +1751,7 @@ name = "SECUIHT"
 definition = "SECUIHT"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1762,7 +1762,7 @@ name = "SECVTGI"
 definition = "SECVTGI"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1774,7 +1774,7 @@ name = "Sektor"
 definition = "Sektor"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1786,7 +1786,7 @@ name = "SGrupp"
 definition = "SGrupp"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1797,7 +1797,7 @@ name = "SICU"
 definition = "SICU"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1808,7 +1808,7 @@ name = "SICU2"
 definition = "SICU2"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1819,7 +1819,7 @@ name = "SICUIPF"
 definition = "SICUIPF"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1830,7 +1830,7 @@ name = "SICUPDE"
 definition = "SICUPDE"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1841,7 +1841,7 @@ name = "SIPUACC"
 definition = "SIPUACC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1852,7 +1852,7 @@ name = "SIPUINV"
 definition = "SIPUINV"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1863,7 +1863,7 @@ name = "SISAACC"
 definition = "SISAACC"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1874,7 +1874,7 @@ name = "SISADIST"
 definition = "SISADIST"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1885,7 +1885,7 @@ name = "SISAINV"
 definition = "SISAINV"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1896,7 +1896,7 @@ name = "SISAPROD"
 definition = "SISAPROD"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1907,7 +1907,7 @@ name = "SISU"
 definition = "SISU"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1918,7 +1918,7 @@ name = "SISU2"
 definition = "SISU2"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1929,7 +1929,7 @@ name = "SISUIPF"
 definition = "SISUIPF"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1940,7 +1940,7 @@ name = "SISUPDE"
 definition = "SISUPDE"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1951,7 +1951,7 @@ name = "StatusKod"
 definition = "StatusKod"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1962,7 +1962,7 @@ name = "StatusTillaggKod"
 definition = "StatusTillaggKod"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1973,7 +1973,7 @@ name = "TOPPDOM_1"
 definition = "TOPPDOM_1"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1984,7 +1984,7 @@ name = "TOPPDOM_2"
 definition = "TOPPDOM_2"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -1995,7 +1995,7 @@ name = "TOPPDOM_3"
 definition = "TOPPDOM_3"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2006,7 +2006,7 @@ name = "TOPPDOM_4"
 definition = "TOPPDOM_4"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2017,7 +2017,7 @@ name = "TOPPDOM_5"
 definition = "TOPPDOM_5"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2028,7 +2028,7 @@ name = "TOPPDOM_6"
 definition = "TOPPDOM_6"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2039,7 +2039,7 @@ name = "TOPPDOM_6a"
 definition = "TOPPDOM_6a"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2050,7 +2050,7 @@ name = "TOPPDOM_6b"
 definition = "TOPPDOM_6b"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2061,7 +2061,7 @@ name = "TOPPDOM_6c"
 definition = "TOPPDOM_6c"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2072,7 +2072,7 @@ name = "TOPPDOMPR"
 definition = "TOPPDOMPR"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2083,7 +2083,7 @@ name = "TOPPDOMPR_Annat"
 definition = "TOPPDOMPR_Annat"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2094,7 +2094,7 @@ name = "WEBCMP"
 definition = "WEBCMP"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2105,7 +2105,7 @@ name = "WEBPAY"
 definition = "WEBPAY"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2116,7 +2116,7 @@ name = "WLAN"
 definition = "WLAN"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[errata.column]]
@@ -2127,7 +2127,7 @@ name = "XGrupp"
 definition = "XGrupp"
 holdings_period = "2008-2020"
 source = "steward-holdings"
-evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (input_data/swecov/derived/steward_coverage.json); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+evidence = "SWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
 noted = "2026-06-14"
 
 [[representation.alias_window]]
