@@ -119,7 +119,8 @@ describe("ProjectEditor — a blocked order closes the download until the draft 
         },
         {
           code: "binding_unavailable",
-          message: "column 'scb/lisa/kon' has no state covering scb/lisa/v1 in 2019",
+          message:
+            "column 'scb/lisa/kon' has no state covering scb/lisa/v1 in 2019",
           variable: "scb/lisa/kon",
           period: "2019",
         },
