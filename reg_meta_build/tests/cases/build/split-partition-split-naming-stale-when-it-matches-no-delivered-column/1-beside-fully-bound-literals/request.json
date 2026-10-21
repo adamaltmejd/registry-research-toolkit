@@ -24,7 +24,7 @@
         },
         {
           "colname": "LEFT",
-          "cvid": 22,
+          "cvid": 22, "varname": "GenericVar left",
           "var_id": 5,
           "year": "2021",
           "regver_id": 2021

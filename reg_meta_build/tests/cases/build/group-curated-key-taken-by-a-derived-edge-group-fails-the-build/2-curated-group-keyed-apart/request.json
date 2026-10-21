@@ -9,7 +9,7 @@
           "cvid": 1004,
           "var_id": 300,
           "colname": "FORNAMN",
-          "varname": "Var300",
+          "varname": "Var300 fornamn",
           "data_type": "int",
           "data_length": "1"
         },

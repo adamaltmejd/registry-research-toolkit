@@ -46,7 +46,7 @@
       "fields": ["variable", "column", "state_name"],
       "rows": [
         ["first", "FIRST", "Reviewed first construct"],
-        ["second", "SECOND", "GenericVar"]
+        ["second", "SECOND", "GenericVar (SECOND)"]
       ]
     },
     {

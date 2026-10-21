@@ -5,15 +5,15 @@
     "description": "Two sub-annual 2020 editions; Q and S are documented only in the 2020-12-31 one.",
     "scb": {
       "registerinformation": [
-        {"colname": "EDITION", "cvid": 1, "var_id": 99, "year": "2020", "versionname": "2020-03-31", "regver_id": 1, "register": ["TEST", 1, 2]},
-        {"colname": "EDITION", "cvid": 2, "var_id": 99, "year": "2020", "versionname": "2020-12-31", "regver_id": 2, "register": ["TEST", 1, 2]},
+        {"colname": "EDITION", "cvid": 1, "varname": "GenericVar v99", "var_id": 99, "year": "2020", "versionname": "2020-03-31", "regver_id": 1, "register": ["TEST", 1, 2]},
+        {"colname": "EDITION", "cvid": 2, "varname": "GenericVar v99", "var_id": 99, "year": "2020", "versionname": "2020-12-31", "regver_id": 2, "register": ["TEST", 1, 2]},
         {"colname": "Q", "cvid": 3, "var_id": 5, "year": "2020", "versionname": "2020-12-31", "regver_id": 2, "register": ["TEST", 1, 2]},
-        {"colname": "S", "cvid": 4, "var_id": 6, "year": "2020", "versionname": "2020-12-31", "regver_id": 2, "register": ["TEST", 1, 2]}
+        {"colname": "S", "cvid": 4, "varname": "GenericVar v6", "var_id": 6, "year": "2020", "versionname": "2020-12-31", "regver_id": 2, "register": ["TEST", 1, 2]}
       ],
       "unika": [
-        "TEST|Testregistret|Individer|Individer|GenericVar|EDITION|2020|2020|0|0|0",
+        "TEST|Testregistret|Individer|Individer|GenericVar v99|EDITION|2020|2020|0|0|0",
         "TEST|Testregistret|Individer|Individer|GenericVar|Q|2020|2020|0|0|0",
-        "TEST|Testregistret|Individer|Individer|GenericVar|S|2020|2020|0|0|0"
+        "TEST|Testregistret|Individer|Individer|GenericVar v6|S|2020|2020|0|0|0"
       ]
     }
   }

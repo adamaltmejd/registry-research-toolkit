@@ -4,14 +4,14 @@
     "registerinformation": [
       {
         "colname": "TXT_E",
-        "cvid": 231,
+        "cvid": 231, "varname": "GenericVar text-e",
         "var_id": 23,
         "year": "2020",
         "regver_id": 2020
       },
       {
         "colname": "TXT_D",
-        "cvid": 221,
+        "cvid": 221, "varname": "GenericVar text-d",
         "var_id": 22,
         "year": "2020",
         "regver_id": 2020,
@@ -23,7 +23,7 @@
       },
       {
         "colname": "OE_KEEP",
-        "cvid": 212,
+        "cvid": 212, "varname": "GenericVar kept-owner",
         "var_id": 21,
         "year": "2020",
         "regver_id": 2020,
@@ -31,7 +31,7 @@
       },
       {
         "colname": "OE_KEEP",
-        "cvid": 211,
+        "cvid": 211, "varname": "GenericVar kept-owner",
         "var_id": 21,
         "year": "2020",
         "regver_id": 2020,
@@ -65,7 +65,7 @@
       },
       {
         "colname": "OC_FIELD",
-        "cvid": 132,
+        "cvid": 132, "varname": "GenericVar field-owner",
         "var_id": 13,
         "year": "2020",
         "regver_id": 2020,
@@ -73,7 +73,7 @@
       },
       {
         "colname": "OC_FIELD",
-        "cvid": 131,
+        "cvid": 131, "varname": "GenericVar field-owner",
         "var_id": 13,
         "year": "2020",
         "regver_id": 2020,
@@ -81,7 +81,7 @@
       },
       {
         "colname": "SB_B",
-        "cvid": 191,
+        "cvid": 191, "varopdef": "Answer SB_B",
         "var_id": 19,
         "year": "2020",
         "regver_id": 2020,
@@ -89,42 +89,42 @@
       },
       {
         "colname": "SB_A",
-        "cvid": 191,
+        "cvid": 191, "varopdef": "Answer SB_A",
         "var_id": 19,
         "year": "2020",
         "regver_id": 2020
       },
       {
         "colname": "EN_B",
-        "cvid": 181,
+        "cvid": 181, "varopdef": "Answer EN_B",
         "var_id": 18,
         "year": "2020",
         "regver_id": 2020
       },
       {
         "colname": "EN_A",
-        "cvid": 181,
+        "cvid": 181, "varopdef": "Answer EN_A",
         "var_id": 18,
         "year": "2020",
         "regver_id": 2020
       },
       {
         "colname": "TXT_C",
-        "cvid": 171,
+        "cvid": 171, "varname": "GenericVar text-c",
         "var_id": 17,
         "year": "2020",
         "regver_id": 2020
       },
       {
         "colname": "TXT_B",
-        "cvid": 161,
+        "cvid": 161, "varname": "GenericVar text-b",
         "var_id": 16,
         "year": "2020",
         "regver_id": 2020
       },
       {
         "colname": "TXT_A",
-        "cvid": 151,
+        "cvid": 151, "varname": "GenericVar text-a",
         "var_id": 15,
         "year": "2020",
         "regver_id": 2020
@@ -162,14 +162,14 @@
       },
       {
         "colname": "PP_OTHER",
-        "cvid": 141,
+        "cvid": 141, "varname": "GenericVar other",
         "var_id": 14,
         "year": "2020",
         "regver_id": 2020
       },
       {
         "colname": "OB_ADD",
-        "cvid": 122,
+        "cvid": 122, "varname": "GenericVar added",
         "var_id": 12,
         "year": "2020",
         "regver_id": 2020,
@@ -177,7 +177,7 @@
       },
       {
         "colname": "OB_ADD",
-        "cvid": 121,
+        "cvid": 121, "varname": "GenericVar added",
         "var_id": 12,
         "year": "2020",
         "regver_id": 2020,
@@ -185,7 +185,7 @@
       },
       {
         "colname": "OA_REMOVE",
-        "cvid": 112,
+        "cvid": 112, "varname": "GenericVar removed",
         "var_id": 11,
         "year": "2020",
         "regver_id": 2020,
@@ -193,7 +193,7 @@
       },
       {
         "colname": "OA_REMOVE",
-        "cvid": 111,
+        "cvid": 111, "varname": "GenericVar removed",
         "var_id": 11,
         "year": "2020",
         "regver_id": 2020,
@@ -250,7 +250,7 @@
       },
       {
         "colname": "KEPT",
-        "cvid": 71,
+        "cvid": 71, "varname": "GenericVar kept",
         "var_id": 7,
         "year": "2020",
         "regver_id": 2020
@@ -264,7 +264,7 @@
       },
       {
         "colname": "PA_OWNED",
-        "cvid": 61,
+        "cvid": 61, "varname": "GenericVar owned",
         "var_id": 6,
         "year": "2020",
         "regver_id": 2020

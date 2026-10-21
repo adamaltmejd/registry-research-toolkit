@@ -20,7 +20,7 @@
           "cvid": 1001,
           "var_id": 100,
           "colname": "LNAMN",
-          "varname": "Var100",
+          "varname": "Var100 lnamn",
           "data_type": "int",
           "data_length": "1"
         },
@@ -36,7 +36,7 @@
           "cvid": 1003,
           "var_id": 200,
           "colname": "KOMMUNNAMN",
-          "varname": "Var200",
+          "varname": "Var200 kommunnamn",
           "data_type": "int",
           "data_length": "1"
         },
@@ -44,7 +44,7 @@
           "cvid": 1004,
           "var_id": 300,
           "colname": "FORNAMN",
-          "varname": "Var300",
+          "varname": "Var300 fornamn",
           "data_type": "int",
           "data_length": "1"
         },
@@ -68,7 +68,7 @@
           "cvid": 1007,
           "var_id": 400,
           "colname": "BELOPPTXT",
-          "varname": "Var400",
+          "varname": "Var400 belopptxt",
           "data_type": "Sträng (text)",
           "data_length": "1"
         },
@@ -84,7 +84,7 @@
           "cvid": 1009,
           "var_id": 500,
           "colname": "DAGTXT",
-          "varname": "Var500",
+          "varname": "Var500 dagtxt",
           "data_type": "Datum",
           "data_length": "10"
         },
@@ -92,7 +92,7 @@
           "cvid": 1010,
           "var_id": 600,
           "colname": "SUN2000KOD",
-          "varname": "Var600",
+          "varname": "Var600 sun-kod",
           "data_type": "int",
           "data_length": "1"
         },
@@ -116,7 +116,7 @@
           "cvid": 1013,
           "var_id": 700,
           "colname": "ANTALTXT",
-          "varname": "Var700",
+          "varname": "Var700 antaltxt",
           "data_type": "Sträng",
           "data_length": "1"
         },
@@ -132,28 +132,28 @@
           "cvid": 1015,
           "var_id": 800,
           "colname": "XTXT",
-          "varname": "Var800",
+          "varname": "Var800 xtxt",
           "data_type": "int",
           "data_length": "2"
         }
       ],
       "unika": [
         "TESTREG|Testregistret|Individer|Individer|Var100|LID|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var100|LNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var100 lnamn|LNAMN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var200|KOMMUN|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var200|KOMMUNNAMN|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var300|FORNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var200 kommunnamn|KOMMUNNAMN|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var300 fornamn|FORNAMN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var300|EFTERNAMN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var400|BELOPP|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var400|BELOPPTXT|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var400 belopptxt|BELOPPTXT|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var500|DAG|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var500|DAGTXT|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var600|SUN2000KOD|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var500 dagtxt|DAGTXT|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var600 sun-kod|SUN2000KOD|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var600|SUN2000NAMN|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var700|ANTAL|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var700|ANTALTXT|2020|2020|0|0|0",
+        "TESTREG|Testregistret|Individer|Individer|Var700 antaltxt|ANTALTXT|2020|2020|0|0|0",
         "TESTREG|Testregistret|Individer|Individer|Var800|X|2020|2020|0|0|0",
-        "TESTREG|Testregistret|Individer|Individer|Var800|XTXT|2020|2020|0|0|0"
+        "TESTREG|Testregistret|Individer|Individer|Var800 xtxt|XTXT|2020|2020|0|0|0"
       ]
     }
   }

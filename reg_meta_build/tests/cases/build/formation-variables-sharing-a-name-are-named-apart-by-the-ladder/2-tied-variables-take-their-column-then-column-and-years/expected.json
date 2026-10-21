@@ -1,0 +1,20 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "name"],
+      "rows": [
+        ["a", "Ägarnummer (AGNR, 2000–2001)"],
+        ["b", "Ägarnummer (AgNr, 2002)"],
+        ["c", "Ägarnummer (AGARE)"]
+      ],
+      "note": "c's column is its own; a and b share one case-folded column and are told apart by their years."
+    }
+  ]
+}

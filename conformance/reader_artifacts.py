@@ -73,8 +73,10 @@ def replicate_filler(case: Path, destination: Path) -> Path:
     """Copy a reader case, expanding its `request.json` filler into copies.
 
     `request.json` names one `filler` binding of the case's `catalog.json` and a
-    `copies` count; the filler is replaced by that many copies whose slug and
-    provider key carry a `-N` suffix. An optional `held_table` `{id, edition}`
+    `copies` count; the filler is replaced by that many copies whose slug,
+    provider key and variants carry a `-N` suffix: a variable name is unique within
+    a variant (#1736), so each copy keeps the filler's name in a variant of its
+    own. An optional `held_table` `{id, edition}`
     also holds every copy: one inventory column and census row per copy, with the
     holdings policy re-pinned to the expanded census. Returns the expanded source
     directory.
@@ -95,11 +97,22 @@ def replicate_filler(case: Path, destination: Path) -> Path:
         == request["filler"]
     )
     catalog.remove(filler)
+
+    def variant(state: dict, index: int) -> dict:
+        return {
+            "slug": f"{state['variant']['slug']}-{index}",
+            "name": f"{state['variant']['name']} {index}",
+        }
+
     catalog.extend(
         {
             **filler,
             "slug": f"{filler['slug']}-{index}",
             "provider_key": f"{filler['provider_key']}-{index}",
+            "states": [
+                {**state, "variant": variant(state, index)}
+                for state in filler["states"]
+            ],
         }
         for index in range(request["copies"])
     )
@@ -110,7 +123,7 @@ def replicate_filler(case: Path, destination: Path) -> Path:
         provider, register = filler["register"]["provider"], filler["register"]["slug"]
         mappings = "".join(
             f'[[table.column]]\nname = "Copy{index}"\n[[table.column.mapping]]\n'
-            f'register_variant = "{provider}/{register}/{state["variant"]["slug"]}"\n'
+            f'register_variant = "{provider}/{register}/{variant(state, index)["slug"]}"\n'
             f'variable = "{provider}/{register}/{filler["slug"]}-{index}"\n'
             f'representation = "{state["delivery_column_name"]}"\n'
             for index in range(request["copies"])

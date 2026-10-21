@@ -50,7 +50,12 @@ from reg_meta_build.source_formation import form_native_variable
 from reg_meta_build.source_intervals import reconcile_source_fields
 from reg_meta_build.source_naming import check_naming_target, native_provider_keys
 from reg_meta_build.source_representations import resolve_representation_cases
-from reg_meta_build.source_siblings import SiblingResolution, resolve_sibling_pairs
+from reg_meta_build.source_siblings import (
+    SiblingResolution,
+    name_colliding_variables,
+    resolve_sibling_pairs,
+    source_name,
+)
 from reg_meta_build.source_value_bindings import (
     bind_occurrence_code_lists,
 )
@@ -690,6 +695,7 @@ def resolve_source_scope(
             )
         late[key].append(case)
     variables = {}
+    formed_at: dict[NativeKey, tuple[str, tuple[SourceRecordRef, ...]]] = {}
     coverage: list[CoverageObligation] = []
     strict_refusals = 0
     for key, items in sorted(groups.items(), key=lambda item: repr(item[0])):
@@ -909,6 +915,7 @@ def resolve_source_scope(
                 )
             withheld["variable", fqid].extend(causes)
         else:
+            formed_at[key] = fqid, refs
             for variant, causes in formed.withheld_variant_states.items():
                 withheld["variant_states", fqid, variant].extend(causes)
             for (variant, column), causes in formed.withheld_representations.items():
@@ -919,6 +926,89 @@ def resolve_source_scope(
                 withheld[
                     "succession_representation", fqid, column.lower(), variant
                 ].extend(causes)
+    # A variable name is unique within a variant (#1736). Variables that share a
+    # source name in a variant are named apart by the fallback ladder; an
+    # `[[errata.field]]` name correction wins, so only a variable still carrying its
+    # source name is renamed. Every variable whose name still collides, across the
+    # whole variant, is withheld, none of them chosen, so a diagnostic build stays
+    # valid for `validate_built_db`.
+    formed_names: dict[NativeKey, ResolvedVariable] = {}
+    source_names: dict[NativeKey, str] = {}
+    for key, variable in variables.items():
+        if variable is not None and variable.name is not None:
+            name = source_name(groups[key])
+            if name is not None:
+                formed_names[key] = variable
+                source_names[key] = name
+    # The ladder name also replaces the source name on the variable's states and
+    # per-column alias windows, which readers show in place of the variable's name;
+    # a state with its own (corrected) name keeps it.
+    for key, name in name_colliding_variables(formed_names, source_names).items():
+        variable, source = formed_names[key], source_names[key]
+        variables[key] = variable.model_copy(
+            update={
+                "name": name,
+                "states": tuple(
+                    state.model_copy(update={"name": name})
+                    if state.name == source
+                    else state
+                    for state in variable.states
+                ),
+                "aliases": tuple(
+                    alias.model_copy(
+                        update={
+                            "windows": tuple(
+                                window.model_copy(update={"name": name})
+                                if window.name == source
+                                else window
+                                for window in alias.windows
+                            )
+                        }
+                    )
+                    for alias in variable.aliases
+                ),
+            }
+        )
+    # Uniqueness is over the name a reader sees per state, as `validate_built_db`
+    # checks it.
+    holders: dict[tuple[str, str, str, str], set[NativeKey]] = defaultdict(set)
+    for key, variable in variables.items():
+        if variable is None or variable.name is None:
+            continue
+        register = variable.register_ref
+        for state in variable.states:
+            holders[
+                register.provider,
+                register.slug,
+                state.variant.slug,
+                state.name or variable.name,
+            ].add(key)
+    clashes: dict[NativeKey, list[str]] = defaultdict(list)
+    clashing_names: dict[NativeKey, str] = {}
+    for (_, _, variant, name), keys in sorted(holders.items()):
+        if len(keys) > 1:
+            for key in keys:
+                others = sorted(formed_at[other][0] for other in keys - {key})
+                clashes[key].append(f"{variant} (with {', '.join(others)})")
+                clashing_names[key] = name
+    for key, where in sorted(clashes.items(), key=lambda item: repr(item[0])):
+        fqid, refs = formed_at[key]
+        clash = ResolutionDiagnostic(
+            code="duplicate_variable_name",
+            severity="error",
+            subject=fqid,
+            detail=f"The name {clashing_names[key]!r} is not unique in variant "
+            + "; ".join(where)
+            + ". Variables that share a source name are named apart by their "
+            "operational definitions, then their delivery columns and years; these "
+            "need an [[errata.field]] name correction.",
+            refs=refs,
+            fields=("name",),
+            withheld_output=(fqid,),
+        )
+        emit(clash)
+        variables[key] = None
+        withheld["variable", fqid].append(clash)
     annotated = apply_alias_cases(
         evidence, tuple(aliases), variables=variables, variants=variants
     )

@@ -7,8 +7,8 @@
     "description": "Variable 1.5 delivers FIRST and SECOND under one source record (CVID 20).",
     "scb": {
       "registerinformation": [
-        {"colname": "FIRST", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020},
-        {"colname": "SECOND", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020}
+        {"colname": "FIRST", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020, "varopdef": "First answer"},
+        {"colname": "SECOND", "cvid": 20, "var_id": 5, "year": "2020", "regver_id": 2020, "varopdef": "Second answer"}
       ]
     }
   }

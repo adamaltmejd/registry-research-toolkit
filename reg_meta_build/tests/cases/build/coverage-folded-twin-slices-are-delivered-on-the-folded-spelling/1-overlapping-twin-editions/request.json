@@ -7,7 +7,7 @@
       "registerinformation": [
         {
           "colname": "Kon",
-          "cvid": 19,
+          "cvid": 19, "varname": "GenericVar kon",
           "var_id": 5,
           "year": "2021",
           "regver_id": 119,
@@ -15,14 +15,14 @@
         },
         {
           "colname": "KON",
-          "cvid": 21,
+          "cvid": 21, "varname": "GenericVar kon",
           "var_id": 5,
           "year": "2021",
           "regver_id": 121
         },
         {
           "colname": "KON",
-          "cvid": 22,
+          "cvid": 22, "varname": "GenericVar kon",
           "var_id": 5,
           "year": "2022",
           "regver_id": 122
