@@ -1211,11 +1211,9 @@ source_editions = ["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008
 variable = "2.272"
 variant = "2.56"
 column = "AktVar"
-edition = "15017"
+editions = ["15017"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Varaktighet i antal dagar mellan det gamla och nya civilståndet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Civilstånd tidigare varaktighet" }, { name = "operational_definition", status = "value", value = "Härledd variabel som visar det tidigare civilståndets varaktighet utifrån personens nuvarande civilståndsdatum och tidigare civilståndsdatum.\n\nVariabeln bör inte användas på grund av dålig kvalité. Osäkerhet finns om tidigare civilståndsdatum för personer som invandrat." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal år" }]
-expected_period_text = "Skilda 1968-1997"
-expected_scope = { kind = "pooled", intervals = [], label = "Skilda 1968-1997", pooled_start = "1968-01-01", pooled_end = "1997-12-31" }
-expected_period = { kind = "pooled", intervals = [], label = "Skilda 1968-1997", pooled_start = "1968-01-01", pooled_end = "1997-12-31" }
+expected_period_text = { 15017 = "Skilda 1968-1997" }
 field = "measurement_unit"
 value = "Dagar"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
@@ -1225,11 +1223,9 @@ noted = "2026-09-30"
 variable = "2.272"
 variant = "2.56"
 column = "Aktvar"
-edition = "15013"
+editions = ["15013"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Varaktighet i antal dagar mellan det gamla och nya civilståndet." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Civilstånd tidigare varaktighet" }, { name = "operational_definition", status = "value", value = "Härledd variabel som visar det tidigare civilståndets varaktighet utifrån personens nuvarande civilståndsdatum och tidigare civilståndsdatum.\n\nVariabeln bör inte användas på grund av dålig kvalité. Osäkerhet finns om tidigare civilståndsdatum för personer som invandrat." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal år" }]
-expected_period_text = "Änkor/ änklingar 1968-1997"
-expected_scope = { kind = "pooled", intervals = [], label = "Änkor/ änklingar 1968-1997", pooled_start = "1968-01-01", pooled_end = "1997-12-31" }
-expected_period = { kind = "pooled", intervals = [], label = "Änkor/ änklingar 1968-1997", pooled_start = "1968-01-01", pooled_end = "1997-12-31" }
+expected_period_text = { 15013 = "Änkor/ änklingar 1968-1997" }
 field = "measurement_unit"
 value = "Dagar"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
@@ -1239,11 +1235,9 @@ noted = "2026-09-30"
 variable = "2.254"
 variant = "2.66"
 column = "Folkbdat"
-edition = "4852"
+editions = ["4852"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "integer" }, { name = "definition", status = "value", value = "Datum från när folkbokföringen gäller." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Folkbokföringsdatum" }, { name = "operational_definition", status = "absent" }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Antal anställda" }]
-expected_period_text = "2005"
-expected_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2005" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2005-01-01", end = "2005-12-31" }] }
+expected_period_text = { 4852 = "2005" }
 field = "measurement_unit"
 value = "Datum"
 evidence = "Complete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
@@ -1363,11 +1357,9 @@ ref = "Complete native source peers and exact literal/edition/fields identify a 
 variable = "2.73"
 variant = "2.56"
 column = "Ar"
-edition = "13038"
+editions = ["13038"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för civilståndsändring." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 13038 = "2018" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1377,11 +1369,9 @@ noted = "2026-09-30"
 variable = "2.73"
 variant = "2.57"
 column = "Ar"
-edition = "13039"
+editions = ["13039"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för dödsfall." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 13039 = "2018" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1391,11 +1381,9 @@ noted = "2026-09-30"
 variable = "2.73"
 variant = "2.59"
 column = "Ar"
-edition = "13040"
+editions = ["13040"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för barnets födelse." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 13040 = "2018" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1405,11 +1393,9 @@ noted = "2026-09-30"
 variable = "2.73"
 variant = "2.60"
 column = "Ar"
-edition = "13047"
+editions = ["13047"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för utvandring." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 13047 = "2018" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1419,11 +1405,9 @@ noted = "2026-09-30"
 variable = "2.73"
 variant = "2.61"
 column = "Ar"
-edition = "13043"
+editions = ["13043"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för barnets födelse." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 13043 = "2018" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1433,11 +1417,9 @@ noted = "2026-09-30"
 variable = "2.73"
 variant = "2.62"
 column = "Ar"
-edition = "13045"
+editions = ["13045"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för invandring." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 13045 = "2018" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1447,11 +1429,9 @@ noted = "2026-09-30"
 variable = "2.73"
 variant = "2.63"
 column = "Ar"
-edition = "13044"
+editions = ["13044", "15947", "18040", "18600", "19043", "19729", "20314"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för inrikes flyttning." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 13044 = "2018", 15947 = "2020", 18040 = "2021", 18600 = "2022", 19043 = "2023", 19729 = "2024", 20314 = "2025" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1461,95 +1441,9 @@ noted = "2026-09-30"
 variable = "2.73"
 variant = "2.63"
 column = "Ar"
-edition = "13927"
+editions = ["13927"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för inrikes flyttning." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Datum" }]
-expected_period_text = "2019"
-expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
-field = "measurement_unit"
-value = "År"
-evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "2.73"
-variant = "2.63"
-column = "Ar"
-edition = "15947"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för inrikes flyttning." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2020"
-expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
-field = "measurement_unit"
-value = "År"
-evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "2.73"
-variant = "2.63"
-column = "Ar"
-edition = "18040"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för inrikes flyttning." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
-field = "measurement_unit"
-value = "År"
-evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "2.73"
-variant = "2.63"
-column = "Ar"
-edition = "18600"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för inrikes flyttning." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "measurement_unit"
-value = "År"
-evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "2.73"
-variant = "2.63"
-column = "Ar"
-edition = "19043"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för inrikes flyttning." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
-field = "measurement_unit"
-value = "År"
-evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "2.73"
-variant = "2.63"
-column = "Ar"
-edition = "19729"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för inrikes flyttning." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
-field = "measurement_unit"
-value = "År"
-evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
-noted = "2026-09-30"
-
-[[errata.field]]
-variable = "2.73"
-variant = "2.63"
-column = "Ar"
-edition = "20314"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för inrikes flyttning." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2025"
-expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-12-31" }] }
+expected_period_text = { 13927 = "2019" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1559,11 +1453,9 @@ noted = "2026-09-30"
 variable = "2.73"
 variant = "2.64"
 column = "Ar"
-edition = "13046"
+editions = ["13046"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "text" }, { name = "definition", status = "value", value = "Kalenderår." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "År" }, { name = "operational_definition", status = "value", value = "År för medborgarskapsändring." }, { name = "representation", status = "absent" }, { name = "measurement_unit", status = "value", value = "Årtal" }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 13046 = "2018" }
 field = "measurement_unit"
 value = "År"
 evidence = "The complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
@@ -1597,11 +1489,9 @@ source = "Complete SCB same-native sourcecoding and user-approved explicit varia
 variable = "2.283"
 variant = "2.57"
 column = "DodDat"
-edition = "19721"
+editions = ["19721"]
 expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "DodDat" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "0" }, { name = "data_type", status = "value", value = "integer" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Datum när dödsfallet inträffade." }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "Datum" }, { name = "name", status = "value", value = "Dödsdatum" }, { name = "operational_definition", status = "value", value = "Datum består av årtal, månad och dag. ÅÅÅÅMMDD" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "unknown" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "value", value = "Skatteverket" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
-expected_period_text = "2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
+expected_period_text = { 19721 = "2024" }
 evidence = "Complete accepted physical table header contains only DodDatum for this exact own native quantity; exported DodDat is absent. Preserve original source fields; no type/coding/role borrowing."
 noted = "2026-10-01"
 field = "column_name"

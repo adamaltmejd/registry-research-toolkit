@@ -2313,11 +2313,9 @@ expected_fields_sha256 = "56f29dd75531a202cf39ca892aa2d5a02f0dade407345f2fa50c16
 variable = "371.1218"
 variant = "371.1344"
 column = "ASJUKM1"
-edition = "13011"
+editions = ["13011"]
 expected_fields = [{ name = "definition", status = "value", value = "Underlag för beräkning av sjukförsäkringsavgift på inkomst <7,5 basbelopp eller för beräkning enbart med högsta procentsats." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för beräkning av sjukförsäkringsavgift på ink. <7,5 basbelopp" }, { name = "operational_definition", status = "value", value = "Underlag för beräkning av sjukförsäkringsavgift 1/1-30/4   4,44 % eller för personer födda 1989 eller senare 1,11%" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+expected_period_text = { 13011 = "2016" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2327,11 +2325,9 @@ value = "Underlag för beräkning av sjukförsäkringsavgift på ink. <7,5 basbe
 variable = "371.1218"
 variant = "371.1344"
 column = "ASJUKM2"
-edition = "13011"
+editions = ["13011"]
 expected_fields = [{ name = "definition", status = "value", value = "Underlag för beräkning av sjukförsäkringsavgift på inkomst <7,5 basbelopp eller för beräkning enbart med högsta procentsats." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för beräkning av sjukförsäkringsavgift på ink. <7,5 basbelopp" }, { name = "operational_definition", status = "value", value = "Underlag för beräkning av sjukförsäkringsavgift perioden 1/5-31/7. För personer födda 1950-1989 4,44 % samt för pesoner födda 1990-1991,1,11%. För personer födda 1992 och senare debiteras inte sjukförsäkringsavgift för perioden." }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+expected_period_text = { 13011 = "2016" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2341,11 +2337,9 @@ value = "Underlag för beräkning av sjukförsäkringsavgift på ink. <7,5 basbe
 variable = "371.1220"
 variant = "371.1344"
 column = "ASKAD1"
-edition = "13011"
+editions = ["13011"]
 expected_fields = [{ name = "definition", status = "value", value = "Underlag för beräkning av arbetsskadeavgift." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för beräkning av arbetsskadeavgift" }, { name = "operational_definition", status = "value", value = "Underlag för beräkning av arbetsskadeavgift perioden 1/1–30/4. För personer födda 1950-1988 0,3 % samt för personer födda 1989 och senare 0,07 %" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+expected_period_text = { 13011 = "2016" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2355,11 +2349,9 @@ value = "Underlag för beräkning av arbetsskadeavgift — 1 januari–30 april"
 variable = "371.1220"
 variant = "371.1344"
 column = "ASKAD2"
-edition = "13011"
+editions = ["13011"]
 expected_fields = [{ name = "definition", status = "value", value = "Underlag för beräkning av arbetsskadeavgift." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för beräkning av arbetsskadeavgift" }, { name = "operational_definition", status = "value", value = "Underlag för beräkning av arbetsskadeavgift perioden 1/5-31/7. För personer födda 1950-1989 0,3% samt för personer födda 1990-1991 0,07 %. För personer födda 1992 och senare debiteras inte arbetsskadeavgift för perioden." }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+expected_period_text = { 13011 = "2016" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2369,11 +2361,9 @@ value = "Underlag för beräkning av arbetsskadeavgift — 1 maj–31 juli"
 variable = "371.21834"
 variant = "371.1344"
 column = "ASFAVG1"
-edition = "13011"
+editions = ["13011"]
 expected_fields = [{ name = "definition", status = "value", value = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 %." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 %" }, { name = "operational_definition", status = "value", value = "Underlag för beräkning av föräldraförsäkringsavgift perioden 1/1–30/4. För personer födda 1950-1988 2,60 % samt för  personer födda 1989 och senare 0,65 %" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+expected_period_text = { 13011 = "2016" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2383,11 +2373,9 @@ value = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 % — 1
 variable = "371.21834"
 variant = "371.1344"
 column = "ASFAVG2"
-edition = "13011"
+editions = ["13011"]
 expected_fields = [{ name = "definition", status = "value", value = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 %." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 %" }, { name = "operational_definition", status = "value", value = "Underlag för beräkning av föräldraförsäkringsavgift perioden 1/5-31/7. För personer födda 1950-1989 2,60 % samt för  personer födda 1990-1991 0,65 %. För personer födda 1992 och senare debiteras inte föräldraförsäkringsavgift för perioden." }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
+expected_period_text = { 13011 = "2016" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2397,11 +2385,9 @@ value = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 % — 1
 variable = "371.22306"
 variant = "371.1345"
 column = "CDISP504HB_TRIF"
-edition = "15727"
+editions = ["14155", "15727", "16506", "18388"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad disponibel inkomst enligt 2004 års definition, exkl. kapitalvinst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def" }, { name = "operational_definition", status = "value", value = "Disponibel inkomst enligt TRIF (totalräknad inkomstfördelningsstatistik)." }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 14155 = "2017", 15727 = "2018", 16506 = "2019", 18388 = "2020" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2411,53 +2397,9 @@ value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF"
 variable = "371.22306"
 variant = "371.1345"
 column = "CDISP504HB_TRIF"
-edition = "16506"
-expected_fields = [{ name = "definition", status = "value", value = "Beräknad disponibel inkomst enligt 2004 års definition, exkl. kapitalvinst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def" }, { name = "operational_definition", status = "value", value = "Disponibel inkomst enligt TRIF (totalräknad inkomstfördelningsstatistik)." }]
-expected_period_text = "2019"
-expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF"
-
-[[errata.field]]
-variable = "371.22306"
-variant = "371.1345"
-column = "CDISP504HB_TRIF"
-edition = "18388"
-expected_fields = [{ name = "definition", status = "value", value = "Beräknad disponibel inkomst enligt 2004 års definition, exkl. kapitalvinst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def" }, { name = "operational_definition", status = "value", value = "Disponibel inkomst enligt TRIF (totalräknad inkomstfördelningsstatistik)." }]
-expected_period_text = "2020"
-expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF"
-
-[[errata.field]]
-variable = "371.22306"
-variant = "371.1345"
-column = "CDISP504HB_TRIF"
-edition = "13003"
+editions = ["13003"]
 expected_fields = [{ name = "definition", status = "value", value = "Beräknad disponibel inkomst enligt 2004 års definition, exkl. kapitalvinst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF"
-
-[[errata.field]]
-variable = "371.22306"
-variant = "371.1345"
-column = "CDISP504HB_TRIF"
-edition = "14155"
-expected_fields = [{ name = "definition", status = "value", value = "Beräknad disponibel inkomst enligt 2004 års definition, exkl. kapitalvinst." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def" }, { name = "operational_definition", status = "value", value = "Disponibel inkomst enligt TRIF (totalräknad inkomstfördelningsstatistik)." }]
-expected_period_text = "2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
+expected_period_text = { 13003 = "2016" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2467,11 +2409,9 @@ value = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF"
 variable = "371.31839"
 variant = "371.1345"
 column = "CDISP04HB_TRIF"
-edition = "15727"
+editions = ["14155", "15727", "16506", "18388"]
 expected_fields = [{ name = "definition", status = "value", value = "Disponibel inkomst individualiserad från familj" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst individualiserad från familj, 2004 års definition" }, { name = "operational_definition", status = "value", value = "Disponibel inkomst enligt TRIF (totalräknad inkomstfördelningsstatistik)." }]
-expected_period_text = "2018"
-expected_scope = { kind = "intervals", intervals = [{ start = "2018", end = "2018" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2018-01-01", end = "2018-12-31" }] }
+expected_period_text = { 14155 = "2017", 15727 = "2018", 16506 = "2019", 18388 = "2020" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2481,53 +2421,9 @@ value = "Disponibel inkomst individualiserad från familj, 2004 års definition 
 variable = "371.31839"
 variant = "371.1345"
 column = "CDISP04HB_TRIF"
-edition = "16506"
-expected_fields = [{ name = "definition", status = "value", value = "Disponibel inkomst individualiserad från familj" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst individualiserad från familj, 2004 års definition" }, { name = "operational_definition", status = "value", value = "Disponibel inkomst enligt TRIF (totalräknad inkomstfördelningsstatistik)." }]
-expected_period_text = "2019"
-expected_scope = { kind = "intervals", intervals = [{ start = "2019", end = "2019" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2019-01-01", end = "2019-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Disponibel inkomst individualiserad från familj, 2004 års definition — TRIF"
-
-[[errata.field]]
-variable = "371.31839"
-variant = "371.1345"
-column = "CDISP04HB_TRIF"
-edition = "18388"
-expected_fields = [{ name = "definition", status = "value", value = "Disponibel inkomst individualiserad från familj" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst individualiserad från familj, 2004 års definition" }, { name = "operational_definition", status = "value", value = "Disponibel inkomst enligt TRIF (totalräknad inkomstfördelningsstatistik)." }]
-expected_period_text = "2020"
-expected_scope = { kind = "intervals", intervals = [{ start = "2020", end = "2020" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2020-01-01", end = "2020-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Disponibel inkomst individualiserad från familj, 2004 års definition — TRIF"
-
-[[errata.field]]
-variable = "371.31839"
-variant = "371.1345"
-column = "CDISP04HB_TRIF"
-edition = "13003"
+editions = ["13003"]
 expected_fields = [{ name = "definition", status = "value", value = "Disponibel inkomst individualiserad från familj" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst individualiserad från familj, 2004 års definition" }, { name = "operational_definition", status = "absent" }]
-expected_period_text = "2016"
-expected_scope = { kind = "intervals", intervals = [{ start = "2016", end = "2016" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2016-01-01", end = "2016-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Disponibel inkomst individualiserad från familj, 2004 års definition — TRIF"
-
-[[errata.field]]
-variable = "371.31839"
-variant = "371.1345"
-column = "CDISP04HB_TRIF"
-edition = "14155"
-expected_fields = [{ name = "definition", status = "value", value = "Disponibel inkomst individualiserad från familj" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Disponibel inkomst individualiserad från familj, 2004 års definition" }, { name = "operational_definition", status = "value", value = "Disponibel inkomst enligt TRIF (totalräknad inkomstfördelningsstatistik)." }]
-expected_period_text = "2017"
-expected_scope = { kind = "intervals", intervals = [{ start = "2017", end = "2017" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2017-01-01", end = "2017-12-31" }] }
+expected_period_text = { 13003 = "2016" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"
@@ -2537,53 +2433,9 @@ value = "Disponibel inkomst individualiserad från familj, 2004 års definition 
 variable = "371.38215"
 variant = "371.1404"
 column = "BTV852"
-edition = "12572"
+editions = ["12572", "12985", "13028", "13105"]
 expected_fields = [{ name = "definition", status = "value", value = "Mer än en tandvårdsåtgärd." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Mer än en tandvårdsåtgärd" }, { name = "operational_definition", status = "value", value = "Tar hänsyn till uppdelningen av åtgärder 852 i två olika åtgärder beroende på om samma åtgärd har använts flera gånger för samma patient." }]
-expected_period_text = "2015"
-expected_scope = { kind = "intervals", intervals = [{ start = "2015", end = "2015" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2015-01-01", end = "2015-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Mer än en tandvårdsåtgärd 852"
-
-[[errata.field]]
-variable = "371.38215"
-variant = "371.1404"
-column = "BTV852"
-edition = "13028"
-expected_fields = [{ name = "definition", status = "value", value = "Mer än en tandvårdsåtgärd." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Mer än en tandvårdsåtgärd" }, { name = "operational_definition", status = "value", value = "Tar hänsyn till uppdelningen av åtgärder 852 i två olika åtgärder beroende på om samma åtgärd har använts flera gånger för samma patient." }]
-expected_period_text = "2012"
-expected_scope = { kind = "intervals", intervals = [{ start = "2012", end = "2012" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2012-01-01", end = "2012-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Mer än en tandvårdsåtgärd 852"
-
-[[errata.field]]
-variable = "371.38215"
-variant = "371.1404"
-column = "BTV852"
-edition = "12985"
-expected_fields = [{ name = "definition", status = "value", value = "Mer än en tandvårdsåtgärd." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Mer än en tandvårdsåtgärd" }, { name = "operational_definition", status = "value", value = "Tar hänsyn till uppdelningen av åtgärder 852 i två olika åtgärder beroende på om samma åtgärd har använts flera gånger för samma patient." }]
-expected_period_text = "2013"
-expected_scope = { kind = "intervals", intervals = [{ start = "2013", end = "2013" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2013-01-01", end = "2013-12-31" }] }
-evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
-noted = "2026-10-02"
-field = "name"
-value = "Mer än en tandvårdsåtgärd 852"
-
-[[errata.field]]
-variable = "371.38215"
-variant = "371.1404"
-column = "BTV852"
-edition = "13105"
-expected_fields = [{ name = "definition", status = "value", value = "Mer än en tandvårdsåtgärd." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Mer än en tandvårdsåtgärd" }, { name = "operational_definition", status = "value", value = "Tar hänsyn till uppdelningen av åtgärder 852 i två olika åtgärder beroende på om samma åtgärd har använts flera gånger för samma patient." }]
-expected_period_text = "2014"
-expected_scope = { kind = "intervals", intervals = [{ start = "2014", end = "2014" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2014-01-01", end = "2014-12-31" }] }
+expected_period_text = { 12572 = "2015", 12985 = "2013", 13028 = "2012", 13105 = "2014" }
 evidence = "Complete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
 noted = "2026-10-02"
 field = "name"

@@ -1076,81 +1076,9 @@ data_warning = "Question wording and delivered floating-point storage are docume
 variable = "122.46751"
 variant = "122.1628"
 column = "UarbSokSattk"
-edition = "19243"
+editions = ["19243", "19479", "19484", "19485", "19684", "20279"]
 expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
-expected_period_text = "2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
-field = "name"
-value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46751"
-variant = "122.1628"
-column = "UarbSokSattk"
-edition = "19479"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
-expected_period_text = "2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
-field = "name"
-value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46751"
-variant = "122.1628"
-column = "UarbSokSattk"
-edition = "19484"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
-expected_period_text = "2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
-field = "name"
-value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46751"
-variant = "122.1628"
-column = "UarbSokSattk"
-edition = "19485"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46751"
-variant = "122.1628"
-column = "UarbSokSattk"
-edition = "19684"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
-expected_period_text = "2025"
-expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-12-31" }] }
-field = "name"
-value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46751"
-variant = "122.1628"
-column = "UarbSokSattk"
-edition = "20279"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Utan arbete - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Om JSM10=2" }]
-expected_period_text = "2026"
-expected_scope = { kind = "intervals", intervals = [{ start = "2026", end = "2026" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2026-01-01", end = "2026-12-31" }] }
+expected_period_text = { 19243 = "2021", 19479 = "2024", 19484 = "2023", 19485 = "2022", 19684 = "2025", 20279 = "2026" }
 field = "name"
 value = "Söksätt - Utan arbete - Förberedelser för att starta eget"
 evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
@@ -1160,81 +1088,9 @@ noted = "2026-10-20"
 variable = "122.46866"
 variant = "122.1628"
 column = "SysSokSattk"
-edition = "19243"
+editions = ["19243", "19479", "19484", "19485", "19684", "20279"]
 expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
-expected_period_text = "2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
-field = "name"
-value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46866"
-variant = "122.1628"
-column = "SysSokSattk"
-edition = "19479"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
-expected_period_text = "2024"
-expected_scope = { kind = "intervals", intervals = [{ start = "2024", end = "2024" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2024-01-01", end = "2024-12-31" }] }
-field = "name"
-value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46866"
-variant = "122.1628"
-column = "SysSokSattk"
-edition = "19484"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
-expected_period_text = "2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
-field = "name"
-value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46866"
-variant = "122.1628"
-column = "SysSokSattk"
-edition = "19485"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
-expected_period_text = "2022"
-expected_scope = { kind = "intervals", intervals = [{ start = "2022", end = "2022" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2022-01-01", end = "2022-12-31" }] }
-field = "name"
-value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46866"
-variant = "122.1628"
-column = "SysSokSattk"
-edition = "19684"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
-expected_period_text = "2025"
-expected_scope = { kind = "intervals", intervals = [{ start = "2025", end = "2025" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2025-01-01", end = "2025-12-31" }] }
-field = "name"
-value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
-evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."
-noted = "2026-10-20"
-
-[[errata.field]]
-variable = "122.46866"
-variant = "122.1628"
-column = "SysSokSattk"
-edition = "20279"
-expected_fields = [{ name = "definition", status = "value", value = "Gjorde du några förberedelser för att starta eget, t.ex. letat efter lokaler, undersökt möjligheter till finansiering, sökt tillstånd eller fått din affärsidé prövad (under de här 4 veckorna)?\n\nFrågorna avser 4 veckor." }, { name = "description", status = "absent" }, { name = "name", status = "value", value = "Söksätt - Sysselsatta - Gjorde du några förberedelser för att starta eget, t.ex. letade efter lokaler, undersökte möjligheter till finansiering, sökte tillstånd eller fick din affärsidé prövad (under de här 4 veckorna)?" }, { name = "operational_definition", status = "value", value = "Frågan ställs om Omb11j är 2,8 eller 9." }]
-expected_period_text = "2026"
-expected_scope = { kind = "intervals", intervals = [{ start = "2026", end = "2026" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2026-01-01", end = "2026-12-31" }] }
+expected_period_text = { 19243 = "2021", 19479 = "2024", 19484 = "2023", 19485 = "2022", 19684 = "2025", 20279 = "2026" }
 field = "name"
 value = "Söksätt - Sysselsatta - Förberedelser för att starta eget"
 evidence = "SCB's name embeds the full survey question, which is longer than the 200-character search cap (#1261); the question stays verbatim in the supplied definition. Shorten the name to the family prefix plus the question's subject, matching the other Söksätt questions."

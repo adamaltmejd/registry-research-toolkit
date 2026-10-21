@@ -3315,11 +3315,9 @@ noted = "2026-10-16"
 variable = "182.3335"
 variant = "182.373"
 column = "v0401"
-edition = "394"
+editions = ["394"]
 expected_fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "absent" }, { name = "column_name", status = "value", value = "v0401" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_length", status = "value", value = "53" }, { name = "data_type", status = "value", value = "decimal" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "value", value = "Kostnad  för egen forskning (ej utvecklingsverksamhet)" }, { name = "description", status = "absent" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "absent" }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "value", value = "1000-tal kronor (KSEK)" }, { name = "name", status = "value", value = "Driftkostnader för forskning" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "value", value = "2003" }, { name = "representation", status = "absent" }, { name = "sensitivity", status = "absent" }, { name = "source_attribution", status = "absent" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }]
-expected_period_text = "2003"
-expected_scope = { kind = "intervals", intervals = [{ start = "2003", end = "2003" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2003-01-01", end = "2003-12-31" }] }
+expected_period_text = { 394 = "2003" }
 field = "column_name"
 value = "v0205"
 evidence = "SCB UF0302 Beskrivning av statistiken 2003 (FoU i företagssektorn, variable list) places 'Därav driftkostnader för forskning: Driftkostnader för grundforskning och tillämpad forskning' in the operating-cost block after Programvarurelaterad FoU (v0204) and before the 2004 budget item (v0206), i.e. column v0205; the product-group item ('FoU-verksamhetens inriktning på produktgrupper') is the separate block v040x/v0401/v0402 per product. SCB's own 2003 metadata names v0411-v0471 'Driftkostnader för FoU avs. produkt 2-8', and native 4372 'Driftkostnader för FoU avs. produkt 1' is the v0401 column at the same edition. Native 3335's v0401 column name contradicts that layout; this corrects its column name to v0205 for this edition only. Name, definition, unit, type and coding are unchanged. (#1603 batch-e; Operator under maintainer delegation 2026-10-16)."
@@ -17268,25 +17266,9 @@ expected_evidence_sha256 = "a785dc95405685a8710dba47aea271bec85d3d42303c9176e9df
 variable = "182.109"
 variant = "182.441"
 column = "EMPLOY_SCOPE_NET"
-edition = "18421"
+editions = ["18421", "19474"]
 expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "value", value = "Variabeln hämtas från registret över högskolans personal." }, { name = "representation", status = "absent" }]
-expected_period_text = "2021"
-expected_scope = { kind = "intervals", intervals = [{ start = "2021", end = "2021" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2021-01-01", end = "2021-12-31" }] }
-evidence = "Same native109, exact EMPLOY_SCOPE_NET calendar-year delivery and source definition; another explicitly supplied source edition for this same year states Procent. Replace only the generic placeholder värde, antal eller % with that precise contemporaneous unit. Raw placeholder and all original metadata remain evidence; no stored magnitude or scaling is changed. Complete peer/family review: Batch52-domain42b-role-review.json."
-noted = "2026-10-02"
-field = "measurement_unit"
-value = "Procent"
-
-[[errata.field]]
-variable = "182.109"
-variant = "182.441"
-column = "EMPLOY_SCOPE_NET"
-edition = "19474"
-expected_fields = [{ name = "classification_declared", status = "absent" }, { name = "coverage_from", status = "absent" }, { name = "coverage_to", status = "absent" }, { name = "data_type", status = "value", value = "decimal" }, { name = "definition", status = "value", value = "Faktisk tjänstgöringstid i förhållande till heltidstjänst." }, { name = "description", status = "absent" }, { name = "measurement_unit", status = "value", value = "värde, antal eller %" }, { name = "name", status = "value", value = "Tjänstgöringsomfattning" }, { name = "operational_definition", status = "value", value = "Variabeln hämtas från registret över högskolans personal." }, { name = "representation", status = "absent" }]
-expected_period_text = "2023"
-expected_scope = { kind = "intervals", intervals = [{ start = "2023", end = "2023" }] }
-expected_period = { kind = "intervals", intervals = [{ start = "2023-01-01", end = "2023-12-31" }] }
+expected_period_text = { 18421 = "2021", 19474 = "2023" }
 evidence = "Same native109, exact EMPLOY_SCOPE_NET calendar-year delivery and source definition; another explicitly supplied source edition for this same year states Procent. Replace only the generic placeholder värde, antal eller % with that precise contemporaneous unit. Raw placeholder and all original metadata remain evidence; no stored magnitude or scaling is changed. Complete peer/family review: Batch52-domain42b-role-review.json."
 noted = "2026-10-02"
 field = "measurement_unit"
