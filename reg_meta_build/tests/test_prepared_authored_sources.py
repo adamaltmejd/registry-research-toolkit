@@ -6,7 +6,8 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import write_input_bundle, write_scb_input
+from _csv_fixtures import write_scb_input
+from _input_repo_fixtures import write_input_bundle
 from reg_meta_build.cli import run
 from reg_meta_build.errors import EXIT_CONFIG
 from reg_meta_build.prepared_catalog import (

@@ -7,10 +7,10 @@ import shutil
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import (
+from _csv_fixtures import write_scb_input
+from _input_repo_fixtures import (
     repin_input_bundle,
     write_input_bundle,
-    write_scb_input,
     write_scb_snapshot,
 )
 from _snapshot_fixtures import git

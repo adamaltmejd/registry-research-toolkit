@@ -9,11 +9,11 @@ import subprocess
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import (
+from _csv_fixtures import write_scb_input
+from _input_repo_fixtures import (
     repin_input_bundle,
     sparsify_scb_values,
     write_input_bundle,
-    write_scb_input,
 )
 from _lisa_fixtures import write_lisa_workbook
 from _prepared_fixtures import accept_prepared, record_file_opens

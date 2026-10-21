@@ -9,7 +9,8 @@ data:
 - the expected result: a status, a refusal, report-ledger rows or built-catalog rows.
 
 `test_build_cases.py` runs every case and `_build_case_runner.py` implements this
-format. A case fails when the build stops matching its `expected.json`.
+format, with `_build_case_sources.py`, `_build_case_curation.py` and
+`_build_case_tables.py`. A case fails when the build stops matching its `expected.json`.
 
 ## Layout
 
@@ -122,13 +123,14 @@ case cannot fail and does not belong here.
 ```
 
 - `scb` is required, because every input bundle carries an SCB snapshot.
-  - `registerinformation` rows are the keyword arguments of `_csv_fixtures.var_row`:
-    `cvid`, `var_id`, `colname`, `year`, `regver_id`, `versionname`, `varname`,
-    `vardef`, `vardesc`, `unit`, `varopdef`, `varsource`, `data_type`, `data_length`,
-    and `register` as `[name, register_id, variant_id]`. Fields left out take that
-    function's defaults: register `TESTREG` (native 1, variant 10), year 2020, type
-    `int`. A row's optional `cells` maps a Registerinformation header to a raw cell
-    value that replaces the generated one, for cells `var_row` has no argument for.
+  - `registerinformation` rows are the keyword arguments of
+    `_registerinformation_rows.var_row`: `cvid`, `var_id`, `colname`, `year`,
+    `regver_id`, `versionname`, `varname`, `vardef`, `vardesc`, `unit`, `varopdef`,
+    `varsource`, `data_type`, `data_length`, and `register` as
+    `[name, register_id, variant_id]`. Fields left out take that function's defaults:
+    register `TESTREG` (native 1, variant 10), year 2020, type `int`. A row's optional
+    `cells` maps a Registerinformation header to a raw cell value that replaces the
+    generated one, for cells `var_row` has no argument for.
   - `vardemangder` rows are raw pipe-delimited Vardemangder lines.
   - `unika` defaults to one non-sensitive, non-identifier summary row per delivered
     column. `null` delivers no Unika file.
@@ -360,5 +362,6 @@ on a value a case must never write as a literal, such as a `value_sets` `id`: th
 states that an id survives a change to the input without knowing the id.
 
 Expected values are read from the test a case replaces, or from the source fixture or
-the spec. Never copy them from a run of the code under test. A new table or placeholder
-goes in `_build_case_runner.py` and in this README in the same change.
+the spec. Never copy them from a run of the code under test. A new table goes in
+`_build_case_tables.py` and `FIELDS` in `_build_case_runner.py`, a new placeholder in
+`_build_case_curation.py`, each with this README in the same change.

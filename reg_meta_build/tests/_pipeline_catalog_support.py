@@ -10,7 +10,7 @@ from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING
 
 import pytest
-from _csv_fixtures import write_input_bundle
+from _input_repo_fixtures import write_input_bundle
 from _prepared_fixtures import accept_prepared
 from reg_meta_build.materialize import build_catalog
 from reg_meta_build.pipeline import check_curation

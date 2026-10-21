@@ -44,8 +44,8 @@ in its repository (the manifest records it); the digest of each authored source
 the thin-provider TOMLs and `scb_canonical.toml`, an absent one as null), not the
 whole curation digest, so other curation edits keep the entry; the content of every file in the code
 boundary (`prepare_code_files`: the builder's own static import walk from the
-`prepare-sources` entry point, which the probe runs, less the comparison-only modules
-it reaches (`PREPARE_UNKEYED`), plus `uv.lock`, and the native extension sources
+`prepare-sources` entry point, which the probe runs, plus `uv.lock`, and the native
+extension sources
 because a walked module imports `reg_core_py`); the Python and SQLite
 versions and the loaded extension. Every key holds `uv.lock` as `lock_sha256` does:
 only the locked runtime closure of `reg-meta-build` (`keyed_cache.uv_lock_sha256`: its
@@ -204,11 +204,6 @@ PREPARE_ROOTS = (
     "reg_meta_build.source_files",
     "reg_meta_build._curation",
 )
-# Walked but not keyed: modules the walk reaches only through code `prepare-sources`
-# never calls. `input_snapshot` imports `dbdiff` at load for `verify_build_lock`, a
-# build-lock comparison. The walk still follows their imports, and the key refuses an
-# entry the walk no longer reaches, so a stale one names itself.
-PREPARE_UNKEYED = ("reg_meta_build/src/reg_meta_build/dbdiff.py",)
 # Lock files whose workspace members' own versions the keys leave out (`lock_sha256`;
 # the build and resolve keys hold `uv.lock` the same way): a release bumps them, and
 # nothing prepared, resolved or recorded reads them.
@@ -453,7 +448,7 @@ def prepare_code_files(walk: dict) -> list[str]:
     imports, whether or not the prepare path reaches them. A module that imports by
     name at run time (`import_module`) pulls in its whole package. Data files beside
     any walked module count, as do the native extension sources when a walked module
-    imports `reg_core_py`, and `uv.lock` always; `PREPARE_UNKEYED` does not.
+    imports `reg_core_py`, and `uv.lock` always.
     """
     if unkeyed := sorted(set(walk["imports"]) & workspace_packages()):
         sys.exit(
@@ -461,15 +456,9 @@ def prepare_code_files(walk: dict) -> list[str]:
             "that it does not key; extend the walk to them"
         )
     walked = set(walk["files"])
-    if stale := sorted(set(PREPARE_UNKEYED) - walked):
-        sys.exit(
-            f"real-seed-cache: the prepare walk no longer reaches {stale}; drop them "
-            "from PREPARE_UNKEYED"
-        )
     # A walked module git ignores stays listed, so `code_digests` refuses it; ignored
     # data beside a module is junk, never keyed.
     files = {path for path in walked if path.endswith(".py")} | repo_files(walked)
-    files -= set(PREPARE_UNKEYED)
     files.update(PREPARE_ENTRY_FILES)
     files.add("uv.lock")
     if "reg_core_py" in walk["imports"]:

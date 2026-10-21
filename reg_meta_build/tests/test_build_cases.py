@@ -19,7 +19,7 @@ from _build_case_runner import case_dirs, case_steps, run_step
 from reg_meta_build.source_naming import authored_naming_id
 
 if TYPE_CHECKING:
-    from _build_case_runner import PreparedCache
+    from _build_case_sources import PreparedCache
 
 LOVA_TOML = Path(__file__).resolve().parents[1] / "curation/registers/sos/lova.toml"
 

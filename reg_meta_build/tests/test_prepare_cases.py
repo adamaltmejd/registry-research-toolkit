@@ -25,14 +25,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import pytest
-from _build_case_runner import scb_row
+from _build_case_sources import scb_row
 from _case_projection import MATCH_MODES, mismatch, to_json, unclaimed
-from _csv_fixtures import (
-    IDENTIFIERARE_HEADER,
-    write_csv,
-    write_scb_input,
-    write_scb_snapshot,
-)
+from _csv_fixtures import IDENTIFIERARE_HEADER, write_csv, write_scb_input
+from _input_repo_fixtures import write_scb_snapshot
 from _lisa_fixtures import write_lisa_workbook
 from _workbook_spec import write_workbook
 from reg_meta_build.errors import EXIT_CONFIG, RegMetaError
