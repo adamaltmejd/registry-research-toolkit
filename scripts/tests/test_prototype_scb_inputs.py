@@ -67,23 +67,3 @@ def test_executable_verifies_a_prepared_snapshot(tmp_path: Path) -> None:
         "records": 1,
         "status": "verified",
     }
-
-
-def test_identity_commands_reject_caller_supplied_checkouts(tmp_path: Path) -> None:
-    commands = (
-        ("prepare", tmp_path / "inventory.json", tmp_path / "snapshot"),
-        (
-            "pin-build",
-            tmp_path / "snapshot",
-            tmp_path / "recorded.db",
-            tmp_path / "lock.json",
-            "--providers",
-            "scb",
-        ),
-        ("verify-lock", tmp_path / "lock.json", tmp_path / "snapshot"),
-    )
-
-    for command in commands:
-        process = _run(*command, "--builder-repo", tmp_path / "unrelated")
-        assert process.returncode == 2
-        assert "unrecognized arguments: --builder-repo" in process.stderr

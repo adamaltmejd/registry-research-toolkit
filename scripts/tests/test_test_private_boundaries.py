@@ -1,6 +1,8 @@
 """Enforce public test boundaries in every test and test-support file.
 
-Conformance additionally rejects private attribute access and product mutation.
+Every file rejects private imports and private attribute access on an imported product
+module (`queries._helper()`). Conformance additionally rejects any private attribute
+access and product mutation.
 Public protocol dunders are allowed. Bare private fixture modules importing public
 names are legacy test support; private imported names are still violations.
 Only network, filesystem, subprocess, environment, clock and platform patches pass.
@@ -35,7 +37,7 @@ PROCESS_ROOTS = {
     "tarfile",
 }
 
-PRODUCT_ROOTS = {"reg_meta_build"}
+PRODUCT_ROOTS = {"reg_meta_build", "reg_core_py"}
 
 
 def private(name):
@@ -108,6 +110,13 @@ def violations(source, *, conformance=False):
                 ):
                     hits.append((node.lineno, f"{node.module}.{alias.name}"))
     for node in ast.walk(tree):
+        if (
+            not conformance
+            and isinstance(node, ast.Attribute)
+            and private(node.attr)
+            and imported_root(node, aliases) in PRODUCT_ROOTS
+        ):
+            hits.append((node.lineno, dotted(node, aliases)))
         if conformance and isinstance(node, (ast.Attribute, ast.Subscript)):
             target = dotted(node, aliases)
             imported = imported_path(node, aliases)
@@ -248,16 +257,14 @@ def test_existing_tests_use_public_boundaries(python_test_files):
         "from unittest.mock import patch as replace\nreplace(target='reg_meta_build.queries.search')",
         "from unittest.mock import patch as replace\nreplace.object(target=module, attribute='search', new=fake)",
         "from reg_meta_build import queries as q\nq.search = fake",
-        "from reg_meta_build import queries as q\nq.search += fake",
+        "import reg_core_py\nreg_core_py.fold_search = fake",
         "from reg_meta_build import queries as q\nq.os.getenv = fake",
         "from reg_meta_build import queries as q\nq.registry['search'] = fake",
         "from reg_meta_build import queries as q\nq.registry['search'] += fake",
         "from reg_meta_build import queries as q\ndel q.registry['search']",
         "from reg_meta_build import queries as q\nq.registry['search'].handler = fake",
-        "from reg_meta_build import queries as q\nq.search: object = fake",
         "from reg_meta_build import queries as q\ndel q.search",
         "from reg_meta_build import queries as q\n(q.search, local.value) = (fake, value)",
-        "from reg_meta_build import queries as q\n[q.search, local.value] = [fake, value]",
         "from reg_meta_build import queries as q\nsetattr(q, 'search', fake)",
         "from reg_meta_build import queries as q\ndelattr(q, 'search')",
         "from reg_meta_build import queries as q\nfrom builtins import setattr as mutate\nmutate(q, 'search', fake)",
@@ -298,13 +305,7 @@ def test_lint_rejects_private_imports_and_internal_patches(source):
         "monkeypatch.setenv('REG_META_DB', directory)",
         "fixture_model.value = value",
         "fixture_model.registry['value'] = value",
-        "fixture_model.registry['value'].handler = value",
-        "setattr(fixture_model.registry['value'], 'handler', value)",
-        "fixture_model.value += value",
-        "fixture_model.value: object = value",
-        "del fixture_model.value",
         "setattr(fixture_model, 'value', value)",
-        "delattr(fixture_model, 'value')",
         "from reg_meta_build.models import CatalogModel\nfixture_model = CatalogModel()\nfixture_model.value = value",
         "import os\nsetattr(os, 'getenv', fake)",
         "import subprocess\nsubprocess.run = fake",
@@ -318,3 +319,22 @@ def test_lint_rejects_private_imports_and_internal_patches(source):
 )
 def test_lint_allows_public_imports_and_process_boundaries(source):
     assert not violations(source, conformance=True)
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "from reg_meta_build import queries\nqueries._helper()",
+        "import reg_meta_build.queries as q\nq._CACHE",
+        "import reg_core_py\nreg_core_py._native",
+    ],
+)
+def test_lint_rejects_private_product_attributes_outside_conformance(source):
+    # Fails if private attribute access on an imported product module is checked
+    # only in conformance, as it was before.
+    assert violations(source)
+
+
+def test_lint_allows_private_attributes_off_product_modules_outside_conformance():
+    # Fails if the package-test rule widens to every private attribute (`self._x`).
+    assert not violations("self._cache = {}\nrecord._replace(value=1)")

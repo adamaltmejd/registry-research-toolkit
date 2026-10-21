@@ -1,10 +1,13 @@
-"""Sparse SCB value-role checkouts: index flags, cone rules and hydration."""
+"""Sparse SCB value-role checkouts (index flags, cone rules, hydration) and the
+prototype CLI's converter provenance."""
 
 from __future__ import annotations
 
 import hashlib
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -18,7 +21,13 @@ from _csv_fixtures import (
     write_scb_input,
     write_scb_snapshot,
 )
-from _snapshot_fixtures import git
+from _prepared_fixtures import accept_prepared
+from _snapshot_fixtures import (
+    copied_builder_checkout,
+    git,
+    run_prototype,
+    scb_inventory,
+)
 from reg_meta_build.input_snapshot import (
     CatalogBundleSelection,
     ScbSnapshotSelection,
@@ -444,3 +453,58 @@ def test_sparse_value_role_rejects_incorrect_index_and_rule_state(
 
     with pytest.raises(SnapshotError, match=expected):
         open_input_bundle(selection)
+
+
+def _assert_rejected(result: subprocess.CompletedProcess[str], message: str) -> None:
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert re.search(message, result.stderr), result.stderr
+
+
+def test_converter_commit_requires_same_clean_tracked_checkout(
+    tmp_path: Path,
+) -> None:
+    # Fails if `prepare` stops pinning converter_commit to a clean, tracked HEAD blob of
+    # the same checkout as the converter, or leaves a snapshot behind on refusal.
+    checkout = copied_builder_checkout(tmp_path)
+    script = checkout / "scripts/prototype_scb_inputs.py"
+    inventory = scb_inventory(
+        tmp_path / "inventory", write_scb_input(tmp_path / "source")
+    )
+
+    clean = run_prototype(checkout, "prepare", inventory, tmp_path / "snapshot-a")
+    assert clean.returncode == 0, clean.stderr
+    manifest = json.loads(
+        (tmp_path / "snapshot-a/manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["converter_commit"] == git(checkout, "rev-parse", "HEAD")
+
+    converter = checkout / "reg_meta_build/src/reg_meta_build/input_snapshot.py"
+    original = converter.read_bytes()
+    converter.write_bytes(original + b"\n")
+    _assert_rejected(
+        run_prototype(checkout, "prepare", inventory, tmp_path / "snapshot-b"),
+        "must be clean",
+    )
+    converter.write_bytes(original)
+
+    ignored = checkout / "ignored/prototype.py"
+    ignored.parent.mkdir()
+    shutil.copyfile(script, ignored)
+    _assert_rejected(
+        run_prototype(
+            checkout, "prepare", inventory, tmp_path / "snapshot-c", script=ignored
+        ),
+        "not a tracked HEAD blob",
+    )
+
+    unrelated = tmp_path / "unrelated-repo" / "prototype.py"
+    unrelated.parent.mkdir()
+    shutil.copyfile(script, unrelated)
+    accept_prepared(unrelated)
+    _assert_rejected(
+        run_prototype(
+            checkout, "prepare", inventory, tmp_path / "snapshot-d", script=unrelated
+        ),
+        "same Git checkout",
+    )
+    assert not any((tmp_path / f"snapshot-{name}").exists() for name in "bcd")

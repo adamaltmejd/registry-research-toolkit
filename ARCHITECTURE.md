@@ -355,7 +355,7 @@ over budget is a finding for the `test-audit` skill, not a reason to raise the n
   | Suite                                | Local | CI job | Rationale                                                                                                                            |
   | ------------------------------------ | ----- | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
   | `reg_meta_build/tests`               | 45 s  | 6 min  | The compiler: a few hundred source-fixture → artifact cases at about 1 s CPU each, plus one session load of the committed curation.  |
-  | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); a few nested pytest runs dominate.                                            |
+  | `scripts/tests`                      | 20 s  | 2 min  | Repository tooling contracts (skill discovery, lints); subprocess runs of the scripts dominate, `test_real_seed_cache` most.         |
   | `crates/` (`cargo test --workspace`) | 10 s  | 6 min  | The Rust runtime's unit and property tests; G0 always runs them.                                                                     |
   | conformance (`scripts/gate.py rust`) | 30 s  | 6 min  | Session-built artifacts, then data-driven HTTP, MCP, order and validate cases against the Rust server; shares the `rust` job.        |
   | frontend (`bun run test`)            | 15 s  | 6 min  | Rendered DOM and accessibility tree for the user flows, jsdom for grammars. The CI job also installs, type-checks, lints and builds. |

@@ -17,21 +17,23 @@ from _scripts_support import load_scripts_module
 
 gi = load_scripts_module("gh_issue")
 
-MAINT = "adamaltmejd"
+# Not the repo owner the fallback would find, so every view test also proves the env
+# override wins: fails if `maintainer_login()` ignores `REGISTRY_MAINTAINER_LOGIN`.
+MAINT = "test-maintainer"
 
 
 @pytest.fixture(autouse=True)
 def _pin_maintainer(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Pin the maintainer via the env override so no test needs a live `gh repo view`."""
+    """Pin the maintainer via the env override so no test needs a live `gh repo view`.
+
+    The repo-owner fallback is pinned too, to an owner other than MAINT, so an override
+    that stops winning fails the view tests instead of shelling out to `gh`.
+    """
     monkeypatch.setenv("REGISTRY_MAINTAINER_LOGIN", MAINT)
+    monkeypatch.setenv("GITHUB_REPOSITORY", "theowner/therepo")
 
 
 # --- maintainer_login ----------------------------------------------------------------
-
-
-def test_maintainer_login_uses_env_override(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("REGISTRY_MAINTAINER_LOGIN", "someone-else")
-    assert gi.maintainer_login() == "someone-else"
 
 
 def test_maintainer_login_falls_back_to_repo_owner(
@@ -59,14 +61,17 @@ def _stub_view(monkeypatch: pytest.MonkeyPatch, payload: dict | None) -> None:
     """Stub `gh issue view`: payload=None models a non-zero exit (a genuinely missing
     number). A PR number does NOT error — it resolves with returncode 0 and a payload —
     so a PR case is modelled by passing a PR-shaped payload, never by payload=None.
+
+    Like `gh`, the stub returns only the `--json` fields the argv requests, so a view
+    test fails if the gate stops requesting a field it surfaces (`state`, `comments`).
     """
 
     def fake_run(cmd, capture_output, text, check):
         if payload is None:
             return types.SimpleNamespace(returncode=1, stdout="", stderr="not found")
-        return types.SimpleNamespace(
-            returncode=0, stdout=json.dumps(payload), stderr=""
-        )
+        requested = cmd[cmd.index("--json") + 1].split(",")
+        shown = {key: value for key, value in payload.items() if key in requested}
+        return types.SimpleNamespace(returncode=0, stdout=json.dumps(shown), stderr="")
 
     monkeypatch.setattr(subprocess, "run", fake_run)
 
@@ -149,28 +154,6 @@ def test_view_missing_number_refuses(
     assert capsys.readouterr().out == ""
 
 
-def test_view_non_maintainer_pr_refuses(
-    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
-) -> None:
-    # A PR number does NOT error — `gh issue view` resolves it with exit 0. So the PR case
-    # reaches the author gate exactly like an issue: a stranger's fork PR (non-maintainer
-    # author) is refused there, NOT because it "can't reach here". This is the test that
-    # proves authorship — not issue-vs-PR — is the trust boundary.
-    _stub_view(
-        monkeypatch,
-        {
-            "number": 1024,
-            "title": "pr",
-            "body": "evil",
-            "author": {"login": "stranger"},
-        },
-    )
-    assert gi.main(["view", "1024"]) == gi.EXIT_REFUSED
-    captured = capsys.readouterr()
-    assert captured.out == ""  # nothing surfaced
-    assert "not maintainer-authored" in captured.err
-
-
 def test_view_comments_strips_non_maintainer(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -204,27 +187,6 @@ def test_view_without_comments_omits_field(
     )
     gi.main(["view", "5"])
     assert "comments" not in json.loads(capsys.readouterr().out)
-
-
-def test_view_comments_requests_comments_field(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    captured: dict[str, list[str]] = {}
-
-    def fake_run(cmd, capture_output, text, check):
-        captured["cmd"] = cmd
-        return types.SimpleNamespace(
-            returncode=0,
-            stdout=json.dumps(
-                {"number": 1, "title": "t", "body": "b", "author": {"login": MAINT}}
-            ),
-            stderr="",
-        )
-
-    monkeypatch.setattr(subprocess, "run", fake_run)
-    gi.main(["view", "1", "--comments"])
-    assert "state" in captured["cmd"][-1]
-    assert "comments" in captured["cmd"][-1]
 
 
 def test_cli_usage_error_exits_2() -> None:
