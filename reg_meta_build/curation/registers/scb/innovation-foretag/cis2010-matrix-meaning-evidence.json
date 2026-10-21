@@ -455,7 +455,7 @@
       "source_pages": {
         "co51": 16
       },
-      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571)."
+      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes."
     },
     {
       "key": "consultants-other-europe",
@@ -476,7 +476,7 @@
       "source_pages": {
         "co52": 16
       },
-      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571)."
+      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes."
     },
     {
       "key": "consultants-usa",
@@ -497,7 +497,7 @@
       "source_pages": {
         "co53": 16
       },
-      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571)."
+      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes."
     },
     {
       "key": "consultants-china-india",
@@ -518,7 +518,7 @@
       "source_pages": {
         "co54": 16
       },
-      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571)."
+      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes."
     },
     {
       "key": "consultants-other-countries",
@@ -539,7 +539,7 @@
       "source_pages": {
         "co55": 16
       },
-      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes (maintainer decision 2026-10-16, #1571)."
+      "data_warning": "The questionnaire lists eight partner rows but the delivery has seven; SCB does not document how the eight were folded, so this row may also cover private research institutes."
     },
     {
       "key": "universities-sweden",
@@ -560,7 +560,7 @@
       "source_pages": {
         "co61": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "universities-other-europe",
@@ -581,7 +581,7 @@
       "source_pages": {
         "co62": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "universities-usa",
@@ -602,7 +602,7 @@
       "source_pages": {
         "co63": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "universities-china-india",
@@ -623,7 +623,7 @@
       "source_pages": {
         "co64": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "universities-other-countries",
@@ -644,7 +644,7 @@
       "source_pages": {
         "co65": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row f; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (g Universitet eller högskolor), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "public-research-sweden",
@@ -665,7 +665,7 @@
       "source_pages": {
         "co71": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "public-research-other-europe",
@@ -686,7 +686,7 @@
       "source_pages": {
         "co72": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "public-research-usa",
@@ -707,7 +707,7 @@
       "source_pages": {
         "co73": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "public-research-china-india",
@@ -728,7 +728,7 @@
       "source_pages": {
         "co74": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented."
     },
     {
       "key": "public-research-other-countries",
@@ -749,7 +749,7 @@
       "source_pages": {
         "co75": 16
       },
-      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves (maintainer same-name rule, 2026-10-16): there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented (Operator under maintainer delegation 2026-10-16, #1603 batch-e D4)."
+      "data_warning": "Meaning assumed from the CIS2006 and CIS2008 waves: there, SCB's 7-category list 'Typ av samarbetspartner' (e consultants, private laboratories and private R&D institutes; f universities; g public research institutes) places this partner on row g; that list is carried over word for word from the 2002–2004 documentation, the 2008–2010 documentation has no such list, and nothing in SCB's documentation ties the list to the delivered co columns. This wave's questionnaire has eight partner rows (h Offentliga forskningsinstitut), so the fold into seven delivered rows is not documented."
     }
   ]
 }

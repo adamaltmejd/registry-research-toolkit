@@ -2096,7 +2096,7 @@ value = "DodDatum"
 # Each entry carries the nearest documented edition's variable into editions SCB does not document, with a data_warning. Code lists are not carried.
 
 [[errata.delivered]]
-data_warning = "SCB documents no column postnr on RTB, Folkbokförda personer for 2015-12-31 to 2020-12-31. The meaning and unit are assumed from SCB's 1997-12-31 documentation of the same delivered name in this register; it is not confirmed for these editions. SWECOV's RTB_PostNr_YYYY tables are read as status 31 December YYYY (RTB year-end versions); that reference date is assumed, not documented for these extracts."
+data_warning = "SCB documents no column postnr on RTB, Folkbokförda personer for 2015-12-31 to 2020-12-31. The meaning and unit are assumed from SCB's 1997-12-31 documentation of the same delivered name in this register; it is not confirmed for these editions. The delivered RTB_PostNr_YYYY tables are read as status 31 December YYYY (RTB year-end versions); that reference date is assumed, not documented for these deliveries."
 variant = "folkbokforda-personer"
 column = "postnr"
 measurement_unit = "Löpnummer"

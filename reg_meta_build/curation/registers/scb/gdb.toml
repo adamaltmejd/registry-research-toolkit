@@ -9,7 +9,7 @@ column = "Kommun"
 versions = ["2024-01-01", "2025-01-01"]
 upstream = "omitted-column-in-version"
 expected_evidence_sha256 = "095b5bc0417d1710935159535a90d6b769d00dc8fdacb9fb03a2b97b7196514d"
-data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
 evidence = "SWECOV holds Kommun in GDB_Skolor2023 and GDB_Skolor2024, the 2024-01-01 and 2025-01-01 versions. Under the GDB year-end rule (maintainer decision 2026-10-16) SWECOV's table for year Y is the status at 31 December Y, SCB's annual version per 1 January Y+1 (OV0100: årsversionerna skapas per den 1 januari). SCB documents Kommun (VarId 36) in every adresser-fastigheter version 2018-01-01..2023-01-01 and none after. (#1603)"
 noted = "2026-10-16"
 
@@ -356,7 +356,7 @@ slug = "postnromrade-old"
 # ── #1494: SWECOV GDB columns SCB does not document (steward-holdings, #1579) ──
 
 [[errata.column]]
-data_warning = "The 2023 workplace tables hold markedly fewer rows than 2018 (aggregate check on MONA); the SCB documentation reviewed does not explain the drop."
+data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
 variant = "adresser-fastigheter"
 column = "AstRuta250swX"
 data_type = "text"
@@ -370,7 +370,7 @@ evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end
 noted = "2026-10-16"
 
 [[errata.column]]
-data_warning = "The 2023 workplace tables hold markedly fewer rows than 2018 (aggregate check on MONA); the SCB documentation reviewed does not explain the drop."
+data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
 variant = "adresser-fastigheter"
 column = "AstRuta250swY"
 data_type = "text"
@@ -410,7 +410,7 @@ evidence = "SWECOV holds the column in its GDB tables, dated by the GDB year-end
 noted = "2026-10-16"
 
 [[errata.column]]
-data_warning = "The 2023 workplace tables hold markedly fewer rows than 2018 (aggregate check on MONA); the SCB documentation reviewed does not explain the drop."
+data_warning = "The 2023 workplace deliveries hold markedly fewer rows than 2018; the SCB documentation reviewed does not explain the drop."
 variant = "adresser-fastigheter"
 column = "AstNr"
 data_type = "text"
@@ -441,7 +441,7 @@ noted = "2026-10-16"
 [[errata.column]]
 variant = "adresser-fastigheter"
 column = "AstKommun"
-data_warning = "Undocumented column: SCB documents no AstKommun on any GDB variant. The meaning (the workplace's municipality code) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_warning = "Undocumented column: SCB documents no AstKommun on any GDB variant. The meaning (the workplace's municipality code) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
 name = "Arbetsställets kommun"
 definition = "Kommun där arbetsstället ligger, som kommunkod. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
@@ -455,7 +455,7 @@ noted = "2026-10-16"
 [[errata.column]]
 variant = "adresser-fastigheter"
 column = "DeSO_2018"
-data_warning = "Undocumented column: SCB documents no DeSO_2018 on any GDB variant. The meaning (DeSO under SCB's 2018 division) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_warning = "Undocumented column: SCB documents no DeSO_2018 on any GDB variant. The meaning (DeSO under SCB's 2018 division) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
 name = "DeSO enligt 2018 års indelning"
 definition = "Demografiskt statistikområde (DeSO) enligt SCB:s indelning från 2018. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
@@ -469,7 +469,7 @@ noted = "2026-10-16"
 [[errata.column]]
 variant = "adresser-fastigheter"
 column = "DeSO_2025"
-data_warning = "Undocumented column: SCB documents no DeSO_2025 on any GDB variant. The meaning (DeSO under SCB's revised 2025 division) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_warning = "Undocumented column: SCB documents no DeSO_2025 on any GDB variant. The meaning (DeSO under SCB's revised 2025 division) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
 name = "DeSO enligt 2025 års indelning"
 definition = "Demografiskt statistikområde (DeSO) enligt SCB:s reviderade indelning från 2025. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
@@ -483,7 +483,7 @@ noted = "2026-10-16"
 [[errata.column]]
 variant = "adresser-fastigheter"
 column = "CfarNr"
-data_warning = "Undocumented column: SCB documents no CfarNr on any GDB variant. The meaning (the workplace's CFAR number, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_warning = "Undocumented column: SCB documents no CfarNr on any GDB variant. The meaning (the workplace's CFAR number, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
 name = "Arbetsställets CFAR-nummer"
 definition = "Identitetsbegrepp för arbetsställe. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
@@ -497,7 +497,7 @@ noted = "2026-10-16"
 [[errata.column]]
 variant = "adresser-fastigheter"
 column = "PeOrgNr"
-data_warning = "Undocumented column: SCB documents no PeOrgNr on any GDB variant. The meaning (a person or organisation number, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_warning = "Undocumented column: SCB documents no PeOrgNr on any GDB variant. The meaning (a person or organisation number, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
 name = "Person-/organisationsnummer"
 definition = "Identitetsbegrepp för juridiska enheter; för fysiska personer med näringsverksamhet används personnumret. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
@@ -511,7 +511,7 @@ noted = "2026-10-16"
 [[errata.column]]
 variant = "adresser-fastigheter"
 column = "PersonNr"
-data_warning = "Undocumented column: SCB documents no PersonNr on any GDB variant. The meaning (a person number, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_warning = "Undocumented column: SCB documents no PersonNr on any GDB variant. The meaning (a person number, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
 name = "Personnummer"
 definition = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
@@ -525,7 +525,7 @@ noted = "2026-10-16"
 [[errata.column]]
 variant = "adresser-fastigheter"
 column = "skolenhetskod"
-data_warning = "Undocumented column: SCB documents no skolenhetskod on any GDB variant. The meaning (the school unit code, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_warning = "Undocumented column: SCB documents no skolenhetskod on any GDB variant. The meaning (the school unit code, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
 name = "Skolenhet"
 definition = "Skolenhet är en administrativ enhet där lärare och/eller elever finns; den avser en organisatorisk enhet på en adress, inte en byggnad. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
@@ -539,7 +539,7 @@ noted = "2026-10-16"
 [[errata.column]]
 variant = "adresser-fastigheter"
 column = "skolkod"
-data_warning = "Undocumented column: SCB documents no skolkod on any GDB variant. The meaning (the school code, delivered pseudonymised as a serial number) is taken from the column name and SWECOV's delivery, not from SCB documentation."
+data_warning = "Undocumented column: SCB documents no skolkod on any GDB variant. The meaning (the school code, delivered pseudonymised as a serial number) is taken from the column name and the delivered values, not from SCB documentation."
 data_type = "text"
 name = "Skola"
 definition = "Skola, en administrativ enhet där lärare och/eller elever finns; den avser en organisatorisk enhet på en adress, inte en byggnad. SWECOV:s leverans har den pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen; den är känd från SWECOV:s leverans."
@@ -793,7 +793,7 @@ evidence = "SWECOV holds Kommun in GDB_Skolor2001, the 2002-01-01 version. Under
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name. DeSO took effect on 1 January 2018; the DeSO values SWECOV holds for earlier versions are assigned retrospectively. The workplace tables (GDB_Ast) are coded on year Y+1's municipality division."
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. DeSO took effect on 1 January 2018; DeSO values delivered for earlier versions are assigned retrospectively. The workplace tables (GDB_Ast) are coded on year Y+1's municipality division."
 variant = "adresser-fastigheter"
 column = "DeSO"
 versions = ["1991-01-01", "1992-01-01", "1993-01-01", "1994-01-01", "1995-01-01", "1996-01-01", "1997-01-01", "1998-01-01", "1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01", "2003-01-01", "2004-01-01", "2005-01-01", "2006-01-01", "2007-01-01", "2008-01-01", "2009-01-01", "2010-01-01", "2011-01-01", "2012-01-01", "2013-01-01", "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01", "2024-01-01"]
@@ -803,7 +803,7 @@ evidence = "SWECOV holds DeSO in GDB_Ind, GDB_Ast and GDB_Skolor for table years
 noted = "2026-10-16"
 
 [[errata.delivered]]
-data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
 variant = "fastigheter"
 column = "Kommun"
 versions = ["1991-01-01", "1992-01-01", "1993-01-01", "1994-01-01", "1995-01-01", "1996-01-01", "1997-01-01", "1998-01-01", "1999-01-01", "2000-01-01", "2001-01-01", "2002-01-01"]
@@ -1034,7 +1034,7 @@ variant = "adresser-fastigheter"
 column = "DeSO"
 periods = [["2018-01-01", "2018-01-01"], ["2019-01-01", "2019-01-01"], ["2020-01-01", "2020-01-01"], ["2021-01-01", "2021-01-01"], ["2022-01-01", "2022-01-01"], ["2023-01-01", "2023-01-01"]]
 fields = ["reference_period"]
-data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name. The workplace tables (GDB_Ast) are coded on year Y+1's municipality division."
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name. The workplace tables (GDB_Ast) are coded on year Y+1's municipality division."
 expected_evidence_sha256 = "034cd01c859f9f85d06034ad4b676462bc3217677cf2e08efa5308766ad07f99"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
@@ -1045,7 +1045,7 @@ variant = "fastigheter"
 column = "Kommun"
 periods = [["2003-01-01", "2003-01-01"], ["2004-01-01", "2004-01-01"], ["2005-01-01", "2005-01-01"], ["2006-01-01", "2006-01-01"], ["2007-01-01", "2007-01-01"]]
 fields = ["reference_period"]
-data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
 expected_evidence_sha256 = "601412e798d8700d4e6b183114b48db96aa8ccf3b80f076b7019da5dca16172b"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
@@ -1056,7 +1056,7 @@ variant = "fastigheter"
 column = "kommun"
 periods = [["2008-01-01", "2008-01-01"], ["2009-01-01", "2009-01-01"], ["2010-01-01", "2010-01-01"], ["2011-01-01", "2011-01-01"], ["2012-01-01", "2012-01-01"], ["2013-01-01", "2013-01-01"], ["2014-01-01", "2014-01-01"], ["2015-01-01", "2015-01-01"]]
 fields = ["reference_period"]
-data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
 expected_evidence_sha256 = "89fcc66391c8f2288dc7e76c9d7896208cadb5e7ea716d67bad1a07b5cb76527"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
@@ -1067,7 +1067,7 @@ variant = "fastigheter"
 column = "KOMMUN"
 periods = [["2016-01-01", "2016-01-01"], ["2017-01-01", "2017-01-01"]]
 fields = ["reference_period"]
-data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
 expected_evidence_sha256 = "3faab02e052ce68aecfcd2103967f3d4a402d858a05e5f007c10334d5adfa1a6"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
@@ -1078,7 +1078,7 @@ variant = "adresser-fastigheter"
 column = "Kommun"
 periods = [["2018-01-01", "2018-01-01"], ["2019-01-01", "2019-01-01"], ["2020-01-01", "2020-01-01"], ["2021-01-01", "2021-01-01"], ["2022-01-01", "2022-01-01"], ["2023-01-01", "2023-01-01"]]
 fields = ["reference_period"]
-data_warning = "SWECOV names its GDB tables by the year whose year-end status they hold: the table for year Y is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the table name."
+data_warning = "A GDB delivery named for year Y holds the year-end status of Y, which is SCB's annual version per 1 January Y+1 (OV0100), so the version date is one year later than the year in the delivery's name."
 expected_evidence_sha256 = "af767eb57c16910f0e869b336baaf03b7dda58ef9fb07d7d9441bac8160c11fb"
 reason = "GDB year-end rule (maintainer decision 2026-10-16, #1603): SWECOV's GDB table for year Y holds the status at 31 December Y, SCB's annual version per 1 January Y+1. SCB documents this column in these versions, so no errata entry carries the rule; this warning gives it to researchers ordering them (#1639)."
 source = "SCB OV0100 Geografidatabasen documentation (årsversionerna skapas per den 1 januari); SCB Registerinformation export for GDB; SWECOV GDB holdings (#1603)."
