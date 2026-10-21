@@ -242,9 +242,9 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
   review (a fresh agent that did not write the change counts) before it merges.
   Coordinate concurrent work and keep main to a single write path.
 - Renovate (`renovate.json`) opens the routine dependency PRs: tools, frontend, CI and
-  dev deps nightly; the builder's runtime deps, Cargo and lockfiles weekly (the next
-  curation real-seed build proves those). `renovate-autofix.yml` lets Sonnet repair a red
-  one.
+  dev deps nightly; the builder's runtime deps and Cargo weekly, plus a separate weekly
+  lockfile-maintenance PR (the next curation real-seed build proves the weekly ones).
+  `renovate-autofix.yml` has Sonnet propose a patch for a red one.
 - Dependency repair and manual, larger upgrades use
   [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md),
   releases use [release](.agents/skills/release/SKILL.md), and real-seed verification

@@ -15,9 +15,10 @@ selected versions; unrelated product features remain outside this task. Do not p
 packages or deploy merely because an upgrade is complete.
 
 Renovate (`renovate.json`) opens the routine dependency PRs: tools, frontend, CI and dev
-deps nightly; the builder's runtime deps, Cargo and lockfiles weekly, proven by the next
-curation real-seed build. This skill is for repairing a red Renovate PR (also what
-`renovate-autofix.yml` asks Sonnet to do) and for manual, larger upgrades.
+deps nightly; the builder's runtime deps and Cargo weekly, plus a separate weekly
+lockfile-maintenance PR (the weekly ones are proven by the next curation real-seed
+build). This skill is for repairing a red Renovate PR (`renovate-autofix.yml` has Sonnet
+propose a patch from it, without running code) and for manual, larger upgrades.
 
 ## Establish the candidate
 
@@ -35,12 +36,11 @@ together, reading actual files rather than a saved version list:
 - Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.py` (the `uvx` checker
   pins), `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
   dependencies.
-- `wasm-bindgen`, pinned in places that move together: the `=` pin in
-  `crates/reg-core-wasm/Cargo.toml` (and so `Cargo.lock`) and every `wasm-bindgen@` tool
-  in `.github/workflows/` (`ci.yml`'s frontend job, `container-build.yml`'s
-  `edge-deploy-swecov` job, the only one that builds the SPA, and
-  `renovate-autofix.yml`). The CLI must equal the crate version (a mismatch fails
-  `gen:wasm`).
+- `wasm-bindgen`, pinned in three places that move together: the `=` pin in
+  `crates/reg-core-wasm/Cargo.toml` (and so `Cargo.lock`), the `wasm-bindgen@` tool in
+  `ci.yml`'s frontend job, and the same tool in `container-build.yml`'s
+  `edge-deploy-swecov` job (the only one that builds the SPA). The CLI must equal the
+  crate version (a mismatch fails `gen:wasm`).
 
 Verify current stable versions and compatibility from package registries and upstream
 release documentation. Distinguish latest stable, latest compatible and a requested LTS
