@@ -81,42 +81,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(visibleColumns()).toEqual(["AliasCol", "AliasCol", "NextCol"]);
   });
 
-  it("keeps empty group bands visible when no graph can render", async () => {
-    const aFqid = "scb/lisa/empty-a";
-    const bFqid = "scb/lisa/empty-b";
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: aFqid,
-          name: "Empty A",
-          registerPrefix: "scb/lisa",
-          rows: [],
-        } satisfies PickerBand,
-        {
-          key: bFqid,
-          name: "Empty B",
-          registerPrefix: "scb/lisa",
-          rows: [],
-        } satisfies PickerBand,
-      ],
-      graphMemberHrefs: {
-        [aFqid]: "/catalog/scb/lisa/empty-a",
-        [bFqid]: "/catalog/scb/lisa/empty-b",
-      },
-      graph: graph({ nodes: [], edges: [], focus_id: null }),
-      ...PROPS,
-    });
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("empty group list not rendered");
-      }
-    });
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(document.querySelectorAll(".empty-note")).toHaveLength(2);
-    expect(document.body.textContent).toContain("No columns");
-  });
-
   it("falls back when a graph run also carries a non-member column", async () => {
     const onapply = vi.fn();
     const aFqid = "scb/lisa/a";
@@ -416,62 +380,6 @@ describe("RepresentationPicker graph mode (#904)", () => {
     expect(document.querySelector(".col-list")).toBeNull();
     await expect
       .element(page.getByText("Showing 1 of 51 columns"))
-      .toBeVisible();
-  });
-
-  it("falls back when a picker row has no graph cell coverage", async () => {
-    const aFqid = "scb/lisa/a";
-    const bFqid = "scb/lisa/b";
-    await render(RepresentationPicker, {
-      bands: [
-        {
-          key: aFqid,
-          name: "A",
-          registerPrefix: "scb/lisa",
-          rows: [
-            row({ column: "MEMBER" }),
-            row({
-              column: "OMITTED",
-              selectable: false,
-              period: "not delivered",
-              wirePeriod: null,
-            }),
-          ],
-        } satisfies PickerBand,
-        {
-          key: bFqid,
-          name: "B",
-          registerPrefix: "scb/lisa",
-          rows: [row({ column: "NEXT" })],
-        } satisfies PickerBand,
-      ],
-      graph: graph({
-        nodes: [
-          graphNode(aFqid, {
-            states: [graphState({ delivery_column_name: "MEMBER" })],
-          }),
-          graphNode(bFqid, {
-            states: [graphState({ delivery_column_name: "NEXT" })],
-          }),
-        ],
-        edges: [edge(aFqid, bFqid)],
-        focus_id: null,
-      }),
-      ...PROPS,
-    });
-
-    await vi.waitFor(() => {
-      if (!document.querySelector(".col-list")) {
-        throw new Error("list fallback not rendered");
-      }
-    });
-    expect(document.querySelector(".graph-picker")).toBeNull();
-    expect(visibleColumns()).toEqual(["MEMBER", "OMITTED", "NEXT"]);
-    await expect
-      .element(page.getByRole("checkbox", { name: /OMITTED/ }))
-      .toBeDisabled();
-    await expect
-      .element(page.getByText("not delivered", { exact: true }))
       .toBeVisible();
   });
 

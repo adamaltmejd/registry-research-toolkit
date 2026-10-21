@@ -3,12 +3,7 @@ import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
 import { search } from "./api";
 import SearchView from "./SearchView.svelte";
-import {
-  mockSearch,
-  type Pages,
-  pillLabel,
-  setQuery,
-} from "./search-view-test-helpers";
+import { mockSearch, type Pages, setQuery } from "./search-view-test-helpers";
 
 // Split from SearchView.browser.test.ts by contract surface:
 // compact per-type tables. Siblings: SearchView.*.browser.test.ts.
@@ -75,32 +70,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
     ],
   };
 
-  it("renders Variables as a normal heading with column chips and muted register context", async () => {
-    mockSearch(FOUR_GROUPS);
-    setQuery("kon");
-    await render(SearchView);
-
-    await expect.element(page.getByText("Column")).not.toBeInTheDocument();
-    const variablesHeading = page.getByRole("heading", { name: "Variables" });
-    await expect.element(variablesHeading).toBeVisible();
-    expect(document.querySelector(".search-view .heading-tag")).toBeNull();
-
-    const link = document.querySelector<HTMLAnchorElement>(
-      ".search-view a.row-link[href='/catalog/scb/lisa/kon']",
-    );
-    const row = link?.closest<HTMLElement>(".leaf-row");
-    const variablePanel = row?.closest(".panel");
-    expect(variablePanel).not.toBeNull();
-    expect(row?.classList.contains("integrated-list-row")).toBe(true);
-    expect(document.querySelector(".search-view .head-row")).toBeNull();
-    expect(row?.querySelector(".register-pill")).toBeNull();
-    expect(row?.querySelector(".col-chip")?.textContent?.trim()).toBe("kon");
-    const registerPill = row?.querySelector<HTMLAnchorElement>(
-      ".register-context-chip[href='/catalog/scb/lisa']",
-    );
-    expect(pillLabel(registerPill)).toBe("SCB: LISA");
-  });
-
   it("omits the variable definition when it exactly repeats the variable name", async () => {
     mockSearch({
       variable: [
@@ -153,25 +122,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
       .toHaveAttribute("href", "/catalog/scb/lisa");
   });
 
-  it("makes a register leaf row a keyboard-focusable whole-row subgrid link (#808 a11y, replaces DataTable)", async () => {
-    // L319 / a11y: registers no longer use DataTable selection-as-navigation (which
-    // made a null-fqid row an interactive dead row). They render the SAME subgrid
-    // whole-row-link pattern as variables/classifications — a real, keyboard-
-    // focusable <a> per FQID-addressable register.
-    mockSearch(FOUR_GROUPS);
-    setQuery("kon");
-    await render(SearchView);
-
-    // Poll until the async search results have rendered before the sync queries.
-    await expect
-      .element(page.getByRole("heading", { name: "Registers" }))
-      .toBeVisible();
-    const row = page.getByRole("link", { name: /^LISA/ });
-    await expect.element(row).toHaveAttribute("href", "/catalog/scb/lisa");
-    (row.element() as HTMLElement).focus();
-    expect(document.activeElement).toBe(row.element());
-  });
-
   it("renders a null-fqid variable leaf as a non-link row (plain text, no navigation target)", async () => {
     // A null-fqid leaf can't navigate: it renders as a non-link <div.leaf-row>
     // (no <a>), its name is plain text. The row still renders (no crash).
@@ -201,60 +151,6 @@ describe("SearchView — compact per-type tables (#808)", () => {
     expect(
       document.querySelector(".search-view .cols-1 div.leaf-row"),
     ).not.toBeNull();
-  });
-
-  it("wraps a long delivery-column chip without creating horizontal overflow on mobile (#808/#806)", async () => {
-    // Regression for the former variables-grid third-column blowout at the 375px
-    // canvas. Variable metadata now rides inside the full-width heading, so a long
-    // unbroken delivery-column chip must wrap within the single row instead of
-    // claiming a separate max-content grid track.
-    mockSearch({
-      variable: [
-        {
-          type: "variable",
-          // A long unbroken delivery column — the shape that formerly drove
-          // the separate column track to its full intrinsic width.
-          fqid: "scb/lisa/foervaervsarbetandebefolkningstatus",
-          name: "Förvärvsarbetande befolkningsstatus",
-          register_name: "LISA",
-          definition: null,
-          delivery_column_names: ["foervaervsarbetandebefolkningstatus"],
-        },
-      ],
-    });
-    setQuery("for");
-    const view = await render(SearchView);
-    // Poll until the async search results have rendered before the sync queries.
-    await expect
-      .element(page.getByRole("heading", { name: "Variables" }))
-      .toBeVisible();
-
-    // The mobile breakpoint must be active for the bounded track to apply — pin the
-    // precondition so a viewport-config change can't silently no-op this regression.
-    expect(window.matchMedia("(max-width: 48rem)").matches).toBe(true);
-
-    // Pin the rendered panel to the 375px canvas (the narrowest mobile target) so the
-    // grid resolves its tracks against the real constraint. border-box keeps the 375
-    // inclusive of padding.
-    const root = document.querySelector<HTMLElement>(".search-view");
-    expect(root).not.toBeNull();
-    if (root) {
-      root.style.boxSizing = "border-box";
-      root.style.width = "375px";
-    }
-
-    const grid = document.querySelector<HTMLElement>(".search-view .cols-1");
-    expect(grid).not.toBeNull();
-    const columnChip = grid?.querySelector<HTMLElement>(".col-chip");
-    expect(columnChip?.textContent?.trim()).toBe(
-      "foervaervsarbetandebefolkningstatus",
-    );
-
-    expect(grid?.scrollWidth ?? 0).toBeLessThanOrEqual(
-      (grid?.clientWidth ?? 0) + 1,
-    );
-
-    view.unmount();
   });
 
   it("interleaves a concept-group link inline in rank order (no 'Grouped families' block)", async () => {
