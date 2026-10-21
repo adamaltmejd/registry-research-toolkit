@@ -621,6 +621,9 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                 f'Use [{kind}."<id>"] entries, not a flat array.',
             )
         for source_id, raw in table.items():
+            # A variable pin may be a bare slug: `"<id>" = "<slug>"`.
+            if kind == "variable" and isinstance(raw, str):
+                raw = {"slug": raw}
             if not isinstance(raw, dict):
                 raise curation_error(
                     "slug_toml_invalid",
@@ -1043,11 +1046,11 @@ def _load_register_slug_tree(
         authored.extend(
             (
                 "variable",
-                row.native_id,
-                row.model_dump(exclude={"native_id"}, exclude_none=True),
-                f"[[variable]] entry {i}",
+                native_id,
+                row.model_dump(exclude_none=True),
+                _variable_pin_location(native_id),
             )
-            for i, row in enumerate(register.variable, 1)
+            for native_id, row in register.variable.items()
         )
         local: list[SlugEntry] = []
         for kind, source_id, raw, location in authored:
@@ -1102,8 +1105,11 @@ def _load_register_slug_tree(
         # reads the same wherever the tree lives.
         auto_file = f"curation/{auto_path.relative_to(root).as_posix()}"
         effective: dict[str, tuple[SlugEntry, str]] = {
-            entry.source_id: (entry, f"{auto_file} [[variable]] entry {index}")
-            for index, entry in enumerate(auto_entries, 1)
+            entry.source_id: (
+                entry,
+                f"{auto_file} {_variable_pin_location(entry.source_id)}",
+            )
+            for entry in auto_entries
         }
         for entry in local:
             if entry.kind == "variable" and entry.slug is not None:
@@ -1130,49 +1136,46 @@ def _load_register_slug_tree(
     return entries
 
 
+def _variable_pin_location(native_id: str) -> str:
+    """Locator of one `[variable]` pin in a register or generated pin file."""
+    return f"[variable].{_toml_str(native_id)}"
+
+
 def _load_register_auto_file(path: Path, provider: str, reg_id: str) -> list[SlugEntry]:
-    from pydantic import ValidationError
-
-    from .curation_tree import RegisterVariableSlug
-
+    """Read a generated ``<register>.auto.toml``: one ``"<id>" = "<slug>"`` pin
+    per line under ``[variable]`` (``write_auto_toml``)."""
     data = _parse_toml(path)
     file = display_path(path)
-    if set(data) - {"variable"} or not isinstance(data.get("variable", []), list):
+    table = data.get("variable", {})
+    if set(data) - {"variable"} or not isinstance(table, dict):
         raise curation_error(
             "slug_toml_invalid",
-            f"{file}: expected only [[variable]] entries.",
+            f"{file}: expected only a [variable] table of pins.",
             "Regenerate the machine-owned pin file.",
         )
     entries: list[SlugEntry] = []
-    seen: set[str] = set()
-    for i, raw in enumerate(data.get("variable", []), 1):
-        try:
-            row = RegisterVariableSlug.model_validate(raw)
-            entry = _validate_entry(
-                "variable",
-                row.native_id,
-                row.model_dump(exclude={"native_id"}, exclude_none=True),
-                provider=provider,
-            )
-        except (ValidationError, RegMetaError) as exc:
+    for native_id, slug in table.items():
+        location = f"{file} {_variable_pin_location(native_id)}"
+        if not isinstance(slug, str):
             raise curation_error(
                 "slug_toml_invalid",
-                f"{file} [[variable]] entry {i}: {exc}",
+                f"{location}: a generated pin must be a slug string.",
                 "Regenerate the pin file.",
+            )
+        try:
+            entry = _validate_entry(
+                "variable", native_id, {"slug": slug}, provider=provider
+            )
+        except RegMetaError as exc:
+            raise curation_error(
+                "slug_toml_invalid", f"{location}: {exc}", "Regenerate the pin file."
             ) from exc
-        if entry.source_id.partition(".")[0] != reg_id or entry.slug is None:
+        if entry.source_id.partition(".")[0] != reg_id:
             raise curation_error(
                 "slug_toml_invalid",
-                f"{file} [[variable]] entry {i}: invalid native_id or missing slug.",
+                f"{location}: native_id does not belong to register {reg_id!r}.",
                 "Keep pins with their owning register.",
             )
-        if entry.source_id in seen:
-            raise curation_error(
-                "slug_toml_invalid",
-                f"{file} [[variable]] entry {i}: duplicate native_id {entry.source_id!r}.",
-                "Keep one generated pin per native id.",
-            )
-        seen.add(entry.source_id)
         entries.append(entry)
     return entries
 
@@ -1551,7 +1554,8 @@ def write_auto_toml(
     slugs: dict[str, str],
     derivation: dict[str, str] | None = None,
 ) -> None:
-    """Emit ``<provider>.auto.toml`` with one `[variable."<id>"]` row per slug.
+    """Emit ``<provider>.auto.toml``: one ``"<id>" = "<slug>"`` pin per line
+    under a single ``[variable]`` table.
 
     Deterministic (sorted by source ID, numeric-aware) so rebuilds produce
     byte-identical output given identical inputs. Generated artifact — the
@@ -1559,7 +1563,7 @@ def write_auto_toml(
     hand-curated ``<provider>.toml`` instead.
 
     ``derivation`` (A4.4a) maps ``source_id`` → derivation class (the
-    ``_DERIVATION_*`` constants). When present, each ``slug = "…"`` line carries
+    ``_DERIVATION_*`` constants). When present, each pin line carries
     an inline ``# source: <class>`` comment recording HOW the slug was derived — a
     provenance aid for the later name-fallback curation seam. It is a **TOML
     comment, not a field**: ``tomllib`` ignores it, so it never reaches
@@ -1574,14 +1578,16 @@ def write_auto_toml(
     """
     lines = [
         f"# AUTO-GENERATED by reg-meta-build — do not hand-edit ({provider}).",
-        "# Auto-derived variable slugs: one entry per (register, var)",
-        "# pair, slug folded from the latest kolumnnamn on first sight and",
-        "# never recomputed. Curator overrides belong in the hand-curated",
-        f"# {path.name.removesuffix(AUTO_FILE_SUFFIX) + '.toml' if path.parent.parent.name == 'registers' else provider + '.toml'}; an override there shadows the entry here.",
+        "# Auto-derived variable slugs: one `<native id> = <slug>` pin per",
+        "# (register, var) pair and line, slug folded from the latest kolumnnamn",
+        "# on first sight and never recomputed. Curator overrides belong in the",
+        f"# hand-curated {path.name.removesuffix(AUTO_FILE_SUFFIX) + '.toml' if path.parent.parent.name == 'registers' else provider + '.toml'};",
+        "# an override there shadows the pin here.",
         "# The `# source:` comment after each slug records its derivation class",
         "# (A4.4a) for the name-fallback curation seam; tomllib ignores it.",
-        "",
     ]
+    if slugs:
+        lines.extend(("", "[variable]"))
 
     def _sort_key(source_id: str) -> tuple[int, int, int, str]:
         # SCB variable IDs are `<int>.<int>`; sort numerically for a stable,
@@ -1594,19 +1600,13 @@ def write_auto_toml(
         return (1, 0, 0, source_id)
 
     derivation = derivation or {}
-    register_owned = path.parent.parent.name == "registers"
     for source_id in sorted(slugs, key=_sort_key):
-        if register_owned:
-            lines.extend(("[[variable]]", f"native_id = {_toml_str(source_id)}"))
-        else:
-            lines.append(f"[variable.{_toml_str(source_id)}]")
-        slug_line = f"slug = {_toml_str(slugs[source_id])}"
+        line = f"{_toml_str(source_id)} = {_toml_str(slugs[source_id])}"
         kind = derivation.get(source_id)
         if kind is not None:
-            slug_line += f"  # source: {kind}"
-        lines.append(slug_line)
-        lines.append("")
-    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+            line += f"  # source: {kind}"
+        lines.append(line)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -1627,7 +1627,7 @@ def write_auto_toml(
 # so they enumerate the exact same set.
 #
 # The global build has no such gate or generator (retired in #1222): compile
-# refuses any variable without an authored `[[variable]]` pin
+# refuses any variable without an authored `[variable]` pin
 # (`unresolved_catalog_identity`), entity key or not.
 #
 # Scope = the STEWARD registers the steward slug dir curates. The flavored DB =
@@ -1945,22 +1945,22 @@ def write_entity_key_pins(
     return written
 
 
-# `[variable."<source_id>"]` header + the `# source:` derivation marker, read
-# back from a committed `<provider>.auto.toml`. tomllib drops the comment, so the
-# provenance round-trips through a small line scanner instead — the marker is the
-# single source of truth the precheck worklist reads (no re-derivation).
-_AUTO_VAR_HEADER_RE = re.compile(r'^\[variable\."(?P<source_id>[^"]+)"\]\s*$')
-_AUTO_NATIVE_ID_RE = re.compile(r'^native_id\s*=\s*"(?P<source_id>[^"]+)"\s*$')
-_AUTO_SOURCE_COMMENT_RE = re.compile(r"#\s*source:\s*(?P<kind>\S+)\s*$")
+# A `"<source_id>" = "<slug>"  # source: <class>` pin line, read back from a
+# committed `<provider>.auto.toml`. tomllib drops the comment, so the provenance
+# round-trips through a small line scanner instead — the marker is the single
+# source of truth the precheck worklist reads (no re-derivation).
+_AUTO_PIN_SOURCE_RE = re.compile(
+    r'^"(?P<source_id>[^"]+)"\s*=\s*"[^"]*"\s*#\s*source:\s*(?P<kind>\S+)\s*$'
+)
 
 
 def read_auto_derivations(path: Path) -> dict[str, str]:
     """Parse the `# source:` derivation markers from a `<provider>.auto.toml`.
 
-    Returns ``{source_id: derivation_kind}`` for every variable entry that
-    carries an A4.4a marker; entries without one (e.g. legacy rows written
-    before A4.4a) are simply absent. A line scanner — `tomllib` strips comments,
-    so it can't surface them. Tolerant by design: a malformed file just yields a
+    Returns ``{source_id: derivation_kind}`` for every pin line that carries an
+    A4.4a marker; pins without one (e.g. legacy rows written before A4.4a) are
+    simply absent. A line scanner — `tomllib` strips comments, so it can't
+    surface them. Tolerant by design: a malformed file just yields a
     partial/empty map (this feeds an advisory worklist that must never gate).
     """
     out: dict[str, str] = {}
@@ -1970,26 +1970,10 @@ def read_auto_derivations(path: Path) -> dict[str, str]:
         text = path.read_text(encoding="utf-8")
     except OSError, UnicodeError:
         return out  # tolerant by design — feeds an advisory worklist, never gates
-    current: str | None = None
     for raw_line in text.splitlines():
-        header = _AUTO_VAR_HEADER_RE.match(raw_line.strip())
-        if header is not None:
-            current = header.group("source_id")
-            continue
-        if raw_line.strip() == "[[variable]]":
-            current = None
-            continue
-        native_id = _AUTO_NATIVE_ID_RE.match(raw_line.strip())
-        if native_id is not None:
-            current = native_id.group("source_id")
-            continue
-        # `"slug "` (with the trailing space the writer always emits) — not bare
-        # `"slug"` — so a hypothetical `slugfoo = …` key can't consume the slot.
-        if current is not None and raw_line.lstrip().startswith("slug "):
-            marker = _AUTO_SOURCE_COMMENT_RE.search(raw_line)
-            if marker is not None:
-                out[current] = marker.group("kind")
-            current = None
+        pin = _AUTO_PIN_SOURCE_RE.match(raw_line.strip())
+        if pin is not None:
+            out[pin.group("source_id")] = pin.group("kind")
     return out
 
 
@@ -3227,7 +3211,11 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
                 f"{out_dir / 'registers' / provider} names its native id.",
                 "Seed into the curation tree that built the catalog (`--out-dir`).",
             )
-        curated = {row.native_id for row in register.variable if row.slug is not None}
+        curated = {
+            native_id
+            for native_id, row in register.variable.items()
+            if row.slug is not None
+        }
         source_ids = _variable_source_ids(
             conn, register_id, register_native_id=native_id
         )
@@ -3468,13 +3456,13 @@ def _raw_variable_table(path: Path) -> dict[str, Any] | None:
         table = _parse_toml(path).get("variable")
     except RegMetaError:
         return None
-    if isinstance(table, list):
-        return {
-            row["native_id"]: row
-            for row in table
-            if isinstance(row, dict) and isinstance(row.get("native_id"), str)
-        }
-    return table if isinstance(table, dict) else None
+    if not isinstance(table, dict):
+        return None
+    # A bare-string pin is shorthand for `{ slug = "…" }`.
+    return {
+        sid: {"slug": row} if isinstance(row, str) else row
+        for sid, row in table.items()
+    }
 
 
 def _name_fallback_variables(

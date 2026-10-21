@@ -11,8 +11,6 @@ panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
+[variable]
 # Ersättning till riskgrupper
-
-[[variable]]
-native_id = "7296709609943288914.personnummer"
-slug = "lopnr-personnr"
+"7296709609943288914.personnummer" = "lopnr-personnr"

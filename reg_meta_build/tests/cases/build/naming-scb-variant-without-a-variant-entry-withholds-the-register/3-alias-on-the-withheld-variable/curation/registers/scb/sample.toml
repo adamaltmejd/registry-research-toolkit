@@ -2,9 +2,9 @@
 provider = "scb"
 slug = "sample"
 native_id = "1"
-[[variable]]
-native_id = "1.101"
-slug = "value"
+
+[variable]
+"1.101" = "value"
 
 [[enrichment.alias]]
 register = "scb/sample"

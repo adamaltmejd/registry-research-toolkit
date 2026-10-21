@@ -11,8 +11,6 @@ panel_entity_key = "lopnr-personnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
+[variable]
 # Handikappersättning
-
-[[variable]]
-native_id = "7612505802412930990.personnummer"
-slug = "lopnr-personnr"
+"7612505802412930990.personnummer" = "lopnr-personnr"

@@ -8,87 +8,52 @@ native_id = "106.118"
 slug = "_default"
 display_group = "Forskarexaminerades arbetsmarknad"
 
+[variable]
 # Gymnasieungdomars studieintresse
-
-[[variable]]
-native_id = "106.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "106.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "106.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "106.1665"
-slug = "registreringsdatum"
-
-[[variable]]
-native_id = "106.1768"
-slug = "examenstyp"
-
-[[variable]]
-native_id = "106.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "106.5020"
-slug = "antal-manader-arbetslos"
-
-[[variable]]
-native_id = "106.5068"
-slug = "huvudsaklig-sysselsattning"
-
-[[variable]]
-native_id = "106.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "106.5090"
-slug = "arbetsmarknadssektor"
-
-[[variable]]
-native_id = "106.5696"
-slug = "stora-n-per-stratum"
-
-[[variable]]
-native_id = "106.5697"
-slug = "lilla-n-per-stratum"
-
-[[variable]]
-native_id = "106.6306"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "106.8682"
-slug = "valet-idag-av-utbildning"
-
-[[variable]]
-native_id = "106.15399"
-slug = "hemmavarande-barn"
-
-[[variable]]
-native_id = "106.30824"
-slug = "minst-en-timmes-arbete-under-matveckan"
-
-[[variable]]
-native_id = "106.36561"
-slug = "hogskole-universitetskod"
-
-[[variable]]
-native_id = "106.38974"
-slug = "arbets-overensstammelse-forskning"
-
-[[variable]]
-native_id = "106.40780"
-slug = "formell-tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "106.40817"
-slug = "lasar-forskarexamen"
+"106.15" = "civilstand"
+"106.241" = "alder-31-12"
+"106.1569" = "fodelseland"
+"106.1665" = "registreringsdatum"
+"106.1768" = "examenstyp"
+"106.4027" = "naringsgren"
+"106.5020" = "antal-manader-arbetslos"
+"106.5068" = "huvudsaklig-sysselsattning"
+"106.5083" = "anstallningsform"
+"106.5090" = "arbetsmarknadssektor"
+"106.5696" = "stora-n-per-stratum"
+"106.5697" = "lilla-n-per-stratum"
+"106.6306" = "antal-arbetade-timmar"
+"106.8682" = "valet-idag-av-utbildning"
+"106.15399" = "hemmavarande-barn"
+"106.30824" = "minst-en-timmes-arbete-under-matveckan"
+"106.36561" = "hogskole-universitetskod"
+"106.38974" = "arbets-overensstammelse-forskning"
+"106.40780" = "formell-tjanstgoringsomfattning"
+"106.40817" = "lasar-forskarexamen"
+"106.40779.f6-1" = "f6-1"
+"106.40779.f6-2" = "f6-2"
+"106.40779.f6-3" = "f6-3"
+"106.40779.f6-4" = "f6-4"
+"106.5063.f25-1" = "f25"
+"106.5063.f25-2" = "f25-2"
+"106.5063.f25-3" = "f25-3"
+"106.5063.f25-4" = "f25-4"
+"106.5063.f25-5" = "f25-5"
+"106.5063.f26-1" = "f26"
+"106.5063.f26-2" = "f26-2"
+"106.5063.f26-3" = "f26-3"
+"106.5063.f26-4" = "f26-4"
+"106.5063.f26-5" = "f26-5"
+"106.15399.f28-1" = "f28-1"
+"106.15399.f28-2" = "f28-2"
+"106.15399.f28-3" = "f28-3"
+"106.15399.f28-4" = "f28-4"
+"106.37062.f9-1" = "f9-1"
+"106.37062.f9-2" = "f9-2"
+"106.37062.f9-3" = "f9-3"
+"106.40815.f24-1" = "f24-1"
+"106.40815.f24-2" = "f24-2"
+"106.40815.f24-3" = "f24-3"
 
 # register 108
 
@@ -126,99 +91,3 @@ variable = "106.40815"
 columns = { F24_1 = "106.40815.f24-1", F24_2 = "106.40815.f24-2", F24_3 = "106.40815.f24-3" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "c2a4e4cfdae1e4091cc418095e976efb2e21d56b8a792edc825ec3f309565c84"
-
-[[variable]]
-native_id = "106.40779.f6-1"
-slug = "f6-1"
-
-[[variable]]
-native_id = "106.40779.f6-2"
-slug = "f6-2"
-
-[[variable]]
-native_id = "106.40779.f6-3"
-slug = "f6-3"
-
-[[variable]]
-native_id = "106.40779.f6-4"
-slug = "f6-4"
-
-[[variable]]
-native_id = "106.5063.f25-1"
-slug = "f25"
-
-[[variable]]
-native_id = "106.5063.f25-2"
-slug = "f25-2"
-
-[[variable]]
-native_id = "106.5063.f25-3"
-slug = "f25-3"
-
-[[variable]]
-native_id = "106.5063.f25-4"
-slug = "f25-4"
-
-[[variable]]
-native_id = "106.5063.f25-5"
-slug = "f25-5"
-
-[[variable]]
-native_id = "106.5063.f26-1"
-slug = "f26"
-
-[[variable]]
-native_id = "106.5063.f26-2"
-slug = "f26-2"
-
-[[variable]]
-native_id = "106.5063.f26-3"
-slug = "f26-3"
-
-[[variable]]
-native_id = "106.5063.f26-4"
-slug = "f26-4"
-
-[[variable]]
-native_id = "106.5063.f26-5"
-slug = "f26-5"
-
-[[variable]]
-native_id = "106.15399.f28-1"
-slug = "f28-1"
-
-[[variable]]
-native_id = "106.15399.f28-2"
-slug = "f28-2"
-
-[[variable]]
-native_id = "106.15399.f28-3"
-slug = "f28-3"
-
-[[variable]]
-native_id = "106.15399.f28-4"
-slug = "f28-4"
-
-[[variable]]
-native_id = "106.37062.f9-1"
-slug = "f9-1"
-
-[[variable]]
-native_id = "106.37062.f9-2"
-slug = "f9-2"
-
-[[variable]]
-native_id = "106.37062.f9-3"
-slug = "f9-3"
-
-[[variable]]
-native_id = "106.40815.f24-1"
-slug = "f24-1"
-
-[[variable]]
-native_id = "106.40815.f24-2"
-slug = "f24-2"
-
-[[variable]]
-native_id = "106.40815.f24-3"
-slug = "f24-3"

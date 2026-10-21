@@ -7,11 +7,6 @@ native_id = "1"
 native_id = "1.10"
 slug = "people"
 
-[[variable]]
-native_id = "1.101"
-slug = "curated"
-deprecated = true
-
-[[variable]]
-native_id = "1.103"
-slug = "stale"
+[variable]
+"1.101" = { slug = "curated", deprecated = true }
+"1.103" = "stale"

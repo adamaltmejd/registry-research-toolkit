@@ -111,468 +111,116 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Gymnasieskola: elever per 15 oktober
-
-[[variable]]
-native_id = "232.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "232.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "232.49"
-slug = "lan"
-
-[[variable]]
-native_id = "232.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "232.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "232.6418"
-slug = "befattningskod-pedagogisk"
-
-[[variable]]
-native_id = "232.6421"
-slug = "pedagogisk-utbildning"
-
-[[variable]]
-native_id = "232.6943"
-slug = "tjanstledig-hosttermin"
-
-[[variable]]
-native_id = "232.8698"
-slug = "inriktning-fristaende-gy"
-
-[[variable]]
-native_id = "232.8701"
-slug = "kopt-utbildning-i-komvux"
-
-[[variable]]
-native_id = "232.8771"
-slug = "pedagogisk-hogskoleexamen"
-
-[[variable]]
-native_id = "232.8773"
-slug = "typ-av-anstallning"
-
-[[variable]]
-native_id = "232.30366"
-slug = "skolenhetskod"
-
-[[variable]]
-native_id = "232.30578"
-slug = "verksamhetstyp"
-
-[[variable]]
-native_id = "232.30664"
-slug = "kopt-utbildning"
-
-[[variable]]
-native_id = "232.35203"
-slug = "tjanstgoringsniva-tjanstlediga"
-
-[[variable]]
-native_id = "232.35237"
-slug = "specialundervisning"
-
-[[variable]]
-native_id = "232.39138"
-slug = "hemspraksundervisning"
+"232.57" = "personnr"
+"232.36" = "kommun"
+"232.49" = "lan"
+"232.1993" = "skolans-identitetsnummer"
+"232.1996" = "skolform"
+"232.6418" = "befattningskod-pedagogisk"
+"232.6421" = "pedagogisk-utbildning"
+"232.6943" = "tjanstledig-hosttermin"
+"232.8698" = "inriktning-fristaende-gy"
+"232.8701" = "kopt-utbildning-i-komvux"
+"232.8771" = "pedagogisk-hogskoleexamen"
+"232.8773" = "typ-av-anstallning"
+"232.30366" = "skolenhetskod"
+"232.30578" = "verksamhetstyp"
+"232.30664" = "kopt-utbildning"
+"232.35203" = "tjanstgoringsniva-tjanstlediga"
+"232.35237" = "specialundervisning"
+"232.39138" = "hemspraksundervisning"
 
 # register 233 (gymnasieskola-elever)
-
-[[variable]]
-native_id = "232.30583.hemsp"
-slug = "undervisning-i-modersmal"
-
-[[variable]]
-native_id = "232.8703.nivakod1"
-slug = "tjanstgoringsniva"
+"232.30583.hemsp" = "undervisning-i-modersmal"
+"232.8703.nivakod1" = "tjanstgoringsniva"
 
 # register 235 (vaxtskyddsmedel)
-
-[[variable]]
-native_id = "232.56.peorgnr"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "232.56.peorgnr-anord"
-slug = "person-orgnr-anordnare"
-
-[[variable]]
-native_id = "232.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "232.1396"
-slug = "lasar"
-
-[[variable]]
-native_id = "232.5056"
-slug = "landstingskod"
-
-[[variable]]
-native_id = "232.8552"
-slug = "gymnasieforbund-id"
-
-[[variable]]
-native_id = "232.8702"
-slug = "sarskoleform"
-
-[[variable]]
-native_id = "232.8770"
-slug = "senaste-aktivt-ar"
-
-[[variable]]
-native_id = "232.26963"
-slug = "inriktning-fristaende-gr"
-
-[[variable]]
-native_id = "232.35151"
-slug = "inlasningsdatum"
-
-[[variable]]
-native_id = "232.37237"
-slug = "tjanstgorande-larare"
-
-[[variable]]
-native_id = "232.38249"
-slug = "fodd-i-sverige-eller-utomlands"
-
-[[variable]]
-native_id = "232.39039"
-slug = "personens-namn"
+"232.56.peorgnr" = "person-orgnr"
+"232.56.peorgnr-anord" = "person-orgnr-anordnare"
+"232.241" = "alder-31-12"
+"232.1396" = "lasar"
+"232.5056" = "landstingskod"
+"232.8552" = "gymnasieforbund-id"
+"232.8702" = "sarskoleform"
+"232.8770" = "senaste-aktivt-ar"
+"232.26963" = "inriktning-fristaende-gr"
+"232.35151" = "inlasningsdatum"
+"232.37237" = "tjanstgorande-larare"
+"232.38249" = "fodd-i-sverige-eller-utomlands"
+"232.39039" = "personens-namn"
 
 # register 233
-
-[[variable]]
-native_id = "232.38250.stvrht"
-slug = "studieveckor-ht"
-
-[[variable]]
-native_id = "232.38250.stvrla"
-slug = "studieveckor-la"
-
-[[variable]]
-native_id = "232.8137.hman"
-slug = "huvudman"
-
-[[variable]]
-native_id = "232.8137.hmannamn"
-slug = "huvudman-namn"
-
-[[variable]]
-native_id = "232.8557.utbanord"
-slug = "utbildningsanordnare"
+"232.38250.stvrht" = "studieveckor-ht"
+"232.38250.stvrla" = "studieveckor-la"
+"232.8137.hman" = "huvudman"
+"232.8137.hmannamn" = "huvudman-namn"
+"232.8557.utbanord" = "utbildningsanordnare"
 
 # register 233
-
-[[variable]]
-native_id = "232.30583.hemtim2"
-slug = "undervisning-i-modersmal-hemtim2"
-deprecated = false
-
-[[variable]]
-native_id = "232.30583.hemtim5"
-slug = "undervisning-i-modersmal-hemtim5"
-deprecated = false
-
-[[variable]]
-native_id = "232.30583.hemtim4"
-slug = "undervisning-i-modersmal-hemtim4"
-deprecated = false
-
-[[variable]]
-native_id = "232.30583.hemtim7"
-slug = "undervisning-i-modersmal-hemtim7"
-deprecated = false
-
-[[variable]]
-native_id = "232.30583.hemtim6"
-slug = "undervisning-i-modersmal-hemtim6"
-deprecated = false
-
-[[variable]]
-native_id = "232.30583.hemtim3"
-slug = "undervisning-i-modersmal-hemtim3"
-deprecated = false
-
-[[variable]]
-native_id = "232.30583.hemtim8"
-slug = "undervisning-i-modersmal-hemtim8"
-deprecated = false
-
-[[variable]]
-native_id = "232.30580.huvudyrkesamn1"
-slug = "yrkesamne-huvudyrkesamn1"
-deprecated = false
-
-[[variable]]
-native_id = "232.30580.huvudyrkesgsaramn2"
-slug = "yrkesamne-huvudyrkesgsaramn2"
-deprecated = false
-
-[[variable]]
-native_id = "232.30580.huvudyrkesamn2"
-slug = "yrkesamne-huvudyrkesamn2"
-deprecated = false
-
-[[variable]]
-native_id = "232.30580.huvudyrkesgsaramn3"
-slug = "yrkesamne-huvudyrkesgsaramn3"
-deprecated = false
-
-[[variable]]
-native_id = "232.30580.huvudyrkesamn3"
-slug = "yrkesamne-huvudyrkesamn3"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.stad2"
-slug = "tjanstgoringsniva-stad2"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.stad5"
-slug = "tjanstgoringsniva-stad5"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.stad4"
-slug = "tjanstgoringsniva-stad4"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.stad6"
-slug = "tjanstgoringsniva-stad6"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.stad3"
-slug = "tjanstgoringsniva-stad3"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.nivakod2"
-slug = "tjanstgoringsniva-nivakod2"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.nivakod5"
-slug = "tjanstgoringsniva-nivakod5"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.nivakod4"
-slug = "tjanstgoringsniva-nivakod4"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.nivakod6"
-slug = "tjanstgoringsniva-nivakod6"
-deprecated = false
-
-[[variable]]
-native_id = "232.8703.nivakod3"
-slug = "tjanstgoringsniva-nivakod3"
-deprecated = false
-
-[[variable]]
-native_id = "232.13671.tjltim2"
-slug = "tjanstledig-tjltim2"
-deprecated = false
-
-[[variable]]
-native_id = "232.13671.tjltim5"
-slug = "tjanstledig-tjltim5"
-deprecated = false
-
-[[variable]]
-native_id = "232.13671.tjltim4"
-slug = "tjanstledig-tjltim4"
-deprecated = false
-
-[[variable]]
-native_id = "232.13671.tjltim6"
-slug = "tjanstledig-tjltim6"
-deprecated = false
-
-[[variable]]
-native_id = "232.13671.tjltim3"
-slug = "tjanstledig-tjltim3"
-deprecated = false
-
-[[variable]]
-native_id = "232.45013.vissaamn3"
-slug = "undervisning-i-vissa-amnen-vissaamn3"
-deprecated = false
-
-[[variable]]
-native_id = "232.45013.vissaamn2"
-slug = "undervisning-i-vissa-amnen-vissaamn2"
-deprecated = false
-
-[[variable]]
-native_id = "232.39905.verkform"
-slug = "verksamhetsform-verkform"
-deprecated = false
-
-[[variable]]
-native_id = "232.39905.verkform1"
-slug = "verksamhetsform-verkform1"
-deprecated = false
-
-[[variable]]
-native_id = "232.39167.hemkol2"
-slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol2"
-deprecated = false
-
-[[variable]]
-native_id = "232.39167.hemkol5"
-slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol5"
-deprecated = false
-
-[[variable]]
-native_id = "232.39167.hemkol4"
-slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol4"
-deprecated = false
-
-[[variable]]
-native_id = "232.39167.hemkol1"
-slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol1"
-deprecated = false
-
-[[variable]]
-native_id = "232.39167.hemkol7"
-slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol7"
-deprecated = false
-
-[[variable]]
-native_id = "232.39167.hemkol6"
-slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol6"
-deprecated = false
-
-[[variable]]
-native_id = "232.39167.hemkol3"
-slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol3"
-deprecated = false
-
-[[variable]]
-native_id = "232.39167.hemkol8"
-slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol8"
-deprecated = false
-
-[[variable]]
-native_id = "232.39137.ttftim2"
-slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim2"
-deprecated = false
-
-[[variable]]
-native_id = "232.39137.ttftim5"
-slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim5"
-deprecated = false
-
-[[variable]]
-native_id = "232.39137.ttftim4"
-slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim4"
-deprecated = false
-
-[[variable]]
-native_id = "232.39137.ttftim1"
-slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim1"
-deprecated = false
-
-[[variable]]
-native_id = "232.39137.ttftim6"
-slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim6"
-deprecated = false
-
-[[variable]]
-native_id = "232.39137.ttftim3"
-slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim3"
-deprecated = false
-
-[[variable]]
-native_id = "232.38251.fatim2"
-slug = "tjanstgoringstimmar-fatim2"
-deprecated = false
-
-[[variable]]
-native_id = "232.38251.fatim5"
-slug = "tjanstgoringstimmar-fatim5"
-deprecated = false
-
-[[variable]]
-native_id = "232.38251.fatim4"
-slug = "tjanstgoringstimmar-fatim4"
-deprecated = false
-
-[[variable]]
-native_id = "232.38251.fatim6"
-slug = "tjanstgoringstimmar-fatim6"
-deprecated = false
-
-[[variable]]
-native_id = "232.38251.fatim3"
-slug = "tjanstgoringstimmar-fatim3"
-deprecated = false
-
-[[variable]]
-native_id = "232.39166.hemrad2"
-slug = "typ-av-hemspraksundervisning-hemrad2"
-deprecated = false
-
-[[variable]]
-native_id = "232.39166.hemrad5"
-slug = "typ-av-hemspraksundervisning-hemrad5"
-deprecated = false
-
-[[variable]]
-native_id = "232.39166.hemrad4"
-slug = "typ-av-hemspraksundervisning-hemrad4"
-deprecated = false
-
-[[variable]]
-native_id = "232.39166.hemrad1"
-slug = "typ-av-hemspraksundervisning-hemrad1"
-deprecated = false
-
-[[variable]]
-native_id = "232.39166.hemrad7"
-slug = "typ-av-hemspraksundervisning-hemrad7"
-deprecated = false
-
-[[variable]]
-native_id = "232.39166.hemrad6"
-slug = "typ-av-hemspraksundervisning-hemrad6"
-deprecated = false
-
-[[variable]]
-native_id = "232.39166.hemrad3"
-slug = "typ-av-hemspraksundervisning-hemrad3"
-deprecated = false
-
-[[variable]]
-native_id = "232.39166.hemrad8"
-slug = "typ-av-hemspraksundervisning-hemrad8"
-deprecated = false
-
-[[variable]]
-native_id = "232.30600.bilaga4amn2"
-slug = "undervisning-i-ovriga-bilaga-4-amnen-bilaga4amn2"
-deprecated = false
-
-[[variable]]
-native_id = "232.30600.bilaga4amn3"
-slug = "undervisning-i-ovriga-bilaga-4-amnen-bilaga4amn3"
-deprecated = false
+"232.30583.hemtim2" = { slug = "undervisning-i-modersmal-hemtim2", deprecated = false }
+"232.30583.hemtim5" = { slug = "undervisning-i-modersmal-hemtim5", deprecated = false }
+"232.30583.hemtim4" = { slug = "undervisning-i-modersmal-hemtim4", deprecated = false }
+"232.30583.hemtim7" = { slug = "undervisning-i-modersmal-hemtim7", deprecated = false }
+"232.30583.hemtim6" = { slug = "undervisning-i-modersmal-hemtim6", deprecated = false }
+"232.30583.hemtim3" = { slug = "undervisning-i-modersmal-hemtim3", deprecated = false }
+"232.30583.hemtim8" = { slug = "undervisning-i-modersmal-hemtim8", deprecated = false }
+"232.30580.huvudyrkesamn1" = { slug = "yrkesamne-huvudyrkesamn1", deprecated = false }
+"232.30580.huvudyrkesgsaramn2" = { slug = "yrkesamne-huvudyrkesgsaramn2", deprecated = false }
+"232.30580.huvudyrkesamn2" = { slug = "yrkesamne-huvudyrkesamn2", deprecated = false }
+"232.30580.huvudyrkesgsaramn3" = { slug = "yrkesamne-huvudyrkesgsaramn3", deprecated = false }
+"232.30580.huvudyrkesamn3" = { slug = "yrkesamne-huvudyrkesamn3", deprecated = false }
+"232.8703.stad2" = { slug = "tjanstgoringsniva-stad2", deprecated = false }
+"232.8703.stad5" = { slug = "tjanstgoringsniva-stad5", deprecated = false }
+"232.8703.stad4" = { slug = "tjanstgoringsniva-stad4", deprecated = false }
+"232.8703.stad6" = { slug = "tjanstgoringsniva-stad6", deprecated = false }
+"232.8703.stad3" = { slug = "tjanstgoringsniva-stad3", deprecated = false }
+"232.8703.nivakod2" = { slug = "tjanstgoringsniva-nivakod2", deprecated = false }
+"232.8703.nivakod5" = { slug = "tjanstgoringsniva-nivakod5", deprecated = false }
+"232.8703.nivakod4" = { slug = "tjanstgoringsniva-nivakod4", deprecated = false }
+"232.8703.nivakod6" = { slug = "tjanstgoringsniva-nivakod6", deprecated = false }
+"232.8703.nivakod3" = { slug = "tjanstgoringsniva-nivakod3", deprecated = false }
+"232.13671.tjltim2" = { slug = "tjanstledig-tjltim2", deprecated = false }
+"232.13671.tjltim5" = { slug = "tjanstledig-tjltim5", deprecated = false }
+"232.13671.tjltim4" = { slug = "tjanstledig-tjltim4", deprecated = false }
+"232.13671.tjltim6" = { slug = "tjanstledig-tjltim6", deprecated = false }
+"232.13671.tjltim3" = { slug = "tjanstledig-tjltim3", deprecated = false }
+"232.45013.vissaamn3" = { slug = "undervisning-i-vissa-amnen-vissaamn3", deprecated = false }
+"232.45013.vissaamn2" = { slug = "undervisning-i-vissa-amnen-vissaamn2", deprecated = false }
+"232.39905.verkform" = { slug = "verksamhetsform-verkform", deprecated = false }
+"232.39905.verkform1" = { slug = "verksamhetsform-verkform1", deprecated = false }
+"232.39167.hemkol2" = { slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol2", deprecated = false }
+"232.39167.hemkol5" = { slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol5", deprecated = false }
+"232.39167.hemkol4" = { slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol4", deprecated = false }
+"232.39167.hemkol1" = { slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol1", deprecated = false }
+"232.39167.hemkol7" = { slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol7", deprecated = false }
+"232.39167.hemkol6" = { slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol6", deprecated = false }
+"232.39167.hemkol3" = { slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol3", deprecated = false }
+"232.39167.hemkol8" = { slug = "skolform-och-stadium-for-hemspraksundervisning-hemkol8", deprecated = false }
+"232.39137.ttftim2" = { slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim2", deprecated = false }
+"232.39137.ttftim5" = { slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim5", deprecated = false }
+"232.39137.ttftim4" = { slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim4", deprecated = false }
+"232.39137.ttftim1" = { slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim1", deprecated = false }
+"232.39137.ttftim6" = { slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim6", deprecated = false }
+"232.39137.ttftim3" = { slug = "tjanstgoring-pa-tillfalliga-timmar-ttftim3", deprecated = false }
+"232.38251.fatim2" = { slug = "tjanstgoringstimmar-fatim2", deprecated = false }
+"232.38251.fatim5" = { slug = "tjanstgoringstimmar-fatim5", deprecated = false }
+"232.38251.fatim4" = { slug = "tjanstgoringstimmar-fatim4", deprecated = false }
+"232.38251.fatim6" = { slug = "tjanstgoringstimmar-fatim6", deprecated = false }
+"232.38251.fatim3" = { slug = "tjanstgoringstimmar-fatim3", deprecated = false }
+"232.39166.hemrad2" = { slug = "typ-av-hemspraksundervisning-hemrad2", deprecated = false }
+"232.39166.hemrad5" = { slug = "typ-av-hemspraksundervisning-hemrad5", deprecated = false }
+"232.39166.hemrad4" = { slug = "typ-av-hemspraksundervisning-hemrad4", deprecated = false }
+"232.39166.hemrad1" = { slug = "typ-av-hemspraksundervisning-hemrad1", deprecated = false }
+"232.39166.hemrad7" = { slug = "typ-av-hemspraksundervisning-hemrad7", deprecated = false }
+"232.39166.hemrad6" = { slug = "typ-av-hemspraksundervisning-hemrad6", deprecated = false }
+"232.39166.hemrad3" = { slug = "typ-av-hemspraksundervisning-hemrad3", deprecated = false }
+"232.39166.hemrad8" = { slug = "typ-av-hemspraksundervisning-hemrad8", deprecated = false }
+"232.30600.bilaga4amn2" = { slug = "undervisning-i-ovriga-bilaga-4-amnen-bilaga4amn2", deprecated = false }
+"232.30600.bilaga4amn3" = { slug = "undervisning-i-ovriga-bilaga-4-amnen-bilaga4amn3", deprecated = false }
+"232.REKTOR" = "rektor"
+"232.RoKod" = "rektorsomrade"
 
 [[identity.column_owner]]
 variable = "232.30583"
@@ -13261,14 +12909,6 @@ source = "steward-holdings"
 evidence = "SWECOV holds P1105_LopNr_RoKod (the löpnummer of RoKod) in LReg_1989 through LReg_2012, editions school years LA1989 through LA2012; holdings_period runs from the start of LA1989 to the end of LA2012 (#1533). No P1105 list names a source or view for it, and SCB's Registerinformation export carries no row for the column on tjansteregistret. The rektorsområde reading rests on the column name only (maintainer-accepted best guess, #1302). data_type follows SWECOV's storage schema for the P1105 löpnummer header (integer)."
 noted = "2026-10-12"
 data_warning = "The meaning (rektorsområde) is read from the column name; it is not documented."
-
-[[variable]]
-native_id = "232.REKTOR"
-slug = "rektor"
-
-[[variable]]
-native_id = "232.RoKod"
-slug = "rektorsomrade"
 
 # ── #1603 batch-e: same-name carries for undocumented rounds under the maintainer decision 2026-10-16 (#1603 batch-e same-name rule) ──
 # Each entry carries the nearest documented edition's variable into editions SCB does not document, with a data_warning. Code lists are not carried, except where a batch-f coding.extend below carries the donor list.

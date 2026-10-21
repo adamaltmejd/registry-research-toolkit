@@ -5,9 +5,9 @@ native_id = "53"
 [[variant]]
 native_id = "53.532"
 slug = "people"
-[[variable]]
-native_id = "53.5"
-slug = "value"
+
+[variable]
+"53.5" = "value"
 
 [[coding.choice]]
 variable = "53.5"

@@ -3,9 +3,15 @@ provider = "fk"
 slug = "tandvardsstodet"
 native_id = "7664376130118991107"
 
-[[variable]]
-native_id = "7664376130118991107.ARO_SEKVNR"
-slug = "aro-sekvnr"
+[variable]
+"7664376130118991107.ARO_SEKVNR" = "aro-sekvnr"
+
+# Underhållsstöd
+"7664376130118991107.LOPNR_ARENDE_ID" = "lopnr-arende-id"
+"7664376130118991107.LOPNUMMER" = "lopnummer"
+"7664376130118991107.HCP_INTERVALL_0" = "tandvard-ersattning-intervall-0"
+"7664376130118991107.HCP_INTERVALL_1" = "tandvard-ersattning-intervall-1"
+"7664376130118991107.HCP_INTERVALL_2" = "tandvard-ersattning-intervall-2"
 
 [[variant]]
 native_id = "7664376130118991107.5077766157907221193"
@@ -77,28 +83,4 @@ display_group = "Tandvårdsstödet"
 panel_entity_key = "aro-sekvnr"
 panel_time_key = "beslutstidpunkt"
 panel_time_grain = "row"
-
-# Underhållsstöd
-
-[[variable]]
-native_id = "7664376130118991107.LOPNR_ARENDE_ID"
-slug = "lopnr-arende-id"
-
-
-[[variable]]
-native_id = "7664376130118991107.LOPNUMMER"
-slug = "lopnummer"
-
-
-[[variable]]
-native_id = "7664376130118991107.HCP_INTERVALL_0"
-slug = "tandvard-ersattning-intervall-0"
-
-[[variable]]
-native_id = "7664376130118991107.HCP_INTERVALL_1"
-slug = "tandvard-ersattning-intervall-1"
-
-[[variable]]
-native_id = "7664376130118991107.HCP_INTERVALL_2"
-slug = "tandvard-ersattning-intervall-2"
 # register 8881065292063230279

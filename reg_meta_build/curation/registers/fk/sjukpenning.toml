@@ -47,31 +47,14 @@ panel_entity_key = "lopnr"
 panel_time_key = "del-from-datum"
 panel_time_grain = "row"
 
+[variable]
 # Merkostnadsersättning
+"8881065292063230279.Lopnr" = "lopnr"
+"8881065292063230279.Askp" = "arbetsskadesjukpenning"
+"8881065292063230279.Fall_from_datum2" = "sjukfall-startdatum"
+"8881065292063230279.Sig_a" = "sjukpenning-a-inkomst"
+"8881065292063230279.Sig_b" = "sjukpenning-b-inkomst"
+"8881065292063230279.Sjp" = "sjukpenning"
 
-[[variable]]
-native_id = "8881065292063230279.Lopnr"
-slug = "lopnr"
-
-
-[[variable]]
-native_id = "8881065292063230279.Askp"
-slug = "arbetsskadesjukpenning"
-
-[[variable]]
-native_id = "8881065292063230279.Fall_from_datum2"
-slug = "sjukfall-startdatum"
-
-[[variable]]
-native_id = "8881065292063230279.Sig_a"
-slug = "sjukpenning-a-inkomst"
-
-[[variable]]
-native_id = "8881065292063230279.Sig_b"
-slug = "sjukpenning-b-inkomst"
-
-[[variable]]
-native_id = "8881065292063230279.Sjp"
-slug = "sjukpenning"
 
 # === END #760 non-SCB concept-slug curation ===

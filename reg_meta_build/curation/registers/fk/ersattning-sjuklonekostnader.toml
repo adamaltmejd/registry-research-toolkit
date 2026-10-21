@@ -11,8 +11,6 @@ panel_entity_key = "lopnr-orgnr"
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
+[variable]
 # Etableringsersättning
-
-[[variable]]
-native_id = "7791929252178908414.organisationsnummer"
-slug = "lopnr-orgnr"
+"7791929252178908414.organisationsnummer" = "lopnr-orgnr"

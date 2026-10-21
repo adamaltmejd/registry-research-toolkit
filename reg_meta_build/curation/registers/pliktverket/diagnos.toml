@@ -11,23 +11,10 @@ panel_entity_key = "personnr"
 panel_time_key = "diagnosdatum"
 panel_time_grain = "row"
 
+[variable]
+"6636188647364956026.penr" = "personnr"
+"6636188647364956026.diagdat" = "diagnosdatum"
+"6636188647364956026.kap" = "kapitelnummer-sjukdom"
+"6636188647364956026.sjnr" = "sjukdomsnummer"
 
-
-
-[[variable]]
-native_id = "6636188647364956026.penr"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "6636188647364956026.diagdat"
-slug = "diagnosdatum"
-
-[[variable]]
-native_id = "6636188647364956026.kap"
-slug = "kapitelnummer-sjukdom"
-
-[[variable]]
-native_id = "6636188647364956026.sjnr"
-slug = "sjukdomsnummer"
 # register 7137015638745956087

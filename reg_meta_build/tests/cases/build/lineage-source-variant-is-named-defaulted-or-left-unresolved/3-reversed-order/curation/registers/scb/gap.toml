@@ -11,9 +11,7 @@ slug = "other"
 [[variant]]
 native_id = "2.20"
 slug = "people"
-[[variable]]
-native_id = "2.202"
-slug = "filler"
-[[variable]]
-native_id = "2.201"
-slug = "gap"
+
+[variable]
+"2.202" = "filler"
+"2.201" = "gap"

@@ -103,509 +103,188 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Mervärdesskatteregistret (Moms)
-
-[[variable]]
-native_id = "10.46"
-slug = "lantbruk-foretags-id"
-
-
-[[variable]]
-native_id = "10.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "10.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "10.77"
-slug = "areal-betesmark"
-
-[[variable]]
-native_id = "10.78"
-slug = "areal-skogsmark"
-
-[[variable]]
-native_id = "10.79"
-slug = "areal-akermark"
-
-[[variable]]
-native_id = "10.80"
-slug = "areal-ovrig-mark"
-
-[[variable]]
-native_id = "10.412"
-slug = "postort"
-
-[[variable]]
-native_id = "10.413"
-slug = "c-o-adress"
-
-[[variable]]
-native_id = "10.1797"
-slug = "gatuadress"
-
-[[variable]]
-native_id = "10.1804"
-slug = "telefonnummer-2"
-
-[[variable]]
-native_id = "10.2351"
-slug = "regionkod"
-
-[[variable]]
-native_id = "10.3170"
-slug = "antal-mjolkkor"
-
-[[variable]]
-native_id = "10.3173"
-slug = "grodnamn"
-
-[[variable]]
-native_id = "10.4049"
-slug = "postadress"
-
-[[variable]]
-native_id = "10.5522"
-slug = "telefon-1"
-
-[[variable]]
-native_id = "10.5524"
-slug = "telefon-2"
-
-[[variable]]
-native_id = "10.7007"
-slug = "grodareal"
-
-[[variable]]
-native_id = "10.7565"
-slug = "riksomrade"
-
-[[variable]]
-native_id = "10.17006"
-slug = "sockerbetor"
-
-[[variable]]
-native_id = "10.17009"
-slug = "areal-frovall"
-
-[[variable]]
-native_id = "10.17011"
-slug = "andra-vaxtslag"
-
-[[variable]]
-native_id = "10.17012"
-slug = "trada"
-
-[[variable]]
-native_id = "10.17899"
-slug = "telefonnummer-1"
-
-[[variable]]
-native_id = "10.22327"
-slug = "lan-kommun-forsamling"
-
-[[variable]]
-native_id = "10.25481"
-slug = "aktuell-areal-havre"
-
-[[variable]]
-native_id = "10.25482"
-slug = "aktuell-areal-varkorn"
-
-[[variable]]
-native_id = "10.25484"
-slug = "aktuell-areal-slattervall"
-
-[[variable]]
-native_id = "10.27077"
-slug = "typ-av-telefonnummer"
-
-[[variable]]
-native_id = "10.32019"
-slug = "grodans-id-nummer"
-
-[[variable]]
-native_id = "10.32020"
-slug = "grodans-namn"
-
-[[variable]]
-native_id = "10.37402"
-slug = "riksomrade-ro"
-
-[[variable]]
-native_id = "10.41865"
-slug = "storleksgrupp-akerareal"
-
-[[variable]]
-native_id = "10.41872"
-slug = "total-akerareal-i-hektar"
-
-[[variable]]
-native_id = "10.41873"
-slug = "totala-betesareal"
-
-[[variable]]
-native_id = "10.41875"
-slug = "totala-vaxthusyta"
-
-[[variable]]
-native_id = "10.41876"
-slug = "avgransat-omrade"
-
-[[variable]]
-native_id = "10.41879"
-slug = "arrenderad-akermark"
-
-[[variable]]
-native_id = "10.41880"
-slug = "arrenderad-betesmark"
-
-[[variable]]
-native_id = "10.41881"
-slug = "skogsareal"
-
-[[variable]]
-native_id = "10.42251"
-slug = "kod-for-undergroda"
-
-[[variable]]
-native_id = "10.42300"
-slug = "ovriga-vaxtslag"
-
-[[variable]]
-native_id = "10.42301"
-slug = "arter-akerbonor"
-
-[[variable]]
-native_id = "10.42304"
-slug = "total-betesmark"
-
-[[variable]]
-native_id = "10.42305"
-slug = "blandsad-areal-i-ha"
-
-[[variable]]
-native_id = "10.42306"
-slug = "bruna-bonor"
-
-[[variable]]
-native_id = "10.42310"
-slug = "energiskog"
-
-[[variable]]
-native_id = "10.42311"
-slug = "potatis-for-starkelse"
-
-[[variable]]
-native_id = "10.42396"
-slug = "antal-hons"
-
-[[variable]]
-native_id = "10.42398"
-slug = "gronfoder"
-
-[[variable]]
-native_id = "10.42400"
-slug = "areal-hostraps"
-
-[[variable]]
-native_id = "10.42401"
-slug = "hostrybs"
-
-[[variable]]
-native_id = "10.42416"
-slug = "konservarter"
-
-
-[[variable]]
-native_id = "10.42422"
-slug = "matpotatis"
-
-[[variable]]
-native_id = "10.42423"
-slug = "antal-mjolkkor-lbr"
-
-[[variable]]
-native_id = "10.42424"
-slug = "areal-oljelin"
-
-[[variable]]
-native_id = "10.42429"
-slug = "areal-rag"
-
-[[variable]]
-native_id = "10.42431"
-slug = "slaktkyckling-normomgang"
-
-[[variable]]
-native_id = "10.42433"
-slug = "slaktsvin-normomgang"
-
-[[variable]]
-native_id = "10.42442"
-slug = "totalt-antal-notdjur"
-
-[[variable]]
-native_id = "10.42451"
-slug = "tjurar-stutar-1-2-ar"
-
-[[variable]]
-native_id = "10.42452"
-slug = "tjurar-stutar-2-ar-over"
-
-[[variable]]
-native_id = "10.42453"
-slug = "tjur-stutkalvar"
-
-[[variable]]
-native_id = "10.42456"
-slug = "areal-varraps"
-
-[[variable]]
-native_id = "10.42457"
-slug = "varrybs"
-
-[[variable]]
-native_id = "10.42458"
-slug = "areal-varvete"
-
-[[variable]]
-native_id = "10.42460"
-slug = "hostvete"
-
-[[variable]]
-native_id = "10.42461"
-slug = "forsamlingsnamn"
-
-[[variable]]
-native_id = "10.42696"
-slug = "hostkorn"
-
-[[variable]]
-native_id = "10.42698"
-slug = "ragvete"
-
-[[variable]]
-native_id = "10.44250"
-slug = "skord-arter-ej-konserv"
-
-[[variable]]
-native_id = "10.44428"
-slug = "utnyttjad-betesmark"
-
-[[variable]]
-native_id = "10.44429"
-slug = "annan-obrukad-mark"
-
-[[variable]]
-native_id = "10.44474"
-slug = "killingar"
-
-[[variable]]
-native_id = "10.44475"
-slug = "getter"
-
-[[variable]]
-native_id = "10.44519"
-slug = "brukarkategori"
-
-[[variable]]
-native_id = "10.44542"
-slug = "betesvall"
-
-[[variable]]
-native_id = "10.44543"
-slug = "utarrenderad-akermark"
-
-[[variable]]
-native_id = "10.44544"
-slug = "antal-gyltor"
-
-[[variable]]
-native_id = "10.44545"
-slug = "antal-slaktsvin-110-kg"
-
-[[variable]]
-native_id = "10.44546"
-slug = "antal-slaktsvin-80-109-kg"
-
-[[variable]]
-native_id = "10.44547"
-slug = "antal-slaktsvin-50-79-kg"
-
-[[variable]]
-native_id = "10.44548"
-slug = "antal-svin-20-49-kg"
-
-[[variable]]
-native_id = "10.44549"
-slug = "kyckling-normomgang"
-
-[[variable]]
-native_id = "10.44550"
-slug = "antal-slaktkalvar"
-
-[[variable]]
-native_id = "10.44551"
-slug = "kvigor-liv-1-2-ar"
-
-[[variable]]
-native_id = "10.44552"
-slug = "kvigor-slakt-1-2-ar"
-
-[[variable]]
-native_id = "10.44554"
-slug = "kvigor-liv-2-ar-over"
-
-[[variable]]
-native_id = "10.44555"
-slug = "antal-suggor-ovriga"
-
-[[variable]]
-native_id = "10.44559"
-slug = "totala-areal"
-
-[[variable]]
-native_id = "10.44584"
-slug = "antal-kvigor"
-
-[[variable]]
-native_id = "10.44588"
-slug = "antal-svin-under-20-kg"
-
-[[variable]]
-native_id = "10.44589"
-slug = "antal-svin-over-20-kg"
-
-[[variable]]
-native_id = "10.44590"
-slug = "ej-utnyttjad-betesmark"
-
-[[variable]]
-native_id = "10.44595"
-slug = "fabrikspotatis-ej-bevattnad"
-
-[[variable]]
-native_id = "10.44596"
-slug = "foderarter"
-
-[[variable]]
-native_id = "10.44609"
-slug = "totalt-antal-not"
-
-[[variable]]
-native_id = "10.44610"
-slug = "antal-svin-over-49-kg"
-
-[[variable]]
-native_id = "10.44613"
-slug = "totalt-antal-getter"
-
-[[variable]]
-native_id = "10.44627"
-slug = "antal-kalvar-ovriga"
-
-[[variable]]
-native_id = "10.44636"
-slug = "antal-ovriga-kalvar"
+"10.46" = "lantbruk-foretags-id"
+"10.56" = "person-orgnr"
+"10.1839" = "orgnr"
+"10.77" = "areal-betesmark"
+"10.78" = "areal-skogsmark"
+"10.79" = "areal-akermark"
+"10.80" = "areal-ovrig-mark"
+"10.412" = "postort"
+"10.413" = "c-o-adress"
+"10.1797" = "gatuadress"
+"10.1804" = "telefonnummer-2"
+"10.2351" = "regionkod"
+"10.3170" = "antal-mjolkkor"
+"10.3173" = "grodnamn"
+"10.4049" = "postadress"
+"10.5522" = "telefon-1"
+"10.5524" = "telefon-2"
+"10.7007" = "grodareal"
+"10.7565" = "riksomrade"
+"10.17006" = "sockerbetor"
+"10.17009" = "areal-frovall"
+"10.17011" = "andra-vaxtslag"
+"10.17012" = "trada"
+"10.17899" = "telefonnummer-1"
+"10.22327" = "lan-kommun-forsamling"
+"10.25481" = "aktuell-areal-havre"
+"10.25482" = "aktuell-areal-varkorn"
+"10.25484" = "aktuell-areal-slattervall"
+"10.27077" = "typ-av-telefonnummer"
+"10.32019" = "grodans-id-nummer"
+"10.32020" = "grodans-namn"
+"10.37402" = "riksomrade-ro"
+"10.41865" = "storleksgrupp-akerareal"
+"10.41872" = "total-akerareal-i-hektar"
+"10.41873" = "totala-betesareal"
+"10.41875" = "totala-vaxthusyta"
+"10.41876" = "avgransat-omrade"
+"10.41879" = "arrenderad-akermark"
+"10.41880" = "arrenderad-betesmark"
+"10.41881" = "skogsareal"
+"10.42251" = "kod-for-undergroda"
+"10.42300" = "ovriga-vaxtslag"
+"10.42301" = "arter-akerbonor"
+"10.42304" = "total-betesmark"
+"10.42305" = "blandsad-areal-i-ha"
+"10.42306" = "bruna-bonor"
+"10.42310" = "energiskog"
+"10.42311" = "potatis-for-starkelse"
+"10.42396" = "antal-hons"
+"10.42398" = "gronfoder"
+"10.42400" = "areal-hostraps"
+"10.42401" = "hostrybs"
+"10.42416" = "konservarter"
+"10.42422" = "matpotatis"
+"10.42423" = "antal-mjolkkor-lbr"
+"10.42424" = "areal-oljelin"
+"10.42429" = "areal-rag"
+"10.42431" = "slaktkyckling-normomgang"
+"10.42433" = "slaktsvin-normomgang"
+"10.42442" = "totalt-antal-notdjur"
+"10.42451" = "tjurar-stutar-1-2-ar"
+"10.42452" = "tjurar-stutar-2-ar-over"
+"10.42453" = "tjur-stutkalvar"
+"10.42456" = "areal-varraps"
+"10.42457" = "varrybs"
+"10.42458" = "areal-varvete"
+"10.42460" = "hostvete"
+"10.42461" = "forsamlingsnamn"
+"10.42696" = "hostkorn"
+"10.42698" = "ragvete"
+"10.44250" = "skord-arter-ej-konserv"
+"10.44428" = "utnyttjad-betesmark"
+"10.44429" = "annan-obrukad-mark"
+"10.44474" = "killingar"
+"10.44475" = "getter"
+"10.44519" = "brukarkategori"
+"10.44542" = "betesvall"
+"10.44543" = "utarrenderad-akermark"
+"10.44544" = "antal-gyltor"
+"10.44545" = "antal-slaktsvin-110-kg"
+"10.44546" = "antal-slaktsvin-80-109-kg"
+"10.44547" = "antal-slaktsvin-50-79-kg"
+"10.44548" = "antal-svin-20-49-kg"
+"10.44549" = "kyckling-normomgang"
+"10.44550" = "antal-slaktkalvar"
+"10.44551" = "kvigor-liv-1-2-ar"
+"10.44552" = "kvigor-slakt-1-2-ar"
+"10.44554" = "kvigor-liv-2-ar-over"
+"10.44555" = "antal-suggor-ovriga"
+"10.44559" = "totala-areal"
+"10.44584" = "antal-kvigor"
+"10.44588" = "antal-svin-under-20-kg"
+"10.44589" = "antal-svin-over-20-kg"
+"10.44590" = "ej-utnyttjad-betesmark"
+"10.44595" = "fabrikspotatis-ej-bevattnad"
+"10.44596" = "foderarter"
+"10.44609" = "totalt-antal-not"
+"10.44610" = "antal-svin-over-49-kg"
+"10.44613" = "totalt-antal-getter"
+"10.44627" = "antal-kalvar-ovriga"
+"10.44636" = "antal-ovriga-kalvar"
 
 # register 13 (moms)
-
-[[variable]]
-native_id = "10.22627.areal"
-slug = "areal-av-grodan"
-
-[[variable]]
-native_id = "10.41860.astat"
-slug = "astat-akermark"
-
-[[variable]]
-native_id = "10.41874.tradgard"
-slug = "totala-frilandssareal"
-
-[[variable]]
-native_id = "10.42250.underkod"
-slug = "underkod"
-
-[[variable]]
-native_id = "10.44427.tradgard"
-slug = "tradgard-areal-i-ha"
-
-[[variable]]
-native_id = "10.5708.kundnr"
-slug = "kundnr"
-
-[[variable]]
-native_id = "10.5712.grodid"
-slug = "grodid"
+"10.22627.areal" = "areal-av-grodan"
+"10.41860.astat" = "astat-akermark"
+"10.41874.tradgard" = "totala-frilandssareal"
+"10.42250.underkod" = "underkod"
+"10.44427.tradgard" = "tradgard-areal-i-ha"
+"10.5708.kundnr" = "kundnr"
+"10.5712.grodid" = "grodid"
 
 # register 102 (gymnasieskola-betyg)
-
-[[variable]]
-native_id = "10.5708.kundnr1"
-slug = "kundnr-2"
-
-[[variable]]
-native_id = "10.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "10.814"
-slug = "faxnummer"
-
-[[variable]]
-native_id = "10.7003"
-slug = "antal-djur"
-
-[[variable]]
-native_id = "10.15390"
-slug = "ej-utnyttjad-vallareal"
-
-[[variable]]
-native_id = "10.16273"
-slug = "areal-total"
-
-[[variable]]
-native_id = "10.21428"
-slug = "bevattnad-areal"
-
-[[variable]]
-native_id = "10.22644"
-slug = "djur"
-
-[[variable]]
-native_id = "10.31996"
-slug = "stodomrade"
-
-[[variable]]
-native_id = "10.32957"
-slug = "kommunkod"
-
-[[variable]]
-native_id = "10.36886"
-slug = "regionindelning-nuts2"
-
-[[variable]]
-native_id = "10.44251"
-slug = "total-skord-akerbonor"
+"10.5708.kundnr1" = "kundnr-2"
+"10.26" = "fastighetsbeteckning"
+"10.814" = "faxnummer"
+"10.7003" = "antal-djur"
+"10.15390" = "ej-utnyttjad-vallareal"
+"10.16273" = "areal-total"
+"10.21428" = "bevattnad-areal"
+"10.22644" = "djur"
+"10.31996" = "stodomrade"
+"10.32957" = "kommunkod"
+"10.36886" = "regionindelning-nuts2"
+"10.44251" = "total-skord-akerbonor"
 
 # register 13
-
-[[variable]]
-native_id = "10.16256.antagdfast"
-slug = "antal-agda-fastigheter"
-
-[[variable]]
-native_id = "10.16256.antarrfast"
-slug = "antal-arrenderade-fastigheter"
-
-[[variable]]
-native_id = "10.22627.areal1"
-slug = "areal-av-grodan-2"
+"10.16256.antagdfast" = "antal-agda-fastigheter"
+"10.16256.antarrfast" = "antal-arrenderade-fastigheter"
+"10.22627.areal1" = "areal-av-grodan-2"
+"10.669.kalla" = "kalla-669"
+"10.669.nykalla" = "nykalla"
+"10.41877.jtim" = "jtim-41877"
+"10.41877.jtim-ny" = "jtim-ny"
+"10.5708.kundnr2" = "kundnr2"
+"10.31996.stodomr" = "stodomr"
+"10.31996.stodomr2014" = "stodomr2014"
+"10.31996.stodomr2015" = "stodomr2015"
+"10.22627.areal10" = "areal10"
+"10.22627.areal11" = "areal11"
+"10.22627.areal12" = "areal12"
+"10.22627.areal13" = "areal13"
+"10.22627.areal14" = "areal14"
+"10.22627.areal15" = "areal15"
+"10.22627.areal16" = "areal16"
+"10.22627.areal17" = "areal17"
+"10.22627.areal18" = "areal18"
+"10.22627.areal19" = "areal19"
+"10.22627.areal2" = "areal2"
+"10.22627.areal20" = "areal20"
+"10.22627.areal3" = "areal3"
+"10.22627.areal4" = "areal4"
+"10.22627.areal5" = "areal5"
+"10.22627.areal6" = "areal6"
+"10.22627.areal7" = "areal7"
+"10.22627.areal8" = "areal8"
+"10.22627.areal9" = "areal9"
+"10.5712.tfid" = "tfid"
+"10.5712.tradid" = "tradid"
+"10.5712.groda1" = "groda"
+"10.5712.groda10" = "groda10"
+"10.5712.groda11" = "groda11"
+"10.5712.groda12" = "groda12"
+"10.5712.groda13" = "groda13"
+"10.5712.groda14" = "groda14"
+"10.5712.groda15" = "groda15"
+"10.5712.groda16" = "groda16"
+"10.5712.groda17" = "groda17"
+"10.5712.groda18" = "groda18"
+"10.5712.groda19" = "groda19"
+"10.5712.groda2" = "groda2"
+"10.5712.groda20" = "groda20"
+"10.5712.groda3" = "groda3"
+"10.5712.groda4" = "groda4"
+"10.5712.groda5" = "groda5"
+"10.5712.groda6" = "groda6"
+"10.5712.groda7" = "groda7"
+"10.5712.groda8" = "groda8"
+"10.5712.groda9" = "groda9"
+"10.42420.lamm" = "lamm"
+"10.42421.majs" = "majs"
 
 # register 102
 
@@ -616,210 +295,6 @@ columns = { FTGid = "10.46", Ftgid = "10.46", IDNR = "10.46", LBRid = "10.46", f
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "bb94de616f7e2d7b7c9ad211ced85df86694d82b2185a1e074825d6f6e2dc496"
-
-[[variable]]
-native_id = "10.669.kalla"
-slug = "kalla-669"
-
-[[variable]]
-native_id = "10.669.nykalla"
-slug = "nykalla"
-
-[[variable]]
-native_id = "10.41877.jtim"
-slug = "jtim-41877"
-
-[[variable]]
-native_id = "10.41877.jtim-ny"
-slug = "jtim-ny"
-
-[[variable]]
-native_id = "10.5708.kundnr2"
-slug = "kundnr2"
-
-[[variable]]
-native_id = "10.31996.stodomr"
-slug = "stodomr"
-
-[[variable]]
-native_id = "10.31996.stodomr2014"
-slug = "stodomr2014"
-
-[[variable]]
-native_id = "10.31996.stodomr2015"
-slug = "stodomr2015"
-
-[[variable]]
-native_id = "10.22627.areal10"
-slug = "areal10"
-
-[[variable]]
-native_id = "10.22627.areal11"
-slug = "areal11"
-
-[[variable]]
-native_id = "10.22627.areal12"
-slug = "areal12"
-
-[[variable]]
-native_id = "10.22627.areal13"
-slug = "areal13"
-
-[[variable]]
-native_id = "10.22627.areal14"
-slug = "areal14"
-
-[[variable]]
-native_id = "10.22627.areal15"
-slug = "areal15"
-
-[[variable]]
-native_id = "10.22627.areal16"
-slug = "areal16"
-
-[[variable]]
-native_id = "10.22627.areal17"
-slug = "areal17"
-
-[[variable]]
-native_id = "10.22627.areal18"
-slug = "areal18"
-
-[[variable]]
-native_id = "10.22627.areal19"
-slug = "areal19"
-
-[[variable]]
-native_id = "10.22627.areal2"
-slug = "areal2"
-
-[[variable]]
-native_id = "10.22627.areal20"
-slug = "areal20"
-
-[[variable]]
-native_id = "10.22627.areal3"
-slug = "areal3"
-
-[[variable]]
-native_id = "10.22627.areal4"
-slug = "areal4"
-
-[[variable]]
-native_id = "10.22627.areal5"
-slug = "areal5"
-
-[[variable]]
-native_id = "10.22627.areal6"
-slug = "areal6"
-
-[[variable]]
-native_id = "10.22627.areal7"
-slug = "areal7"
-
-[[variable]]
-native_id = "10.22627.areal8"
-slug = "areal8"
-
-[[variable]]
-native_id = "10.22627.areal9"
-slug = "areal9"
-
-[[variable]]
-native_id = "10.5712.tfid"
-slug = "tfid"
-
-[[variable]]
-native_id = "10.5712.tradid"
-slug = "tradid"
-
-[[variable]]
-native_id = "10.5712.groda1"
-slug = "groda"
-
-[[variable]]
-native_id = "10.5712.groda10"
-slug = "groda10"
-
-[[variable]]
-native_id = "10.5712.groda11"
-slug = "groda11"
-
-[[variable]]
-native_id = "10.5712.groda12"
-slug = "groda12"
-
-[[variable]]
-native_id = "10.5712.groda13"
-slug = "groda13"
-
-[[variable]]
-native_id = "10.5712.groda14"
-slug = "groda14"
-
-[[variable]]
-native_id = "10.5712.groda15"
-slug = "groda15"
-
-[[variable]]
-native_id = "10.5712.groda16"
-slug = "groda16"
-
-[[variable]]
-native_id = "10.5712.groda17"
-slug = "groda17"
-
-[[variable]]
-native_id = "10.5712.groda18"
-slug = "groda18"
-
-[[variable]]
-native_id = "10.5712.groda19"
-slug = "groda19"
-
-[[variable]]
-native_id = "10.5712.groda2"
-slug = "groda2"
-
-[[variable]]
-native_id = "10.5712.groda20"
-slug = "groda20"
-
-[[variable]]
-native_id = "10.5712.groda3"
-slug = "groda3"
-
-[[variable]]
-native_id = "10.5712.groda4"
-slug = "groda4"
-
-[[variable]]
-native_id = "10.5712.groda5"
-slug = "groda5"
-
-[[variable]]
-native_id = "10.5712.groda6"
-slug = "groda6"
-
-[[variable]]
-native_id = "10.5712.groda7"
-slug = "groda7"
-
-[[variable]]
-native_id = "10.5712.groda8"
-slug = "groda8"
-
-[[variable]]
-native_id = "10.5712.groda9"
-slug = "groda9"
-
-[[variable]]
-native_id = "10.42420.lamm"
-slug = "lamm"
-
-[[variable]]
-native_id = "10.42421.majs"
-slug = "majs"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

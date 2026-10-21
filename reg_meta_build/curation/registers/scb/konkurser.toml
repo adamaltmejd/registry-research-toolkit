@@ -190,36 +190,16 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Företagens ekonomi (FEK)
-
-[[variable]]
-native_id = "167.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "167.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "167.97"
-slug = "referensmanad"
-
-[[variable]]
-native_id = "167.972"
-slug = "aktuellt-antal-anstallda"
-
-[[variable]]
-native_id = "167.4040"
-slug = "foretagsenhetens-startar"
-
-[[variable]]
-native_id = "167.18011"
-slug = "sni2007-5siffror"
-
-[[variable]]
-native_id = "167.21549"
-slug = "objekttyp"
+"167.56" = "person-orgnr"
+"167.34" = "juridisk-form"
+"167.97" = "referensmanad"
+"167.972" = "aktuellt-antal-anstallda"
+"167.4040" = "foretagsenhetens-startar"
+"167.18011" = "sni2007-5siffror"
+"167.21549" = "objekttyp"
+"167.PersonNr_opnr" = "lopnr-personnr-opnr"
 
 # register 168
 
@@ -237,7 +217,3 @@ holdings_period = "2015-2024"
 source = "steward-holdings"
 evidence = "SWECOV holds P1105_LopNr_PersonNr_opnr in Konkurs_2015..Konkurs_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it with source Konk.OffAck and view Konkurs_ÅÅÅÅ; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F1, maintainer round 5)."
 noted = "2026-10-12"
-
-[[variable]]
-native_id = "167.PersonNr_opnr"
-slug = "lopnr-personnr-opnr"

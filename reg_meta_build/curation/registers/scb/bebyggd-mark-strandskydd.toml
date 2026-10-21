@@ -22,111 +22,49 @@ native_id = "217.934"
 slug = "bebyggelsepaverkad-kust"
 display_group = "Bebyggelsepåverkad kust och strand"
 
+[variable]
 # Kust, stränder och öar
-
-[[variable]]
-native_id = "217.64"
-slug = "tatort-tom-2010"
-
-[[variable]]
-native_id = "217.3720"
-slug = "typ-av-bebyggelse"
-
-[[variable]]
-native_id = "217.3745"
-slug = "antal-taxeringsenheter"
-
-[[variable]]
-native_id = "217.7900"
-slug = "byggnadsar"
-
-[[variable]]
-native_id = "217.22523"
-slug = "byggnadstyp"
-
-[[variable]]
-native_id = "217.23680"
-slug = "kust-och-strandlinje"
-
-[[variable]]
-native_id = "217.25832"
-slug = "de-tre-storsta-insjoarna"
-
-[[variable]]
-native_id = "217.25834"
-slug = "kust-och-strandareal-100m"
-
-[[variable]]
-native_id = "217.25835"
-slug = "kust-och-strandkvot-300m"
-
-[[variable]]
-native_id = "217.25836"
-slug = "antal-byggnader"
-
-[[variable]]
-native_id = "217.25837"
-slug = "andel-byggnader"
-
-[[variable]]
-native_id = "217.25840"
-slug = "kust-och-strandareal-300m"
-
-[[variable]]
-native_id = "217.25841"
-slug = "kust-och-strandkvot-100m"
-
-[[variable]]
-native_id = "217.25842"
-slug = "antal-byggnader-per-hektar-100m"
-
-[[variable]]
-native_id = "217.25843"
-slug = "antal-byggnader-per-hektar-300m"
-
-[[variable]]
-native_id = "217.25860"
-slug = "kust-och-strandlangd-100m"
-
-[[variable]]
-native_id = "217.25861"
-slug = "kust-och-strandlangd-300m"
-
-[[variable]]
-native_id = "217.32024"
-slug = "bebyggelsepaverkad-kust-och-strandlinje"
-
-[[variable]]
-native_id = "217.32025"
-slug = "antal-strandnara-byggnader"
-
-[[variable]]
-native_id = "217.42758"
-slug = "strandlinje-i-tatort"
-
-[[variable]]
-native_id = "217.42759"
-slug = "strandlinje-inom-skyddad-natur"
-
-[[variable]]
-native_id = "217.42765"
-slug = "byggnad-i-tatort"
-
-[[variable]]
-native_id = "217.42766"
-slug = "byggnad-inom-formellt-skyddad-natur"
+"217.64" = "tatort-tom-2010"
+"217.3720" = "typ-av-bebyggelse"
+"217.3745" = "antal-taxeringsenheter"
+"217.7900" = "byggnadsar"
+"217.22523" = "byggnadstyp"
+"217.23680" = "kust-och-strandlinje"
+"217.25832" = "de-tre-storsta-insjoarna"
+"217.25834" = "kust-och-strandareal-100m"
+"217.25835" = "kust-och-strandkvot-300m"
+"217.25836" = "antal-byggnader"
+"217.25837" = "andel-byggnader"
+"217.25840" = "kust-och-strandareal-300m"
+"217.25841" = "kust-och-strandkvot-100m"
+"217.25842" = "antal-byggnader-per-hektar-100m"
+"217.25843" = "antal-byggnader-per-hektar-300m"
+"217.25860" = "kust-och-strandlangd-100m"
+"217.25861" = "kust-och-strandlangd-300m"
+"217.32024" = "bebyggelsepaverkad-kust-och-strandlinje"
+"217.32025" = "antal-strandnara-byggnader"
+"217.42758" = "strandlinje-i-tatort"
+"217.42759" = "strandlinje-inom-skyddad-natur"
+"217.42765" = "byggnad-i-tatort"
+"217.42766" = "byggnad-inom-formellt-skyddad-natur"
 
 # register 219 (kust-strander-oar)
-
-[[variable]]
-native_id = "217.39461"
-slug = "datatyp-for-geometri"
+"217.39461" = "datatyp-for-geometri"
 
 # register 219
-
-[[variable]]
-native_id = "217.39462.objectid"
-slug = "objekt-id"
+"217.39462.objectid" = "objekt-id"
+"217.42764.e2014" = "e20"
+"217.42764.e2015" = "e2015"
+"217.42764.e2016" = "e2016"
+"217.42764.e2017" = "e2017"
+"217.42764.e2018" = "e2018"
+"217.42764.e2019" = "e2019"
+"217.42764.e2020" = "e2020"
+"217.42764.e2021" = "e2021"
+"217.42764.e2022" = "e2022"
+"217.42764.e2023" = "e2023"
+"217.42764.etom2013" = "etom20"
+"217.42764.etom2020" = "etom2020"
 
 # register 219
 
@@ -144,51 +82,3 @@ variable = "217.42764"
 columns = { E2014 = "217.42764.e2014", E2015 = "217.42764.e2015", E2016 = "217.42764.e2016", E2017 = "217.42764.e2017", E2018 = "217.42764.e2018", E2019 = "217.42764.e2019", E2020 = "217.42764.e2020", E2021 = "217.42764.e2021", E2022 = "217.42764.e2022", E2023 = "217.42764.e2023", ETOM2013 = "217.42764.etom2013", ETOM2020 = "217.42764.etom2020" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "59a97a2f549228271a0c1d62ea071576bfda825c0f3bcdc0d7e03376e26f3952"
-
-[[variable]]
-native_id = "217.42764.e2014"
-slug = "e20"
-
-[[variable]]
-native_id = "217.42764.e2015"
-slug = "e2015"
-
-[[variable]]
-native_id = "217.42764.e2016"
-slug = "e2016"
-
-[[variable]]
-native_id = "217.42764.e2017"
-slug = "e2017"
-
-[[variable]]
-native_id = "217.42764.e2018"
-slug = "e2018"
-
-[[variable]]
-native_id = "217.42764.e2019"
-slug = "e2019"
-
-[[variable]]
-native_id = "217.42764.e2020"
-slug = "e2020"
-
-[[variable]]
-native_id = "217.42764.e2021"
-slug = "e2021"
-
-[[variable]]
-native_id = "217.42764.e2022"
-slug = "e2022"
-
-[[variable]]
-native_id = "217.42764.e2023"
-slug = "e2023"
-
-[[variable]]
-native_id = "217.42764.etom2013"
-slug = "etom20"
-
-[[variable]]
-native_id = "217.42764.etom2020"
-slug = "etom2020"

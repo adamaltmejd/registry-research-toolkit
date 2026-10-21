@@ -17,6 +17,5 @@ source = "steward-holdings"
 evidence = "held"
 noted = "2026-10-18"
 
-[[variable]]
-native_id = "3.LOST"
-slug = "lost"
+[variable]
+"3.LOST" = "lost"

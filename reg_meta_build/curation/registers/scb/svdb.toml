@@ -11,46 +11,19 @@ panel_entity_key = "isin"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Försäkringsföretagens kapitalplaceringar
-
-[[variable]]
-native_id = "323.28747"
-slug = "isin"
-
-
-[[variable]]
-native_id = "323.28755"
-slug = "senast-granskad"
+"323.28747" = "isin"
+"323.28755" = "senast-granskad"
 
 # register 325 (forsakring-kapital)
-
-[[variable]]
-native_id = "323.3578"
-slug = "orgnr-12"
-
-[[variable]]
-native_id = "323.2014"
-slug = "foretagsnamn"
-
-[[variable]]
-native_id = "323.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "323.23599"
-slug = "versionsnummer"
-
-[[variable]]
-native_id = "323.27294"
-slug = "ar-och-manad"
-
-[[variable]]
-native_id = "323.28744"
-slug = "vardepapperstyp"
-
-[[variable]]
-native_id = "323.28852"
-slug = "marknadspris"
+"323.3578" = "orgnr-12"
+"323.2014" = "foretagsnamn"
+"323.4027" = "naringsgren"
+"323.23599" = "versionsnummer"
+"323.27294" = "ar-och-manad"
+"323.28744" = "vardepapperstyp"
+"323.28852" = "marknadspris"
 
 # register 326
 

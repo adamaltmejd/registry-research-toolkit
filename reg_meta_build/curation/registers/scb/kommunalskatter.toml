@@ -35,95 +35,31 @@ panel_entity_key = "kommun"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Kommunernas och regionernas finansiella tillgångar och skulder (KTS)
-
-[[variable]]
-native_id = "115.36"
-slug = "kommun"
-
-
-[[variable]]
-native_id = "115.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "115.49"
-slug = "lan"
-
-[[variable]]
-native_id = "115.2188"
-slug = "folkmangd"
-
-[[variable]]
-native_id = "115.5099"
-slug = "invanare-per-kommun"
-
-[[variable]]
-native_id = "115.16805"
-slug = "kommun-eller-lansnamn"
-
-[[variable]]
-native_id = "115.16808"
-slug = "folkmangd-31-dec-t-2"
-
-[[variable]]
-native_id = "115.16819"
-slug = "total-kommunal-skattesats"
-
-[[variable]]
-native_id = "115.16821"
-slug = "skattesats-primarkommunen"
-
-[[variable]]
-native_id = "115.16824"
-slug = "skattesats-landsting"
-
-[[variable]]
-native_id = "115.16827"
-slug = "total-kyrkoavgiftssats"
-
-[[variable]]
-native_id = "115.16829"
-slug = "begravningsavgiftssats"
-
-[[variable]]
-native_id = "115.19693"
-slug = "region-landsting"
-
-[[variable]]
-native_id = "115.22203"
-slug = "skatteunderlag-t-1"
-
-[[variable]]
-native_id = "115.32913"
-slug = "skatteunderlag-sv-kyrkan"
+"115.36" = "kommun"
+"115.56" = "person-orgnr"
+"115.49" = "lan"
+"115.2188" = "folkmangd"
+"115.5099" = "invanare-per-kommun"
+"115.16805" = "kommun-eller-lansnamn"
+"115.16808" = "folkmangd-31-dec-t-2"
+"115.16819" = "total-kommunal-skattesats"
+"115.16821" = "skattesats-primarkommunen"
+"115.16824" = "skattesats-landsting"
+"115.16827" = "total-kyrkoavgiftssats"
+"115.16829" = "begravningsavgiftssats"
+"115.19693" = "region-landsting"
+"115.22203" = "skatteunderlag-t-1"
+"115.32913" = "skatteunderlag-sv-kyrkan"
 
 # register 116 (kts)
-
-[[variable]]
-native_id = "115.607"
-slug = "skatteunderlag"
-
-[[variable]]
-native_id = "115.2763"
-slug = "argang"
-
-[[variable]]
-native_id = "115.5056"
-slug = "landstingskod"
-
-[[variable]]
-native_id = "115.5059"
-slug = "landstingets-namn"
-
-[[variable]]
-native_id = "115.14850"
-slug = "kommungrupp"
-
-[[variable]]
-native_id = "115.16818"
-slug = "befolkningstathet"
+"115.607" = "skatteunderlag"
+"115.2763" = "argang"
+"115.5056" = "landstingskod"
+"115.5059" = "landstingets-namn"
+"115.14850" = "kommungrupp"
+"115.16818" = "befolkningstathet"
 
 # register 117
 

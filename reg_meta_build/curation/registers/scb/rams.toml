@@ -128,569 +128,184 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Longitudinell individdatabas (LINDA)
-
-[[variable]]
-native_id = "26.56.peorgnr"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "26.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "26.14.cfarnr"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "26.14.cfarnr1"
-slug = "cfar-nummer-2"
-
-
-[[variable]]
-native_id = "26.56.peorgnr2"
-slug = "person-orgnr-2"
-
-
-[[variable]]
-native_id = "26.17"
-slug = "arbetsstallenummer"
-
-[[variable]]
-native_id = "26.28"
-slug = "syssstat-allman"
-
-[[variable]]
-native_id = "26.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "26.49"
-slug = "lan"
-
-[[variable]]
-native_id = "26.372"
-slug = "familjeidentitet-rtb"
-
-[[variable]]
-native_id = "26.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "26.753"
-slug = "examensar"
-
-[[variable]]
-native_id = "26.754"
-slug = "examenskommun"
-
-[[variable]]
-native_id = "26.793"
-slug = "examenstermin"
-
-[[variable]]
-native_id = "26.903"
-slug = "antal-kontrolluppgifter"
-
-[[variable]]
-native_id = "26.1141"
-slug = "sektortillhorighet"
-
-[[variable]]
-native_id = "26.1165"
-slug = "inkomst-aktiv-enskild-naringsverksamhet"
-
-[[variable]]
-native_id = "26.2692"
-slug = "institutionell-sektorkod"
-
-[[variable]]
-native_id = "26.3005"
-slug = "institutionell-kod"
-
-[[variable]]
-native_id = "26.4963"
-slug = "typ-av-foretag"
-
-[[variable]]
-native_id = "26.4989"
-slug = "foretagets-adress"
-
-[[variable]]
-native_id = "26.15118"
-slug = "foregaende-ast-nr"
-
-[[variable]]
-native_id = "26.15532"
-slug = "antal-sysselsatta-ast"
-
-[[variable]]
-native_id = "26.15533"
-slug = "summerad-inkomst-ast"
-
-[[variable]]
-native_id = "26.15549"
-slug = "antal-sysselsatta-foretag-syssreg"
-
-[[variable]]
-native_id = "26.16019"
-slug = "startar-ftg-fad"
-
-[[variable]]
-native_id = "26.16033"
-slug = "antal-sysselsatta-ar-1"
-
-[[variable]]
-native_id = "26.16034"
-slug = "antal-sysselsatta-ar-2"
-
-[[variable]]
-native_id = "26.16037"
-slug = "klassificering-ast-fad"
-
-[[variable]]
-native_id = "26.16038"
-slug = "klassificering-ftg-fad"
-
-[[variable]]
-native_id = "26.16041"
-slug = "startar-ast-fad"
-
-[[variable]]
-native_id = "26.16042"
-slug = "antal-sysselsatta-ast-ar-1"
-
-[[variable]]
-native_id = "26.16043"
-slug = "antal-sysselsatta-ast-ar-2"
-
-[[variable]]
-native_id = "26.16069"
-slug = "yrkesstallning-per-ku"
-
-[[variable]]
-native_id = "26.16233"
-slug = "institutionell-sektorkod-rams"
-
-[[variable]]
-native_id = "26.16899"
-slug = "lone-eller-foretagarinkomst"
-
-[[variable]]
-native_id = "26.17484"
-slug = "antal-arbetsstallen"
-
-[[variable]]
-native_id = "26.17734"
-slug = "syssstat-nov-jobbet"
-
-[[variable]]
-native_id = "26.37409"
-slug = "antal-sysselsatta-foretaget"
-
-[[variable]]
-native_id = "26.37411"
-slug = "antal-anstallda-foretaget"
-
-[[variable]]
-native_id = "26.37412"
-slug = "antal-ku-individen"
-
-[[variable]]
-native_id = "26.37808"
-slug = "antal-anstallda-ftg-syssreg"
-
-[[variable]]
-native_id = "26.37815"
-slug = "etableringsgrans-arbmark"
-
-[[variable]]
-native_id = "26.37831"
-slug = "antal-arbetade-manader"
-
-[[variable]]
-native_id = "26.42022"
-slug = "naringsgren-stat-foreg-huvud"
-
-[[variable]]
-native_id = "26.42607"
-slug = "sysselsattningsstatus-november-agi"
-
-[[variable]]
-native_id = "26.42926"
-slug = "antal-arbetade-manader-agi"
-
-[[variable]]
-native_id = "26.42929"
-slug = "etableringsgrans"
-
-[[variable]]
-native_id = "26.44694"
-slug = "antal-sysselsatta-ast-syssreg"
-
-[[variable]]
-native_id = "26.44696"
-slug = "antal-sysselsatta-ast-astreg"
-
-[[variable]]
-native_id = "26.44746"
-slug = "antal-arbetstallen-peorgnr"
+"26.56.peorgnr" = "person-orgnr"
+"26.57" = "personnr"
+"26.14.cfarnr" = "cfar-nummer"
+"26.14.cfarnr1" = "cfar-nummer-2"
+"26.56.peorgnr2" = "person-orgnr-2"
+"26.17" = "arbetsstallenummer"
+"26.28" = "syssstat-allman"
+"26.36" = "kommun"
+"26.49" = "lan"
+"26.372" = "familjeidentitet-rtb"
+"26.667" = "kommun-for-arbetsstalle"
+"26.753" = "examensar"
+"26.754" = "examenskommun"
+"26.793" = "examenstermin"
+"26.903" = "antal-kontrolluppgifter"
+"26.1141" = "sektortillhorighet"
+"26.1165" = "inkomst-aktiv-enskild-naringsverksamhet"
+"26.2692" = "institutionell-sektorkod"
+"26.3005" = "institutionell-kod"
+"26.4963" = "typ-av-foretag"
+"26.4989" = "foretagets-adress"
+"26.15118" = "foregaende-ast-nr"
+"26.15532" = "antal-sysselsatta-ast"
+"26.15533" = "summerad-inkomst-ast"
+"26.15549" = "antal-sysselsatta-foretag-syssreg"
+"26.16019" = "startar-ftg-fad"
+"26.16033" = "antal-sysselsatta-ar-1"
+"26.16034" = "antal-sysselsatta-ar-2"
+"26.16037" = "klassificering-ast-fad"
+"26.16038" = "klassificering-ftg-fad"
+"26.16041" = "startar-ast-fad"
+"26.16042" = "antal-sysselsatta-ast-ar-1"
+"26.16043" = "antal-sysselsatta-ast-ar-2"
+"26.16069" = "yrkesstallning-per-ku"
+"26.16233" = "institutionell-sektorkod-rams"
+"26.16899" = "lone-eller-foretagarinkomst"
+"26.17484" = "antal-arbetsstallen"
+"26.17734" = "syssstat-nov-jobbet"
+"26.37409" = "antal-sysselsatta-foretaget"
+"26.37411" = "antal-anstallda-foretaget"
+"26.37412" = "antal-ku-individen"
+"26.37808" = "antal-anstallda-ftg-syssreg"
+"26.37815" = "etableringsgrans-arbmark"
+"26.37831" = "antal-arbetade-manader"
+"26.42022" = "naringsgren-stat-foreg-huvud"
+"26.42607" = "sysselsattningsstatus-november-agi"
+"26.42926" = "antal-arbetade-manader-agi"
+"26.42929" = "etableringsgrans"
+"26.44694" = "antal-sysselsatta-ast-syssreg"
+"26.44696" = "antal-sysselsatta-ast-astreg"
+"26.44746" = "antal-arbetstallen-peorgnr"
 
 # register 29 (linda)
-
-[[variable]]
-native_id = "26.19053.ast2sni07"
-slug = "naringsgren-huvud-fad-sni2007"
-
-
-[[variable]]
-native_id = "26.19053.astsni69"
-slug = "naringsgren-huvud"
-
-
-[[variable]]
-native_id = "26.19053.astsni02"
-slug = "naringsgren-huvud-sni2002"
-
-
-[[variable]]
-native_id = "26.19053.astsni92begr"
-slug = "naringsgren-huvud-sni92-begransad"
-
-
-[[variable]]
-native_id = "26.19054.astsni02"
-slug = "naringsgren-stat-huvud"
-
-
-[[variable]]
-native_id = "26.19054.astsni92"
-slug = "naringsgren-stat-huvud-sni92"
-
-
-[[variable]]
-native_id = "26.19054.ast2ngs07"
-slug = "naringsgren-stat-huvud-fad-ngs07"
-
-
-[[variable]]
-native_id = "26.19054.ast2sni07"
-slug = "naringsgren-stat-huvud-fad-sni2007"
-
-[[variable]]
-native_id = "26.33.sektor"
-slug = "institutionell-sektor"
-
-[[variable]]
-native_id = "26.34.jurform"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "26.4027.ftgsni69"
-slug = "naringsgren-ftg"
-
-[[variable]]
-native_id = "26.4027.ftgsni92begr"
-slug = "naringsgren-ftg-sni92-begransad"
-
-[[variable]]
-native_id = "26.63.syssstat"
-slug = "sysselsattningsstatus-november"
-
-[[variable]]
-native_id = "26.6392.antalsysc"
-slug = "antal-sysselsatta"
-
-[[variable]]
-native_id = "26.6392.antalsyss"
-slug = "antal-sysselsatta-syssreg"
-
-[[variable]]
-native_id = "26.74.agkat"
-slug = "agarkontroll"
+"26.19053.ast2sni07" = "naringsgren-huvud-fad-sni2007"
+"26.19053.astsni69" = "naringsgren-huvud"
+"26.19053.astsni02" = "naringsgren-huvud-sni2002"
+"26.19053.astsni92begr" = "naringsgren-huvud-sni92-begransad"
+"26.19054.astsni02" = "naringsgren-stat-huvud"
+"26.19054.astsni92" = "naringsgren-stat-huvud-sni92"
+"26.19054.ast2ngs07" = "naringsgren-stat-huvud-fad-ngs07"
+"26.19054.ast2sni07" = "naringsgren-stat-huvud-fad-sni2007"
+"26.33.sektor" = "institutionell-sektor"
+"26.34.jurform" = "juridisk-form"
+"26.4027.ftgsni69" = "naringsgren-ftg"
+"26.4027.ftgsni92begr" = "naringsgren-ftg-sni92-begransad"
+"26.63.syssstat" = "sysselsattningsstatus-november"
+"26.6392.antalsysc" = "antal-sysselsatta"
+"26.6392.antalsyss" = "antal-sysselsatta-syssreg"
+"26.74.agkat" = "agarkontroll"
 
 # register 260 (gymnasieskola-sokande)
-
-[[variable]]
-native_id = "26.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "26.16"
-slug = "antal-anstallda-ku"
-
-[[variable]]
-native_id = "26.18"
-slug = "arbetsstallestatus"
-
-[[variable]]
-native_id = "26.24"
-slug = "familjestallning"
-
-[[variable]]
-native_id = "26.25"
-slug = "familjetyp"
-
-[[variable]]
-native_id = "26.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "26.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "26.242"
-slug = "alder-31-12-relationsperson"
-
-[[variable]]
-native_id = "26.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "26.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "26.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "26.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "26.473"
-slug = "lan-arbetsstalle"
-
-[[variable]]
-native_id = "26.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "26.537"
-slug = "postnr"
-
-[[variable]]
-native_id = "26.666"
-slug = "anstallda-storleksklass"
-
-[[variable]]
-native_id = "26.778"
-slug = "utbildningsniva-3-positioner"
-
-[[variable]]
-native_id = "26.781"
-slug = "benamning"
-
-[[variable]]
-native_id = "26.784"
-slug = "utbildningsinriktning-4-positioner"
-
-[[variable]]
-native_id = "26.799"
-slug = "belagenhetsadress-gata"
-
-[[variable]]
-native_id = "26.800"
-slug = "bgatunr"
-
-[[variable]]
-native_id = "26.801"
-slug = "utbildningsgrupp-enl-sun-2000"
-
-[[variable]]
-native_id = "26.804"
-slug = "besokspostort"
-
-[[variable]]
-native_id = "26.832"
-slug = "hjalpverksamhetskod"
-
-[[variable]]
-native_id = "26.972"
-slug = "aktuellt-antal-anstallda"
-
-[[variable]]
-native_id = "26.1049"
-slug = "gatunr"
-
-[[variable]]
-native_id = "26.1593"
-slug = "antal-ast"
-
-[[variable]]
-native_id = "26.1821"
-slug = "yrkesstallning"
-
-[[variable]]
-native_id = "26.1829"
-slug = "ersattning-forlorad-arbetsfortjanst"
-
-[[variable]]
-native_id = "26.3575"
-slug = "foretagets-namn"
-
-[[variable]]
-native_id = "26.3752"
-slug = "kontaktperson"
-
-[[variable]]
-native_id = "26.4038"
-slug = "antal-anstallda-enligt-fdb"
-
-[[variable]]
-native_id = "26.4975"
-slug = "antal-kvinnor-arbetsstallet"
-
-[[variable]]
-native_id = "26.4988"
-slug = "antal-man-pa-arbetsstallet"
-
-[[variable]]
-native_id = "26.6056"
-slug = "anstalld-fran-manad"
-
-[[variable]]
-native_id = "26.6057"
-slug = "anstalld-till-manad"
-
-[[variable]]
-native_id = "26.6096"
-slug = "kostnadsersattningar"
-
-[[variable]]
-native_id = "26.6098"
-slug = "ovriga-ersattningar"
-
-[[variable]]
-native_id = "26.6267"
-slug = "alder"
-
-[[variable]]
-native_id = "26.8189"
-slug = "utbildningens-niva-och-inriktning"
-
-[[variable]]
-native_id = "26.15530"
-slug = "arbetsstalle-populationstyp"
-
-[[variable]]
-native_id = "26.15535"
-slug = "antal-man-ast-forgymn"
-
-[[variable]]
-native_id = "26.15536"
-slug = "antal-man-ast-gymn"
-
-[[variable]]
-native_id = "26.15537"
-slug = "antal-man-ast-eftergymn-k"
-
-[[variable]]
-native_id = "26.15538"
-slug = "antal-man-ast-eftergymn-l"
-
-[[variable]]
-native_id = "26.15539"
-slug = "antal-kvinnor-forgymn"
-
-[[variable]]
-native_id = "26.15540"
-slug = "antal-kvinnor-gymn"
-
-[[variable]]
-native_id = "26.15541"
-slug = "antal-kv-korteftergymn"
-
-[[variable]]
-native_id = "26.15542"
-slug = "antal-kv-langeftergymn"
-
-[[variable]]
-native_id = "26.15546"
-slug = "inkomst-enskild-naringsverksamhet"
-
-[[variable]]
-native_id = "26.16040"
-slug = "fad-arbetsstalle-id"
-
-[[variable]]
-native_id = "26.16234"
-slug = "fodelseland-eller-lan"
-
-[[variable]]
-native_id = "26.16323"
-slug = "naringsgren-foretag"
-
-[[variable]]
-native_id = "26.17556"
-slug = "belagenhetsadress"
-
-[[variable]]
-native_id = "26.17561"
-slug = "forsamling-arbetsstallet"
-
-[[variable]]
-native_id = "26.17732"
-slug = "enskild-naringsverksamhet-overskott"
-
-[[variable]]
-native_id = "26.17733"
-slug = "enskild-naringsverksamhet-underskott"
-
-[[variable]]
-native_id = "26.18249"
-slug = "fastighets-lopnr-arbetsstallet"
-
-[[variable]]
-native_id = "26.18384"
-slug = "pension-enligt-ku"
-
-[[variable]]
-native_id = "26.31398"
-slug = "inkomst-foranledd-studier"
-
-[[variable]]
-native_id = "26.31499"
-slug = "inkomst-foranledd-sjukdom"
-
-[[variable]]
-native_id = "26.31575"
-slug = "inkomst-foranledd-arbetsloshet"
-
-[[variable]]
-native_id = "26.31653"
-slug = "inkomst-foranledd-fortidspension"
-
-[[variable]]
-native_id = "26.37828"
-slug = "huvudsaklig-inkomstkalla"
-
-[[variable]]
-native_id = "26.41952"
-slug = "tillfalligt-franvarande"
-
-[[variable]]
-native_id = "26.42951"
-slug = "antal-manader-loneutbetalning"
-
-[[variable]]
-native_id = "26.42953"
-slug = "markering-lonegaranti"
+"26.15" = "civilstand"
+"26.16" = "antal-anstallda-ku"
+"26.18" = "arbetsstallestatus"
+"26.24" = "familjestallning"
+"26.25" = "familjetyp"
+"26.26" = "fastighetsbeteckning"
+"26.241" = "alder-31-12"
+"26.242" = "alder-31-12-relationsperson"
+"26.257" = "fodelseland-rtb"
+"26.271" = "medborgarskapsland"
+"26.332" = "senaste-invandringsdatum"
+"26.467" = "telefonnummer"
+"26.473" = "lan-arbetsstalle"
+"26.517" = "senaste-invandringsar"
+"26.537" = "postnr"
+"26.666" = "anstallda-storleksklass"
+"26.778" = "utbildningsniva-3-positioner"
+"26.781" = "benamning"
+"26.784" = "utbildningsinriktning-4-positioner"
+"26.799" = "belagenhetsadress-gata"
+"26.800" = "bgatunr"
+"26.801" = "utbildningsgrupp-enl-sun-2000"
+"26.804" = "besokspostort"
+"26.832" = "hjalpverksamhetskod"
+"26.972" = "aktuellt-antal-anstallda"
+"26.1049" = "gatunr"
+"26.1593" = "antal-ast"
+"26.1821" = "yrkesstallning"
+"26.1829" = "ersattning-forlorad-arbetsfortjanst"
+"26.3575" = "foretagets-namn"
+"26.3752" = "kontaktperson"
+"26.4038" = "antal-anstallda-enligt-fdb"
+"26.4975" = "antal-kvinnor-arbetsstallet"
+"26.4988" = "antal-man-pa-arbetsstallet"
+"26.6056" = "anstalld-fran-manad"
+"26.6057" = "anstalld-till-manad"
+"26.6096" = "kostnadsersattningar"
+"26.6098" = "ovriga-ersattningar"
+"26.6267" = "alder"
+"26.8189" = "utbildningens-niva-och-inriktning"
+"26.15530" = "arbetsstalle-populationstyp"
+"26.15535" = "antal-man-ast-forgymn"
+"26.15536" = "antal-man-ast-gymn"
+"26.15537" = "antal-man-ast-eftergymn-k"
+"26.15538" = "antal-man-ast-eftergymn-l"
+"26.15539" = "antal-kvinnor-forgymn"
+"26.15540" = "antal-kvinnor-gymn"
+"26.15541" = "antal-kv-korteftergymn"
+"26.15542" = "antal-kv-langeftergymn"
+"26.15546" = "inkomst-enskild-naringsverksamhet"
+"26.16040" = "fad-arbetsstalle-id"
+"26.16234" = "fodelseland-eller-lan"
+"26.16323" = "naringsgren-foretag"
+"26.17556" = "belagenhetsadress"
+"26.17561" = "forsamling-arbetsstallet"
+"26.17732" = "enskild-naringsverksamhet-overskott"
+"26.17733" = "enskild-naringsverksamhet-underskott"
+"26.18249" = "fastighets-lopnr-arbetsstallet"
+"26.18384" = "pension-enligt-ku"
+"26.31398" = "inkomst-foranledd-studier"
+"26.31499" = "inkomst-foranledd-sjukdom"
+"26.31575" = "inkomst-foranledd-arbetsloshet"
+"26.31653" = "inkomst-foranledd-fortidspension"
+"26.37828" = "huvudsaklig-inkomstkalla"
+"26.41952" = "tillfalligt-franvarande"
+"26.42951" = "antal-manader-loneutbetalning"
+"26.42953" = "markering-lonegaranti"
 
 # register 29
-
-[[variable]]
-native_id = "26.33.sektor1"
-slug = "institutionell-sektor-2"
-
-[[variable]]
-native_id = "26.34.jurform1"
-slug = "juridisk-form-2"
+"26.33.sektor1" = "institutionell-sektor-2"
+"26.34.jurform1" = "juridisk-form-2"
+"26.16323.ftgsni02" = "ftgsni02"
+"26.16323.ftgsni07" = "ftgsni07"
+"26.16323.ftgsni69" = "ftgsni69"
+"26.16323.ftgsni92" = "ftgsni92"
+"26.4027.ftgsni02" = "ftgsni02-4027"
+"26.4027.ftgsni07" = "ftgsni07-4027"
+"26.4027.ftgsni92" = "ftgsni92-4027"
+"26.56.peorgnr1" = "peorgnr1"
+"26.19054.astsni07" = "astsni07"
+"26.44784.antk1" = "antk1"
+"26.44784.antk2" = "antk2"
+"26.19053.astsni92" = "naringsgren-huvud-sni92"
+"26.19053.ftgsni02" = "ftgsni02-19053"
+"26.19053.ftgsni92" = "ftgsni92-19053"
+"26.33.sektor2" = "sektor2"
+"26.34.jurform2" = "jurform2"
+"26.74.agkat1" = "agkat"
+"26.74.agkat2" = "agkat2"
+"26.16041.ar-a" = "ar-a"
+"26.16041.ar-ny" = "ar-ny"
+"26.14.cfarnr2" = "cfarnr2"
+"26.16038.kvar" = "kvar"
+"26.16038.kvarf" = "kvarf"
+"26.4963.ftgtyp" = "ftgtyp"
+"26.4963.ftgtyp2" = "ftgtyp2"
+"26.4963.typ" = "typ"
+"26.44781.kvot1" = "kvot1-44781"
+"26.44781.kvot2" = "kvot2-44781"
+"26.44746.antast1" = "antast1"
+"26.44746.antast2" = "antast2"
+"26.17484.antk1" = "antk1-17484"
+"26.17484.antk2" = "antk2-17484"
+"26.66.sun2020niva" = "sun2020niva-66"
+"26.66.sun2020niva-old" = "sun2020niva-old"
 
 # register 260
 
@@ -836,142 +451,6 @@ variable = "26.66"
 columns = { SUN2020Niva = "26.66.sun2020niva", SUN2020Niva_Old = "26.66.sun2020niva-old" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "5371c0f0767d6fbcc8dddbdd0d70b2c088534843fd4d9dc98a6de28dcb8330fc"
-
-[[variable]]
-native_id = "26.16323.ftgsni02"
-slug = "ftgsni02"
-
-[[variable]]
-native_id = "26.16323.ftgsni07"
-slug = "ftgsni07"
-
-[[variable]]
-native_id = "26.16323.ftgsni69"
-slug = "ftgsni69"
-
-[[variable]]
-native_id = "26.16323.ftgsni92"
-slug = "ftgsni92"
-
-[[variable]]
-native_id = "26.4027.ftgsni02"
-slug = "ftgsni02-4027"
-
-[[variable]]
-native_id = "26.4027.ftgsni07"
-slug = "ftgsni07-4027"
-
-[[variable]]
-native_id = "26.4027.ftgsni92"
-slug = "ftgsni92-4027"
-
-[[variable]]
-native_id = "26.56.peorgnr1"
-slug = "peorgnr1"
-
-[[variable]]
-native_id = "26.19054.astsni07"
-slug = "astsni07"
-
-[[variable]]
-native_id = "26.44784.antk1"
-slug = "antk1"
-
-[[variable]]
-native_id = "26.44784.antk2"
-slug = "antk2"
-
-[[variable]]
-native_id = "26.19053.astsni92"
-slug = "naringsgren-huvud-sni92"
-
-[[variable]]
-native_id = "26.19053.ftgsni02"
-slug = "ftgsni02-19053"
-
-[[variable]]
-native_id = "26.19053.ftgsni92"
-slug = "ftgsni92-19053"
-
-[[variable]]
-native_id = "26.33.sektor2"
-slug = "sektor2"
-
-[[variable]]
-native_id = "26.34.jurform2"
-slug = "jurform2"
-
-[[variable]]
-native_id = "26.74.agkat1"
-slug = "agkat"
-
-[[variable]]
-native_id = "26.74.agkat2"
-slug = "agkat2"
-
-[[variable]]
-native_id = "26.16041.ar-a"
-slug = "ar-a"
-
-[[variable]]
-native_id = "26.16041.ar-ny"
-slug = "ar-ny"
-
-[[variable]]
-native_id = "26.14.cfarnr2"
-slug = "cfarnr2"
-
-[[variable]]
-native_id = "26.16038.kvar"
-slug = "kvar"
-
-[[variable]]
-native_id = "26.16038.kvarf"
-slug = "kvarf"
-
-[[variable]]
-native_id = "26.4963.ftgtyp"
-slug = "ftgtyp"
-
-[[variable]]
-native_id = "26.4963.ftgtyp2"
-slug = "ftgtyp2"
-
-[[variable]]
-native_id = "26.4963.typ"
-slug = "typ"
-
-[[variable]]
-native_id = "26.44781.kvot1"
-slug = "kvot1-44781"
-
-[[variable]]
-native_id = "26.44781.kvot2"
-slug = "kvot2-44781"
-
-[[variable]]
-native_id = "26.44746.antast1"
-slug = "antast1"
-
-[[variable]]
-native_id = "26.44746.antast2"
-slug = "antast2"
-
-[[variable]]
-native_id = "26.17484.antk1"
-slug = "antk1-17484"
-
-[[variable]]
-native_id = "26.17484.antk2"
-slug = "antk2-17484"
-
-[[variable]]
-native_id = "26.66.sun2020niva"
-slug = "sun2020niva-66"
-
-[[variable]]
-native_id = "26.66.sun2020niva-old"
-slug = "sun2020niva-old"
 
 [[representation.parallel]]
 valid_from = "1990-01-01"

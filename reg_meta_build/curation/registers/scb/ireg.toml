@@ -26,127 +26,61 @@ native_id = "131.533"
 slug = "tjansteproduktionsindex"
 display_group = "Tjänsteproduktionsindex"
 
+[variable]
 # Industrins energianvändning (ISEN)
-
-[[variable]]
-native_id = "131.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "131.3578"
-slug = "orgnr-12"
-
-
-[[variable]]
-native_id = "131.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "131.2163"
-slug = "leveransperiod"
-
-[[variable]]
-native_id = "131.2608"
-slug = "branschgrupper"
-
-[[variable]]
-native_id = "131.2846"
-slug = "lopnummer-urvalsenheter"
-
-[[variable]]
-native_id = "131.3310"
-slug = "branschgrupp"
-
-[[variable]]
-native_id = "131.3751"
-slug = "lopnummer"
-
-[[variable]]
-native_id = "131.3758"
-slug = "blankettyp"
-
-[[variable]]
-native_id = "131.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "131.4030"
-slug = "lillan"
-
-[[variable]]
-native_id = "131.4079"
-slug = "omsattningsvarde"
-
-[[variable]]
-native_id = "131.5072"
-slug = "moms"
-
-[[variable]]
-native_id = "131.5084"
-slug = "inrikes-omsattning"
-
-[[variable]]
-native_id = "131.15169"
-slug = "bransch"
-
-[[variable]]
-native_id = "131.17112"
-slug = "periodindikator"
+"131.56" = "person-orgnr"
+"131.3578" = "orgnr-12"
+"131.36" = "kommun"
+"131.2163" = "leveransperiod"
+"131.2608" = "branschgrupper"
+"131.2846" = "lopnummer-urvalsenheter"
+"131.3310" = "branschgrupp"
+"131.3751" = "lopnummer"
+"131.3758" = "blankettyp"
+"131.4027" = "naringsgren"
+"131.4030" = "lillan"
+"131.4079" = "omsattningsvarde"
+"131.5072" = "moms"
+"131.5084" = "inrikes-omsattning"
+"131.15169" = "bransch"
+"131.17112" = "periodindikator"
 
 # register 132 (isen)
-
-[[variable]]
-native_id = "131.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "131.814"
-slug = "faxnummer"
-
-[[variable]]
-native_id = "131.2921"
-slug = "urvalsar"
-
-[[variable]]
-native_id = "131.4038"
-slug = "antal-anstallda-enligt-fdb"
-
-[[variable]]
-native_id = "131.4045"
-slug = "koncernmarkering"
-
-[[variable]]
-native_id = "131.4053"
-slug = "bransch-enligt-uppgiftslamnaren"
-
-[[variable]]
-native_id = "131.4066"
-slug = "storleksgrupp"
-
-[[variable]]
-native_id = "131.5002"
-slug = "lagervarde"
-
-[[variable]]
-native_id = "131.19079"
-slug = "kvartal-period"
-
-[[variable]]
-native_id = "131.19538"
-slug = "upprakningsfaktor"
-
-[[variable]]
-native_id = "131.28064"
-slug = "imputeringsstatus"
-
-[[variable]]
-native_id = "131.31002"
-slug = "urvalsversion"
-
-[[variable]]
-native_id = "131.38120"
-slug = "forsta-urvalsar"
+"131.467" = "telefonnummer"
+"131.814" = "faxnummer"
+"131.2921" = "urvalsar"
+"131.4038" = "antal-anstallda-enligt-fdb"
+"131.4045" = "koncernmarkering"
+"131.4053" = "bransch-enligt-uppgiftslamnaren"
+"131.4066" = "storleksgrupp"
+"131.5002" = "lagervarde"
+"131.19079" = "kvartal-period"
+"131.19538" = "upprakningsfaktor"
+"131.28064" = "imputeringsstatus"
+"131.31002" = "urvalsversion"
+"131.38120" = "forsta-urvalsar"
+"131.5072.period-1" = "period-1"
+"131.5072.period-2" = "period-2"
+"131.5072.period-3" = "period-3"
+"131.5072.period-x-1" = "period-x-1"
+"131.5072.period-x-2" = "period-x-2"
+"131.5072.period-x-3" = "period-x-3"
+"131.5072.omsmoms" = "omsmoms"
+"131.2613.urvnr" = "urvnr"
+"131.2613.urvalsnr" = "urvalsnr-2613"
+"131.2921.ar" = "ar"
+"131.2921.urvalsar" = "urvalsar-2921"
+"131.3310.bgrupp" = "bgrupp"
+"131.3310.branschgr" = "branschgr"
+"131.15169.ng1" = "ng1"
+"131.15169.ngs1" = "ngs1"
+"131.15169.sni92" = "sni92"
+"131.4066.sgrupp" = "sgrupp"
+"131.4066.storleksgr" = "storleksgr"
+"131.4038.anst" = "anst"
+"131.4038.cfaranst" = "cfaranst"
+"131.36.kommunsate" = "kommunsate"
+"131.36.kommun" = "kommun-36"
 
 # register 132
 
@@ -235,94 +169,6 @@ variable = "131.36"
 columns = { KommunSate = "131.36.kommunsate", kommun = "131.36.kommun" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "cdbb3541a0edf304f5a583d9338590e7aacdc63dbbe185a2956a1032d2769b33"
-
-[[variable]]
-native_id = "131.5072.period-1"
-slug = "period-1"
-
-[[variable]]
-native_id = "131.5072.period-2"
-slug = "period-2"
-
-[[variable]]
-native_id = "131.5072.period-3"
-slug = "period-3"
-
-[[variable]]
-native_id = "131.5072.period-x-1"
-slug = "period-x-1"
-
-[[variable]]
-native_id = "131.5072.period-x-2"
-slug = "period-x-2"
-
-[[variable]]
-native_id = "131.5072.period-x-3"
-slug = "period-x-3"
-
-[[variable]]
-native_id = "131.5072.omsmoms"
-slug = "omsmoms"
-
-[[variable]]
-native_id = "131.2613.urvnr"
-slug = "urvnr"
-
-[[variable]]
-native_id = "131.2613.urvalsnr"
-slug = "urvalsnr-2613"
-
-[[variable]]
-native_id = "131.2921.ar"
-slug = "ar"
-
-[[variable]]
-native_id = "131.2921.urvalsar"
-slug = "urvalsar-2921"
-
-[[variable]]
-native_id = "131.3310.bgrupp"
-slug = "bgrupp"
-
-[[variable]]
-native_id = "131.3310.branschgr"
-slug = "branschgr"
-
-[[variable]]
-native_id = "131.15169.ng1"
-slug = "ng1"
-
-[[variable]]
-native_id = "131.15169.ngs1"
-slug = "ngs1"
-
-[[variable]]
-native_id = "131.15169.sni92"
-slug = "sni92"
-
-[[variable]]
-native_id = "131.4066.sgrupp"
-slug = "sgrupp"
-
-[[variable]]
-native_id = "131.4066.storleksgr"
-slug = "storleksgr"
-
-[[variable]]
-native_id = "131.4038.anst"
-slug = "anst"
-
-[[variable]]
-native_id = "131.4038.cfaranst"
-slug = "cfaranst"
-
-[[variable]]
-native_id = "131.36.kommunsate"
-slug = "kommunsate"
-
-[[variable]]
-native_id = "131.36.kommun"
-slug = "kommun-36"
 
 [[acknowledge]]
 code = "unresolved_source_event_endpoint"

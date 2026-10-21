@@ -145,734 +145,199 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Befolkningens studiedeltagande
-
-[[variable]]
-native_id = "102.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "102.49"
-slug = "lan"
-
-[[variable]]
-native_id = "102.73"
-slug = "ar"
-
-[[variable]]
-native_id = "102.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "102.304"
-slug = "fodelselandnamnfar"
-
-[[variable]]
-native_id = "102.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "102.1529"
-slug = "ar-avslutad-gymnasieutbildning"
-
-[[variable]]
-native_id = "102.1536"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "102.3594"
-slug = "antal-amnen-ej-kunskapskrav"
-
-[[variable]]
-native_id = "102.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "102.8006"
-slug = "verksamhetsform-skolvasendet"
-
-[[variable]]
-native_id = "102.8698"
-slug = "inriktning-fristaende-gy"
-
-[[variable]]
-native_id = "102.14672"
-slug = "kurs"
-
-[[variable]]
-native_id = "102.14815"
-slug = "kommun-for-skola-skolenhet"
-
-[[variable]]
-native_id = "102.15706"
-slug = "gymnasiepoang"
-
-[[variable]]
-native_id = "102.16359"
-slug = "start-programbidrag"
-
-[[variable]]
-native_id = "102.16361"
-slug = "startinriktning-fristaende-gy"
-
-[[variable]]
-native_id = "102.18386"
-slug = "kurspoang"
-
-[[variable]]
-native_id = "102.19346"
-slug = "ar-for-examen"
-
-[[variable]]
-native_id = "102.23717"
-slug = "betyg-i-engelska-c"
-
-[[variable]]
-native_id = "102.23718"
-slug = "betyg-i-engelska-a"
-
-[[variable]]
-native_id = "102.23720"
-slug = "betyg-i-estetisk-verksamhet"
-
-[[variable]]
-native_id = "102.23721"
-slug = "betyg-i-franska-1"
-
-[[variable]]
-native_id = "102.23722"
-slug = "betyg-i-franska-2"
-
-[[variable]]
-native_id = "102.23723"
-slug = "betyg-i-franska-3"
-
-[[variable]]
-native_id = "102.23724"
-slug = "betyg-i-franska-4"
-
-[[variable]]
-native_id = "102.23725"
-slug = "betyg-i-franska-5"
-
-[[variable]]
-native_id = "102.23726"
-slug = "betyg-i-franska-6"
-
-[[variable]]
-native_id = "102.23727"
-slug = "betyg-i-franska-7"
-
-[[variable]]
-native_id = "102.23730"
-slug = "betyg-i-idrott-halsa-a"
-
-[[variable]]
-native_id = "102.23731"
-slug = "betyg-i-engelska-b"
-
-[[variable]]
-native_id = "102.23733"
-slug = "betyg-i-italienska-1"
-
-[[variable]]
-native_id = "102.23734"
-slug = "betyg-i-italienska-2"
-
-[[variable]]
-native_id = "102.23735"
-slug = "betyg-i-italienska-3"
-
-[[variable]]
-native_id = "102.23736"
-slug = "betyg-i-italienska-4"
-
-[[variable]]
-native_id = "102.23737"
-slug = "betyg-i-italienska-5"
-
-[[variable]]
-native_id = "102.23738"
-slug = "betyg-i-italienska-6"
-
-[[variable]]
-native_id = "102.23739"
-slug = "betyg-i-italienska-7"
-
-[[variable]]
-native_id = "102.23742"
-slug = "betyg-i-matematik-a"
-
-[[variable]]
-native_id = "102.23747"
-slug = "betyg-i-naturkunskap-a"
-
-[[variable]]
-native_id = "102.23749"
-slug = "betyg-i-religion-a"
-
-[[variable]]
-native_id = "102.23750"
-slug = "betyg-i-ryska-1"
-
-[[variable]]
-native_id = "102.23751"
-slug = "betyg-i-ryska-2"
-
-[[variable]]
-native_id = "102.23752"
-slug = "betyg-i-ryska-3"
-
-[[variable]]
-native_id = "102.23753"
-slug = "betyg-i-ryska-4"
-
-[[variable]]
-native_id = "102.23754"
-slug = "betyg-i-ryska-5"
-
-[[variable]]
-native_id = "102.23755"
-slug = "betyg-i-ryska-6"
-
-[[variable]]
-native_id = "102.23756"
-slug = "betyg-i-ryska-7"
-
-[[variable]]
-native_id = "102.23757"
-slug = "betyg-i-samhallskunskap-a"
-
-[[variable]]
-native_id = "102.23758"
-slug = "betyg-i-spanska-1"
-
-[[variable]]
-native_id = "102.23759"
-slug = "betyg-i-spanska-2"
-
-[[variable]]
-native_id = "102.23760"
-slug = "betyg-i-spanska-3"
-
-[[variable]]
-native_id = "102.23761"
-slug = "betyg-i-spanska-4"
-
-[[variable]]
-native_id = "102.23762"
-slug = "betyg-i-spanska-5"
-
-[[variable]]
-native_id = "102.23763"
-slug = "betyg-i-spanska-6"
-
-[[variable]]
-native_id = "102.23764"
-slug = "betyg-i-spanska-7"
-
-[[variable]]
-native_id = "102.23765"
-slug = "betyg-i-svenska-a"
-
-[[variable]]
-native_id = "102.23767"
-slug = "betyg-i-svenska-som-andrasprak-a"
-
-[[variable]]
-native_id = "102.23768"
-slug = "betyg-i-svenska-som-andrasprak-b"
-
-[[variable]]
-native_id = "102.23769"
-slug = "betyg-i-tyska-1"
-
-[[variable]]
-native_id = "102.23770"
-slug = "betyg-i-tyska-2"
-
-[[variable]]
-native_id = "102.23771"
-slug = "betyg-i-tyska-3"
-
-[[variable]]
-native_id = "102.23772"
-slug = "betyg-i-tyska-4"
-
-[[variable]]
-native_id = "102.23773"
-slug = "betyg-i-tyska-5"
-
-[[variable]]
-native_id = "102.23774"
-slug = "betyg-i-tyska-6"
-
-[[variable]]
-native_id = "102.23775"
-slug = "betyg-i-tyska-7"
-
-[[variable]]
-native_id = "102.26963"
-slug = "inriktning-fristaende-gr"
-
-[[variable]]
-native_id = "102.30474"
-slug = "studievagstyp-gren-inriktning"
-
-[[variable]]
-native_id = "102.30632"
-slug = "medelbetyg"
-
-[[variable]]
-native_id = "102.30905"
-slug = "individuellt-gymnasieprogram"
-
-[[variable]]
-native_id = "102.31322"
-slug = "provning-pa-kursen"
-
-[[variable]]
-native_id = "102.31324"
-slug = "individuellt-anpassat-program"
-
-[[variable]]
-native_id = "102.32738"
-slug = "skollan"
-
-[[variable]]
-native_id = "102.32870"
-slug = "provning-pa-kurs"
-
-[[variable]]
-native_id = "102.37035"
-slug = "skola-skolenhet"
-
-[[variable]]
-native_id = "102.37468"
-slug = "typ-av-kurs"
-
-[[variable]]
-native_id = "102.37527"
-slug = "lasar-avslut-ak9"
-
-[[variable]]
-native_id = "102.40216"
-slug = "avslutande-arskurs"
+"102.57" = "personnr"
+"102.49" = "lan"
+"102.73" = "ar"
+"102.257" = "fodelseland-rtb"
+"102.304" = "fodelselandnamnfar"
+"102.305" = "fodelseland-mor"
+"102.1529" = "ar-avslutad-gymnasieutbildning"
+"102.1536" = "studievag-gymnasieskolan"
+"102.3594" = "antal-amnen-ej-kunskapskrav"
+"102.6809" = "folkbokforingskommun"
+"102.8006" = "verksamhetsform-skolvasendet"
+"102.8698" = "inriktning-fristaende-gy"
+"102.14672" = "kurs"
+"102.14815" = "kommun-for-skola-skolenhet"
+"102.15706" = "gymnasiepoang"
+"102.16359" = "start-programbidrag"
+"102.16361" = "startinriktning-fristaende-gy"
+"102.18386" = "kurspoang"
+"102.19346" = "ar-for-examen"
+"102.23717" = "betyg-i-engelska-c"
+"102.23718" = "betyg-i-engelska-a"
+"102.23720" = "betyg-i-estetisk-verksamhet"
+"102.23721" = "betyg-i-franska-1"
+"102.23722" = "betyg-i-franska-2"
+"102.23723" = "betyg-i-franska-3"
+"102.23724" = "betyg-i-franska-4"
+"102.23725" = "betyg-i-franska-5"
+"102.23726" = "betyg-i-franska-6"
+"102.23727" = "betyg-i-franska-7"
+"102.23730" = "betyg-i-idrott-halsa-a"
+"102.23731" = "betyg-i-engelska-b"
+"102.23733" = "betyg-i-italienska-1"
+"102.23734" = "betyg-i-italienska-2"
+"102.23735" = "betyg-i-italienska-3"
+"102.23736" = "betyg-i-italienska-4"
+"102.23737" = "betyg-i-italienska-5"
+"102.23738" = "betyg-i-italienska-6"
+"102.23739" = "betyg-i-italienska-7"
+"102.23742" = "betyg-i-matematik-a"
+"102.23747" = "betyg-i-naturkunskap-a"
+"102.23749" = "betyg-i-religion-a"
+"102.23750" = "betyg-i-ryska-1"
+"102.23751" = "betyg-i-ryska-2"
+"102.23752" = "betyg-i-ryska-3"
+"102.23753" = "betyg-i-ryska-4"
+"102.23754" = "betyg-i-ryska-5"
+"102.23755" = "betyg-i-ryska-6"
+"102.23756" = "betyg-i-ryska-7"
+"102.23757" = "betyg-i-samhallskunskap-a"
+"102.23758" = "betyg-i-spanska-1"
+"102.23759" = "betyg-i-spanska-2"
+"102.23760" = "betyg-i-spanska-3"
+"102.23761" = "betyg-i-spanska-4"
+"102.23762" = "betyg-i-spanska-5"
+"102.23763" = "betyg-i-spanska-6"
+"102.23764" = "betyg-i-spanska-7"
+"102.23765" = "betyg-i-svenska-a"
+"102.23767" = "betyg-i-svenska-som-andrasprak-a"
+"102.23768" = "betyg-i-svenska-som-andrasprak-b"
+"102.23769" = "betyg-i-tyska-1"
+"102.23770" = "betyg-i-tyska-2"
+"102.23771" = "betyg-i-tyska-3"
+"102.23772" = "betyg-i-tyska-4"
+"102.23773" = "betyg-i-tyska-5"
+"102.23774" = "betyg-i-tyska-6"
+"102.23775" = "betyg-i-tyska-7"
+"102.26963" = "inriktning-fristaende-gr"
+"102.30474" = "studievagstyp-gren-inriktning"
+"102.30632" = "medelbetyg"
+"102.30905" = "individuellt-gymnasieprogram"
+"102.31322" = "provning-pa-kursen"
+"102.31324" = "individuellt-anpassat-program"
+"102.32738" = "skollan"
+"102.32870" = "provning-pa-kurs"
+"102.37035" = "skola-skolenhet"
+"102.37468" = "typ-av-kurs"
+"102.37527" = "lasar-avslut-ak9"
+"102.40216" = "avslutande-arskurs"
 
 # register 103 (rpu)
-
-[[variable]]
-native_id = "102.104.skol-ar9"
-slug = "skolkod-ar9"
-
-[[variable]]
-native_id = "102.104.skolenhetskod"
-slug = "skola-skolenhetskod"
-
-[[variable]]
-native_id = "102.104.skolkod"
-slug = "skolkod"
-
-[[variable]]
-native_id = "102.16303.st-pgm-bidrag"
-slug = "programbidrag"
-
-[[variable]]
-native_id = "102.1996.verkform"
-slug = "skolform"
-
-[[variable]]
-native_id = "102.30366.skolenhetskod"
-slug = "skolenhetskod"
-
-[[variable]]
-native_id = "102.30392.beht-ehs"
-slug = "behorighet-gy-ehs"
-
-[[variable]]
-native_id = "102.30392.beht-ehs-ak9"
-slug = "behorighet-gy-ehs-ak9"
-
-[[variable]]
-native_id = "102.30392.beht-est"
-slug = "behorighet-gy-est"
-
-[[variable]]
-native_id = "102.30392.beht-est-ak9"
-slug = "behorighet-gy-est-ak9"
-
-[[variable]]
-native_id = "102.30392.beht-impro"
-slug = "behorighet-gy-impro"
-
-[[variable]]
-native_id = "102.30392.beht-impro-ak9"
-slug = "behorighet-gy-impro-ak9"
-
-[[variable]]
-native_id = "102.30392.beht-nt"
-slug = "behorighet-gy-nt"
-
-[[variable]]
-native_id = "102.30392.beht-nt-ak9"
-slug = "behorighet-gy-nt-ak9"
-
-[[variable]]
-native_id = "102.30392.beht-yrk"
-slug = "behorighet-gy-yrk"
-
-[[variable]]
-native_id = "102.30392.beht-yrk-ak9"
-slug = "behorighet-gy-yrk-ak9"
-
-[[variable]]
-native_id = "102.30476.stvkod"
-slug = "studievag"
-
-[[variable]]
-native_id = "102.35497.beht-yrk"
-slug = "behorighet-gymnasiets-yrk"
-
-[[variable]]
-native_id = "102.35497.beht-yrk-ak9"
-slug = "behorighet-gymnasiets-yrk-ak9"
-
-[[variable]]
-native_id = "102.35498.beht-nt"
-slug = "behorighet-gymnasiets-nt"
-
-[[variable]]
-native_id = "102.35498.beht-nt-ak9"
-slug = "behorighet-gymnasiets-nt-ak9"
-
-[[variable]]
-native_id = "102.35499.beht-impro"
-slug = "behorighet-gymnasiets-impro"
-
-[[variable]]
-native_id = "102.35499.beht-impro-ak9"
-slug = "behorighet-gymnasiets-impro-ak9"
-
-[[variable]]
-native_id = "102.35500.beht-est"
-slug = "behorighet-gymnasiets-est"
-
-[[variable]]
-native_id = "102.35500.beht-est-ak9"
-slug = "behorighet-gymnasiets-est-ak9"
-
-[[variable]]
-native_id = "102.35501.beht-ehs"
-slug = "behorighet-gymnasiets-ehs"
-
-[[variable]]
-native_id = "102.35501.beht-ehs-ak9"
-slug = "behorighet-gymnasiets-ehs-ak9"
-
-[[variable]]
-native_id = "102.36.hkom"
-slug = "kommun"
-
-[[variable]]
-native_id = "102.36.kommun"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "102.36.skolkod"
-slug = "kommun-skolkod"
+"102.104.skol-ar9" = "skolkod-ar9"
+"102.104.skolenhetskod" = "skola-skolenhetskod"
+"102.104.skolkod" = "skolkod"
+"102.16303.st-pgm-bidrag" = "programbidrag"
+"102.1996.verkform" = "skolform"
+"102.30366.skolenhetskod" = "skolenhetskod"
+"102.30392.beht-ehs" = "behorighet-gy-ehs"
+"102.30392.beht-ehs-ak9" = "behorighet-gy-ehs-ak9"
+"102.30392.beht-est" = "behorighet-gy-est"
+"102.30392.beht-est-ak9" = "behorighet-gy-est-ak9"
+"102.30392.beht-impro" = "behorighet-gy-impro"
+"102.30392.beht-impro-ak9" = "behorighet-gy-impro-ak9"
+"102.30392.beht-nt" = "behorighet-gy-nt"
+"102.30392.beht-nt-ak9" = "behorighet-gy-nt-ak9"
+"102.30392.beht-yrk" = "behorighet-gy-yrk"
+"102.30392.beht-yrk-ak9" = "behorighet-gy-yrk-ak9"
+"102.30476.stvkod" = "studievag"
+"102.35497.beht-yrk" = "behorighet-gymnasiets-yrk"
+"102.35497.beht-yrk-ak9" = "behorighet-gymnasiets-yrk-ak9"
+"102.35498.beht-nt" = "behorighet-gymnasiets-nt"
+"102.35498.beht-nt-ak9" = "behorighet-gymnasiets-nt-ak9"
+"102.35499.beht-impro" = "behorighet-gymnasiets-impro"
+"102.35499.beht-impro-ak9" = "behorighet-gymnasiets-impro-ak9"
+"102.35500.beht-est" = "behorighet-gymnasiets-est"
+"102.35500.beht-est-ak9" = "behorighet-gymnasiets-est-ak9"
+"102.35501.beht-ehs" = "behorighet-gymnasiets-ehs"
+"102.35501.beht-ehs-ak9" = "behorighet-gymnasiets-ehs-ak9"
+"102.36.hkom" = "kommun"
+"102.36.kommun" = "skolkommun"
+"102.36.skolkod" = "kommun-skolkod"
 
 # register 104 (elevpaneler)
-
-[[variable]]
-native_id = "102.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "102.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "102.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "102.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "102.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "102.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "102.1653"
-slug = "kommentar-uppgiftslamnare"
-
-[[variable]]
-native_id = "102.3592"
-slug = "antal-amnen-godkand"
-
-[[variable]]
-native_id = "102.3635"
-slug = "skolans-namn"
-
-[[variable]]
-native_id = "102.4642"
-slug = "faderns-fodelseland"
-
-[[variable]]
-native_id = "102.6141"
-slug = "grundlaggande-behorighet-hogskola"
-
-[[variable]]
-native_id = "102.7914"
-slug = "arskurs"
-
-[[variable]]
-native_id = "102.8552"
-slug = "gymnasieforbund-id"
-
-[[variable]]
-native_id = "102.16347"
-slug = "typ-av-betyg"
-
-[[variable]]
-native_id = "102.18398"
-slug = "lokal-kurs"
-
-[[variable]]
-native_id = "102.23867"
-slug = "klassbeteckning"
-
-[[variable]]
-native_id = "102.26962"
-slug = "gymnasieprogram-arskurs-3"
-
-[[variable]]
-native_id = "102.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "102.30471"
-slug = "direktovergang"
-
-[[variable]]
-native_id = "102.32791"
-slug = "utfardandedatum"
-
-[[variable]]
-native_id = "102.36624"
-slug = "gymnasielinje"
+"102.56" = "person-orgnr"
+"102.34" = "juridisk-form"
+"102.323" = "personnr-far"
+"102.324" = "personnr-mor"
+"102.332" = "senaste-invandringsdatum"
+"102.749" = "aldersgrupp"
+"102.1653" = "kommentar-uppgiftslamnare"
+"102.3592" = "antal-amnen-godkand"
+"102.3635" = "skolans-namn"
+"102.4642" = "faderns-fodelseland"
+"102.6141" = "grundlaggande-behorighet-hogskola"
+"102.7914" = "arskurs"
+"102.8552" = "gymnasieforbund-id"
+"102.16347" = "typ-av-betyg"
+"102.18398" = "lokal-kurs"
+"102.23867" = "klassbeteckning"
+"102.26962" = "gymnasieprogram-arskurs-3"
+"102.29426" = "tidigaste-invandringsdatum"
+"102.30471" = "direktovergang"
+"102.32791" = "utfardandedatum"
+"102.36624" = "gymnasielinje"
 
 # register 103
-
-[[variable]]
-native_id = "102.104.skolkod-ar9"
-slug = "skolkod-ar9-2"
-
-[[variable]]
-native_id = "102.16341.totalpoang"
-slug = "antal-gymnasiepoang"
-
-[[variable]]
-native_id = "102.16342.jmftal"
-slug = "genomsnittlig-betygspoang"
-
-[[variable]]
-native_id = "102.1993.skolid"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "102.25186.m1-spra"
-slug = "moderna-sprak-elevens-val-sprak"
-
-[[variable]]
-native_id = "102.25186.mspr1-betyg"
-slug = "moderna-sprak-elevens-val-betyg"
-
-[[variable]]
-native_id = "102.25186.mspr1-sprak"
-slug = "moderna-sprak-elevens-val-sprak-2"
-
-[[variable]]
-native_id = "102.30476.nystvkod"
-slug = "studievag-ny"
-
-[[variable]]
-native_id = "102.30476.startstvkod"
-slug = "studievag-start"
-
-[[variable]]
-native_id = "102.30476.stvnamn"
-slug = "studievag-namn"
-
-[[variable]]
-native_id = "102.30484.pgmtyp"
-slug = "laroplan"
-
-[[variable]]
-native_id = "102.34103.m2-spra"
-slug = "moderna-sprak-sprakval"
-
-[[variable]]
-native_id = "102.34103.mspr2-betyg"
-slug = "moderna-sprak-sprakval-betyg"
-
-[[variable]]
-native_id = "102.34103.mspr2-sprak"
-slug = "moderna-sprak-sprakval-sprak"
-
-[[variable]]
-native_id = "102.3599.bl"
-slug = "betyg-bild"
-
-[[variable]]
-native_id = "102.3599.kompl-bl"
-slug = "kompl-betyg-bild"
-
-[[variable]]
-native_id = "102.3614.meritv-ak9"
-slug = "meritvarde-ak9"
-
-[[variable]]
-native_id = "102.3614.meritvarde-ak9"
-slug = "meritvarde-ak9-2"
-
-[[variable]]
-native_id = "102.3619.kompl-no-amnen"
-slug = "blockbetyg-no-komplettering"
-
-[[variable]]
-native_id = "102.3619.no-amnen"
-slug = "blockbetyg-no-amnen"
-
-[[variable]]
-native_id = "102.3620.kompl-re"
-slug = "kompl-betyg-religion"
-
-[[variable]]
-native_id = "102.3620.re"
-slug = "betyg-religion"
-
-[[variable]]
-native_id = "102.3621.kompl-sh"
-slug = "kompl-betyg-samhallskunskap"
-
-[[variable]]
-native_id = "102.3621.sh"
-slug = "betyg-samhallskunskap"
-
-[[variable]]
-native_id = "102.3622.kompl-sl"
-slug = "kompl-betyg-slojd"
-
-[[variable]]
-native_id = "102.3622.sl"
-slug = "betyg-slojd"
-
-[[variable]]
-native_id = "102.3624.kompl-so"
-slug = "blockbetyg-so-komplettering"
-
-[[variable]]
-native_id = "102.3624.so"
-slug = "blockbetyg-so-amnen"
-
-[[variable]]
-native_id = "102.3625.kompl-sv"
-slug = "kompl-betyg-svenska"
-
-[[variable]]
-native_id = "102.3625.sv"
-slug = "betyg-svenska"
-
-[[variable]]
-native_id = "102.3627.kompl-tk"
-slug = "kompl-betyg-teknik"
-
-[[variable]]
-native_id = "102.3627.tk"
-slug = "betyg-teknik"
-
-[[variable]]
-native_id = "102.3629.kompl-tn"
-slug = "kompl-betyg-teckensprak"
-
-[[variable]]
-native_id = "102.3629.tn"
-slug = "betyg-teckensprak"
-
-[[variable]]
-native_id = "102.4693.pgmank-im"
-slug = "gymnasieprogram"
-
-[[variable]]
-native_id = "102.7650.varldsdelkodfar"
-slug = "varldsdelkod-far"
-
-[[variable]]
-native_id = "102.7650.varldsdelkodmor"
-slug = "varldsdelkod-mor"
-
-[[variable]]
-native_id = "102.8073.mutb"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "102.8073.sun2000-niva3-mor"
-slug = "sun-niva-3-mor"
-
-[[variable]]
-native_id = "102.8073.sun2000niva-grov-mor"
-slug = "sun-niva-grov-mor"
-
-[[variable]]
-native_id = "102.8073.sun2000niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "102.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "102.8073.sun2000niva-sv-mor"
-slug = "sun-niva-sv-mor"
-
-[[variable]]
-native_id = "102.8073.sun2020niva-mor"
-slug = "sun-niva-mor-3"
-
-[[variable]]
-native_id = "102.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "102.8073.sunniva-mor"
-slug = "sun-niva-mor-4"
-
-[[variable]]
-native_id = "102.8074.putb"
-slug = "faderns-utbildningsniva"
-
-[[variable]]
-native_id = "102.8074.sun2000-niva3-far"
-slug = "sun2000niva-3-far"
-
-[[variable]]
-native_id = "102.8137.hman"
-slug = "huvudman"
-
-[[variable]]
-native_id = "102.8137.hmannamn"
-slug = "huvudman-namn"
-
-[[variable]]
-native_id = "102.utbildningstyp"
-slug = "programtyp"
+"102.104.skolkod-ar9" = "skolkod-ar9-2"
+"102.16341.totalpoang" = "antal-gymnasiepoang"
+"102.16342.jmftal" = "genomsnittlig-betygspoang"
+"102.1993.skolid" = "skolans-identitetsnummer"
+"102.25186.m1-spra" = "moderna-sprak-elevens-val-sprak"
+"102.25186.mspr1-betyg" = "moderna-sprak-elevens-val-betyg"
+"102.25186.mspr1-sprak" = "moderna-sprak-elevens-val-sprak-2"
+"102.30476.nystvkod" = "studievag-ny"
+"102.30476.startstvkod" = "studievag-start"
+"102.30476.stvnamn" = "studievag-namn"
+"102.30484.pgmtyp" = "laroplan"
+"102.34103.m2-spra" = "moderna-sprak-sprakval"
+"102.34103.mspr2-betyg" = "moderna-sprak-sprakval-betyg"
+"102.34103.mspr2-sprak" = "moderna-sprak-sprakval-sprak"
+"102.3599.bl" = "betyg-bild"
+"102.3599.kompl-bl" = "kompl-betyg-bild"
+"102.3614.meritv-ak9" = "meritvarde-ak9"
+"102.3614.meritvarde-ak9" = "meritvarde-ak9-2"
+"102.3619.kompl-no-amnen" = "blockbetyg-no-komplettering"
+"102.3619.no-amnen" = "blockbetyg-no-amnen"
+"102.3620.kompl-re" = "kompl-betyg-religion"
+"102.3620.re" = "betyg-religion"
+"102.3621.kompl-sh" = "kompl-betyg-samhallskunskap"
+"102.3621.sh" = "betyg-samhallskunskap"
+"102.3622.kompl-sl" = "kompl-betyg-slojd"
+"102.3622.sl" = "betyg-slojd"
+"102.3624.kompl-so" = "blockbetyg-so-komplettering"
+"102.3624.so" = "blockbetyg-so-amnen"
+"102.3625.kompl-sv" = "kompl-betyg-svenska"
+"102.3625.sv" = "betyg-svenska"
+"102.3627.kompl-tk" = "kompl-betyg-teknik"
+"102.3627.tk" = "betyg-teknik"
+"102.3629.kompl-tn" = "kompl-betyg-teckensprak"
+"102.3629.tn" = "betyg-teckensprak"
+"102.4693.pgmank-im" = "gymnasieprogram"
+"102.7650.varldsdelkodfar" = "varldsdelkod-far"
+"102.7650.varldsdelkodmor" = "varldsdelkod-mor"
+"102.8073.mutb" = "sun-niva-mor"
+"102.8073.sun2000-niva3-mor" = "sun-niva-3-mor"
+"102.8073.sun2000niva-grov-mor" = "sun-niva-grov-mor"
+"102.8073.sun2000niva-mor" = "sun-niva-mor-2"
+"102.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"102.8073.sun2000niva-sv-mor" = "sun-niva-sv-mor"
+"102.8073.sun2020niva-mor" = "sun-niva-mor-3"
+"102.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"102.8073.sunniva-mor" = "sun-niva-mor-4"
+"102.8074.putb" = "faderns-utbildningsniva"
+"102.8074.sun2000-niva3-far" = "sun2000niva-3-far"
+"102.8137.hman" = "huvudman"
+"102.8137.hmannamn" = "huvudman-namn"
+"102.utbildningstyp" = "programtyp"
+"102.67.invbakgr" = "invbakgr"
+"102.67.utlbakgr" = "utlbakgr"
+"102.67.utlbakgr2" = "utlbakgr2"
+"102.utbildning" = "utbildning"
+"102.Kurskod_omkodad" = "kurskod-omkodad"
 
 # register 103
 
@@ -1003,18 +468,6 @@ columns = { Invbakgr = "102.67.invbakgr", UtlBakGr = "102.67.utlbakgr", UtlBakGr
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "9c61986bd4afc4182184cc1a1080b9f32dd42b2b5cc742e947c6659833bdaa73"
 
-[[variable]]
-native_id = "102.67.invbakgr"
-slug = "invbakgr"
-
-[[variable]]
-native_id = "102.67.utlbakgr"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "102.67.utlbakgr2"
-slug = "utlbakgr2"
-
 # ── #1302 SWECOV-held columns SCB's export omits (2026-10-12) ──
 # Each column is placed in the table's own view by SWECOV's P1105 delivery list.
 # Names and definitions are written from the column name and the catalog's sibling
@@ -1041,14 +494,6 @@ holdings_period = "1996-07-01/2024-06-30"
 source = "steward-holdings"
 evidence = "SWECOV holds Kurskod_omkodad in GymnasieskolaAvg_Kurs_1997 through GymnasieskolaAvg_Kurs_2024, editions school years LA1996 through LA2023; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on kursbetyg. holdings_period is the SWECOV holdings range, from the start of LA1996 to the end of LA2023 (#1302, #1533)."
 noted = "2026-10-12"
-
-[[variable]]
-native_id = "102.utbildning"
-slug = "utbildning"
-
-[[variable]]
-native_id = "102.Kurskod_omkodad"
-slug = "kurskod-omkodad"
 
 # ── #1603 A2: SWECOV GymnasieskolaAvg_Individ_1997–2004 ElevTyp ──
 

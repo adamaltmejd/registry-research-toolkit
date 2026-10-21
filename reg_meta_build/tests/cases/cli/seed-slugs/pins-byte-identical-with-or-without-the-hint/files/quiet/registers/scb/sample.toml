@@ -7,6 +7,5 @@ native_id = "1"
 native_id = "1.10"
 slug = "people"
 
-[[variable]]
-native_id = "1.102"
-slug = "kon"
+[variable]
+"1.102" = "kon"

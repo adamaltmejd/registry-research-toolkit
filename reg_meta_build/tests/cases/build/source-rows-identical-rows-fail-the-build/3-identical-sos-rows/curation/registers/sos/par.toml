@@ -6,6 +6,6 @@ native_id = "5891427617861710725"
 [[variant]]
 native_id = "5891427617861710725.5623677195158740599"
 slug = "par-ov"
-[[variable]]
-native_id = "5891427617861710725.INVARN8"
-slug = "invarn8"
+
+[variable]
+"5891427617861710725.INVARN8" = "invarn8"

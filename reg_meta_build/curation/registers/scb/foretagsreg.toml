@@ -20,153 +20,64 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Continuing Vocational Training Statistics
-
-[[variable]]
-native_id = "372.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "372.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "372.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "372.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "372.473"
-slug = "lan-arbetsstalle"
-
-[[variable]]
-native_id = "372.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "372.781"
-slug = "benamning"
-
-[[variable]]
-native_id = "372.803"
-slug = "belagenhetsadress-postnr"
-
-[[variable]]
-native_id = "372.804"
-slug = "besokspostort"
-
-[[variable]]
-native_id = "372.972"
-slug = "aktuellt-antal-anstallda"
-
-[[variable]]
-native_id = "372.1038"
-slug = "antal-firmor"
-
-[[variable]]
-native_id = "372.1130"
-slug = "koncernmoderns-orgnr"
-
-[[variable]]
-native_id = "372.1133"
-slug = "privat-publikt-foretag"
-
-[[variable]]
-native_id = "372.1141"
-slug = "sektortillhorighet"
-
-[[variable]]
-native_id = "372.17484"
-slug = "antal-arbetsstallen"
-
-[[variable]]
-native_id = "372.17556"
-slug = "belagenhetsadress"
-
-[[variable]]
-native_id = "372.48346"
-slug = "antal-anstallda-arbetsstalle"
-
-[[variable]]
-native_id = "372.48347"
-slug = "antal-anstallda-juridisk-enhet"
+"372.14" = "cfar-nummer"
+"372.56" = "person-orgnr"
+"372.34" = "juridisk-form"
+"372.74" = "agarkontroll"
+"372.473" = "lan-arbetsstalle"
+"372.667" = "kommun-for-arbetsstalle"
+"372.781" = "benamning"
+"372.803" = "belagenhetsadress-postnr"
+"372.804" = "besokspostort"
+"372.972" = "aktuellt-antal-anstallda"
+"372.1038" = "antal-firmor"
+"372.1130" = "koncernmoderns-orgnr"
+"372.1133" = "privat-publikt-foretag"
+"372.1141" = "sektortillhorighet"
+"372.17484" = "antal-arbetsstallen"
+"372.17556" = "belagenhetsadress"
+"372.48346" = "antal-anstallda-arbetsstalle"
+"372.48347" = "antal-anstallda-juridisk-enhet"
 
 # register 374 (cvts)
-
-[[variable]]
-native_id = "372.55"
-slug = "omsattning-enligt-moms"
-
-[[variable]]
-native_id = "372.666"
-slug = "anstallda-storleksklass"
-
-[[variable]]
-native_id = "372.668"
-slug = "arbstalle-status"
-
-[[variable]]
-native_id = "372.832"
-slug = "hjalpverksamhetskod"
-
-[[variable]]
-native_id = "372.971"
-slug = "aktiekapital"
-
-[[variable]]
-native_id = "372.1009"
-slug = "arbetsgivarstatus"
-
-[[variable]]
-native_id = "372.1047"
-slug = "je-foretagsstatus"
-
-[[variable]]
-native_id = "372.1052"
-slug = "je-status"
-
-[[variable]]
-native_id = "372.1054"
-slug = "sateskommun"
-
-[[variable]]
-native_id = "372.1058"
-slug = "sateslan"
-
-[[variable]]
-native_id = "372.1134"
-slug = "bolagsstatus"
-
-[[variable]]
-native_id = "372.37573"
-slug = "huvudarbetsstalle"
+"372.55" = "omsattning-enligt-moms"
+"372.666" = "anstallda-storleksklass"
+"372.668" = "arbstalle-status"
+"372.832" = "hjalpverksamhetskod"
+"372.971" = "aktiekapital"
+"372.1009" = "arbetsgivarstatus"
+"372.1047" = "je-foretagsstatus"
+"372.1052" = "je-status"
+"372.1054" = "sateskommun"
+"372.1058" = "sateslan"
+"372.1134" = "bolagsstatus"
+"372.37573" = "huvudarbetsstalle"
 
 # register 374
-
-[[variable]]
-native_id = "372.1086.jenamn"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "372.1086.namn"
-slug = "namn-juridiska-enheten-2"
-
-[[variable]]
-native_id = "372.19.aregion"
-slug = "a-region"
-
-[[variable]]
-native_id = "372.413.coadress"
-slug = "c-o-adress"
-
-[[variable]]
-native_id = "372.814.fax"
-slug = "faxnummer"
+"372.1086.jenamn" = "namn-juridiska-enheten"
+"372.1086.namn" = "namn-juridiska-enheten-2"
+"372.19.aregion" = "a-region"
+"372.413.coadress" = "c-o-adress"
+"372.814.fax" = "faxnummer"
+"372.19053.ng1avd" = "ng1avd"
+"372.49729.eilandomr1" = "eilandomr1"
+"372.49729.eilandomr2" = "eilandomr2"
+"372.49729.eilandomr3" = "eilandomr3"
+"372.49729.eilandomr4" = "eilandomr4"
+"372.49729.eilandomr5" = "eilandomr5"
+"372.49729.eilandomr6" = "eilandomr6"
+"372.49729.eilandomr7" = "eilandomr7"
+"372.49729.eilandomr8" = "eilandomr8"
+"372.835.ng2" = "ng2-835"
+"372.835.ng2avd" = "ng2avd"
+"372.37551.ng5" = "ng5-37551"
+"372.37551.ng5avd" = "ng5avd"
+"372.37550.ng4" = "ng4-37550"
+"372.37550.ng4avd" = "ng4avd"
+"372.21078.ng3" = "ng3-21078"
+"372.21078.ng3avd" = "ng3avd"
 
 # register 374
 
@@ -175,10 +86,6 @@ variable = "372.19053"
 columns = { Ng1 = "372.19053.ng1", Ng1Avd = "372.19053.ng1avd", Ng1UAvd = "372.19053.ng1uavd" }
 columns_ref = "Complete native family and full physical-column peer census reviewed. Yrkesreg keeps source SNI histories and literal-case SNI2007 variants; Företagsreg separates explicitly named Avdelning, Underavdelning and Detaljgrupp operations; Livsmedelsförsäljning retains the same explicitly identified legal-unit identity across literal case spellings. No suffix-only semantics or storage/coding equivalence is inferred. Batch52-native3-source-review.json."
 expected_evidence_sha256 = "85f4d6663b40287c792eb76d76d4848674e1fbd3c82915dd34da7328bd46deeb"
-
-[[variable]]
-native_id = "372.19053.ng1avd"
-slug = "ng1avd"
 
 [[acknowledge]]
 code = "missing_coding_period"
@@ -334,70 +241,6 @@ variable = "372.21078"
 columns = { Ng3 = "372.21078.ng3", Ng3Avd = "372.21078.ng3avd" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "84c02043eea16169d964175377dcda1e59c97b213d3f2caf727ea57e10b2521f"
-
-[[variable]]
-native_id = "372.49729.eilandomr1"
-slug = "eilandomr1"
-
-[[variable]]
-native_id = "372.49729.eilandomr2"
-slug = "eilandomr2"
-
-[[variable]]
-native_id = "372.49729.eilandomr3"
-slug = "eilandomr3"
-
-[[variable]]
-native_id = "372.49729.eilandomr4"
-slug = "eilandomr4"
-
-[[variable]]
-native_id = "372.49729.eilandomr5"
-slug = "eilandomr5"
-
-[[variable]]
-native_id = "372.49729.eilandomr6"
-slug = "eilandomr6"
-
-[[variable]]
-native_id = "372.49729.eilandomr7"
-slug = "eilandomr7"
-
-[[variable]]
-native_id = "372.49729.eilandomr8"
-slug = "eilandomr8"
-
-[[variable]]
-native_id = "372.835.ng2"
-slug = "ng2-835"
-
-[[variable]]
-native_id = "372.835.ng2avd"
-slug = "ng2avd"
-
-[[variable]]
-native_id = "372.37551.ng5"
-slug = "ng5-37551"
-
-[[variable]]
-native_id = "372.37551.ng5avd"
-slug = "ng5avd"
-
-[[variable]]
-native_id = "372.37550.ng4"
-slug = "ng4-37550"
-
-[[variable]]
-native_id = "372.37550.ng4avd"
-slug = "ng4avd"
-
-[[variable]]
-native_id = "372.21078.ng3"
-slug = "ng3-21078"
-
-[[variable]]
-native_id = "372.21078.ng3avd"
-slug = "ng3avd"
 
 [[acknowledge]]
 code = "missing_coding_period"

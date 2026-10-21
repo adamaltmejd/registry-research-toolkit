@@ -8,62 +8,21 @@ native_id = "263.606"
 slug = "_default"
 display_group = "Byggkostnadsindex (BKI)"
 
+[variable]
 # Standardiserade räkenskapsutdrag (SRU)
-
-[[variable]]
-native_id = "263.22023"
-slug = "maskiner-maskinutnyttjande"
-
-[[variable]]
-native_id = "263.22024"
-slug = "inbyggt-material"
-
-[[variable]]
-native_id = "263.22025"
-slug = "arbetslon-exkl-loneglidning"
-
-[[variable]]
-native_id = "263.22026"
-slug = "transporter-drivmedel-elkraft"
-
-[[variable]]
-native_id = "263.22027"
-slug = "omkostnader"
-
-[[variable]]
-native_id = "263.22028"
-slug = "byggherrekostnader"
-
-[[variable]]
-native_id = "263.22865"
-slug = "person-samordnings-orgnr"
-
-[[variable]]
-native_id = "263.24301"
-slug = "transporter-bygg-anlaggning"
-
-[[variable]]
-native_id = "263.24302"
-slug = "dieselolja"
-
-[[variable]]
-native_id = "263.24303"
-slug = "elkraft-nybyggnad"
-
-[[variable]]
-native_id = "263.24304"
-slug = "schaktmaskiner"
-
-[[variable]]
-native_id = "263.24305"
-slug = "ovriga-maskiner"
+"263.22023" = "maskiner-maskinutnyttjande"
+"263.22024" = "inbyggt-material"
+"263.22025" = "arbetslon-exkl-loneglidning"
+"263.22026" = "transporter-drivmedel-elkraft"
+"263.22027" = "omkostnader"
+"263.22028" = "byggherrekostnader"
+"263.22865" = "person-samordnings-orgnr"
+"263.24301" = "transporter-bygg-anlaggning"
+"263.24302" = "dieselolja"
+"263.24303" = "elkraft-nybyggnad"
+"263.24304" = "schaktmaskiner"
+"263.24305" = "ovriga-maskiner"
 
 # register 264 (sru)
-
-[[variable]]
-native_id = "263.50"
-slug = "manad"
-
-[[variable]]
-native_id = "263.23603"
-slug = "produktgruppsvikt"
+"263.50" = "manad"
+"263.23603" = "produktgruppsvikt"

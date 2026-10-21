@@ -11,80 +11,29 @@ panel_entity_key = "scbid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Företagsstatistik för industri-, bygg och tjänstesektorn
-
-[[variable]]
-native_id = "374.4600"
-slug = "scbid"
-
-
-[[variable]]
-native_id = "374.39613"
-slug = "studier-yrkeskvalifikation"
+"374.4600" = "scbid"
+"374.39613" = "studier-yrkeskvalifikation"
 
 # register 375 (foretagsstatistik)
-
-[[variable]]
-native_id = "374.45"
-slug = "land"
-
-[[variable]]
-native_id = "374.98"
-slug = "referensar"
-
-[[variable]]
-native_id = "374.2951"
-slug = "arbetskraftskostnader"
-
-[[variable]]
-native_id = "374.4038"
-slug = "antal-anstallda-enligt-fdb"
-
-[[variable]]
-native_id = "374.4656"
-slug = "insamlingsmetod"
-
-[[variable]]
-native_id = "374.6211"
-slug = "svarande-per-stratum"
-
-[[variable]]
-native_id = "374.6290"
-slug = "nuts"
-
-[[variable]]
-native_id = "374.6306"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "374.21044"
-slug = "bidragsbelopp"
-
-[[variable]]
-native_id = "374.37405"
-slug = "suburval"
-
-[[variable]]
-native_id = "374.39617"
-slug = "foretagsstorlek"
-
-[[variable]]
-native_id = "374.39651"
-slug = "svarsalternativ"
+"374.45" = "land"
+"374.98" = "referensar"
+"374.2951" = "arbetskraftskostnader"
+"374.4038" = "antal-anstallda-enligt-fdb"
+"374.4656" = "insamlingsmetod"
+"374.6211" = "svarande-per-stratum"
+"374.6290" = "nuts"
+"374.6306" = "antal-arbetade-timmar"
+"374.21044" = "bidragsbelopp"
+"374.37405" = "suburval"
+"374.39617" = "foretagsstorlek"
+"374.39651" = "svarsalternativ"
 
 # register 375
-
-[[variable]]
-native_id = "374.690.a2f"
-slug = "antal-anstallda-kvinnor"
-
-[[variable]]
-native_id = "374.690.a2m"
-slug = "antal-anstallda-man"
-
-[[variable]]
-native_id = "374.690.a2tot"
-slug = "antal-anstallda"
+"374.690.a2f" = "antal-anstallda-kvinnor"
+"374.690.a2m" = "antal-anstallda-man"
+"374.690.a2tot" = "antal-anstallda"
 
 # register 377
 

@@ -5,9 +5,10 @@ native_id = "257"
 [[variant]]
 native_id = "257.553"
 slug = "_default"
-[[variable]]
-native_id = "257.15662"
-slug = "answer-sweden"
+
+[variable]
+"257.15662" = "answer-sweden"
+
 [[representation.matrix]]
 source_mode = "documented_blank"
 evidence_file = "registers/scb/innovation-foretag/answers.json"

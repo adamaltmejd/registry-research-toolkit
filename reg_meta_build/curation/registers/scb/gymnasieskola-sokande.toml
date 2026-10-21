@@ -47,404 +47,166 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Byggkostnadsindex (BKI)
-
-[[variable]]
-native_id = "260.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "260.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "260.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "260.73"
-slug = "ar"
-
-[[variable]]
-native_id = "260.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "260.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "260.3603"
-slug = "fodelselandnamn"
-
-[[variable]]
-native_id = "260.4693"
-slug = "gymnasieprogram"
-
-[[variable]]
-native_id = "260.19344"
-slug = "ar-for-antagningen"
-
-[[variable]]
-native_id = "260.25826"
-slug = "ar-for-ansokan"
-
-[[variable]]
-native_id = "260.30632"
-slug = "medelbetyg"
-
-[[variable]]
-native_id = "260.31989"
-slug = "lopnr-elev"
-
-[[variable]]
-native_id = "260.35155"
-slug = "behorighet-gymnasieprogram"
-
-[[variable]]
-native_id = "260.35156"
-slug = "antagningsstatus"
-
-[[variable]]
-native_id = "260.35159"
-slug = "rangordning-gymnasieprogram"
-
-[[variable]]
-native_id = "260.35162"
-slug = "valutfall"
-
-[[variable]]
-native_id = "260.35268"
-slug = "direktansokande-fran-ak9"
+"260.57" = "personnr"
+"260.34" = "juridisk-form"
+"260.56" = "person-orgnr"
+"260.73" = "ar"
+"260.257" = "fodelseland-rtb"
+"260.1993" = "skolans-identitetsnummer"
+"260.3603" = "fodelselandnamn"
+"260.4693" = "gymnasieprogram"
+"260.19344" = "ar-for-antagningen"
+"260.25826" = "ar-for-ansokan"
+"260.30632" = "medelbetyg"
+"260.31989" = "lopnr-elev"
+"260.35155" = "behorighet-gymnasieprogram"
+"260.35156" = "antagningsstatus"
+"260.35159" = "rangordning-gymnasieprogram"
+"260.35162" = "valutfall"
+"260.35268" = "direktansokande-fran-ak9"
 
 # register 263 (bki)
-
-[[variable]]
-native_id = "260.104.skolkod"
-slug = "skolkod"
-
-[[variable]]
-native_id = "260.35158.sgrupp1"
-slug = "sokgrupp"
-
-[[variable]]
-native_id = "260.36.hgyreg"
-slug = "kommun"
-
-[[variable]]
-native_id = "260.36.kommun"
-slug = "skola-kommun"
-
-[[variable]]
-native_id = "260.3614.u-gbetyg"
-slug = "meritvarde"
-
-[[variable]]
-native_id = "260.36733.hgyreg"
-slug = "gymnasieregion"
-
-[[variable]]
-native_id = "260.40053.skolkod"
-slug = "arbetslivserfarenhet-forutbildning"
+"260.104.skolkod" = "skolkod"
+"260.35158.sgrupp1" = "sokgrupp"
+"260.36.hgyreg" = "kommun"
+"260.36.kommun" = "skola-kommun"
+"260.3614.u-gbetyg" = "meritvarde"
+"260.36733.hgyreg" = "gymnasieregion"
+"260.40053.skolkod" = "arbetslivserfarenhet-forutbildning"
 
 # register 270 (fortroendevalda)
-
-[[variable]]
-native_id = "260.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "260.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "260.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "260.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "260.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "260.1994"
-slug = "rektorsomrades-id"
-
-[[variable]]
-native_id = "260.8187"
-slug = "utlandsk-bakgrund"
-
-[[variable]]
-native_id = "260.26963"
-slug = "inriktning-fristaende-gr"
-
-[[variable]]
-native_id = "260.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "260.30471"
-slug = "direktovergang"
-
-[[variable]]
-native_id = "260.30634"
-slug = "summa-betyg"
-
-[[variable]]
-native_id = "260.32738"
-slug = "skollan"
-
-[[variable]]
-native_id = "260.35151"
-slug = "inlasningsdatum"
-
-[[variable]]
-native_id = "260.35887"
-slug = "nyligen-invandrad"
+"260.241" = "alder-31-12"
+"260.305" = "fodelseland-mor"
+"260.323" = "personnr-far"
+"260.324" = "personnr-mor"
+"260.517" = "senaste-invandringsar"
+"260.1994" = "rektorsomrades-id"
+"260.8187" = "utlandsk-bakgrund"
+"260.26963" = "inriktning-fristaende-gr"
+"260.29426" = "tidigaste-invandringsdatum"
+"260.30471" = "direktovergang"
+"260.30634" = "summa-betyg"
+"260.32738" = "skollan"
+"260.35151" = "inlasningsdatum"
+"260.35887" = "nyligen-invandrad"
 
 # register 263
-
-[[variable]]
-native_id = "260.104.skol-ar9"
-slug = "skolkod-ar9"
-
-[[variable]]
-native_id = "260.1536.stvkod"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "260.36624.ilinje"
-slug = "gymnasielinje"
-
-[[variable]]
-native_id = "260.36730.sektor1"
-slug = "utbildningssektor"
-
-[[variable]]
-native_id = "260.67.utlbakgr2"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "260.8073.sun2000niva-1-mor"
-slug = "sun-niva-1-mor"
-
-[[variable]]
-native_id = "260.8073.sun2000niva-3-mor"
-slug = "sun-niva-3-mor"
-
-[[variable]]
-native_id = "260.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "260.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "260.8073.sun2000niva-sv-mor"
-slug = "sun-niva-sv-mor"
-
-[[variable]]
-native_id = "260.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "260.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "260.8137.hman"
-slug = "huvudman"
+"260.104.skol-ar9" = "skolkod-ar9"
+"260.1536.stvkod" = "studievag-gymnasieskolan"
+"260.36624.ilinje" = "gymnasielinje"
+"260.36730.sektor1" = "utbildningssektor"
+"260.67.utlbakgr2" = "utlbakgr"
+"260.8073.sun2000niva-1-mor" = "sun-niva-1-mor"
+"260.8073.sun2000niva-3-mor" = "sun-niva-3-mor"
+"260.8073.sun2000niva-mor" = "sun-niva-mor"
+"260.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"260.8073.sun2000niva-sv-mor" = "sun-niva-sv-mor"
+"260.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"260.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"260.8137.hman" = "huvudman"
 
 # register 264
-
-[[variable]]
-native_id = "260.36730.sektor2"
-slug = "utbildningssektor-for-sokt-utbildning-val-2"
-
-[[variable]]
-native_id = "260.36730.sektor3"
-slug = "utbildningssektor-for-sokt-utbildning-val-3"
-
-[[variable]]
-native_id = "260.36730.sektor4"
-slug = "utbildningssektor-for-sokt-utbildning-val-4"
-
-[[variable]]
-native_id = "260.36730.sektor5"
-slug = "utbildningssektor-for-sokt-utbildning-val-5"
-
-[[variable]]
-native_id = "260.36730.sektor6"
-slug = "utbildningssektor-for-sokt-utbildning-val-6"
-
-[[variable]]
-native_id = "260.36730.isektor"
-slug = "isektor"
-
-[[variable]]
-native_id = "260.28690.sint1"
-slug = "sint"
-
-[[variable]]
-native_id = "260.28690.sint2"
-slug = "antagen-till-sokt-utbildning-val-2"
-
-[[variable]]
-native_id = "260.28690.sint3"
-slug = "antagen-till-sokt-utbildning-val-3"
-
-[[variable]]
-native_id = "260.28690.sint4"
-slug = "antagen-till-sokt-utbildning-val-4"
-
-[[variable]]
-native_id = "260.28690.sint5"
-slug = "antagen-till-sokt-utbildning-val-5"
-
-[[variable]]
-native_id = "260.28690.sint6"
-slug = "antagen-till-sokt-utbildning-val-6"
-
-[[variable]]
-native_id = "260.28690.sval"
-slug = "sval"
-
-[[variable]]
-native_id = "260.36733.sgyreg1"
-slug = "sgyreg"
-
-[[variable]]
-native_id = "260.36733.sgyreg2"
-slug = "gymnasieregion-for-sokt-skola-val-2"
-
-[[variable]]
-native_id = "260.36733.sgyreg3"
-slug = "gymnasieregion-for-sokt-skola-val-3"
-
-[[variable]]
-native_id = "260.36733.sgyreg4"
-slug = "gymnasieregion-for-sokt-skola-val-4"
-
-[[variable]]
-native_id = "260.36733.sgyreg5"
-slug = "gymnasieregion-for-sokt-skola-val-5"
-
-[[variable]]
-native_id = "260.36733.sgyreg6"
-slug = "gymnasieregion-for-sokt-skola-val-6"
-
-[[variable]]
-native_id = "260.36733.igyreg"
-slug = "igyreg"
-
-[[variable]]
-native_id = "260.40053.alefu1"
-slug = "alefu"
-
-[[variable]]
-native_id = "260.40053.alefu2"
-slug = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-2"
-
-[[variable]]
-native_id = "260.40053.alefu3"
-slug = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-3"
-
-[[variable]]
-native_id = "260.40053.alefu4"
-slug = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-4"
-
-[[variable]]
-native_id = "260.40053.alefu5"
-slug = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-5"
-
-[[variable]]
-native_id = "260.40053.alefu6"
-slug = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-6"
-
-[[variable]]
-native_id = "260.38265.svgg1"
-slug = "svgg"
-
-[[variable]]
-native_id = "260.38265.svgg2"
-slug = "studievagsgrupp-for-sokt-specialkurs-val-2"
-
-[[variable]]
-native_id = "260.38265.svgg3"
-slug = "studievagsgrupp-for-sokt-specialkurs-val-3"
-
-[[variable]]
-native_id = "260.38265.svgg4"
-slug = "studievagsgrupp-for-sokt-specialkurs-val-4"
-
-[[variable]]
-native_id = "260.38265.svgg5"
-slug = "studievagsgrupp-for-sokt-specialkurs-val-5"
-
-[[variable]]
-native_id = "260.38265.svgg6"
-slug = "studievagsgrupp-for-sokt-specialkurs-val-6"
-
-[[variable]]
-native_id = "260.38265.isvgg"
-slug = "isvgg"
-
-[[variable]]
-native_id = "260.36732.kursl1"
-slug = "kursl"
-
-[[variable]]
-native_id = "260.36732.kursl2"
-slug = "kurslangd-i-veckor-for-sokt-utbildning-val-2"
-
-[[variable]]
-native_id = "260.36732.kursl3"
-slug = "kurslangd-i-veckor-for-sokt-utbildning-val-3"
-
-[[variable]]
-native_id = "260.36732.kursl4"
-slug = "kurslangd-i-veckor-for-sokt-utbildning-val-4"
-
-[[variable]]
-native_id = "260.36732.kursl5"
-slug = "kurslangd-i-veckor-for-sokt-utbildning-val-5"
-
-[[variable]]
-native_id = "260.36732.kursl6"
-slug = "kurslangd-i-veckor-for-sokt-utbildning-val-6"
-
-[[variable]]
-native_id = "260.36732.ikursl"
-slug = "ikursl"
-
-[[variable]]
-native_id = "260.36624.linje1"
-slug = "linje"
-
-[[variable]]
-native_id = "260.36624.linje2"
-slug = "gymnasielinje-for-sokt-utbildning-val-2"
-
-[[variable]]
-native_id = "260.36624.linje3"
-slug = "gymnasielinje-for-sokt-utbildning-val-3"
-
-[[variable]]
-native_id = "260.36624.linje4"
-slug = "gymnasielinje-for-sokt-utbildning-val-4"
-
-[[variable]]
-native_id = "260.36624.linje5"
-slug = "gymnasielinje-for-sokt-utbildning-val-5"
-
-[[variable]]
-native_id = "260.36624.linje6"
-slug = "gymnasielinje-for-sokt-utbildning-val-6"
+"260.36730.sektor2" = "utbildningssektor-for-sokt-utbildning-val-2"
+"260.36730.sektor3" = "utbildningssektor-for-sokt-utbildning-val-3"
+"260.36730.sektor4" = "utbildningssektor-for-sokt-utbildning-val-4"
+"260.36730.sektor5" = "utbildningssektor-for-sokt-utbildning-val-5"
+"260.36730.sektor6" = "utbildningssektor-for-sokt-utbildning-val-6"
+"260.36730.isektor" = "isektor"
+"260.28690.sint1" = "sint"
+"260.28690.sint2" = "antagen-till-sokt-utbildning-val-2"
+"260.28690.sint3" = "antagen-till-sokt-utbildning-val-3"
+"260.28690.sint4" = "antagen-till-sokt-utbildning-val-4"
+"260.28690.sint5" = "antagen-till-sokt-utbildning-val-5"
+"260.28690.sint6" = "antagen-till-sokt-utbildning-val-6"
+"260.28690.sval" = "sval"
+"260.36733.sgyreg1" = "sgyreg"
+"260.36733.sgyreg2" = "gymnasieregion-for-sokt-skola-val-2"
+"260.36733.sgyreg3" = "gymnasieregion-for-sokt-skola-val-3"
+"260.36733.sgyreg4" = "gymnasieregion-for-sokt-skola-val-4"
+"260.36733.sgyreg5" = "gymnasieregion-for-sokt-skola-val-5"
+"260.36733.sgyreg6" = "gymnasieregion-for-sokt-skola-val-6"
+"260.36733.igyreg" = "igyreg"
+"260.40053.alefu1" = "alefu"
+"260.40053.alefu2" = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-2"
+"260.40053.alefu3" = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-3"
+"260.40053.alefu4" = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-4"
+"260.40053.alefu5" = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-5"
+"260.40053.alefu6" = "arbetslivserfarenhet-eller-forutbildning-for-sokt-utbildning-val-6"
+"260.38265.svgg1" = "svgg"
+"260.38265.svgg2" = "studievagsgrupp-for-sokt-specialkurs-val-2"
+"260.38265.svgg3" = "studievagsgrupp-for-sokt-specialkurs-val-3"
+"260.38265.svgg4" = "studievagsgrupp-for-sokt-specialkurs-val-4"
+"260.38265.svgg5" = "studievagsgrupp-for-sokt-specialkurs-val-5"
+"260.38265.svgg6" = "studievagsgrupp-for-sokt-specialkurs-val-6"
+"260.38265.isvgg" = "isvgg"
+"260.36732.kursl1" = "kursl"
+"260.36732.kursl2" = "kurslangd-i-veckor-for-sokt-utbildning-val-2"
+"260.36732.kursl3" = "kurslangd-i-veckor-for-sokt-utbildning-val-3"
+"260.36732.kursl4" = "kurslangd-i-veckor-for-sokt-utbildning-val-4"
+"260.36732.kursl5" = "kurslangd-i-veckor-for-sokt-utbildning-val-5"
+"260.36732.kursl6" = "kurslangd-i-veckor-for-sokt-utbildning-val-6"
+"260.36732.ikursl" = "ikursl"
+"260.36624.linje1" = "linje"
+"260.36624.linje2" = "gymnasielinje-for-sokt-utbildning-val-2"
+"260.36624.linje3" = "gymnasielinje-for-sokt-utbildning-val-3"
+"260.36624.linje4" = "gymnasielinje-for-sokt-utbildning-val-4"
+"260.36624.linje5" = "gymnasielinje-for-sokt-utbildning-val-5"
+"260.36624.linje6" = "gymnasielinje-for-sokt-utbildning-val-6"
+"260.104.iskenh" = "iskenh"
+"260.104.skola1" = "skola"
+"260.104.skola2" = "skola2"
+"260.104.skola3" = "skola3"
+"260.104.skola4" = "skola4"
+"260.104.skola5" = "skola5"
+"260.104.skola6" = "skola6"
+"260.104.skolkod-ak9" = "skolkod-ak9"
+"260.104.vy-skolkod" = "vy-skolkod"
+"260.36734.jmft1" = "jmft"
+"260.36734.jmft2" = "jmft2"
+"260.36734.jmft3" = "jmft3"
+"260.36734.jmft4" = "jmft4"
+"260.36734.jmft5" = "jmft5"
+"260.36734.jmft6" = "jmft6"
+"260.36734.jmftal" = "jmftal"
+"260.36734.u-jtal" = "u-jtal"
+"260.1536.gren1" = "gren"
+"260.1536.gren2" = "gren2"
+"260.1536.gren3" = "gren3"
+"260.1536.gren4" = "gren4"
+"260.1536.gren5" = "gren5"
+"260.1536.gren6" = "gren6"
+"260.1536.igren" = "igren"
+"260.1536.stvkod-ans" = "stvkod-ans"
+"260.1536.stvkod-ht" = "stvkod-ht"
+"260.1536.stvkod-utb" = "stvkod-utb"
+"260.1536.u-stv" = "u-stv"
+"260.35158.grupp1" = "grupp"
+"260.35158.grupp2" = "grupp2"
+"260.35158.grupp3" = "grupp3"
+"260.35158.grupp4" = "grupp4"
+"260.35158.grupp5" = "grupp5"
+"260.35158.grupp6" = "grupp6"
+"260.35158.sgrupp2" = "sgrupp2"
+"260.35158.sgrupp3" = "sgrupp3"
+"260.35158.sgrupp4" = "sgrupp4"
+"260.35158.sgrupp5" = "sgrupp5"
+"260.35158.sgrupp6" = "sgrupp6"
+"260.35158.sgrupp" = "sgrupp"
+"260.35158.u-sgrupp" = "u-sgrupp"
+"260.38272.verksamh1" = "verksamh1"
+"260.38272.verksamh2" = "verksamh2"
+"260.38272.verksamh3" = "verksamh3"
+"260.38272.verksamh4" = "verksamh4"
+"260.38272.verksamh5" = "verksamh5"
+"260.38272.verksamh6" = "verksamh6"
+"260.36625.beh1" = "beh1"
+"260.36625.beh2" = "beh2"
+"260.36625.beh3" = "beh3"
+"260.36625.beh4" = "beh4"
+"260.36625.beh5" = "beh5"
+"260.36625.beh6" = "beh6"
 
 [[identity.column_owner]]
 variable = "260.36730"
@@ -6545,215 +6307,3 @@ variable = "260.36625"
 columns = { BEH1 = "260.36625.beh1", BEH2 = "260.36625.beh2", BEH3 = "260.36625.beh3", BEH4 = "260.36625.beh4", BEH5 = "260.36625.beh5", BEH6 = "260.36625.beh6" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "9a799bb97c28c3e0da46177cb7366b9d34bc90d353ccb8c723e68c71920fb01c"
-
-[[variable]]
-native_id = "260.104.iskenh"
-slug = "iskenh"
-
-[[variable]]
-native_id = "260.104.skola1"
-slug = "skola"
-
-[[variable]]
-native_id = "260.104.skola2"
-slug = "skola2"
-
-[[variable]]
-native_id = "260.104.skola3"
-slug = "skola3"
-
-[[variable]]
-native_id = "260.104.skola4"
-slug = "skola4"
-
-[[variable]]
-native_id = "260.104.skola5"
-slug = "skola5"
-
-[[variable]]
-native_id = "260.104.skola6"
-slug = "skola6"
-
-[[variable]]
-native_id = "260.104.skolkod-ak9"
-slug = "skolkod-ak9"
-
-[[variable]]
-native_id = "260.104.vy-skolkod"
-slug = "vy-skolkod"
-
-[[variable]]
-native_id = "260.36734.jmft1"
-slug = "jmft"
-
-[[variable]]
-native_id = "260.36734.jmft2"
-slug = "jmft2"
-
-[[variable]]
-native_id = "260.36734.jmft3"
-slug = "jmft3"
-
-[[variable]]
-native_id = "260.36734.jmft4"
-slug = "jmft4"
-
-[[variable]]
-native_id = "260.36734.jmft5"
-slug = "jmft5"
-
-[[variable]]
-native_id = "260.36734.jmft6"
-slug = "jmft6"
-
-[[variable]]
-native_id = "260.36734.jmftal"
-slug = "jmftal"
-
-[[variable]]
-native_id = "260.36734.u-jtal"
-slug = "u-jtal"
-
-[[variable]]
-native_id = "260.1536.gren1"
-slug = "gren"
-
-[[variable]]
-native_id = "260.1536.gren2"
-slug = "gren2"
-
-[[variable]]
-native_id = "260.1536.gren3"
-slug = "gren3"
-
-[[variable]]
-native_id = "260.1536.gren4"
-slug = "gren4"
-
-[[variable]]
-native_id = "260.1536.gren5"
-slug = "gren5"
-
-[[variable]]
-native_id = "260.1536.gren6"
-slug = "gren6"
-
-[[variable]]
-native_id = "260.1536.igren"
-slug = "igren"
-
-[[variable]]
-native_id = "260.1536.stvkod-ans"
-slug = "stvkod-ans"
-
-[[variable]]
-native_id = "260.1536.stvkod-ht"
-slug = "stvkod-ht"
-
-[[variable]]
-native_id = "260.1536.stvkod-utb"
-slug = "stvkod-utb"
-
-[[variable]]
-native_id = "260.1536.u-stv"
-slug = "u-stv"
-
-[[variable]]
-native_id = "260.35158.grupp1"
-slug = "grupp"
-
-[[variable]]
-native_id = "260.35158.grupp2"
-slug = "grupp2"
-
-[[variable]]
-native_id = "260.35158.grupp3"
-slug = "grupp3"
-
-[[variable]]
-native_id = "260.35158.grupp4"
-slug = "grupp4"
-
-[[variable]]
-native_id = "260.35158.grupp5"
-slug = "grupp5"
-
-[[variable]]
-native_id = "260.35158.grupp6"
-slug = "grupp6"
-
-[[variable]]
-native_id = "260.35158.sgrupp2"
-slug = "sgrupp2"
-
-[[variable]]
-native_id = "260.35158.sgrupp3"
-slug = "sgrupp3"
-
-[[variable]]
-native_id = "260.35158.sgrupp4"
-slug = "sgrupp4"
-
-[[variable]]
-native_id = "260.35158.sgrupp5"
-slug = "sgrupp5"
-
-[[variable]]
-native_id = "260.35158.sgrupp6"
-slug = "sgrupp6"
-
-[[variable]]
-native_id = "260.35158.sgrupp"
-slug = "sgrupp"
-
-[[variable]]
-native_id = "260.35158.u-sgrupp"
-slug = "u-sgrupp"
-
-[[variable]]
-native_id = "260.38272.verksamh1"
-slug = "verksamh1"
-
-[[variable]]
-native_id = "260.38272.verksamh2"
-slug = "verksamh2"
-
-[[variable]]
-native_id = "260.38272.verksamh3"
-slug = "verksamh3"
-
-[[variable]]
-native_id = "260.38272.verksamh4"
-slug = "verksamh4"
-
-[[variable]]
-native_id = "260.38272.verksamh5"
-slug = "verksamh5"
-
-[[variable]]
-native_id = "260.38272.verksamh6"
-slug = "verksamh6"
-
-[[variable]]
-native_id = "260.36625.beh1"
-slug = "beh1"
-
-[[variable]]
-native_id = "260.36625.beh2"
-slug = "beh2"
-
-[[variable]]
-native_id = "260.36625.beh3"
-slug = "beh3"
-
-[[variable]]
-native_id = "260.36625.beh4"
-slug = "beh4"
-
-[[variable]]
-native_id = "260.36625.beh5"
-slug = "beh5"
-
-[[variable]]
-native_id = "260.36625.beh6"
-slug = "beh6"

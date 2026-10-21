@@ -11,71 +11,28 @@ panel_entity_key = "lopnr-personnr"
 panel_time_key = "tillfalle"
 panel_time_grain = "row"
 
-
-
-
-[[variable]]
-native_id = "5444831050852607094.Personnummer"
-slug = "lopnr-personnr"
+[variable]
+"5444831050852607094.Personnummer" = "lopnr-personnr"
 
 # === BEGIN #760 non-SCB concept-slug curation (generated) ===
 # 13 curated overrides: cryptic delivery-column slugs replaced
 # with canonical Swedish-prose slugs derived from the variable name, plus
 # cross-register/cross-provider concept consistency and person/org identifier
 # alignment to the SCB locked forms (#760). Keyed by source_id.
-
 # register 5444831050852607094
+"5444831050852607094.AO" = "allman-orientering"
+"5444831050852607094.DTK" = "diagram-tabeller-kartor"
+"5444831050852607094.ELF" = "engelsk-lasforstelse"
+"5444831050852607094.KVA" = "kvantitativa-jamforelser"
+"5444831050852607094.Kvant" = "kvantitativ-delsumma"
+"5444831050852607094.LÄS" = "lasforstelse"
+"5444831050852607094.MEK" = "meningskomplettering"
+"5444831050852607094.NOG" = "kvantitativa-resonemang"
+"5444831050852607094.Norm" = "normerat-resultat"
+"5444831050852607094.ORD" = "ordforstelse"
+"5444831050852607094.STUF" = "studietekniska-fardigheter"
+"5444831050852607094.Verb" = "verbal-delsumma"
+"5444831050852607094.XYZ" = "matematisk-problemlosning"
 
-[[variable]]
-native_id = "5444831050852607094.AO"
-slug = "allman-orientering"
-
-[[variable]]
-native_id = "5444831050852607094.DTK"
-slug = "diagram-tabeller-kartor"
-
-[[variable]]
-native_id = "5444831050852607094.ELF"
-slug = "engelsk-lasforstelse"
-
-[[variable]]
-native_id = "5444831050852607094.KVA"
-slug = "kvantitativa-jamforelser"
-
-[[variable]]
-native_id = "5444831050852607094.Kvant"
-slug = "kvantitativ-delsumma"
-
-[[variable]]
-native_id = "5444831050852607094.LÄS"
-slug = "lasforstelse"
-
-[[variable]]
-native_id = "5444831050852607094.MEK"
-slug = "meningskomplettering"
-
-[[variable]]
-native_id = "5444831050852607094.NOG"
-slug = "kvantitativa-resonemang"
-
-[[variable]]
-native_id = "5444831050852607094.Norm"
-slug = "normerat-resultat"
-
-[[variable]]
-native_id = "5444831050852607094.ORD"
-slug = "ordforstelse"
-
-[[variable]]
-native_id = "5444831050852607094.STUF"
-slug = "studietekniska-fardigheter"
-
-[[variable]]
-native_id = "5444831050852607094.Verb"
-slug = "verbal-delsumma"
-
-[[variable]]
-native_id = "5444831050852607094.XYZ"
-slug = "matematisk-problemlosning"
 
 # === END #760 non-SCB concept-slug curation ===

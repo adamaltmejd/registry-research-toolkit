@@ -11,578 +11,155 @@ panel_entity_key = "foretagsidentitet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Normskördar
-
-[[variable]]
-native_id = "208.7550"
-slug = "foretagsidentitet"
-
-
-[[variable]]
-native_id = "208.44275.karnfrohektarskord-dar-22"
-slug = "hostrybs-hektarskord"
-
-[[variable]]
-native_id = "208.44293.karnfrohektarskord-dar-22"
-slug = "troskad-areal-hostrybs"
-
-[[variable]]
-native_id = "208.44294.karnfrotroskadareal-dar-23"
-slug = "troskad-areal-varrybs"
-
-[[variable]]
-native_id = "208.44296.karnfroobargadareal-dar-9"
-slug = "troskad-areal-majs"
-
-[[variable]]
-native_id = "208.44312.karnfrotroskadareal-dar-23"
-slug = "obargad-areal-varrybs"
-
-[[variable]]
-native_id = "208.44314.karnfroobargadareal-dar-9"
-slug = "obargad-areal-majs"
+"208.7550" = "foretagsidentitet"
+"208.44275.karnfrohektarskord-dar-22" = "hostrybs-hektarskord"
+"208.44293.karnfrohektarskord-dar-22" = "troskad-areal-hostrybs"
+"208.44294.karnfrotroskadareal-dar-23" = "troskad-areal-varrybs"
+"208.44296.karnfroobargadareal-dar-9" = "troskad-areal-majs"
+"208.44312.karnfrotroskadareal-dar-23" = "obargad-areal-varrybs"
+"208.44314.karnfroobargadareal-dar-9" = "obargad-areal-majs"
 
 # register 215 (vattenbruk)
-
-[[variable]]
-native_id = "208.2351"
-slug = "regionkod"
-
-[[variable]]
-native_id = "208.3021"
-slug = "namn-uppgiftslamnare"
-
-[[variable]]
-native_id = "208.41860"
-slug = "areal-akermark"
+"208.2351" = "regionkod"
+"208.3021" = "namn-uppgiftslamnare"
+"208.41860" = "areal-akermark"
 
 # register 211
-
-[[variable]]
-native_id = "208.2437.ordsko"
-slug = "skordeomrade"
-
-[[variable]]
-native_id = "208.44244.karnfrototalskord-5"
-slug = "varvete"
-
-[[variable]]
-native_id = "208.44245.karnfrototalskord-8"
-slug = "rag"
-
-[[variable]]
-native_id = "208.44246.karnfrototalskord-2"
-slug = "varkorn"
-
-[[variable]]
-native_id = "208.44250.karnfrototalskord-30"
-slug = "skord-arter-ej-konserv"
-
-[[variable]]
-native_id = "208.44252.karnfrototalskord-20"
-slug = "hostraps"
-
-[[variable]]
-native_id = "208.44254.karnfrototalskord-21"
-slug = "varraps"
-
-[[variable]]
-native_id = "208.44256.karnfrototalskord-40"
-slug = "oljelin"
+"208.2437.ordsko" = "skordeomrade"
+"208.44244.karnfrototalskord-5" = "varvete"
+"208.44245.karnfrototalskord-8" = "rag"
+"208.44246.karnfrototalskord-2" = "varkorn"
+"208.44250.karnfrototalskord-30" = "skord-arter-ej-konserv"
+"208.44252.karnfrototalskord-20" = "hostraps"
+"208.44254.karnfrototalskord-21" = "varraps"
+"208.44256.karnfrototalskord-40" = "oljelin"
 
 # register 217
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-1"
-slug = "gronfodertshalt"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-12"
-slug = "gronfodertshalt-12"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-16"
-slug = "gronfodertshalt-16"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-2"
-slug = "gronfodertshalt-2"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-20"
-slug = "gronfodertshalt-20"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-21"
-slug = "gronfodertshalt-21"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-22"
-slug = "gronfodertshalt-22"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-23"
-slug = "gronfodertshalt-23"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-29"
-slug = "gronfodertshalt-29"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-3"
-slug = "gronfodertshalt-3"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-30"
-slug = "gronfodertshalt-30"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-32"
-slug = "gronfodertshalt-32"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-4"
-slug = "gronfodertshalt-4"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-40"
-slug = "gronfodertshalt-40"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-5"
-slug = "gronfodertshalt-5"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-501"
-slug = "gronfodertshalt-501"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-7"
-slug = "gronfodertshalt-7"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-8"
-slug = "gronfodertshalt-8"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-80"
-slug = "gronfodertshalt-80"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-9"
-slug = "gronfodertshalt-9"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-1"
-slug = "gronfodertshalt-dar"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-12"
-slug = "gronfodertshalt-dar-12"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-16"
-slug = "gronfodertshalt-dar-16"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-2"
-slug = "gronfodertshalt-dar-2"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-20"
-slug = "gronfodertshalt-dar-20"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-21"
-slug = "gronfodertshalt-dar-21"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-22"
-slug = "gronfodertshalt-dar-22"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-23"
-slug = "gronfodertshalt-dar-23"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-29"
-slug = "gronfodertshalt-dar-29"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-3"
-slug = "gronfodertshalt-dar-3"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-30"
-slug = "gronfodertshalt-dar-30"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-32"
-slug = "gronfodertshalt-dar-32"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-4"
-slug = "gronfodertshalt-dar-4"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-40"
-slug = "gronfodertshalt-dar-40"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-5"
-slug = "gronfodertshalt-dar-5"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-501"
-slug = "gronfodertshalt-dar-501"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-7"
-slug = "gronfodertshalt-dar-7"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-8"
-slug = "gronfodertshalt-dar-8"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-80"
-slug = "gronfodertshalt-dar-80"
-
-[[variable]]
-native_id = "208.45719.gronfodertshalt-dar-9"
-slug = "gronfodertshalt-dar-9"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-1"
-slug = "karnfrovattenhalt"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-12"
-slug = "karnfrovattenhalt-12"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-2"
-slug = "karnfrovattenhalt-2"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-20"
-slug = "karnfrovattenhalt-20"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-21"
-slug = "karnfrovattenhalt-21"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-22"
-slug = "karnfrovattenhalt-22"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-23"
-slug = "karnfrovattenhalt-23"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-29"
-slug = "karnfrovattenhalt-29"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-3"
-slug = "karnfrovattenhalt-3"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-30"
-slug = "karnfrovattenhalt-30"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-32"
-slug = "karnfrovattenhalt-32"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-4"
-slug = "karnfrovattenhalt-4"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-40"
-slug = "karnfrovattenhalt-40"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-5"
-slug = "karnfrovattenhalt-5"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-501"
-slug = "karnfrovattenhalt-501"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-7"
-slug = "karnfrovattenhalt-7"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-8"
-slug = "karnfrovattenhalt-8"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-9"
-slug = "karnfrovattenhalt-9"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-1"
-slug = "karnfrovattenhalt-dar"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-12"
-slug = "karnfrovattenhalt-dar-12"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-2"
-slug = "karnfrovattenhalt-dar-2"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-20"
-slug = "karnfrovattenhalt-dar-20"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-21"
-slug = "karnfrovattenhalt-dar-21"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-22"
-slug = "karnfrovattenhalt-dar-22"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-23"
-slug = "karnfrovattenhalt-dar-23"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-29"
-slug = "karnfrovattenhalt-dar-29"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-3"
-slug = "karnfrovattenhalt-dar-3"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-30"
-slug = "karnfrovattenhalt-dar-30"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-32"
-slug = "karnfrovattenhalt-dar-32"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-4"
-slug = "karnfrovattenhalt-dar-4"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-40"
-slug = "karnfrovattenhalt-dar-40"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-5"
-slug = "karnfrovattenhalt-dar-5"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-501"
-slug = "karnfrovattenhalt-dar-501"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-7"
-slug = "karnfrovattenhalt-dar-7"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-8"
-slug = "karnfrovattenhalt-dar-8"
-
-[[variable]]
-native_id = "208.3147.karnfrovattenhalt-dar-9"
-slug = "karnfrovattenhalt-dar-9"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-1"
-slug = "partielltbortfall"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-12"
-slug = "partielltbortfall-12"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-16"
-slug = "partielltbortfall-16"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-2"
-slug = "partielltbortfall-2"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-20"
-slug = "partielltbortfall-20"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-21"
-slug = "partielltbortfall-21"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-22"
-slug = "partielltbortfall-22"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-23"
-slug = "partielltbortfall-23"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-29"
-slug = "partielltbortfall-29"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-3"
-slug = "partielltbortfall-3"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-30"
-slug = "partielltbortfall-30"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-32"
-slug = "partielltbortfall-32"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-4"
-slug = "partielltbortfall-4"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-40"
-slug = "partielltbortfall-40"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-5"
-slug = "partielltbortfall-5"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-501"
-slug = "partielltbortfall-501"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-7"
-slug = "partielltbortfall-7"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-8"
-slug = "partielltbortfall-8"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-9"
-slug = "partielltbortfall-9"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-1"
-slug = "partielltbortfall-dar"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-12"
-slug = "partielltbortfall-dar-12"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-16"
-slug = "partielltbortfall-dar-16"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-2"
-slug = "partielltbortfall-dar-2"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-20"
-slug = "partielltbortfall-dar-20"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-21"
-slug = "partielltbortfall-dar-21"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-22"
-slug = "partielltbortfall-dar-22"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-23"
-slug = "partielltbortfall-dar-23"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-29"
-slug = "partielltbortfall-dar-29"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-3"
-slug = "partielltbortfall-dar-3"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-30"
-slug = "partielltbortfall-dar-30"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-32"
-slug = "partielltbortfall-dar-32"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-4"
-slug = "partielltbortfall-dar-4"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-40"
-slug = "partielltbortfall-dar-40"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-5"
-slug = "partielltbortfall-dar-5"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-501"
-slug = "partielltbortfall-dar-501"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-7"
-slug = "partielltbortfall-dar-7"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-8"
-slug = "partielltbortfall-dar-8"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-80"
-slug = "partielltbortfall-dar-80"
-
-[[variable]]
-native_id = "208.2975.partielltbortfall-dar-9"
-slug = "partielltbortfall-dar-9"
-
-[[variable]]
-native_id = "208.44310.gronfoderobargadareal-21"
-slug = "gronfoderobargadareal-21"
-
-[[variable]]
-native_id = "208.44310.gronfoderobargadareal-dar-21"
-slug = "gronfoderobargadareal-dar-21"
-
-[[variable]]
-native_id = "208.44310.karnfroobargadareal-21"
-slug = "karnfroobargadareal-21"
-
-[[variable]]
-native_id = "208.44310.karnfroobargadareal-dar-21"
-slug = "karnfroobargadareal-dar-21"
-
-[[variable]]
-native_id = "208.44313.gronfoderobargadareal-40"
-slug = "gronfoderobargadareal-40"
-
-[[variable]]
-native_id = "208.44313.gronfoderobargadareal-dar-40"
-slug = "gronfoderobargadareal-dar"
-
-[[variable]]
-native_id = "208.44313.karnfroobargadareal-40"
-slug = "karnfroobargadareal-40"
-
-[[variable]]
-native_id = "208.44313.karnfroobargadareal-dar-40"
-slug = "karnfroobargadareal-dar-40"
+"208.45719.gronfodertshalt-1" = "gronfodertshalt"
+"208.45719.gronfodertshalt-12" = "gronfodertshalt-12"
+"208.45719.gronfodertshalt-16" = "gronfodertshalt-16"
+"208.45719.gronfodertshalt-2" = "gronfodertshalt-2"
+"208.45719.gronfodertshalt-20" = "gronfodertshalt-20"
+"208.45719.gronfodertshalt-21" = "gronfodertshalt-21"
+"208.45719.gronfodertshalt-22" = "gronfodertshalt-22"
+"208.45719.gronfodertshalt-23" = "gronfodertshalt-23"
+"208.45719.gronfodertshalt-29" = "gronfodertshalt-29"
+"208.45719.gronfodertshalt-3" = "gronfodertshalt-3"
+"208.45719.gronfodertshalt-30" = "gronfodertshalt-30"
+"208.45719.gronfodertshalt-32" = "gronfodertshalt-32"
+"208.45719.gronfodertshalt-4" = "gronfodertshalt-4"
+"208.45719.gronfodertshalt-40" = "gronfodertshalt-40"
+"208.45719.gronfodertshalt-5" = "gronfodertshalt-5"
+"208.45719.gronfodertshalt-501" = "gronfodertshalt-501"
+"208.45719.gronfodertshalt-7" = "gronfodertshalt-7"
+"208.45719.gronfodertshalt-8" = "gronfodertshalt-8"
+"208.45719.gronfodertshalt-80" = "gronfodertshalt-80"
+"208.45719.gronfodertshalt-9" = "gronfodertshalt-9"
+"208.45719.gronfodertshalt-dar-1" = "gronfodertshalt-dar"
+"208.45719.gronfodertshalt-dar-12" = "gronfodertshalt-dar-12"
+"208.45719.gronfodertshalt-dar-16" = "gronfodertshalt-dar-16"
+"208.45719.gronfodertshalt-dar-2" = "gronfodertshalt-dar-2"
+"208.45719.gronfodertshalt-dar-20" = "gronfodertshalt-dar-20"
+"208.45719.gronfodertshalt-dar-21" = "gronfodertshalt-dar-21"
+"208.45719.gronfodertshalt-dar-22" = "gronfodertshalt-dar-22"
+"208.45719.gronfodertshalt-dar-23" = "gronfodertshalt-dar-23"
+"208.45719.gronfodertshalt-dar-29" = "gronfodertshalt-dar-29"
+"208.45719.gronfodertshalt-dar-3" = "gronfodertshalt-dar-3"
+"208.45719.gronfodertshalt-dar-30" = "gronfodertshalt-dar-30"
+"208.45719.gronfodertshalt-dar-32" = "gronfodertshalt-dar-32"
+"208.45719.gronfodertshalt-dar-4" = "gronfodertshalt-dar-4"
+"208.45719.gronfodertshalt-dar-40" = "gronfodertshalt-dar-40"
+"208.45719.gronfodertshalt-dar-5" = "gronfodertshalt-dar-5"
+"208.45719.gronfodertshalt-dar-501" = "gronfodertshalt-dar-501"
+"208.45719.gronfodertshalt-dar-7" = "gronfodertshalt-dar-7"
+"208.45719.gronfodertshalt-dar-8" = "gronfodertshalt-dar-8"
+"208.45719.gronfodertshalt-dar-80" = "gronfodertshalt-dar-80"
+"208.45719.gronfodertshalt-dar-9" = "gronfodertshalt-dar-9"
+"208.3147.karnfrovattenhalt-1" = "karnfrovattenhalt"
+"208.3147.karnfrovattenhalt-12" = "karnfrovattenhalt-12"
+"208.3147.karnfrovattenhalt-2" = "karnfrovattenhalt-2"
+"208.3147.karnfrovattenhalt-20" = "karnfrovattenhalt-20"
+"208.3147.karnfrovattenhalt-21" = "karnfrovattenhalt-21"
+"208.3147.karnfrovattenhalt-22" = "karnfrovattenhalt-22"
+"208.3147.karnfrovattenhalt-23" = "karnfrovattenhalt-23"
+"208.3147.karnfrovattenhalt-29" = "karnfrovattenhalt-29"
+"208.3147.karnfrovattenhalt-3" = "karnfrovattenhalt-3"
+"208.3147.karnfrovattenhalt-30" = "karnfrovattenhalt-30"
+"208.3147.karnfrovattenhalt-32" = "karnfrovattenhalt-32"
+"208.3147.karnfrovattenhalt-4" = "karnfrovattenhalt-4"
+"208.3147.karnfrovattenhalt-40" = "karnfrovattenhalt-40"
+"208.3147.karnfrovattenhalt-5" = "karnfrovattenhalt-5"
+"208.3147.karnfrovattenhalt-501" = "karnfrovattenhalt-501"
+"208.3147.karnfrovattenhalt-7" = "karnfrovattenhalt-7"
+"208.3147.karnfrovattenhalt-8" = "karnfrovattenhalt-8"
+"208.3147.karnfrovattenhalt-9" = "karnfrovattenhalt-9"
+"208.3147.karnfrovattenhalt-dar-1" = "karnfrovattenhalt-dar"
+"208.3147.karnfrovattenhalt-dar-12" = "karnfrovattenhalt-dar-12"
+"208.3147.karnfrovattenhalt-dar-2" = "karnfrovattenhalt-dar-2"
+"208.3147.karnfrovattenhalt-dar-20" = "karnfrovattenhalt-dar-20"
+"208.3147.karnfrovattenhalt-dar-21" = "karnfrovattenhalt-dar-21"
+"208.3147.karnfrovattenhalt-dar-22" = "karnfrovattenhalt-dar-22"
+"208.3147.karnfrovattenhalt-dar-23" = "karnfrovattenhalt-dar-23"
+"208.3147.karnfrovattenhalt-dar-29" = "karnfrovattenhalt-dar-29"
+"208.3147.karnfrovattenhalt-dar-3" = "karnfrovattenhalt-dar-3"
+"208.3147.karnfrovattenhalt-dar-30" = "karnfrovattenhalt-dar-30"
+"208.3147.karnfrovattenhalt-dar-32" = "karnfrovattenhalt-dar-32"
+"208.3147.karnfrovattenhalt-dar-4" = "karnfrovattenhalt-dar-4"
+"208.3147.karnfrovattenhalt-dar-40" = "karnfrovattenhalt-dar-40"
+"208.3147.karnfrovattenhalt-dar-5" = "karnfrovattenhalt-dar-5"
+"208.3147.karnfrovattenhalt-dar-501" = "karnfrovattenhalt-dar-501"
+"208.3147.karnfrovattenhalt-dar-7" = "karnfrovattenhalt-dar-7"
+"208.3147.karnfrovattenhalt-dar-8" = "karnfrovattenhalt-dar-8"
+"208.3147.karnfrovattenhalt-dar-9" = "karnfrovattenhalt-dar-9"
+"208.2975.partielltbortfall-1" = "partielltbortfall"
+"208.2975.partielltbortfall-12" = "partielltbortfall-12"
+"208.2975.partielltbortfall-16" = "partielltbortfall-16"
+"208.2975.partielltbortfall-2" = "partielltbortfall-2"
+"208.2975.partielltbortfall-20" = "partielltbortfall-20"
+"208.2975.partielltbortfall-21" = "partielltbortfall-21"
+"208.2975.partielltbortfall-22" = "partielltbortfall-22"
+"208.2975.partielltbortfall-23" = "partielltbortfall-23"
+"208.2975.partielltbortfall-29" = "partielltbortfall-29"
+"208.2975.partielltbortfall-3" = "partielltbortfall-3"
+"208.2975.partielltbortfall-30" = "partielltbortfall-30"
+"208.2975.partielltbortfall-32" = "partielltbortfall-32"
+"208.2975.partielltbortfall-4" = "partielltbortfall-4"
+"208.2975.partielltbortfall-40" = "partielltbortfall-40"
+"208.2975.partielltbortfall-5" = "partielltbortfall-5"
+"208.2975.partielltbortfall-501" = "partielltbortfall-501"
+"208.2975.partielltbortfall-7" = "partielltbortfall-7"
+"208.2975.partielltbortfall-8" = "partielltbortfall-8"
+"208.2975.partielltbortfall-9" = "partielltbortfall-9"
+"208.2975.partielltbortfall-dar-1" = "partielltbortfall-dar"
+"208.2975.partielltbortfall-dar-12" = "partielltbortfall-dar-12"
+"208.2975.partielltbortfall-dar-16" = "partielltbortfall-dar-16"
+"208.2975.partielltbortfall-dar-2" = "partielltbortfall-dar-2"
+"208.2975.partielltbortfall-dar-20" = "partielltbortfall-dar-20"
+"208.2975.partielltbortfall-dar-21" = "partielltbortfall-dar-21"
+"208.2975.partielltbortfall-dar-22" = "partielltbortfall-dar-22"
+"208.2975.partielltbortfall-dar-23" = "partielltbortfall-dar-23"
+"208.2975.partielltbortfall-dar-29" = "partielltbortfall-dar-29"
+"208.2975.partielltbortfall-dar-3" = "partielltbortfall-dar-3"
+"208.2975.partielltbortfall-dar-30" = "partielltbortfall-dar-30"
+"208.2975.partielltbortfall-dar-32" = "partielltbortfall-dar-32"
+"208.2975.partielltbortfall-dar-4" = "partielltbortfall-dar-4"
+"208.2975.partielltbortfall-dar-40" = "partielltbortfall-dar-40"
+"208.2975.partielltbortfall-dar-5" = "partielltbortfall-dar-5"
+"208.2975.partielltbortfall-dar-501" = "partielltbortfall-dar-501"
+"208.2975.partielltbortfall-dar-7" = "partielltbortfall-dar-7"
+"208.2975.partielltbortfall-dar-8" = "partielltbortfall-dar-8"
+"208.2975.partielltbortfall-dar-80" = "partielltbortfall-dar-80"
+"208.2975.partielltbortfall-dar-9" = "partielltbortfall-dar-9"
+"208.44310.gronfoderobargadareal-21" = "gronfoderobargadareal-21"
+"208.44310.gronfoderobargadareal-dar-21" = "gronfoderobargadareal-dar-21"
+"208.44310.karnfroobargadareal-21" = "karnfroobargadareal-21"
+"208.44310.karnfroobargadareal-dar-21" = "karnfroobargadareal-dar-21"
+"208.44313.gronfoderobargadareal-40" = "gronfoderobargadareal-40"
+"208.44313.gronfoderobargadareal-dar-40" = "gronfoderobargadareal-dar"
+"208.44313.karnfroobargadareal-40" = "karnfroobargadareal-40"
+"208.44313.karnfroobargadareal-dar-40" = "karnfroobargadareal-dar-40"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

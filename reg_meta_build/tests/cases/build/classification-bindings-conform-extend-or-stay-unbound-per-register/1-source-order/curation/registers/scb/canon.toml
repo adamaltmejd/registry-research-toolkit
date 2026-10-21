@@ -5,18 +5,10 @@ native_id = "4049337523726598901"
 [[variant]]
 slug = "default"
 native_id = "4049337523726598901.3507384454372521807"
-[[variable]]
-slug = "outcol"
-native_id = "4049337523726598901.OUTCOL"
-[[variable]]
-slug = "twocol"
-native_id = "4049337523726598901.TWOCOL"
-[[variable]]
-slug = "members"
-native_id = "4049337523726598901.MEMBERS"
-[[variable]]
-slug = "duplab"
-native_id = "4049337523726598901.DUPLAB"
-[[variable]]
-slug = "blankb"
-native_id = "4049337523726598901.BLANKB"
+
+[variable]
+"4049337523726598901.OUTCOL" = "outcol"
+"4049337523726598901.TWOCOL" = "twocol"
+"4049337523726598901.MEMBERS" = "members"
+"4049337523726598901.DUPLAB" = "duplab"
+"4049337523726598901.BLANKB" = "blankb"

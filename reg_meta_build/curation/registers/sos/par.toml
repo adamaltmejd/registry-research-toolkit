@@ -139,6 +139,7 @@ panel_entity_key = "personnr"
 panel_time_key = "inskrivningsdatum-psykiatrisk-vardform"
 panel_time_grain = "row"
 
+[variable]
 # Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM (LVM)
 #
 # #211: the lvm_* token map gave the variants real states, so the PNR column
@@ -146,371 +147,128 @@ panel_time_grain = "row"
 # column-derived `pnr`). The variants are event registers (applications /
 # immediate-custody decisions / care episodes) — row grain on the numeric
 # event-date column of each, consistent with PAR/CAN/DORS.
-
-[[variable]]
-native_id = "5891427617861710725.PNR"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "5891427617861710725.ATC.atc"
-slug = "dia-yo-kod-ar-atc-kod"
-
-[[variable]]
-native_id = "5891427617861710725.ATC.atc-1"
-slug = "atc-komplement-diagnos"
+"5891427617861710725.PNR" = "personnr"
+"5891427617861710725.ATC.atc" = "dia-yo-kod-ar-atc-kod"
+"5891427617861710725.ATC.atc-1" = "atc-komplement-diagnos"
 
 # Owners of the AR / INDATUM / INDATUMA source-basis splits above.
-
-[[variable]]
-native_id = "5891427617861710725.AR.besoksar"
-slug = "besoksar"
-
-[[variable]]
-native_id = "5891427617861710725.AR.utskrivningsar"
-slug = "utskrivningsar"
-
-[[variable]]
-native_id = "5891427617861710725.AR.ar-avslutad-psykiatrisk-vardform"
-slug = "ar-avslutad-psykiatrisk-vardform"
-
-[[variable]]
-native_id = "5891427617861710725.INDATUM.besoksdatum"
-slug = "besoksdatum"
-
-[[variable]]
-native_id = "5891427617861710725.INDATUM.inskrivningsdatum-slutenvard"
-slug = "inskrivningsdatum-slutenvard"
-
-[[variable]]
-native_id = "5891427617861710725.INDATUM.inskrivningsdatum-psykiatrisk-vardform"
-slug = "inskrivningsdatum-psykiatrisk-vardform"
-
-[[variable]]
-native_id = "5891427617861710725.INDATUMA.besoksdatum-alfanumeriskt"
-slug = "besoksdatum-alfanumeriskt"
-
-[[variable]]
-native_id = "5891427617861710725.INDATUMA.inskrivningsdatum-alfanumeriskt"
-slug = "inskrivningsdatum-alfanumeriskt"
-
-[[variable]]
-native_id = "5891427617861710725.ALDER.alder-vid-oppenvardskontakt"
-slug = "alder-vid-oppenvardskontakt"
-
-[[variable]]
-native_id = "5891427617861710725.ALDER.alder-vid-utskrivning-slutenvard"
-slug = "alder-vid-utskrivning-slutenvard"
-
-[[variable]]
-native_id = "5891427617861710725.ALDER.alder-vid-utskrivning-psykiatrisk-vardform"
-slug = "alder-vid-utskrivning-psykiatrisk-vardform"
-
-[[variable]]
-native_id = "5891427617861710725.IDNR.lopnr-vardkontakt-oppenvard"
-slug = "lopnr-vardkontakt-oppenvard"
-
-[[variable]]
-native_id = "5891427617861710725.IDNR.lopnr-slutenvardstillfalle"
-slug = "lopnr-slutenvardstillfalle"
-
-[[variable]]
-native_id = "5891427617861710725.IDNR.lopnr-tvangsvardsform"
-slug = "lopnr-tvangsvardsform"
-
-[[variable]]
-native_id = "5891427617861710725.FODDAT.fodelsedatum-alfanumeriskt"
-slug = "fodelsedatum-alfanumeriskt"
-
-[[variable]]
-native_id = "5891427617861710725.FODDAT.fodelsedatum-sas-psykiatrisk-vardform"
-slug = "fodelsedatum-sas-psykiatrisk-vardform"
+"5891427617861710725.AR.besoksar" = "besoksar"
+"5891427617861710725.AR.utskrivningsar" = "utskrivningsar"
+"5891427617861710725.AR.ar-avslutad-psykiatrisk-vardform" = "ar-avslutad-psykiatrisk-vardform"
+"5891427617861710725.INDATUM.besoksdatum" = "besoksdatum"
+"5891427617861710725.INDATUM.inskrivningsdatum-slutenvard" = "inskrivningsdatum-slutenvard"
+"5891427617861710725.INDATUM.inskrivningsdatum-psykiatrisk-vardform" = "inskrivningsdatum-psykiatrisk-vardform"
+"5891427617861710725.INDATUMA.besoksdatum-alfanumeriskt" = "besoksdatum-alfanumeriskt"
+"5891427617861710725.INDATUMA.inskrivningsdatum-alfanumeriskt" = "inskrivningsdatum-alfanumeriskt"
+"5891427617861710725.ALDER.alder-vid-oppenvardskontakt" = "alder-vid-oppenvardskontakt"
+"5891427617861710725.ALDER.alder-vid-utskrivning-slutenvard" = "alder-vid-utskrivning-slutenvard"
+"5891427617861710725.ALDER.alder-vid-utskrivning-psykiatrisk-vardform" = "alder-vid-utskrivning-psykiatrisk-vardform"
+"5891427617861710725.IDNR.lopnr-vardkontakt-oppenvard" = "lopnr-vardkontakt-oppenvard"
+"5891427617861710725.IDNR.lopnr-slutenvardstillfalle" = "lopnr-slutenvardstillfalle"
+"5891427617861710725.IDNR.lopnr-tvangsvardsform" = "lopnr-tvangsvardsform"
+"5891427617861710725.FODDAT.fodelsedatum-alfanumeriskt" = "fodelsedatum-alfanumeriskt"
+"5891427617861710725.FODDAT.fodelsedatum-sas-psykiatrisk-vardform" = "fodelsedatum-sas-psykiatrisk-vardform"
 
 # register 7550156225339591583 (bu)
+"5891427617861710725.ALDER_S.alder-vid-arets-slut" = "alder-vid-arets-slut"
+"5891427617861710725.ANE1" = "anestesikod-1"
+"5891427617861710725.ANE2" = "anestesikod-2"
+"5891427617861710725.ATCO.atc-komplement-atgardskod" = "atc-komplement-atgardskod"
+"5891427617861710725.ATG" = "atgardskod-eller-atc-kod"
+"5891427617861710725.ATGARD" = "atgardskod-eller-atc-kod-2"
+"5891427617861710725.ATGDATUM" = "atgardsdatum"
+"5891427617861710725.DIA" = "diagnoskod-atc-skada-forgiftning"
+"5891427617861710725.DRG" = "diagnosrelaterad-grupp"
+"5891427617861710725.EKOD.yttre-orsakskoder" = "yttre-orsakskoder"
+"5891427617861710725.EKOD1" = "yttre-orsakskod-1"
+"5891427617861710725.EKOD2" = "yttre-orsakskod-2"
+"5891427617861710725.EKOD3" = "yttre-orsakskod-3"
+"5891427617861710725.EKOD4" = "yttre-orsakskod-4"
+"5891427617861710725.EKOD5" = "yttre-orsakskod-5"
+"5891427617861710725.EKOD6" = "yttre-orsakskod-6"
+"5891427617861710725.EKOD7" = "yttre-orsakskod-7"
+"5891427617861710725.FLAND" = "fodelseland"
+"5891427617861710725.FODAR" = "fodelsear"
+"5891427617861710725.FODDATN" = "fodelsedatum-sas"
+"5891427617861710725.FODDATUMN" = "fodelsedatum-sas-m"
+"5891427617861710725.HDIA.typ-av-diagnos" = "typ-av-diagnos"
+"5891427617861710725.IDNR" = "lopnr-oppenvardskontakt"
+"5891427617861710725.KTYP" = "form-oppenvardskontakt"
+"5891427617861710725.LK" = "folkbokforingsort-lan-kommun"
+"5891427617861710725.LKF" = "folkbokforingsort-lan-kommun-forsamling"
+"5891427617861710725.LT_IN" = "uppgiftslamnare"
+"5891427617861710725.MVO" = "medicinskt-verksamhetsomrade"
+"5891427617861710725.OP" = "atgardskoder"
+"5891427617861710725.OPD1" = "atgardsdatum-1"
+"5891427617861710725.OPD10" = "atgardsdatum-10"
+"5891427617861710725.OPD11" = "atgardsdatum-11"
+"5891427617861710725.OPD12" = "atgardsdatum-12"
+"5891427617861710725.OPD13" = "atgardsdatum-13"
+"5891427617861710725.OPD14" = "atgardsdatum-14"
+"5891427617861710725.OPD15" = "atgardsdatum-15"
+"5891427617861710725.OPD16" = "atgardsdatum-16"
+"5891427617861710725.OPD17" = "atgardsdatum-17"
+"5891427617861710725.OPD18" = "atgardsdatum-18"
+"5891427617861710725.OPD19" = "atgardsdatum-19"
+"5891427617861710725.OPD2" = "atgardsdatum-2"
+"5891427617861710725.OPD20" = "atgardsdatum-20"
+"5891427617861710725.OPD21" = "atgardsdatum-21"
+"5891427617861710725.OPD22" = "atgardsdatum-22"
+"5891427617861710725.OPD23" = "atgardsdatum-23"
+"5891427617861710725.OPD24" = "atgardsdatum-24"
+"5891427617861710725.OPD25" = "atgardsdatum-25"
+"5891427617861710725.OPD26" = "atgardsdatum-26"
+"5891427617861710725.OPD27" = "atgardsdatum-27"
+"5891427617861710725.OPD28" = "atgardsdatum-28"
+"5891427617861710725.OPD29" = "atgardsdatum-29"
+"5891427617861710725.OPD3" = "atgardsdatum-3"
+"5891427617861710725.OPD30" = "atgardsdatum-30"
+"5891427617861710725.OPD4" = "atgardsdatum-4"
+"5891427617861710725.OPD5" = "atgardsdatum-5"
+"5891427617861710725.OPD6" = "atgardsdatum-6"
+"5891427617861710725.OPD7" = "atgardsdatum-7"
+"5891427617861710725.OPD8" = "atgardsdatum-8"
+"5891427617861710725.OPD9" = "atgardsdatum-9"
+"5891427617861710725.OP_NR" = "sekvensnr-atgard"
+"5891427617861710725.PERM" = "permission"
+"5891427617861710725.PNRQ" = "personnummerkvalitet"
+"5891427617861710725.PVARD" = "planerad-vardkontakt"
+"5891427617861710725.RNR" = "reservnummer"
+"5891427617861710725.RTC" = "kvalitetsvariabel-drg"
+"5891427617861710725.SENINV" = "senaste-invandring"
+"5891427617861710725.SENINV1" = "senaste-invandring-1"
+"5891427617861710725.SLUT.slutdatum-psyk-vardform" = "slutdatum-psyk-vardform"
+"5891427617861710725.START.startdatum-psykiatrisk-vardform" = "startdatum-psykiatrisk-vardform"
+"5891427617861710725.VTID" = "vardtid"
+"5891427617861710725.YO" = "yttre-orsakskod-eller-atc"
+
+# #1603 batch-e (#1633): kva_typ is the stem of SWECOV's kva_typ1..30 position
+# columns on PAR_OV and PAR_SV. SoS documents no such field, so it is minted, one
+# entry per subset with identical facts, so both share one variable.
+"5891427617861710725.kva_typ" = "kva-typ-enligt-leverans"
+"5891427617861710725.ATCO.atg-kod-ar-atc-kod" = "atg-kod-ar-atc-kod"
+"5891427617861710725.DIAGNOS.diagnoskoder" = "diagnos"
+"5891427617861710725.DIAGNOS.diagnoskod-eller-atc-kod-psykiatrisk-vard" = "diagnoskod-eller-atc-kod-psykiatrisk-vard"
+"5891427617861710725.EKOD.yttre-orsakskod-eller-atc-kod-psykiatrisk-vard" = "yttre-orsakskod-eller-atc-kod-psykiatrisk-vard"
+"5891427617861710725.HDIA.huvuddiagnoskod" = "huvuddiagnoskod"
+"5891427617861710725.START.startdatum-permission" = "startdatum-permission"
+"5891427617861710725.START.startdatum-avvikning" = "startdatum-avvikning"
+"5891427617861710725.SLUT.slutdatum-permission" = "slutdatum-permission"
+"5891427617861710725.SLUT.slutdatum-avvikning" = "slutdatum-avvikning"
+"5891427617861710725.TYP.typ" = "typ"
+"5891427617861710725.TYP.markor-yttre-orsakskod" = "markor-yttre-orsakskod"
+"5891427617861710725.TYP.markor-avvikning" = "markor-avvikning"
+"5891427617861710725.TYP.markor-permission" = "markor-permission"
+"5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut" = "alder-vid-utskrivningsarets-slut"
+"5891427617861710725.DISTRIKT.distrikt-vid-oppenvardskontakt" = "distrikt-vid-oppenvardskontakt"
+"5891427617861710725.DISTRIKT.distrikt" = "distrikt"
+"5891427617861710725.DISTRIKT.distrikt-vid-utskrivning-slutenvard" = "distrikt-vid-utskrivning-slutenvard"
+"5891427617861710725.DISTRIKT.distrikt-vid-slut-psykiatrisk-vardform" = "distrikt-vid-slut-psykiatrisk-vardform"
+"5891427617861710725.LK.folkbokforingsort-lan-kommun" = "folkbokforingsort-lan-kommun"
+"5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-oppenvardskontakt" = "folkbokforingsort-lan-kommun-vid-oppenvardskontakt"
+"5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard" = "folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard"
+"5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform" = "folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform"
 
-[[variable]]
-native_id = "5891427617861710725.ALDER_S.alder-vid-arets-slut"
-slug = "alder-vid-arets-slut"
-
-[[variable]]
-native_id = "5891427617861710725.ANE1"
-slug = "anestesikod-1"
-
-[[variable]]
-native_id = "5891427617861710725.ANE2"
-slug = "anestesikod-2"
-
-[[variable]]
-native_id = "5891427617861710725.ATCO.atc-komplement-atgardskod"
-slug = "atc-komplement-atgardskod"
-
-[[variable]]
-native_id = "5891427617861710725.ATG"
-slug = "atgardskod-eller-atc-kod"
-
-[[variable]]
-native_id = "5891427617861710725.ATGARD"
-slug = "atgardskod-eller-atc-kod-2"
-
-[[variable]]
-native_id = "5891427617861710725.ATGDATUM"
-slug = "atgardsdatum"
-
-[[variable]]
-native_id = "5891427617861710725.DIA"
-slug = "diagnoskod-atc-skada-forgiftning"
-
-[[variable]]
-native_id = "5891427617861710725.DRG"
-slug = "diagnosrelaterad-grupp"
-
-[[variable]]
-native_id = "5891427617861710725.EKOD.yttre-orsakskoder"
-slug = "yttre-orsakskoder"
-
-[[variable]]
-native_id = "5891427617861710725.EKOD1"
-slug = "yttre-orsakskod-1"
-
-[[variable]]
-native_id = "5891427617861710725.EKOD2"
-slug = "yttre-orsakskod-2"
-
-[[variable]]
-native_id = "5891427617861710725.EKOD3"
-slug = "yttre-orsakskod-3"
-
-[[variable]]
-native_id = "5891427617861710725.EKOD4"
-slug = "yttre-orsakskod-4"
-
-[[variable]]
-native_id = "5891427617861710725.EKOD5"
-slug = "yttre-orsakskod-5"
-
-[[variable]]
-native_id = "5891427617861710725.EKOD6"
-slug = "yttre-orsakskod-6"
-
-[[variable]]
-native_id = "5891427617861710725.EKOD7"
-slug = "yttre-orsakskod-7"
-
-[[variable]]
-native_id = "5891427617861710725.FLAND"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "5891427617861710725.FODAR"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "5891427617861710725.FODDATN"
-slug = "fodelsedatum-sas"
-
-[[variable]]
-native_id = "5891427617861710725.FODDATUMN"
-slug = "fodelsedatum-sas-m"
-
-[[variable]]
-native_id = "5891427617861710725.HDIA.typ-av-diagnos"
-slug = "typ-av-diagnos"
-
-[[variable]]
-native_id = "5891427617861710725.IDNR"
-slug = "lopnr-oppenvardskontakt"
-
-[[variable]]
-native_id = "5891427617861710725.KTYP"
-slug = "form-oppenvardskontakt"
-
-[[variable]]
-native_id = "5891427617861710725.LK"
-slug = "folkbokforingsort-lan-kommun"
-
-[[variable]]
-native_id = "5891427617861710725.LKF"
-slug = "folkbokforingsort-lan-kommun-forsamling"
-
-[[variable]]
-native_id = "5891427617861710725.LT_IN"
-slug = "uppgiftslamnare"
-
-[[variable]]
-native_id = "5891427617861710725.MVO"
-slug = "medicinskt-verksamhetsomrade"
-
-[[variable]]
-native_id = "5891427617861710725.OP"
-slug = "atgardskoder"
-
-[[variable]]
-native_id = "5891427617861710725.OPD1"
-slug = "atgardsdatum-1"
-
-[[variable]]
-native_id = "5891427617861710725.OPD10"
-slug = "atgardsdatum-10"
-
-[[variable]]
-native_id = "5891427617861710725.OPD11"
-slug = "atgardsdatum-11"
-
-[[variable]]
-native_id = "5891427617861710725.OPD12"
-slug = "atgardsdatum-12"
-
-[[variable]]
-native_id = "5891427617861710725.OPD13"
-slug = "atgardsdatum-13"
-
-[[variable]]
-native_id = "5891427617861710725.OPD14"
-slug = "atgardsdatum-14"
-
-[[variable]]
-native_id = "5891427617861710725.OPD15"
-slug = "atgardsdatum-15"
-
-[[variable]]
-native_id = "5891427617861710725.OPD16"
-slug = "atgardsdatum-16"
-
-[[variable]]
-native_id = "5891427617861710725.OPD17"
-slug = "atgardsdatum-17"
-
-[[variable]]
-native_id = "5891427617861710725.OPD18"
-slug = "atgardsdatum-18"
-
-[[variable]]
-native_id = "5891427617861710725.OPD19"
-slug = "atgardsdatum-19"
-
-[[variable]]
-native_id = "5891427617861710725.OPD2"
-slug = "atgardsdatum-2"
-
-[[variable]]
-native_id = "5891427617861710725.OPD20"
-slug = "atgardsdatum-20"
-
-[[variable]]
-native_id = "5891427617861710725.OPD21"
-slug = "atgardsdatum-21"
-
-[[variable]]
-native_id = "5891427617861710725.OPD22"
-slug = "atgardsdatum-22"
-
-[[variable]]
-native_id = "5891427617861710725.OPD23"
-slug = "atgardsdatum-23"
-
-[[variable]]
-native_id = "5891427617861710725.OPD24"
-slug = "atgardsdatum-24"
-
-[[variable]]
-native_id = "5891427617861710725.OPD25"
-slug = "atgardsdatum-25"
-
-[[variable]]
-native_id = "5891427617861710725.OPD26"
-slug = "atgardsdatum-26"
-
-[[variable]]
-native_id = "5891427617861710725.OPD27"
-slug = "atgardsdatum-27"
-
-[[variable]]
-native_id = "5891427617861710725.OPD28"
-slug = "atgardsdatum-28"
-
-[[variable]]
-native_id = "5891427617861710725.OPD29"
-slug = "atgardsdatum-29"
-
-[[variable]]
-native_id = "5891427617861710725.OPD3"
-slug = "atgardsdatum-3"
-
-[[variable]]
-native_id = "5891427617861710725.OPD30"
-slug = "atgardsdatum-30"
-
-[[variable]]
-native_id = "5891427617861710725.OPD4"
-slug = "atgardsdatum-4"
-
-[[variable]]
-native_id = "5891427617861710725.OPD5"
-slug = "atgardsdatum-5"
-
-[[variable]]
-native_id = "5891427617861710725.OPD6"
-slug = "atgardsdatum-6"
-
-[[variable]]
-native_id = "5891427617861710725.OPD7"
-slug = "atgardsdatum-7"
-
-[[variable]]
-native_id = "5891427617861710725.OPD8"
-slug = "atgardsdatum-8"
-
-[[variable]]
-native_id = "5891427617861710725.OPD9"
-slug = "atgardsdatum-9"
-
-[[variable]]
-native_id = "5891427617861710725.OP_NR"
-slug = "sekvensnr-atgard"
-
-[[variable]]
-native_id = "5891427617861710725.PERM"
-slug = "permission"
-
-[[variable]]
-native_id = "5891427617861710725.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "5891427617861710725.PVARD"
-slug = "planerad-vardkontakt"
-
-[[variable]]
-native_id = "5891427617861710725.RNR"
-slug = "reservnummer"
-
-[[variable]]
-native_id = "5891427617861710725.RTC"
-slug = "kvalitetsvariabel-drg"
-
-[[variable]]
-native_id = "5891427617861710725.SENINV"
-slug = "senaste-invandring"
-
-[[variable]]
-native_id = "5891427617861710725.SENINV1"
-slug = "senaste-invandring-1"
-
-[[variable]]
-native_id = "5891427617861710725.SLUT.slutdatum-psyk-vardform"
-slug = "slutdatum-psyk-vardform"
-
-[[variable]]
-native_id = "5891427617861710725.START.startdatum-psykiatrisk-vardform"
-slug = "startdatum-psykiatrisk-vardform"
-
-[[variable]]
-native_id = "5891427617861710725.VTID"
-slug = "vardtid"
-
-[[variable]]
-native_id = "5891427617861710725.YO"
-slug = "yttre-orsakskod-eller-atc"
 # register 6052270801387609014
 
 # Reviewed equivalent SOS wording; retain original evidence and representations.
@@ -592,14 +350,6 @@ carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" 
 data_warning = "Before 2015 Socialstyrelsen reported action codes only inside the OP string, so the per-position codes for 2005–2014 were derived from it. Their meaning is assumed to match the documented ATG."
 evidence = "The SoS PAR metadata (Metadata_Patientregistret (PAR)_webb.xlsx) documents ATG as a row-wise column on PAR_OV and PAR_SV only from 2015. Earlier, action codes exist only inside OP (PAR_OV from 1997, PAR_SV from 1964). #1603 batch-e; maintainer same-name rule 2026-10-16."
 noted = "2026-10-17"
-
-# #1603 batch-e (#1633): kva_typ is the stem of SWECOV's kva_typ1..30 position
-# columns on PAR_OV and PAR_SV. SoS documents no such field, so it is minted, one
-# entry per subset with identical facts, so both share one variable.
-
-[[variable]]
-native_id = "5891427617861710725.kva_typ"
-slug = "kva-typ-enligt-leverans"
 
 [[errata.column]]
 variant = "PAR_OV"
@@ -702,82 +452,30 @@ variable = "ATCO"
 by = "data_type"
 parts = [{ data_type = "text", owner = "5891427617861710725.ATCO.atc-komplement-atgardskod" }, { data_type = "integer", owner = "5891427617861710725.ATCO.atg-kod-ar-atc-kod" }]
 
-[[variable]]
-native_id = "5891427617861710725.ATCO.atg-kod-ar-atc-kod"
-slug = "atg-kod-ar-atc-kod"
-
 [[identity.split]]
 variable = "DIAGNOS"
 by = "deldatamangd"
 parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.DIAGNOS.diagnoskoder" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.DIAGNOS.diagnoskoder" }, { deldatamangd = "PAR_TV", owner = "5891427617861710725.DIAGNOS.diagnoskod-eller-atc-kod-psykiatrisk-vard" }]
-
-[[variable]]
-native_id = "5891427617861710725.DIAGNOS.diagnoskoder"
-slug = "diagnos"
-
-[[variable]]
-native_id = "5891427617861710725.DIAGNOS.diagnoskod-eller-atc-kod-psykiatrisk-vard"
-slug = "diagnoskod-eller-atc-kod-psykiatrisk-vard"
 
 [[identity.split]]
 variable = "EKOD"
 by = "deldatamangd"
 parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.EKOD.yttre-orsakskoder" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.EKOD.yttre-orsakskoder" }, { deldatamangd = "PAR_TV", owner = "5891427617861710725.EKOD.yttre-orsakskod-eller-atc-kod-psykiatrisk-vard" }]
 
-[[variable]]
-native_id = "5891427617861710725.EKOD.yttre-orsakskod-eller-atc-kod-psykiatrisk-vard"
-slug = "yttre-orsakskod-eller-atc-kod-psykiatrisk-vard"
-
-[[variable]]
-native_id = "5891427617861710725.HDIA.huvuddiagnoskod"
-slug = "huvuddiagnoskod"
-
 [[identity.split]]
 variable = "HDIA"
 by = "name"
 parts = [{ name = "Typ av diagnos", owner = "5891427617861710725.HDIA.typ-av-diagnos" }, { name = "Huvuddiagnoskod", owner = "5891427617861710725.HDIA.huvuddiagnoskod" }]
-
-[[variable]]
-native_id = "5891427617861710725.START.startdatum-permission"
-slug = "startdatum-permission"
-
-[[variable]]
-native_id = "5891427617861710725.START.startdatum-avvikning"
-slug = "startdatum-avvikning"
 
 [[identity.split]]
 variable = "START"
 by = "name"
 parts = [{ name = "Startdatum för psykiatrisk vårdform", owner = "5891427617861710725.START.startdatum-psykiatrisk-vardform" }, { name = "Startdatum för permission", owner = "5891427617861710725.START.startdatum-permission" }, { name = "Startdatum för avvikning", owner = "5891427617861710725.START.startdatum-avvikning" }]
 
-[[variable]]
-native_id = "5891427617861710725.SLUT.slutdatum-permission"
-slug = "slutdatum-permission"
-
-[[variable]]
-native_id = "5891427617861710725.SLUT.slutdatum-avvikning"
-slug = "slutdatum-avvikning"
-
 [[identity.split]]
 variable = "SLUT"
 by = "name"
 parts = [{ name = "Slutdatum för psykiatrisk vårdform", owner = "5891427617861710725.SLUT.slutdatum-psyk-vardform" }, { name = "Slutdatum för permission", owner = "5891427617861710725.SLUT.slutdatum-permission" }, { name = "Slutdatum för avvikning", owner = "5891427617861710725.SLUT.slutdatum-avvikning" }]
-
-[[variable]]
-native_id = "5891427617861710725.TYP.typ"
-slug = "typ"
-
-[[variable]]
-native_id = "5891427617861710725.TYP.markor-yttre-orsakskod"
-slug = "markor-yttre-orsakskod"
-
-[[variable]]
-native_id = "5891427617861710725.TYP.markor-avvikning"
-slug = "markor-avvikning"
-
-[[variable]]
-native_id = "5891427617861710725.TYP.markor-permission"
-slug = "markor-permission"
 
 [[identity.split]]
 variable = "TYP"
@@ -791,10 +489,6 @@ parts = [{ name = "Psykiatrisk vårdform", owner = "5891427617861710725.TYP.typ"
 variable = "ALDER_S"
 by = "deldatamangd"
 parts = [{deldatamangd = "PAR_OV", owner = "5891427617861710725.ALDER_S.alder-vid-arets-slut"}, {deldatamangd = "PAR_SV", owner = "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut"}, {deldatamangd = "PAR_TV", owner = "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut"}]
-
-[[variable]]
-native_id = "5891427617861710725.ALDER_S.alder-vid-utskrivningsarets-slut"
-slug = "alder-vid-utskrivningsarets-slut"
 
 # Exact disjoint years supplied on the original OP_NR row.
 [[errata.occurrence_period]]
@@ -832,22 +526,6 @@ parts = [
   { description = "Distrikt där patienten var folkbokförd vid slut av psykiatrisk vårdform. Saknas slutdatum används datum då registret skapas. Finns i månadsversionen.", owner = "5891427617861710725.DISTRIKT.distrikt-vid-slut-psykiatrisk-vardform" },
 ]
 
-[[variable]]
-native_id = "5891427617861710725.DISTRIKT.distrikt-vid-oppenvardskontakt"
-slug = "distrikt-vid-oppenvardskontakt"
-
-[[variable]]
-native_id = "5891427617861710725.DISTRIKT.distrikt"
-slug = "distrikt"
-
-[[variable]]
-native_id = "5891427617861710725.DISTRIKT.distrikt-vid-utskrivning-slutenvard"
-slug = "distrikt-vid-utskrivning-slutenvard"
-
-[[variable]]
-native_id = "5891427617861710725.DISTRIKT.distrikt-vid-slut-psykiatrisk-vardform"
-slug = "distrikt-vid-slut-psykiatrisk-vardform"
-
 # Exact supplied observation time distinguishes year-end from care-event residence.
 [[identity.split]]
 variable = "LK"
@@ -858,22 +536,6 @@ parts = [
   { description = "Län och kommun där patienten var folkbokförd vid utskrivningsdatum. Saknas utskrivningsdatum används datum då registret skapas. Finns i månadsversionen.", owner = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard" },
   { description = "Län och kommun där patienten var folkbokförd vid tidpunkten för slut av psykiatrisk vårdform. Saknas slutdatum används datum då registret skapas.  Finns i månadsversionen.", owner = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform" },
 ]
-
-[[variable]]
-native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun"
-slug = "folkbokforingsort-lan-kommun"
-
-[[variable]]
-native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-oppenvardskontakt"
-slug = "folkbokforingsort-lan-kommun-vid-oppenvardskontakt"
-
-[[variable]]
-native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard"
-slug = "folkbokforingsort-lan-kommun-vid-utskrivning-slutenvard"
-
-[[variable]]
-native_id = "5891427617861710725.LK.folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform"
-slug = "folkbokforingsort-lan-kommun-vid-slut-psykiatrisk-vardform"
 
 [[errata.field]]
 variable = "5891427617861710725.LK"

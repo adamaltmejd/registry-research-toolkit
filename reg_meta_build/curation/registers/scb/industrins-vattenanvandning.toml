@@ -11,47 +11,17 @@ panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Land- och vattenarealer
-
-[[variable]]
-native_id = "223.14"
-slug = "cfar-nummer"
-
-
-[[variable]]
-native_id = "223.400"
-slug = "adress"
-
-[[variable]]
-native_id = "223.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "223.2865"
-slug = "anvandning-eget-vatten"
-
-[[variable]]
-native_id = "223.2868"
-slug = "vattenutslapp"
-
-[[variable]]
-native_id = "223.3174"
-slug = "kostnad-inkopt-vatten-avlopp"
+"223.14" = "cfar-nummer"
+"223.400" = "adress"
+"223.467" = "telefonnummer"
+"223.2865" = "anvandning-eget-vatten"
+"223.2868" = "vattenutslapp"
+"223.3174" = "kostnad-inkopt-vatten-avlopp"
 
 # register 225 (land-och-vattenarealer)
-
-[[variable]]
-native_id = "223.473"
-slug = "lan-arbetsstalle"
-
-[[variable]]
-native_id = "223.667"
-slug = "kommun-for-arbetsstalle"
-
-[[variable]]
-native_id = "223.1639"
-slug = "anstallda-arbetsstallet"
-
-[[variable]]
-native_id = "223.4027"
-slug = "naringsgren"
+"223.473" = "lan-arbetsstalle"
+"223.667" = "kommun-for-arbetsstalle"
+"223.1639" = "anstallda-arbetsstallet"
+"223.4027" = "naringsgren"

@@ -8,16 +8,8 @@ native_id = "311.882"
 slug = "_default"
 display_group = "Hälsoräkenskaper"
 
+[variable]
 # Tjänsteföretagens förbrukning
-
-[[variable]]
-native_id = "311.25334"
-slug = "varde-lopande-pris-ar"
-
-[[variable]]
-native_id = "311.25347"
-slug = "andel-andamal-hushallssektor"
-
-[[variable]]
-native_id = "311.25355"
-slug = "andel-andamal-offentlig-sektor"
+"311.25334" = "varde-lopande-pris-ar"
+"311.25347" = "andel-andamal-hushallssektor"
+"311.25355" = "andel-andamal-offentlig-sektor"

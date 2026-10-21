@@ -145,222 +145,89 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Grundskola: nationella prov åk 9
-
-[[variable]]
-native_id = "189.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "189.3592"
-slug = "antal-amnen-godkand"
-
-[[variable]]
-native_id = "189.3619"
-slug = "blockbetyg-no-amnen"
-
-[[variable]]
-native_id = "189.3626"
-slug = "sva"
-
-[[variable]]
-native_id = "189.3635"
-slug = "skolans-namn"
-
-[[variable]]
-native_id = "189.8190"
-slug = "inriktning-fristaende-skola"
-
-[[variable]]
-native_id = "189.23867"
-slug = "klassbeteckning"
-
-[[variable]]
-native_id = "189.30494"
-slug = "antal-betyg"
-
-[[variable]]
-native_id = "189.30654"
-slug = "skolenhetens-namn"
+"189.57" = "personnr"
+"189.3592" = "antal-amnen-godkand"
+"189.3619" = "blockbetyg-no-amnen"
+"189.3626" = "sva"
+"189.3635" = "skolans-namn"
+"189.8190" = "inriktning-fristaende-skola"
+"189.23867" = "klassbeteckning"
+"189.30494" = "antal-betyg"
+"189.30654" = "skolenhetens-namn"
 
 # register 190 (grundskola-prov-ak9)
-
-[[variable]]
-native_id = "189.30653.antal-f"
-slug = "minst-ett-godkant-betyg"
-
-[[variable]]
-native_id = "189.3594.antal-f"
-slug = "antal-amnen-ej-natt"
+"189.30653.antal-f" = "minst-ett-godkant-betyg"
+"189.3594.antal-f" = "antal-amnen-ej-natt"
 
 # register 190 (grundskola-prov-ak9)
-
-[[variable]]
-native_id = "189.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "189.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "189.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "189.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "189.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "189.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "189.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "189.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "189.3599"
-slug = "betyg-bild"
-
-[[variable]]
-native_id = "189.3620"
-slug = "betyg-religion"
-
-[[variable]]
-native_id = "189.3621"
-slug = "betyg-samhallskunskap"
-
-[[variable]]
-native_id = "189.3622"
-slug = "betyg-slojd"
-
-[[variable]]
-native_id = "189.3624"
-slug = "blockbetyg-so-amnen"
-
-[[variable]]
-native_id = "189.3625"
-slug = "betyg-svenska"
-
-[[variable]]
-native_id = "189.3627"
-slug = "betyg-teknik"
-
-[[variable]]
-native_id = "189.3629"
-slug = "betyg-teckensprak"
-
-[[variable]]
-native_id = "189.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "189.7914"
-slug = "arskurs"
-
-[[variable]]
-native_id = "189.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "189.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "189.30634"
-slug = "summa-betyg"
-
-[[variable]]
-native_id = "189.39019"
-slug = "nyinvandring"
+"189.56" = "person-orgnr"
+"189.34" = "juridisk-form"
+"189.305" = "fodelseland-mor"
+"189.323" = "personnr-far"
+"189.324" = "personnr-mor"
+"189.332" = "senaste-invandringsdatum"
+"189.1993" = "skolans-identitetsnummer"
+"189.1996" = "skolform"
+"189.3599" = "betyg-bild"
+"189.3620" = "betyg-religion"
+"189.3621" = "betyg-samhallskunskap"
+"189.3622" = "betyg-slojd"
+"189.3624" = "blockbetyg-so-amnen"
+"189.3625" = "betyg-svenska"
+"189.3627" = "betyg-teknik"
+"189.3629" = "betyg-teckensprak"
+"189.6809" = "folkbokforingskommun"
+"189.7914" = "arskurs"
+"189.8137" = "huvudman"
+"189.29426" = "tidigaste-invandringsdatum"
+"189.30634" = "summa-betyg"
+"189.39019" = "nyinvandring"
 
 # register 190
-
-[[variable]]
-native_id = "189.25186.mspr1-betyg"
-slug = "moderna-sprak-elevens-val-betyg"
-
-[[variable]]
-native_id = "189.25186.mspr1-sprak"
-slug = "moderna-sprak-elevens-val-sprak"
-
-[[variable]]
-native_id = "189.30392.beht-ehs"
-slug = "behorighet-gy-ehs"
-
-[[variable]]
-native_id = "189.30392.beht-est"
-slug = "behorighet-gy-est"
-
-[[variable]]
-native_id = "189.30392.beht-nt"
-slug = "behorighet-gy-nt"
-
-[[variable]]
-native_id = "189.30392.beht-yrk"
-slug = "behorighet-gy-yrk"
-
-[[variable]]
-native_id = "189.30653.betyg"
-slug = "minst-ett-godkant-betyg-2"
-
-[[variable]]
-native_id = "189.34103.mspr2-betyg"
-slug = "moderna-sprak-sprakval-betyg"
-
-[[variable]]
-native_id = "189.34103.mspr2-sprak"
-slug = "moderna-sprak-sprakval"
-
-[[variable]]
-native_id = "189.8073.sun2000niva-1-mor"
-slug = "sun-niva-1-mor"
-
-[[variable]]
-native_id = "189.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "189.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "189.8073.sun2000niva-old-mor"
-slug = "sun-niva-old-mor"
-
-[[variable]]
-native_id = "189.8073.sun2000niva-sv-mor"
-slug = "sun-niva-sv-mor"
-
-[[variable]]
-native_id = "189.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "189.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "189.8073.sunniva-mor"
-slug = "sun-niva-mor-3"
-
-[[variable]]
-native_id = "189.8073.sunniva-mor-omkodad"
-slug = "sun-niva-mor-omkodad"
-
-[[variable]]
-native_id = "189.8073.sunniva-sv-mor"
-slug = "sun-niva-sv-mor-2"
+"189.25186.mspr1-betyg" = "moderna-sprak-elevens-val-betyg"
+"189.25186.mspr1-sprak" = "moderna-sprak-elevens-val-sprak"
+"189.30392.beht-ehs" = "behorighet-gy-ehs"
+"189.30392.beht-est" = "behorighet-gy-est"
+"189.30392.beht-nt" = "behorighet-gy-nt"
+"189.30392.beht-yrk" = "behorighet-gy-yrk"
+"189.30653.betyg" = "minst-ett-godkant-betyg-2"
+"189.34103.mspr2-betyg" = "moderna-sprak-sprakval-betyg"
+"189.34103.mspr2-sprak" = "moderna-sprak-sprakval"
+"189.8073.sun2000niva-1-mor" = "sun-niva-1-mor"
+"189.8073.sun2000niva-mor" = "sun-niva-mor"
+"189.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"189.8073.sun2000niva-old-mor" = "sun-niva-old-mor"
+"189.8073.sun2000niva-sv-mor" = "sun-niva-sv-mor"
+"189.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"189.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"189.8073.sunniva-mor" = "sun-niva-mor-3"
+"189.8073.sunniva-mor-omkodad" = "sun-niva-mor-omkodad"
+"189.8073.sunniva-sv-mor" = "sun-niva-sv-mor-2"
+"189.3614.meritvarde" = "meritvarde"
+"189.3614.meritvarde-m2" = "meritvarde-m2"
+"189.67.utlbakgr" = "utlbakgr"
+"189.67.utlbakgr2" = "utlbakgr2"
+"189.67.utlsvbakg" = "utlsvbakg"
+"189.30636.ht7" = "ht7"
+"189.30636.ht8" = "ht8"
+"189.30636.ht9" = "ht9"
+"189.30636.tv1-ht7" = "tv1-ht"
+"189.30636.tv1-ht8" = "tv1-ht8"
+"189.30636.tv1-ht9" = "tv1-ht9"
+"189.30636.tv1-vt7" = "tv1-vt"
+"189.30636.tv1-vt8" = "tv1-vt8"
+"189.30636.tv1-vt9" = "tv1-vt9"
+"189.30636.vt7" = "vt7"
+"189.30636.vt8" = "vt8"
+"189.30636.vt9" = "vt9"
+"189.30638.tv2-ht7" = "tv2-ht"
+"189.30638.tv2-ht8" = "tv2-ht8"
+"189.30638.tv2-ht9" = "tv2-ht9"
+"189.30638.tv2-vt7" = "tv2-vt"
+"189.30638.tv2-vt8" = "tv2-vt8"
+"189.30638.tv2-vt9" = "tv2-vt9"
 
 # register 190
 
@@ -656,98 +523,6 @@ variable = "189.30638"
 columns = { TV2_HT7 = "189.30638.tv2-ht7", TV2_HT8 = "189.30638.tv2-ht8", TV2_HT9 = "189.30638.tv2-ht9", TV2_VT7 = "189.30638.tv2-vt7", TV2_VT8 = "189.30638.tv2-vt8", TV2_VT9 = "189.30638.tv2-vt9" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "ced10a107212fc9fc4b4a6eb72805cf642ab6ad752ff2236d7cc3eeaeaf897cf"
-
-[[variable]]
-native_id = "189.3614.meritvarde"
-slug = "meritvarde"
-
-[[variable]]
-native_id = "189.3614.meritvarde-m2"
-slug = "meritvarde-m2"
-
-[[variable]]
-native_id = "189.67.utlbakgr"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "189.67.utlbakgr2"
-slug = "utlbakgr2"
-
-[[variable]]
-native_id = "189.67.utlsvbakg"
-slug = "utlsvbakg"
-
-[[variable]]
-native_id = "189.30636.ht7"
-slug = "ht7"
-
-[[variable]]
-native_id = "189.30636.ht8"
-slug = "ht8"
-
-[[variable]]
-native_id = "189.30636.ht9"
-slug = "ht9"
-
-[[variable]]
-native_id = "189.30636.tv1-ht7"
-slug = "tv1-ht"
-
-[[variable]]
-native_id = "189.30636.tv1-ht8"
-slug = "tv1-ht8"
-
-[[variable]]
-native_id = "189.30636.tv1-ht9"
-slug = "tv1-ht9"
-
-[[variable]]
-native_id = "189.30636.tv1-vt7"
-slug = "tv1-vt"
-
-[[variable]]
-native_id = "189.30636.tv1-vt8"
-slug = "tv1-vt8"
-
-[[variable]]
-native_id = "189.30636.tv1-vt9"
-slug = "tv1-vt9"
-
-[[variable]]
-native_id = "189.30636.vt7"
-slug = "vt7"
-
-[[variable]]
-native_id = "189.30636.vt8"
-slug = "vt8"
-
-[[variable]]
-native_id = "189.30636.vt9"
-slug = "vt9"
-
-[[variable]]
-native_id = "189.30638.tv2-ht7"
-slug = "tv2-ht"
-
-[[variable]]
-native_id = "189.30638.tv2-ht8"
-slug = "tv2-ht8"
-
-[[variable]]
-native_id = "189.30638.tv2-ht9"
-slug = "tv2-ht9"
-
-[[variable]]
-native_id = "189.30638.tv2-vt7"
-slug = "tv2-vt"
-
-[[variable]]
-native_id = "189.30638.tv2-vt8"
-slug = "tv2-vt8"
-
-[[variable]]
-native_id = "189.30638.tv2-vt9"
-slug = "tv2-vt9"
 
 [[representation.parallel]]
 valid_from = "2003-07-01"

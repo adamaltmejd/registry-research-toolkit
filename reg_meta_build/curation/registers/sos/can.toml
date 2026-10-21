@@ -20,125 +20,38 @@ panel_entity_key = "pseudo"
 panel_time_key = "diagnosdatum"
 panel_time_grain = "row"
 
+[variable]
 # Dödsorsaksregistret (DORS)
+"7119586976865944958.PNR" = "personnr"
+"7119586976865944958.PSEUDO" = "pseudo"
+"7119586976865944958.BEN" = "malign-benign"
+"7119586976865944958.DIADAT" = "diagnosdatum"
+"7119586976865944958.DIGR" = "diagnosgrund"
+"7119586976865944958.DODCA" = "avliden-i-cancer"
+"7119586976865944958.DODSDAT" = "dodsdatum"
+"7119586976865944958.EXNR" = "tumorraknare-brost"
+"7119586976865944958.FODDAT" = "fodelsedatum"
+"7119586976865944958.FODDATN" = "fodelsedatum-sas"
+"7119586976865944958.HEMFR" = "framskriving-folkbokforingsort"
+"7119586976865944958.ICDO10" = "icd-o-2-med-icd-10"
+"7119586976865944958.ICDO3" = "icd-o-3"
+"7119586976865944958.JNR" = "journalnummer"
+"7119586976865944958.LKF" = "lan-kommun-forsamling-vid-diagnos"
+"7119586976865944958.M" = "tumorutbredning-m-kategori"
+"7119586976865944958.MORF" = "morfologisk-typ"
+"7119586976865944958.N" = "tumorutbredning-n-kategori"
+"7119586976865944958.OBD1" = "obduktionsfynd"
+"7119586976865944958.PAD" = "histopatologisk-diagnos"
+"7119586976865944958.PAT" = "patolog-cytolog"
+"7119586976865944958.PNRQ" = "personnummerkvalitet"
+"7119586976865944958.PREP" = "preparatnummer"
+"7119586976865944958.REGION" = "sjukvardsregion"
+"7119586976865944958.SNOMED3" = "snomed-o-3"
+"7119586976865944958.SNOMEDO10" = "snomed-o-2-10"
+"7119586976865944958.T" = "tumorutbredning-t-kategori"
+"7119586976865944958.TNR" = "tumornummer"
+"7119586976865944958.TOPO" = "topografisk-kod"
 
-[[variable]]
-native_id = "7119586976865944958.PNR"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "7119586976865944958.PSEUDO"
-slug = "pseudo"
-
-
-[[variable]]
-native_id = "7119586976865944958.BEN"
-slug = "malign-benign"
-
-[[variable]]
-native_id = "7119586976865944958.DIADAT"
-slug = "diagnosdatum"
-
-[[variable]]
-native_id = "7119586976865944958.DIGR"
-slug = "diagnosgrund"
-
-[[variable]]
-native_id = "7119586976865944958.DODCA"
-slug = "avliden-i-cancer"
-
-[[variable]]
-native_id = "7119586976865944958.DODSDAT"
-slug = "dodsdatum"
-
-[[variable]]
-native_id = "7119586976865944958.EXNR"
-slug = "tumorraknare-brost"
-
-[[variable]]
-native_id = "7119586976865944958.FODDAT"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "7119586976865944958.FODDATN"
-slug = "fodelsedatum-sas"
-
-[[variable]]
-native_id = "7119586976865944958.HEMFR"
-slug = "framskriving-folkbokforingsort"
-
-[[variable]]
-native_id = "7119586976865944958.ICDO10"
-slug = "icd-o-2-med-icd-10"
-
-[[variable]]
-native_id = "7119586976865944958.ICDO3"
-slug = "icd-o-3"
-
-[[variable]]
-native_id = "7119586976865944958.JNR"
-slug = "journalnummer"
-
-[[variable]]
-native_id = "7119586976865944958.LKF"
-slug = "lan-kommun-forsamling-vid-diagnos"
-
-[[variable]]
-native_id = "7119586976865944958.M"
-slug = "tumorutbredning-m-kategori"
-
-[[variable]]
-native_id = "7119586976865944958.MORF"
-slug = "morfologisk-typ"
-
-[[variable]]
-native_id = "7119586976865944958.N"
-slug = "tumorutbredning-n-kategori"
-
-[[variable]]
-native_id = "7119586976865944958.OBD1"
-slug = "obduktionsfynd"
-
-[[variable]]
-native_id = "7119586976865944958.PAD"
-slug = "histopatologisk-diagnos"
-
-[[variable]]
-native_id = "7119586976865944958.PAT"
-slug = "patolog-cytolog"
-
-[[variable]]
-native_id = "7119586976865944958.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "7119586976865944958.PREP"
-slug = "preparatnummer"
-
-[[variable]]
-native_id = "7119586976865944958.REGION"
-slug = "sjukvardsregion"
-
-[[variable]]
-native_id = "7119586976865944958.SNOMED3"
-slug = "snomed-o-3"
-
-[[variable]]
-native_id = "7119586976865944958.SNOMEDO10"
-slug = "snomed-o-2-10"
-
-[[variable]]
-native_id = "7119586976865944958.T"
-slug = "tumorutbredning-t-kategori"
-
-[[variable]]
-native_id = "7119586976865944958.TNR"
-slug = "tumornummer"
-
-[[variable]]
-native_id = "7119586976865944958.TOPO"
-slug = "topografisk-kod"
 # register 7550156225339591583
 
 # Batch47: guarded explanatory references describe local response meanings,

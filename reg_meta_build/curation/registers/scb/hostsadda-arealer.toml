@@ -11,88 +11,31 @@ panel_entity_key = "addid"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Gödselmedelsanvändning i jordbruket
-
-[[variable]]
-native_id = "145.20010"
-slug = "addid"
-
-
-[[variable]]
-native_id = "145.48538"
-slug = "hostsadd-areal-hostkorn"
-
-[[variable]]
-native_id = "145.48539"
-slug = "hostsadd-areal-hostvete"
-
-[[variable]]
-native_id = "145.48540"
-slug = "hostsadd-areal-hostraps"
-
-[[variable]]
-native_id = "145.48541"
-slug = "hostsadd-areal-hostrybs"
-
-[[variable]]
-native_id = "145.48542"
-slug = "hostsadd-areal-hostdinkel-speltvete"
-
-[[variable]]
-native_id = "145.48543"
-slug = "hostsadd-areal-hostrag"
-
-[[variable]]
-native_id = "145.48544"
-slug = "hostsadd-areal-hostragvete"
-
-[[variable]]
-native_id = "145.48568"
-slug = "ekologisk-hostsadd-areal-hostvete"
-
-[[variable]]
-native_id = "145.48569"
-slug = "ekologisk-hostsadd-areal-hostraps"
-
-[[variable]]
-native_id = "145.48570"
-slug = "ekologisk-hostsadd-areal-hostrag"
-
-[[variable]]
-native_id = "145.48571"
-slug = "ekologisk-hostsadd-areal-hostkorn"
-
-[[variable]]
-native_id = "145.48572"
-slug = "ekologisk-hostsadd-areal-hostrybs"
-
-[[variable]]
-native_id = "145.48573"
-slug = "ekologisk-hostsadd-hostdinkel-speltvete"
-
-[[variable]]
-native_id = "145.48574"
-slug = "ekologisk-hostsadd-areal-hostragvete"
-
-[[variable]]
-native_id = "145.48609"
-slug = "hostsadd-areal-hostdinkel"
-
-[[variable]]
-native_id = "145.48610"
-slug = "ekologisk-hostsadd-areal-hostdinkel"
+"145.20010" = "addid"
+"145.48538" = "hostsadd-areal-hostkorn"
+"145.48539" = "hostsadd-areal-hostvete"
+"145.48540" = "hostsadd-areal-hostraps"
+"145.48541" = "hostsadd-areal-hostrybs"
+"145.48542" = "hostsadd-areal-hostdinkel-speltvete"
+"145.48543" = "hostsadd-areal-hostrag"
+"145.48544" = "hostsadd-areal-hostragvete"
+"145.48568" = "ekologisk-hostsadd-areal-hostvete"
+"145.48569" = "ekologisk-hostsadd-areal-hostraps"
+"145.48570" = "ekologisk-hostsadd-areal-hostrag"
+"145.48571" = "ekologisk-hostsadd-areal-hostkorn"
+"145.48572" = "ekologisk-hostsadd-areal-hostrybs"
+"145.48573" = "ekologisk-hostsadd-hostdinkel-speltvete"
+"145.48574" = "ekologisk-hostsadd-areal-hostragvete"
+"145.48609" = "hostsadd-areal-hostdinkel"
+"145.48610" = "ekologisk-hostsadd-areal-hostdinkel"
 
 # register 147 (godselmedelsanvandning)
-
-[[variable]]
-native_id = "145.48558"
-slug = "namn-pa-foretaget"
+"145.48558" = "namn-pa-foretaget"
 
 # register 147
-
-[[variable]]
-native_id = "145.2437.ordsko"
-slug = "skordeomrade"
+"145.2437.ordsko" = "skordeomrade"
 
 # register 156
 

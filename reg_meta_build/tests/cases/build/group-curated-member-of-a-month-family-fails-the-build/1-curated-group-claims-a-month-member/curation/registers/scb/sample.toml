@@ -5,21 +5,14 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
-[[variable]]
-native_id = "1.111"
-slug = "lonjan"
-[[variable]]
-native_id = "1.112"
-slug = "lonfeb"
-[[variable]]
-native_id = "1.113"
-slug = "lonmar"
-[[variable]]
-native_id = "1.101"
-slug = "value"
-[[variable]]
-native_id = "1.102"
-slug = "other"
+
+[variable]
+"1.111" = "lonjan"
+"1.112" = "lonfeb"
+"1.113" = "lonmar"
+"1.101" = "value"
+"1.102" = "other"
+
 [[group]]
 register = "scb/sample"
 key = "pay"

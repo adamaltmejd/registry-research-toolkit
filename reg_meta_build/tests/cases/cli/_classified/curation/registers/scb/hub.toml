@@ -7,10 +7,6 @@ native_id = "13"
 native_id = "13.130"
 slug = "people"
 
-[[variable]]
-native_id = "13.1306"
-slug = "ha"
-
-[[variable]]
-native_id = "13.1307"
-slug = "hb"
+[variable]
+"13.1306" = "ha"
+"13.1307" = "hb"

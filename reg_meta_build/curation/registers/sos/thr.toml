@@ -38,43 +38,20 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
+"8948214044434034899.PNR" = "personnr"
+"8948214044434034899.EU_PAT" = "eu-patient"
+"8948214044434034899.FODLAND" = "fodelseland"
+"8948214044434034899.GRUND" = "grund-till-vard"
+"8948214044434034899.MEDBORG" = "medborgarskap"
+"8948214044434034899.ORG_NR" = "orgnr"
+"8948214044434034899.PNRQ" = "personnummerkvalitet"
+"8948214044434034899.SENINV" = "senaste-invandring"
+"8948214044434034899.BESLUTSDATUMN.decision" = "beslutsdatum"
+"8948214044434034899.BESLUTSDATUMN.decision-atb" = "beslutsdatum-eller-atb-anvandningsdatum"
+"8948214044434034899.BESOKSDATUMN.completed" = "besoksdatum"
+"8948214044434034899.BESOKSDATUMN.completed-submitted" = "besoksdatum-eller-inskickatdatum"
 
-
-
-[[variable]]
-native_id = "8948214044434034899.PNR"
-slug = "personnr"
-
-
-
-
-[[variable]]
-native_id = "8948214044434034899.EU_PAT"
-slug = "eu-patient"
-
-[[variable]]
-native_id = "8948214044434034899.FODLAND"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "8948214044434034899.GRUND"
-slug = "grund-till-vard"
-
-[[variable]]
-native_id = "8948214044434034899.MEDBORG"
-slug = "medborgarskap"
-
-[[variable]]
-native_id = "8948214044434034899.ORG_NR"
-slug = "orgnr"
-
-[[variable]]
-native_id = "8948214044434034899.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "8948214044434034899.SENINV"
-slug = "senaste-invandring"
 # register 9047831179457584381
 
 # Batch47: exact unresolved dictionary links remain visible limitations.
@@ -217,14 +194,6 @@ expected_records = [{ ref = { source = "Socialstyrelsen/Metadata_Tandhälsoregis
 expected_evidence_sha256 = "78f61442e0a5b2841e48984710cd3dfb008204df7acae67fa6b95f27d5caf4e3"
 data_warning = "The source distinguishes FK decision from decision/ATB-use dates, and completion from completion/submission dates for subscription patients. Keep these documented role contexts separate, with every own representation and missing-value statement. No inference of date availability or equivalence. Complete review Batch52-THR-complete-source-review.json."
 
-[[variable]]
-native_id = "8948214044434034899.BESLUTSDATUMN.decision"
-slug = "beslutsdatum"
-
-[[variable]]
-native_id = "8948214044434034899.BESLUTSDATUMN.decision-atb"
-slug = "beslutsdatum-eller-atb-anvandningsdatum"
-
 [[identity.split]]
 variable = "BESOKSDATUMN"
 by = "deldatamangd"
@@ -232,14 +201,6 @@ parts = [{ deldatamangd = "THR_BESOK", owner = "8948214044434034899.BESOKSDATUMN
 expected_records = [{ ref = { source = "Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx", semantic_record_key = ["register:Tandhälsoregistret", "deldatamangd:THR_BESOK", "variable:BESOKSDATUMN"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "BESOKSDATUMN" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "2008" }, { name = "coverage_to", status = "unknown" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "date" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Datum för avslutad åtgärd" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Besöksdatum" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYYMMDD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "value", value = "Vårdgivaren" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2008" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Tandhälsoregistret" }, variant = { status = "value", name = "THR_BESOK" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "BESOKSDATUMN", name = "Besöksdatum" }, member = { status = "value", name = "BESOKSDATUMN" }, native = {  } }, parent_facts = [] }] }, { ref = { source = "Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx", semantic_record_key = ["register:Tandhälsoregistret", "deldatamangd:THR_BESOK_LANDSTING", "variable:BESOKSDATUMN"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "BESOKSDATUMN" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "2008" }, { name = "coverage_to", status = "unknown" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "date" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Datum för avslutad åtgärd" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Besöksdatum" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYY-MM-DD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "value", value = "Vårdgivaren" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2008" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Tandhälsoregistret" }, variant = { status = "value", name = "THR_BESOK_LANDSTING" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "BESOKSDATUMN", name = "Besöksdatum" }, member = { status = "value", name = "BESOKSDATUMN" }, native = {  } }, parent_facts = [] }] }, { ref = { source = "Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx", semantic_record_key = ["register:Tandhälsoregistret", "deldatamangd:THR_TANDHALSA", "variable:BESOKSDATUMN"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "BESOKSDATUMN" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "2008" }, { name = "coverage_to", status = "unknown" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "date" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Datum för avslutad åtgärd eller datum då uppgift om patientens tandhälsan har skickats in till FK för patienter på abonnemang." }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Besöksdatum / Inskickatdatum" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYY-MM-DD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "unknown" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2008" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Tandhälsoregistret" }, variant = { status = "value", name = "THR_TANDHALSA" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "BESOKSDATUMN", name = "Besöksdatum / Inskickatdatum" }, member = { status = "value", name = "BESOKSDATUMN" }, native = {  } }, parent_facts = [] }] }, { ref = { source = "Socialstyrelsen/Metadata_Tandhälsoregistret (THR)_webb.xlsx", semantic_record_key = ["register:Tandhälsoregistret", "deldatamangd:THR_TANDHALSA_LANDSTING", "variable:BESOKSDATUMN"] }, alternatives = [{ fields = [{ name = "access_rights", status = "absent" }, { name = "access_url", status = "absent" }, { name = "aggregation_level", status = "absent" }, { name = "availability", status = "value", value = true }, { name = "base_register", status = "absent" }, { name = "classification_declared", status = "unknown" }, { name = "column_name", status = "value", value = "BESOKSDATUMN" }, { name = "conditional_sensitivity", status = "absent" }, { name = "coverage", status = "absent" }, { name = "coverage_from", status = "value", value = "2008" }, { name = "coverage_to", status = "unknown" }, { name = "data_length", status = "absent" }, { name = "data_type", status = "value", value = "date" }, { name = "dataset_label", status = "absent" }, { name = "definition", status = "absent" }, { name = "description", status = "value", value = "Datum för avslutad åtgärd" }, { name = "documentation_status", status = "absent" }, { name = "documentation_url", status = "absent" }, { name = "first_approved_at", status = "absent" }, { name = "geographic_coverage", status = "absent" }, { name = "identifier", status = "value", value = false }, { name = "landing_page", status = "absent" }, { name = "last_approved_at", status = "absent" }, { name = "legislation", status = "absent" }, { name = "measurement_information", status = "absent" }, { name = "measurement_unit", status = "absent" }, { name = "name", status = "value", value = "Besöksdatum" }, { name = "operational_definition", status = "absent" }, { name = "population_comment", status = "absent" }, { name = "population_date", status = "absent" }, { name = "population_definition", status = "absent" }, { name = "purpose", status = "absent" }, { name = "reference_period", status = "absent" }, { name = "representation", status = "value", value = "YYYY-MM-DD" }, { name = "sensitivity", status = "value", value = true }, { name = "source_attribution", status = "unknown" }, { name = "source_date", status = "absent" }, { name = "source_version", status = "absent" }, { name = "update_frequency", status = "absent" }, { name = "value_set_declared", status = "absent" }], edition_scope = { kind = "intervals", intervals = [{ start = "2008" }] }, edition_period_scope = { kind = "not_applicable", intervals = [] }, subject = { provider = "sos", register = { status = "value", name = "Tandhälsoregistret" }, variant = { status = "value", name = "THR_TANDHALSA_LANDSTING" }, variant_references = [], population = { status = "unknown" }, variable = { status = "value", native_id = "BESOKSDATUMN", name = "Besöksdatum" }, member = { status = "value", name = "BESOKSDATUMN" }, native = {  } }, parent_facts = [] }] }]
 expected_evidence_sha256 = "5fab01e8863dc700c490278a56c9a4f3759d8849d50813e6b6a52ed42d59a920"
 data_warning = "The source distinguishes FK decision from decision/ATB-use dates, and completion from completion/submission dates for subscription patients. Keep these documented role contexts separate, with every own representation and missing-value statement. No inference of date availability or equivalence. Complete review Batch52-THR-complete-source-review.json."
-
-[[variable]]
-native_id = "8948214044434034899.BESOKSDATUMN.completed"
-slug = "besoksdatum"
-
-[[variable]]
-native_id = "8948214044434034899.BESOKSDATUMN.completed-submitted"
-slug = "besoksdatum-eller-inskickatdatum"
 
 [[errata.field]]
 variable = "8948214044434034899.ARENDEID"

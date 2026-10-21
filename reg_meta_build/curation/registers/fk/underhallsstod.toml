@@ -47,26 +47,13 @@ panel_entity_key = ["lopnr-bs", "lopnr-d85", "lopnr-barn"]
 panel_time_key = "datum-inbet"
 panel_time_grain = "row"
 
+[variable]
 # Aktivitetsstöd
+"9011624717046135047.LOPNR_BARN" = "lopnr-barn"
+"9011624717046135047.LOPNR_BM" = "lopnr-bm"
+"9011624717046135047.LOPNR_BS" = "lopnr-bs"
+"9011624717046135047.LOPNR_D85" = "lopnr-d85"
 
-[[variable]]
-native_id = "9011624717046135047.LOPNR_BARN"
-slug = "lopnr-barn"
-
-
-[[variable]]
-native_id = "9011624717046135047.LOPNR_BM"
-slug = "lopnr-bm"
-
-
-[[variable]]
-native_id = "9011624717046135047.LOPNR_BS"
-slug = "lopnr-bs"
-
-
-[[variable]]
-native_id = "9011624717046135047.LOPNR_D85"
-slug = "lopnr-d85"
 
 # === BEGIN #760 non-SCB concept-slug curation (generated) ===
 # 19 curated overrides: cryptic delivery-column slugs replaced

@@ -19,92 +19,62 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Statens skolor för vuxna (SSV)
-
-[[variable]]
-native_id = "390.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "390.66"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "390.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "390.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "390.43179"
-slug = "antal-fiskedrag"
-
-[[variable]]
-native_id = "390.43180"
-slug = "antal-meter-fiskelina"
+"390.57" = "personnr"
+"390.66" = "utbildningsniva"
+"390.257" = "fodelseland-rtb"
+"390.1569" = "fodelseland"
+"390.43179" = "antal-fiskedrag"
+"390.43180" = "antal-meter-fiskelina"
 
 # register 391 (ssv)
-
-[[variable]]
-native_id = "390.98"
-slug = "referensar"
-
-[[variable]]
-native_id = "390.447"
-slug = "lansnamn"
-
-[[variable]]
-native_id = "390.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "390.4656"
-slug = "insamlingsmetod"
-
-[[variable]]
-native_id = "390.7062"
-slug = "folkbokforingslan"
-
-[[variable]]
-native_id = "390.8164"
-slug = "urvalsstratum"
-
-[[variable]]
-native_id = "390.17473"
-slug = "kalibreringsvikt"
-
-[[variable]]
-native_id = "390.17589"
-slug = "gruppering-av-alder"
-
-[[variable]]
-native_id = "390.22520"
-slug = "aldgkon"
-
-[[variable]]
-native_id = "390.32957"
-slug = "kommunkod"
-
-[[variable]]
-native_id = "390.40288"
-slug = "storstadsomrade"
+"390.98" = "referensar"
+"390.447" = "lansnamn"
+"390.1378" = "fodelsear"
+"390.4656" = "insamlingsmetod"
+"390.7062" = "folkbokforingslan"
+"390.8164" = "urvalsstratum"
+"390.17473" = "kalibreringsvikt"
+"390.17589" = "gruppering-av-alder"
+"390.22520" = "aldgkon"
+"390.32957" = "kommunkod"
+"390.40288" = "storstadsomrade"
 
 # register 391
-
-[[variable]]
-native_id = "390.15.civil"
-slug = "civilstand"
-
-[[variable]]
-native_id = "390.99.aux-ink"
-slug = "sammanraknad-forvarvsinkomst"
-
-[[variable]]
-native_id = "390.99.csfvi"
-slug = "sammanraknad-forvarvsinkomst-2"
+"390.15.civil" = "civilstand"
+"390.99.aux-ink" = "sammanraknad-forvarvsinkomst"
+"390.99.csfvi" = "sammanraknad-forvarvsinkomst-2"
+"390.3573.lillan-fas1" = "lillan-fas1"
+"390.3573.lillan-fas2" = "lillan-fas2"
+"390.3582.storan-fas1" = "storan-fas1"
+"390.3582.storan-fas2" = "storan-fas2"
+"390.42505.f03b-01" = "f03b-0"
+"390.42505.f03b-02" = "f03b-02"
+"390.42505.f03b-03" = "f03b-03"
+"390.42505.f03b-04" = "f03b-04"
+"390.42505.f2b" = "f2b"
+"390.42505.f2f" = "f2f"
+"390.42505.f2d" = "f2d"
+"390.45533.f03-01" = "f03-01"
+"390.45533.f03-02" = "f03-02"
+"390.45533.f03-03" = "f03-03"
+"390.45533.f03-04" = "f03-04"
+"390.45533.f03-05" = "f03-05"
+"390.45533.f03-06" = "f03-06"
+"390.45533.f03-07" = "f03-07"
+"390.45533.f03-08" = "f03-08"
+"390.45533.f03-09" = "f03-09"
+"390.43178.f18-1" = "f18-1"
+"390.43178.f18-2" = "f18-2"
+"390.43178.f18-3" = "f18-3"
+"390.43178.f18-4" = "f18-4"
+"390.43177.f17-1" = "f17-1"
+"390.43177.f17-2" = "f17-2"
+"390.43177.f17-3" = "f17-3"
+"390.43177.f17-4" = "f17-4"
+"390.8164.stratum-fas1" = "stratum-fas1"
+"390.8164.stratum-fas2" = "stratum-fas2"
 
 # register 397
 
@@ -228,123 +198,3 @@ variable = "390.8164"
 columns = { stratum_fas1 = "390.8164.stratum-fas1", stratum_fas2 = "390.8164.stratum-fas2" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "4a959586f168a34a5333f19f970acafd7a1b925cfebce1f51a93e88883b98215"
-
-[[variable]]
-native_id = "390.3573.lillan-fas1"
-slug = "lillan-fas1"
-
-[[variable]]
-native_id = "390.3573.lillan-fas2"
-slug = "lillan-fas2"
-
-[[variable]]
-native_id = "390.3582.storan-fas1"
-slug = "storan-fas1"
-
-[[variable]]
-native_id = "390.3582.storan-fas2"
-slug = "storan-fas2"
-
-[[variable]]
-native_id = "390.42505.f03b-01"
-slug = "f03b-0"
-
-[[variable]]
-native_id = "390.42505.f03b-02"
-slug = "f03b-02"
-
-[[variable]]
-native_id = "390.42505.f03b-03"
-slug = "f03b-03"
-
-[[variable]]
-native_id = "390.42505.f03b-04"
-slug = "f03b-04"
-
-[[variable]]
-native_id = "390.42505.f2b"
-slug = "f2b"
-
-[[variable]]
-native_id = "390.42505.f2f"
-slug = "f2f"
-
-[[variable]]
-native_id = "390.42505.f2d"
-slug = "f2d"
-
-[[variable]]
-native_id = "390.45533.f03-01"
-slug = "f03-01"
-
-[[variable]]
-native_id = "390.45533.f03-02"
-slug = "f03-02"
-
-[[variable]]
-native_id = "390.45533.f03-03"
-slug = "f03-03"
-
-[[variable]]
-native_id = "390.45533.f03-04"
-slug = "f03-04"
-
-[[variable]]
-native_id = "390.45533.f03-05"
-slug = "f03-05"
-
-[[variable]]
-native_id = "390.45533.f03-06"
-slug = "f03-06"
-
-[[variable]]
-native_id = "390.45533.f03-07"
-slug = "f03-07"
-
-[[variable]]
-native_id = "390.45533.f03-08"
-slug = "f03-08"
-
-[[variable]]
-native_id = "390.45533.f03-09"
-slug = "f03-09"
-
-[[variable]]
-native_id = "390.43178.f18-1"
-slug = "f18-1"
-
-[[variable]]
-native_id = "390.43178.f18-2"
-slug = "f18-2"
-
-[[variable]]
-native_id = "390.43178.f18-3"
-slug = "f18-3"
-
-[[variable]]
-native_id = "390.43178.f18-4"
-slug = "f18-4"
-
-[[variable]]
-native_id = "390.43177.f17-1"
-slug = "f17-1"
-
-[[variable]]
-native_id = "390.43177.f17-2"
-slug = "f17-2"
-
-[[variable]]
-native_id = "390.43177.f17-3"
-slug = "f17-3"
-
-[[variable]]
-native_id = "390.43177.f17-4"
-slug = "f17-4"
-
-[[variable]]
-native_id = "390.8164.stratum-fas1"
-slug = "stratum-fas1"
-
-[[variable]]
-native_id = "390.8164.stratum-fas2"
-slug = "stratum-fas2"

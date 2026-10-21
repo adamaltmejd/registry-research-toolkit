@@ -84,145 +84,43 @@ native_id = "349.1485"
 slug = "personakt-flyttning"
 display_group = "Personakt - Flyttning"
 
+[variable]
 # Grönytor i och omkring tätorter
-
-[[variable]]
-native_id = "349.323"
-slug = "personnr-far"
-
-
-[[variable]]
-native_id = "349.324"
-slug = "personnr-mor"
-
-
-[[variable]]
-native_id = "349.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "349.39445"
-slug = "personnr-avliden"
-
-
-[[variable]]
-native_id = "349.39481"
-slug = "personnr-barn"
-
-
-[[variable]]
-native_id = "349.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "349.304"
-slug = "fodelselandnamnfar"
-
-[[variable]]
-native_id = "349.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "349.327"
-slug = "efternamn"
-
-[[variable]]
-native_id = "349.398"
-slug = "fornamn"
-
-[[variable]]
-native_id = "349.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "349.21766"
-slug = "antal-biologiska-barn-mor"
-
-[[variable]]
-native_id = "349.21780"
-slug = "syskonordnr-far"
-
-[[variable]]
-native_id = "349.24372"
-slug = "syskonordnr-mor"
-
-[[variable]]
-native_id = "349.31003"
-slug = "antal-biologiska-barn-far"
-
-[[variable]]
-native_id = "349.39419"
-slug = "fodelseort"
-
-[[variable]]
-native_id = "349.39457"
-slug = "efternamn-maka-make"
-
-[[variable]]
-native_id = "349.39458"
-slug = "fornamn-maka-make"
-
-[[variable]]
-native_id = "349.39459"
-slug = "fodelseort-maka-make"
-
-[[variable]]
-native_id = "349.39483"
-slug = "fodelseland-barn"
-
-[[variable]]
-native_id = "349.39494"
-slug = "fornamn-barn"
-
-[[variable]]
-native_id = "349.39495"
-slug = "efternamn-barn"
-
-[[variable]]
-native_id = "349.39506"
-slug = "fodelseland-mor-personakt"
-
-[[variable]]
-native_id = "349.39507"
-slug = "fodelseland-far-personakt"
+"349.323" = "personnr-far"
+"349.324" = "personnr-mor"
+"349.57" = "personnr"
+"349.39445" = "personnr-avliden"
+"349.39481" = "personnr-barn"
+"349.257" = "fodelseland-rtb"
+"349.304" = "fodelselandnamnfar"
+"349.305" = "fodelseland-mor"
+"349.327" = "efternamn"
+"349.398" = "fornamn"
+"349.1569" = "fodelseland"
+"349.21766" = "antal-biologiska-barn-mor"
+"349.21780" = "syskonordnr-far"
+"349.24372" = "syskonordnr-mor"
+"349.31003" = "antal-biologiska-barn-far"
+"349.39419" = "fodelseort"
+"349.39457" = "efternamn-maka-make"
+"349.39458" = "fornamn-maka-make"
+"349.39459" = "fodelseort-maka-make"
+"349.39483" = "fodelseland-barn"
+"349.39494" = "fornamn-barn"
+"349.39495" = "efternamn-barn"
+"349.39506" = "fodelseland-mor-personakt"
+"349.39507" = "fodelseland-far-personakt"
 
 # register 350 (gronytor-tatorter)
+"349.366" = "datum-adoptivfar"
+"349.367" = "datum-adoptivmor"
+"349.379" = "personnr-adoptivfar"
+"349.380" = "personnr-adoptivmor"
+"349.8002" = "ateranvant-personnr"
+"349.14610" = "adopterad"
+"349.23477" = "yrke"
+"349.29578" = "medborgarskap"
+"349.39448" = "utvandringsland-personakt"
 
-[[variable]]
-native_id = "349.366"
-slug = "datum-adoptivfar"
-
-[[variable]]
-native_id = "349.367"
-slug = "datum-adoptivmor"
-
-[[variable]]
-native_id = "349.379"
-slug = "personnr-adoptivfar"
-
-[[variable]]
-native_id = "349.380"
-slug = "personnr-adoptivmor"
-
-[[variable]]
-native_id = "349.8002"
-slug = "ateranvant-personnr"
-
-[[variable]]
-native_id = "349.14610"
-slug = "adopterad"
-
-[[variable]]
-native_id = "349.23477"
-slug = "yrke"
-
-[[variable]]
-native_id = "349.29578"
-slug = "medborgarskap"
-
-[[variable]]
-native_id = "349.39448"
-slug = "utvandringsland-personakt"
 
 # register 350

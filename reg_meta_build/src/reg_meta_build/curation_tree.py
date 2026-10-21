@@ -305,9 +305,17 @@ class RegisterVariantSlug(_CurationModel):
 
 
 class RegisterVariableSlug(_CurationModel):
-    native_id: str
+    """One `[variable]` pin, keyed by its native id: `"<id>" = "<slug>"`, or an
+    inline table (`"<id>" = { slug = "…", deprecated = true }`) when the pin
+    carries more than its slug."""
+
     slug: str | None = None
     deprecated: bool = False
+
+    @model_validator(mode="before")
+    @classmethod
+    def _bare_slug(cls, value: object) -> object:
+        return {"slug": value} if isinstance(value, str) else value
 
 
 CatalogDataType = Literal["integer", "decimal", "text", "date"]
@@ -2142,7 +2150,7 @@ class RegisterCuration(_CurationModel):
 
     register_info: RegisterIdentity = Field(validation_alias="register")
     variant: list[RegisterVariantSlug] = Field(default_factory=list)
-    variable: list[RegisterVariableSlug] = Field(default_factory=list)
+    variable: dict[str, RegisterVariableSlug] = Field(default_factory=dict)
     errata: ErrataCuration = Field(default_factory=ErrataCuration)
     enrichment: EnrichmentCuration = Field(default_factory=EnrichmentCuration)
     group: list[RegisterGroupEntry] = Field(default_factory=list)

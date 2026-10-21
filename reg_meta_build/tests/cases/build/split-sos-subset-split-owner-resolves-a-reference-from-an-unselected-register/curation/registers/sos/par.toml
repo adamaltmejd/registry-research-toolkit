@@ -16,9 +16,7 @@ slug = "par-tv"
 variable = "ATC"
 by = "deldatamangd"
 parts = [{ deldatamangd = "PAR_OV", owner = "5891427617861710725.ATC.shared" }, { deldatamangd = "PAR_SV", owner = "5891427617861710725.ATC.shared" }, { deldatamangd = "PAR_TV", owner = "5891427617861710725.ATC.other" }]
-[[variable]]
-native_id = "5891427617861710725.ATC.shared"
-slug = "shared"
-[[variable]]
-native_id = "5891427617861710725.ATC.other"
-slug = "other"
+
+[variable]
+"5891427617861710725.ATC.shared" = "shared"
+"5891427617861710725.ATC.other" = "other"

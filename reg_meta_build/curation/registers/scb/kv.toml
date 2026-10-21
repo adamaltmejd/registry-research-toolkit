@@ -11,87 +11,31 @@ panel_entity_key = "cfar-nummer"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Registerbaserad lönesummestatistik (LSUM)
-
-[[variable]]
-native_id = "127.43"
-slug = "kvartal"
-
-[[variable]]
-native_id = "127.972"
-slug = "aktuellt-antal-anstallda"
-
-[[variable]]
-native_id = "127.4903"
-slug = "ar-och-kvartal"
+"127.43" = "kvartal"
+"127.972" = "aktuellt-antal-anstallda"
+"127.4903" = "ar-och-kvartal"
 
 # register 128 (lsum)
-
-[[variable]]
-native_id = "127.473"
-slug = "lan-arbetsstalle"
-
-[[variable]]
-native_id = "127.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "127.4973"
-slug = "lediga-jobb-obemannade"
-
-[[variable]]
-native_id = "127.4982"
-slug = "lediga-jobb-arbetsstalle"
-
-[[variable]]
-native_id = "127.4983"
-slug = "lediga-jobb-vikarie"
+"127.473" = "lan-arbetsstalle"
+"127.4027" = "naringsgren"
+"127.4973" = "lediga-jobb-obemannade"
+"127.4982" = "lediga-jobb-arbetsstalle"
+"127.4983" = "lediga-jobb-vikarie"
 
 # register 128
-
-[[variable]]
-native_id = "127.4027.ngs1"
-slug = "ngs1"
-
-[[variable]]
-native_id = "127.4027.snia"
-slug = "snia"
-
-[[variable]]
-native_id = "127.4924.bemforetag"
-slug = "bemforetag-4924"
-
-[[variable]]
-native_id = "127.4924.bemftg"
-slug = "bemftg"
-
-[[variable]]
-native_id = "127.14.cfarnr"
-slug = "cfar-nummer"
-
-[[variable]]
-native_id = "127.14.idnr"
-slug = "idnr"
-
-[[variable]]
-native_id = "127.972.syssa"
-slug = "syssa"
-
-[[variable]]
-native_id = "127.972.syssa02"
-slug = "syssa02"
-
-[[variable]]
-native_id = "127.972.syssa98"
-slug = "syssa98"
-
-[[variable]]
-native_id = "127.4982.tot"
-slug = "tot"
-
-[[variable]]
-native_id = "127.4982.totled"
-slug = "totled"
+"127.4027.ngs1" = "ngs1"
+"127.4027.snia" = "snia"
+"127.4924.bemforetag" = "bemforetag-4924"
+"127.4924.bemftg" = "bemftg"
+"127.14.cfarnr" = "cfar-nummer"
+"127.14.idnr" = "idnr"
+"127.972.syssa" = "syssa"
+"127.972.syssa02" = "syssa02"
+"127.972.syssa98" = "syssa98"
+"127.4982.tot" = "tot"
+"127.4982.totled" = "totled"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

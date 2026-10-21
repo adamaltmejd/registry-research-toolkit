@@ -8,10 +8,9 @@ native_id = "292.843"
 slug = "finansiella-foretag-indata"
 display_group = "Indata"
 
+[variable]
 # Statliga anslag till forskning och utveckling
+"292.23859" = "kvartal-och-ar"
 
-[[variable]]
-native_id = "292.23859"
-slug = "kvartal-och-ar"
 
 # register 295

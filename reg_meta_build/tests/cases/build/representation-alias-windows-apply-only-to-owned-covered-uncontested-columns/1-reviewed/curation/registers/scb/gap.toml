@@ -5,9 +5,9 @@ native_id = "33"
 [[variant]]
 native_id = "33.330"
 slug = "people"
-[[variable]]
-native_id = "33.5"
-slug = "value"
+
+[variable]
+"33.5" = "value"
 
 [[representation.alias_window]]
 variable = "scb/gap/value"

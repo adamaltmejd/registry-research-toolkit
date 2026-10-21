@@ -5,9 +5,10 @@ native_id = "7"
 [[variant]]
 native_id = "7.70"
 slug = "people"
-[[variable]]
-native_id = "7.7"
-slug = "income"
+
+[variable]
+"7.7" = "income"
+
 [[identity.partition]]
 variable = "7.7"
 columns = { First = "7.7", Second = "7.7" }

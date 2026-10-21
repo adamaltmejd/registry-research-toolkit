@@ -39,144 +39,46 @@ native_id = "22.508"
 slug = "ekonomiskt-bistand"
 display_group = "Ekonomiskt bistånd, kvartalsstatistik"
 
+[variable]
 # Befolkningens utbildning (Utbildningsregistret)
-
-[[variable]]
-native_id = "22.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "22.98"
-slug = "referensar"
-
-[[variable]]
-native_id = "22.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "22.256"
-slug = "fodelselan"
-
-[[variable]]
-native_id = "22.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "22.7062"
-slug = "folkbokforingslan"
-
-[[variable]]
-native_id = "22.7071"
-slug = "medborgarskapsar"
-
-[[variable]]
-native_id = "22.7173"
-slug = "manader-introduktionsersattning"
-
-[[variable]]
-native_id = "22.7498"
-slug = "manader-ekonomiskt-bistand"
-
-[[variable]]
-native_id = "22.7499"
-slug = "introduktionsersattning"
-
-[[variable]]
-native_id = "22.7500"
-slug = "utbetalt-belopp-till-hushallet"
-
-[[variable]]
-native_id = "22.7501"
-slug = "antal-barn-0-15-ar"
-
-[[variable]]
-native_id = "22.7504"
-slug = "antal-barn-16-17-ar"
+"22.57" = "personnr"
+"22.98" = "referensar"
+"22.241" = "alder-31-12"
+"22.256" = "fodelselan"
+"22.517" = "senaste-invandringsar"
+"22.7062" = "folkbokforingslan"
+"22.7071" = "medborgarskapsar"
+"22.7173" = "manader-introduktionsersattning"
+"22.7498" = "manader-ekonomiskt-bistand"
+"22.7499" = "introduktionsersattning"
+"22.7500" = "utbetalt-belopp-till-hushallet"
+"22.7501" = "antal-barn-0-15-ar"
+"22.7504" = "antal-barn-16-17-ar"
 
 # The April columns SBelApr / IBelApr carried the generated fold pins `sbel` / `ibel`,
 # the slugs the `[[representation.period_family]]` variables above take. Two
 # identities may not share a slug (naming_slug_collision), so each takes its own
 # column's slug; its months form the family, so it publishes nothing itself.
-[[variable]]
-native_id = "22.7509"
-slug = "sbelapr"
-
-[[variable]]
-native_id = "22.7521"
-slug = "ibelapr"
-
-[[variable]]
-native_id = "22.7608"
-slug = "antal-barn-0-ar"
-
-[[variable]]
-native_id = "22.7609"
-slug = "antal-barn-10-ar"
-
-[[variable]]
-native_id = "22.7610"
-slug = "antal-barn-2-ar"
-
-[[variable]]
-native_id = "22.7611"
-slug = "antal-barn-3-ar"
-
-[[variable]]
-native_id = "22.7612"
-slug = "antal-barn-4-ar"
-
-[[variable]]
-native_id = "22.7613"
-slug = "antal-barn-5-ar"
-
-[[variable]]
-native_id = "22.7614"
-slug = "antal-barn-6-ar"
-
-[[variable]]
-native_id = "22.7615"
-slug = "antal-barn-7-ar"
-
-[[variable]]
-native_id = "22.7616"
-slug = "antal-barn-8-ar"
-
-[[variable]]
-native_id = "22.7617"
-slug = "antal-barn-9-ar"
-
-[[variable]]
-native_id = "22.7618"
-slug = "antal-barn-1-ar"
-
-[[variable]]
-native_id = "22.7619"
-slug = "antal-barn-11-ar"
-
-[[variable]]
-native_id = "22.7620"
-slug = "antal-barn-12-ar"
-
-[[variable]]
-native_id = "22.7621"
-slug = "antal-barn-13-ar"
-
-[[variable]]
-native_id = "22.7622"
-slug = "antal-barn-14-ar"
-
-[[variable]]
-native_id = "22.7623"
-slug = "antal-barn-15-ar"
-
-[[variable]]
-native_id = "22.8556"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "22.17351"
-slug = "medborgarskap"
+"22.7509" = "sbelapr"
+"22.7521" = "ibelapr"
+"22.7608" = "antal-barn-0-ar"
+"22.7609" = "antal-barn-10-ar"
+"22.7610" = "antal-barn-2-ar"
+"22.7611" = "antal-barn-3-ar"
+"22.7612" = "antal-barn-4-ar"
+"22.7613" = "antal-barn-5-ar"
+"22.7614" = "antal-barn-6-ar"
+"22.7615" = "antal-barn-7-ar"
+"22.7616" = "antal-barn-8-ar"
+"22.7617" = "antal-barn-9-ar"
+"22.7618" = "antal-barn-1-ar"
+"22.7619" = "antal-barn-11-ar"
+"22.7620" = "antal-barn-12-ar"
+"22.7621" = "antal-barn-13-ar"
+"22.7622" = "antal-barn-14-ar"
+"22.7623" = "antal-barn-15-ar"
+"22.8556" = "folkbokforingskommun"
+"22.17351" = "medborgarskap"
 
 # register 24
 

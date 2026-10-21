@@ -828,7 +828,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "pin (precedence 1 in slug population) freezes that slug. The steward\n"
             "curation gate makes the pin MANDATORY, so a new entity-key variable can't\n"
             "ship un-pinned. The global build needs no pins from here: compile refuses\n"
-            "any variable without an authored [[variable]] pin.\n\n"
+            "any variable without an authored [variable] pin.\n\n"
             "REQUIRES --slug-dir pointing at the steward dir (fqid_slugs/<steward>/)\n"
             "that curates the overlay's registers — NOT the global curation/ root\n"
             "(rejected when --slug-dir equals the repo's curation/ OR has\n"

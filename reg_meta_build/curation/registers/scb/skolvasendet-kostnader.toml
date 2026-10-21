@@ -11,77 +11,32 @@ panel_entity_key = "skolenhetskod"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Konjunkturstatistik över sjuklöner (KSju)
-
-[[variable]]
-native_id = "194.30366"
-slug = "skolenhetskod"
-
-
-[[variable]]
-native_id = "194.14841"
-slug = "fsg-annan-kommun"
-
-[[variable]]
-native_id = "194.14858"
-slug = "kop-annan-kommun"
-
-[[variable]]
-native_id = "194.14871"
-slug = "antal-elever-skolkommun"
-
-[[variable]]
-native_id = "194.30481"
-slug = "kop-fran-kommun"
-
-[[variable]]
-native_id = "194.30483"
-slug = "fsg-till-kommun"
+"194.30366" = "skolenhetskod"
+"194.14841" = "fsg-annan-kommun"
+"194.14858" = "kop-annan-kommun"
+"194.14871" = "antal-elever-skolkommun"
+"194.30481" = "kop-fran-kommun"
+"194.30483" = "fsg-till-kommun"
 
 # register 195 (ksju)
-
 # register 195 (ksju)
 # var 4027 näringsgren 2009-only predecessor: the `lgrp` sibling of the #845
 # split (see the `195.4027.ng1-2007` entry above). It's the 2009 grouped-SNI
 # member of the näringsgren group (concept_groups.toml key `naringsgren`).
-
-[[variable]]
-native_id = "194.4819"
-slug = "ovriga-kostnader"
-
-[[variable]]
-native_id = "194.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "194.8552"
-slug = "gymnasieforbund-id"
-
-[[variable]]
-native_id = "194.8698"
-slug = "inriktning-fristaende-gy"
-
-[[variable]]
-native_id = "194.16587"
-slug = "intakter-lokaler"
-
-[[variable]]
-native_id = "194.26963"
-slug = "inriktning-fristaende-gr"
-
-[[variable]]
-native_id = "194.28237"
-slug = "ovriga-intakter-spec"
-
-[[variable]]
-native_id = "194.30348"
-slug = "typ-av-gymnasieprogram"
+"194.4819" = "ovriga-kostnader"
+"194.8137" = "huvudman"
+"194.8552" = "gymnasieforbund-id"
+"194.8698" = "inriktning-fristaende-gy"
+"194.16587" = "intakter-lokaler"
+"194.26963" = "inriktning-fristaende-gr"
+"194.28237" = "ovriga-intakter-spec"
+"194.30348" = "typ-av-gymnasieprogram"
 
 # register 195
-
-[[variable]]
-native_id = "194.8702.sarform"
-slug = "sarskoleform"
+"194.8702.sarform" = "sarskoleform"
+"194.1996.schoolform" = "skolform"
 
 # register 195
 
@@ -145,10 +100,6 @@ expected_evidence_sha256 = "6792b34e801128a7e004562d590bcf9675667bdc5d4cccfb887d
 variable = "194.14871"
 expected_evidence_sha256 = "e9fb516a4322b760f147978389dc77593a996a51b0d665a0a4c6cf179bff5aab"
 evidence = "All supplied SkElev coordinates also bind native30485 with a different generic pupil-count definition. Retain the full native14871 municipality-specific family without an invented semantic owner. Full physical-peer closure and 32 complete originals: Batch52-directfacts4-source-review.json."
-
-[[variable]]
-native_id = "194.1996.schoolform"
-slug = "skolform"
 
 [[representation.parallel]]
 valid_from = "2013-01-01"

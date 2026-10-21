@@ -45,140 +45,48 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Specialskola
-
-[[variable]]
-native_id = "342.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "342.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "342.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "342.7914"
-slug = "arskurs"
-
-[[variable]]
-native_id = "342.14672"
-slug = "kurs"
-
-[[variable]]
-native_id = "342.30654"
-slug = "skolenhetens-namn"
+"342.57" = "personnr"
+"342.36" = "kommun"
+"342.332" = "senaste-invandringsdatum"
+"342.7914" = "arskurs"
+"342.14672" = "kurs"
+"342.30654" = "skolenhetens-namn"
 
 # register 344 (specialskola)
-
-[[variable]]
-native_id = "342.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "342.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "342.73"
-slug = "ar"
-
-[[variable]]
-native_id = "342.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "342.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "342.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "342.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "342.1536"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "342.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "342.2628"
-slug = "insamlingsdatum"
-
-[[variable]]
-native_id = "342.3635"
-slug = "skolans-namn"
-
-[[variable]]
-native_id = "342.4693"
-slug = "gymnasieprogram"
-
-[[variable]]
-native_id = "342.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "342.8698"
-slug = "inriktning-fristaende-gy"
-
-[[variable]]
-native_id = "342.14640"
-slug = "betyg"
-
-[[variable]]
-native_id = "342.23867"
-slug = "klassbeteckning"
-
-[[variable]]
-native_id = "342.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "342.30545"
-slug = "termin-for-kursen"
-
-[[variable]]
-native_id = "342.39019"
-slug = "nyinvandring"
+"342.56" = "person-orgnr"
+"342.34" = "juridisk-form"
+"342.73" = "ar"
+"342.257" = "fodelseland-rtb"
+"342.305" = "fodelseland-mor"
+"342.323" = "personnr-far"
+"342.324" = "personnr-mor"
+"342.1536" = "studievag-gymnasieskolan"
+"342.1993" = "skolans-identitetsnummer"
+"342.2628" = "insamlingsdatum"
+"342.3635" = "skolans-namn"
+"342.4693" = "gymnasieprogram"
+"342.8137" = "huvudman"
+"342.8698" = "inriktning-fristaende-gy"
+"342.14640" = "betyg"
+"342.23867" = "klassbeteckning"
+"342.29426" = "tidigaste-invandringsdatum"
+"342.30545" = "termin-for-kursen"
+"342.39019" = "nyinvandring"
 
 # register 344
-
-[[variable]]
-native_id = "342.30455.ma-a-pom"
-slug = "a-poang-merit"
-
-[[variable]]
-native_id = "342.8073.sun2000niva-1-mor"
-slug = "sun-niva-1-mor"
-
-[[variable]]
-native_id = "342.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "342.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "342.8073.sun2000niva-sv-mor"
-slug = "sun-niva-sv-mor"
-
-[[variable]]
-native_id = "342.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "342.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
+"342.30455.ma-a-pom" = "a-poang-merit"
+"342.8073.sun2000niva-1-mor" = "sun-niva-1-mor"
+"342.8073.sun2000niva-mor" = "sun-niva-mor"
+"342.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"342.8073.sun2000niva-sv-mor" = "sun-niva-sv-mor"
+"342.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"342.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"342.67.utl-bakg" = "utl-bakg"
+"342.67.utlbakgr" = "utlbakgr"
+"342.67.utlbakgr2" = "utlbakgr2"
+"342.67.utlsvbakg" = "utlsvbakg"
 
 # register 344
 
@@ -224,22 +132,6 @@ variable = "342.67"
 columns = { UTL_BAKG = "342.67.utl-bakg", UtlBakGr = "342.67.utlbakgr", UtlBakGr2 = "342.67.utlbakgr2", UtlSvBakg = "342.67.utlsvbakg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "1afe6a226143675b673b88efc78c22d9b05c3edeaae49e5394ff4657b22f41d0"
-
-[[variable]]
-native_id = "342.67.utl-bakg"
-slug = "utl-bakg"
-
-[[variable]]
-native_id = "342.67.utlbakgr"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "342.67.utlbakgr2"
-slug = "utlbakgr2"
-
-[[variable]]
-native_id = "342.67.utlsvbakg"
-slug = "utlsvbakg"
 
 # ── #1603 D5: SWECOV Kursprov_gymn HT2011–VT2015 TERMIN ──
 

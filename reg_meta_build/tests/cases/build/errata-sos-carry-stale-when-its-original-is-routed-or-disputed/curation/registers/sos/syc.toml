@@ -6,15 +6,17 @@ native_id = {{naming_id kind=register provider=sos register_key=syc}}
 [[variant]]
 slug = "syc-a"
 native_id = {{naming_id kind=register_variant provider=sos register_key=syc member_key=SYC_A}}
-[[variable]]
-slug = "kod"
-native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=KOD}}
-[[variable]]
-slug = "rkod"
-native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=RKOD}}
-[[variable]]
-slug = "datum"
-native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=DATUM}}
+
+[variable]
+{{naming_id kind=variable provider=sos register_key=syc member_key=KOD}} = "kod"
+{{naming_id kind=variable provider=sos register_key=syc member_key=RKOD}} = "rkod"
+{{naming_id kind=variable provider=sos register_key=syc member_key=DATUM}} = "datum"
+{{naming_id kind=variable provider=sos register_key=syc member_key=LANK}} = "lank"
+{{naming_id kind=variable provider=sos register_key=syc member_key=ALT}} = "alt"
+{{naming_id kind=variable provider=sos register_key=syc member_key=DUP}} = "dup"
+{{naming_id kind=variable provider=sos register_key=syc member_key=PER}} = "per"
+{{naming_id kind=variable provider=sos register_key=syc member_key=REP}} = "rep"
+
 [[identity.route]]
 deldatamangd = "TOKEN"
 variants = ["SYC_A"]
@@ -82,9 +84,6 @@ carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" 
 data_warning = "Before 2015 the provider documents these dates elsewhere."
 evidence = "Delivered under the same name in 2005-2014."
 noted = "2026-10-17"
-[[variable]]
-slug = "lank"
-native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=LANK}}
 [[errata.column]]
 variant = "TOKEN"
 column = "LANK"
@@ -94,9 +93,6 @@ holdings_period = "2005-2023"
 source = "steward-holdings"
 evidence = "Held under the routed token."
 noted = "2026-10-17"
-[[variable]]
-slug = "alt"
-native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=ALT}}
 [[errata.occurrence_carry]]
 variable = {{naming_id kind=variable provider=sos register_key=syc member_key=ALT}}
 variant = "SYC_A"
@@ -108,12 +104,6 @@ carry_scope = { kind = "intervals", intervals = [{ start = "2005", end = "2014" 
 data_warning = "Before 2015 the provider documents these codes elsewhere."
 evidence = "Delivered under the same name in 2005-2014."
 noted = "2026-10-17"
-[[variable]]
-slug = "dup"
-native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=DUP}}
-[[variable]]
-slug = "per"
-native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=PER}}
 [[errata.occurrence_carry]]
 variable = {{naming_id kind=variable provider=sos register_key=syc member_key=DUP}}
 variant = "SYC_A"
@@ -158,9 +148,6 @@ edition_scope = { kind = "intervals", intervals = [{ start = "2010", end = "2023
 edition_period_scope = {{period_scope key=variable:PER}}
 evidence = "The provider's own note dates the column from 2010."
 noted = "2026-10-17"
-[[variable]]
-slug = "rep"
-native_id = {{naming_id kind=variable provider=sos register_key=syc member_key=REP}}
 [[errata.field]]
 variable = {{naming_id kind=variable provider=sos register_key=syc member_key=REP}}
 variant = "SYC_A"

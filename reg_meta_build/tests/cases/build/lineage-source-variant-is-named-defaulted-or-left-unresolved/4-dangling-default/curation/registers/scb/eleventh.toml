@@ -11,9 +11,7 @@ slug = "other"
 [[variant]]
 native_id = "5.52"
 slug = "missing"
-[[variable]]
-native_id = "5.501"
-slug = "undelivered"
-[[variable]]
-native_id = "5.502"
-slug = "filler"
+
+[variable]
+"5.501" = "undelivered"
+"5.502" = "filler"

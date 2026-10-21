@@ -5,12 +5,10 @@ native_id = "76"
 [[variant]]
 native_id = "76.762"
 slug = "people"
-[[variable]]
-native_id = "76.5"
-slug = "value"
-[[variable]]
-native_id = "76.99"
-slug = "other"
+
+[variable]
+"76.5" = "value"
+"76.99" = "other"
 
 [[errata.delivered]]
 variant = "people"

@@ -6,12 +6,11 @@ native_id = {{naming_id kind=register provider=sos register_key=syd}}
 [[variant]]
 slug = "_default"
 native_id = {{naming_id kind=register_variant provider=sos register_key=syd member_key=_default}}
-[[variable]]
-slug = "col"
-native_id = {{naming_id kind=variable provider=sos register_key=syd member_key=COL}}
-[[variable]]
-slug = "lank"
-native_id = {{naming_id kind=variable provider=sos register_key=syd member_key=LANK}}
+
+[variable]
+{{naming_id kind=variable provider=sos register_key=syd member_key=COL}} = "col"
+{{naming_id kind=variable provider=sos register_key=syd member_key=LANK}} = "lank"
+
 [[errata.occurrence_carry]]
 variable = {{naming_id kind=variable provider=sos register_key=syd member_key=COL}}
 variant = "TOKEN"

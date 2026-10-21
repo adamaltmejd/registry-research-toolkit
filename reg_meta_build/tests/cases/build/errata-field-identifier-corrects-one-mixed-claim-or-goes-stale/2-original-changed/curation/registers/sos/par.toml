@@ -21,12 +21,11 @@ native_id = {{naming_id kind=register_variant provider=sos register_key=par memb
 [[variant]]
 slug = "par-f"
 native_id = {{naming_id kind=register_variant provider=sos register_key=par member_key=PAR_F}}
-[[variable]]
-slug = "datum"
-native_id = {{naming_id kind=variable provider=sos register_key=par member_key=DATUM}}
-[[variable]]
-slug = "lopdat"
-native_id = {{naming_id kind=variable provider=sos register_key=par member_key=LOPDAT}}
+
+[variable]
+{{naming_id kind=variable provider=sos register_key=par member_key=DATUM}} = "datum"
+{{naming_id kind=variable provider=sos register_key=par member_key=LOPDAT}} = "lopdat"
+
 [[errata.field]]
 variable = {{naming_id kind=variable provider=sos register_key=par member_key=DATUM}}
 variant = "PAR_F"

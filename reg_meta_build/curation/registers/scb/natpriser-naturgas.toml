@@ -17,17 +17,8 @@ native_id = "284.721"
 slug = "leverantorsbyten"
 display_group = "Leverantörsbyten"
 
+[variable]
 # Nationalräkenskaper
-
-[[variable]]
-native_id = "284.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "284.19676"
-slug = "natpris-1-jan-hushall"
-
-[[variable]]
-native_id = "284.19677"
-slug = "natpris-1-jan-industrikunder"
+"284.1839" = "orgnr"
+"284.19676" = "natpris-1-jan-hushall"
+"284.19677" = "natpris-1-jan-industrikunder"

@@ -7884,542 +7884,301 @@ panel_entity_key = "orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # IT-användning
-
-[[variable]]
-native_id = "257.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "257.29"
-slug = "fenr"
-
-[[variable]]
-native_id = "257.73.ar"
-slug = "ar"
-
-[[variable]]
-native_id = "257.462.stratum"
-slug = "stratum"
-
-[[variable]]
-native_id = "257.690"
-slug = "antal-anstallda"
-
-[[variable]]
-native_id = "257.2468"
-slug = "outlier"
-
-[[variable]]
-native_id = "257.4027.naringsgren"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "257.4032"
-slug = "antal-anstallda-foretaget"
-
-[[variable]]
-native_id = "257.4045"
-slug = "koncernmarkering"
-
-[[variable]]
-native_id = "257.4256"
-slug = "nettoomsattning"
-
-[[variable]]
-native_id = "257.5696.stora-n-per-stratum"
-slug = "stora-n-per-stratum"
-
-[[variable]]
-native_id = "257.5697.lilla-n-per-stratum"
-slug = "lilla-n-per-stratum"
-
-[[variable]]
-native_id = "257.6211.svarande-per-stratum"
-slug = "svarande-per-stratum"
-
-[[variable]]
-native_id = "257.7705"
-slug = "utgifter-for-egen-fou"
-
-[[variable]]
-native_id = "257.7708"
-slug = "utgifter-for-utlagd-fou"
-
-[[variable]]
-native_id = "257.15555"
-slug = "geografisk-marknad-nationellt"
-
-[[variable]]
-native_id = "257.15556"
-slug = "geografisk-marknad-eu-efta"
-
-[[variable]]
-native_id = "257.15559"
-slug = "geografisk-marknad-ovriga-lander"
-
-[[variable]]
-native_id = "257.15562"
-slug = "produktinnovation-ny-for-marknad"
-
-[[variable]]
-native_id = "257.15563"
-slug = "produktinnovation-ny-for-foretaget"
-
-[[variable]]
-native_id = "257.15568"
-slug = "omsattningsandel-inno-ny-for-marknad"
-
-[[variable]]
-native_id = "257.15569"
-slug = "omsattningsandel-inno-ny-for-foretaget"
-
-[[variable]]
-native_id = "257.15570"
-slug = "omsattningsandel-oforandrade-varor"
-
-[[variable]]
-native_id = "257.15571"
-slug = "introduktion-av-produktionsmetoder"
-
-[[variable]]
-native_id = "257.15578"
-slug = "introduktion-av-leveransmetoder"
-
-[[variable]]
-native_id = "257.15579"
-slug = "introduktion-av-stodverksamheter"
-
-[[variable]]
-native_id = "257.15580"
-slug = "utvecklare-av-processinnovationer"
-
-[[variable]]
-native_id = "257.15582"
-slug = "introduktion-av-varor"
-
-[[variable]]
-native_id = "257.15583"
-slug = "introduktion-av-tjanster"
-
-[[variable]]
-native_id = "257.15584"
-slug = "utvecklare-av-produktinnovationer"
-
-[[variable]]
-native_id = "257.15593"
-slug = "huvudkontoret-belaget"
-
-[[variable]]
-native_id = "257.15600"
-slug = "innovationssamarbete"
-
-[[variable]]
-native_id = "257.15612"
-slug = "utgifter-forvarv-maskiner-programvara"
-
-[[variable]]
-native_id = "257.15613"
-slug = "utgifter-forvarv-existerande-kunskap"
-
-[[variable]]
-native_id = "257.15614"
-slug = "inna-egen-fou"
-
-[[variable]]
-native_id = "257.15616"
-slug = "inna-utlagd-fou"
-
-[[variable]]
-native_id = "257.15617"
-slug = "inna-forvarv-maskiner"
-
-[[variable]]
-native_id = "257.15618"
-slug = "inna-forvarv-existerande-kunskap"
-
-[[variable]]
-native_id = "257.15619"
-slug = "inna-utbildning"
-
-[[variable]]
-native_id = "257.15620"
-slug = "inna-marknadsintroduktion"
-
-[[variable]]
-native_id = "257.15621"
-slug = "inna-andra-forberedelser"
-
-[[variable]]
-native_id = "257.15642"
-slug = "geografisk-marknad-regional-lokal"
-
-[[variable]]
-native_id = "257.15643"
-slug = "totala-innovationsutgifter"
-
-[[variable]]
-native_id = "257.15665"
-slug = "mest-vardefull-samarbetspartner"
-
-[[variable]]
-native_id = "257.17402"
-slug = "koncerntillhorighet"
-
-[[variable]]
-native_id = "257.20900"
-slug = "avbruten-innovationsaktivitet"
-
-[[variable]]
-native_id = "257.20901"
-slug = "pagaende-innovationsaktivitet"
-
-[[variable]]
-native_id = "257.20940"
-slug = "introduktion-av-nya-affarsmetoder"
-
-[[variable]]
-native_id = "257.20941"
-slug = "introduktion-metoder-ansvar-beslut"
-
-[[variable]]
-native_id = "257.20942"
-slug = "introduktion-metoder-externa-relationer"
-
-[[variable]]
-native_id = "257.20948"
-slug = "introduktion-forandringar-utformning"
-
-[[variable]]
-native_id = "257.20949"
-slug = "introduktion-metoder-marknadsforing"
-
-[[variable]]
-native_id = "257.20950"
-slug = "introduktion-metoder-produktplacering"
-
-[[variable]]
-native_id = "257.20951"
-slug = "introduktion-metoder-prissattning"
-
-[[variable]]
-native_id = "257.20955"
-slug = "miljoinnovation-minskad-materialatgang"
-
-[[variable]]
-native_id = "257.20958"
-slug = "miljoinnovation-materialersattning"
-
-[[variable]]
-native_id = "257.20959"
-slug = "miljoinnovation-fororeningar-foretaget"
-
-[[variable]]
-native_id = "257.20960"
-slug = "miljoinnovation-atervinning-avfall"
-
-[[variable]]
-native_id = "257.20962"
-slug = "miljoinno-fororeningar-slutkonsumtion"
-
-[[variable]]
-native_id = "257.28037"
-slug = "syfte-inno-marknadsandelar"
-
-[[variable]]
-native_id = "257.28038"
-slug = "syfte-inno-miljo"
-
-[[variable]]
-native_id = "257.28039"
-slug = "syfte-inno-material-energikostnad"
-
-[[variable]]
-native_id = "257.28047"
-slug = "kreativitet-brainstorming"
-
-[[variable]]
-native_id = "257.28048"
-slug = "kreativitet-sektorovergripande-team"
-
-[[variable]]
-native_id = "257.28049"
-slug = "kreativitet-rotation-personal"
-
-[[variable]]
-native_id = "257.28050"
-slug = "kreativitet-ekonomiska-incitament"
-
-[[variable]]
-native_id = "257.28051"
-slug = "kreativitet-icke-ekonomiska-incitament"
-
-[[variable]]
-native_id = "257.28052"
-slug = "kreativitet-utbilda-personal"
-
-[[variable]]
-native_id = "257.28053"
-slug = "finansieringskalla-innovationsutgifter"
-
-[[variable]]
-native_id = "257.28057"
-slug = "kompetens-i-foretaget"
-
-[[variable]]
-native_id = "257.29913"
-slug = "utgifter-ovrig-innovationsverksamhet"
-
-[[variable]]
-native_id = "257.29914"
-slug = "stod-for-innovationsverksamhet-kommun"
-
-[[variable]]
-native_id = "257.29916"
-slug = "informationskallor-produktinnovation"
-
-[[variable]]
-native_id = "257.30126"
-slug = "foretagssammanslagningar"
-
-[[variable]]
-native_id = "257.30128"
-slug = "foretagets-konkurrenskraft"
-
-[[variable]]
-native_id = "257.30132"
-slug = "strategier-hinder-foretagets-mal"
-
-[[variable]]
-native_id = "257.30134"
-slug = "strategier-for-foretagets-mal"
-
-[[variable]]
-native_id = "257.30135"
-slug = "hinder-for-foretagets-mal"
-
-[[variable]]
-native_id = "257.32713"
-slug = "ipr-patent"
-
-[[variable]]
-native_id = "257.32715"
-slug = "ej-inno-lag-efterfragan"
-
-[[variable]]
-native_id = "257.32717"
-slug = "miljovinster-slutkonsumtion"
-
-[[variable]]
-native_id = "257.32718"
-slug = "miljovinster-inom-foretaget"
-
-[[variable]]
-native_id = "257.32719"
-slug = "miljovinst-fran-typ-av-innovation"
-
-[[variable]]
-native_id = "257.32720"
-slug = "faktorer-innovationer-miljovinster"
-
-[[variable]]
-native_id = "257.32722"
-slug = "rutiner-minska-miljopaverkan"
-
-[[variable]]
-native_id = "257.32723"
-slug = "rutiner-minska-miljopaverkan-fore-2012"
-
-[[variable]]
-native_id = "257.32725"
-slug = "rutiner-minska-miljopaverkan-2012-2014"
-
-[[variable]]
-native_id = "257.36983"
-slug = "stod-for-innovationsverksamhet-staten"
-
-[[variable]]
-native_id = "257.36984"
-slug = "stod-for-innovationsverksamhet-eu"
-
-[[variable]]
-native_id = "257.37076"
-slug = "ipr-monsterskydd"
-
-[[variable]]
-native_id = "257.37077"
-slug = "ipr-varumarke"
-
-[[variable]]
-native_id = "257.37078"
-slug = "ipr-salt"
-
-[[variable]]
-native_id = "257.37079"
-slug = "ipr-kopt"
-
-[[variable]]
-native_id = "257.39088"
-slug = "innovationsutgifter-forvarv-material"
-
-[[variable]]
-native_id = "257.39090"
-slug = "finansieringskalla-aktiefinansiering"
-
-[[variable]]
-native_id = "257.39092"
-slug = "finansieringskalla-lanefinansiering"
-
-[[variable]]
-native_id = "257.39094"
-slug = "stod-innovationsaktiviteter-eu-h2020"
-
-[[variable]]
-native_id = "257.39096"
-slug = "stod-fran-eu-h2020"
-
-[[variable]]
-native_id = "257.39101.source-native-quantity"
-slug = "innosamarbete-konsulter-se"
-
-[[variable]]
-native_id = "257.39102"
-slug = "samarbete-inom-ovriga-aktiviteter"
-
-[[variable]]
-native_id = "257.39104.source-native-quantity"
-slug = "innosamarbete-konsulter-eu"
-
-[[variable]]
-native_id = "257.39126"
-slug = "coop-pub-clcu-neu-nefta"
-
-[[variable]]
-native_id = "257.44660"
-slug = "env-engra-kort"
-
-[[variable]]
-native_id = "257.44661"
-slug = "env-endem-kort"
-
-[[variable]]
-native_id = "257.44667"
-slug = "clim-cust-medvetenhet"
-
-[[variable]]
-native_id = "257.46476"
-slug = "env-endem"
-
-[[variable]]
-native_id = "257.46478"
-slug = "env-engra"
-
-[[variable]]
-native_id = "257.46481"
-slug = "miljoinno-livscykel"
-
-[[variable]]
-native_id = "257.46482"
-slug = "miljoinno-atervinning"
-
-[[variable]]
-native_id = "257.46484"
-slug = "miljoinno-mangfald-kons"
-
-[[variable]]
-native_id = "257.46485"
-slug = "miljoinno-mangfald-intern"
-
-[[variable]]
-native_id = "257.46492"
-slug = "miljoinno-fossila"
-
-[[variable]]
-native_id = "257.46493"
-slug = "clim-cust-efterfragan"
-
-[[variable]]
-native_id = "257.46499"
-slug = "fund-debt-succ"
-
-[[variable]]
-native_id = "257.46502"
-slug = "fund-equit-succ"
-
-[[variable]]
-native_id = "257.46586.source-native-question"
-slug = "reas-ninn-nneed"
-
-[[variable]]
-native_id = "257.46587.source-native-question"
-slug = "reas-ninn-oth"
-
-[[variable]]
-native_id = "257.46588.source-native-question"
-slug = "reas-ninn-resc"
-
-[[variable]]
-native_id = "257.46589.source-native-question"
-slug = "reas-aktiva-nneed"
-
-[[variable]]
-native_id = "257.46590.source-native-question"
-slug = "reas-nminn-oth"
-
-[[variable]]
-native_id = "257.46591.source-native-question"
-slug = "reas-nminn-resc"
-
-[[variable]]
-native_id = "257.46595"
-slug = "innovationsutgifter-tjanster-material"
-
-[[variable]]
-native_id = "257.46650"
-slug = "turpop"
-
-[[variable]]
-native_id = "257.46654"
-slug = "turresp"
-
-[[variable]]
-native_id = "257.46665"
-slug = "tur-prd-inn-andel"
-
-[[variable]]
-native_id = "257.49574"
-slug = "tur-prd-inn"
-
-[[variable]]
-native_id = "257.49581"
-slug = "risks-depe-neu"
-
-[[variable]]
-native_id = "257.49589"
-slug = "risks-depe-miti-neu"
+"257.1839" = "orgnr"
+"257.29" = "fenr"
+"257.73.ar" = "ar"
+"257.462.stratum" = "stratum"
+"257.690" = "antal-anstallda"
+"257.2468" = "outlier"
+"257.4027.naringsgren" = "naringsgren"
+"257.4032" = "antal-anstallda-foretaget"
+"257.4045" = "koncernmarkering"
+"257.4256" = "nettoomsattning"
+"257.5696.stora-n-per-stratum" = "stora-n-per-stratum"
+"257.5697.lilla-n-per-stratum" = "lilla-n-per-stratum"
+"257.6211.svarande-per-stratum" = "svarande-per-stratum"
+"257.7705" = "utgifter-for-egen-fou"
+"257.7708" = "utgifter-for-utlagd-fou"
+"257.15555" = "geografisk-marknad-nationellt"
+"257.15556" = "geografisk-marknad-eu-efta"
+"257.15559" = "geografisk-marknad-ovriga-lander"
+"257.15562" = "produktinnovation-ny-for-marknad"
+"257.15563" = "produktinnovation-ny-for-foretaget"
+"257.15568" = "omsattningsandel-inno-ny-for-marknad"
+"257.15569" = "omsattningsandel-inno-ny-for-foretaget"
+"257.15570" = "omsattningsandel-oforandrade-varor"
+"257.15571" = "introduktion-av-produktionsmetoder"
+"257.15578" = "introduktion-av-leveransmetoder"
+"257.15579" = "introduktion-av-stodverksamheter"
+"257.15580" = "utvecklare-av-processinnovationer"
+"257.15582" = "introduktion-av-varor"
+"257.15583" = "introduktion-av-tjanster"
+"257.15584" = "utvecklare-av-produktinnovationer"
+"257.15593" = "huvudkontoret-belaget"
+"257.15600" = "innovationssamarbete"
+"257.15612" = "utgifter-forvarv-maskiner-programvara"
+"257.15613" = "utgifter-forvarv-existerande-kunskap"
+"257.15614" = "inna-egen-fou"
+"257.15616" = "inna-utlagd-fou"
+"257.15617" = "inna-forvarv-maskiner"
+"257.15618" = "inna-forvarv-existerande-kunskap"
+"257.15619" = "inna-utbildning"
+"257.15620" = "inna-marknadsintroduktion"
+"257.15621" = "inna-andra-forberedelser"
+"257.15642" = "geografisk-marknad-regional-lokal"
+"257.15643" = "totala-innovationsutgifter"
+"257.15665" = "mest-vardefull-samarbetspartner"
+"257.17402" = "koncerntillhorighet"
+"257.20900" = "avbruten-innovationsaktivitet"
+"257.20901" = "pagaende-innovationsaktivitet"
+"257.20940" = "introduktion-av-nya-affarsmetoder"
+"257.20941" = "introduktion-metoder-ansvar-beslut"
+"257.20942" = "introduktion-metoder-externa-relationer"
+"257.20948" = "introduktion-forandringar-utformning"
+"257.20949" = "introduktion-metoder-marknadsforing"
+"257.20950" = "introduktion-metoder-produktplacering"
+"257.20951" = "introduktion-metoder-prissattning"
+"257.20955" = "miljoinnovation-minskad-materialatgang"
+"257.20958" = "miljoinnovation-materialersattning"
+"257.20959" = "miljoinnovation-fororeningar-foretaget"
+"257.20960" = "miljoinnovation-atervinning-avfall"
+"257.20962" = "miljoinno-fororeningar-slutkonsumtion"
+"257.28037" = "syfte-inno-marknadsandelar"
+"257.28038" = "syfte-inno-miljo"
+"257.28039" = "syfte-inno-material-energikostnad"
+"257.28047" = "kreativitet-brainstorming"
+"257.28048" = "kreativitet-sektorovergripande-team"
+"257.28049" = "kreativitet-rotation-personal"
+"257.28050" = "kreativitet-ekonomiska-incitament"
+"257.28051" = "kreativitet-icke-ekonomiska-incitament"
+"257.28052" = "kreativitet-utbilda-personal"
+"257.28053" = "finansieringskalla-innovationsutgifter"
+"257.28057" = "kompetens-i-foretaget"
+"257.29913" = "utgifter-ovrig-innovationsverksamhet"
+"257.29914" = "stod-for-innovationsverksamhet-kommun"
+"257.29916" = "informationskallor-produktinnovation"
+"257.30126" = "foretagssammanslagningar"
+"257.30128" = "foretagets-konkurrenskraft"
+"257.30132" = "strategier-hinder-foretagets-mal"
+"257.30134" = "strategier-for-foretagets-mal"
+"257.30135" = "hinder-for-foretagets-mal"
+"257.32713" = "ipr-patent"
+"257.32715" = "ej-inno-lag-efterfragan"
+"257.32717" = "miljovinster-slutkonsumtion"
+"257.32718" = "miljovinster-inom-foretaget"
+"257.32719" = "miljovinst-fran-typ-av-innovation"
+"257.32720" = "faktorer-innovationer-miljovinster"
+"257.32722" = "rutiner-minska-miljopaverkan"
+"257.32723" = "rutiner-minska-miljopaverkan-fore-2012"
+"257.32725" = "rutiner-minska-miljopaverkan-2012-2014"
+"257.36983" = "stod-for-innovationsverksamhet-staten"
+"257.36984" = "stod-for-innovationsverksamhet-eu"
+"257.37076" = "ipr-monsterskydd"
+"257.37077" = "ipr-varumarke"
+"257.37078" = "ipr-salt"
+"257.37079" = "ipr-kopt"
+"257.39088" = "innovationsutgifter-forvarv-material"
+"257.39090" = "finansieringskalla-aktiefinansiering"
+"257.39092" = "finansieringskalla-lanefinansiering"
+"257.39094" = "stod-innovationsaktiviteter-eu-h2020"
+"257.39096" = "stod-fran-eu-h2020"
+"257.39101.source-native-quantity" = "innosamarbete-konsulter-se"
+"257.39102" = "samarbete-inom-ovriga-aktiviteter"
+"257.39104.source-native-quantity" = "innosamarbete-konsulter-eu"
+"257.39126" = "coop-pub-clcu-neu-nefta"
+"257.44660" = "env-engra-kort"
+"257.44661" = "env-endem-kort"
+"257.44667" = "clim-cust-medvetenhet"
+"257.46476" = "env-endem"
+"257.46478" = "env-engra"
+"257.46481" = "miljoinno-livscykel"
+"257.46482" = "miljoinno-atervinning"
+"257.46484" = "miljoinno-mangfald-kons"
+"257.46485" = "miljoinno-mangfald-intern"
+"257.46492" = "miljoinno-fossila"
+"257.46493" = "clim-cust-efterfragan"
+"257.46499" = "fund-debt-succ"
+"257.46502" = "fund-equit-succ"
+"257.46586.source-native-question" = "reas-ninn-nneed"
+"257.46587.source-native-question" = "reas-ninn-oth"
+"257.46588.source-native-question" = "reas-ninn-resc"
+"257.46589.source-native-question" = "reas-aktiva-nneed"
+"257.46590.source-native-question" = "reas-nminn-oth"
+"257.46591.source-native-question" = "reas-nminn-resc"
+"257.46595" = "innovationsutgifter-tjanster-material"
+"257.46650" = "turpop"
+"257.46654" = "turresp"
+"257.46665" = "tur-prd-inn-andel"
+"257.49574" = "tur-prd-inn"
+"257.49581" = "risks-depe-neu"
+"257.49589" = "risks-depe-miti-neu"
 
 # register 258 (it-anvandning)
+"257.3578" = "orgnr-12"
+"257.74" = "agarkontroll"
+"257.1054" = "sateskommun"
+"257.27731" = "koncernforetag"
+"257.39089" = "innovationsutgifter-kapitalvaror"
+"257.28054.varuinnovation-utvecklad-av-foretaget" = "varuinnovation-utvecklad-av-foretaget"
+"257.28054.varuinnovation-utvecklad-med-andra" = "varuinnovation-utvecklad-med-andra"
+"257.28054.varuinnovation-anpassad-av-foretaget" = "varuinnovation-anpassad-av-foretaget"
+"257.28054.varuinnovation-utvecklad-av-andra" = "varuinnovation-utvecklad-av-andra"
+"257.28055.tjansteinnovation-utvecklad-av-foretaget" = "tjansteinnovation-utvecklad-av-foretaget"
+"257.28055.tjansteinnovation-utvecklad-med-andra" = "tjansteinnovation-utvecklad-med-andra"
+"257.28055.tjansteinnovation-anpassad-av-foretaget" = "tjansteinnovation-anpassad-av-foretaget"
+"257.28055.tjansteinnovation-utvecklad-av-andra" = "tjansteinnovation-utvecklad-av-andra"
+"257.28056.processinnovation-utvecklad-av-foretaget" = "processinnovation-utvecklad-av-foretaget"
+"257.28056.processinnovation-utvecklad-med-andra" = "processinnovation-utvecklad-med-andra"
+"257.28056.processinnovation-anpassad-av-foretaget" = "processinnovation-anpassad-av-foretaget"
+"257.28056.processinnovation-utvecklad-av-andra" = "processinnovation-utvecklad-av-andra"
+"257.30131.innovationsaktivitet-i-upphandlingsavtal" = "innovationsaktivitet-i-upphandlingsavtal"
+"257.30131.innovation-kravd-i-upphandlingsavtal" = "innovation-kravd-i-upphandlingsavtal"
+"257.30131.innovation-ej-kravd-i-upphandlingsavtal" = "innovation-ej-kravd-i-upphandlingsavtal"
+"257.37092.logistikinnovation-utebliven-huvudorsak" = "logistikinnovation-utebliven-huvudorsak"
+"257.37092.logistikinnovation-ekonomiskt-hinder" = "logistikinnovation-ekonomiskt-hinder"
+"257.37092.logistikinnovation-tekniskt-hinder" = "logistikinnovation-tekniskt-hinder"
+"257.37092.logistikinnovation-rattsligt-hinder" = "logistikinnovation-rattsligt-hinder"
+"257.37092.logistikinnovation-annat-hinder" = "logistikinnovation-annat-hinder"
 
-[[variable]]
-native_id = "257.3578"
-slug = "orgnr-12"
-
-[[variable]]
-native_id = "257.74"
-slug = "agarkontroll"
-
-[[variable]]
-native_id = "257.1054"
-slug = "sateskommun"
-
-[[variable]]
-native_id = "257.27731"
-slug = "koncernforetag"
-
-[[variable]]
-native_id = "257.39089"
-slug = "innovationsutgifter-kapitalvaror"
+# Y-311 2026-09-29: split-owner naming for the 74 finite Innovation native-question
+# families above. Each leaf reuses the family's existing source-native slug; the base
+# family keeps its own name.
+"257.29.fenr" = "fenr"
+"257.690.antal-anstallda" = "antal-anstallda"
+"257.2468.outlier" = "outlier"
+"257.4032.antal-anstallda-foretaget" = "antal-anstallda-foretaget"
+"257.4045.koncernmarkering" = "koncernmarkering"
+"257.4256.nettoomsattning" = "nettoomsattning"
+"257.7705.utgifter-for-egen-fou" = "utgifter-for-egen-fou"
+"257.7708.utgifter-for-utlagd-fou" = "utgifter-for-utlagd-fou"
+"257.15555.geografisk-marknad-nationellt" = "geografisk-marknad-nationellt"
+"257.15556.geografisk-marknad-eu-efta" = "geografisk-marknad-eu-efta"
+"257.15559.geografisk-marknad-ovriga-lander" = "geografisk-marknad-ovriga-lander"
+"257.15562.produktinnovation-ny-for-marknad" = "produktinnovation-ny-for-marknad"
+"257.15563.produktinnovation-ny-for-foretaget" = "produktinnovation-ny-for-foretaget"
+"257.15568.omsattningsandel-inno-ny-for-marknad" = "omsattningsandel-inno-ny-for-marknad"
+"257.15569.omsattningsandel-inno-ny-for-foretaget" = "omsattningsandel-inno-ny-for-foretaget"
+"257.15570.omsattningsandel-oforandrade-varor" = "omsattningsandel-oforandrade-varor"
+"257.15571.introduktion-av-produktionsmetoder" = "introduktion-av-produktionsmetoder"
+"257.15578.introduktion-av-leveransmetoder" = "introduktion-av-leveransmetoder"
+"257.15579.introduktion-av-stodverksamheter" = "introduktion-av-stodverksamheter"
+"257.15580.utvecklare-av-processinnovationer" = "utvecklare-av-processinnovationer"
+"257.15582.introduktion-av-varor" = "introduktion-av-varor"
+"257.15583.introduktion-av-tjanster" = "introduktion-av-tjanster"
+"257.15584.utvecklare-av-produktinnovationer" = "utvecklare-av-produktinnovationer"
+"257.15593.huvudkontoret-belaget" = "huvudkontoret-belaget"
+"257.15600.innovationssamarbete" = "innovationssamarbete"
+"257.15612.utgifter-forvarv-maskiner-programvara" = "utgifter-forvarv-maskiner-programvara"
+"257.15613.utgifter-forvarv-existerande-kunskap" = "utgifter-forvarv-existerande-kunskap"
+"257.15614.inna-egen-fou" = "inna-egen-fou"
+"257.15616.inna-utlagd-fou" = "inna-utlagd-fou"
+"257.15617.inna-forvarv-maskiner" = "inna-forvarv-maskiner"
+"257.15618.inna-forvarv-existerande-kunskap" = "inna-forvarv-existerande-kunskap"
+"257.15619.inna-utbildning" = "inna-utbildning"
+"257.15620.inna-marknadsintroduktion" = "inna-marknadsintroduktion"
+"257.15621.inna-andra-forberedelser" = "inna-andra-forberedelser"
+"257.15642.geografisk-marknad-regional-lokal" = "geografisk-marknad-regional-lokal"
+"257.15643.totala-innovationsutgifter" = "totala-innovationsutgifter"
+"257.15665.mest-vardefull-samarbetspartner" = "mest-vardefull-samarbetspartner"
+"257.17402.koncerntillhorighet" = "koncerntillhorighet"
+"257.20900.avbruten-innovationsaktivitet" = "avbruten-innovationsaktivitet"
+"257.20901.pagaende-innovationsaktivitet" = "pagaende-innovationsaktivitet"
+"257.20940.introduktion-av-nya-affarsmetoder" = "introduktion-av-nya-affarsmetoder"
+"257.20941.introduktion-metoder-ansvar-beslut" = "introduktion-metoder-ansvar-beslut"
+"257.20942.introduktion-metoder-externa-relationer" = "introduktion-metoder-externa-relationer"
+"257.20948.introduktion-forandringar-utformning" = "introduktion-forandringar-utformning"
+"257.20949.introduktion-metoder-marknadsforing" = "introduktion-metoder-marknadsforing"
+"257.20950.introduktion-metoder-produktplacering" = "introduktion-metoder-produktplacering"
+"257.20951.introduktion-metoder-prissattning" = "introduktion-metoder-prissattning"
+"257.20955.miljoinnovation-minskad-materialatgang" = "miljoinnovation-minskad-materialatgang"
+"257.20957.j20c" = "j20c"
+"257.20958.miljoinnovation-materialersattning" = "miljoinnovation-materialersattning"
+"257.20959.miljoinnovation-fororeningar-foretaget" = "miljoinnovation-fororeningar-foretaget"
+"257.20960.miljoinnovation-atervinning-avfall" = "miljoinnovation-atervinning-avfall"
+"257.20962.miljoinno-fororeningar-slutkonsumtion" = "miljoinno-fororeningar-slutkonsumtion"
+"257.29913.utgifter-ovrig-innovationsverksamhet" = "utgifter-ovrig-innovationsverksamhet"
+"257.29914.stod-for-innovationsverksamhet-kommun" = "stod-for-innovationsverksamhet-kommun"
+"257.32713.ipr-patent" = "ipr-patent"
+"257.36983.stod-for-innovationsverksamhet-staten" = "stod-for-innovationsverksamhet-staten"
+"257.36984.stod-for-innovationsverksamhet-eu" = "stod-for-innovationsverksamhet-eu"
+"257.37076.ipr-monsterskydd" = "ipr-monsterskydd"
+"257.37077.ipr-varumarke" = "ipr-varumarke"
+"257.37078.ipr-salt" = "ipr-salt"
+"257.37079.ipr-kopt" = "ipr-kopt"
+"257.39094.stod-innovationsaktiviteter-eu-h2020" = "stod-innovationsaktiviteter-eu-h2020"
+"257.39096.stod-fran-eu-h2020" = "stod-fran-eu-h2020"
+"257.39102.samarbete-inom-ovriga-aktiviteter" = "samarbete-inom-ovriga-aktiviteter"
+"257.39126.coop-pub-clcu-neu-nefta" = "coop-pub-clcu-neu-nefta"
+"257.46481.miljoinno-livscykel" = "miljoinno-livscykel"
+"257.46482.miljoinno-atervinning" = "miljoinno-atervinning"
+"257.46483.eco-enu-sg" = "eco-enu-sg"
+"257.46484.miljoinno-mangfald-kons" = "miljoinno-mangfald-kons"
+"257.46485.miljoinno-mangfald-intern" = "miljoinno-mangfald-intern"
+"257.46492.miljoinno-fossila" = "miljoinno-fossila"
+"257.46650.turpop" = "turpop"
+"257.46654.turresp" = "turresp"
+"257.ECOENU" = "ecoenu"
+"257.ECOMAT" = "ecomat"
+"257.ECOPOL" = "ecopol"
+"257.ECOPOS" = "ecopos"
+"257.ECOREA" = "ecorea"
+"257.ECOREC" = "ecorec"
+"257.ECOSUB" = "ecosub"
+"257.ECOENO" = "ecoeno"
+"257.ECOEXT" = "ecoext"
+"257.ECOREP" = "ecorep"
+"257.Emp2014" = "emp2014"
+"257.emp2012" = "emp2012"
+"257.co11" = "cis2002-samarbete-koncernforetag-sverige"
+"257.co12" = "cis2002-samarbete-koncernforetag-platskolumn-2"
+"257.co13" = "cis2002-samarbete-koncernforetag-platskolumn-3"
+"257.co14" = "cis2002-samarbete-koncernforetag-platskolumn-4"
+"257.co15" = "cis2002-samarbete-koncernforetag-platskolumn-5"
+"257.CO21" = "cis2002-samarbete-leverantorer-sverige"
+"257.co22" = "cis2002-samarbete-leverantorer-platskolumn-2"
+"257.co23" = "cis2002-samarbete-leverantorer-platskolumn-3"
+"257.co24" = "cis2002-samarbete-leverantorer-platskolumn-4"
+"257.co25" = "cis2002-samarbete-leverantorer-platskolumn-5"
+"257.CO31" = "cis2002-samarbete-kunder-sverige"
+"257.co32" = "cis2002-samarbete-kunder-platskolumn-2"
+"257.co33" = "cis2002-samarbete-kunder-platskolumn-3"
+"257.co34" = "cis2002-samarbete-kunder-platskolumn-4"
+"257.co35" = "cis2002-samarbete-kunder-platskolumn-5"
+"257.CO41" = "cis2002-samarbete-konkurrenter-sverige"
+"257.co42" = "cis2002-samarbete-konkurrenter-platskolumn-2"
+"257.co43" = "cis2002-samarbete-konkurrenter-platskolumn-3"
+"257.co44" = "cis2002-samarbete-konkurrenter-platskolumn-4"
+"257.co45" = "cis2002-samarbete-konkurrenter-platskolumn-5"
+"257.CO51" = "cis2002-samarbete-konsulter-sverige"
+"257.co52" = "cis2002-samarbete-konsulter-platskolumn-2"
+"257.co53" = "cis2002-samarbete-konsulter-platskolumn-3"
+"257.co54" = "cis2002-samarbete-konsulter-platskolumn-4"
+"257.Co55" = "cis2002-samarbete-konsulter-platskolumn-5"
+"257.CO61" = "cis2002-samarbete-universitet-sverige"
+"257.co62" = "cis2002-samarbete-universitet-platskolumn-2"
+"257.co63" = "cis2002-samarbete-universitet-platskolumn-3"
+"257.co64" = "cis2002-samarbete-universitet-platskolumn-4"
+"257.co65" = "cis2002-samarbete-universitet-platskolumn-5"
+"257.CO71" = "cis2002-samarbete-offentlig-forskning-sverige"
+"257.co72" = "cis2002-samarbete-offentlig-forskning-platskolumn-2"
+"257.co73" = "cis2002-samarbete-offentlig-forskning-platskolumn-3"
+"257.co74" = "cis2002-samarbete-offentlig-forskning-platskolumn-4"
+"257.co75" = "cis2002-samarbete-offentlig-forskning-platskolumn-5"
+"257.COOP_NO" = "coop-no-enligt-leverans"
+"257.STRAT" = "strat-enligt-leverans"
+"257.HO" = "ho-enligt-leverans"
+"257.LILLAN" = "lillan-enligt-leverans"
+"257.WEIGHT" = "weight-enligt-leverans"
+"257.emp02" = "emp02-enligt-leverans"
+"257.emp04" = "emp04-enligt-leverans"
+"257.emp06" = "emp06-enligt-leverans"
+"257.emp08" = "emp08-enligt-leverans"
+"257.emp2010" = "emp2010-enligt-leverans"
+"257.Emp2016" = "emp2016-enligt-leverans"
+"257.Emp2018" = "emp2018-enligt-leverans"
+"257.Emp2020" = "emp2020-enligt-leverans"
 
 # CIS2016 response components. The historical CIS2016 column in SCB's
 # 2019-11-12 quality declaration identifies each literal; the questionnaire
@@ -8907,386 +8666,6 @@ data_warning = "Catalog identity follows the exported question ID and definition
 variable = "257.46654"
 columns = { StoraN_TUR = "257.46654.turresp", TURRESP = "257.46654.turresp" }
 columns_ref = "Y-311 2026-09-29: 257.46654 reviewed native-question identity {StoraN_TUR, TURRESP} owned by turresp; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
-
-[[variable]]
-native_id = "257.28054.varuinnovation-utvecklad-av-foretaget"
-slug = "varuinnovation-utvecklad-av-foretaget"
-
-[[variable]]
-native_id = "257.28054.varuinnovation-utvecklad-med-andra"
-slug = "varuinnovation-utvecklad-med-andra"
-
-[[variable]]
-native_id = "257.28054.varuinnovation-anpassad-av-foretaget"
-slug = "varuinnovation-anpassad-av-foretaget"
-
-[[variable]]
-native_id = "257.28054.varuinnovation-utvecklad-av-andra"
-slug = "varuinnovation-utvecklad-av-andra"
-
-[[variable]]
-native_id = "257.28055.tjansteinnovation-utvecklad-av-foretaget"
-slug = "tjansteinnovation-utvecklad-av-foretaget"
-
-[[variable]]
-native_id = "257.28055.tjansteinnovation-utvecklad-med-andra"
-slug = "tjansteinnovation-utvecklad-med-andra"
-
-[[variable]]
-native_id = "257.28055.tjansteinnovation-anpassad-av-foretaget"
-slug = "tjansteinnovation-anpassad-av-foretaget"
-
-[[variable]]
-native_id = "257.28055.tjansteinnovation-utvecklad-av-andra"
-slug = "tjansteinnovation-utvecklad-av-andra"
-
-[[variable]]
-native_id = "257.28056.processinnovation-utvecklad-av-foretaget"
-slug = "processinnovation-utvecklad-av-foretaget"
-
-[[variable]]
-native_id = "257.28056.processinnovation-utvecklad-med-andra"
-slug = "processinnovation-utvecklad-med-andra"
-
-[[variable]]
-native_id = "257.28056.processinnovation-anpassad-av-foretaget"
-slug = "processinnovation-anpassad-av-foretaget"
-
-[[variable]]
-native_id = "257.28056.processinnovation-utvecklad-av-andra"
-slug = "processinnovation-utvecklad-av-andra"
-
-[[variable]]
-native_id = "257.30131.innovationsaktivitet-i-upphandlingsavtal"
-slug = "innovationsaktivitet-i-upphandlingsavtal"
-
-[[variable]]
-native_id = "257.30131.innovation-kravd-i-upphandlingsavtal"
-slug = "innovation-kravd-i-upphandlingsavtal"
-
-[[variable]]
-native_id = "257.30131.innovation-ej-kravd-i-upphandlingsavtal"
-slug = "innovation-ej-kravd-i-upphandlingsavtal"
-
-[[variable]]
-native_id = "257.37092.logistikinnovation-utebliven-huvudorsak"
-slug = "logistikinnovation-utebliven-huvudorsak"
-
-[[variable]]
-native_id = "257.37092.logistikinnovation-ekonomiskt-hinder"
-slug = "logistikinnovation-ekonomiskt-hinder"
-
-[[variable]]
-native_id = "257.37092.logistikinnovation-tekniskt-hinder"
-slug = "logistikinnovation-tekniskt-hinder"
-
-[[variable]]
-native_id = "257.37092.logistikinnovation-rattsligt-hinder"
-slug = "logistikinnovation-rattsligt-hinder"
-
-[[variable]]
-native_id = "257.37092.logistikinnovation-annat-hinder"
-slug = "logistikinnovation-annat-hinder"
-
-# Y-311 2026-09-29: split-owner naming for the 74 finite Innovation native-question
-# families above. Each leaf reuses the family's existing source-native slug; the base
-# family keeps its own name.
-
-[[variable]]
-native_id = "257.29.fenr"
-slug = "fenr"
-
-[[variable]]
-native_id = "257.690.antal-anstallda"
-slug = "antal-anstallda"
-
-[[variable]]
-native_id = "257.2468.outlier"
-slug = "outlier"
-
-[[variable]]
-native_id = "257.4032.antal-anstallda-foretaget"
-slug = "antal-anstallda-foretaget"
-
-[[variable]]
-native_id = "257.4045.koncernmarkering"
-slug = "koncernmarkering"
-
-[[variable]]
-native_id = "257.4256.nettoomsattning"
-slug = "nettoomsattning"
-
-[[variable]]
-native_id = "257.7705.utgifter-for-egen-fou"
-slug = "utgifter-for-egen-fou"
-
-[[variable]]
-native_id = "257.7708.utgifter-for-utlagd-fou"
-slug = "utgifter-for-utlagd-fou"
-
-[[variable]]
-native_id = "257.15555.geografisk-marknad-nationellt"
-slug = "geografisk-marknad-nationellt"
-
-[[variable]]
-native_id = "257.15556.geografisk-marknad-eu-efta"
-slug = "geografisk-marknad-eu-efta"
-
-[[variable]]
-native_id = "257.15559.geografisk-marknad-ovriga-lander"
-slug = "geografisk-marknad-ovriga-lander"
-
-[[variable]]
-native_id = "257.15562.produktinnovation-ny-for-marknad"
-slug = "produktinnovation-ny-for-marknad"
-
-[[variable]]
-native_id = "257.15563.produktinnovation-ny-for-foretaget"
-slug = "produktinnovation-ny-for-foretaget"
-
-[[variable]]
-native_id = "257.15568.omsattningsandel-inno-ny-for-marknad"
-slug = "omsattningsandel-inno-ny-for-marknad"
-
-[[variable]]
-native_id = "257.15569.omsattningsandel-inno-ny-for-foretaget"
-slug = "omsattningsandel-inno-ny-for-foretaget"
-
-[[variable]]
-native_id = "257.15570.omsattningsandel-oforandrade-varor"
-slug = "omsattningsandel-oforandrade-varor"
-
-[[variable]]
-native_id = "257.15571.introduktion-av-produktionsmetoder"
-slug = "introduktion-av-produktionsmetoder"
-
-[[variable]]
-native_id = "257.15578.introduktion-av-leveransmetoder"
-slug = "introduktion-av-leveransmetoder"
-
-[[variable]]
-native_id = "257.15579.introduktion-av-stodverksamheter"
-slug = "introduktion-av-stodverksamheter"
-
-[[variable]]
-native_id = "257.15580.utvecklare-av-processinnovationer"
-slug = "utvecklare-av-processinnovationer"
-
-[[variable]]
-native_id = "257.15582.introduktion-av-varor"
-slug = "introduktion-av-varor"
-
-[[variable]]
-native_id = "257.15583.introduktion-av-tjanster"
-slug = "introduktion-av-tjanster"
-
-[[variable]]
-native_id = "257.15584.utvecklare-av-produktinnovationer"
-slug = "utvecklare-av-produktinnovationer"
-
-[[variable]]
-native_id = "257.15593.huvudkontoret-belaget"
-slug = "huvudkontoret-belaget"
-
-[[variable]]
-native_id = "257.15600.innovationssamarbete"
-slug = "innovationssamarbete"
-
-[[variable]]
-native_id = "257.15612.utgifter-forvarv-maskiner-programvara"
-slug = "utgifter-forvarv-maskiner-programvara"
-
-[[variable]]
-native_id = "257.15613.utgifter-forvarv-existerande-kunskap"
-slug = "utgifter-forvarv-existerande-kunskap"
-
-[[variable]]
-native_id = "257.15614.inna-egen-fou"
-slug = "inna-egen-fou"
-
-[[variable]]
-native_id = "257.15616.inna-utlagd-fou"
-slug = "inna-utlagd-fou"
-
-[[variable]]
-native_id = "257.15617.inna-forvarv-maskiner"
-slug = "inna-forvarv-maskiner"
-
-[[variable]]
-native_id = "257.15618.inna-forvarv-existerande-kunskap"
-slug = "inna-forvarv-existerande-kunskap"
-
-[[variable]]
-native_id = "257.15619.inna-utbildning"
-slug = "inna-utbildning"
-
-[[variable]]
-native_id = "257.15620.inna-marknadsintroduktion"
-slug = "inna-marknadsintroduktion"
-
-[[variable]]
-native_id = "257.15621.inna-andra-forberedelser"
-slug = "inna-andra-forberedelser"
-
-[[variable]]
-native_id = "257.15642.geografisk-marknad-regional-lokal"
-slug = "geografisk-marknad-regional-lokal"
-
-[[variable]]
-native_id = "257.15643.totala-innovationsutgifter"
-slug = "totala-innovationsutgifter"
-
-[[variable]]
-native_id = "257.15665.mest-vardefull-samarbetspartner"
-slug = "mest-vardefull-samarbetspartner"
-
-[[variable]]
-native_id = "257.17402.koncerntillhorighet"
-slug = "koncerntillhorighet"
-
-[[variable]]
-native_id = "257.20900.avbruten-innovationsaktivitet"
-slug = "avbruten-innovationsaktivitet"
-
-[[variable]]
-native_id = "257.20901.pagaende-innovationsaktivitet"
-slug = "pagaende-innovationsaktivitet"
-
-[[variable]]
-native_id = "257.20940.introduktion-av-nya-affarsmetoder"
-slug = "introduktion-av-nya-affarsmetoder"
-
-[[variable]]
-native_id = "257.20941.introduktion-metoder-ansvar-beslut"
-slug = "introduktion-metoder-ansvar-beslut"
-
-[[variable]]
-native_id = "257.20942.introduktion-metoder-externa-relationer"
-slug = "introduktion-metoder-externa-relationer"
-
-[[variable]]
-native_id = "257.20948.introduktion-forandringar-utformning"
-slug = "introduktion-forandringar-utformning"
-
-[[variable]]
-native_id = "257.20949.introduktion-metoder-marknadsforing"
-slug = "introduktion-metoder-marknadsforing"
-
-[[variable]]
-native_id = "257.20950.introduktion-metoder-produktplacering"
-slug = "introduktion-metoder-produktplacering"
-
-[[variable]]
-native_id = "257.20951.introduktion-metoder-prissattning"
-slug = "introduktion-metoder-prissattning"
-
-[[variable]]
-native_id = "257.20955.miljoinnovation-minskad-materialatgang"
-slug = "miljoinnovation-minskad-materialatgang"
-
-[[variable]]
-native_id = "257.20957.j20c"
-slug = "j20c"
-
-[[variable]]
-native_id = "257.20958.miljoinnovation-materialersattning"
-slug = "miljoinnovation-materialersattning"
-
-[[variable]]
-native_id = "257.20959.miljoinnovation-fororeningar-foretaget"
-slug = "miljoinnovation-fororeningar-foretaget"
-
-[[variable]]
-native_id = "257.20960.miljoinnovation-atervinning-avfall"
-slug = "miljoinnovation-atervinning-avfall"
-
-[[variable]]
-native_id = "257.20962.miljoinno-fororeningar-slutkonsumtion"
-slug = "miljoinno-fororeningar-slutkonsumtion"
-
-[[variable]]
-native_id = "257.29913.utgifter-ovrig-innovationsverksamhet"
-slug = "utgifter-ovrig-innovationsverksamhet"
-
-[[variable]]
-native_id = "257.29914.stod-for-innovationsverksamhet-kommun"
-slug = "stod-for-innovationsverksamhet-kommun"
-
-[[variable]]
-native_id = "257.32713.ipr-patent"
-slug = "ipr-patent"
-
-[[variable]]
-native_id = "257.36983.stod-for-innovationsverksamhet-staten"
-slug = "stod-for-innovationsverksamhet-staten"
-
-[[variable]]
-native_id = "257.36984.stod-for-innovationsverksamhet-eu"
-slug = "stod-for-innovationsverksamhet-eu"
-
-[[variable]]
-native_id = "257.37076.ipr-monsterskydd"
-slug = "ipr-monsterskydd"
-
-[[variable]]
-native_id = "257.37077.ipr-varumarke"
-slug = "ipr-varumarke"
-
-[[variable]]
-native_id = "257.37078.ipr-salt"
-slug = "ipr-salt"
-
-[[variable]]
-native_id = "257.37079.ipr-kopt"
-slug = "ipr-kopt"
-
-[[variable]]
-native_id = "257.39094.stod-innovationsaktiviteter-eu-h2020"
-slug = "stod-innovationsaktiviteter-eu-h2020"
-
-[[variable]]
-native_id = "257.39096.stod-fran-eu-h2020"
-slug = "stod-fran-eu-h2020"
-
-[[variable]]
-native_id = "257.39102.samarbete-inom-ovriga-aktiviteter"
-slug = "samarbete-inom-ovriga-aktiviteter"
-
-[[variable]]
-native_id = "257.39126.coop-pub-clcu-neu-nefta"
-slug = "coop-pub-clcu-neu-nefta"
-
-[[variable]]
-native_id = "257.46481.miljoinno-livscykel"
-slug = "miljoinno-livscykel"
-
-[[variable]]
-native_id = "257.46482.miljoinno-atervinning"
-slug = "miljoinno-atervinning"
-
-[[variable]]
-native_id = "257.46483.eco-enu-sg"
-slug = "eco-enu-sg"
-
-[[variable]]
-native_id = "257.46484.miljoinno-mangfald-kons"
-slug = "miljoinno-mangfald-kons"
-
-[[variable]]
-native_id = "257.46485.miljoinno-mangfald-intern"
-slug = "miljoinno-mangfald-intern"
-
-[[variable]]
-native_id = "257.46492.miljoinno-fossila"
-slug = "miljoinno-fossila"
-
-[[variable]]
-native_id = "257.46650.turpop"
-slug = "turpop"
-
-[[variable]]
-native_id = "257.46654.turresp"
-slug = "turresp"
 
 # register 258
 
@@ -13863,195 +13242,6 @@ source = "steward-holdings"
 evidence = "SWECOV holds emp2012 in CIS2012 and CIS2014 (pooled range 2012-2014; CIS is biennial, so no 2013 wave); Utkast_P1105_Variabellista_uppd2025_v5.xlsx (CIS sheet) lists it; SCB's Registerinformation export carries no row for it on this variant. (#1302, #1533)"
 noted = "2026-10-12"
 
-[[variable]]
-native_id = "257.ECOENU"
-slug = "ecoenu"
-
-[[variable]]
-native_id = "257.ECOMAT"
-slug = "ecomat"
-
-[[variable]]
-native_id = "257.ECOPOL"
-slug = "ecopol"
-
-[[variable]]
-native_id = "257.ECOPOS"
-slug = "ecopos"
-
-[[variable]]
-native_id = "257.ECOREA"
-slug = "ecorea"
-
-[[variable]]
-native_id = "257.ECOREC"
-slug = "ecorec"
-
-[[variable]]
-native_id = "257.ECOSUB"
-slug = "ecosub"
-
-[[variable]]
-native_id = "257.ECOENO"
-slug = "ecoeno"
-
-[[variable]]
-native_id = "257.ECOEXT"
-slug = "ecoext"
-
-[[variable]]
-native_id = "257.ECOREP"
-slug = "ecorep"
-
-[[variable]]
-native_id = "257.Emp2014"
-slug = "emp2014"
-
-[[variable]]
-native_id = "257.emp2012"
-slug = "emp2012"
-
-
-[[variable]]
-native_id = "257.co11"
-slug = "cis2002-samarbete-koncernforetag-sverige"
-
-[[variable]]
-native_id = "257.co12"
-slug = "cis2002-samarbete-koncernforetag-platskolumn-2"
-
-[[variable]]
-native_id = "257.co13"
-slug = "cis2002-samarbete-koncernforetag-platskolumn-3"
-
-[[variable]]
-native_id = "257.co14"
-slug = "cis2002-samarbete-koncernforetag-platskolumn-4"
-
-[[variable]]
-native_id = "257.co15"
-slug = "cis2002-samarbete-koncernforetag-platskolumn-5"
-
-[[variable]]
-native_id = "257.CO21"
-slug = "cis2002-samarbete-leverantorer-sverige"
-
-[[variable]]
-native_id = "257.co22"
-slug = "cis2002-samarbete-leverantorer-platskolumn-2"
-
-[[variable]]
-native_id = "257.co23"
-slug = "cis2002-samarbete-leverantorer-platskolumn-3"
-
-[[variable]]
-native_id = "257.co24"
-slug = "cis2002-samarbete-leverantorer-platskolumn-4"
-
-[[variable]]
-native_id = "257.co25"
-slug = "cis2002-samarbete-leverantorer-platskolumn-5"
-
-[[variable]]
-native_id = "257.CO31"
-slug = "cis2002-samarbete-kunder-sverige"
-
-[[variable]]
-native_id = "257.co32"
-slug = "cis2002-samarbete-kunder-platskolumn-2"
-
-[[variable]]
-native_id = "257.co33"
-slug = "cis2002-samarbete-kunder-platskolumn-3"
-
-[[variable]]
-native_id = "257.co34"
-slug = "cis2002-samarbete-kunder-platskolumn-4"
-
-[[variable]]
-native_id = "257.co35"
-slug = "cis2002-samarbete-kunder-platskolumn-5"
-
-[[variable]]
-native_id = "257.CO41"
-slug = "cis2002-samarbete-konkurrenter-sverige"
-
-[[variable]]
-native_id = "257.co42"
-slug = "cis2002-samarbete-konkurrenter-platskolumn-2"
-
-[[variable]]
-native_id = "257.co43"
-slug = "cis2002-samarbete-konkurrenter-platskolumn-3"
-
-[[variable]]
-native_id = "257.co44"
-slug = "cis2002-samarbete-konkurrenter-platskolumn-4"
-
-[[variable]]
-native_id = "257.co45"
-slug = "cis2002-samarbete-konkurrenter-platskolumn-5"
-
-[[variable]]
-native_id = "257.CO51"
-slug = "cis2002-samarbete-konsulter-sverige"
-
-[[variable]]
-native_id = "257.co52"
-slug = "cis2002-samarbete-konsulter-platskolumn-2"
-
-[[variable]]
-native_id = "257.co53"
-slug = "cis2002-samarbete-konsulter-platskolumn-3"
-
-[[variable]]
-native_id = "257.co54"
-slug = "cis2002-samarbete-konsulter-platskolumn-4"
-
-[[variable]]
-native_id = "257.Co55"
-slug = "cis2002-samarbete-konsulter-platskolumn-5"
-
-[[variable]]
-native_id = "257.CO61"
-slug = "cis2002-samarbete-universitet-sverige"
-
-[[variable]]
-native_id = "257.co62"
-slug = "cis2002-samarbete-universitet-platskolumn-2"
-
-[[variable]]
-native_id = "257.co63"
-slug = "cis2002-samarbete-universitet-platskolumn-3"
-
-[[variable]]
-native_id = "257.co64"
-slug = "cis2002-samarbete-universitet-platskolumn-4"
-
-[[variable]]
-native_id = "257.co65"
-slug = "cis2002-samarbete-universitet-platskolumn-5"
-
-[[variable]]
-native_id = "257.CO71"
-slug = "cis2002-samarbete-offentlig-forskning-sverige"
-
-[[variable]]
-native_id = "257.co72"
-slug = "cis2002-samarbete-offentlig-forskning-platskolumn-2"
-
-[[variable]]
-native_id = "257.co73"
-slug = "cis2002-samarbete-offentlig-forskning-platskolumn-3"
-
-[[variable]]
-native_id = "257.co74"
-slug = "cis2002-samarbete-offentlig-forskning-platskolumn-4"
-
-[[variable]]
-native_id = "257.co75"
-slug = "cis2002-samarbete-offentlig-forskning-platskolumn-5"
-
 # #1603 batch-e: SWECOV-delivered columns whose source meaning is ambiguous are minted
 # as their own variables, with the candidate meanings named in data_warning
 # (maintainer rule 2026-10-16: ambiguity is not a hold reason; never pick a candidate).
@@ -14208,26 +13398,6 @@ source = "steward-holdings"
 evidence = "SWECOV holds Emp2020 in CIS2020, the 2018 - 2020 wave's own reference-year employee count. SCB's Registerinformation export carries no row for it on this variant; SCB delivers antal-anstallda for 2020 as EMP2022 (2020 - 2022), so carrying EMP into 2018 - 2020 would give 2020 two column names (unresolved_column_representation). Minted per reference year, as Emp2018 and the register's emp2012 and Emp2014. data_type follows SWECOV's SQL Server storage schema (float); flags follow antal-anstallda (non-sensitive, non-identifier); the unit Antal, antal-anstallda's documented unit, is carried with the meaning (unit-with-meaning rule 2026-10-17; #1603 batch-g, #1665); no code list is carried (#1603 batch-e, #1495; Operator under maintainer delegation 2026-10-16, option (a) 2026-10-17)."
 noted = "2026-10-17"
 
-[[variable]]
-native_id = "257.COOP_NO"
-slug = "coop-no-enligt-leverans"
-
-[[variable]]
-native_id = "257.STRAT"
-slug = "strat-enligt-leverans"
-
-[[variable]]
-native_id = "257.HO"
-slug = "ho-enligt-leverans"
-
-[[variable]]
-native_id = "257.LILLAN"
-slug = "lillan-enligt-leverans"
-
-[[variable]]
-native_id = "257.WEIGHT"
-slug = "weight-enligt-leverans"
-
 # #1603 batch-e, unblocked by #1652: ambiguous literals beside an [[errata.delivered]] entry on disjoint versions.
 
 [[errata.column]]
@@ -14272,38 +13442,6 @@ evidence = "SWECOV holds WEIGHT in CIS2002. Previously unmapped because the supp
 noted = "2026-10-16"
 data_warning = "Den levererade kolumnen WEIGHT i CIS2002 kan avse bortfallskompenserad vikt (49567), som kolumnnamnet betyder i katalogen från 2004–2006 (i SCB:s dokumentation från 2022–2024), men det är inte fastställt att kolumnen har den betydelsen eller vilket urval och vilken bortfallsjustering vikten avser."
 
-[[variable]]
-native_id = "257.emp02"
-slug = "emp02-enligt-leverans"
-
-[[variable]]
-native_id = "257.emp04"
-slug = "emp04-enligt-leverans"
-
-[[variable]]
-native_id = "257.emp06"
-slug = "emp06-enligt-leverans"
-
-[[variable]]
-native_id = "257.emp08"
-slug = "emp08-enligt-leverans"
-
-[[variable]]
-native_id = "257.emp2010"
-slug = "emp2010-enligt-leverans"
-
-[[variable]]
-native_id = "257.Emp2016"
-slug = "emp2016-enligt-leverans"
-
-[[variable]]
-native_id = "257.Emp2018"
-slug = "emp2018-enligt-leverans"
-
-[[variable]]
-native_id = "257.Emp2020"
-slug = "emp2020-enligt-leverans"
-
 # #1603 batch-e, option (b): antal-anstallda (EMP) carried into every SWECOV CIS wave by the
 # same-name rule; replaces the CIS2002 EMP mint.
 
@@ -14330,4 +13468,3 @@ witness = ["2022-01-01", "2022-12-31"]
 periods = [["2014-01-01", "2020-12-31"]]
 reason = "The #1603 batch-e same-name carry gives column AGKAT the meaning of SCB's documentation of scb/innovation-foretag/agarkontroll in the undocumented CIS2016, CIS2018, CIS2020 round(s). Carry the documented list Standard för indelning efter ägarkategori 2000 (2022) into the same window: every delivered value is in it, per Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only). Source periods, labels and associations stay unchanged."
 source = "SCB Registerinformation/Vardemangder for scb/innovation-foretag/agarkontroll on variant _default, documented 2022; Operator 2026-10-19, extending F7 (#1603 batch-g A8: every delivered value in the donor list, aggregate check on MONA, conclusion only)"
-

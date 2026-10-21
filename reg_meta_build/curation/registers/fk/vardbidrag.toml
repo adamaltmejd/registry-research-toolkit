@@ -11,14 +11,6 @@ panel_entity_key = ["lopnr-personnr", "lopnr-personnr-barn"]
 panel_time_key = "utbetalningsmanad"
 panel_time_grain = "row"
 
-
-
-
-[[variable]]
-native_id = "5430440157686027706.personnummer"
-slug = "lopnr-personnr"
-
-
-[[variable]]
-native_id = "5430440157686027706.personnummer_barn"
-slug = "lopnr-personnr-barn"
+[variable]
+"5430440157686027706.personnummer" = "lopnr-personnr"
+"5430440157686027706.personnummer_barn" = "lopnr-personnr-barn"

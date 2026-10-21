@@ -14,451 +14,357 @@ native_id = "321.1005"
 slug = "regioner"
 display_group = "Regioner"
 
+[variable]
 # Distansutbildning i högskolan
-
-[[variable]]
-native_id = "321.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "321.2907"
-slug = "region"
-
-[[variable]]
-native_id = "321.5056"
-slug = "landstingskod"
-
-[[variable]]
-native_id = "321.16093"
-slug = "artal-for-registret-num"
-
-[[variable]]
-native_id = "321.28500"
-slug = "politisk-majoritet-centerpartiet"
-
-[[variable]]
-native_id = "321.28579"
-slug = "politisk-majoritet-liberalerna"
-
-[[variable]]
-native_id = "321.28580"
-slug = "politisk-majoritet-kristdemokraterna"
-
-[[variable]]
-native_id = "321.28581"
-slug = "politisk-majoritet-miljopartiet"
-
-[[variable]]
-native_id = "321.28582"
-slug = "politisk-majoritet-moderaterna"
-
-[[variable]]
-native_id = "321.28583"
-slug = "politisk-majoritet-socialdemokraterna"
-
-[[variable]]
-native_id = "321.28584"
-slug = "politisk-majoritet-vansterpartiet"
-
-[[variable]]
-native_id = "321.28598"
-slug = "revisionens-ordforande-minoritet"
-
-[[variable]]
-native_id = "321.28604"
-slug = "offentlig-privat-partnerskap-opp"
-
-[[variable]]
-native_id = "321.28618"
-slug = "klagomalshantering"
-
-[[variable]]
-native_id = "321.28619"
-slug = "tjanstegarantier-servicedeklarationer"
-
-[[variable]]
-native_id = "321.28620"
-slug = "webb-kalendarium"
-
-[[variable]]
-native_id = "321.28621"
-slug = "webb-protokoll-sammantraden"
-
-[[variable]]
-native_id = "321.28623"
-slug = "webbplats-med-debattforum"
-
-[[variable]]
-native_id = "321.28631"
-slug = "mojlighet-att-lamna-medborgarforslag"
-
-[[variable]]
-native_id = "321.28633"
-slug = "sammantraden-i-fullmaktige"
-
-[[variable]]
-native_id = "321.28634"
-slug = "tv-radio-eller-webbsandningar"
-
-[[variable]]
-native_id = "321.28656"
-slug = "offentlig-utfragning-hearing"
-
-[[variable]]
-native_id = "321.28657"
-slug = "genomford-medborgarundersokning"
-
-[[variable]]
-native_id = "321.28664"
-slug = "politiskt-organ-for-demokratifragor"
-
-[[variable]]
-native_id = "321.28665"
-slug = "medel-avsatt-for-demokratifragor"
-
-[[variable]]
-native_id = "321.29338"
-slug = "organ-kommunstyrelse-beslutanderatt"
-
-[[variable]]
-native_id = "321.29340"
-slug = "kommun-eller-stadsdelsnamnd"
-
-[[variable]]
-native_id = "321.29346"
-slug = "overenskommelse-civila-samhallet"
-
-[[variable]]
-native_id = "321.29347"
-slug = "partistod"
-
-[[variable]]
-native_id = "321.29349"
-slug = "kommunala-bolag-under-moderbolag"
-
-[[variable]]
-native_id = "321.29354"
-slug = "medborgardialog-strategi"
-
-[[variable]]
-native_id = "321.29419"
-slug = "demokratistrategi"
-
-[[variable]]
-native_id = "321.29420"
-slug = "medborgardialog-via-webb"
-
-[[variable]]
-native_id = "321.29421"
-slug = "webb-moteshandlingar"
-
-[[variable]]
-native_id = "321.29423"
-slug = "webbplats-med-kommunala-foreskrifter"
-
-[[variable]]
-native_id = "321.29424"
-slug = "webb-diarie-arendesystem"
-
-[[variable]]
-native_id = "321.29602"
-slug = "politisk-majoritet-sverigedemokraterna"
-
-[[variable]]
-native_id = "321.29664"
-slug = "organ-direkt-under-kommunfullmaktige"
-
-[[variable]]
-native_id = "321.35982"
-slug = "ideburet-offentligt-partnerskap-iop"
-
-[[variable]]
-native_id = "321.35985"
-slug = "forekomst-av-flerpartsstyrning"
-
-[[variable]]
-native_id = "321.41363"
-slug = "artal-for-uppgiften"
-
-[[variable]]
-native_id = "321.41487"
-slug = "organ-direkt-under-fullmaktige"
-
-[[variable]]
-native_id = "321.41488"
-slug = "organ-under-styrelse-med-beslutanderatt"
-
-[[variable]]
-native_id = "321.42782"
-slug = "offentlig-privat-samverkan-ops"
-
-[[variable]]
-native_id = "321.42786"
-slug = "utse-ledamoter-namnder-styrelser"
-
-[[variable]]
-native_id = "321.42787"
-slug = "andra-organ-under-fullmaktige"
-
-[[variable]]
-native_id = "321.42788"
-slug = "partistod-till-ungdomsforbund"
-
-[[variable]]
-native_id = "321.42790"
-slug = "mojlighet-att-lamna-e-forslag"
-
-[[variable]]
-native_id = "321.42792"
-slug = "stod-for-e-forslag"
-
-[[variable]]
-native_id = "321.42793"
-slug = "allmanhetens-fragestund"
-
-[[variable]]
-native_id = "321.42794"
-slug = "fortroendevaldas-trygghet-ansvar"
-
-[[variable]]
-native_id = "321.42795"
-slug = "hot-hat-vald-mot-fortroendevalda"
-
-[[variable]]
-native_id = "321.42796"
-slug = "revisorer-vald-med-undantag-granskning"
-
-[[variable]]
-native_id = "321.48943"
-slug = "beslut-om-foraldraledighet"
-
-[[variable]]
-native_id = "321.48944"
-slug = "politisk-vilde"
-
-[[variable]]
-native_id = "321.48945"
-slug = "antal-anstallda-politiska-sekreterare"
-
-[[variable]]
-native_id = "321.48946"
-slug = "medborgarforslag-mojlighet-borttagen"
-
-[[variable]]
-native_id = "321.48947"
-slug = "medborgarforslag-mojlighet-tidpunkt"
-
-[[variable]]
-native_id = "321.48957"
-slug = "e-forslag-mojlighet-borttagen"
-
-[[variable]]
-native_id = "321.48958"
-slug = "e-forslag-mojlighet-tidpunkt"
-
-[[variable]]
-native_id = "321.48959"
-slug = "fullmaktigesammantraden-webb-tillgang"
-
-[[variable]]
-native_id = "321.48974"
-slug = "forekomst-av-namndsammantraden"
-
-[[variable]]
-native_id = "321.48976"
-slug = "rad-fokusgrupper-textsvar"
-
-[[variable]]
-native_id = "321.48979"
-slug = "organ-for-demokratifragor"
-
-[[variable]]
-native_id = "321.48980"
-slug = "organ-for-demokratifragor-text"
-
-[[variable]]
-native_id = "321.48981"
-slug = "samverkan"
-
-[[variable]]
-native_id = "321.48986"
-slug = "forekomst-av-bolag"
-
-[[variable]]
-native_id = "321.48987"
-slug = "delagda-bolag"
-
-[[variable]]
-native_id = "321.48988"
-slug = "helagda-bolag"
-
-[[variable]]
-native_id = "321.48991"
-slug = "inget-rad-fokusgrupper"
-
-[[variable]]
-native_id = "321.48992"
-slug = "beslut-om-medborgardialoger"
-
-[[variable]]
-native_id = "321.48993"
-slug = "delta-i-medborgardialoger-via-webbplats"
-
-[[variable]]
-native_id = "321.48999"
-slug = "politisk-majoritet-annat-parti-fritext"
-
-[[variable]]
-native_id = "321.49020"
-slug = "fullmaktige-ekonomiska-mal-bolag"
+"321.36" = "kommun"
+"321.2907" = "region"
+"321.5056" = "landstingskod"
+"321.16093" = "artal-for-registret-num"
+"321.28500" = "politisk-majoritet-centerpartiet"
+"321.28579" = "politisk-majoritet-liberalerna"
+"321.28580" = "politisk-majoritet-kristdemokraterna"
+"321.28581" = "politisk-majoritet-miljopartiet"
+"321.28582" = "politisk-majoritet-moderaterna"
+"321.28583" = "politisk-majoritet-socialdemokraterna"
+"321.28584" = "politisk-majoritet-vansterpartiet"
+"321.28598" = "revisionens-ordforande-minoritet"
+"321.28604" = "offentlig-privat-partnerskap-opp"
+"321.28618" = "klagomalshantering"
+"321.28619" = "tjanstegarantier-servicedeklarationer"
+"321.28620" = "webb-kalendarium"
+"321.28621" = "webb-protokoll-sammantraden"
+"321.28623" = "webbplats-med-debattforum"
+"321.28631" = "mojlighet-att-lamna-medborgarforslag"
+"321.28633" = "sammantraden-i-fullmaktige"
+"321.28634" = "tv-radio-eller-webbsandningar"
+"321.28656" = "offentlig-utfragning-hearing"
+"321.28657" = "genomford-medborgarundersokning"
+"321.28664" = "politiskt-organ-for-demokratifragor"
+"321.28665" = "medel-avsatt-for-demokratifragor"
+"321.29338" = "organ-kommunstyrelse-beslutanderatt"
+"321.29340" = "kommun-eller-stadsdelsnamnd"
+"321.29346" = "overenskommelse-civila-samhallet"
+"321.29347" = "partistod"
+"321.29349" = "kommunala-bolag-under-moderbolag"
+"321.29354" = "medborgardialog-strategi"
+"321.29419" = "demokratistrategi"
+"321.29420" = "medborgardialog-via-webb"
+"321.29421" = "webb-moteshandlingar"
+"321.29423" = "webbplats-med-kommunala-foreskrifter"
+"321.29424" = "webb-diarie-arendesystem"
+"321.29602" = "politisk-majoritet-sverigedemokraterna"
+"321.29664" = "organ-direkt-under-kommunfullmaktige"
+"321.35982" = "ideburet-offentligt-partnerskap-iop"
+"321.35985" = "forekomst-av-flerpartsstyrning"
+"321.41363" = "artal-for-uppgiften"
+"321.41487" = "organ-direkt-under-fullmaktige"
+"321.41488" = "organ-under-styrelse-med-beslutanderatt"
+"321.42782" = "offentlig-privat-samverkan-ops"
+"321.42786" = "utse-ledamoter-namnder-styrelser"
+"321.42787" = "andra-organ-under-fullmaktige"
+"321.42788" = "partistod-till-ungdomsforbund"
+"321.42790" = "mojlighet-att-lamna-e-forslag"
+"321.42792" = "stod-for-e-forslag"
+"321.42793" = "allmanhetens-fragestund"
+"321.42794" = "fortroendevaldas-trygghet-ansvar"
+"321.42795" = "hot-hat-vald-mot-fortroendevalda"
+"321.42796" = "revisorer-vald-med-undantag-granskning"
+"321.48943" = "beslut-om-foraldraledighet"
+"321.48944" = "politisk-vilde"
+"321.48945" = "antal-anstallda-politiska-sekreterare"
+"321.48946" = "medborgarforslag-mojlighet-borttagen"
+"321.48947" = "medborgarforslag-mojlighet-tidpunkt"
+"321.48957" = "e-forslag-mojlighet-borttagen"
+"321.48958" = "e-forslag-mojlighet-tidpunkt"
+"321.48959" = "fullmaktigesammantraden-webb-tillgang"
+"321.48974" = "forekomst-av-namndsammantraden"
+"321.48976" = "rad-fokusgrupper-textsvar"
+"321.48979" = "organ-for-demokratifragor"
+"321.48980" = "organ-for-demokratifragor-text"
+"321.48981" = "samverkan"
+"321.48986" = "forekomst-av-bolag"
+"321.48987" = "delagda-bolag"
+"321.48988" = "helagda-bolag"
+"321.48991" = "inget-rad-fokusgrupper"
+"321.48992" = "beslut-om-medborgardialoger"
+"321.48993" = "delta-i-medborgardialoger-via-webbplats"
+"321.48999" = "politisk-majoritet-annat-parti-fritext"
+"321.49020" = "fullmaktige-ekonomiska-mal-bolag"
 
 # register 322 (distansutbildning)
-
-[[variable]]
-native_id = "321.28585.fr1a-9-text"
-slug = "politisk-majoritet-annat-parti"
-
-[[variable]]
-native_id = "321.28597.fr2"
-slug = "professionella-namnder-styrelser"
-
-[[variable]]
-native_id = "321.28613.brukaromr"
-slug = "brukarrepresentation-utover-delegering"
-
-[[variable]]
-native_id = "321.28613.brukarsys"
-slug = "brukarsys-utover-delegering"
-
-[[variable]]
-native_id = "321.28613.fr27-1"
-slug = "brukarrepresentation-fr27"
-
-[[variable]]
-native_id = "321.28617.fr42-1"
-slug = "medborgarkontor-fr42"
-
-[[variable]]
-native_id = "321.28629.fr11-text"
-slug = "folkomrostning-forekomst-text"
-
-[[variable]]
-native_id = "321.28629.fr7"
-slug = "folkomrostning-forekomst-fr7"
-
-[[variable]]
-native_id = "321.28629.fr8"
-slug = "folkomrostning-forekomst-fr8"
-
-[[variable]]
-native_id = "321.28629.fr9"
-slug = "folkomrostning-forekomst-fr9"
-
-[[variable]]
-native_id = "321.28630.fr10a"
-slug = "folkinitiativ-folkomrostning-fr10a"
-
-[[variable]]
-native_id = "321.28630.fr10a-text"
-slug = "folkinitiativ-folkomrostning-fr10a-text"
-
-[[variable]]
-native_id = "321.28630.fr10b-text"
-slug = "folkinitiativ-folkomrostning-fr10b-text"
-
-[[variable]]
-native_id = "321.28630.fr8a-text"
-slug = "folkinitiativ-folkomrostning-fr8a-text"
-
-[[variable]]
-native_id = "321.28630.fr8b-text"
-slug = "folkinitiativ-folkomrostning-fr8b-text"
-
-[[variable]]
-native_id = "321.28632.fr10a-text"
-slug = "inkomna-medborgarforslag-fr10a"
-
-[[variable]]
-native_id = "321.28632.fr10b-text"
-slug = "inkomna-medborgarforslag-fr10b"
-
-[[variable]]
-native_id = "321.28632.fr11-text"
-slug = "inkomna-medborgarforslag-fr11"
-
-[[variable]]
-native_id = "321.28632.fr8a-text"
-slug = "inkomna-medborgarforslag-fr8a"
-
-[[variable]]
-native_id = "321.28632.fr8b-text"
-slug = "inkomna-medborgarforslag-fr8b"
-
-[[variable]]
-native_id = "321.28667.fr26-1"
-slug = "rad-fokusgrupper-fr26"
-
-[[variable]]
-native_id = "321.29348.fr4"
-slug = "pol-sekreterare-forekomst-fr4"
-
-[[variable]]
-native_id = "321.29348.fr6"
-slug = "pol-sekreterare-forekomst-fr6"
-
-[[variable]]
-native_id = "321.29348.fr7"
-slug = "pol-sekreterare-forekomst-fr7"
-
-[[variable]]
-native_id = "321.29348.fr8"
-slug = "pol-sekreterare-forekomst-fr8"
-
-[[variable]]
-native_id = "321.29350.fr24-1"
-slug = "faststall-bolagsmal-fr24"
-
-[[variable]]
-native_id = "321.29350.fr26-1"
-slug = "faststall-bolagsmal-fr26"
-
-[[variable]]
-native_id = "321.29350.fr39-1"
-slug = "faststall-bolagsmal-fr39"
-
-[[variable]]
-native_id = "321.35983.fr40-1"
-slug = "samarbete-verksamhetsutveckling-fr40"
-
-[[variable]]
-native_id = "321.35983.fr41-1"
-slug = "samarbete-verksamhetsutveckling-fr41"
-
-[[variable]]
-native_id = "321.41361.brukaromr"
-slug = "brukarrepresentation"
-
-[[variable]]
-native_id = "321.41361.brukarsys"
-slug = "brukarrepresentation-brukarsys"
-
-[[variable]]
-native_id = "321.42791.fr17"
-slug = "inkomna-e-forslag-fr17"
+"321.28585.fr1a-9-text" = "politisk-majoritet-annat-parti"
+"321.28597.fr2" = "professionella-namnder-styrelser"
+"321.28613.brukaromr" = "brukarrepresentation-utover-delegering"
+"321.28613.brukarsys" = "brukarsys-utover-delegering"
+"321.28613.fr27-1" = "brukarrepresentation-fr27"
+"321.28617.fr42-1" = "medborgarkontor-fr42"
+"321.28629.fr11-text" = "folkomrostning-forekomst-text"
+"321.28629.fr7" = "folkomrostning-forekomst-fr7"
+"321.28629.fr8" = "folkomrostning-forekomst-fr8"
+"321.28629.fr9" = "folkomrostning-forekomst-fr9"
+"321.28630.fr10a" = "folkinitiativ-folkomrostning-fr10a"
+"321.28630.fr10a-text" = "folkinitiativ-folkomrostning-fr10a-text"
+"321.28630.fr10b-text" = "folkinitiativ-folkomrostning-fr10b-text"
+"321.28630.fr8a-text" = "folkinitiativ-folkomrostning-fr8a-text"
+"321.28630.fr8b-text" = "folkinitiativ-folkomrostning-fr8b-text"
+"321.28632.fr10a-text" = "inkomna-medborgarforslag-fr10a"
+"321.28632.fr10b-text" = "inkomna-medborgarforslag-fr10b"
+"321.28632.fr11-text" = "inkomna-medborgarforslag-fr11"
+"321.28632.fr8a-text" = "inkomna-medborgarforslag-fr8a"
+"321.28632.fr8b-text" = "inkomna-medborgarforslag-fr8b"
+"321.28667.fr26-1" = "rad-fokusgrupper-fr26"
+"321.29348.fr4" = "pol-sekreterare-forekomst-fr4"
+"321.29348.fr6" = "pol-sekreterare-forekomst-fr6"
+"321.29348.fr7" = "pol-sekreterare-forekomst-fr7"
+"321.29348.fr8" = "pol-sekreterare-forekomst-fr8"
+"321.29350.fr24-1" = "faststall-bolagsmal-fr24"
+"321.29350.fr26-1" = "faststall-bolagsmal-fr26"
+"321.29350.fr39-1" = "faststall-bolagsmal-fr39"
+"321.35983.fr40-1" = "samarbete-verksamhetsutveckling-fr40"
+"321.35983.fr41-1" = "samarbete-verksamhetsutveckling-fr41"
+"321.41361.brukaromr" = "brukarrepresentation"
+"321.41361.brukarsys" = "brukarrepresentation-brukarsys"
+"321.42791.fr17" = "inkomna-e-forslag-fr17"
 
 # register 326 (kompletterande-utbildning)
-
-[[variable]]
-native_id = "321.42791.fr20"
-slug = "fr2"
-
-[[variable]]
-native_id = "321.2351"
-slug = "regionkod"
-
-[[variable]]
-native_id = "321.38417"
-slug = "kommunalforbund-antal"
+"321.42791.fr20" = "fr2"
+"321.2351" = "regionkod"
+"321.38417" = "kommunalforbund-antal"
+"321.28617.fr27-1" = "fr27"
+"321.28617.fr27-2" = "fr27-2"
+"321.28617.fr27-3" = "fr27-3"
+"321.28617.fr29-1" = "fr29"
+"321.28617.fr29-2" = "fr29-2"
+"321.28617.fr29-3" = "fr29-3"
+"321.28617.fr41-1" = "fr41"
+"321.28617.fr41-2" = "fr41-2"
+"321.28617.fr41-3" = "fr41-3"
+"321.28617.fr42-2" = "fr42-2"
+"321.28617.fr42-3" = "fr42-3"
+"321.28617.fr44-1" = "fr44"
+"321.28617.fr44-2" = "fr44-2"
+"321.28617.fr44-3" = "fr44-3"
+"321.28617.medbkont" = "medbkont"
+"321.28617.medbkontant" = "medbkontant"
+"321.28617.medbkontfys" = "medbkontfys"
+"321.28617.medbkontweb" = "medbkontweb"
+"321.28667.fokusgrupp" = "fokusgrupp"
+"321.28667.fr12-1" = "fr12"
+"321.28667.fr12-2" = "fr12-2"
+"321.28667.fr12-3" = "fr12-3"
+"321.28667.fr12-4" = "fr12-4"
+"321.28667.fr12-5" = "fr12-5"
+"321.28667.fr12-6" = "fr12-6"
+"321.28667.fr14-1" = "fr14"
+"321.28667.fr14-2" = "fr14-2"
+"321.28667.fr14-3" = "fr14-3"
+"321.28667.fr14-4" = "fr14-4"
+"321.28667.fr14-5" = "fr14-5"
+"321.28667.fr14-6" = "fr14-6"
+"321.28667.fr23-1" = "fr23"
+"321.28667.fr23-2" = "fr23-2"
+"321.28667.fr23-3" = "fr23-3"
+"321.28667.fr23-4" = "fr23-4"
+"321.28667.fr23-5" = "fr23-5"
+"321.28667.fr23-6" = "fr23-6"
+"321.28667.fr23-7" = "fr23-7"
+"321.28667.fr24-1" = "fr24"
+"321.28667.fr24-2" = "fr24-2"
+"321.28667.fr24-3" = "fr24-3"
+"321.28667.fr24-4" = "fr24-4"
+"321.28667.fr24-5" = "fr24-5"
+"321.28667.fr24-6" = "fr24-6"
+"321.28667.fr24-7" = "fr24-7"
+"321.28667.fr26-2" = "fr26-2"
+"321.28667.fr26-3" = "fr26-3"
+"321.28667.fr26-4" = "fr26-4"
+"321.28667.fr26-5" = "fr26-5"
+"321.28667.fr26-6" = "fr26-6"
+"321.28667.fr26-7" = "fr26-7"
+"321.28667.medbradald" = "medbradald"
+"321.28667.medbradannat" = "medbradannat"
+"321.28667.medbradfunk" = "medbradfunk"
+"321.28667.medbradnatmin" = "medbradnatmin"
+"321.28667.medbradung" = "medbradung"
+"321.28667.medbradutlb" = "medbradutlb"
+"321.28613.brukarsysald" = "brukarsysald"
+"321.28613.brukarsysfs" = "brukarsysfs"
+"321.28613.brukarsysfunk" = "brukarsysfunk"
+"321.28613.brukarsysgs" = "brukarsysgs"
+"321.28613.brukarsysgym" = "brukarsysgym"
+"321.28613.brukarsysifo" = "brukarsysifo"
+"321.28613.brukarsysovr" = "brukarsysovr"
+"321.28613.fr26-1" = "fr26"
+"321.28613.fr26-2" = "fr26-2-28613"
+"321.28613.fr27-2" = "fr27-2-28613"
+"321.28613.fr27-3" = "fr27-3-28613"
+"321.28613.fr27-4" = "fr27-4"
+"321.28613.fr27-5" = "fr27-5"
+"321.28613.fr27-6" = "fr27-6"
+"321.28613.fr27-7" = "fr27-7"
+"321.28613.fr27-8" = "fr27-8"
+"321.28613.fr39-1" = "fr39"
+"321.28613.fr39-2" = "fr39-2"
+"321.28613.fr39-3" = "fr39-3"
+"321.28613.fr40-1" = "fr40"
+"321.28613.fr40-2" = "fr40-2"
+"321.28613.fr40-3" = "fr40-3"
+"321.28613.fr40-4" = "fr40-4"
+"321.28613.fr40-5" = "fr40-5"
+"321.28613.fr40-6" = "fr40-6"
+"321.28613.fr40-7" = "fr40-7"
+"321.28613.fr40-8" = "fr40-8"
+"321.28613.fr42-1" = "fr42"
+"321.28613.fr42-2" = "fr42-2-28613"
+"321.28613.fr42-3" = "fr42-3-28613"
+"321.28613.fr42-4" = "fr42-4"
+"321.28613.fr42-5" = "fr42-5-28613"
+"321.28613.fr42-6" = "fr42-6"
+"321.28613.fr42-7" = "fr42-7"
+"321.28613.fr42-8" = "fr42-8"
+"321.28585.fr1a-10" = "fr1a-10"
+"321.28585.fr1a-11" = "fr1a-11"
+"321.28585.fr1a-9" = "fr1a-9"
+"321.28585.lokparti" = "lokparti"
+"321.28585.maj" = "maj"
+"321.28585.majlp" = "majlp"
+"321.28632.fr12" = "fr1"
+"321.28632.fr12-text" = "fr12-text"
+"321.28632.fr13" = "fr13"
+"321.28632.fr13-text" = "fr13-text"
+"321.28632.fr14" = "fr14-28632"
+"321.28632.fr14-text" = "fr14-text"
+"321.28632.fr15" = "fr15"
+"321.28632.fr16" = "fr16"
+"321.28632.mbfant" = "mbfant"
+"321.28632.mbfbeh" = "mbfbeh"
+"321.28632.mbfbif" = "mbfbif"
+"321.28632.fr10c-text" = "fr10c-text"
+"321.28632.fr8c-text" = "fr8c-text"
+"321.35983.fr28-1" = "fr28"
+"321.35983.fr28-2" = "fr28-2"
+"321.35983.fr28-3" = "fr28-3"
+"321.35983.fr28-4" = "fr28-4"
+"321.35983.fr28-5" = "fr28-5"
+"321.35983.fr28-6" = "fr28-6"
+"321.35983.fr28-7" = "fr28-7"
+"321.35983.fr28-8" = "fr28-8"
+"321.35983.fr40-2" = "fr40-2-35983"
+"321.35983.fr40-3" = "fr40-3-35983"
+"321.35983.fr41-2" = "fr41-2-35983"
+"321.35983.fr41-3" = "fr41-3-35983"
+"321.35983.fr41-4" = "fr41-4"
+"321.35983.fr41-5" = "fr41-5"
+"321.35983.fr41-6" = "fr41-6"
+"321.35983.fr41-7" = "fr41-7"
+"321.35983.fr41-8" = "fr41-8"
+"321.35983.fr43-1" = "fr43"
+"321.35983.fr43-2" = "fr43-2"
+"321.35983.fr43-3" = "fr43-3"
+"321.35983.fr43-4" = "fr43-4"
+"321.35983.fr43-5" = "fr43-5"
+"321.35983.fr43-6" = "fr43-6"
+"321.35983.fr43-7" = "fr43-7"
+"321.35983.fr43-8" = "fr43-8"
+"321.42791.fr16-text" = "fr16-text"
+"321.42791.fr17-text" = "fr17-text"
+"321.42791.fr18" = "fr18"
+"321.42791.fr18-text" = "fr18-text"
+"321.42791.fr19" = "fr19"
+"321.42791.fr19-text" = "fr19-text"
+"321.42791.fr21" = "fr21"
+"321.42789.fr6-1" = "fr6"
+"321.42789.fr6-2" = "fr6-2"
+"321.42789.fr6-3" = "fr6-3"
+"321.42789.fr6-4" = "fr6-4"
+"321.42789.fr6-5" = "fr6-5"
+"321.42789.fr6-6" = "fr6-6"
+"321.42789.fr7-1" = "fr7"
+"321.42789.fr7-2" = "fr7-2"
+"321.42789.fr7-3" = "fr7-3"
+"321.42789.fr7-4" = "fr7-4"
+"321.42789.fr7-5" = "fr7-5"
+"321.42789.fr7-6" = "fr7-6"
+"321.28625.source-positive" = "webb-skicka-meddelanden"
+"321.28626.fr32-10" = "fr32"
+"321.28626.fr32-9" = "fr32-9"
+"321.28626.fr45-5" = "fr45-5"
+"321.28626.webbmedb" = "webbmedb"
+"321.28626.webbmedbfors" = "webbmedbfors"
+"321.28626.webbmedbforsant" = "webbmedbforsant"
+"321.28626.webbmedbhant" = "webbmedbhant"
+"321.28626.fr30-10" = "fr30"
+"321.28626.fr30-9" = "fr30-9"
+"321.28626.fr42-5" = "fr42-5"
+"321.28630.folkinit" = "folkinit"
+"321.28630.folkinit2011" = "folkinit2011"
+"321.28630.folkinitant" = "folkinitant"
+"321.28630.folkinitant2011" = "folkinitant2011"
+"321.28630.folkinitbes" = "folkinitbes"
+"321.28630.folkinitbes2011ant" = "folkinitbes2011ant"
+"321.28630.folkinitbesant" = "folkinitbesant"
+"321.28630.fr12a" = "fr12a"
+"321.28630.fr12a-text" = "fr12a-text"
+"321.28630.fr12b" = "fr12b"
+"321.28630.fr8a" = "fr8a"
+"321.28630.fr10b" = "fr10b"
+"321.28630.fr6a" = "fr6a"
+"321.28630.fr6b-text" = "fr6b-text"
+"321.28630.fr9a" = "fr9a"
+"321.28630.fr9a-text" = "fr9a-text"
+"321.28630.fr9b-text" = "fr9b-text"
+"321.28630.fr6a-text" = "fr6a-text"
+"321.29350.ekverkmal" = "ekverkmal"
+"321.29350.ekverkmalsamt" = "ekverkmalsamt"
+"321.29350.ekverkmalvis" = "ekverkmalvis"
+"321.29350.fr26-2" = "fr26-2-29350"
+"321.29350.fr26-3" = "fr26-3-29350"
+"321.29350.fr26-4" = "fr26-4-29350"
+"321.29350.fr26-5" = "fr26-5-29350"
+"321.29350.fr39-2" = "fr39-2-29350"
+"321.29350.fr39-3" = "fr39-3-29350"
+"321.29350.fr39-5" = "fr39-5"
+"321.29350.fr39-6" = "fr39-6"
+"321.29350.fr39-7" = "fr39-7"
+"321.29350.fr41a" = "fr41a"
+"321.29350.fr41b" = "fr41b"
+"321.29350.fr41c" = "fr41c"
+"321.29350.verkmalsamt" = "verkmalsamt"
+"321.29350.verkmalvis" = "verkmalvis"
+"321.29350.fr24-2" = "fr24-2-29350"
+"321.29350.fr24-3" = "fr24-3-29350"
+"321.29350.fr24-4" = "fr24-4-29350"
+"321.29350.fr24-5" = "fr24-5-29350"
+"321.29350.fr38-1" = "fr38"
+"321.29350.fr38-2" = "fr38-2"
+"321.29350.fr38-3" = "fr38-3"
+"321.29350.fr38-4" = "fr38-4"
+"321.29350.fr38-5" = "fr38-5"
+"321.29350.fr38-6" = "fr38-6"
+"321.29350.fr38-7" = "fr38-7"
+"321.29353.fr33-1" = "fr33"
+"321.29353.fr33-2" = "fr33-2"
+"321.29353.fr33-3" = "fr33-3"
+"321.29353.fr33-4" = "fr33-4"
+"321.29353.fr33-5" = "fr33-5"
+"321.29353.fr46-1" = "fr46"
+"321.29353.fr46-3" = "fr46-3"
+"321.29353.fr46-5" = "fr46-5"
+"321.29353.socmedier" = "socmedier"
+"321.29353.socmedierannat" = "socmedierannat"
+"321.29353.socmedierinfo" = "socmedierinfo"
+"321.29353.socmedierkont" = "socmedierkont"
+"321.29353.socmedierpaverk" = "socmedierpaverk"
+"321.29353.fr31-1" = "fr31"
+"321.29353.fr31-2" = "fr31-2"
+"321.29353.fr31-3" = "fr31-3"
+"321.29353.fr31-4" = "fr31-4"
+"321.29353.fr31-5" = "fr31-5"
+"321.29353.fr45-1" = "fr45"
+"321.29353.fr45-2" = "fr45-2"
+"321.29353.fr45-3" = "fr45-3"
+"321.29353.fr45-4" = "fr45-4"
+"321.35984.source-positive" = "webb-politiska-styret"
 
 # register 322
 
@@ -583,946 +489,6 @@ valid_to = "2020-12-31"
 reason = "The source supplies no own response-domain association for this exact delivery window. Retain all original fields, dates and the known source lists outside this window. Do not infer the stored codes, special values or vintage from a column suffix or a neighbouring list. Keep only this exact window’s value set unavailable."
 evidence = "Complete accepted native-family and own bound-coding review, actual whole-register auxiliary support accounting and complete panel-owner prerequisites. Exact full-original and coding fingerprint. Proof: Batch51-missing-domain106-source-proof.json. Existing missing-domain policy; no domain continuity assumed."
 expected_evidence_sha256 = "8035c4b590863b3ff317063fda6b63126a677bee5f1a09942efb757fa0f50155"
-
-[[variable]]
-native_id = "321.28617.fr27-1"
-slug = "fr27"
-
-[[variable]]
-native_id = "321.28617.fr27-2"
-slug = "fr27-2"
-
-[[variable]]
-native_id = "321.28617.fr27-3"
-slug = "fr27-3"
-
-[[variable]]
-native_id = "321.28617.fr29-1"
-slug = "fr29"
-
-[[variable]]
-native_id = "321.28617.fr29-2"
-slug = "fr29-2"
-
-[[variable]]
-native_id = "321.28617.fr29-3"
-slug = "fr29-3"
-
-[[variable]]
-native_id = "321.28617.fr41-1"
-slug = "fr41"
-
-[[variable]]
-native_id = "321.28617.fr41-2"
-slug = "fr41-2"
-
-[[variable]]
-native_id = "321.28617.fr41-3"
-slug = "fr41-3"
-
-[[variable]]
-native_id = "321.28617.fr42-2"
-slug = "fr42-2"
-
-[[variable]]
-native_id = "321.28617.fr42-3"
-slug = "fr42-3"
-
-[[variable]]
-native_id = "321.28617.fr44-1"
-slug = "fr44"
-
-[[variable]]
-native_id = "321.28617.fr44-2"
-slug = "fr44-2"
-
-[[variable]]
-native_id = "321.28617.fr44-3"
-slug = "fr44-3"
-
-[[variable]]
-native_id = "321.28617.medbkont"
-slug = "medbkont"
-
-[[variable]]
-native_id = "321.28617.medbkontant"
-slug = "medbkontant"
-
-[[variable]]
-native_id = "321.28617.medbkontfys"
-slug = "medbkontfys"
-
-[[variable]]
-native_id = "321.28617.medbkontweb"
-slug = "medbkontweb"
-
-[[variable]]
-native_id = "321.28667.fokusgrupp"
-slug = "fokusgrupp"
-
-[[variable]]
-native_id = "321.28667.fr12-1"
-slug = "fr12"
-
-[[variable]]
-native_id = "321.28667.fr12-2"
-slug = "fr12-2"
-
-[[variable]]
-native_id = "321.28667.fr12-3"
-slug = "fr12-3"
-
-[[variable]]
-native_id = "321.28667.fr12-4"
-slug = "fr12-4"
-
-[[variable]]
-native_id = "321.28667.fr12-5"
-slug = "fr12-5"
-
-[[variable]]
-native_id = "321.28667.fr12-6"
-slug = "fr12-6"
-
-[[variable]]
-native_id = "321.28667.fr14-1"
-slug = "fr14"
-
-[[variable]]
-native_id = "321.28667.fr14-2"
-slug = "fr14-2"
-
-[[variable]]
-native_id = "321.28667.fr14-3"
-slug = "fr14-3"
-
-[[variable]]
-native_id = "321.28667.fr14-4"
-slug = "fr14-4"
-
-[[variable]]
-native_id = "321.28667.fr14-5"
-slug = "fr14-5"
-
-[[variable]]
-native_id = "321.28667.fr14-6"
-slug = "fr14-6"
-
-[[variable]]
-native_id = "321.28667.fr23-1"
-slug = "fr23"
-
-[[variable]]
-native_id = "321.28667.fr23-2"
-slug = "fr23-2"
-
-[[variable]]
-native_id = "321.28667.fr23-3"
-slug = "fr23-3"
-
-[[variable]]
-native_id = "321.28667.fr23-4"
-slug = "fr23-4"
-
-[[variable]]
-native_id = "321.28667.fr23-5"
-slug = "fr23-5"
-
-[[variable]]
-native_id = "321.28667.fr23-6"
-slug = "fr23-6"
-
-[[variable]]
-native_id = "321.28667.fr23-7"
-slug = "fr23-7"
-
-[[variable]]
-native_id = "321.28667.fr24-1"
-slug = "fr24"
-
-[[variable]]
-native_id = "321.28667.fr24-2"
-slug = "fr24-2"
-
-[[variable]]
-native_id = "321.28667.fr24-3"
-slug = "fr24-3"
-
-[[variable]]
-native_id = "321.28667.fr24-4"
-slug = "fr24-4"
-
-[[variable]]
-native_id = "321.28667.fr24-5"
-slug = "fr24-5"
-
-[[variable]]
-native_id = "321.28667.fr24-6"
-slug = "fr24-6"
-
-[[variable]]
-native_id = "321.28667.fr24-7"
-slug = "fr24-7"
-
-[[variable]]
-native_id = "321.28667.fr26-2"
-slug = "fr26-2"
-
-[[variable]]
-native_id = "321.28667.fr26-3"
-slug = "fr26-3"
-
-[[variable]]
-native_id = "321.28667.fr26-4"
-slug = "fr26-4"
-
-[[variable]]
-native_id = "321.28667.fr26-5"
-slug = "fr26-5"
-
-[[variable]]
-native_id = "321.28667.fr26-6"
-slug = "fr26-6"
-
-[[variable]]
-native_id = "321.28667.fr26-7"
-slug = "fr26-7"
-
-[[variable]]
-native_id = "321.28667.medbradald"
-slug = "medbradald"
-
-[[variable]]
-native_id = "321.28667.medbradannat"
-slug = "medbradannat"
-
-[[variable]]
-native_id = "321.28667.medbradfunk"
-slug = "medbradfunk"
-
-[[variable]]
-native_id = "321.28667.medbradnatmin"
-slug = "medbradnatmin"
-
-[[variable]]
-native_id = "321.28667.medbradung"
-slug = "medbradung"
-
-[[variable]]
-native_id = "321.28667.medbradutlb"
-slug = "medbradutlb"
-
-[[variable]]
-native_id = "321.28613.brukarsysald"
-slug = "brukarsysald"
-
-[[variable]]
-native_id = "321.28613.brukarsysfs"
-slug = "brukarsysfs"
-
-[[variable]]
-native_id = "321.28613.brukarsysfunk"
-slug = "brukarsysfunk"
-
-[[variable]]
-native_id = "321.28613.brukarsysgs"
-slug = "brukarsysgs"
-
-[[variable]]
-native_id = "321.28613.brukarsysgym"
-slug = "brukarsysgym"
-
-[[variable]]
-native_id = "321.28613.brukarsysifo"
-slug = "brukarsysifo"
-
-[[variable]]
-native_id = "321.28613.brukarsysovr"
-slug = "brukarsysovr"
-
-[[variable]]
-native_id = "321.28613.fr26-1"
-slug = "fr26"
-
-[[variable]]
-native_id = "321.28613.fr26-2"
-slug = "fr26-2-28613"
-
-[[variable]]
-native_id = "321.28613.fr27-2"
-slug = "fr27-2-28613"
-
-[[variable]]
-native_id = "321.28613.fr27-3"
-slug = "fr27-3-28613"
-
-[[variable]]
-native_id = "321.28613.fr27-4"
-slug = "fr27-4"
-
-[[variable]]
-native_id = "321.28613.fr27-5"
-slug = "fr27-5"
-
-[[variable]]
-native_id = "321.28613.fr27-6"
-slug = "fr27-6"
-
-[[variable]]
-native_id = "321.28613.fr27-7"
-slug = "fr27-7"
-
-[[variable]]
-native_id = "321.28613.fr27-8"
-slug = "fr27-8"
-
-[[variable]]
-native_id = "321.28613.fr39-1"
-slug = "fr39"
-
-[[variable]]
-native_id = "321.28613.fr39-2"
-slug = "fr39-2"
-
-[[variable]]
-native_id = "321.28613.fr39-3"
-slug = "fr39-3"
-
-[[variable]]
-native_id = "321.28613.fr40-1"
-slug = "fr40"
-
-[[variable]]
-native_id = "321.28613.fr40-2"
-slug = "fr40-2"
-
-[[variable]]
-native_id = "321.28613.fr40-3"
-slug = "fr40-3"
-
-[[variable]]
-native_id = "321.28613.fr40-4"
-slug = "fr40-4"
-
-[[variable]]
-native_id = "321.28613.fr40-5"
-slug = "fr40-5"
-
-[[variable]]
-native_id = "321.28613.fr40-6"
-slug = "fr40-6"
-
-[[variable]]
-native_id = "321.28613.fr40-7"
-slug = "fr40-7"
-
-[[variable]]
-native_id = "321.28613.fr40-8"
-slug = "fr40-8"
-
-[[variable]]
-native_id = "321.28613.fr42-1"
-slug = "fr42"
-
-[[variable]]
-native_id = "321.28613.fr42-2"
-slug = "fr42-2-28613"
-
-[[variable]]
-native_id = "321.28613.fr42-3"
-slug = "fr42-3-28613"
-
-[[variable]]
-native_id = "321.28613.fr42-4"
-slug = "fr42-4"
-
-[[variable]]
-native_id = "321.28613.fr42-5"
-slug = "fr42-5-28613"
-
-[[variable]]
-native_id = "321.28613.fr42-6"
-slug = "fr42-6"
-
-[[variable]]
-native_id = "321.28613.fr42-7"
-slug = "fr42-7"
-
-[[variable]]
-native_id = "321.28613.fr42-8"
-slug = "fr42-8"
-
-[[variable]]
-native_id = "321.28585.fr1a-10"
-slug = "fr1a-10"
-
-[[variable]]
-native_id = "321.28585.fr1a-11"
-slug = "fr1a-11"
-
-[[variable]]
-native_id = "321.28585.fr1a-9"
-slug = "fr1a-9"
-
-[[variable]]
-native_id = "321.28585.lokparti"
-slug = "lokparti"
-
-[[variable]]
-native_id = "321.28585.maj"
-slug = "maj"
-
-[[variable]]
-native_id = "321.28585.majlp"
-slug = "majlp"
-
-[[variable]]
-native_id = "321.28632.fr12"
-slug = "fr1"
-
-[[variable]]
-native_id = "321.28632.fr12-text"
-slug = "fr12-text"
-
-[[variable]]
-native_id = "321.28632.fr13"
-slug = "fr13"
-
-[[variable]]
-native_id = "321.28632.fr13-text"
-slug = "fr13-text"
-
-[[variable]]
-native_id = "321.28632.fr14"
-slug = "fr14-28632"
-
-[[variable]]
-native_id = "321.28632.fr14-text"
-slug = "fr14-text"
-
-[[variable]]
-native_id = "321.28632.fr15"
-slug = "fr15"
-
-[[variable]]
-native_id = "321.28632.fr16"
-slug = "fr16"
-
-[[variable]]
-native_id = "321.28632.mbfant"
-slug = "mbfant"
-
-[[variable]]
-native_id = "321.28632.mbfbeh"
-slug = "mbfbeh"
-
-[[variable]]
-native_id = "321.28632.mbfbif"
-slug = "mbfbif"
-
-[[variable]]
-native_id = "321.28632.fr10c-text"
-slug = "fr10c-text"
-
-[[variable]]
-native_id = "321.28632.fr8c-text"
-slug = "fr8c-text"
-
-[[variable]]
-native_id = "321.35983.fr28-1"
-slug = "fr28"
-
-[[variable]]
-native_id = "321.35983.fr28-2"
-slug = "fr28-2"
-
-[[variable]]
-native_id = "321.35983.fr28-3"
-slug = "fr28-3"
-
-[[variable]]
-native_id = "321.35983.fr28-4"
-slug = "fr28-4"
-
-[[variable]]
-native_id = "321.35983.fr28-5"
-slug = "fr28-5"
-
-[[variable]]
-native_id = "321.35983.fr28-6"
-slug = "fr28-6"
-
-[[variable]]
-native_id = "321.35983.fr28-7"
-slug = "fr28-7"
-
-[[variable]]
-native_id = "321.35983.fr28-8"
-slug = "fr28-8"
-
-[[variable]]
-native_id = "321.35983.fr40-2"
-slug = "fr40-2-35983"
-
-[[variable]]
-native_id = "321.35983.fr40-3"
-slug = "fr40-3-35983"
-
-[[variable]]
-native_id = "321.35983.fr41-2"
-slug = "fr41-2-35983"
-
-[[variable]]
-native_id = "321.35983.fr41-3"
-slug = "fr41-3-35983"
-
-[[variable]]
-native_id = "321.35983.fr41-4"
-slug = "fr41-4"
-
-[[variable]]
-native_id = "321.35983.fr41-5"
-slug = "fr41-5"
-
-[[variable]]
-native_id = "321.35983.fr41-6"
-slug = "fr41-6"
-
-[[variable]]
-native_id = "321.35983.fr41-7"
-slug = "fr41-7"
-
-[[variable]]
-native_id = "321.35983.fr41-8"
-slug = "fr41-8"
-
-[[variable]]
-native_id = "321.35983.fr43-1"
-slug = "fr43"
-
-[[variable]]
-native_id = "321.35983.fr43-2"
-slug = "fr43-2"
-
-[[variable]]
-native_id = "321.35983.fr43-3"
-slug = "fr43-3"
-
-[[variable]]
-native_id = "321.35983.fr43-4"
-slug = "fr43-4"
-
-[[variable]]
-native_id = "321.35983.fr43-5"
-slug = "fr43-5"
-
-[[variable]]
-native_id = "321.35983.fr43-6"
-slug = "fr43-6"
-
-[[variable]]
-native_id = "321.35983.fr43-7"
-slug = "fr43-7"
-
-[[variable]]
-native_id = "321.35983.fr43-8"
-slug = "fr43-8"
-
-[[variable]]
-native_id = "321.42791.fr16-text"
-slug = "fr16-text"
-
-[[variable]]
-native_id = "321.42791.fr17-text"
-slug = "fr17-text"
-
-[[variable]]
-native_id = "321.42791.fr18"
-slug = "fr18"
-
-[[variable]]
-native_id = "321.42791.fr18-text"
-slug = "fr18-text"
-
-[[variable]]
-native_id = "321.42791.fr19"
-slug = "fr19"
-
-[[variable]]
-native_id = "321.42791.fr19-text"
-slug = "fr19-text"
-
-[[variable]]
-native_id = "321.42791.fr21"
-slug = "fr21"
-
-[[variable]]
-native_id = "321.42789.fr6-1"
-slug = "fr6"
-
-[[variable]]
-native_id = "321.42789.fr6-2"
-slug = "fr6-2"
-
-[[variable]]
-native_id = "321.42789.fr6-3"
-slug = "fr6-3"
-
-[[variable]]
-native_id = "321.42789.fr6-4"
-slug = "fr6-4"
-
-[[variable]]
-native_id = "321.42789.fr6-5"
-slug = "fr6-5"
-
-[[variable]]
-native_id = "321.42789.fr6-6"
-slug = "fr6-6"
-
-[[variable]]
-native_id = "321.42789.fr7-1"
-slug = "fr7"
-
-[[variable]]
-native_id = "321.42789.fr7-2"
-slug = "fr7-2"
-
-[[variable]]
-native_id = "321.42789.fr7-3"
-slug = "fr7-3"
-
-[[variable]]
-native_id = "321.42789.fr7-4"
-slug = "fr7-4"
-
-[[variable]]
-native_id = "321.42789.fr7-5"
-slug = "fr7-5"
-
-[[variable]]
-native_id = "321.42789.fr7-6"
-slug = "fr7-6"
-
-[[variable]]
-native_id = "321.28625.source-positive"
-slug = "webb-skicka-meddelanden"
-
-[[variable]]
-native_id = "321.28626.fr32-10"
-slug = "fr32"
-
-[[variable]]
-native_id = "321.28626.fr32-9"
-slug = "fr32-9"
-
-[[variable]]
-native_id = "321.28626.fr45-5"
-slug = "fr45-5"
-
-[[variable]]
-native_id = "321.28626.webbmedb"
-slug = "webbmedb"
-
-[[variable]]
-native_id = "321.28626.webbmedbfors"
-slug = "webbmedbfors"
-
-[[variable]]
-native_id = "321.28626.webbmedbforsant"
-slug = "webbmedbforsant"
-
-[[variable]]
-native_id = "321.28626.webbmedbhant"
-slug = "webbmedbhant"
-
-[[variable]]
-native_id = "321.28626.fr30-10"
-slug = "fr30"
-
-[[variable]]
-native_id = "321.28626.fr30-9"
-slug = "fr30-9"
-
-[[variable]]
-native_id = "321.28626.fr42-5"
-slug = "fr42-5"
-
-[[variable]]
-native_id = "321.28630.folkinit"
-slug = "folkinit"
-
-[[variable]]
-native_id = "321.28630.folkinit2011"
-slug = "folkinit2011"
-
-[[variable]]
-native_id = "321.28630.folkinitant"
-slug = "folkinitant"
-
-[[variable]]
-native_id = "321.28630.folkinitant2011"
-slug = "folkinitant2011"
-
-[[variable]]
-native_id = "321.28630.folkinitbes"
-slug = "folkinitbes"
-
-[[variable]]
-native_id = "321.28630.folkinitbes2011ant"
-slug = "folkinitbes2011ant"
-
-[[variable]]
-native_id = "321.28630.folkinitbesant"
-slug = "folkinitbesant"
-
-[[variable]]
-native_id = "321.28630.fr12a"
-slug = "fr12a"
-
-[[variable]]
-native_id = "321.28630.fr12a-text"
-slug = "fr12a-text"
-
-[[variable]]
-native_id = "321.28630.fr12b"
-slug = "fr12b"
-
-[[variable]]
-native_id = "321.28630.fr8a"
-slug = "fr8a"
-
-[[variable]]
-native_id = "321.28630.fr10b"
-slug = "fr10b"
-
-[[variable]]
-native_id = "321.28630.fr6a"
-slug = "fr6a"
-
-[[variable]]
-native_id = "321.28630.fr6b-text"
-slug = "fr6b-text"
-
-[[variable]]
-native_id = "321.28630.fr9a"
-slug = "fr9a"
-
-[[variable]]
-native_id = "321.28630.fr9a-text"
-slug = "fr9a-text"
-
-[[variable]]
-native_id = "321.28630.fr9b-text"
-slug = "fr9b-text"
-
-[[variable]]
-native_id = "321.28630.fr6a-text"
-slug = "fr6a-text"
-
-[[variable]]
-native_id = "321.29350.ekverkmal"
-slug = "ekverkmal"
-
-[[variable]]
-native_id = "321.29350.ekverkmalsamt"
-slug = "ekverkmalsamt"
-
-[[variable]]
-native_id = "321.29350.ekverkmalvis"
-slug = "ekverkmalvis"
-
-[[variable]]
-native_id = "321.29350.fr26-2"
-slug = "fr26-2-29350"
-
-[[variable]]
-native_id = "321.29350.fr26-3"
-slug = "fr26-3-29350"
-
-[[variable]]
-native_id = "321.29350.fr26-4"
-slug = "fr26-4-29350"
-
-[[variable]]
-native_id = "321.29350.fr26-5"
-slug = "fr26-5-29350"
-
-[[variable]]
-native_id = "321.29350.fr39-2"
-slug = "fr39-2-29350"
-
-[[variable]]
-native_id = "321.29350.fr39-3"
-slug = "fr39-3-29350"
-
-[[variable]]
-native_id = "321.29350.fr39-5"
-slug = "fr39-5"
-
-[[variable]]
-native_id = "321.29350.fr39-6"
-slug = "fr39-6"
-
-[[variable]]
-native_id = "321.29350.fr39-7"
-slug = "fr39-7"
-
-[[variable]]
-native_id = "321.29350.fr41a"
-slug = "fr41a"
-
-[[variable]]
-native_id = "321.29350.fr41b"
-slug = "fr41b"
-
-[[variable]]
-native_id = "321.29350.fr41c"
-slug = "fr41c"
-
-[[variable]]
-native_id = "321.29350.verkmalsamt"
-slug = "verkmalsamt"
-
-[[variable]]
-native_id = "321.29350.verkmalvis"
-slug = "verkmalvis"
-
-[[variable]]
-native_id = "321.29350.fr24-2"
-slug = "fr24-2-29350"
-
-[[variable]]
-native_id = "321.29350.fr24-3"
-slug = "fr24-3-29350"
-
-[[variable]]
-native_id = "321.29350.fr24-4"
-slug = "fr24-4-29350"
-
-[[variable]]
-native_id = "321.29350.fr24-5"
-slug = "fr24-5-29350"
-
-[[variable]]
-native_id = "321.29350.fr38-1"
-slug = "fr38"
-
-[[variable]]
-native_id = "321.29350.fr38-2"
-slug = "fr38-2"
-
-[[variable]]
-native_id = "321.29350.fr38-3"
-slug = "fr38-3"
-
-[[variable]]
-native_id = "321.29350.fr38-4"
-slug = "fr38-4"
-
-[[variable]]
-native_id = "321.29350.fr38-5"
-slug = "fr38-5"
-
-[[variable]]
-native_id = "321.29350.fr38-6"
-slug = "fr38-6"
-
-[[variable]]
-native_id = "321.29350.fr38-7"
-slug = "fr38-7"
-
-[[variable]]
-native_id = "321.29353.fr33-1"
-slug = "fr33"
-
-[[variable]]
-native_id = "321.29353.fr33-2"
-slug = "fr33-2"
-
-[[variable]]
-native_id = "321.29353.fr33-3"
-slug = "fr33-3"
-
-[[variable]]
-native_id = "321.29353.fr33-4"
-slug = "fr33-4"
-
-[[variable]]
-native_id = "321.29353.fr33-5"
-slug = "fr33-5"
-
-[[variable]]
-native_id = "321.29353.fr46-1"
-slug = "fr46"
-
-[[variable]]
-native_id = "321.29353.fr46-3"
-slug = "fr46-3"
-
-[[variable]]
-native_id = "321.29353.fr46-5"
-slug = "fr46-5"
-
-[[variable]]
-native_id = "321.29353.socmedier"
-slug = "socmedier"
-
-[[variable]]
-native_id = "321.29353.socmedierannat"
-slug = "socmedierannat"
-
-[[variable]]
-native_id = "321.29353.socmedierinfo"
-slug = "socmedierinfo"
-
-[[variable]]
-native_id = "321.29353.socmedierkont"
-slug = "socmedierkont"
-
-[[variable]]
-native_id = "321.29353.socmedierpaverk"
-slug = "socmedierpaverk"
-
-[[variable]]
-native_id = "321.29353.fr31-1"
-slug = "fr31"
-
-[[variable]]
-native_id = "321.29353.fr31-2"
-slug = "fr31-2"
-
-[[variable]]
-native_id = "321.29353.fr31-3"
-slug = "fr31-3"
-
-[[variable]]
-native_id = "321.29353.fr31-4"
-slug = "fr31-4"
-
-[[variable]]
-native_id = "321.29353.fr31-5"
-slug = "fr31-5"
-
-[[variable]]
-native_id = "321.29353.fr45-1"
-slug = "fr45"
-
-[[variable]]
-native_id = "321.29353.fr45-2"
-slug = "fr45-2"
-
-[[variable]]
-native_id = "321.29353.fr45-3"
-slug = "fr45-3"
-
-[[variable]]
-native_id = "321.29353.fr45-4"
-slug = "fr45-4"
-
-[[variable]]
-native_id = "321.35984.source-positive"
-slug = "webb-politiska-styret"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
