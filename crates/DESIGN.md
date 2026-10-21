@@ -447,11 +447,12 @@ it is optional; only docs operations need it.
 **Three layers.** `reference` is everything in the catalog; `holdings` is what the
 steward holds; a project is what one user has: a `project_data.json` against a steward
 (`steward: <id>`, ordered from its holdings) or against the global catalog
-(`steward: global`, ordered from the register holders). The project layer is the user's
-file: the server stores none, and checks one only when it is posted to validate or order
-(the SPA runs the structural layer client-side first). Validation and order answer for
-the catalog that serves them, so a project is checked on its own steward's server:
-another catalog's answer differs without failing.
+(`steward: global`, a `global_fallback` manifest describing data the researcher already
+holds; nothing orders it). The project layer is the user's file: the server stores none,
+and checks one only when it is posted to validate or order (the SPA runs the structural
+layer client-side first). Validation and order answer for the catalog that serves them,
+so a project is checked on its own steward's server: another catalog's answer differs
+without failing.
 
 A steward artifact defaults to `holdings` scope, a catalog artifact to `reference`;
 explicit `holdings` on a catalog is `scope_unavailable`. Reference means every node of

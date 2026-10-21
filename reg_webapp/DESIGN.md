@@ -1424,11 +1424,11 @@ same two origin-side guards; GET reads are not limited (they have the cheaper ed
 
 The project editor was rebuilt around one rule: **the catalog is the only authoring
 surface**. `/project` is a **cart** — it shows what has been picked and authors nothing
-of its own but a source's **period** (Y-81, below), the project's name and the
-window-overlap action. `ProjectEditor` / `SourceEditor` / `BindingEditor` display each
-source's variant coordinate, period, and bindings (variable, pinned representation) and
-offer only delete-per-row, that period, the project's own name, and the
-New/Open/Download project_data.json/Download order.json actions — validation runs
+of its own but a source's **period** (Y-81, below; set directly or by the window-overlap
+action) and the project's name. `ProjectEditor` / `SourceEditor` / `BindingEditor`
+display each source's variant coordinate, period, and bindings (variable, pinned
+representation) and offer only delete-per-row, that period, the project's own name, and
+the New/Open/Download project_data.json/Download order.json actions — validation runs
 automatically on every edit, with no separate Validate action. A wrong variable, variant
 or representation gets fixed by picking again from the catalog subject page, not by
 editing the cart row; there is no general in-cart editing UI.
