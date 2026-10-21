@@ -11,88 +11,38 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Konjunkturstatistik för industrin
-
-[[variable]]
-native_id = "186.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "186.510"
-slug = "ssyk3"
-
-[[variable]]
-native_id = "186.511"
-slug = "ssyk4-huvud"
-
-[[variable]]
-native_id = "186.778"
-slug = "utbildningsniva-3-positioner"
-
-[[variable]]
-native_id = "186.779"
-slug = "utbildningsniva-1-position"
-
-[[variable]]
-native_id = "186.784"
-slug = "utbildningsinriktning-4-positioner"
-
-[[variable]]
-native_id = "186.785"
-slug = "utbildningsinriktning-1-position"
-
-[[variable]]
-native_id = "186.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "186.6416"
-slug = "utbildningsgrupp"
-
-[[variable]]
-native_id = "186.17503"
-slug = "lopnummer-sektor"
+"186.57" = "personnr"
+"186.510" = "ssyk3"
+"186.511" = "ssyk4-huvud"
+"186.778" = "utbildningsniva-3-positioner"
+"186.779" = "utbildningsniva-1-position"
+"186.784" = "utbildningsinriktning-4-positioner"
+"186.785" = "utbildningsinriktning-1-position"
+"186.4027" = "naringsgren"
+"186.6416" = "utbildningsgrupp"
+"186.17503" = "lopnummer-sektor"
 
 # register 187 (konjunkturstatistik-industri)
-
-[[variable]]
-native_id = "186.65.utbin"
-slug = "utbildningsinriktning"
-
-[[variable]]
-native_id = "186.66.utbnv"
-slug = "utbildningsniva"
+"186.65.utbin" = "utbildningsinriktning"
+"186.66.utbnv" = "utbildningsniva"
 
 # register 187 (konjunkturstatistik-industri)
-
-[[variable]]
-native_id = "186.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "186.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "186.120"
-slug = "yrkesuppgift"
-
-[[variable]]
-native_id = "186.753"
-slug = "examensar"
-
-[[variable]]
-native_id = "186.801"
-slug = "utbildningsgrupp-enl-sun-2000"
-
-[[variable]]
-native_id = "186.6349"
-slug = "rorliga-lonetillagg-uppraknade"
-
-[[variable]]
-native_id = "186.46223"
-slug = "anstallningstyp"
+"186.56" = "person-orgnr"
+"186.109" = "tjanstgoringsomfattning"
+"186.120" = "yrkesuppgift"
+"186.753" = "examensar"
+"186.801" = "utbildningsgrupp-enl-sun-2000"
+"186.6349" = "rorliga-lonetillagg-uppraknade"
+"186.46223" = "anstallningstyp"
+"186.66.sun2000niva" = "sun2000niva"
+"186.66.sun2020niva" = "sun2020niva"
+"186.66.sun2000niva-old" = "sun2000niva-old-66"
+"186.774.sun2000grp" = "sun2000grp"
+"186.774.sun2000niva-old" = "sun2000niva-old-774"
+"186.120.ssyk12-3" = "ssyk12-3"
+"186.120.ssyk12-4" = "ssyk12-4"
 
 # register 187
 
@@ -124,31 +74,3 @@ variable = "186.120"
 columns = { ssyk12_3 = "186.120.ssyk12-3", ssyk12_4 = "186.120.ssyk12-4" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "3230d7257427a2109328aff6eb845c2790f507edafa4d3f99bc6e9ed9ef9bb3c"
-
-[[variable]]
-native_id = "186.66.sun2000niva"
-slug = "sun2000niva"
-
-[[variable]]
-native_id = "186.66.sun2020niva"
-slug = "sun2020niva"
-
-[[variable]]
-native_id = "186.66.sun2000niva-old"
-slug = "sun2000niva-old-66"
-
-[[variable]]
-native_id = "186.774.sun2000grp"
-slug = "sun2000grp"
-
-[[variable]]
-native_id = "186.774.sun2000niva-old"
-slug = "sun2000niva-old-774"
-
-[[variable]]
-native_id = "186.120.ssyk12-3"
-slug = "ssyk12-3"
-
-[[variable]]
-native_id = "186.120.ssyk12-4"
-slug = "ssyk12-4"

@@ -11,38 +11,121 @@ panel_entity_key = "identitet"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Småorter
-
-[[variable]]
-native_id = "156.145"
-slug = "identitet"
-
-
-[[variable]]
-native_id = "156.1666"
-slug = "antal-anstallda-foretag"
-
-[[variable]]
-native_id = "156.6331"
-slug = "miljoskyddsinvestering-allt"
-
-[[variable]]
-native_id = "156.6335"
-slug = "lopande-externa-drift"
-
-[[variable]]
-native_id = "156.15938"
-slug = "foretagets-verksamhet"
-
-[[variable]]
-native_id = "156.28430"
-slug = "miljoskyddsinvestering-beskrivning"
+"156.145" = "identitet"
+"156.1666" = "antal-anstallda-foretag"
+"156.6331" = "miljoskyddsinvestering-allt"
+"156.6335" = "lopande-externa-drift"
+"156.15938" = "foretagets-verksamhet"
+"156.28430" = "miljoskyddsinvestering-beskrivning"
 
 # register 158 (skyddad-natur)
+"156.6345.hus113b" = "hushallsinvestering"
+"156.6331.invbelopp" = { slug = "invbelopp", deprecated = false }
+"156.6331.invbelopp101" = { slug = "invbelopp101", deprecated = false }
+"156.6331.invbelopp102" = { slug = "invbelopp102", deprecated = false }
+"156.6331.invbelopp103" = { slug = "invbelopp103", deprecated = false }
+"156.6331.invbelopp104" = { slug = "invbelopp104", deprecated = false }
+"156.6331.invbelopp105" = { slug = "invbelopp105", deprecated = false }
+"156.6331.invbelopp106" = { slug = "invbelopp106", deprecated = false }
+"156.6331.invbelopp107" = { slug = "invbelopp107", deprecated = false }
+"156.6331.invbelopp108" = { slug = "invbelopp108", deprecated = false }
+"156.6331.invbelopp109" = { slug = "invbelopp109", deprecated = false }
+"156.6331.invbelopp110" = { slug = "invbelopp110", deprecated = false }
+"156.6331.invtyp" = { slug = "invtyp", deprecated = false }
+"156.6331.miljoomra" = { slug = "miljoomra", deprecated = false }
+"156.6331.miljoomrb" = { slug = "miljoomrb", deprecated = false }
+"156.6331.radnr" = { slug = "radnr", deprecated = false }
+"156.6335.kost311k" = { slug = "kost311k", deprecated = false }
+"156.6335.kost312a" = { slug = "kost312a", deprecated = false }
+"156.6335.kost312l" = { slug = "kost312l", deprecated = false }
+"156.6335.kost312o" = { slug = "kost312o", deprecated = false }
+"156.6335.kost312q" = { slug = "kost312q", deprecated = false }
+"156.6335.kost312v" = { slug = "kost312v", deprecated = false }
+"156.6345.hus113b-kontroll" = { slug = "hus113b-kontroll", deprecated = false }
+"156.6345.hus113e" = { slug = "hus113e", deprecated = false }
+"156.6345.hus113v" = { slug = "hus113v", deprecated = false }
+"156.6345.husbeskr" = { slug = "husbeskr", deprecated = false }
+"156.6332.inv111a" = { slug = "inv111a-6332", deprecated = false }
+"156.6332.inv111komm" = { slug = "inv111komm", deprecated = false }
+"156.6332.inv111l" = { slug = "inv111l", deprecated = false }
+"156.6332.inv111o" = { slug = "inv111o", deprecated = false }
+"156.6332.inv111q" = { slug = "inv111q", deprecated = false }
+"156.6332.inv111t" = { slug = "inv111t", deprecated = false }
+"156.6332.inv111v" = { slug = "inv111v", deprecated = false }
+"156.6333.inv112a" = { slug = "inv112a-6333", deprecated = false }
+"156.6333.inv112komm" = { slug = "inv112komm", deprecated = false }
+"156.6333.inv112l" = { slug = "inv112l", deprecated = false }
+"156.6333.inv112o" = { slug = "inv112o", deprecated = false }
+"156.6333.inv112q" = { slug = "inv112q", deprecated = false }
+"156.6333.inv112t" = { slug = "inv112t", deprecated = false }
+"156.6333.inv112v" = { slug = "inv112v", deprecated = false }
+"156.6253.invtyp101" = { slug = "invtyp101-6253", deprecated = false }
+"156.6253.invtyp102" = { slug = "invtyp102", deprecated = false }
+"156.6253.invtyp103" = { slug = "invtyp103", deprecated = false }
+"156.6253.invtyp104" = { slug = "invtyp104", deprecated = false }
+"156.6253.invtyp105" = { slug = "invtyp105", deprecated = false }
+"156.6253.invtyp106" = { slug = "invtyp106", deprecated = false }
+"156.6253.invtyp107" = { slug = "invtyp107", deprecated = false }
+"156.6253.invtyp108" = { slug = "invtyp108", deprecated = false }
+"156.6253.invtyp109" = { slug = "invtyp109", deprecated = false }
+"156.6253.invtyp110" = { slug = "invtyp110", deprecated = false }
+"156.1682.miljoomra101" = { slug = "miljoomra101-1682", deprecated = false }
+"156.1682.miljoomra102" = { slug = "miljoomra102", deprecated = false }
+"156.1682.miljoomra103" = { slug = "miljoomra103", deprecated = false }
+"156.1682.miljoomra104" = { slug = "miljoomra104", deprecated = false }
+"156.1682.miljoomra105" = { slug = "miljoomra105", deprecated = false }
+"156.1682.miljoomra106" = { slug = "miljoomra106", deprecated = false }
+"156.1682.miljoomra107" = { slug = "miljoomra107", deprecated = false }
+"156.1682.miljoomra108" = { slug = "miljoomra108", deprecated = false }
+"156.1682.miljoomra109" = { slug = "miljoomra109", deprecated = false }
+"156.1682.miljoomra110" = { slug = "miljoomra110", deprecated = false }
+"156.28430.beskrivkost302a" = { slug = "beskrivkost302a", deprecated = false }
+"156.28430.beskrivkost302l" = { slug = "beskrivkost302l", deprecated = false }
+"156.28430.beskrivkost302o" = { slug = "beskrivkost302o", deprecated = false }
+"156.28430.beskrivkost302v" = { slug = "beskrivkost302v", deprecated = false }
+"156.28430.beskrivkost303t" = { slug = "beskrivkost303t", deprecated = false }
+"156.28430.beskrivkost304t" = { slug = "beskrivkost304t", deprecated = false }
+"156.28430.beskrivkost305t" = { slug = "beskrivkost305t", deprecated = false }
+"156.28430.beskrivkost312a" = { slug = "beskrivkost312a", deprecated = false }
+"156.28430.beskrivkost312l" = { slug = "beskrivkost312l", deprecated = false }
+"156.28430.beskrivkost312o" = { slug = "beskrivkost312o", deprecated = false }
+"156.28430.beskrivkost312v" = { slug = "beskrivkost312v", deprecated = false }
+"156.28430.beskrivkost313k" = { slug = "beskrivkost313k", deprecated = false }
+"156.28430.beskrivkost314k" = { slug = "beskrivkost314k", deprecated = false }
+"156.28430.beskrivkost315t" = { slug = "beskrivkost315t", deprecated = false }
+"156.28430.inv111komm" = { slug = "inv111komm-28430", deprecated = false }
+"156.28430.inv112komm" = { slug = "inv112komm-28430", deprecated = false }
+"156.28427.beskrivinv101" = { slug = "beskrivinv101-28427", deprecated = false }
+"156.28427.beskrivinv102" = { slug = "beskrivinv102", deprecated = false }
+"156.28427.beskrivinv103" = { slug = "beskrivinv103", deprecated = false }
+"156.28427.beskrivinv104" = { slug = "beskrivinv104", deprecated = false }
+"156.28427.beskrivinv105" = { slug = "beskrivinv105", deprecated = false }
+"156.28427.beskrivinv106" = { slug = "beskrivinv106", deprecated = false }
+"156.28427.beskrivinv107" = { slug = "beskrivinv107", deprecated = false }
+"156.28427.beskrivinv108" = { slug = "beskrivinv108", deprecated = false }
+"156.28427.beskrivinv109" = { slug = "beskrivinv109", deprecated = false }
+"156.28427.beskrivinv110" = { slug = "beskrivinv110", deprecated = false }
+"156.6334.kost301t" = { slug = "kost301t", deprecated = false }
+"156.6334.kost302a" = { slug = "kost302a-6334", deprecated = false }
+"156.6334.kost302l" = { slug = "kost302l", deprecated = false }
+"156.6334.kost302o" = { slug = "kost302o", deprecated = false }
+"156.6334.kost302q" = { slug = "kost302q", deprecated = false }
+"156.6334.kost302v" = { slug = "kost302v", deprecated = false }
+"156.6338.source-positive" = { slug = "kost303t", deprecated = false }
+"156.412" = "postort"
+"156.453" = "namn-kontaktperson"
+"156.15937" = "datum-for-svar"
+"156.58" = "postnromrade"
+"156.467" = "telefonnummer"
+"156.814" = "faxnummer"
+"156.1724" = "e-postadress-kontaktperson"
+"156.2014" = "foretagsnamn"
 
-[[variable]]
-native_id = "156.6345.hus113b"
-slug = "hushallsinvestering"
+# register 157
+"156.4989.adress" = "foretagets-adress"
+"156.4989.gatunr" = "gata-2"
 
 # register 168 (fek)
 
@@ -69,466 +152,6 @@ columns = { NgS1 = "156.15938", Verksamhet = "156.15938", verksamhet = "156.1593
 unassigned_columns = []
 columns_ref = "Reviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
 expected_evidence_sha256 = "f7ad682a031cbc2c8416469db02b4b1e8a17da5e77d39fce88610abbd70fdfa7"
-
-[[variable]]
-native_id = "156.6331.invbelopp"
-slug = "invbelopp"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp101"
-slug = "invbelopp101"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp102"
-slug = "invbelopp102"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp103"
-slug = "invbelopp103"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp104"
-slug = "invbelopp104"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp105"
-slug = "invbelopp105"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp106"
-slug = "invbelopp106"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp107"
-slug = "invbelopp107"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp108"
-slug = "invbelopp108"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp109"
-slug = "invbelopp109"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invbelopp110"
-slug = "invbelopp110"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.invtyp"
-slug = "invtyp"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.miljoomra"
-slug = "miljoomra"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.miljoomrb"
-slug = "miljoomrb"
-deprecated = false
-
-[[variable]]
-native_id = "156.6331.radnr"
-slug = "radnr"
-deprecated = false
-
-[[variable]]
-native_id = "156.6335.kost311k"
-slug = "kost311k"
-deprecated = false
-
-[[variable]]
-native_id = "156.6335.kost312a"
-slug = "kost312a"
-deprecated = false
-
-[[variable]]
-native_id = "156.6335.kost312l"
-slug = "kost312l"
-deprecated = false
-
-[[variable]]
-native_id = "156.6335.kost312o"
-slug = "kost312o"
-deprecated = false
-
-[[variable]]
-native_id = "156.6335.kost312q"
-slug = "kost312q"
-deprecated = false
-
-[[variable]]
-native_id = "156.6335.kost312v"
-slug = "kost312v"
-deprecated = false
-
-[[variable]]
-native_id = "156.6345.hus113b-kontroll"
-slug = "hus113b-kontroll"
-deprecated = false
-
-[[variable]]
-native_id = "156.6345.hus113e"
-slug = "hus113e"
-deprecated = false
-
-[[variable]]
-native_id = "156.6345.hus113v"
-slug = "hus113v"
-deprecated = false
-
-[[variable]]
-native_id = "156.6345.husbeskr"
-slug = "husbeskr"
-deprecated = false
-
-[[variable]]
-native_id = "156.6332.inv111a"
-slug = "inv111a-6332"
-deprecated = false
-
-[[variable]]
-native_id = "156.6332.inv111komm"
-slug = "inv111komm"
-deprecated = false
-
-[[variable]]
-native_id = "156.6332.inv111l"
-slug = "inv111l"
-deprecated = false
-
-[[variable]]
-native_id = "156.6332.inv111o"
-slug = "inv111o"
-deprecated = false
-
-[[variable]]
-native_id = "156.6332.inv111q"
-slug = "inv111q"
-deprecated = false
-
-[[variable]]
-native_id = "156.6332.inv111t"
-slug = "inv111t"
-deprecated = false
-
-[[variable]]
-native_id = "156.6332.inv111v"
-slug = "inv111v"
-deprecated = false
-
-[[variable]]
-native_id = "156.6333.inv112a"
-slug = "inv112a-6333"
-deprecated = false
-
-[[variable]]
-native_id = "156.6333.inv112komm"
-slug = "inv112komm"
-deprecated = false
-
-[[variable]]
-native_id = "156.6333.inv112l"
-slug = "inv112l"
-deprecated = false
-
-[[variable]]
-native_id = "156.6333.inv112o"
-slug = "inv112o"
-deprecated = false
-
-[[variable]]
-native_id = "156.6333.inv112q"
-slug = "inv112q"
-deprecated = false
-
-[[variable]]
-native_id = "156.6333.inv112t"
-slug = "inv112t"
-deprecated = false
-
-[[variable]]
-native_id = "156.6333.inv112v"
-slug = "inv112v"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp101"
-slug = "invtyp101-6253"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp102"
-slug = "invtyp102"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp103"
-slug = "invtyp103"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp104"
-slug = "invtyp104"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp105"
-slug = "invtyp105"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp106"
-slug = "invtyp106"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp107"
-slug = "invtyp107"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp108"
-slug = "invtyp108"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp109"
-slug = "invtyp109"
-deprecated = false
-
-[[variable]]
-native_id = "156.6253.invtyp110"
-slug = "invtyp110"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra101"
-slug = "miljoomra101-1682"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra102"
-slug = "miljoomra102"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra103"
-slug = "miljoomra103"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra104"
-slug = "miljoomra104"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra105"
-slug = "miljoomra105"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra106"
-slug = "miljoomra106"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra107"
-slug = "miljoomra107"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra108"
-slug = "miljoomra108"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra109"
-slug = "miljoomra109"
-deprecated = false
-
-[[variable]]
-native_id = "156.1682.miljoomra110"
-slug = "miljoomra110"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost302a"
-slug = "beskrivkost302a"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost302l"
-slug = "beskrivkost302l"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost302o"
-slug = "beskrivkost302o"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost302v"
-slug = "beskrivkost302v"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost303t"
-slug = "beskrivkost303t"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost304t"
-slug = "beskrivkost304t"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost305t"
-slug = "beskrivkost305t"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost312a"
-slug = "beskrivkost312a"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost312l"
-slug = "beskrivkost312l"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost312o"
-slug = "beskrivkost312o"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost312v"
-slug = "beskrivkost312v"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost313k"
-slug = "beskrivkost313k"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost314k"
-slug = "beskrivkost314k"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.beskrivkost315t"
-slug = "beskrivkost315t"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.inv111komm"
-slug = "inv111komm-28430"
-deprecated = false
-
-[[variable]]
-native_id = "156.28430.inv112komm"
-slug = "inv112komm-28430"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv101"
-slug = "beskrivinv101-28427"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv102"
-slug = "beskrivinv102"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv103"
-slug = "beskrivinv103"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv104"
-slug = "beskrivinv104"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv105"
-slug = "beskrivinv105"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv106"
-slug = "beskrivinv106"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv107"
-slug = "beskrivinv107"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv108"
-slug = "beskrivinv108"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv109"
-slug = "beskrivinv109"
-deprecated = false
-
-[[variable]]
-native_id = "156.28427.beskrivinv110"
-slug = "beskrivinv110"
-deprecated = false
-
-[[variable]]
-native_id = "156.6334.kost301t"
-slug = "kost301t"
-deprecated = false
-
-[[variable]]
-native_id = "156.6334.kost302a"
-slug = "kost302a-6334"
-deprecated = false
-
-[[variable]]
-native_id = "156.6334.kost302l"
-slug = "kost302l"
-deprecated = false
-
-[[variable]]
-native_id = "156.6334.kost302o"
-slug = "kost302o"
-deprecated = false
-
-[[variable]]
-native_id = "156.6334.kost302q"
-slug = "kost302q"
-deprecated = false
-
-[[variable]]
-native_id = "156.6334.kost302v"
-slug = "kost302v"
-deprecated = false
-
-[[variable]]
-native_id = "156.6338.source-positive"
-slug = "kost303t"
-deprecated = false
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -698,54 +321,3 @@ reason = "These exact source coordinates lack unique catalog ownership because t
 evidence = "Maintainer-approved retained-source/unknown-ownership, historical missing-domain and uncertain grouping policy. Full native family and physical-coordinate closure: Batch54-root-complete-collision-closure.json. Exact diagnostic, complete source alternatives and attached coding evidence are guarded; no value equivalence, delivery discriminator or unstated storage encoding is invented."
 expected_evidence_sha256 = "5bc30070702cf12d3a248bac2a07b2f6ad28647e61c0ba90d1c8b3cc1f6d3402"
 expected_diagnostic_sha256 = "bc95722b9e401b1164c2ba82fb420a956e0dfef4932851db39a89d1c88b82f7e"
-
-[[variable]]
-native_id = "156.412"
-slug = "postort"
-
-
-[[variable]]
-native_id = "156.453"
-slug = "namn-kontaktperson"
-
-
-[[variable]]
-native_id = "156.15937"
-slug = "datum-for-svar"
-
-
-[[variable]]
-native_id = "156.58"
-slug = "postnromrade"
-
-
-[[variable]]
-native_id = "156.467"
-slug = "telefonnummer"
-
-
-[[variable]]
-native_id = "156.814"
-slug = "faxnummer"
-
-
-[[variable]]
-native_id = "156.1724"
-slug = "e-postadress-kontaktperson"
-
-
-[[variable]]
-native_id = "156.2014"
-slug = "foretagsnamn"
-
-# register 157
-
-
-[[variable]]
-native_id = "156.4989.adress"
-slug = "foretagets-adress"
-
-
-[[variable]]
-native_id = "156.4989.gatunr"
-slug = "gata-2"

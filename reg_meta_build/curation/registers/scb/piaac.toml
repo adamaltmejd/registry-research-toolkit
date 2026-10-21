@@ -11,644 +11,208 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Gymnasial yrkesutbildning
-
-[[variable]]
-native_id = "351.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "351.32906.d-q12c"
-slug = "utbildningsniva-krav"
-
-[[variable]]
-native_id = "351.32908.d-q12c"
-slug = "arbetsplats-larande"
+"351.57" = "personnr"
+"351.32906.d-q12c" = "utbildningsniva-krav"
+"351.32908.d-q12c" = "arbetsplats-larande"
 
 # register 355 (tradbransle-torv)
-
-[[variable]]
-native_id = "351.44"
-slug = "kon"
-
-[[variable]]
-native_id = "351.45"
-slug = "land"
-
-[[variable]]
-native_id = "351.753"
-slug = "examensar"
-
-[[variable]]
-native_id = "351.6267"
-slug = "alder"
-
-[[variable]]
-native_id = "351.17328"
-slug = "individnyckel"
-
-[[variable]]
-native_id = "351.32788"
-slug = "alder-avslutad-utbildning"
+"351.44" = "kon"
+"351.45" = "land"
+"351.753" = "examensar"
+"351.6267" = "alder"
+"351.17328" = "individnyckel"
+"351.32788" = "alder-avslutad-utbildning"
 
 # register 352
-
-[[variable]]
-native_id = "351.5726.b-q01a"
-slug = "utbildningens-niva"
-
-[[variable]]
-native_id = "351.5726.b-q01a-t"
-slug = "utbildningens-niva-2"
+"351.5726.b-q01a" = "utbildningens-niva"
+"351.5726.b-q01a-t" = "utbildningens-niva-2"
 
 # register 353
-
-
-[[variable]]
-native_id = "351.4677.c-q08a"
-slug = "c-q08a"
-deprecated = false
-
-[[variable]]
-native_id = "351.4677.c-q08b"
-slug = "c-q08b"
-deprecated = false
-
-[[variable]]
-native_id = "351.4677.c-q08c1"
-slug = "c-q08c"
-deprecated = false
-
-[[variable]]
-native_id = "351.4677.c-q10a"
-slug = "c-q10a"
-deprecated = false
-
-[[variable]]
-native_id = "351.4677.c-q09"
-slug = "sysselsattningsstatus-ungefar-hur-manga-ar-har-du-totalt-haft-betalt-arbete-rakna-bara-med-ar-da-du-haft-heltids-eller-deltidsarbete-minst-6-manader"
-deprecated = false
-
-[[variable]]
-native_id = "351.4677.c-q07"
-slug = "c-q0"
-deprecated = false
-
-[[variable]]
-native_id = "351.4677.c-q08c2"
-slug = "sysselsattningsstatus-vilket-ar-slutade-du-pa-ditt-senaste-avlonade-arbete"
-deprecated = false
-
-[[variable]]
-native_id = "351.32872.b-q03c1"
-slug = "b-q03c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32872.b-q03d"
-slug = "b-q03d"
-deprecated = false
-
-[[variable]]
-native_id = "351.32872.b-q03c2"
-slug = "avbruten-utbildning-vilket-ar-slutade-du-att-studera-pa-utbildningen"
-deprecated = false
-
-[[variable]]
-native_id = "351.32872.b-q03a"
-slug = "b-q03a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32872.b-q03b"
-slug = "b-q03b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q01"
-slug = "j-q0"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q02a"
-slug = "j-q02a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q03a"
-slug = "j-q03a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q04c1"
-slug = "j-q04c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q03c"
-slug = "j-q03c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q03d1"
-slug = "j-q03d"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q03d2"
-slug = "bakgrund-hur-gammalt-ar-ditt-aldsta-barn"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q03b"
-slug = "j-q03b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q07a"
-slug = "j-q07a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q04a"
-slug = "j-q04a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q06a"
-slug = "j-q06a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-n05a2"
-slug = "j-n05a2"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q02c"
-slug = "j-q02c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q08"
-slug = "bakgrund-ungefar-hur-manga-bocker-finns-det-i-ditt-hem-rakna-inte-tidningar-tidskrifter-eller-skolbocker-en-meter-i-en-bokhylla-motsvarar-ungefar-40-bocker"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q06b"
-slug = "j-q06b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q07b"
-slug = "j-q07b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32886.j-q04c2"
-slug = "bakgrund-vilket-ar-var-det-nar-du-invandrade-till-sverige-forsta-gangen-ange-artal"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q03c"
-slug = "g-q03c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q03g"
-slug = "g-q03g"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q05a"
-slug = "g-q05a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q05f"
-slug = "g-q05f"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q05c"
-slug = "g-q05c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q05e"
-slug = "g-q05e"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q03d"
-slug = "g-q03d"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q05g"
-slug = "g-q05g"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q06c"
-slug = "f-q06c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q05h"
-slug = "g-q05h"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q02d"
-slug = "g-q02d"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q04b"
-slug = "f-q04b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q02e"
-slug = "f-q02e"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q03f"
-slug = "g-q03f"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q02c"
-slug = "f-q02c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q02b"
-slug = "f-q02b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q01d"
-slug = "g-q01d"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q01c"
-slug = "g-q01c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q01b"
-slug = "g-q01b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q01a"
-slug = "g-q01a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q01e"
-slug = "g-q01e"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q01h"
-slug = "g-q01h"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q01g"
-slug = "g-q01g"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q01f"
-slug = "g-q01f"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q03b"
-slug = "f-q03b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q03c"
-slug = "f-q03c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q03b"
-slug = "g-q03b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q02b"
-slug = "g-q02b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q02c"
-slug = "g-q02c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q02d"
-slug = "f-q02d"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q05d"
-slug = "g-q05d"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q03h"
-slug = "g-q03h"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q04"
-slug = "g-q0"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q05a"
-slug = "f-q05a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q08"
-slug = "hur-ofta-brukar-du-pa-arbetet-har-brist-pa-datorkunskap-paverkat-dina-chanser-for-att-bli-anstalld-befordrad-eller-fa-loneforhojning"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q06b"
-slug = "f-q06b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q02a"
-slug = "f-q02a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q04a"
-slug = "f-q04a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q03a"
-slug = "f-q03a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q05b"
-slug = "f-q05b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q01b"
-slug = "f-q01b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q07a"
-slug = "f-q07a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.f-q07b"
-slug = "f-q07b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q02a"
-slug = "g-q02a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q07"
-slug = "hur-ofta-brukar-du-pa-arbetet-tycker-du-att-du-har-de-datorkunskaper-som-behovs-for-att-utfora-ditt-nuvarande-arbete-bra-tycker-du-att-du-hade-de-datorkunskaper-som-behovdes-for-att-utfora-ditt-senaste-arbete-bra"
-deprecated = false
-
-[[variable]]
-native_id = "351.32889.g-q06"
-slug = "hur-ofta-brukar-du-pa-arbetet-vilken-datorkunskap-ar-nodvandig-for-att-kunna-utfora-ditt-nuvarande-arbete-vilken-datorkunskap-var-nodvandig-for-att-kunna-utfora-ditt-senaste-arbete"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q05b2"
-slug = "senaste-arbetsplats-det-galler-fortfarande-det-foretag-du-lamnade-inom-de-12-senaste-manaderna-nar-du-borjade-arbeta-med-ditt-foretag-vilket-ar-var-det-det-galler-fortfarande-det-foretag-som-du-lamnade-innan-du-senast-slutade-arbeta-nar-du-borjade-arbeta-med-ditt-foretag-eller-vilket-ar-var-det-det-galler-fortfarande-det-foretag-som-du-lamnade-nar-du-borjade-arbeta-med-ditt-foretag-eller-vilket-ar-var-det"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q05b1"
-slug = "e-q05b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q05a1"
-slug = "e-q05a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q05a2"
-slug = "senaste-arbetsplats-fragan-galler-fortfarande-det-arbete-du-har-lamnat-inom-de-12-senaste-manaderna-vilket-ar-var-det-fragan-galler-fortfarande-det-arbete-du-lamnade-innan-du-senast-slutade-arbeta-vilket-ar-var-det-fragan-galler-fortfarande-det-arbete-du-lamnade-under-vilket-ar-var-det"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q07a"
-slug = "e-q07a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q07b"
-slug = "e-q07b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q06"
-slug = "senaste-arbetsplats-hur-manga-personer-arbetade-for-din-arbetsgivare-pa-din-arbetsplats-var-det"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q09"
-slug = "senaste-arbetsplats-hur-manga-timmar-arbetade-du-vanligtvis-per-vecka-pa-detta-arbete-rakna-med-normal-avlonad-eller-oavlonad-overtid-men-rakna-inte-med-lunchrast-eller-andra-raster"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q03"
-slug = "e-q"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q04"
-slug = "senaste-arbetsplats-var-du-anstalld-eller-var-du-egen-foretagare"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q08"
-slug = "senaste-arbetsplats-vilken-typ-av-anstallning-hade-du-var-det"
-deprecated = false
-
-[[variable]]
-native_id = "351.32894.e-q10"
-slug = "senaste-arbetsplats-vilket-var-det-huvudsakliga-skalet-till-att-du-slutade-pa-ditt-senaste-arbete"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q06b"
-slug = "d-q06b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q07a"
-slug = "d-q07a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q07b"
-slug = "d-q07b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q08b"
-slug = "d-q08b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q06a"
-slug = "d-q06a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q10"
-slug = "nuvarande-arbetsplats-hur-manga-timmar-arbetar-du-vanligtvis-per-vecka-pa-ditt-nuvarande-arbete-rakna-med-normal-avlonad-eller-oavlonad-overtid-men-rakna-inte-med-lunchrast-eller-andra-raster"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q08a"
-slug = "d-q08a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q03"
-slug = "d-q"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q14"
-slug = "nuvarande-arbetsplats-pa-det-stora-hela-hur-nojd-ar-du-med-ditt-nuvarande-arbete-ar-du"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q09"
-slug = "nuvarande-arbetsplats-vilken-typ-av-anstallning-har-du-ar-det"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q06c"
-slug = "d-q06c"
-deprecated = false
-
-[[variable]]
-native_id = "351.32901.d-q04"
-slug = "nuvarande-arbetsplats-ar-du-anstalld-eller-egen-foretagare"
-deprecated = false
-
-[[variable]]
-native_id = "351.32902.d-q05a1"
-slug = "d-q05a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32902.d-q05b1"
-slug = "d-q05b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32902.d-q05b3"
-slug = "nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilken-manad-borjade-du-arbeta-med-ditt-egna-foretag"
-deprecated = false
-
-[[variable]]
-native_id = "351.32902.d-q05a3"
-slug = "nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilken-manad-borjade-du-hos-din-arbetsgivare"
-deprecated = false
-
-[[variable]]
-native_id = "351.32902.d-q05b2"
-slug = "nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilket-ar-var-de-nar-du-borjade-arbeta-i-ditt-nuvarande-egna-foretag"
-deprecated = false
-
-[[variable]]
-native_id = "351.32902.d-q05a2"
-slug = "nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilket-ar-var-det-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-s16a"
-slug = "d-s16a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q17a"
-slug = "d-q17a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q16d2"
-slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-dag"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q16d5"
-slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-manad"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q16d1"
-slug = "d-q16d"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q16d4"
-slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-tva-veckor"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q16d3"
-slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-vecka"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q16d6"
-slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-ar"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q16a"
-slug = "d-q16a"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q17b"
-slug = "d-q17b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q16b"
-slug = "d-q16b"
-deprecated = false
-
-[[variable]]
-native_id = "351.32907.d-q18a"
-slug = "d-q18a"
-deprecated = false
+"351.4677.c-q08a" = { slug = "c-q08a", deprecated = false }
+"351.4677.c-q08b" = { slug = "c-q08b", deprecated = false }
+"351.4677.c-q08c1" = { slug = "c-q08c", deprecated = false }
+"351.4677.c-q10a" = { slug = "c-q10a", deprecated = false }
+"351.4677.c-q09" = { slug = "sysselsattningsstatus-ungefar-hur-manga-ar-har-du-totalt-haft-betalt-arbete-rakna-bara-med-ar-da-du-haft-heltids-eller-deltidsarbete-minst-6-manader", deprecated = false }
+"351.4677.c-q07" = { slug = "c-q0", deprecated = false }
+"351.4677.c-q08c2" = { slug = "sysselsattningsstatus-vilket-ar-slutade-du-pa-ditt-senaste-avlonade-arbete", deprecated = false }
+"351.32872.b-q03c1" = { slug = "b-q03c", deprecated = false }
+"351.32872.b-q03d" = { slug = "b-q03d", deprecated = false }
+"351.32872.b-q03c2" = { slug = "avbruten-utbildning-vilket-ar-slutade-du-att-studera-pa-utbildningen", deprecated = false }
+"351.32872.b-q03a" = { slug = "b-q03a", deprecated = false }
+"351.32872.b-q03b" = { slug = "b-q03b", deprecated = false }
+"351.32886.j-q01" = { slug = "j-q0", deprecated = false }
+"351.32886.j-q02a" = { slug = "j-q02a", deprecated = false }
+"351.32886.j-q03a" = { slug = "j-q03a", deprecated = false }
+"351.32886.j-q04c1" = { slug = "j-q04c", deprecated = false }
+"351.32886.j-q03c" = { slug = "j-q03c", deprecated = false }
+"351.32886.j-q03d1" = { slug = "j-q03d", deprecated = false }
+"351.32886.j-q03d2" = { slug = "bakgrund-hur-gammalt-ar-ditt-aldsta-barn", deprecated = false }
+"351.32886.j-q03b" = { slug = "j-q03b", deprecated = false }
+"351.32886.j-q07a" = { slug = "j-q07a", deprecated = false }
+"351.32886.j-q04a" = { slug = "j-q04a", deprecated = false }
+"351.32886.j-q06a" = { slug = "j-q06a", deprecated = false }
+"351.32886.j-n05a2" = { slug = "j-n05a2", deprecated = false }
+"351.32886.j-q02c" = { slug = "j-q02c", deprecated = false }
+"351.32886.j-q08" = { slug = "bakgrund-ungefar-hur-manga-bocker-finns-det-i-ditt-hem-rakna-inte-tidningar-tidskrifter-eller-skolbocker-en-meter-i-en-bokhylla-motsvarar-ungefar-40-bocker", deprecated = false }
+"351.32886.j-q06b" = { slug = "j-q06b", deprecated = false }
+"351.32886.j-q07b" = { slug = "j-q07b", deprecated = false }
+"351.32886.j-q04c2" = { slug = "bakgrund-vilket-ar-var-det-nar-du-invandrade-till-sverige-forsta-gangen-ange-artal", deprecated = false }
+"351.32889.g-q03c" = { slug = "g-q03c", deprecated = false }
+"351.32889.g-q03g" = { slug = "g-q03g", deprecated = false }
+"351.32889.g-q05a" = { slug = "g-q05a", deprecated = false }
+"351.32889.g-q05f" = { slug = "g-q05f", deprecated = false }
+"351.32889.g-q05c" = { slug = "g-q05c", deprecated = false }
+"351.32889.g-q05e" = { slug = "g-q05e", deprecated = false }
+"351.32889.g-q03d" = { slug = "g-q03d", deprecated = false }
+"351.32889.g-q05g" = { slug = "g-q05g", deprecated = false }
+"351.32889.f-q06c" = { slug = "f-q06c", deprecated = false }
+"351.32889.g-q05h" = { slug = "g-q05h", deprecated = false }
+"351.32889.g-q02d" = { slug = "g-q02d", deprecated = false }
+"351.32889.f-q04b" = { slug = "f-q04b", deprecated = false }
+"351.32889.f-q02e" = { slug = "f-q02e", deprecated = false }
+"351.32889.g-q03f" = { slug = "g-q03f", deprecated = false }
+"351.32889.f-q02c" = { slug = "f-q02c", deprecated = false }
+"351.32889.f-q02b" = { slug = "f-q02b", deprecated = false }
+"351.32889.g-q01d" = { slug = "g-q01d", deprecated = false }
+"351.32889.g-q01c" = { slug = "g-q01c", deprecated = false }
+"351.32889.g-q01b" = { slug = "g-q01b", deprecated = false }
+"351.32889.g-q01a" = { slug = "g-q01a", deprecated = false }
+"351.32889.g-q01e" = { slug = "g-q01e", deprecated = false }
+"351.32889.g-q01h" = { slug = "g-q01h", deprecated = false }
+"351.32889.g-q01g" = { slug = "g-q01g", deprecated = false }
+"351.32889.g-q01f" = { slug = "g-q01f", deprecated = false }
+"351.32889.f-q03b" = { slug = "f-q03b", deprecated = false }
+"351.32889.f-q03c" = { slug = "f-q03c", deprecated = false }
+"351.32889.g-q03b" = { slug = "g-q03b", deprecated = false }
+"351.32889.g-q02b" = { slug = "g-q02b", deprecated = false }
+"351.32889.g-q02c" = { slug = "g-q02c", deprecated = false }
+"351.32889.f-q02d" = { slug = "f-q02d", deprecated = false }
+"351.32889.g-q05d" = { slug = "g-q05d", deprecated = false }
+"351.32889.g-q03h" = { slug = "g-q03h", deprecated = false }
+"351.32889.g-q04" = { slug = "g-q0", deprecated = false }
+"351.32889.f-q05a" = { slug = "f-q05a", deprecated = false }
+"351.32889.g-q08" = { slug = "hur-ofta-brukar-du-pa-arbetet-har-brist-pa-datorkunskap-paverkat-dina-chanser-for-att-bli-anstalld-befordrad-eller-fa-loneforhojning", deprecated = false }
+"351.32889.f-q06b" = { slug = "f-q06b", deprecated = false }
+"351.32889.f-q02a" = { slug = "f-q02a", deprecated = false }
+"351.32889.f-q04a" = { slug = "f-q04a", deprecated = false }
+"351.32889.f-q03a" = { slug = "f-q03a", deprecated = false }
+"351.32889.f-q05b" = { slug = "f-q05b", deprecated = false }
+"351.32889.f-q01b" = { slug = "f-q01b", deprecated = false }
+"351.32889.f-q07a" = { slug = "f-q07a", deprecated = false }
+"351.32889.f-q07b" = { slug = "f-q07b", deprecated = false }
+"351.32889.g-q02a" = { slug = "g-q02a", deprecated = false }
+"351.32889.g-q07" = { slug = "hur-ofta-brukar-du-pa-arbetet-tycker-du-att-du-har-de-datorkunskaper-som-behovs-for-att-utfora-ditt-nuvarande-arbete-bra-tycker-du-att-du-hade-de-datorkunskaper-som-behovdes-for-att-utfora-ditt-senaste-arbete-bra", deprecated = false }
+"351.32889.g-q06" = { slug = "hur-ofta-brukar-du-pa-arbetet-vilken-datorkunskap-ar-nodvandig-for-att-kunna-utfora-ditt-nuvarande-arbete-vilken-datorkunskap-var-nodvandig-for-att-kunna-utfora-ditt-senaste-arbete", deprecated = false }
+"351.32894.e-q05b2" = { slug = "senaste-arbetsplats-det-galler-fortfarande-det-foretag-du-lamnade-inom-de-12-senaste-manaderna-nar-du-borjade-arbeta-med-ditt-foretag-vilket-ar-var-det-det-galler-fortfarande-det-foretag-som-du-lamnade-innan-du-senast-slutade-arbeta-nar-du-borjade-arbeta-med-ditt-foretag-eller-vilket-ar-var-det-det-galler-fortfarande-det-foretag-som-du-lamnade-nar-du-borjade-arbeta-med-ditt-foretag-eller-vilket-ar-var-det", deprecated = false }
+"351.32894.e-q05b1" = { slug = "e-q05b", deprecated = false }
+"351.32894.e-q05a1" = { slug = "e-q05a", deprecated = false }
+"351.32894.e-q05a2" = { slug = "senaste-arbetsplats-fragan-galler-fortfarande-det-arbete-du-har-lamnat-inom-de-12-senaste-manaderna-vilket-ar-var-det-fragan-galler-fortfarande-det-arbete-du-lamnade-innan-du-senast-slutade-arbeta-vilket-ar-var-det-fragan-galler-fortfarande-det-arbete-du-lamnade-under-vilket-ar-var-det", deprecated = false }
+"351.32894.e-q07a" = { slug = "e-q07a", deprecated = false }
+"351.32894.e-q07b" = { slug = "e-q07b", deprecated = false }
+"351.32894.e-q06" = { slug = "senaste-arbetsplats-hur-manga-personer-arbetade-for-din-arbetsgivare-pa-din-arbetsplats-var-det", deprecated = false }
+"351.32894.e-q09" = { slug = "senaste-arbetsplats-hur-manga-timmar-arbetade-du-vanligtvis-per-vecka-pa-detta-arbete-rakna-med-normal-avlonad-eller-oavlonad-overtid-men-rakna-inte-med-lunchrast-eller-andra-raster", deprecated = false }
+"351.32894.e-q03" = { slug = "e-q", deprecated = false }
+"351.32894.e-q04" = { slug = "senaste-arbetsplats-var-du-anstalld-eller-var-du-egen-foretagare", deprecated = false }
+"351.32894.e-q08" = { slug = "senaste-arbetsplats-vilken-typ-av-anstallning-hade-du-var-det", deprecated = false }
+"351.32894.e-q10" = { slug = "senaste-arbetsplats-vilket-var-det-huvudsakliga-skalet-till-att-du-slutade-pa-ditt-senaste-arbete", deprecated = false }
+"351.32901.d-q06b" = { slug = "d-q06b", deprecated = false }
+"351.32901.d-q07a" = { slug = "d-q07a", deprecated = false }
+"351.32901.d-q07b" = { slug = "d-q07b", deprecated = false }
+"351.32901.d-q08b" = { slug = "d-q08b", deprecated = false }
+"351.32901.d-q06a" = { slug = "d-q06a", deprecated = false }
+"351.32901.d-q10" = { slug = "nuvarande-arbetsplats-hur-manga-timmar-arbetar-du-vanligtvis-per-vecka-pa-ditt-nuvarande-arbete-rakna-med-normal-avlonad-eller-oavlonad-overtid-men-rakna-inte-med-lunchrast-eller-andra-raster", deprecated = false }
+"351.32901.d-q08a" = { slug = "d-q08a", deprecated = false }
+"351.32901.d-q03" = { slug = "d-q", deprecated = false }
+"351.32901.d-q14" = { slug = "nuvarande-arbetsplats-pa-det-stora-hela-hur-nojd-ar-du-med-ditt-nuvarande-arbete-ar-du", deprecated = false }
+"351.32901.d-q09" = { slug = "nuvarande-arbetsplats-vilken-typ-av-anstallning-har-du-ar-det", deprecated = false }
+"351.32901.d-q06c" = { slug = "d-q06c", deprecated = false }
+"351.32901.d-q04" = { slug = "nuvarande-arbetsplats-ar-du-anstalld-eller-egen-foretagare", deprecated = false }
+"351.32902.d-q05a1" = { slug = "d-q05a", deprecated = false }
+"351.32902.d-q05b1" = { slug = "d-q05b", deprecated = false }
+"351.32902.d-q05b3" = { slug = "nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilken-manad-borjade-du-arbeta-med-ditt-egna-foretag", deprecated = false }
+"351.32902.d-q05a3" = { slug = "nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilken-manad-borjade-du-hos-din-arbetsgivare", deprecated = false }
+"351.32902.d-q05b2" = { slug = "nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilket-ar-var-de-nar-du-borjade-arbeta-i-ditt-nuvarande-egna-foretag", deprecated = false }
+"351.32902.d-q05a2" = { slug = "nuvarande-arbetsplats-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare-vilket-ar-var-det-nar-du-borjade-arbeta-for-din-nuvarande-arbetsgivare", deprecated = false }
+"351.32907.d-s16a" = { slug = "d-s16a", deprecated = false }
+"351.32907.d-q17a" = { slug = "d-q17a", deprecated = false }
+"351.32907.d-q16d2" = { slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-dag", deprecated = false }
+"351.32907.d-q16d5" = { slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-manad", deprecated = false }
+"351.32907.d-q16d1" = { slug = "d-q16d", deprecated = false }
+"351.32907.d-q16d4" = { slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-tva-veckor", deprecated = false }
+"351.32907.d-q16d3" = { slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-vecka", deprecated = false }
+"351.32907.d-q16d6" = { slug = "nuvarande-arbetsplats-lon-hur-mycket-lon-far-du-ungefar-fore-skatt-per-ar", deprecated = false }
+"351.32907.d-q16a" = { slug = "d-q16a", deprecated = false }
+"351.32907.d-q17b" = { slug = "d-q17b", deprecated = false }
+"351.32907.d-q16b" = { slug = "d-q16b", deprecated = false }
+"351.32907.d-q18a" = { slug = "d-q18a", deprecated = false }
+"351.32879.b-q12a" = "b-q12a"
+"351.32879.b-q12b" = "b-q12b"
+"351.32879.b-q12c" = "b-q12c"
+"351.32879.b-q12d" = "b-q12d"
+"351.32879.b-q12e" = "b-q12e"
+"351.32879.b-q12f" = "b-q12f"
+"351.32879.b-q12g" = "b-q12g"
+"351.32879.b-q12h" = "b-q12h"
+"351.32879.b-q13" = "b-q1"
+"351.32879.b-q14a" = "b-q14a"
+"351.32879.b-q14b" = "b-q14b"
+"351.32879.b-q15a" = "b-q15a"
+"351.32879.b-q15b" = "b-q15b"
+"351.32879.b-q15c" = "b-q15c"
+"351.32879.b-q16" = "b-q16"
+"351.32879.b-q17" = "b-q17"
+"351.32879.b-q18a" = "b-q18a"
+"351.32879.b-q19a" = "b-q19a"
+"351.32879.b-q20a" = "b-q20a"
+"351.32879.b-q20b" = "b-q20b"
+"351.32879.b-q26a" = "b-q26a"
+"351.32879.b-q26b" = "b-q26b"
+"351.32909.litstatus" = "litstatus"
+"351.32909.pvlit1" = "pvlit"
+"351.32909.pvlit10" = "pvlit10"
+"351.32909.pvlit2" = "pvlit2"
+"351.32909.pvlit3" = "pvlit3"
+"351.32909.pvlit4" = "pvlit4"
+"351.32909.pvlit5" = "pvlit5"
+"351.32909.pvlit6" = "pvlit6"
+"351.32909.pvlit7" = "pvlit7"
+"351.32909.pvlit8" = "pvlit8"
+"351.32909.pvlit9" = "pvlit9"
+"351.32911.pslstatus" = "pslstatus"
+"351.32911.pvpsl1" = "pvpsl"
+"351.32911.pvpsl10" = "pvpsl10"
+"351.32911.pvpsl2" = "pvpsl2"
+"351.32911.pvpsl3" = "pvpsl3"
+"351.32911.pvpsl4" = "pvpsl4"
+"351.32911.pvpsl5" = "pvpsl5"
+"351.32911.pvpsl6" = "pvpsl6"
+"351.32911.pvpsl7" = "pvpsl7"
+"351.32911.pvpsl8" = "pvpsl8"
+"351.32911.pvpsl9" = "pvpsl9"
+"351.32910.numstatus" = "numstatus"
+"351.32910.pvnum1" = "pvnum"
+"351.32910.pvnum10" = "pvnum10"
+"351.32910.pvnum2" = "pvnum2"
+"351.32910.pvnum3" = "pvnum3"
+"351.32910.pvnum4" = "pvnum4"
+"351.32910.pvnum5" = "pvnum5"
+"351.32910.pvnum6" = "pvnum6"
+"351.32910.pvnum7" = "pvnum7"
+"351.32910.pvnum8" = "pvnum8"
+"351.32910.pvnum9" = "pvnum9"
+"351.32010.c-q03-01" = "c-q03-01"
+"351.32010.c-q03-02" = "c-q03-02"
+"351.32010.c-q03-03" = "c-q03-03"
+"351.32010.c-q03-04" = "c-q03-04"
+"351.32010.c-q03-05" = "c-q03-05"
+"351.32010.c-q03-06" = "c-q03-06"
+"351.32010.c-q03-07" = "c-q03-07"
+"351.32010.c-q03-08" = "c-q03-08"
+"351.32010.c-q03-09" = "c-q03-09"
+"351.32010.c-q03-10" = "c-q03-10"
+"351.5726.b-q01a3" = "b-q01a3"
 
 [[identity.column_owner]]
 variable = "351.4677"
@@ -3382,267 +2946,3 @@ variable = "351.5726"
 columns = { B_Q01a = "351.5726.b-q01a", B_Q01a3 = "351.5726.b-q01a3", B_Q01a_T = "351.5726.b-q01a-t" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "803451224909ef4923d67bc005bbf3c1d08129b8339eed893926dad6b6ce2877"
-
-[[variable]]
-native_id = "351.32879.b-q12a"
-slug = "b-q12a"
-
-[[variable]]
-native_id = "351.32879.b-q12b"
-slug = "b-q12b"
-
-[[variable]]
-native_id = "351.32879.b-q12c"
-slug = "b-q12c"
-
-[[variable]]
-native_id = "351.32879.b-q12d"
-slug = "b-q12d"
-
-[[variable]]
-native_id = "351.32879.b-q12e"
-slug = "b-q12e"
-
-[[variable]]
-native_id = "351.32879.b-q12f"
-slug = "b-q12f"
-
-[[variable]]
-native_id = "351.32879.b-q12g"
-slug = "b-q12g"
-
-[[variable]]
-native_id = "351.32879.b-q12h"
-slug = "b-q12h"
-
-[[variable]]
-native_id = "351.32879.b-q13"
-slug = "b-q1"
-
-[[variable]]
-native_id = "351.32879.b-q14a"
-slug = "b-q14a"
-
-[[variable]]
-native_id = "351.32879.b-q14b"
-slug = "b-q14b"
-
-[[variable]]
-native_id = "351.32879.b-q15a"
-slug = "b-q15a"
-
-[[variable]]
-native_id = "351.32879.b-q15b"
-slug = "b-q15b"
-
-[[variable]]
-native_id = "351.32879.b-q15c"
-slug = "b-q15c"
-
-[[variable]]
-native_id = "351.32879.b-q16"
-slug = "b-q16"
-
-[[variable]]
-native_id = "351.32879.b-q17"
-slug = "b-q17"
-
-[[variable]]
-native_id = "351.32879.b-q18a"
-slug = "b-q18a"
-
-[[variable]]
-native_id = "351.32879.b-q19a"
-slug = "b-q19a"
-
-[[variable]]
-native_id = "351.32879.b-q20a"
-slug = "b-q20a"
-
-[[variable]]
-native_id = "351.32879.b-q20b"
-slug = "b-q20b"
-
-[[variable]]
-native_id = "351.32879.b-q26a"
-slug = "b-q26a"
-
-[[variable]]
-native_id = "351.32879.b-q26b"
-slug = "b-q26b"
-
-[[variable]]
-native_id = "351.32909.litstatus"
-slug = "litstatus"
-
-[[variable]]
-native_id = "351.32909.pvlit1"
-slug = "pvlit"
-
-[[variable]]
-native_id = "351.32909.pvlit10"
-slug = "pvlit10"
-
-[[variable]]
-native_id = "351.32909.pvlit2"
-slug = "pvlit2"
-
-[[variable]]
-native_id = "351.32909.pvlit3"
-slug = "pvlit3"
-
-[[variable]]
-native_id = "351.32909.pvlit4"
-slug = "pvlit4"
-
-[[variable]]
-native_id = "351.32909.pvlit5"
-slug = "pvlit5"
-
-[[variable]]
-native_id = "351.32909.pvlit6"
-slug = "pvlit6"
-
-[[variable]]
-native_id = "351.32909.pvlit7"
-slug = "pvlit7"
-
-[[variable]]
-native_id = "351.32909.pvlit8"
-slug = "pvlit8"
-
-[[variable]]
-native_id = "351.32909.pvlit9"
-slug = "pvlit9"
-
-[[variable]]
-native_id = "351.32911.pslstatus"
-slug = "pslstatus"
-
-[[variable]]
-native_id = "351.32911.pvpsl1"
-slug = "pvpsl"
-
-[[variable]]
-native_id = "351.32911.pvpsl10"
-slug = "pvpsl10"
-
-[[variable]]
-native_id = "351.32911.pvpsl2"
-slug = "pvpsl2"
-
-[[variable]]
-native_id = "351.32911.pvpsl3"
-slug = "pvpsl3"
-
-[[variable]]
-native_id = "351.32911.pvpsl4"
-slug = "pvpsl4"
-
-[[variable]]
-native_id = "351.32911.pvpsl5"
-slug = "pvpsl5"
-
-[[variable]]
-native_id = "351.32911.pvpsl6"
-slug = "pvpsl6"
-
-[[variable]]
-native_id = "351.32911.pvpsl7"
-slug = "pvpsl7"
-
-[[variable]]
-native_id = "351.32911.pvpsl8"
-slug = "pvpsl8"
-
-[[variable]]
-native_id = "351.32911.pvpsl9"
-slug = "pvpsl9"
-
-[[variable]]
-native_id = "351.32910.numstatus"
-slug = "numstatus"
-
-[[variable]]
-native_id = "351.32910.pvnum1"
-slug = "pvnum"
-
-[[variable]]
-native_id = "351.32910.pvnum10"
-slug = "pvnum10"
-
-[[variable]]
-native_id = "351.32910.pvnum2"
-slug = "pvnum2"
-
-[[variable]]
-native_id = "351.32910.pvnum3"
-slug = "pvnum3"
-
-[[variable]]
-native_id = "351.32910.pvnum4"
-slug = "pvnum4"
-
-[[variable]]
-native_id = "351.32910.pvnum5"
-slug = "pvnum5"
-
-[[variable]]
-native_id = "351.32910.pvnum6"
-slug = "pvnum6"
-
-[[variable]]
-native_id = "351.32910.pvnum7"
-slug = "pvnum7"
-
-[[variable]]
-native_id = "351.32910.pvnum8"
-slug = "pvnum8"
-
-[[variable]]
-native_id = "351.32910.pvnum9"
-slug = "pvnum9"
-
-[[variable]]
-native_id = "351.32010.c-q03-01"
-slug = "c-q03-01"
-
-[[variable]]
-native_id = "351.32010.c-q03-02"
-slug = "c-q03-02"
-
-[[variable]]
-native_id = "351.32010.c-q03-03"
-slug = "c-q03-03"
-
-[[variable]]
-native_id = "351.32010.c-q03-04"
-slug = "c-q03-04"
-
-[[variable]]
-native_id = "351.32010.c-q03-05"
-slug = "c-q03-05"
-
-[[variable]]
-native_id = "351.32010.c-q03-06"
-slug = "c-q03-06"
-
-[[variable]]
-native_id = "351.32010.c-q03-07"
-slug = "c-q03-07"
-
-[[variable]]
-native_id = "351.32010.c-q03-08"
-slug = "c-q03-08"
-
-[[variable]]
-native_id = "351.32010.c-q03-09"
-slug = "c-q03-09"
-
-[[variable]]
-native_id = "351.32010.c-q03-10"
-slug = "c-q03-10"
-
-[[variable]]
-native_id = "351.5726.b-q01a3"
-slug = "b-q01a3"

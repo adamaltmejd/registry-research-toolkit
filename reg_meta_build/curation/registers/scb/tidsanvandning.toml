@@ -25,1328 +25,344 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Kommunernas aktivitetsansvar
-
-[[variable]]
-native_id = "367.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "367.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "367.3223"
-slug = "antal-individer-kosthushallet"
-
-[[variable]]
-native_id = "367.5068"
-slug = "huvudsaklig-sysselsattning"
-
-[[variable]]
-native_id = "367.7018"
-slug = "utbildningsniva-3-positioner"
-
-[[variable]]
-native_id = "367.11393"
-slug = "individvikt"
-
-[[variable]]
-native_id = "367.14720"
-slug = "urvalskod"
-
-[[variable]]
-native_id = "367.21665"
-slug = "fast-tidsbegransad-anstallning"
-
-[[variable]]
-native_id = "367.36285"
-slug = "vilja-mer-vardagar"
-
-[[variable]]
-native_id = "367.36288"
-slug = "umgas-med-vanner-och-bekanta"
-
-[[variable]]
-native_id = "367.36299"
-slug = "antal-barn-under-19-ar"
-
-[[variable]]
-native_id = "367.36353"
-slug = "ensam-vid-aktiviteten"
-
-[[variable]]
-native_id = "367.36359"
-slug = "narvarande-person"
-
-[[variable]]
-native_id = "367.36375"
-slug = "nar-fyllde-svarande-i-dagboken"
-
-[[variable]]
-native_id = "367.36376"
-slug = "antal-dagar-efter-dagboksdagen"
-
-[[variable]]
-native_id = "367.36380"
-slug = "nattsomn-andra-natten"
-
-[[variable]]
-native_id = "367.36382"
-slug = "vaknade-pa-morgonen"
-
-[[variable]]
-native_id = "367.36383"
-slug = "stressad-under-bokforingsdagen"
-
-[[variable]]
-native_id = "367.36384"
-slug = "normal-dag"
-
-[[variable]]
-native_id = "367.36385"
-slug = "positiv-upplevelse"
-
-[[variable]]
-native_id = "367.36386"
-slug = "negativ-upplevelse"
-
-[[variable]]
-native_id = "367.36387"
-slug = "jobb-eller-studier"
-
-[[variable]]
-native_id = "367.36388"
-slug = "typ-av-dagboksdag"
-
-[[variable]]
-native_id = "367.36390"
-slug = "forvarvsarbete-totalt"
-
-[[variable]]
-native_id = "367.36391"
-slug = "arbetsresor"
-
-[[variable]]
-native_id = "367.36392"
-slug = "arbetsresor-direkt"
-
-[[variable]]
-native_id = "367.36393"
-slug = "arbetsresor-med-arenden"
-
-[[variable]]
-native_id = "367.36394"
-slug = "tjansteresa"
-
-[[variable]]
-native_id = "367.36395"
-slug = "forvarvsarbete-exkl-resor"
-
-[[variable]]
-native_id = "367.36396"
-slug = "overtidsarbete-i-huvudyrke"
-
-[[variable]]
-native_id = "367.36397"
-slug = "ordinarie-arbete-i-huvudyrke"
-
-[[variable]]
-native_id = "367.36398"
-slug = "bisyssla-extraknack"
-
-[[variable]]
-native_id = "367.36399"
-slug = "maltider-i-samband-med-arbete"
-
-[[variable]]
-native_id = "367.36400"
-slug = "annan-tid-pa-arbetsplatsen"
-
-[[variable]]
-native_id = "367.36401"
-slug = "hemarbete-totalt"
-
-[[variable]]
-native_id = "367.36402"
-slug = "resor-i-samband-med-hemarbete"
-
-[[variable]]
-native_id = "367.36403"
-slug = "resor-underhalls-hushallsarbete"
-
-[[variable]]
-native_id = "367.36404"
-slug = "resor-omsorg-egna-barn"
-
-[[variable]]
-native_id = "367.36405"
-slug = "resor-hjalp-vuxna-hushall"
-
-[[variable]]
-native_id = "367.36406"
-slug = "resor-inkop-varor-tjanster"
-
-[[variable]]
-native_id = "367.36407"
-slug = "resor-hemarbete-ovriga"
-
-[[variable]]
-native_id = "367.36408"
-slug = "resor-hemarbete-ospecificerade"
-
-[[variable]]
-native_id = "367.36409"
-slug = "hushallsarbete-totalt"
-
-[[variable]]
-native_id = "367.36410"
-slug = "brodbakning"
-
-[[variable]]
-native_id = "367.36411"
-slug = "matlagning-tid"
-
-[[variable]]
-native_id = "367.36414"
-slug = "egenproduktion-av-matvaror"
-
-[[variable]]
-native_id = "367.36415"
-slug = "diskning-avdukning"
-
-[[variable]]
-native_id = "367.36416"
-slug = "stadning-av-bostaden"
-
-[[variable]]
-native_id = "367.36417"
-slug = "tvatt-strykning"
-
-[[variable]]
-native_id = "367.36418"
-slug = "vard-tillverkning-av-klader"
-
-[[variable]]
-native_id = "367.36419"
-slug = "eldning-vedhuggning"
-
-[[variable]]
-native_id = "367.36420"
-slug = "ospecificerat-hushallsarbete"
-
-[[variable]]
-native_id = "367.36421"
-slug = "underhallsarbete-totalt"
-
-[[variable]]
-native_id = "367.36422"
-slug = "skotsel-av-tomt-och-tradgard"
-
-[[variable]]
-native_id = "367.36423"
-slug = "rastning-av-hund"
-
-[[variable]]
-native_id = "367.36424"
-slug = "annan-skotsel-av-sallskapsdjur"
-
-[[variable]]
-native_id = "367.36425"
-slug = "byggnadsarbeten-ombyggnader"
-
-[[variable]]
-native_id = "367.36426"
-slug = "reparationer-underhall-i-hemmet"
-
-[[variable]]
-native_id = "367.36427"
-slug = "reparation-underhall-av-fordon"
-
-[[variable]]
-native_id = "367.36428"
-slug = "reparation-underhall-av-annat"
-
-[[variable]]
-native_id = "367.36429"
-slug = "ospecificerat-underhall"
-
-[[variable]]
-native_id = "367.36430"
-slug = "omsorg-om-egna-barn-totalt"
-
-[[variable]]
-native_id = "367.36431"
-slug = "tillsyn-och-hjalp-till-barn"
-
-[[variable]]
-native_id = "367.36432"
-slug = "hjalp-med-laxlasning"
-
-[[variable]]
-native_id = "367.36433"
-slug = "lek-med-barn"
-
-[[variable]]
-native_id = "367.36434"
-slug = "samtal-med-barn"
-
-[[variable]]
-native_id = "367.36435"
-slug = "hoglasning-for-barn"
-
-[[variable]]
-native_id = "367.36436"
-slug = "foraldramoten-m-m"
-
-[[variable]]
-native_id = "367.36437"
-slug = "narvaro-vid-barns-aktiviteter"
-
-[[variable]]
-native_id = "367.36438"
-slug = "annan-omsorg-om-barn"
-
-[[variable]]
-native_id = "367.36439"
-slug = "omsorg-om-andra-totalt"
-
-[[variable]]
-native_id = "367.36440"
-slug = "hjalp-till-vuxna-i-eget-hushall"
-
-[[variable]]
-native_id = "367.36441"
-slug = "hjalp-till-barn-i-andras-hushall"
-
-[[variable]]
-native_id = "367.36442"
-slug = "annan-hjalp-till-andras-hushall"
-
-[[variable]]
-native_id = "367.36443"
-slug = "besok-hos-patient-pa-sjukhus"
-
-[[variable]]
-native_id = "367.36444"
-slug = "ospecificerad-omsorg-om-andra"
-
-[[variable]]
-native_id = "367.36445"
-slug = "inkop-varor-tjanster-totalt"
-
-[[variable]]
-native_id = "367.36446"
-slug = "inkop-av-dagligvaror"
-
-[[variable]]
-native_id = "367.36447"
-slug = "inkop-av-andra-varor"
-
-[[variable]]
-native_id = "367.36448"
-slug = "medicinsk-behandling-utom-hemmet"
-
-[[variable]]
-native_id = "367.36449"
-slug = "arenden-offentliga-inrattningar"
-
-[[variable]]
-native_id = "367.36450"
-slug = "andra-och-ospecificerade-arenden"
-
-[[variable]]
-native_id = "367.36451"
-slug = "annat-hemarbete"
-
-[[variable]]
-native_id = "367.36452"
-slug = "personliga-behov-totalt"
-
-[[variable]]
-native_id = "367.36453"
-slug = "resor-i-sb-med-personliga-behov"
-
-[[variable]]
-native_id = "367.36454"
-slug = "personlig-omvardnad-totalt"
-
-[[variable]]
-native_id = "367.36455"
-slug = "nattsomn"
-
-[[variable]]
-native_id = "367.36456"
-slug = "middagslur"
-
-[[variable]]
-native_id = "367.36457"
-slug = "sangliggande-p-g-a-sjukdom"
-
-[[variable]]
-native_id = "367.36458"
-slug = "personlig-hygien-av-pakladning"
-
-[[variable]]
-native_id = "367.36459"
-slug = "bastu-solarium"
-
-[[variable]]
-native_id = "367.36460"
-slug = "annan-personlig-omvardnad"
-
-[[variable]]
-native_id = "367.36461"
-slug = "maltider-totalt"
-
-[[variable]]
-native_id = "367.36462"
-slug = "maltider"
-
-[[variable]]
-native_id = "367.36463"
-slug = "kaffe-forfriskningar"
-
-[[variable]]
-native_id = "367.36464"
-slug = "studier-totalt"
-
-[[variable]]
-native_id = "367.36465"
-slug = "resor-i-samband-med-studier"
-
-[[variable]]
-native_id = "367.36466"
-slug = "resor-malinriktade-studier"
-
-[[variable]]
-native_id = "367.36467"
-slug = "resor-studiecirklar"
-
-[[variable]]
-native_id = "367.36468"
-slug = "resor-utbildning-ospecificerade"
-
-[[variable]]
-native_id = "367.36469"
-slug = "studier-exkl-resor"
-
-[[variable]]
-native_id = "367.36470"
-slug = "malinriktade-studier-lektioner"
-
-[[variable]]
-native_id = "367.36471"
-slug = "malinriktade-studier-hemarbete"
-
-[[variable]]
-native_id = "367.36472"
-slug = "ospecificerat-utbildning"
-
-[[variable]]
-native_id = "367.36473"
-slug = "studiecirklar-och-liknande"
-
-[[variable]]
-native_id = "367.36474"
-slug = "lasning-av-facklitteratur-o-dyl"
-
-[[variable]]
-native_id = "367.36475"
-slug = "ospecificerat-studiecirklar"
-
-[[variable]]
-native_id = "367.36476"
-slug = "ospecificerat-utbildning-studiecirklar"
-
-[[variable]]
-native_id = "367.36477"
-slug = "fri-tid-totalt"
-
-[[variable]]
-native_id = "367.36478"
-slug = "resor-i-sb-med-fri-tid"
-
-[[variable]]
-native_id = "367.36479"
-slug = "idrott-och-friluftsliv-totalt"
-
-[[variable]]
-native_id = "367.36480"
-slug = "promenader-i-skog-och-mark"
-
-[[variable]]
-native_id = "367.36481"
-slug = "andra-promenader"
-
-[[variable]]
-native_id = "367.36482"
-slug = "jakt"
-
-[[variable]]
-native_id = "367.36483"
-slug = "fiske"
-
-[[variable]]
-native_id = "367.36484"
-slug = "idrott-motion-utomhus"
-
-[[variable]]
-native_id = "367.36485"
-slug = "idrott-motion-inomhus"
-
-[[variable]]
-native_id = "367.36486"
-slug = "bilutflykter-tid"
-
-[[variable]]
-native_id = "367.36487"
-slug = "annat-idrotts-eller-friluftsliv"
-
-[[variable]]
-native_id = "367.36488"
-slug = "foreningsverksamhet-m-m-totalt"
-
-[[variable]]
-native_id = "367.36489"
-slug = "foreningsverksamhet-ej-religios"
-
-[[variable]]
-native_id = "367.36490"
-slug = "religios-verksamhet"
-
-[[variable]]
-native_id = "367.36491"
-slug = "underhallning-kultur-totalt"
-
-[[variable]]
-native_id = "367.36492"
-slug = "askadare-vid-idrottsevenemang"
-
-[[variable]]
-native_id = "367.36493"
-slug = "biobesok"
-
-[[variable]]
-native_id = "367.36494"
-slug = "teater-konsert-utstallningar"
-
-[[variable]]
-native_id = "367.36495"
-slug = "biblioteksbesok-tid"
-
-[[variable]]
-native_id = "367.36496"
-slug = "annan-underhallning"
-
-[[variable]]
-native_id = "367.36497"
-slug = "social-samvaro-totalt"
-
-[[variable]]
-native_id = "367.36498"
-slug = "fest-kalas"
-
-[[variable]]
-native_id = "367.36499"
-slug = "besok-hos-slakt-och-vanner"
-
-[[variable]]
-native_id = "367.36500"
-slug = "besok-av-slakt-och-vanner"
-
-[[variable]]
-native_id = "367.36501"
-slug = "samtal"
-
-[[variable]]
-native_id = "367.36502"
-slug = "telefonsamtal"
-
-[[variable]]
-native_id = "367.36503"
-slug = "besok-pa-restaurang-cafe-bar"
-
-[[variable]]
-native_id = "367.36504"
-slug = "dans-diskotek"
-
-[[variable]]
-native_id = "367.36505"
-slug = "spel-sallskapslekar"
-
-[[variable]]
-native_id = "367.36506"
-slug = "andra-sociala-sammankomster"
-
-[[variable]]
-native_id = "367.36507"
-slug = "tv-och-radio-totalt"
-
-[[variable]]
-native_id = "367.36508"
-slug = "tv-videotittande"
-
-[[variable]]
-native_id = "367.36509"
-slug = "radiolyssnande"
-
-[[variable]]
-native_id = "367.36510"
-slug = "ospecificerad-radio-eller-tv"
-
-[[variable]]
-native_id = "367.36511"
-slug = "lasning-totalt"
-
-[[variable]]
-native_id = "367.36512"
-slug = "dagstidningslasning"
-
-[[variable]]
-native_id = "367.36513"
-slug = "veckotidningslasning"
-
-[[variable]]
-native_id = "367.36514"
-slug = "boklasning"
-
-[[variable]]
-native_id = "367.36515"
-slug = "ovrig-ospecificerad-lasning"
-
-[[variable]]
-native_id = "367.36516"
-slug = "hobbies-totalt"
-
-[[variable]]
-native_id = "367.36517"
-slug = "stickning"
-
-[[variable]]
-native_id = "367.36518"
-slug = "annat-handarbete"
-
-[[variable]]
-native_id = "367.36519"
-slug = "annan-datoranvandning"
-
-[[variable]]
-native_id = "367.36520"
-slug = "tekniska-hobbies-samling"
-
-[[variable]]
-native_id = "367.36521"
-slug = "spel-lek-ensam"
-
-[[variable]]
-native_id = "367.36522"
-slug = "internetanvandning"
-
-[[variable]]
-native_id = "367.36523"
-slug = "penningspel"
-
-[[variable]]
-native_id = "367.36524"
-slug = "lyssna-pa-cd-bandspelare"
-
-[[variable]]
-native_id = "367.36525"
-slug = "musikutovning"
-
-[[variable]]
-native_id = "367.36526"
-slug = "andra-hobbies"
-
-[[variable]]
-native_id = "367.36527"
-slug = "ovrig-fri-tid-totalt"
-
-[[variable]]
-native_id = "367.36528"
-slug = "vila-meditera-gora-ingenting"
-
-[[variable]]
-native_id = "367.36529"
-slug = "ovrig-och-ospecificerad-fri-tid"
-
-[[variable]]
-native_id = "367.36530"
-slug = "ovrigt-okodbart-totalt"
-
-[[variable]]
-native_id = "367.36531"
-slug = "ospecificerade-resor"
-
-[[variable]]
-native_id = "367.36532"
-slug = "forde-tidsdagbok"
-
-[[variable]]
-native_id = "367.36533"
-slug = "ej-uppgiven-eller-okodbar-akt"
-
-[[variable]]
-native_id = "367.36534"
-slug = "total-tid"
-
-[[variable]]
-native_id = "367.36537"
-slug = "individvikt-tid"
-
-[[variable]]
-native_id = "367.38725"
-slug = "ensamhushall"
-
-[[variable]]
-native_id = "367.38750"
-slug = "tidbrist-istallet"
-
-[[variable]]
-native_id = "367.39403"
-slug = "ospecificerat-arbete"
-
-[[variable]]
-native_id = "367.39404"
-slug = "ospecificerad-annan-tid-arbetsplatsen"
-
-[[variable]]
-native_id = "367.39405"
-slug = "ospecificerade-maltider"
-
-[[variable]]
-native_id = "367.39406"
-slug = "promenader-ovriga"
-
-[[variable]]
-native_id = "367.39407"
-slug = "promenader-i-skog-och-mark-ta"
-
-[[variable]]
-native_id = "367.39408"
-slug = "spel-och-lek-ensam"
-
-[[variable]]
-native_id = "367.40265"
-slug = "urval-ta1990"
-
-[[variable]]
-native_id = "367.40373"
-slug = "ospecificerad-hjalp-andra-hushall"
-
-[[variable]]
-native_id = "367.45479"
-slug = "upplevd-halsa"
-
-[[variable]]
-native_id = "367.45482"
-slug = "svart-delta-aktiviteter-6-manader"
+"367.57" = "personnr"
+"367.241" = "alder-31-12"
+"367.3223" = "antal-individer-kosthushallet"
+"367.5068" = "huvudsaklig-sysselsattning"
+"367.7018" = "utbildningsniva-3-positioner"
+"367.11393" = "individvikt"
+"367.14720" = "urvalskod"
+"367.21665" = "fast-tidsbegransad-anstallning"
+"367.36285" = "vilja-mer-vardagar"
+"367.36288" = "umgas-med-vanner-och-bekanta"
+"367.36299" = "antal-barn-under-19-ar"
+"367.36353" = "ensam-vid-aktiviteten"
+"367.36359" = "narvarande-person"
+"367.36375" = "nar-fyllde-svarande-i-dagboken"
+"367.36376" = "antal-dagar-efter-dagboksdagen"
+"367.36380" = "nattsomn-andra-natten"
+"367.36382" = "vaknade-pa-morgonen"
+"367.36383" = "stressad-under-bokforingsdagen"
+"367.36384" = "normal-dag"
+"367.36385" = "positiv-upplevelse"
+"367.36386" = "negativ-upplevelse"
+"367.36387" = "jobb-eller-studier"
+"367.36388" = "typ-av-dagboksdag"
+"367.36390" = "forvarvsarbete-totalt"
+"367.36391" = "arbetsresor"
+"367.36392" = "arbetsresor-direkt"
+"367.36393" = "arbetsresor-med-arenden"
+"367.36394" = "tjansteresa"
+"367.36395" = "forvarvsarbete-exkl-resor"
+"367.36396" = "overtidsarbete-i-huvudyrke"
+"367.36397" = "ordinarie-arbete-i-huvudyrke"
+"367.36398" = "bisyssla-extraknack"
+"367.36399" = "maltider-i-samband-med-arbete"
+"367.36400" = "annan-tid-pa-arbetsplatsen"
+"367.36401" = "hemarbete-totalt"
+"367.36402" = "resor-i-samband-med-hemarbete"
+"367.36403" = "resor-underhalls-hushallsarbete"
+"367.36404" = "resor-omsorg-egna-barn"
+"367.36405" = "resor-hjalp-vuxna-hushall"
+"367.36406" = "resor-inkop-varor-tjanster"
+"367.36407" = "resor-hemarbete-ovriga"
+"367.36408" = "resor-hemarbete-ospecificerade"
+"367.36409" = "hushallsarbete-totalt"
+"367.36410" = "brodbakning"
+"367.36411" = "matlagning-tid"
+"367.36414" = "egenproduktion-av-matvaror"
+"367.36415" = "diskning-avdukning"
+"367.36416" = "stadning-av-bostaden"
+"367.36417" = "tvatt-strykning"
+"367.36418" = "vard-tillverkning-av-klader"
+"367.36419" = "eldning-vedhuggning"
+"367.36420" = "ospecificerat-hushallsarbete"
+"367.36421" = "underhallsarbete-totalt"
+"367.36422" = "skotsel-av-tomt-och-tradgard"
+"367.36423" = "rastning-av-hund"
+"367.36424" = "annan-skotsel-av-sallskapsdjur"
+"367.36425" = "byggnadsarbeten-ombyggnader"
+"367.36426" = "reparationer-underhall-i-hemmet"
+"367.36427" = "reparation-underhall-av-fordon"
+"367.36428" = "reparation-underhall-av-annat"
+"367.36429" = "ospecificerat-underhall"
+"367.36430" = "omsorg-om-egna-barn-totalt"
+"367.36431" = "tillsyn-och-hjalp-till-barn"
+"367.36432" = "hjalp-med-laxlasning"
+"367.36433" = "lek-med-barn"
+"367.36434" = "samtal-med-barn"
+"367.36435" = "hoglasning-for-barn"
+"367.36436" = "foraldramoten-m-m"
+"367.36437" = "narvaro-vid-barns-aktiviteter"
+"367.36438" = "annan-omsorg-om-barn"
+"367.36439" = "omsorg-om-andra-totalt"
+"367.36440" = "hjalp-till-vuxna-i-eget-hushall"
+"367.36441" = "hjalp-till-barn-i-andras-hushall"
+"367.36442" = "annan-hjalp-till-andras-hushall"
+"367.36443" = "besok-hos-patient-pa-sjukhus"
+"367.36444" = "ospecificerad-omsorg-om-andra"
+"367.36445" = "inkop-varor-tjanster-totalt"
+"367.36446" = "inkop-av-dagligvaror"
+"367.36447" = "inkop-av-andra-varor"
+"367.36448" = "medicinsk-behandling-utom-hemmet"
+"367.36449" = "arenden-offentliga-inrattningar"
+"367.36450" = "andra-och-ospecificerade-arenden"
+"367.36451" = "annat-hemarbete"
+"367.36452" = "personliga-behov-totalt"
+"367.36453" = "resor-i-sb-med-personliga-behov"
+"367.36454" = "personlig-omvardnad-totalt"
+"367.36455" = "nattsomn"
+"367.36456" = "middagslur"
+"367.36457" = "sangliggande-p-g-a-sjukdom"
+"367.36458" = "personlig-hygien-av-pakladning"
+"367.36459" = "bastu-solarium"
+"367.36460" = "annan-personlig-omvardnad"
+"367.36461" = "maltider-totalt"
+"367.36462" = "maltider"
+"367.36463" = "kaffe-forfriskningar"
+"367.36464" = "studier-totalt"
+"367.36465" = "resor-i-samband-med-studier"
+"367.36466" = "resor-malinriktade-studier"
+"367.36467" = "resor-studiecirklar"
+"367.36468" = "resor-utbildning-ospecificerade"
+"367.36469" = "studier-exkl-resor"
+"367.36470" = "malinriktade-studier-lektioner"
+"367.36471" = "malinriktade-studier-hemarbete"
+"367.36472" = "ospecificerat-utbildning"
+"367.36473" = "studiecirklar-och-liknande"
+"367.36474" = "lasning-av-facklitteratur-o-dyl"
+"367.36475" = "ospecificerat-studiecirklar"
+"367.36476" = "ospecificerat-utbildning-studiecirklar"
+"367.36477" = "fri-tid-totalt"
+"367.36478" = "resor-i-sb-med-fri-tid"
+"367.36479" = "idrott-och-friluftsliv-totalt"
+"367.36480" = "promenader-i-skog-och-mark"
+"367.36481" = "andra-promenader"
+"367.36482" = "jakt"
+"367.36483" = "fiske"
+"367.36484" = "idrott-motion-utomhus"
+"367.36485" = "idrott-motion-inomhus"
+"367.36486" = "bilutflykter-tid"
+"367.36487" = "annat-idrotts-eller-friluftsliv"
+"367.36488" = "foreningsverksamhet-m-m-totalt"
+"367.36489" = "foreningsverksamhet-ej-religios"
+"367.36490" = "religios-verksamhet"
+"367.36491" = "underhallning-kultur-totalt"
+"367.36492" = "askadare-vid-idrottsevenemang"
+"367.36493" = "biobesok"
+"367.36494" = "teater-konsert-utstallningar"
+"367.36495" = "biblioteksbesok-tid"
+"367.36496" = "annan-underhallning"
+"367.36497" = "social-samvaro-totalt"
+"367.36498" = "fest-kalas"
+"367.36499" = "besok-hos-slakt-och-vanner"
+"367.36500" = "besok-av-slakt-och-vanner"
+"367.36501" = "samtal"
+"367.36502" = "telefonsamtal"
+"367.36503" = "besok-pa-restaurang-cafe-bar"
+"367.36504" = "dans-diskotek"
+"367.36505" = "spel-sallskapslekar"
+"367.36506" = "andra-sociala-sammankomster"
+"367.36507" = "tv-och-radio-totalt"
+"367.36508" = "tv-videotittande"
+"367.36509" = "radiolyssnande"
+"367.36510" = "ospecificerad-radio-eller-tv"
+"367.36511" = "lasning-totalt"
+"367.36512" = "dagstidningslasning"
+"367.36513" = "veckotidningslasning"
+"367.36514" = "boklasning"
+"367.36515" = "ovrig-ospecificerad-lasning"
+"367.36516" = "hobbies-totalt"
+"367.36517" = "stickning"
+"367.36518" = "annat-handarbete"
+"367.36519" = "annan-datoranvandning"
+"367.36520" = "tekniska-hobbies-samling"
+"367.36521" = "spel-lek-ensam"
+"367.36522" = "internetanvandning"
+"367.36523" = "penningspel"
+"367.36524" = "lyssna-pa-cd-bandspelare"
+"367.36525" = "musikutovning"
+"367.36526" = "andra-hobbies"
+"367.36527" = "ovrig-fri-tid-totalt"
+"367.36528" = "vila-meditera-gora-ingenting"
+"367.36529" = "ovrig-och-ospecificerad-fri-tid"
+"367.36530" = "ovrigt-okodbart-totalt"
+"367.36531" = "ospecificerade-resor"
+"367.36532" = "forde-tidsdagbok"
+"367.36533" = "ej-uppgiven-eller-okodbar-akt"
+"367.36534" = "total-tid"
+"367.36537" = "individvikt-tid"
+"367.38725" = "ensamhushall"
+"367.38750" = "tidbrist-istallet"
+"367.39403" = "ospecificerat-arbete"
+"367.39404" = "ospecificerad-annan-tid-arbetsplatsen"
+"367.39405" = "ospecificerade-maltider"
+"367.39406" = "promenader-ovriga"
+"367.39407" = "promenader-i-skog-och-mark-ta"
+"367.39408" = "spel-och-lek-ensam"
+"367.40265" = "urval-ta1990"
+"367.40373" = "ospecificerad-hjalp-andra-hushall"
+"367.45479" = "upplevd-halsa"
+"367.45482" = "svart-delta-aktiviteter-6-manader"
 
 # register 368 (kommunernas-aktivitetsansvar)
-
-[[variable]]
-native_id = "367.25026.f10"
-slug = "arbetade-timmar-per-vecka"
-
-[[variable]]
-native_id = "367.36389.f14"
-slug = "arbetstid-utomhus"
-
-[[variable]]
-native_id = "367.801.sun2000niva"
-slug = "utbildningsgrupp-enl-sun-2000"
+"367.25026.f10" = "arbetade-timmar-per-vecka"
+"367.36389.f14" = "arbetstid-utomhus"
+"367.801.sun2000niva" = "utbildningsgrupp-enl-sun-2000"
 
 # register 371 (fasit)
-
-[[variable]]
-native_id = "367.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "367.43"
-slug = "kvartal"
-
-[[variable]]
-native_id = "367.99"
-slug = "sammanraknad-forvarvsinkomst"
-
-[[variable]]
-native_id = "367.388"
-slug = "antal-barn"
-
-[[variable]]
-native_id = "367.391"
-slug = "antal-barn-under-6-ar"
-
-[[variable]]
-native_id = "367.393"
-slug = "yngstabarn"
-
-[[variable]]
-native_id = "367.447"
-slug = "lansnamn"
-
-[[variable]]
-native_id = "367.1198"
-slug = "loneinkomst"
-
-[[variable]]
-native_id = "367.1286"
-slug = "antal-barn-0-17-ar"
-
-[[variable]]
-native_id = "367.1290"
-slug = "sammanraknad-forvarvsinkomst-familj"
-
-[[variable]]
-native_id = "367.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "367.1618"
-slug = "loneinkomst-familj"
-
-[[variable]]
-native_id = "367.2474"
-slug = "datum-inkommet-svar"
-
-[[variable]]
-native_id = "367.3188"
-slug = "hushallstyp"
-
-[[variable]]
-native_id = "367.3195"
-slug = "h-region"
-
-[[variable]]
-native_id = "367.3270"
-slug = "sysselsattningstyp"
-
-[[variable]]
-native_id = "367.4656"
-slug = "insamlingsmetod"
-
-[[variable]]
-native_id = "367.4677"
-slug = "sysselsattningsstatus"
-
-[[variable]]
-native_id = "367.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "367.8772"
-slug = "utbildningsinriktning-individen"
-
-[[variable]]
-native_id = "367.9063"
-slug = "antal-barn-13-18-ar"
-
-[[variable]]
-native_id = "367.9072"
-slug = "antal-barn-7-18-ar"
-
-[[variable]]
-native_id = "367.11766"
-slug = "korkort-bil"
-
-[[variable]]
-native_id = "367.13564"
-slug = "cd-spelare"
-
-[[variable]]
-native_id = "367.13575"
-slug = "forradsutrymme"
-
-[[variable]]
-native_id = "367.15889"
-slug = "dator-hemma"
-
-[[variable]]
-native_id = "367.15937"
-slug = "datum-for-svar"
-
-[[variable]]
-native_id = "367.17357"
-slug = "timlon"
-
-[[variable]]
-native_id = "367.17473"
-slug = "kalibreringsvikt"
-
-[[variable]]
-native_id = "367.18102"
-slug = "arbetsinkomst-familj"
-
-[[variable]]
-native_id = "367.21517"
-slug = "disponibel-inkomst-familj-2004"
-
-[[variable]]
-native_id = "367.24584"
-slug = "disponibel-inkomst-individ-2004"
-
-[[variable]]
-native_id = "367.32773"
-slug = "antal-personer-i-hushallet"
-
-[[variable]]
-native_id = "367.35581"
-slug = "relation-till-urvalsperson"
-
-[[variable]]
-native_id = "367.35783"
-slug = "internet-i-bostaden"
-
-[[variable]]
-native_id = "367.35992"
-slug = "antal-rum"
-
-[[variable]]
-native_id = "367.36224"
-slug = "procent-av-heltid"
-
-[[variable]]
-native_id = "367.36303"
-slug = "antal-barn-under-7-ar"
-
-[[variable]]
-native_id = "367.38042"
-slug = "naringsgren-sni-2-siffer"
-
-[[variable]]
-native_id = "367.40298"
-slug = "antal-barn-0-24-ar"
-
-[[variable]]
-native_id = "367.42371"
-slug = "yngsta-barnets-alder"
+"367.15" = "civilstand"
+"367.43" = "kvartal"
+"367.99" = "sammanraknad-forvarvsinkomst"
+"367.388" = "antal-barn"
+"367.391" = "antal-barn-under-6-ar"
+"367.393" = "yngstabarn"
+"367.447" = "lansnamn"
+"367.1198" = "loneinkomst"
+"367.1286" = "antal-barn-0-17-ar"
+"367.1290" = "sammanraknad-forvarvsinkomst-familj"
+"367.1569" = "fodelseland"
+"367.1618" = "loneinkomst-familj"
+"367.2474" = "datum-inkommet-svar"
+"367.3188" = "hushallstyp"
+"367.3195" = "h-region"
+"367.3270" = "sysselsattningstyp"
+"367.4656" = "insamlingsmetod"
+"367.4677" = "sysselsattningsstatus"
+"367.5083" = "anstallningsform"
+"367.8772" = "utbildningsinriktning-individen"
+"367.9063" = "antal-barn-13-18-ar"
+"367.9072" = "antal-barn-7-18-ar"
+"367.11766" = "korkort-bil"
+"367.13564" = "cd-spelare"
+"367.13575" = "forradsutrymme"
+"367.15889" = "dator-hemma"
+"367.15937" = "datum-for-svar"
+"367.17357" = "timlon"
+"367.17473" = "kalibreringsvikt"
+"367.18102" = "arbetsinkomst-familj"
+"367.21517" = "disponibel-inkomst-familj-2004"
+"367.24584" = "disponibel-inkomst-individ-2004"
+"367.32773" = "antal-personer-i-hushallet"
+"367.35581" = "relation-till-urvalsperson"
+"367.35783" = "internet-i-bostaden"
+"367.35992" = "antal-rum"
+"367.36224" = "procent-av-heltid"
+"367.36303" = "antal-barn-under-7-ar"
+"367.38042" = "naringsgren-sni-2-siffer"
+"367.40298" = "antal-barn-0-24-ar"
+"367.42371" = "yngsta-barnets-alder"
 
 # register 368
-
-[[variable]]
-native_id = "367.125.cfviki00"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst"
-
-[[variable]]
-native_id = "367.1378.born"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "367.19979.idbo"
-slug = "aktiv-i-boendeforening"
-
-[[variable]]
-native_id = "367.2686.lonman"
-slug = "manadslon"
-
-[[variable]]
-native_id = "367.2768.bostadstyptxt"
-slug = "bostadstyp"
-
-[[variable]]
-native_id = "367.2768.hustyp"
-slug = "bostadstyp-2"
-
-[[variable]]
-native_id = "367.28679.syss"
-slug = "sysselsattning-aktivitet"
-
-[[variable]]
-native_id = "367.3131.lonform"
-slug = "loneform"
+"367.125.cfviki00" = "sammanraknad-forvarvs-och-kapitalinkomst"
+"367.1378.born" = "fodelsear"
+"367.19979.idbo" = "aktiv-i-boendeforening"
+"367.2686.lonman" = "manadslon"
+"367.2768.bostadstyptxt" = "bostadstyp"
+"367.2768.hustyp" = "bostadstyp-2"
+"367.28679.syss" = "sysselsattning-aktivitet"
+"367.3131.lonform" = "loneform"
 
 # register 368
-
-[[variable]]
-native_id = "367.44.pers2-kon"
-slug = "kon-pers2-kon"
-
-[[variable]]
-native_id = "367.44.pers3-kon"
-slug = "kon-pers3-kon"
-
-[[variable]]
-native_id = "367.44.pers4-kon"
-slug = "kon-pers4-kon"
-
-[[variable]]
-native_id = "367.44.pers5-kon"
-slug = "kon-pers5-kon"
-
-[[variable]]
-native_id = "367.44.pers6-kon"
-slug = "kon-pers6-kon"
-
-[[variable]]
-native_id = "367.44.pers7-kon"
-slug = "kon-pers7-kon"
-
-[[variable]]
-native_id = "367.38726.flex4"
-slug = "orsak-varierad-arbetstid-flex4"
-
-[[variable]]
-native_id = "367.38726.flex3"
-slug = "orsak-varierad-arbetstid-flex3"
-
-[[variable]]
-native_id = "367.38719.fr11-1"
-slug = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-1"
-
-[[variable]]
-native_id = "367.38719.fr11-2"
-slug = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-2"
-
-[[variable]]
-native_id = "367.38719.fr11-3"
-slug = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-3"
-
-[[variable]]
-native_id = "367.38719.fr11-4"
-slug = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-4"
-
-[[variable]]
-native_id = "367.38719.fr11-5"
-slug = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-5"
-
-[[variable]]
-native_id = "367.38719.fr11-6"
-slug = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-6"
-
-[[variable]]
-native_id = "367.38720.fr12-1"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-1"
-
-[[variable]]
-native_id = "367.38720.fr12-2"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-2"
-
-[[variable]]
-native_id = "367.38720.fr12-3"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-3"
-
-[[variable]]
-native_id = "367.38720.fr12-4"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-4"
-
-[[variable]]
-native_id = "367.38720.fr12-5"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-5"
-
-[[variable]]
-native_id = "367.38720.fr12-6"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-6"
-
-[[variable]]
-native_id = "367.38720.fr12-7"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-7"
-
-[[variable]]
-native_id = "367.38720.fr12-8"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-8"
-
-[[variable]]
-native_id = "367.38720.fr12-9"
-slug = "om-den-svarande-var-uppkopplad-mot-internet-fr12-9"
-
-[[variable]]
-native_id = "367.3195.hreg2"
-slug = "h-region-hreg2"
-
-[[variable]]
-native_id = "367.3195.hreg"
-slug = "h-region-hreg"
-
-[[variable]]
-native_id = "367.36222.famcyk2"
-slug = "familjecykel-famcyk2"
-
-[[variable]]
-native_id = "367.36222.famcyk3"
-slug = "familjecykel-famcyk3"
-
-[[variable]]
-native_id = "367.18102.carbh99"
-slug = "arbetsinkomst-familj-carbh99"
-
-[[variable]]
-native_id = "367.18102.carbh00"
-slug = "arbetsinkomst-familj-carbh00"
-
-[[variable]]
-native_id = "367.18102.carbh01"
-slug = "arbetsinkomst-familj-carbh01"
-
-[[variable]]
-native_id = "367.18102.carbh09"
-slug = "arbetsinkomst-familj-carbh09"
-
-[[variable]]
-native_id = "367.18102.carbh10"
-slug = "arbetsinkomst-familj-carbh10"
-
-[[variable]]
-native_id = "367.18102.carbh11"
-slug = "arbetsinkomst-familj-carbh11"
-
-[[variable]]
-native_id = "367.1198.tlont99"
-slug = "loneinkomst-tlont99"
-
-[[variable]]
-native_id = "367.1198.tlont00"
-slug = "loneinkomst-tlont00"
-
-[[variable]]
-native_id = "367.1198.tlont01"
-slug = "loneinkomst-tlont01"
-
-[[variable]]
-native_id = "367.1198.tlont09"
-slug = "loneinkomst-tlont09"
-
-[[variable]]
-native_id = "367.1198.tlont10"
-slug = "loneinkomst-tlont10"
-
-[[variable]]
-native_id = "367.1198.tlont11"
-slug = "loneinkomst-tlont11"
-
-[[variable]]
-native_id = "367.1618.tlonth99"
-slug = "loneinkomst-familj-tlonth99"
-
-[[variable]]
-native_id = "367.1618.tlonth00"
-slug = "loneinkomst-familj-tlonth00"
-
-[[variable]]
-native_id = "367.1618.tlonth01"
-slug = "loneinkomst-familj-tlonth01"
-
-[[variable]]
-native_id = "367.1618.tlonth09"
-slug = "loneinkomst-familj-tlonth09"
-
-[[variable]]
-native_id = "367.1618.tlonth10"
-slug = "loneinkomst-familj-tlonth10"
-
-[[variable]]
-native_id = "367.1618.tlonth11"
-slug = "loneinkomst-familj-tlonth11"
-
-[[variable]]
-native_id = "367.125.cfvikih99"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih99"
-
-[[variable]]
-native_id = "367.125.cfvikih01"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih01"
-
-[[variable]]
-native_id = "367.125.cfviki99"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki99"
-
-[[variable]]
-native_id = "367.125.cfviki01"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki01"
-
-[[variable]]
-native_id = "367.125.cfviki09"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki09"
-
-[[variable]]
-native_id = "367.125.cfvikih09"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih09"
-
-[[variable]]
-native_id = "367.125.cfviki10"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki10"
-
-[[variable]]
-native_id = "367.125.cfvikih10"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih10"
-
-[[variable]]
-native_id = "367.125.cfviki11"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki11"
-
-[[variable]]
-native_id = "367.125.cfvikih11"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih11"
-
-[[variable]]
-native_id = "367.99.csfvi99"
-slug = "sammanraknad-forvarvsinkomst-csfvi99"
-
-[[variable]]
-native_id = "367.99.csfvi00"
-slug = "sammanraknad-forvarvsinkomst-csfvi00"
-
-[[variable]]
-native_id = "367.99.csfvi01"
-slug = "sammanraknad-forvarvsinkomst-csfvi01"
-
-[[variable]]
-native_id = "367.99.csfvi09"
-slug = "sammanraknad-forvarvsinkomst-csfvi09"
-
-[[variable]]
-native_id = "367.99.csfvi10"
-slug = "sammanraknad-forvarvsinkomst-csfvi10"
-
-[[variable]]
-native_id = "367.99.csfvi11"
-slug = "sammanraknad-forvarvsinkomst-csfvi11"
-
-[[variable]]
-native_id = "367.1290.csfvih99"
-slug = "sammanraknad-forvarvsinkomst-familj-csfvih99"
-
-[[variable]]
-native_id = "367.1290.csfvih00"
-slug = "sammanraknad-forvarvsinkomst-familj-csfvih00"
-
-[[variable]]
-native_id = "367.1290.csfvih01"
-slug = "sammanraknad-forvarvsinkomst-familj-csfvih01"
-
-[[variable]]
-native_id = "367.1290.csfvih09"
-slug = "sammanraknad-forvarvsinkomst-familj-csfvih09"
-
-[[variable]]
-native_id = "367.1290.csfvih10"
-slug = "sammanraknad-forvarvsinkomst-familj-csfvih10"
-
-[[variable]]
-native_id = "367.1290.csfvih11"
-slug = "sammanraknad-forvarvsinkomst-familj-csfvih11"
-
-[[variable]]
-native_id = "367.36451.field-26"
-slug = "annat-hemarbete-26"
-
-[[variable]]
-native_id = "367.36451.field-2611"
-slug = "annat-hemarbete-2611"
-
-[[variable]]
-native_id = "367.36453.field-3010"
-slug = "resor-i-sb-med-personliga-behov-3010"
-
-[[variable]]
-native_id = "367.36453.field-30"
-slug = "resor-i-sb-med-personliga-behov-30"
-
-[[variable]]
-native_id = "367.749.aldgrup2"
-slug = "aldersgrupp-aldgrup2"
-
-[[variable]]
-native_id = "367.749.aldgrp2"
-slug = "aldersgrupp-aldgrp2"
-
-[[variable]]
-native_id = "367.241.bald"
-slug = "alder-31-12-bald"
-
-[[variable]]
-native_id = "367.241.alderslut"
-slug = "alder-31-12-alderslut"
-
-[[variable]]
-native_id = "367.241.pers2-ald"
-slug = "alder-31-12-pers2-ald"
-
-[[variable]]
-native_id = "367.241.pers3-ald"
-slug = "alder-31-12-pers3-ald"
-
-[[variable]]
-native_id = "367.241.pers4-ald"
-slug = "alder-31-12-pers4-ald"
-
-[[variable]]
-native_id = "367.241.pers5-ald"
-slug = "alder-31-12-pers5-ald"
-
-[[variable]]
-native_id = "367.241.pers6-ald"
-slug = "alder-31-12-pers6-ald"
-
-[[variable]]
-native_id = "367.241.pers7-ald"
-slug = "alder-31-12-pers7-ald"
-
-[[variable]]
-native_id = "367.6290.nuts2-old"
-slug = "nuts-nomenclature-des-unites-territoriales-statistiques-nuts2-old"
-
-[[variable]]
-native_id = "367.6290.nuts3-old"
-slug = "nuts-nomenclature-des-unites-territoriales-statistiques-nuts3-old"
-
-[[variable]]
-native_id = "367.36359.samvaro"
-slug = "narvarande-person-samvaro"
-
-[[variable]]
-native_id = "367.36359.pers2"
-slug = "narvarande-person-pers2"
-
-[[variable]]
-native_id = "367.36359.pers3"
-slug = "narvarande-person-pers3"
-
-[[variable]]
-native_id = "367.36359.pers4"
-slug = "narvarande-person-pers4"
-
-[[variable]]
-native_id = "367.36359.pers5"
-slug = "narvarande-person-pers5"
-
-[[variable]]
-native_id = "367.36359.pers6"
-slug = "narvarande-person-pers6"
-
-[[variable]]
-native_id = "367.36359.pers7"
-slug = "narvarande-person-pers7"
-
-[[variable]]
-native_id = "367.36359.pers8"
-slug = "narvarande-person-pers8"
-
-[[variable]]
-native_id = "367.35581.pers2-reltyp"
-slug = "relation-till-urvalsperson-pers2-reltyp"
-
-[[variable]]
-native_id = "367.35581.pers3-reltyp"
-slug = "relation-till-urvalsperson-pers3-reltyp"
-
-[[variable]]
-native_id = "367.35581.pers4-reltyp"
-slug = "relation-till-urvalsperson-pers4-reltyp"
-
-[[variable]]
-native_id = "367.35581.pers5-reltyp"
-slug = "relation-till-urvalsperson-pers5-reltyp"
-
-[[variable]]
-native_id = "367.35581.pers6-reltyp"
-slug = "relation-till-urvalsperson-pers6-reltyp"
-
-[[variable]]
-native_id = "367.35581.pers7-reltyp"
-slug = "relation-till-urvalsperson-pers7-reltyp"
+"367.44.pers2-kon" = "kon-pers2-kon"
+"367.44.pers3-kon" = "kon-pers3-kon"
+"367.44.pers4-kon" = "kon-pers4-kon"
+"367.44.pers5-kon" = "kon-pers5-kon"
+"367.44.pers6-kon" = "kon-pers6-kon"
+"367.44.pers7-kon" = "kon-pers7-kon"
+"367.38726.flex4" = "orsak-varierad-arbetstid-flex4"
+"367.38726.flex3" = "orsak-varierad-arbetstid-flex3"
+"367.38719.fr11-1" = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-1"
+"367.38719.fr11-2" = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-2"
+"367.38719.fr11-3" = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-3"
+"367.38719.fr11-4" = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-4"
+"367.38719.fr11-5" = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-5"
+"367.38719.fr11-6" = "om-den-svarande-anvande-dator-i-hemmet-under-dagboksdagen-fr11-6"
+"367.38720.fr12-1" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-1"
+"367.38720.fr12-2" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-2"
+"367.38720.fr12-3" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-3"
+"367.38720.fr12-4" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-4"
+"367.38720.fr12-5" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-5"
+"367.38720.fr12-6" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-6"
+"367.38720.fr12-7" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-7"
+"367.38720.fr12-8" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-8"
+"367.38720.fr12-9" = "om-den-svarande-var-uppkopplad-mot-internet-fr12-9"
+"367.3195.hreg2" = "h-region-hreg2"
+"367.3195.hreg" = "h-region-hreg"
+"367.36222.famcyk2" = "familjecykel-famcyk2"
+"367.36222.famcyk3" = "familjecykel-famcyk3"
+"367.18102.carbh99" = "arbetsinkomst-familj-carbh99"
+"367.18102.carbh00" = "arbetsinkomst-familj-carbh00"
+"367.18102.carbh01" = "arbetsinkomst-familj-carbh01"
+"367.18102.carbh09" = "arbetsinkomst-familj-carbh09"
+"367.18102.carbh10" = "arbetsinkomst-familj-carbh10"
+"367.18102.carbh11" = "arbetsinkomst-familj-carbh11"
+"367.1198.tlont99" = "loneinkomst-tlont99"
+"367.1198.tlont00" = "loneinkomst-tlont00"
+"367.1198.tlont01" = "loneinkomst-tlont01"
+"367.1198.tlont09" = "loneinkomst-tlont09"
+"367.1198.tlont10" = "loneinkomst-tlont10"
+"367.1198.tlont11" = "loneinkomst-tlont11"
+"367.1618.tlonth99" = "loneinkomst-familj-tlonth99"
+"367.1618.tlonth00" = "loneinkomst-familj-tlonth00"
+"367.1618.tlonth01" = "loneinkomst-familj-tlonth01"
+"367.1618.tlonth09" = "loneinkomst-familj-tlonth09"
+"367.1618.tlonth10" = "loneinkomst-familj-tlonth10"
+"367.1618.tlonth11" = "loneinkomst-familj-tlonth11"
+"367.125.cfvikih99" = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih99"
+"367.125.cfvikih01" = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih01"
+"367.125.cfviki99" = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki99"
+"367.125.cfviki01" = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki01"
+"367.125.cfviki09" = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki09"
+"367.125.cfvikih09" = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih09"
+"367.125.cfviki10" = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki10"
+"367.125.cfvikih10" = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih10"
+"367.125.cfviki11" = "sammanraknad-forvarvs-och-kapitalinkomst-cfviki11"
+"367.125.cfvikih11" = "sammanraknad-forvarvs-och-kapitalinkomst-cfvikih11"
+"367.99.csfvi99" = "sammanraknad-forvarvsinkomst-csfvi99"
+"367.99.csfvi00" = "sammanraknad-forvarvsinkomst-csfvi00"
+"367.99.csfvi01" = "sammanraknad-forvarvsinkomst-csfvi01"
+"367.99.csfvi09" = "sammanraknad-forvarvsinkomst-csfvi09"
+"367.99.csfvi10" = "sammanraknad-forvarvsinkomst-csfvi10"
+"367.99.csfvi11" = "sammanraknad-forvarvsinkomst-csfvi11"
+"367.1290.csfvih99" = "sammanraknad-forvarvsinkomst-familj-csfvih99"
+"367.1290.csfvih00" = "sammanraknad-forvarvsinkomst-familj-csfvih00"
+"367.1290.csfvih01" = "sammanraknad-forvarvsinkomst-familj-csfvih01"
+"367.1290.csfvih09" = "sammanraknad-forvarvsinkomst-familj-csfvih09"
+"367.1290.csfvih10" = "sammanraknad-forvarvsinkomst-familj-csfvih10"
+"367.1290.csfvih11" = "sammanraknad-forvarvsinkomst-familj-csfvih11"
+"367.36451.field-26" = "annat-hemarbete-26"
+"367.36451.field-2611" = "annat-hemarbete-2611"
+"367.36453.field-3010" = "resor-i-sb-med-personliga-behov-3010"
+"367.36453.field-30" = "resor-i-sb-med-personliga-behov-30"
+"367.749.aldgrup2" = "aldersgrupp-aldgrup2"
+"367.749.aldgrp2" = "aldersgrupp-aldgrp2"
+"367.241.bald" = "alder-31-12-bald"
+"367.241.alderslut" = "alder-31-12-alderslut"
+"367.241.pers2-ald" = "alder-31-12-pers2-ald"
+"367.241.pers3-ald" = "alder-31-12-pers3-ald"
+"367.241.pers4-ald" = "alder-31-12-pers4-ald"
+"367.241.pers5-ald" = "alder-31-12-pers5-ald"
+"367.241.pers6-ald" = "alder-31-12-pers6-ald"
+"367.241.pers7-ald" = "alder-31-12-pers7-ald"
+"367.6290.nuts2-old" = "nuts-nomenclature-des-unites-territoriales-statistiques-nuts2-old"
+"367.6290.nuts3-old" = "nuts-nomenclature-des-unites-territoriales-statistiques-nuts3-old"
+"367.36359.samvaro" = "narvarande-person-samvaro"
+"367.36359.pers2" = "narvarande-person-pers2"
+"367.36359.pers3" = "narvarande-person-pers3"
+"367.36359.pers4" = "narvarande-person-pers4"
+"367.36359.pers5" = "narvarande-person-pers5"
+"367.36359.pers6" = "narvarande-person-pers6"
+"367.36359.pers7" = "narvarande-person-pers7"
+"367.36359.pers8" = "narvarande-person-pers8"
+"367.35581.pers2-reltyp" = "relation-till-urvalsperson-pers2-reltyp"
+"367.35581.pers3-reltyp" = "relation-till-urvalsperson-pers3-reltyp"
+"367.35581.pers4-reltyp" = "relation-till-urvalsperson-pers4-reltyp"
+"367.35581.pers5-reltyp" = "relation-till-urvalsperson-pers5-reltyp"
+"367.35581.pers6-reltyp" = "relation-till-urvalsperson-pers6-reltyp"
+"367.35581.pers7-reltyp" = "relation-till-urvalsperson-pers7-reltyp"
 
 [[identity.column_owner]]
 data_warning = "Exact source limitations for this native family, applying only to annotated owner originals:\nkon: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\npers2_kon: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred.\npers3_kon: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred.\npers4_kon: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred.\npers5_kon: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred.\npers6_kon: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred.\npers7_kon: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred.\nsex: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\nsex: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nThe supplied native definition establishes only the generic quantity. Keep this exact physical field separately; its detailed respondent, component, reference year or grouping is unspecified. Do not infer a role from the column suffix or assign a neighbouring field’s operation.\nThe same native question wording is associated with multiple distinct columns in this exact source edition. The supplied metadata does not establish their relationship or questionnaire branch. Retain these source fields separately with their own original coding and periods; no renumbering, equivalence or merged overlapping delivery is inferred."

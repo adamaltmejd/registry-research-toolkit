@@ -45,240 +45,60 @@ panel_entity_key = "venr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Utrikeshandel med varor
-
-
-
-
-
-
-
-
-
-
-
-
-[[variable]]
-native_id = "187.2928"
-slug = "anskaffningsvarde-frammande"
-
-[[variable]]
-native_id = "187.2929"
-slug = "anskaffningsvarde-insats"
-
-[[variable]]
-native_id = "187.2930"
-slug = "forsaljningsvarde-fardiga-produkter"
-
-[[variable]]
-native_id = "187.2941"
-slug = "forsaljningsvarde-produkter-arbete"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[[variable]]
-native_id = "187.4042"
-slug = "firmanamn"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[[variable]]
-native_id = "187.6306"
-slug = "antal-arbetade-timmar"
-
-
-[[variable]]
-native_id = "187.19538"
-slug = "upprakningsfaktor"
-
-[[variable]]
-native_id = "187.21317"
-slug = "produktionsvolymer"
-
-[[variable]]
-native_id = "187.28064"
-slug = "imputeringsstatus"
+"187.2928" = "anskaffningsvarde-frammande"
+"187.2929" = "anskaffningsvarde-insats"
+"187.2930" = "forsaljningsvarde-fardiga-produkter"
+"187.2941" = "forsaljningsvarde-produkter-arbete"
+"187.4042" = "firmanamn"
+"187.6306" = "antal-arbetade-timmar"
+"187.19538" = "upprakningsfaktor"
+"187.21317" = "produktionsvolymer"
+"187.28064" = "imputeringsstatus"
 
 # register 188 (utrikeshandel)
-
-
-
-[[variable]]
-native_id = "187.2923.andrad"
-slug = "andrad-kol"
+"187.2923.andrad" = "andrad-kol"
 
 # register 188 (utrikeshandel)
-
-[[variable]]
-native_id = "187.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "187.2846"
-slug = "lopnummer-urvalsenheter"
-
-[[variable]]
-native_id = "187.2936"
-slug = "ingaende-lager"
-
-[[variable]]
-native_id = "187.4028"
-slug = "storan"
-
-[[variable]]
-native_id = "187.4030"
-slug = "lillan"
-
-[[variable]]
-native_id = "187.4066"
-slug = "storleksgrupp"
-
-[[variable]]
-native_id = "187.15169"
-slug = "bransch"
-
-[[variable]]
-native_id = "187.23859"
-slug = "kvartal-och-ar"
-
-[[variable]]
-native_id = "187.31002"
-slug = "urvalsversion"
+"187.56" = "person-orgnr"
+"187.2846" = "lopnummer-urvalsenheter"
+"187.2936" = "ingaende-lager"
+"187.4028" = "storan"
+"187.4030" = "lillan"
+"187.4066" = "storleksgrupp"
+"187.15169" = "bransch"
+"187.23859" = "kvartal-och-ar"
+"187.31002" = "urvalsversion"
 
 # register 188
-
-[[variable]]
-native_id = "187.4873.prodvarde"
-slug = "produktionsvarde"
+"187.4873.prodvarde" = "produktionsvarde"
 
 # register 189
-
 # ==== registers/scb/konjunkturstatistik-industri.toml (register 187) ====
-
-
-[[variable]]
-native_id = "187.50.manad"
-slug = "manad"
-
-[[variable]]
-native_id = "187.73.ar"
-slug = "ar"
-
-[[variable]]
-native_id = "187.466.source-positive"
-slug = "upprakningstal"
-
-[[variable]]
-native_id = "187.865.source-positive"
-slug = "anvandaridentitet-uppgiftsnotering"
-
-[[variable]]
-native_id = "187.1454.source-positive"
-slug = "venr"
-
-[[variable]]
-native_id = "187.2642.source-positive"
-slug = "antal-anstallda-verksamhetsenhet"
-
-[[variable]]
-native_id = "187.2916.source-positive"
-slug = "granskning"
-
-[[variable]]
-native_id = "187.2918.obsnr"
-slug = "obsnr"
-
-[[variable]]
-native_id = "187.2921.uar"
-slug = "uar"
-
-[[variable]]
-native_id = "187.2952.source-positive"
-slug = "fran-och-meddatum"
-
-[[variable]]
-native_id = "187.2953.source-positive"
-slug = "leveranser-hemmamarknad"
-
-[[variable]]
-native_id = "187.2954.source-positive"
-slug = "interna-leveranser"
-
-[[variable]]
-native_id = "187.2955.source-positive"
-slug = "totala-leveranser"
-
-[[variable]]
-native_id = "187.2956.source-positive"
-slug = "orderingang-exportmarknad"
-
-[[variable]]
-native_id = "187.2957.source-positive"
-slug = "orderingang-hemmamarknad"
-
-[[variable]]
-native_id = "187.2958.source-positive"
-slug = "total-orderingang"
-
-[[variable]]
-native_id = "187.2962.source-positive"
-slug = "tilldatum"
-
-[[variable]]
-native_id = "187.3310.source-positive"
-slug = "branschgrupp"
-
-[[variable]]
-native_id = "187.3578.source-positive"
-slug = "orgnr-12"
-
-[[variable]]
-native_id = "187.4027.source-positive"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "187.5179.source-positive"
-slug = "aktivt-organisationsnummer"
-
-[[variable]]
-native_id = "187.5181.source-positive"
-slug = "urvalsstorlek"
-
-[[variable]]
-native_id = "187.14636.source-positive"
-slug = "leveranser-exportmarknad"
+"187.50.manad" = "manad"
+"187.73.ar" = "ar"
+"187.466.source-positive" = "upprakningstal"
+"187.865.source-positive" = "anvandaridentitet-uppgiftsnotering"
+"187.1454.source-positive" = "venr"
+"187.2642.source-positive" = "antal-anstallda-verksamhetsenhet"
+"187.2916.source-positive" = "granskning"
+"187.2918.obsnr" = "obsnr"
+"187.2921.uar" = "uar"
+"187.2952.source-positive" = "fran-och-meddatum"
+"187.2953.source-positive" = "leveranser-hemmamarknad"
+"187.2954.source-positive" = "interna-leveranser"
+"187.2955.source-positive" = "totala-leveranser"
+"187.2956.source-positive" = "orderingang-exportmarknad"
+"187.2957.source-positive" = "orderingang-hemmamarknad"
+"187.2958.source-positive" = "total-orderingang"
+"187.2962.source-positive" = "tilldatum"
+"187.3310.source-positive" = "branschgrupp"
+"187.3578.source-positive" = "orgnr-12"
+"187.4027.source-positive" = "naringsgren"
+"187.5179.source-positive" = "aktivt-organisationsnummer"
+"187.5181.source-positive" = "urvalsstorlek"
+"187.14636.source-positive" = "leveranser-exportmarknad"
 
 [[identity.column_owner]]
 data_warning = "Some exported physical coordinates have competing native source owners without a supplied delivery discriminator. The catalog admits only uncontested histories; all conflicting originals, dates, definitions and coding associations remain retained as source evidence."

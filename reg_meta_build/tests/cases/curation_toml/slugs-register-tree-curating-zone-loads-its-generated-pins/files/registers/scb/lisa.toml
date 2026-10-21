@@ -3,6 +3,5 @@ provider = "scb"
 slug = "lisa"
 native_id = "1"
 
-[[variable]]
-native_id = "1.44"
-slug = "kon"
+[variable]
+"1.44" = "kon"

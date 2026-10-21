@@ -63,168 +63,50 @@ panel_entity_key = "pfnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Bostadsbestånd
-
-[[variable]]
-native_id = "276.135.afnr"
-slug = "afnr"
-
-
-[[variable]]
-native_id = "276.135.fnr"
-slug = "fnr"
-
-
-[[variable]]
-native_id = "276.135.pfnr"
-slug = "pfnr"
-
-
-[[variable]]
-native_id = "276.24177.ridadrpl"
-slug = "ridadrpl"
-
-
-[[variable]]
-native_id = "276.29378.uuidregbyg"
-slug = "uuidregbyg"
-
-
-[[variable]]
-native_id = "276.412"
-slug = "postort"
-
-[[variable]]
-native_id = "276.428"
-slug = "postort-utland"
-
-[[variable]]
-native_id = "276.17810"
-slug = "nordlig-koordinat-sweref"
-
-[[variable]]
-native_id = "276.17812"
-slug = "ostlig-koordinat-sweref"
-
-[[variable]]
-native_id = "276.18972"
-slug = "tredimensionellt-omrade"
-
-[[variable]]
-native_id = "276.18978"
-slug = "tredimensionell-urholkning"
-
-[[variable]]
-native_id = "276.29379"
-slug = "versionsnr-fastighetsreg"
-
-[[variable]]
-native_id = "276.35349"
-slug = "planforkortning"
-
-[[variable]]
-native_id = "276.35356"
-slug = "planforkortning-naturvard"
+"276.135.afnr" = "afnr"
+"276.135.fnr" = "fnr"
+"276.135.pfnr" = "pfnr"
+"276.24177.ridadrpl" = "ridadrpl"
+"276.29378.uuidregbyg" = "uuidregbyg"
+"276.412" = "postort"
+"276.428" = "postort-utland"
+"276.17810" = "nordlig-koordinat-sweref"
+"276.17812" = "ostlig-koordinat-sweref"
+"276.18972" = "tredimensionellt-omrade"
+"276.18978" = "tredimensionell-urholkning"
+"276.29379" = "versionsnr-fastighetsreg"
+"276.35349" = "planforkortning"
+"276.35356" = "planforkortning-naturvard"
 
 # register 282 (bostadsbestand)
-
-[[variable]]
-native_id = "276.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "276.135.tillhfnr"
-slug = "fnr-tillh"
-
-[[variable]]
-native_id = "276.7"
-slug = "adressomrade"
-
-[[variable]]
-native_id = "276.8"
-slug = "adressplats"
-
-[[variable]]
-native_id = "276.12"
-slug = "popularnamn"
-
-[[variable]]
-native_id = "276.49"
-slug = "lan"
-
-[[variable]]
-native_id = "276.1086"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "276.2189"
-slug = "landareal"
-
-[[variable]]
-native_id = "276.2888"
-slug = "totalareal"
-
-[[variable]]
-native_id = "276.3144"
-slug = "vattenareal"
-
-[[variable]]
-native_id = "276.4656"
-slug = "insamlingsmetod"
-
-[[variable]]
-native_id = "276.16384"
-slug = "tilltalsnamn"
-
-[[variable]]
-native_id = "276.18378"
-slug = "transaktionstyp"
-
-[[variable]]
-native_id = "276.19640"
-slug = "avregistreringsorsak"
-
-[[variable]]
-native_id = "276.19683"
-slug = "adressplatstyp"
-
-[[variable]]
-native_id = "276.19684"
-slug = "adressomradestyp"
-
-[[variable]]
-native_id = "276.21097"
-slug = "lokalarea-totalt"
-
-[[variable]]
-native_id = "276.21549"
-slug = "objekttyp"
-
-[[variable]]
-native_id = "276.29559"
-slug = "gallandedatum"
-
-[[variable]]
-native_id = "276.39461"
-slug = "datatyp-for-geometri"
+"276.56" = "person-orgnr"
+"276.135.tillhfnr" = "fnr-tillh"
+"276.7" = "adressomrade"
+"276.8" = "adressplats"
+"276.12" = "popularnamn"
+"276.49" = "lan"
+"276.1086" = "namn-juridiska-enheten"
+"276.2189" = "landareal"
+"276.2888" = "totalareal"
+"276.3144" = "vattenareal"
+"276.4656" = "insamlingsmetod"
+"276.16384" = "tilltalsnamn"
+"276.18378" = "transaktionstyp"
+"276.19640" = "avregistreringsorsak"
+"276.19683" = "adressplatstyp"
+"276.19684" = "adressomradestyp"
+"276.21097" = "lokalarea-totalt"
+"276.21549" = "objekttyp"
+"276.29559" = "gallandedatum"
+"276.39461" = "datatyp-for-geometri"
 
 # register 282
-
-[[variable]]
-native_id = "276.16297.byggar"
-slug = "nybyggnadsar"
-
-[[variable]]
-native_id = "276.16511.avgaldavgiftsumma"
-slug = "tomtrattsavgald-och-arrendeavgifter"
-
-[[variable]]
-native_id = "276.2224.scb-typkod"
-slug = "typkod"
-
-[[variable]]
-native_id = "276.22523.byggtyp"
-slug = "byggnadstyp"
+"276.16297.byggar" = "nybyggnadsar"
+"276.16511.avgaldavgiftsumma" = "tomtrattsavgald-och-arrendeavgifter"
+"276.2224.scb-typkod" = "typkod"
+"276.22523.byggtyp" = "byggnadstyp"
 
 # register 282
 

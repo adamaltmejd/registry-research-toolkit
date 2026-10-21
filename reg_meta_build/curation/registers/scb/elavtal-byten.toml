@@ -8,55 +8,30 @@ native_id = "272.644"
 slug = "elavtal-omforhandling-byten"
 display_group = "Omförhandling  och byten av elavtal"
 
+[variable]
 # Registret för integrationsstudier (STATIV)
-
-[[variable]]
-native_id = "272.2768"
-slug = "bostadstyp"
-
-[[variable]]
-native_id = "272.16733"
-slug = "antal-vuxna-i-hushallet"
-
-[[variable]]
-native_id = "272.16740"
-slug = "antal-barn-i-hushallet"
-
-[[variable]]
-native_id = "272.16741"
-slug = "minst-tre-manader-pa-adress"
-
-[[variable]]
-native_id = "272.16742"
-slug = "eget-elavtal"
-
-[[variable]]
-native_id = "272.16770"
-slug = "typ-av-elavtal"
-
-[[variable]]
-native_id = "272.16772"
-slug = "byte-av-elleverantor"
-
-[[variable]]
-native_id = "272.16775"
-slug = "anledning-byte-elleverantor"
-
-[[variable]]
-native_id = "272.16777"
-slug = "elforbrukning"
-
-[[variable]]
-native_id = "272.16778"
-slug = "andring-av-elavtal"
-
-[[variable]]
-native_id = "272.25488"
-slug = "gemensam-faktura-elnattjanst"
-
-[[variable]]
-native_id = "272.25489"
-slug = "anledning-ej-byte-elleverantor"
+"272.2768" = "bostadstyp"
+"272.16733" = "antal-vuxna-i-hushallet"
+"272.16740" = "antal-barn-i-hushallet"
+"272.16741" = "minst-tre-manader-pa-adress"
+"272.16742" = "eget-elavtal"
+"272.16770" = "typ-av-elavtal"
+"272.16772" = "byte-av-elleverantor"
+"272.16775" = "anledning-byte-elleverantor"
+"272.16777" = "elforbrukning"
+"272.16778" = "andring-av-elavtal"
+"272.25488" = "gemensam-faktura-elnattjanst"
+"272.25489" = "anledning-ej-byte-elleverantor"
+"272.16775.f07b" = "f07b"
+"272.16775.f07b-txt" = "f07b-txt"
+"272.16775.f07c" = "f07c"
+"272.16775.f7b" = "f7b"
+"272.16770.f05" = "f05"
+"272.16770.f05-txt" = "f05-txt"
+"272.16770.f5" = "f5"
+"272.25488.f09a" = "f09a"
+"272.25488.f9a" = "f9a"
+"272.25488.f9b" = "f9b"
 
 # register 273 (stativ)
 
@@ -80,43 +55,3 @@ variable = "272.25488"
 columns = { F09a = "272.25488.f09a", F9a = "272.25488.f9a", F9b = "272.25488.f9b" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "3015161b5b19c8f2f73b6cfb93fa17c64716b0d1f18cd66d1471957b6b3bb607"
-
-[[variable]]
-native_id = "272.16775.f07b"
-slug = "f07b"
-
-[[variable]]
-native_id = "272.16775.f07b-txt"
-slug = "f07b-txt"
-
-[[variable]]
-native_id = "272.16775.f07c"
-slug = "f07c"
-
-[[variable]]
-native_id = "272.16775.f7b"
-slug = "f7b"
-
-[[variable]]
-native_id = "272.16770.f05"
-slug = "f05"
-
-[[variable]]
-native_id = "272.16770.f05-txt"
-slug = "f05-txt"
-
-[[variable]]
-native_id = "272.16770.f5"
-slug = "f5"
-
-[[variable]]
-native_id = "272.25488.f09a"
-slug = "f09a"
-
-[[variable]]
-native_id = "272.25488.f9a"
-slug = "f9a"
-
-[[variable]]
-native_id = "272.25488.f9b"
-slug = "f9b"

@@ -98,195 +98,154 @@ native_id = "8.1188"
 slug = "ovriga-fordonsslag"
 display_group = "Övriga fordonsslag"
 
+[variable]
 # Lantbruksregistret (LBR)
-
-[[variable]]
-native_id = "8.16564"
-slug = "chassi"
-
-
-[[variable]]
-native_id = "8.2350"
-slug = "arsmodell-imputerad"
-
-[[variable]]
-native_id = "8.2814"
-slug = "fabrikat"
-
-[[variable]]
-native_id = "8.3017"
-slug = "koppling"
-
-[[variable]]
-native_id = "8.3028"
-slug = "yrkesmassig-trafik-buss"
-
-[[variable]]
-native_id = "8.3031"
-slug = "yrkesmassig-trafik-linje"
-
-[[variable]]
-native_id = "8.3057"
-slug = "karosserikod-moped"
-
-[[variable]]
-native_id = "8.3061"
-slug = "koppling-1"
-
-[[variable]]
-native_id = "8.3062"
-slug = "koppling-2"
-
-[[variable]]
-native_id = "8.6353"
-slug = "fabrikat-moped-klass-i"
-
-[[variable]]
-native_id = "8.19640"
-slug = "avregistreringsorsak"
-
-[[variable]]
-native_id = "8.20694"
-slug = "utryckningsfordon"
-
-[[variable]]
-native_id = "8.25339"
-slug = "avregorsak"
-
-[[variable]]
-native_id = "8.26037"
-slug = "yrkesmassig-busstrafik"
-
-[[variable]]
-native_id = "8.26040"
-slug = "yrkesmassig-linjetrafik"
-
-[[variable]]
-native_id = "8.37093"
-slug = "fordonets-benamning"
-
-[[variable]]
-native_id = "8.37110"
-slug = "handelsbeteckning"
-
-[[variable]]
-native_id = "8.37397"
-slug = "fordonskategori"
-
-[[variable]]
-native_id = "8.38738"
-slug = "naringsgrenskod-sni-2002"
-
-[[variable]]
-native_id = "8.41377"
-slug = "yrkesmassig-utryckning"
-
-[[variable]]
-native_id = "8.48835"
-slug = "drivmedel-grupperad"
+"8.16564" = "chassi"
+"8.2350" = "arsmodell-imputerad"
+"8.2814" = "fabrikat"
+"8.3017" = "koppling"
+"8.3028" = "yrkesmassig-trafik-buss"
+"8.3031" = "yrkesmassig-trafik-linje"
+"8.3057" = "karosserikod-moped"
+"8.3061" = "koppling-1"
+"8.3062" = "koppling-2"
+"8.6353" = "fabrikat-moped-klass-i"
+"8.19640" = "avregistreringsorsak"
+"8.20694" = "utryckningsfordon"
+"8.25339" = "avregorsak"
+"8.26037" = "yrkesmassig-busstrafik"
+"8.26040" = "yrkesmassig-linjetrafik"
+"8.37093" = "fordonets-benamning"
+"8.37110" = "handelsbeteckning"
+"8.37397" = "fordonskategori"
+"8.38738" = "naringsgrenskod-sni-2002"
+"8.41377" = "yrkesmassig-utryckning"
+"8.48835" = "drivmedel-grupperad"
 
 # register 10 (lbr)
+"8.1721.brforbr1" = "brforbr-2"
+"8.25764.effektenh1" = "effektenh-2"
+"8.37378.drivm" = "drivmedel"
+"8.37378.drivmedel" = "drivmedel-2"
+"8.4027.sni2002" = "naringsgren"
 
-[[variable]]
-native_id = "8.1721.brforbr1"
-slug = "brforbr-2"
-
-[[variable]]
-native_id = "8.25764.effektenh1"
-slug = "effektenh-2"
-
-[[variable]]
-native_id = "8.37378.drivm"
-slug = "drivmedel"
-
-[[variable]]
-native_id = "8.37378.drivmedel"
-slug = "drivmedel-2"
-
-[[variable]]
-native_id = "8.4027.sni2002"
-slug = "naringsgren"
 # #931: fordonsreg näringsgren parallel siblings (SNI vintage × owner-role)
-
-[[variable]]
-native_id = "8.4027.sni92"
-slug = "naringsgren-sni92"
-
-[[variable]]
-native_id = "8.4027.sni92-2"
-slug = "naringsgren-sni92-foregaende"
-
-[[variable]]
-native_id = "8.4027.sni92-3"
-slug = "naringsgren-sni92-nastforegaende"
-
-[[variable]]
-native_id = "8.4027.sni2002-2"
-slug = "naringsgren-sni2002-foregaende"
-
-[[variable]]
-native_id = "8.4027.sni2002-3"
-slug = "naringsgren-sni2002-nastforegaende"
-
-[[variable]]
-native_id = "8.4027.sni2007"
-slug = "naringsgren-sni2007"
-
-[[variable]]
-native_id = "8.4027.sni2007-2"
-slug = "naringsgren-sni2007-foregaende"
-
-[[variable]]
-native_id = "8.4027.sni2007-3"
-slug = "naringsgren-sni2007-nastforegaende"
-
-[[variable]]
-native_id = "8.4027.sni2007-ag"
-slug = "naringsgren-sni2007-administrativ"
+"8.4027.sni92" = "naringsgren-sni92"
+"8.4027.sni92-2" = "naringsgren-sni92-foregaende"
+"8.4027.sni92-3" = "naringsgren-sni92-nastforegaende"
+"8.4027.sni2002-2" = "naringsgren-sni2002-foregaende"
+"8.4027.sni2002-3" = "naringsgren-sni2002-nastforegaende"
+"8.4027.sni2007" = "naringsgren-sni2007"
+"8.4027.sni2007-2" = "naringsgren-sni2007-foregaende"
+"8.4027.sni2007-3" = "naringsgren-sni2007-nastforegaende"
+"8.4027.sni2007-ag" = "naringsgren-sni2007-administrativ"
 
 # register 97 (hek)
-
-[[variable]]
-native_id = "8.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "8.58"
-slug = "postnromrade"
-
-[[variable]]
-native_id = "8.20686"
-slug = "krockkudde"
+"8.36" = "kommun"
+"8.58" = "postnromrade"
+"8.20686" = "krockkudde"
 
 # register 10
-
-[[variable]]
-native_id = "8.1721.brforbr"
-slug = "bransleforbrukning"
-
-[[variable]]
-native_id = "8.1721.brforbrviktad"
-slug = "bransleforbrukning-viktad"
-
-[[variable]]
-native_id = "8.1975.kaross"
-slug = "karosserikod"
-
-[[variable]]
-native_id = "8.1975.karosserikod1"
-slug = "karosserikod-2"
-
-[[variable]]
-native_id = "8.2187.agkat"
-slug = "agarkategori"
-
-[[variable]]
-native_id = "8.3005.inst"
-slug = "institutionell-kod"
-
-[[variable]]
-native_id = "8.3265.datfreg"
-slug = "datumreg"
+"8.1721.brforbr" = "bransleforbrukning"
+"8.1721.brforbrviktad" = "bransleforbrukning-viktad"
+"8.1975.kaross" = "karosserikod"
+"8.1975.karosserikod1" = "karosserikod-2"
+"8.2187.agkat" = "agarkategori"
+"8.3005.inst" = "institutionell-kod"
+"8.3265.datfreg" = "datumreg"
+"8.1721.literal-brforbr2-f9ba07ca" = { slug = "bransleforbrukning-literal-brforbr2-f9ba07ca", deprecated = false }
+"8.1721.literal-brforbr3" = { slug = "bransleforbrukning-literal-brforbr3", deprecated = false }
+"8.1721.literal-brforbr2-13fe0298" = { slug = "bransleforbrukning-literal-brforbr2-13fe0298", deprecated = false }
+"8.1975.literal-karosserikod2" = { slug = "karosserikod-literal-karosserikod2", deprecated = false }
+"8.1975.literal-kaross2" = { slug = "karosserikod-literal-kaross2", deprecated = false }
+"8.2187.literal-agkat-2-85fd0653" = { slug = "agarkategori-literal-agkat-2-85fd0653", deprecated = false }
+"8.2187.agkat-ag" = { slug = "agkat-ag", deprecated = false }
+"8.2187.literal-agkat-3-6bb1c8ef" = { slug = "agarkategori-literal-agkat-3-6bb1c8ef", deprecated = false }
+"8.2187.literal-agkat-2-1853b578" = { slug = "agarkategori-literal-agkat-2-1853b578", deprecated = false }
+"8.2187.literal-agkat-3-10f23b3f" = { slug = "agarkategori-literal-agkat-3-10f23b3f", deprecated = false }
+"8.2969.native-main" = { slug = "agnr", deprecated = false }
+"8.2969.literal-agnr-2-d214e07e" = { slug = "agarnummer-literal-agnr-2-d214e07e", deprecated = false }
+"8.2969.literal-agnr-3-f941dde3" = { slug = "agarnummer-literal-agnr-3-f941dde3", deprecated = false }
+"8.2969.literal-agnr-fb232daf" = { slug = "agarnummer-literal-agnr-fb232daf", deprecated = false }
+"8.2969.literal-agnr-2-a94b2e58" = { slug = "agarnummer-literal-agnr-2-a94b2e58", deprecated = false }
+"8.2969.literal-agnr-3-7a7a57e3" = { slug = "agarnummer-literal-agnr-3-7a7a57e3", deprecated = false }
+"8.2969.literal-agnr-old" = { slug = "agarnummer-literal-agnr-old", deprecated = false }
+"8.3005.literal-inst-2" = { slug = "institutionell-kod-literal-inst-2", deprecated = false }
+"8.3005.literal-inst-3" = { slug = "institutionell-kod-literal-inst-3", deprecated = false }
+"8.3005.inst-ag" = { slug = "inst-ag", deprecated = false }
+"8.3011.datovl1" = { slug = "datovl", deprecated = false }
+"8.3011.literal-datovl-2-472a8fd9" = { slug = "datum-for-agarbyte-literal-datovl-2-472a8fd9", deprecated = false }
+"8.3011.literal-datovl-3-390ccf41" = { slug = "datum-for-agarbyte-literal-datovl-3-390ccf41", deprecated = false }
+"8.3011.datovlagare" = { slug = "datovlagare", deprecated = false }
+"8.3011.literal-datovl-2-0526387e" = { slug = "datum-for-agarbyte-literal-datovl-2-0526387e", deprecated = false }
+"8.3011.literal-datovl-3-555f4358" = { slug = "datum-for-agarbyte-literal-datovl-3-555f4358", deprecated = false }
+"8.3044.fysjur" = { slug = "fysjur", deprecated = false }
+"8.3044.literal-fysjur-2-5ab8a047" = { slug = "fysisk-juridisk-agare-literal-fysjur-2-5ab8a047", deprecated = false }
+"8.3044.fysjur-ag" = { slug = "fysjur-ag", deprecated = false }
+"8.3044.literal-fysjur-3-ae3bade8" = { slug = "fysisk-juridisk-agare-literal-fysjur-3-ae3bade8", deprecated = false }
+"8.3044.literal-fysjur-2-241b48ca" = { slug = "fysisk-juridisk-agare-literal-fysjur-2-241b48ca", deprecated = false }
+"8.3044.literal-fysjur-3-1f287314" = { slug = "fysisk-juridisk-agare-literal-fysjur-3-1f287314", deprecated = false }
+"8.20695.native-main" = { slug = "buller", deprecated = false }
+"8.20695.literal-buller2" = { slug = "fordonets-bullerniva-literal-buller2", deprecated = false }
+"8.20695.literal-buller3" = { slug = "fordonets-bullerniva-literal-buller3", deprecated = false }
+"8.25764.literal-effektenh2" = { slug = "effektnorm-literal-effektenh2", deprecated = false }
+"8.25764.literal-effektenh3" = { slug = "effektnorm-literal-effektenh3", deprecated = false }
+"8.25764.effektenh" = { slug = "effektenh", deprecated = false }
+"8.37297.native-main" = { slug = "brforblwltpdriv", deprecated = false }
+"8.37297.literal-brforblwltpdriv2" = { slug = "bransleforbrukning-wltp-literal-brforblwltpdriv2", deprecated = false }
+"8.37297.literal-brforblwltpdriv3" = { slug = "bransleforbrukning-wltp-literal-brforblwltpdriv3", deprecated = false }
+"8.37298.native-main" = { slug = "brforvikblwltpdriv", deprecated = false }
+"8.37298.literal-brforvikblwltpdriv2" = { slug = "bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv2", deprecated = false }
+"8.37298.literal-brforvikblwltpdriv3" = { slug = "bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv3", deprecated = false }
+"8.37311.native-main" = { slug = "co2blwltpdriv", deprecated = false }
+"8.37311.literal-co2blwltpdriv2" = { slug = "koldioxidutslapp-wltp-literal-co2blwltpdriv2", deprecated = false }
+"8.37311.literal-co2blwltpdriv3" = { slug = "koldioxidutslapp-wltp-literal-co2blwltpdriv3", deprecated = false }
+"8.37314.native-main" = { slug = "co2landnedcdriv", deprecated = false }
+"8.37314.literal-co2landnedcdriv2" = { slug = "koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv2", deprecated = false }
+"8.37314.literal-co2landnedcdriv3" = { slug = "koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv3", deprecated = false }
+"8.37315.native-main" = { slug = "co2stadnedcdriv", deprecated = false }
+"8.37315.literal-co2stadnedcdriv2" = { slug = "koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv2", deprecated = false }
+"8.37315.literal-co2stadnedcdriv3" = { slug = "koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv3", deprecated = false }
+"8.37334.co2varde1" = { slug = "co2varde", deprecated = false }
+"8.37334.literal-co2varde2" = { slug = "koldioxidutslapp-literal-co2varde2", deprecated = false }
+"8.37334.co2vardeviktad" = { slug = "co2vardeviktad", deprecated = false }
+"8.37334.literal-co2varde3" = { slug = "koldioxidutslapp-literal-co2varde3", deprecated = false }
+"8.37335.native-main" = { slug = "co2vikblwltpdriv", deprecated = false }
+"8.37335.literal-co2vikblwltpdriv2" = { slug = "koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv2", deprecated = false }
+"8.37335.literal-co2vikblwltpdriv3" = { slug = "koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv3", deprecated = false }
+"8.37378.literal-drivm2-b9a8650b" = { slug = "drivmedel-literal-drivm2-b9a8650b", deprecated = false }
+"8.37378.literal-drivm3" = { slug = "drivmedel-literal-drivm3", deprecated = false }
+"8.37378.drivm1" = { slug = "drivm", deprecated = false }
+"8.37378.literal-drivm2-58124c1f" = { slug = "drivmedel-literal-drivm2-58124c1f", deprecated = false }
+"8.37380.native-main" = { slug = "effekt", deprecated = false }
+"8.37380.literal-effekt1" = { slug = "motorstyrka-literal-effekt1", deprecated = false }
+"8.37380.literal-effekt2" = { slug = "motorstyrka-literal-effekt2", deprecated = false }
+"8.37380.literal-effekt3" = { slug = "motorstyrka-literal-effekt3", deprecated = false }
+"8.37380.literal-effekt-62140c64" = { slug = "motorstyrka-literal-effekt-62140c64", deprecated = false }
+"8.37391.native-main" = { slug = "energik-wltp-driv", deprecated = false }
+"8.37391.literal-energik-wltp-driv2" = { slug = "elenergiforbrukning-wltp-literal-energik-wltp-driv2", deprecated = false }
+"8.37392.native-main" = { slug = "energik-vikt-wltp-driv", deprecated = false }
+"8.37392.literal-energik-vikt-wltp-driv2" = { slug = "elenergiforbrukning-wltp-viktad-literal-energik-vikt-wltp-driv2", deprecated = false }
+"8.37868.nox4drivm1" = { slug = "nox4drivm", deprecated = false }
+"8.37868.literal-nox4drivm2" = { slug = "kvaveoxidutslapp-literal-nox4drivm2", deprecated = false }
+"8.37868.noxdrivm1" = { slug = "noxdrivm", deprecated = false }
+"8.37868.literal-noxdrivm2" = { slug = "kvaveoxidutslapp-literal-noxdrivm2", deprecated = false }
+"8.37897.native-main" = { slug = "noxhcdrivm", deprecated = false }
+"8.37897.literal-noxhcdrivm2" = { slug = "kvaveoxid-och-kolvateutslapp-literal-noxhcdrivm2", deprecated = false }
+"8.37898.native-main" = { slug = "noxwltpdriv", deprecated = false }
+"8.37898.literal-noxwltpdriv2" = { slug = "kvaveoxidutslapp-wltp-literal-noxwltpdriv2", deprecated = false }
+"8.37898.literal-noxwltpdriv3" = { slug = "kvaveoxidutslapp-wltp-literal-noxwltpdriv3", deprecated = false }
+"8.37899.partvarde1" = { slug = "partvarde", deprecated = false }
+"8.37899.literal-partvarde2" = { slug = "partikelvarde-literal-partvarde2", deprecated = false }
+"8.37899.literal-partvarde3" = { slug = "partikelvarde-literal-partvarde3", deprecated = false }
+"8.37899.part4drivm1" = { slug = "part4drivm", deprecated = false }
+"8.37899.literal-part4drivm2" = { slug = "partikelvarde-literal-part4drivm2", deprecated = false }
+"8.37899.partvardeenhdrivm3" = { slug = "partvardeenhdrivm3", deprecated = false }
+"8.37901.native-main" = { slug = "rackvidd-wltp-driv", deprecated = false }
+"8.37901.literal-rackvidd-wltp-driv2" = { slug = "rackvidd-wltp-literal-rackvidd-wltp-driv2", deprecated = false }
+"8.37904.native-main" = { slug = "tankvol", deprecated = false }
+"8.37904.literal-tankvol2" = { slug = "tankvolym-literal-tankvol2", deprecated = false }
+"8.37904.literal-tankvol3" = { slug = "tankvolym-literal-tankvol3", deprecated = false }
 
 # register 86
 
@@ -571,471 +530,6 @@ valid_to = "2012-12-31"
 expected_evidence_sha256 = "1889bebb62a82ed3d3b721b92a8cf2df31339d33542a22dd450487cf197da5f8"
 reason = "The supplied snapshot occurrence lacks any bound response list. Other years have lists, but the inputs do not establish this exact stored domain; no ordinary neighboring-year domain continuity is assumed. Retain the original metadata and all known coding elsewhere, leaving this exact value set unavailable."
 evidence = "Complete998-original Fordons four-family source/coding audit against accepted prepared cdd343ba8a61e6d2e44a2f057ae6677e579db32d and exact source code bindings; full-original and bound-coding digest guard. Batch48-Fordons82-source-proof.json."
-
-[[variable]]
-native_id = "8.1721.literal-brforbr2-f9ba07ca"
-slug = "bransleforbrukning-literal-brforbr2-f9ba07ca"
-deprecated = false
-
-[[variable]]
-native_id = "8.1721.literal-brforbr3"
-slug = "bransleforbrukning-literal-brforbr3"
-deprecated = false
-
-[[variable]]
-native_id = "8.1721.literal-brforbr2-13fe0298"
-slug = "bransleforbrukning-literal-brforbr2-13fe0298"
-deprecated = false
-
-[[variable]]
-native_id = "8.1975.literal-karosserikod2"
-slug = "karosserikod-literal-karosserikod2"
-deprecated = false
-
-[[variable]]
-native_id = "8.1975.literal-kaross2"
-slug = "karosserikod-literal-kaross2"
-deprecated = false
-
-[[variable]]
-native_id = "8.2187.literal-agkat-2-85fd0653"
-slug = "agarkategori-literal-agkat-2-85fd0653"
-deprecated = false
-
-[[variable]]
-native_id = "8.2187.agkat-ag"
-slug = "agkat-ag"
-deprecated = false
-
-[[variable]]
-native_id = "8.2187.literal-agkat-3-6bb1c8ef"
-slug = "agarkategori-literal-agkat-3-6bb1c8ef"
-deprecated = false
-
-[[variable]]
-native_id = "8.2187.literal-agkat-2-1853b578"
-slug = "agarkategori-literal-agkat-2-1853b578"
-deprecated = false
-
-[[variable]]
-native_id = "8.2187.literal-agkat-3-10f23b3f"
-slug = "agarkategori-literal-agkat-3-10f23b3f"
-deprecated = false
-
-[[variable]]
-native_id = "8.2969.native-main"
-slug = "agnr"
-deprecated = false
-
-[[variable]]
-native_id = "8.2969.literal-agnr-2-d214e07e"
-slug = "agarnummer-literal-agnr-2-d214e07e"
-deprecated = false
-
-[[variable]]
-native_id = "8.2969.literal-agnr-3-f941dde3"
-slug = "agarnummer-literal-agnr-3-f941dde3"
-deprecated = false
-
-[[variable]]
-native_id = "8.2969.literal-agnr-fb232daf"
-slug = "agarnummer-literal-agnr-fb232daf"
-deprecated = false
-
-[[variable]]
-native_id = "8.2969.literal-agnr-2-a94b2e58"
-slug = "agarnummer-literal-agnr-2-a94b2e58"
-deprecated = false
-
-[[variable]]
-native_id = "8.2969.literal-agnr-3-7a7a57e3"
-slug = "agarnummer-literal-agnr-3-7a7a57e3"
-deprecated = false
-
-[[variable]]
-native_id = "8.2969.literal-agnr-old"
-slug = "agarnummer-literal-agnr-old"
-deprecated = false
-
-[[variable]]
-native_id = "8.3005.literal-inst-2"
-slug = "institutionell-kod-literal-inst-2"
-deprecated = false
-
-[[variable]]
-native_id = "8.3005.literal-inst-3"
-slug = "institutionell-kod-literal-inst-3"
-deprecated = false
-
-[[variable]]
-native_id = "8.3005.inst-ag"
-slug = "inst-ag"
-deprecated = false
-
-[[variable]]
-native_id = "8.3011.datovl1"
-slug = "datovl"
-deprecated = false
-
-[[variable]]
-native_id = "8.3011.literal-datovl-2-472a8fd9"
-slug = "datum-for-agarbyte-literal-datovl-2-472a8fd9"
-deprecated = false
-
-[[variable]]
-native_id = "8.3011.literal-datovl-3-390ccf41"
-slug = "datum-for-agarbyte-literal-datovl-3-390ccf41"
-deprecated = false
-
-[[variable]]
-native_id = "8.3011.datovlagare"
-slug = "datovlagare"
-deprecated = false
-
-[[variable]]
-native_id = "8.3011.literal-datovl-2-0526387e"
-slug = "datum-for-agarbyte-literal-datovl-2-0526387e"
-deprecated = false
-
-[[variable]]
-native_id = "8.3011.literal-datovl-3-555f4358"
-slug = "datum-for-agarbyte-literal-datovl-3-555f4358"
-deprecated = false
-
-[[variable]]
-native_id = "8.3044.fysjur"
-slug = "fysjur"
-deprecated = false
-
-[[variable]]
-native_id = "8.3044.literal-fysjur-2-5ab8a047"
-slug = "fysisk-juridisk-agare-literal-fysjur-2-5ab8a047"
-deprecated = false
-
-[[variable]]
-native_id = "8.3044.fysjur-ag"
-slug = "fysjur-ag"
-deprecated = false
-
-[[variable]]
-native_id = "8.3044.literal-fysjur-3-ae3bade8"
-slug = "fysisk-juridisk-agare-literal-fysjur-3-ae3bade8"
-deprecated = false
-
-[[variable]]
-native_id = "8.3044.literal-fysjur-2-241b48ca"
-slug = "fysisk-juridisk-agare-literal-fysjur-2-241b48ca"
-deprecated = false
-
-[[variable]]
-native_id = "8.3044.literal-fysjur-3-1f287314"
-slug = "fysisk-juridisk-agare-literal-fysjur-3-1f287314"
-deprecated = false
-
-[[variable]]
-native_id = "8.20695.native-main"
-slug = "buller"
-deprecated = false
-
-[[variable]]
-native_id = "8.20695.literal-buller2"
-slug = "fordonets-bullerniva-literal-buller2"
-deprecated = false
-
-[[variable]]
-native_id = "8.20695.literal-buller3"
-slug = "fordonets-bullerniva-literal-buller3"
-deprecated = false
-
-[[variable]]
-native_id = "8.25764.literal-effektenh2"
-slug = "effektnorm-literal-effektenh2"
-deprecated = false
-
-[[variable]]
-native_id = "8.25764.literal-effektenh3"
-slug = "effektnorm-literal-effektenh3"
-deprecated = false
-
-[[variable]]
-native_id = "8.25764.effektenh"
-slug = "effektenh"
-deprecated = false
-
-[[variable]]
-native_id = "8.37297.native-main"
-slug = "brforblwltpdriv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37297.literal-brforblwltpdriv2"
-slug = "bransleforbrukning-wltp-literal-brforblwltpdriv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37297.literal-brforblwltpdriv3"
-slug = "bransleforbrukning-wltp-literal-brforblwltpdriv3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37298.native-main"
-slug = "brforvikblwltpdriv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37298.literal-brforvikblwltpdriv2"
-slug = "bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37298.literal-brforvikblwltpdriv3"
-slug = "bransleforbrukning-wltp-viktad-literal-brforvikblwltpdriv3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37311.native-main"
-slug = "co2blwltpdriv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37311.literal-co2blwltpdriv2"
-slug = "koldioxidutslapp-wltp-literal-co2blwltpdriv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37311.literal-co2blwltpdriv3"
-slug = "koldioxidutslapp-wltp-literal-co2blwltpdriv3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37314.native-main"
-slug = "co2landnedcdriv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37314.literal-co2landnedcdriv2"
-slug = "koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37314.literal-co2landnedcdriv3"
-slug = "koldioxidutslapp-landsvag-nedc-literal-co2landnedcdriv3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37315.native-main"
-slug = "co2stadnedcdriv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37315.literal-co2stadnedcdriv2"
-slug = "koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37315.literal-co2stadnedcdriv3"
-slug = "koldioxidutslapp-stad-nedc-literal-co2stadnedcdriv3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37334.co2varde1"
-slug = "co2varde"
-deprecated = false
-
-[[variable]]
-native_id = "8.37334.literal-co2varde2"
-slug = "koldioxidutslapp-literal-co2varde2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37334.co2vardeviktad"
-slug = "co2vardeviktad"
-deprecated = false
-
-[[variable]]
-native_id = "8.37334.literal-co2varde3"
-slug = "koldioxidutslapp-literal-co2varde3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37335.native-main"
-slug = "co2vikblwltpdriv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37335.literal-co2vikblwltpdriv2"
-slug = "koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37335.literal-co2vikblwltpdriv3"
-slug = "koldioxidutslapp-wltp-viktad-literal-co2vikblwltpdriv3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37378.literal-drivm2-b9a8650b"
-slug = "drivmedel-literal-drivm2-b9a8650b"
-deprecated = false
-
-[[variable]]
-native_id = "8.37378.literal-drivm3"
-slug = "drivmedel-literal-drivm3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37378.drivm1"
-slug = "drivm"
-deprecated = false
-
-[[variable]]
-native_id = "8.37378.literal-drivm2-58124c1f"
-slug = "drivmedel-literal-drivm2-58124c1f"
-deprecated = false
-
-[[variable]]
-native_id = "8.37380.native-main"
-slug = "effekt"
-deprecated = false
-
-[[variable]]
-native_id = "8.37380.literal-effekt1"
-slug = "motorstyrka-literal-effekt1"
-deprecated = false
-
-[[variable]]
-native_id = "8.37380.literal-effekt2"
-slug = "motorstyrka-literal-effekt2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37380.literal-effekt3"
-slug = "motorstyrka-literal-effekt3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37380.literal-effekt-62140c64"
-slug = "motorstyrka-literal-effekt-62140c64"
-deprecated = false
-
-[[variable]]
-native_id = "8.37391.native-main"
-slug = "energik-wltp-driv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37391.literal-energik-wltp-driv2"
-slug = "elenergiforbrukning-wltp-literal-energik-wltp-driv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37392.native-main"
-slug = "energik-vikt-wltp-driv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37392.literal-energik-vikt-wltp-driv2"
-slug = "elenergiforbrukning-wltp-viktad-literal-energik-vikt-wltp-driv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37868.nox4drivm1"
-slug = "nox4drivm"
-deprecated = false
-
-[[variable]]
-native_id = "8.37868.literal-nox4drivm2"
-slug = "kvaveoxidutslapp-literal-nox4drivm2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37868.noxdrivm1"
-slug = "noxdrivm"
-deprecated = false
-
-[[variable]]
-native_id = "8.37868.literal-noxdrivm2"
-slug = "kvaveoxidutslapp-literal-noxdrivm2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37897.native-main"
-slug = "noxhcdrivm"
-deprecated = false
-
-[[variable]]
-native_id = "8.37897.literal-noxhcdrivm2"
-slug = "kvaveoxid-och-kolvateutslapp-literal-noxhcdrivm2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37898.native-main"
-slug = "noxwltpdriv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37898.literal-noxwltpdriv2"
-slug = "kvaveoxidutslapp-wltp-literal-noxwltpdriv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37898.literal-noxwltpdriv3"
-slug = "kvaveoxidutslapp-wltp-literal-noxwltpdriv3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37899.partvarde1"
-slug = "partvarde"
-deprecated = false
-
-[[variable]]
-native_id = "8.37899.literal-partvarde2"
-slug = "partikelvarde-literal-partvarde2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37899.literal-partvarde3"
-slug = "partikelvarde-literal-partvarde3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37899.part4drivm1"
-slug = "part4drivm"
-deprecated = false
-
-[[variable]]
-native_id = "8.37899.literal-part4drivm2"
-slug = "partikelvarde-literal-part4drivm2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37899.partvardeenhdrivm3"
-slug = "partvardeenhdrivm3"
-deprecated = false
-
-[[variable]]
-native_id = "8.37901.native-main"
-slug = "rackvidd-wltp-driv"
-deprecated = false
-
-[[variable]]
-native_id = "8.37901.literal-rackvidd-wltp-driv2"
-slug = "rackvidd-wltp-literal-rackvidd-wltp-driv2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37904.native-main"
-slug = "tankvol"
-deprecated = false
-
-[[variable]]
-native_id = "8.37904.literal-tankvol2"
-slug = "tankvolym-literal-tankvol2"
-deprecated = false
-
-[[variable]]
-native_id = "8.37904.literal-tankvol3"
-slug = "tankvolym-literal-tankvol3"
-deprecated = false
 
 [[identity.partition]]
 variable = "8.1721"

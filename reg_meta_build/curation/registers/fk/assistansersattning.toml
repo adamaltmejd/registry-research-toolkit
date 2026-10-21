@@ -56,8 +56,6 @@ panel_entity_key = "lopnr"
 panel_time_key = "beslutsdatum"
 panel_time_grain = "row"
 
+[variable]
 # Bilstöd
-
-[[variable]]
-native_id = "5301353483611203358.Lopnr"
-slug = "lopnr"
+"5301353483611203358.Lopnr" = "lopnr"

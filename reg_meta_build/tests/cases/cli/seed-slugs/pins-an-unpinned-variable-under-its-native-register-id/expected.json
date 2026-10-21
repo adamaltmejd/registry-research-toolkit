@@ -6,12 +6,9 @@
     },
     "curation/registers/scb/sample.auto.toml": {
       "toml": {
-        "variable": [
-          {
-            "native_id": "1.101",
-            "slug": "value"
-          }
-        ]
+        "variable": {
+          "1.101": "value"
+        }
       }
     }
   },

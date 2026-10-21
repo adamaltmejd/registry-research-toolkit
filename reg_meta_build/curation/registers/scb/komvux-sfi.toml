@@ -28,214 +28,70 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Kommunal vuxenutbildning
-
-[[variable]]
-native_id = "248.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "248.49"
-slug = "lan"
-
-[[variable]]
-native_id = "248.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "248.66"
-slug = "utbildningsniva"
-
-[[variable]]
-native_id = "248.73"
-slug = "ar"
-
-[[variable]]
-native_id = "248.104"
-slug = "skolkod"
-
-[[variable]]
-native_id = "248.1396"
-slug = "lasar"
-
-[[variable]]
-native_id = "248.8006"
-slug = "verksamhetsform-skolvasendet"
-
-[[variable]]
-native_id = "248.8557"
-slug = "utbildningsanordnare"
-
-[[variable]]
-native_id = "248.14672"
-slug = "kurs"
-
-[[variable]]
-native_id = "248.14677"
-slug = "antal-timmar-i-praktik"
-
-[[variable]]
-native_id = "248.15724"
-slug = "grund-for-bosattning-grupperad"
-
-[[variable]]
-native_id = "248.17221"
-slug = "provtyp"
-
-[[variable]]
-native_id = "248.28321"
-slug = "antal-veckor-i-praktik"
-
-[[variable]]
-native_id = "248.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "248.29437"
-slug = "provtyp-enligt-skollagen"
-
-[[variable]]
-native_id = "248.32756"
-slug = "nyinskriven-elev"
-
-[[variable]]
-native_id = "248.37468"
-slug = "typ-av-kurs"
-
-[[variable]]
-native_id = "248.48201"
-slug = "nyinskriven"
+"248.57" = "personnr"
+"248.49" = "lan"
+"248.56" = "person-orgnr"
+"248.66" = "utbildningsniva"
+"248.73" = "ar"
+"248.104" = "skolkod"
+"248.1396" = "lasar"
+"248.8006" = "verksamhetsform-skolvasendet"
+"248.8557" = "utbildningsanordnare"
+"248.14672" = "kurs"
+"248.14677" = "antal-timmar-i-praktik"
+"248.15724" = "grund-for-bosattning-grupperad"
+"248.17221" = "provtyp"
+"248.28321" = "antal-veckor-i-praktik"
+"248.29426" = "tidigaste-invandringsdatum"
+"248.29437" = "provtyp-enligt-skollagen"
+"248.32756" = "nyinskriven-elev"
+"248.37468" = "typ-av-kurs"
+"248.48201" = "nyinskriven"
 
 # register 249 (komvux)
-
-[[variable]]
-native_id = "248.14815.skolkommun"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "248.29140.beth"
-slug = "sfi-prov-betyg-hor"
-
-[[variable]]
-native_id = "248.29140.betl"
-slug = "sfi-prov-betyg-las"
-
-[[variable]]
-native_id = "248.29140.bets"
-slug = "sfi-prov-betyg-skrift"
-
-[[variable]]
-native_id = "248.29140.bett"
-slug = "sfi-prov-betyg-tal"
-
-[[variable]]
-native_id = "248.36.skolkommun"
-slug = "skolenhet-kommun"
-
-[[variable]]
-native_id = "248.49446.beth"
-slug = "sfi-prov-poang-hor"
-
-[[variable]]
-native_id = "248.49446.betl"
-slug = "sfi-prov-poang-las"
-
-[[variable]]
-native_id = "248.49446.bets"
-slug = "sfi-prov-poang-skrift"
-
-[[variable]]
-native_id = "248.49446.bett"
-slug = "sfi-prov-poang-tal"
+"248.14815.skolkommun" = "skolkommun"
+"248.29140.beth" = "sfi-prov-betyg-hor"
+"248.29140.betl" = "sfi-prov-betyg-las"
+"248.29140.bets" = "sfi-prov-betyg-skrift"
+"248.29140.bett" = "sfi-prov-betyg-tal"
+"248.36.skolkommun" = "skolenhet-kommun"
+"248.49446.beth" = "sfi-prov-poang-hor"
+"248.49446.betl" = "sfi-prov-poang-las"
+"248.49446.bets" = "sfi-prov-poang-skrift"
+"248.49446.bett" = "sfi-prov-poang-tal"
 
 # register 249 (komvux)
-
-[[variable]]
-native_id = "248.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "248.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "248.254"
-slug = "folkbokforingsdatum"
-
-[[variable]]
-native_id = "248.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "248.1086"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "248.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "248.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "248.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "248.14671"
-slug = "studievag-sfi"
-
-[[variable]]
-native_id = "248.14673"
-slug = "undervisningstimmar-sfi"
-
-[[variable]]
-native_id = "248.14674"
-slug = "orsak-kursavbrott-sfi"
-
-[[variable]]
-native_id = "248.14678"
-slug = "typ-av-invandring"
-
-[[variable]]
-native_id = "248.29141"
-slug = "provversion"
-
-[[variable]]
-native_id = "248.32721"
-slug = "distansundervisning"
-
-[[variable]]
-native_id = "248.39039"
-slug = "personens-namn"
+"248.34" = "juridisk-form"
+"248.241" = "alder-31-12"
+"248.254" = "folkbokforingsdatum"
+"248.517" = "senaste-invandringsar"
+"248.1086" = "namn-juridiska-enheten"
+"248.1378" = "fodelsear"
+"248.1993" = "skolans-identitetsnummer"
+"248.8137" = "huvudman"
+"248.14671" = "studievag-sfi"
+"248.14673" = "undervisningstimmar-sfi"
+"248.14674" = "orsak-kursavbrott-sfi"
+"248.14678" = "typ-av-invandring"
+"248.29141" = "provversion"
+"248.32721" = "distansundervisning"
+"248.39039" = "personens-namn"
 
 # register 249
-
-[[variable]]
-native_id = "248.257.fodelselandnamn"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "248.38417.gyfid"
-slug = "kommunalforbund-id"
-
-[[variable]]
-native_id = "248.38417.gyfnamn"
-slug = "kommunalforbund-namn"
-
-[[variable]]
-native_id = "248.38417.kfid"
-slug = "kommunalforbund-id-2"
-
-[[variable]]
-native_id = "248.38417.kfnamn"
-slug = "kommunalforbund-namn-2"
-
-[[variable]]
-native_id = "248.8534.komgrupp17"
-slug = "kommungrupp-kod"
+"248.257.fodelselandnamn" = "fodelseland-rtb"
+"248.38417.gyfid" = "kommunalforbund-id"
+"248.38417.gyfnamn" = "kommunalforbund-namn"
+"248.38417.kfid" = "kommunalforbund-id-2"
+"248.38417.kfnamn" = "kommunalforbund-namn-2"
+"248.8534.komgrupp17" = "kommungrupp-kod"
+"248.36.arsuppgift-skolrapporterad-senaste" = "hemkommun-arsuppgift-senaste-skolrapport"
+"248.36.arsuppgift-folkbokford-senaste" = "hemkommun-arsuppgift-senaste-folkbokforing"
+"248.36.arsuppgift-bostad-senaste" = "hemkommun-arsuppgift-senaste-bostadsuppgift"
+"248.14675.arsuppgift-senaste-kursstart" = "utbildningsar-hemland-arsuppgift-senaste-kursstart"
+"248.8534.komgrupp23" = "komgrupp23"
+"248.8534.kommungrupp-text" = "kommungrupp-text"
 
 # register 249
 
@@ -686,22 +542,6 @@ evidence = "The same source record defines delivered teaching hours of 60 minute
 noted = "2026-10-01"
 field = "measurement_unit"
 value = "Antal timmar"
-
-[[variable]]
-native_id = "248.36.arsuppgift-skolrapporterad-senaste"
-slug = "hemkommun-arsuppgift-senaste-skolrapport"
-
-[[variable]]
-native_id = "248.36.arsuppgift-folkbokford-senaste"
-slug = "hemkommun-arsuppgift-senaste-folkbokforing"
-
-[[variable]]
-native_id = "248.36.arsuppgift-bostad-senaste"
-slug = "hemkommun-arsuppgift-senaste-bostadsuppgift"
-
-[[variable]]
-native_id = "248.14675.arsuppgift-senaste-kursstart"
-slug = "utbildningsar-hemland-arsuppgift-senaste-kursstart"
 
 [[identity.partition]]
 variable = "248.36"
@@ -1630,11 +1470,3 @@ variable = "248.8534"
 columns = { Komgrupp17 = "248.8534.komgrupp17", Komgrupp23 = "248.8534.komgrupp23", Kommungrupp_text = "248.8534.kommungrupp-text", komgrupp17 = "248.8534.komgrupp17" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "5a499969e3bd6073e0c0c2a7e993267f5dcf2b71363e8285bf698027d7cba821"
-
-[[variable]]
-native_id = "248.8534.komgrupp23"
-slug = "komgrupp23"
-
-[[variable]]
-native_id = "248.8534.kommungrupp-text"
-slug = "kommungrupp-text"

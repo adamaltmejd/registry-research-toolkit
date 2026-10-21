@@ -20,47 +20,22 @@ panel_entity_key = "seqrpt"
 panel_time_key = "initreceivedate"
 panel_time_grain = "row"
 
-
-
-
-[[variable]]
-native_id = "7228002101699435108.SeqRpt"
-slug = "seqrpt"
+[variable]
+"7228002101699435108.SeqRpt" = "seqrpt"
 
 # === BEGIN #760 non-SCB concept-slug curation (generated) ===
 # 7 curated overrides: cryptic delivery-column slugs replaced
 # with canonical Swedish-prose slugs derived from the variable name, plus
 # cross-register/cross-provider concept consistency and person/org identifier
 # alignment to the SCB locked forms (#760). Keyed by source_id.
-
 # register 7228002101699435108
+"7228002101699435108.DateOfBirth" = "fodelsedatum"
+"7228002101699435108.Hlgt" = "meddra-hlgt"
+"7228002101699435108.Hlt" = "meddra-hlt"
+"7228002101699435108.IdNumber" = "lopnr-personnr"
+"7228002101699435108.Pt" = "meddra-pt"
+"7228002101699435108.Soc" = "meddra-soc"
+"7228002101699435108.atc4pos" = "atc-kod-4-pos"
 
-[[variable]]
-native_id = "7228002101699435108.DateOfBirth"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "7228002101699435108.Hlgt"
-slug = "meddra-hlgt"
-
-[[variable]]
-native_id = "7228002101699435108.Hlt"
-slug = "meddra-hlt"
-
-[[variable]]
-native_id = "7228002101699435108.IdNumber"
-slug = "lopnr-personnr"
-
-[[variable]]
-native_id = "7228002101699435108.Pt"
-slug = "meddra-pt"
-
-[[variable]]
-native_id = "7228002101699435108.Soc"
-slug = "meddra-soc"
-
-[[variable]]
-native_id = "7228002101699435108.atc4pos"
-slug = "atc-kod-4-pos"
 
 # === END #760 non-SCB concept-slug curation ===

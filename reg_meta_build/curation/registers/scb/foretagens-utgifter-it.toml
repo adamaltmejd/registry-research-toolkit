@@ -11,82 +11,28 @@ panel_entity_key = "orgnr-12"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Gymnasieskola: sökande och antagna
-
-[[variable]]
-native_id = "259.3578"
-slug = "orgnr-12"
-
-
-[[variable]]
-native_id = "259.98"
-slug = "referensar"
-
-[[variable]]
-native_id = "259.1557"
-slug = "kalenderar"
-
-[[variable]]
-native_id = "259.2014"
-slug = "foretagsnamn"
-
-[[variable]]
-native_id = "259.3575"
-slug = "foretagets-namn"
-
-[[variable]]
-native_id = "259.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "259.14832"
-slug = "finansiell-leasing"
-
-[[variable]]
-native_id = "259.19052"
-slug = "naringsgren-for-statistiken"
-
-[[variable]]
-native_id = "259.21895"
-slug = "datautrustning-utg"
-
-[[variable]]
-native_id = "259.21897"
-slug = "teleutrustning-utg"
-
-[[variable]]
-native_id = "259.21899"
-slug = "mjukvara-utg"
-
-[[variable]]
-native_id = "259.21900"
-slug = "mjukvara-invest"
-
-[[variable]]
-native_id = "259.45974"
-slug = "mjukvara-inkop-invest"
+"259.3578" = "orgnr-12"
+"259.98" = "referensar"
+"259.1557" = "kalenderar"
+"259.2014" = "foretagsnamn"
+"259.3575" = "foretagets-namn"
+"259.4027" = "naringsgren"
+"259.14832" = "finansiell-leasing"
+"259.19052" = "naringsgren-for-statistiken"
+"259.21895" = "datautrustning-utg"
+"259.21897" = "teleutrustning-utg"
+"259.21899" = "mjukvara-utg"
+"259.21900" = "mjukvara-invest"
+"259.45974" = "mjukvara-inkop-invest"
 
 # register 260 (gymnasieskola-sokande)
-
-[[variable]]
-native_id = "259.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "259.87"
-slug = "foradlingsvarde"
-
-[[variable]]
-native_id = "259.4038"
-slug = "antal-anstallda-enligt-fdb"
-
-[[variable]]
-native_id = "259.6212"
-slug = "vikt-ht"
-
-[[variable]]
-native_id = "259.17642"
-slug = "arsverken-programvaruutv-ovriga"
+"259.56" = "person-orgnr"
+"259.87" = "foradlingsvarde"
+"259.4038" = "antal-anstallda-enligt-fdb"
+"259.6212" = "vikt-ht"
+"259.17642" = "arsverken-programvaruutv-ovriga"
 
 # register 260
 

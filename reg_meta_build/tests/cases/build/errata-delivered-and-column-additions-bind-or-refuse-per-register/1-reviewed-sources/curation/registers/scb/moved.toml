@@ -8,15 +8,11 @@ slug = "people"
 [[variant]]
 native_id = "12.122.stock"
 slug = "stock"
-[[variable]]
-native_id = "12.5"
-slug = "v5"
-[[variable]]
-native_id = "12.6"
-slug = "v6"
-[[variable]]
-native_id = "12.NewCol"
-slug = "new-col"
+
+[variable]
+"12.5" = "v5"
+"12.6" = "v6"
+"12.NewCol" = "new-col"
 
 [[identity.edition_split]]
 variant = "12.122"

@@ -17,6 +17,5 @@ source = "steward-holdings"
 evidence = "held"
 noted = "2026-10-18"
 
-[[variable]]
-native_id = "2.DIA"
-slug = "dia"
+[variable]
+"2.DIA" = "dia"

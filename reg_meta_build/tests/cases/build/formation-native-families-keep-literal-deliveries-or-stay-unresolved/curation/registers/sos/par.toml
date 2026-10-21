@@ -6,12 +6,8 @@ native_id = "5891427617861710725"
 [[variant]]
 native_id = "5891427617861710725.5623677195158740599"
 slug = "par-ov"
-[[variable]]
-native_id = "5891427617861710725.OPEN"
-slug = "open"
-[[variable]]
-native_id = "5891427617861710725.SPLIT"
-slug = "split"
-[[variable]]
-native_id = "5891427617861710725.OPENRUN"
-slug = "openrun"
+
+[variable]
+"5891427617861710725.OPEN" = "open"
+"5891427617861710725.SPLIT" = "split"
+"5891427617861710725.OPENRUN" = "openrun"

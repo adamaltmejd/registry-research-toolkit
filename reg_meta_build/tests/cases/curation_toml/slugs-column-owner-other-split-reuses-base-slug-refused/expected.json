@@ -5,7 +5,7 @@
   "note": "The family declares a column owner, but another split: only the declared owner may keep the base slug.",
   "error": {
     "code": "slug_toml_invalid",
-    "locator": "curation/registers/scb/lisa.toml [[variable]] entry 2",
+    "locator": "curation/registers/scb/lisa.toml [variable].\"34.4.kon\"",
     "message_contains": [
       "reused"
     ]

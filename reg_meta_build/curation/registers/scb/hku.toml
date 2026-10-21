@@ -11,36 +11,15 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Konkurser och offentliga ackord
-
-[[variable]]
-native_id = "166.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "166.43"
-slug = "kvartal"
-
-[[variable]]
-native_id = "166.466"
-slug = "upprakningstal"
-
-[[variable]]
-native_id = "166.814"
-slug = "faxnummer"
-
-[[variable]]
-native_id = "166.2846"
-slug = "lopnummer-urvalsenheter"
-
-[[variable]]
-native_id = "166.2974"
-slug = "epost-uppgiftslamnare"
-
-[[variable]]
-native_id = "166.3575"
-slug = "foretagets-namn"
+"166.56" = "person-orgnr"
+"166.43" = "kvartal"
+"166.466" = "upprakningstal"
+"166.814" = "faxnummer"
+"166.2846" = "lopnummer-urvalsenheter"
+"166.2974" = "epost-uppgiftslamnare"
+"166.3575" = "foretagets-namn"
 
 # register 167
 

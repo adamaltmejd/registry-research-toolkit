@@ -5,9 +5,10 @@ native_id = "6"
 [[variant]]
 native_id = "6.10"
 slug = "people"
-[[variable]]
-native_id = "6.6"
-slug = "income"
+
+[variable]
+"6.6" = "income"
+
 [[representation.delivery_metadata]]
 variable = "6.6"
 fields = ["name"]

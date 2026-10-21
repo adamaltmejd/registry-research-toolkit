@@ -153,142 +153,46 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Gymnasieskola: nationella prov
-
-[[variable]]
-native_id = "340.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "340.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "340.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "340.36"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "340.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "340.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "340.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "340.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "340.1557"
-slug = "kalenderar"
-
-[[variable]]
-native_id = "340.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "340.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "340.3599"
-slug = "betyg-bild"
-
-[[variable]]
-native_id = "340.3619"
-slug = "blockbetyg-no-amnen"
-
-[[variable]]
-native_id = "340.3620"
-slug = "betyg-religion"
-
-[[variable]]
-native_id = "340.3621"
-slug = "betyg-samhallskunskap"
-
-[[variable]]
-native_id = "340.3622"
-slug = "betyg-slojd"
-
-[[variable]]
-native_id = "340.3624"
-slug = "blockbetyg-so-amnen"
-
-[[variable]]
-native_id = "340.3625"
-slug = "betyg-svenska"
-
-[[variable]]
-native_id = "340.3627"
-slug = "betyg-teknik"
-
-[[variable]]
-native_id = "340.3629"
-slug = "betyg-teckensprak"
-
-[[variable]]
-native_id = "340.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "340.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "340.23867"
-slug = "klassbeteckning"
-
-[[variable]]
-native_id = "340.25186"
-slug = "moderna-sprak-elevens-val-sprak"
-
-[[variable]]
-native_id = "340.25187"
-slug = "moderna-sprak-sprakval-sprak"
-
-[[variable]]
-native_id = "340.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "340.39019"
-slug = "nyinvandring"
+"340.57" = "personnr"
+"340.56" = "person-orgnr"
+"340.34" = "juridisk-form"
+"340.36" = "skolkommun"
+"340.305" = "fodelseland-mor"
+"340.323" = "personnr-far"
+"340.324" = "personnr-mor"
+"340.332" = "senaste-invandringsdatum"
+"340.1557" = "kalenderar"
+"340.1993" = "skolans-identitetsnummer"
+"340.1996" = "skolform"
+"340.3599" = "betyg-bild"
+"340.3619" = "blockbetyg-no-amnen"
+"340.3620" = "betyg-religion"
+"340.3621" = "betyg-samhallskunskap"
+"340.3622" = "betyg-slojd"
+"340.3624" = "blockbetyg-so-amnen"
+"340.3625" = "betyg-svenska"
+"340.3627" = "betyg-teknik"
+"340.3629" = "betyg-teckensprak"
+"340.6809" = "folkbokforingskommun"
+"340.8137" = "huvudman"
+"340.23867" = "klassbeteckning"
+"340.25186" = "moderna-sprak-elevens-val-sprak"
+"340.25187" = "moderna-sprak-sprakval-sprak"
+"340.29426" = "tidigaste-invandringsdatum"
+"340.39019" = "nyinvandring"
 
 # register 342
-
-[[variable]]
-native_id = "340.3594.antalf"
-slug = "antal-amnen-ej-natt"
-
-[[variable]]
-native_id = "340.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "340.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "340.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "340.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "340.8073.sunniva-mor-omkodad"
-slug = "sun-niva-mor-omkodad"
+"340.3594.antalf" = "antal-amnen-ej-natt"
+"340.8073.sun2000niva-mor" = "sun-niva-mor"
+"340.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"340.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"340.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"340.8073.sunniva-mor-omkodad" = "sun-niva-mor-omkodad"
+"340.67.utlbakgr" = "utlbakgr"
+"340.67.utlbakgr2" = "utlbakgr2"
+"340.67.utlsvbakg" = "utlsvbakg"
 
 # register 342
 
@@ -298,15 +202,3 @@ variable = "340.67"
 columns = { UtlBakGr = "340.67.utlbakgr", UtlBakGr2 = "340.67.utlbakgr2", UtlSvBakg = "340.67.utlsvbakg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "13536c0ae70296840d1ea463ac8fbb2873d188494732fec9afafc0c61934cd7d"
-
-[[variable]]
-native_id = "340.67.utlbakgr"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "340.67.utlbakgr2"
-slug = "utlbakgr2"
-
-[[variable]]
-native_id = "340.67.utlsvbakg"
-slug = "utlsvbakg"

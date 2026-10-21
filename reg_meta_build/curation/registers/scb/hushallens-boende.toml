@@ -23,79 +23,26 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Historiska befolkningsregistret (HBR)
+"346.57" = "personnr"
+"346.15" = "civilstand"
+"346.26" = "fastighetsbeteckning"
+"346.241" = "alder-31-12"
+"346.254" = "folkbokforingsdatum"
+"346.257" = "fodelseland-rtb"
+"346.271" = "medborgarskapsland"
+"346.388" = "antal-barn"
+"346.389" = "antal-barn-under-18-ar"
+"346.391" = "antal-barn-under-6-ar"
+"346.2299" = "lagenhetstyp"
+"346.3730" = "fastighetens-identitetsnummer"
+"346.29339" = "hushallstyp-bostadshushall"
+"346.29828" = "lagenhetsnyckel"
+"346.29832" = "lopnummer-bostadshushall"
+"346.30120" = "bostadskategori"
+"346.30353" = "familjeidentitet"
+"346.30770" = "agarkategori-bostad"
 
-[[variable]]
-native_id = "346.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "346.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "346.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "346.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "346.254"
-slug = "folkbokforingsdatum"
-
-[[variable]]
-native_id = "346.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "346.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "346.388"
-slug = "antal-barn"
-
-[[variable]]
-native_id = "346.389"
-slug = "antal-barn-under-18-ar"
-
-[[variable]]
-native_id = "346.391"
-slug = "antal-barn-under-6-ar"
-
-[[variable]]
-native_id = "346.2299"
-slug = "lagenhetstyp"
-
-[[variable]]
-native_id = "346.3730"
-slug = "fastighetens-identitetsnummer"
-
-[[variable]]
-native_id = "346.29339"
-slug = "hushallstyp-bostadshushall"
-
-[[variable]]
-native_id = "346.29828"
-slug = "lagenhetsnyckel"
-
-[[variable]]
-native_id = "346.29832"
-slug = "lopnummer-bostadshushall"
-
-[[variable]]
-native_id = "346.30120"
-slug = "bostadskategori"
-
-[[variable]]
-native_id = "346.30353"
-slug = "familjeidentitet"
-
-[[variable]]
-native_id = "346.30770"
-slug = "agarkategori-bostad"
 
 # register 348

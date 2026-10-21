@@ -20,126 +20,47 @@ panel_entity_key = "fastighetsbeteckning"
 panel_time_key = "datum-for-bygglovets-beslut"
 panel_time_grain = "row"
 
+[variable]
 # Byggnadsprisindex (BPI)
-
-[[variable]]
-native_id = "76.26"
-slug = "fastighetsbeteckning"
-
-
-[[variable]]
-native_id = "76.4472"
-slug = "upplatelseform"
-
-[[variable]]
-native_id = "76.5113"
-slug = "byggherre"
-
-[[variable]]
-native_id = "76.17046"
-slug = "antal-lagenheter-totalt"
-
-[[variable]]
-native_id = "76.17232"
-slug = "byggherrekategori"
-
-[[variable]]
-native_id = "76.17235"
-slug = "fardigstallandear-manad"
-
-[[variable]]
-native_id = "76.17236"
-slug = "paborjandear-manad"
-
-[[variable]]
-native_id = "76.17240"
-slug = "fardigstallandear-manad-justerad"
-
-[[variable]]
-native_id = "76.17371"
-slug = "bruttoarea-bostader"
-
-[[variable]]
-native_id = "76.17372"
-slug = "bruttoarea-lokaler"
-
-[[variable]]
-native_id = "76.17373"
-slug = "bruttoarea-totalt"
-
-[[variable]]
-native_id = "76.17374"
-slug = "datum-for-inkommen-bygganmalan"
-
-[[variable]]
-native_id = "76.17375"
-slug = "datum-for-bygglovets-beslut"
-
-[[variable]]
-native_id = "76.17376"
-slug = "datum-for-byggnationens-paborjan"
-
-[[variable]]
-native_id = "76.17377"
-slug = "datum-for-bygglovets-rapportering"
-
-[[variable]]
-native_id = "76.17378"
-slug = "byggherrens-adress"
-
-[[variable]]
-native_id = "76.17380"
-slug = "byggherrens-postnummer"
-
-[[variable]]
-native_id = "76.17381"
-slug = "fastighetens-adress"
-
-[[variable]]
-native_id = "76.17383"
-slug = "gruppbebyggelse"
-
-[[variable]]
-native_id = "76.17385"
-slug = "huvudsaklig-byggnadstyp"
-
-[[variable]]
-native_id = "76.17411"
-slug = "bostadsarea"
+"76.26" = "fastighetsbeteckning"
+"76.4472" = "upplatelseform"
+"76.5113" = "byggherre"
+"76.17046" = "antal-lagenheter-totalt"
+"76.17232" = "byggherrekategori"
+"76.17235" = "fardigstallandear-manad"
+"76.17236" = "paborjandear-manad"
+"76.17240" = "fardigstallandear-manad-justerad"
+"76.17371" = "bruttoarea-bostader"
+"76.17372" = "bruttoarea-lokaler"
+"76.17373" = "bruttoarea-totalt"
+"76.17374" = "datum-for-inkommen-bygganmalan"
+"76.17375" = "datum-for-bygglovets-beslut"
+"76.17376" = "datum-for-byggnationens-paborjan"
+"76.17377" = "datum-for-bygglovets-rapportering"
+"76.17378" = "byggherrens-adress"
+"76.17380" = "byggherrens-postnummer"
+"76.17381" = "fastighetens-adress"
+"76.17383" = "gruppbebyggelse"
+"76.17385" = "huvudsaklig-byggnadstyp"
+"76.17411" = "bostadsarea"
 
 # register 86 (hut)
-
-[[variable]]
-native_id = "76.1724"
-slug = "e-postadress-kontaktperson"
-
-[[variable]]
-native_id = "76.1804"
-slug = "telefonnummer-2"
-
-[[variable]]
-native_id = "76.2877"
-slug = "antal-fritidshus"
-
-[[variable]]
-native_id = "76.3735"
-slug = "fastighetspostnr"
-
-[[variable]]
-native_id = "76.3752"
-slug = "kontaktperson"
-
-[[variable]]
-native_id = "76.15195"
-slug = "redovisningsar"
-
-[[variable]]
-native_id = "76.17379"
-slug = "byggherrens-postadress"
-
-[[variable]]
-native_id = "76.17899"
-slug = "telefonnummer-1"
+"76.1724" = "e-postadress-kontaktperson"
+"76.1804" = "telefonnummer-2"
+"76.2877" = "antal-fritidshus"
+"76.3735" = "fastighetspostnr"
+"76.3752" = "kontaktperson"
+"76.15195" = "redovisningsar"
+"76.17379" = "byggherrens-postadress"
+"76.17899" = "telefonnummer-1"
+"76.5092.huskat" = "huskat"
+"76.5092.hustyp" = "hustyp-5092"
+"76.5092.hustypns" = "hustypns"
+"76.5092.hustyp2" = "hustyp"
+"76.17376.armanpabeg" = "armanpabeg"
+"76.17376.armanpabfaktisk" = "armanpabfaktisk"
+"76.17376.datpabba" = "datpabba"
+"76.17376.datpabeg" = "datpabeg"
 
 # register 77
 
@@ -156,35 +77,3 @@ variable = "76.17376"
 columns = { ArManPabEg = "76.17376.armanpabeg", ArManPabFaktisk = "76.17376.armanpabfaktisk", DatPabBA = "76.17376.datpabba", DatPabEg = "76.17376.datpabeg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "1d648888e7d2592f986c91f3b6d57ae8a62b4379e4713552447d019bc7257ca7"
-
-[[variable]]
-native_id = "76.5092.huskat"
-slug = "huskat"
-
-[[variable]]
-native_id = "76.5092.hustyp"
-slug = "hustyp-5092"
-
-[[variable]]
-native_id = "76.5092.hustypns"
-slug = "hustypns"
-
-[[variable]]
-native_id = "76.5092.hustyp2"
-slug = "hustyp"
-
-[[variable]]
-native_id = "76.17376.armanpabeg"
-slug = "armanpabeg"
-
-[[variable]]
-native_id = "76.17376.armanpabfaktisk"
-slug = "armanpabfaktisk"
-
-[[variable]]
-native_id = "76.17376.datpabba"
-slug = "datpabba"
-
-[[variable]]
-native_id = "76.17376.datpabeg"
-slug = "datpabeg"

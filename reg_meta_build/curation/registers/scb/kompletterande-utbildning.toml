@@ -37,114 +37,41 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Aktieägarstatistik
-
-[[variable]]
-native_id = "326.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "326.67"
-slug = "utlsvbakg"
-
-[[variable]]
-native_id = "326.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "326.1579"
-slug = "termin"
-
-[[variable]]
-native_id = "326.14815"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "326.25047"
-slug = "namn-person"
-
-[[variable]]
-native_id = "326.29138"
-slug = "tillsynsform"
+"326.57" = "personnr"
+"326.67" = "utlsvbakg"
+"326.1378" = "fodelsear"
+"326.1579" = "termin"
+"326.14815" = "skolkommun"
+"326.25047" = "namn-person"
+"326.29138" = "tillsynsform"
 
 # register 330 (aktieagarstatistik)
-
-[[variable]]
-native_id = "326.104.namn"
-slug = "skola"
-
-[[variable]]
-native_id = "326.36.kommun"
-slug = "kommun"
-
-[[variable]]
-native_id = "326.66.sun2000niva"
-slug = "utbildningsniva"
+"326.104.namn" = "skola"
+"326.36.kommun" = "kommun"
+"326.66.sun2000niva" = "utbildningsniva"
 
 # register 333 (breg)
-
-[[variable]]
-native_id = "326.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "326.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "326.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "326.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "326.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "326.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "326.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "326.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "326.15458"
-slug = "statligt-studiestod"
-
-[[variable]]
-native_id = "326.23867"
-slug = "klassbeteckning"
+"326.241" = "alder-31-12"
+"326.257" = "fodelseland-rtb"
+"326.305" = "fodelseland-mor"
+"326.323" = "personnr-far"
+"326.324" = "personnr-mor"
+"326.332" = "senaste-invandringsdatum"
+"326.1993" = "skolans-identitetsnummer"
+"326.8137" = "huvudman"
+"326.15458" = "statligt-studiestod"
+"326.23867" = "klassbeteckning"
 
 # register 330
-
-[[variable]]
-native_id = "326.30476.stvkod"
-slug = "studievag"
-
-[[variable]]
-native_id = "326.30476.stvnamn"
-slug = "studievag-namn"
-
-[[variable]]
-native_id = "326.6133.fullf"
-slug = "fullfoljt-utbildning"
-
-[[variable]]
-native_id = "326.8073.sun2000niva-1-mor"
-slug = "sun-niva-1-mor"
-
-[[variable]]
-native_id = "326.8073.sun2000niva-3-mor"
-slug = "sun-niva-3-mor"
+"326.30476.stvkod" = "studievag"
+"326.30476.stvnamn" = "studievag-namn"
+"326.6133.fullf" = "fullfoljt-utbildning"
+"326.8073.sun2000niva-1-mor" = "sun-niva-1-mor"
+"326.8073.sun2000niva-3-mor" = "sun-niva-3-mor"
+"326.66.sun2000niva-1" = "sun2000niva"
+"326.66.sun2000niva-3" = "sun2000niva-3"
 
 # register 333
 
@@ -154,11 +81,3 @@ variable = "326.66"
 columns = { SUN2000Niva_1 = "326.66.sun2000niva-1", SUN2000Niva_3 = "326.66.sun2000niva-3", Sun2000Niva = "326.66.sun2000niva" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "da9e1b3b75d7d26fbac27beca63460cbfc66486daaa60bd662acf8cad0729ea9"
-
-[[variable]]
-native_id = "326.66.sun2000niva-1"
-slug = "sun2000niva"
-
-[[variable]]
-native_id = "326.66.sun2000niva-3"
-slug = "sun2000niva-3"

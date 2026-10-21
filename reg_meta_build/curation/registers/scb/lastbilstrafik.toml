@@ -11,190 +11,55 @@ panel_entity_key = "orgnr"
 panel_time_key = "datum"
 panel_time_grain = "row"
 
+[variable]
 # Partisympatiundersökningen (PSU)
-
-[[variable]]
-native_id = "162.1839"
-slug = "orgnr"
-
-
-[[variable]]
-native_id = "162.36"
-slug = "kommun"
-
-[[variable]]
-native_id = "162.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "162.1724"
-slug = "e-postadress-kontaktperson"
-
-[[variable]]
-native_id = "162.1947"
-slug = "palastade-kilo"
-
-[[variable]]
-native_id = "162.1949"
-slug = "korningskilometer"
-
-[[variable]]
-native_id = "162.1952"
-slug = "lastningsgrad-volym"
-
-[[variable]]
-native_id = "162.1956"
-slug = "varuslag-korning"
-
-[[variable]]
-native_id = "162.1963"
-slug = "antal-axlar-lastbil"
-
-[[variable]]
-native_id = "162.1966"
-slug = "avprickningsdatum"
-
-[[variable]]
-native_id = "162.1975"
-slug = "karosserikod"
-
-[[variable]]
-native_id = "162.1986"
-slug = "maximilastvikt-lastbil"
-
-[[variable]]
-native_id = "162.2012"
-slug = "tjanstevikt-lastbil"
-
-[[variable]]
-native_id = "162.2013"
-slug = "totalvikt-lastbil"
-
-[[variable]]
-native_id = "162.2015"
-slug = "mobiltelefonnummer"
-
-[[variable]]
-native_id = "162.2017"
-slug = "telefaxnummer"
-
-[[variable]]
-native_id = "162.2022"
-slug = "avlastningsomrade-omlastning"
-
-[[variable]]
-native_id = "162.2023"
-slug = "avlastningsort-omlastning"
-
-[[variable]]
-native_id = "162.2025"
-slug = "palastningsomrade-omlastning"
-
-[[variable]]
-native_id = "162.2026"
-slug = "palastningsort-omlastning"
-
-[[variable]]
-native_id = "162.2028"
-slug = "antal-axlar-pa-slapet"
-
-[[variable]]
-native_id = "162.2030"
-slug = "slapets-maximilastvikt"
-
-[[variable]]
-native_id = "162.2033"
-slug = "slapets-tjanstevikt"
-
-[[variable]]
-native_id = "162.2034"
-slug = "slapets-totalvikt"
-
-[[variable]]
-native_id = "162.2037"
-slug = "avlastningsomrade"
-
-[[variable]]
-native_id = "162.2039"
-slug = "avlastningsort"
-
-[[variable]]
-native_id = "162.2044"
-slug = "sandningens-vikt-i-kilo"
-
-[[variable]]
-native_id = "162.2046"
-slug = "korda-kilometer-sandning"
-
-[[variable]]
-native_id = "162.2049"
-slug = "lastningsgrad-i-volymmatt"
-
-[[variable]]
-native_id = "162.2055"
-slug = "palastningsomrade"
-
-[[variable]]
-native_id = "162.2057"
-slug = "palastningsort"
-
-[[variable]]
-native_id = "162.2061"
-slug = "varukod-sandning"
-
-[[variable]]
-native_id = "162.16332"
-slug = "slapets-registreringsland"
-
-[[variable]]
-native_id = "162.16333"
-slug = "transitland"
-
-[[variable]]
-native_id = "162.16334"
-slug = "slapets-karosserikod"
+"162.1839" = "orgnr"
+"162.36" = "kommun"
+"162.467" = "telefonnummer"
+"162.1724" = "e-postadress-kontaktperson"
+"162.1947" = "palastade-kilo"
+"162.1949" = "korningskilometer"
+"162.1952" = "lastningsgrad-volym"
+"162.1956" = "varuslag-korning"
+"162.1963" = "antal-axlar-lastbil"
+"162.1966" = "avprickningsdatum"
+"162.1975" = "karosserikod"
+"162.1986" = "maximilastvikt-lastbil"
+"162.2012" = "tjanstevikt-lastbil"
+"162.2013" = "totalvikt-lastbil"
+"162.2015" = "mobiltelefonnummer"
+"162.2017" = "telefaxnummer"
+"162.2022" = "avlastningsomrade-omlastning"
+"162.2023" = "avlastningsort-omlastning"
+"162.2025" = "palastningsomrade-omlastning"
+"162.2026" = "palastningsort-omlastning"
+"162.2028" = "antal-axlar-pa-slapet"
+"162.2030" = "slapets-maximilastvikt"
+"162.2033" = "slapets-tjanstevikt"
+"162.2034" = "slapets-totalvikt"
+"162.2037" = "avlastningsomrade"
+"162.2039" = "avlastningsort"
+"162.2044" = "sandningens-vikt-i-kilo"
+"162.2046" = "korda-kilometer-sandning"
+"162.2049" = "lastningsgrad-i-volymmatt"
+"162.2055" = "palastningsomrade"
+"162.2057" = "palastningsort"
+"162.2061" = "varukod-sandning"
+"162.16332" = "slapets-registreringsland"
+"162.16333" = "transitland"
+"162.16334" = "slapets-karosserikod"
 
 # register 164 (psu)
-
-[[variable]]
-native_id = "162.400"
-slug = "adress"
-
-[[variable]]
-native_id = "162.403"
-slug = "ort"
-
-[[variable]]
-native_id = "162.537"
-slug = "postnr"
-
-[[variable]]
-native_id = "162.1653"
-slug = "kommentar-uppgiftslamnare"
-
-[[variable]]
-native_id = "162.1970"
-slug = "foretagsidentifikation"
-
-[[variable]]
-native_id = "162.1972"
-slug = "granskningskod"
-
-[[variable]]
-native_id = "162.1973"
-slug = "inkommen-datum"
-
-[[variable]]
-native_id = "162.1974"
-slug = "internettillgang"
-
-[[variable]]
-native_id = "162.2014"
-slug = "foretagsnamn"
-
-[[variable]]
-native_id = "162.4027"
-slug = "naringsgren"
+"162.400" = "adress"
+"162.403" = "ort"
+"162.537" = "postnr"
+"162.1653" = "kommentar-uppgiftslamnare"
+"162.1970" = "foretagsidentifikation"
+"162.1972" = "granskningskod"
+"162.1973" = "inkommen-datum"
+"162.1974" = "internettillgang"
+"162.2014" = "foretagsnamn"
+"162.4027" = "naringsgren"
 
 # register 164
 

@@ -23,188 +23,94 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Allmänna val, valresultat
-
-[[variable]]
-native_id = "242.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "242.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "242.775"
-slug = "utbildningsniva-aggregat-grov"
-
-[[variable]]
-native_id = "242.1305"
-slug = "disponibel-inkomst-familj"
-
-[[variable]]
-native_id = "242.6586"
-slug = "anknytningsgrad"
-
-[[variable]]
-native_id = "242.7185"
-slug = "rostat-i-riksdagsval"
-
-[[variable]]
-native_id = "242.7186"
-slug = "rostat-i-landstingsfullmaktigval"
-
-[[variable]]
-native_id = "242.7187"
-slug = "rostat-i-kommunfullmaktigval"
-
-[[variable]]
-native_id = "242.7809"
-slug = "anknytningsgrad-aku"
-
-[[variable]]
-native_id = "242.7911"
-slug = "forstagangsvaljare-allmanna-val"
-
-[[variable]]
-native_id = "242.21876"
-slug = "forstagangsvaljare-europaparlamentsval"
-
-[[variable]]
-native_id = "242.23287"
-slug = "utbildningsniva-grov"
+"242.57" = "personnr"
+"242.332" = "senaste-invandringsdatum"
+"242.775" = "utbildningsniva-aggregat-grov"
+"242.1305" = "disponibel-inkomst-familj"
+"242.6586" = "anknytningsgrad"
+"242.7185" = "rostat-i-riksdagsval"
+"242.7186" = "rostat-i-landstingsfullmaktigval"
+"242.7187" = "rostat-i-kommunfullmaktigval"
+"242.7809" = "anknytningsgrad-aku"
+"242.7911" = "forstagangsvaljare-allmanna-val"
+"242.21876" = "forstagangsvaljare-europaparlamentsval"
+"242.23287" = "utbildningsniva-grov"
 
 # register 243 (allmanna-val-valresultat)
-
-[[variable]]
-native_id = "242.15"
-slug = "civilstand"
-
-[[variable]]
-native_id = "242.25"
-slug = "familjetyp"
-
-[[variable]]
-native_id = "242.99"
-slug = "sammanraknad-forvarvsinkomst"
-
-[[variable]]
-native_id = "242.125"
-slug = "sammanraknad-forvarvs-och-kapitalinkomst"
-
-[[variable]]
-native_id = "242.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "242.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "242.269"
-slug = "medborgarskapsdatum"
-
-[[variable]]
-native_id = "242.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "242.447"
-slug = "lansnamn"
-
-[[variable]]
-native_id = "242.544"
-slug = "sektor-i-huvudsysslan"
-
-[[variable]]
-native_id = "242.3582"
-slug = "stora-n"
-
-[[variable]]
-native_id = "242.3881"
-slug = "sei-i-huvudsysslan"
-
-[[variable]]
-native_id = "242.6375"
-slug = "arbetskraftsstatus-aldre"
-
-[[variable]]
-native_id = "242.6545"
-slug = "facklig-centralorganisation"
-
-[[variable]]
-native_id = "242.6840"
-slug = "studier"
-
-[[variable]]
-native_id = "242.6845"
-slug = "studier-hel-eller-deltid"
-
-[[variable]]
-native_id = "242.7008"
-slug = "gift-sambo-ensamstaende"
-
-[[variable]]
-native_id = "242.7916"
-slug = "forvarvsinkomst-kvintilgrupp"
-
-[[variable]]
-native_id = "242.15298"
-slug = "arbetskraftsstatus"
-
-[[variable]]
-native_id = "242.17810"
-slug = "nordlig-koordinat-sweref"
-
-[[variable]]
-native_id = "242.17812"
-slug = "ostlig-koordinat-sweref"
-
-[[variable]]
-native_id = "242.28836"
-slug = "nummer-i-rostlangden"
+"242.15" = "civilstand"
+"242.25" = "familjetyp"
+"242.99" = "sammanraknad-forvarvsinkomst"
+"242.125" = "sammanraknad-forvarvs-och-kapitalinkomst"
+"242.241" = "alder-31-12"
+"242.257" = "fodelseland-rtb"
+"242.269" = "medborgarskapsdatum"
+"242.271" = "medborgarskapsland"
+"242.447" = "lansnamn"
+"242.544" = "sektor-i-huvudsysslan"
+"242.3582" = "stora-n"
+"242.3881" = "sei-i-huvudsysslan"
+"242.6375" = "arbetskraftsstatus-aldre"
+"242.6545" = "facklig-centralorganisation"
+"242.6840" = "studier"
+"242.6845" = "studier-hel-eller-deltid"
+"242.7008" = "gift-sambo-ensamstaende"
+"242.7916" = "forvarvsinkomst-kvintilgrupp"
+"242.15298" = "arbetskraftsstatus"
+"242.17810" = "nordlig-koordinat-sweref"
+"242.17812" = "ostlig-koordinat-sweref"
+"242.28836" = "nummer-i-rostlangden"
 
 # register 243
-
-[[variable]]
-native_id = "242.6556.fodelselandgrp"
-slug = "fodelseland-varldsdel"
-
-[[variable]]
-native_id = "242.6556.fodelselandvd"
-slug = "fodelseland-varldsdel-2"
-
-[[variable]]
-native_id = "242.6818.medblandgrp"
-slug = "medborgarland-varldsdel"
-
-[[variable]]
-native_id = "242.6818.medborgarlandvd"
-slug = "medborgarland-varldsdel-2"
-
-[[variable]]
-native_id = "242.6818.medborgarlandvdnamn"
-slug = "medborgarland-varldsdel-namn"
-
-[[variable]]
-native_id = "242.69.llkkdddd"
-slug = "valdistrikt"
-
-[[variable]]
-native_id = "242.69.valdistnamn"
-slug = "valdistriktsnamn"
-
-[[variable]]
-native_id = "242.69.valdistrikt"
-slug = "valdistrikt-2"
-
-[[variable]]
-native_id = "242.8534.kgruppnamn"
-slug = "kommungrupp-namn"
-
-[[variable]]
-native_id = "242.8534.kgruppnr"
-slug = "kommungrupp-kod"
+"242.6556.fodelselandgrp" = "fodelseland-varldsdel"
+"242.6556.fodelselandvd" = "fodelseland-varldsdel-2"
+"242.6818.medblandgrp" = "medborgarland-varldsdel"
+"242.6818.medborgarlandvd" = "medborgarland-varldsdel-2"
+"242.6818.medborgarlandvdnamn" = "medborgarland-varldsdel-namn"
+"242.69.llkkdddd" = "valdistrikt"
+"242.69.valdistnamn" = "valdistriktsnamn"
+"242.69.valdistrikt" = "valdistrikt-2"
+"242.8534.kgruppnamn" = "kommungrupp-namn"
+"242.8534.kgruppnr" = "kommungrupp-kod"
+"242.7188.postrost" = "postrost-7188"
+"242.7188.postrost11" = "postrost11"
+"242.69.valdistrikt11" = "valdistrikt11"
+"242.8540.kvikt-ko" = "kvikt-ko"
+"242.8540.kvikt-ko10-rev" = "kvikt-ko10-rev"
+"242.8540.kvikt-ko11" = "kvikt-ko11"
+"242.20805.kvikt-lt" = "kvikt-lt-20805"
+"242.20805.kvikt-lt11" = "kvikt-lt11"
+"242.25103.uenr" = "uenr-25103"
+"242.25103.uenr11" = "uenr11"
+"242.25362.kvikt-ko-aku" = "kvikt-ko-aku-25362"
+"242.25362.kvikt-ko-aku11" = "kvikt-ko-aku11"
+"242.25361.kvikt-lt-aku" = "kvikt-lt-aku-25361"
+"242.25361.kvikt-lt-aku11" = "kvikt-lt-aku11"
+"242.15413.undnr" = "undnr-15413"
+"242.15413.undnr11" = "undnr11"
+"242.8534.grupp" = "grupp"
+"242.8534.kgruppnamn2011" = "kgruppnamn2011"
+"242.8534.kgruppnr2011" = "kgruppnr2011"
+"242.8534.kommungrupp-2017-namn" = "kommungrupp-2017-namn"
+"242.1781.aldg" = "aldg-1781"
+"242.1781.aldg11" = "aldg11"
+"242.22256.aldgkon6" = "aldgkon6-22256"
+"242.22256.aldgkon6-11" = "aldgkon6-11"
+"242.21887.aldgkon3" = "aldgkon3-21887"
+"242.21887.aldgkon3-11" = "aldgkon3-11"
+"242.28724.svmedb" = "svmedb-28724"
+"242.28724.svmedb11" = "svmedb11"
+"242.241.alderslut" = "alderslut"
+"242.241.alderslut11" = "alderslut11"
+"242.36.kommun" = "kommun"
+"242.36.kommun11" = "kommun11"
+"242.36.llkk" = "llkk"
+"242.49.lan" = "lan"
+"242.49.lan11" = "lan11"
+"242.49.ll" = "ll"
+"242.25358.rostratt" = "rostratt-25358"
+"242.25358.rostratt11" = "rostratt11"
 
 # register 243
 
@@ -350,155 +256,3 @@ variable = "242.25358"
 columns = { Rostratt = "242.25358.rostratt", rostratt = "242.25358.rostratt", rostratt11 = "242.25358.rostratt11" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "88700a85a2c9ade304069be22a5f1f7b03cd933f9816bc32363964103d101fa1"
-
-[[variable]]
-native_id = "242.7188.postrost"
-slug = "postrost-7188"
-
-[[variable]]
-native_id = "242.7188.postrost11"
-slug = "postrost11"
-
-[[variable]]
-native_id = "242.69.valdistrikt11"
-slug = "valdistrikt11"
-
-[[variable]]
-native_id = "242.8540.kvikt-ko"
-slug = "kvikt-ko"
-
-[[variable]]
-native_id = "242.8540.kvikt-ko10-rev"
-slug = "kvikt-ko10-rev"
-
-[[variable]]
-native_id = "242.8540.kvikt-ko11"
-slug = "kvikt-ko11"
-
-[[variable]]
-native_id = "242.20805.kvikt-lt"
-slug = "kvikt-lt-20805"
-
-[[variable]]
-native_id = "242.20805.kvikt-lt11"
-slug = "kvikt-lt11"
-
-[[variable]]
-native_id = "242.25103.uenr"
-slug = "uenr-25103"
-
-[[variable]]
-native_id = "242.25103.uenr11"
-slug = "uenr11"
-
-[[variable]]
-native_id = "242.25362.kvikt-ko-aku"
-slug = "kvikt-ko-aku-25362"
-
-[[variable]]
-native_id = "242.25362.kvikt-ko-aku11"
-slug = "kvikt-ko-aku11"
-
-[[variable]]
-native_id = "242.25361.kvikt-lt-aku"
-slug = "kvikt-lt-aku-25361"
-
-[[variable]]
-native_id = "242.25361.kvikt-lt-aku11"
-slug = "kvikt-lt-aku11"
-
-[[variable]]
-native_id = "242.15413.undnr"
-slug = "undnr-15413"
-
-[[variable]]
-native_id = "242.15413.undnr11"
-slug = "undnr11"
-
-[[variable]]
-native_id = "242.8534.grupp"
-slug = "grupp"
-
-[[variable]]
-native_id = "242.8534.kgruppnamn2011"
-slug = "kgruppnamn2011"
-
-[[variable]]
-native_id = "242.8534.kgruppnr2011"
-slug = "kgruppnr2011"
-
-[[variable]]
-native_id = "242.8534.kommungrupp-2017-namn"
-slug = "kommungrupp-2017-namn"
-
-[[variable]]
-native_id = "242.1781.aldg"
-slug = "aldg-1781"
-
-[[variable]]
-native_id = "242.1781.aldg11"
-slug = "aldg11"
-
-[[variable]]
-native_id = "242.22256.aldgkon6"
-slug = "aldgkon6-22256"
-
-[[variable]]
-native_id = "242.22256.aldgkon6-11"
-slug = "aldgkon6-11"
-
-[[variable]]
-native_id = "242.21887.aldgkon3"
-slug = "aldgkon3-21887"
-
-[[variable]]
-native_id = "242.21887.aldgkon3-11"
-slug = "aldgkon3-11"
-
-[[variable]]
-native_id = "242.28724.svmedb"
-slug = "svmedb-28724"
-
-[[variable]]
-native_id = "242.28724.svmedb11"
-slug = "svmedb11"
-
-[[variable]]
-native_id = "242.241.alderslut"
-slug = "alderslut"
-
-[[variable]]
-native_id = "242.241.alderslut11"
-slug = "alderslut11"
-
-[[variable]]
-native_id = "242.36.kommun"
-slug = "kommun"
-
-[[variable]]
-native_id = "242.36.kommun11"
-slug = "kommun11"
-
-[[variable]]
-native_id = "242.36.llkk"
-slug = "llkk"
-
-[[variable]]
-native_id = "242.49.lan"
-slug = "lan"
-
-[[variable]]
-native_id = "242.49.lan11"
-slug = "lan11"
-
-[[variable]]
-native_id = "242.49.ll"
-slug = "ll"
-
-[[variable]]
-native_id = "242.25358.rostratt"
-slug = "rostratt-25358"
-
-[[variable]]
-native_id = "242.25358.rostratt11"
-slug = "rostratt11"

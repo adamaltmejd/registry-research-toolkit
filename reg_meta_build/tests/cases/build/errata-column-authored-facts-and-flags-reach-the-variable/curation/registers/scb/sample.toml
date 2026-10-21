@@ -5,24 +5,14 @@ native_id = "1"
 [[variant]]
 native_id = "1.2"
 slug = "people"
-[[variable]]
-native_id = "1.5"
-slug = "a"
-[[variable]]
-native_id = "1.NewOn"
-slug = "new-on"
-[[variable]]
-native_id = "1.NewOff"
-slug = "new-off"
-[[variable]]
-native_id = "1.NoFlag"
-slug = "no-flag"
-[[variable]]
-native_id = "1.NoId"
-slug = "no-id"
-[[variable]]
-native_id = "1.Held"
-slug = "held"
+
+[variable]
+"1.5" = "a"
+"1.NewOn" = "new-on"
+"1.NewOff" = "new-off"
+"1.NoFlag" = "no-flag"
+"1.NoId" = "no-id"
+"1.Held" = "held"
 
 [[errata.column]]
 variant = "people"

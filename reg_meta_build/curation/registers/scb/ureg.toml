@@ -68,145 +68,85 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Inkomst- och taxeringsregistret (IoT)
-
-[[variable]]
-native_id = "24.4544"
-slug = "eget-personnr"
-
-
-[[variable]]
-native_id = "24.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "24.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "24.44"
-slug = "kon"
-
-[[variable]]
-native_id = "24.73"
-slug = "ar"
-
-[[variable]]
-native_id = "24.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "24.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "24.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "24.751"
-slug = "arsversion"
-
-[[variable]]
-native_id = "24.6556"
-slug = "fodelseland-varldsdel"
-
-[[variable]]
-native_id = "24.32900"
-slug = "koneget"
+"24.4544" = "eget-personnr"
+"24.57" = "personnr"
+"24.26" = "fastighetsbeteckning"
+"24.44" = "kon"
+"24.73" = "ar"
+"24.241" = "alder-31-12"
+"24.332" = "senaste-invandringsdatum"
+"24.749" = "aldersgrupp"
+"24.751" = "arsversion"
+"24.6556" = "fodelseland-varldsdel"
+"24.32900" = "koneget"
 
 # register 25 (iot)
-
-[[variable]]
-native_id = "24.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "24.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "24.753"
-slug = "examensar"
-
-[[variable]]
-native_id = "24.754"
-slug = "examenskommun"
-
-[[variable]]
-native_id = "24.793"
-slug = "examenstermin"
-
-[[variable]]
-native_id = "24.866"
-slug = "fodd-i-sverige-utomlands"
-
-[[variable]]
-native_id = "24.1536"
-slug = "studievag-gymnasieskolan"
-
-[[variable]]
-native_id = "24.15724"
-slug = "grund-for-bosattning-grupperad"
-
-[[variable]]
-native_id = "24.16234"
-slug = "fodelseland-eller-lan"
-
-[[variable]]
-native_id = "24.17351"
-slug = "medborgarskap"
-
-[[variable]]
-native_id = "24.27129"
-slug = "grund-for-bosattning-klassgrupp"
-
-[[variable]]
-native_id = "24.41673"
-slug = "deltagande-kurs"
+"24.257" = "fodelseland-rtb"
+"24.271" = "medborgarskapsland"
+"24.753" = "examensar"
+"24.754" = "examenskommun"
+"24.793" = "examenstermin"
+"24.866" = "fodd-i-sverige-utomlands"
+"24.1536" = "studievag-gymnasieskolan"
+"24.15724" = "grund-for-bosattning-grupperad"
+"24.16234" = "fodelseland-eller-lan"
+"24.17351" = "medborgarskap"
+"24.27129" = "grund-for-bosattning-klassgrupp"
+"24.41673" = "deltagande-kurs"
 
 # register 25
-
-[[variable]]
-native_id = "24.32912.vistelsetid"
-slug = "vistelsetid-migrant"
-
-[[variable]]
-native_id = "24.40077.atutim"
-slug = "undervisningstimmar"
-
-[[variable]]
-native_id = "24.7018.hutcsun2000niva"
-slug = "utbildningsniva-3-positioner"
-
-[[variable]]
-native_id = "24.7018.hutxsun2000niva"
-slug = "utbildningsniva-3-positioner-2"
-
-[[variable]]
-native_id = "24.7062.fblanmigar"
-slug = "folkbokforingslan"
-
-[[variable]]
-native_id = "24.785.hutcsun2000inr1"
-slug = "utbildningsinriktning-1-position"
-
-[[variable]]
-native_id = "24.785.hutxsun2000inr1"
-slug = "utbildningsinriktning-1-position-2"
-
-[[variable]]
-native_id = "24.8189.hutcsun"
-slug = "utbildningens-niva-och-inriktning"
-
-[[variable]]
-native_id = "24.8772.hutcsun2000inr"
-slug = "utbildningsinriktning-individen"
-
-[[variable]]
-native_id = "24.8772.hutxsun2000inr"
-slug = "utbildningsinriktning-individen-2"
+"24.32912.vistelsetid" = "vistelsetid-migrant"
+"24.40077.atutim" = "undervisningstimmar"
+"24.7018.hutcsun2000niva" = "utbildningsniva-3-positioner"
+"24.7018.hutxsun2000niva" = "utbildningsniva-3-positioner-2"
+"24.7062.fblanmigar" = "folkbokforingslan"
+"24.785.hutcsun2000inr1" = "utbildningsinriktning-1-position"
+"24.785.hutxsun2000inr1" = "utbildningsinriktning-1-position-2"
+"24.8189.hutcsun" = "utbildningens-niva-och-inriktning"
+"24.8772.hutcsun2000inr" = "utbildningsinriktning-individen"
+"24.8772.hutxsun2000inr" = "utbildningsinriktning-individen-2"
+"24.763.kallkod-6" = { slug = "utbildningens-kallkod-for-aldre-personer-fodda-19111926-rams-och-lisa", deprecated = false }
+"24.1280.totalpoang-2013" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2013", deprecated = false }
+"24.1280.totalpoang-2014" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2014", deprecated = false }
+"24.1280.totalpoang-2015" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2015", deprecated = false }
+"24.1280.totalpoang-2016" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2016", deprecated = false }
+"24.1280.totalpoang-2017" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2017", deprecated = false }
+"24.1280.totalpoang-2018" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2018", deprecated = false }
+"24.1280.totalpoang-2019" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2019", deprecated = false }
+"24.1280.totalpoang-2020" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2020", deprecated = false }
+"24.1280.totalpoang-2021" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2021", deprecated = false }
+"24.1280.poang-kurs" = { slug = "poang-som-kursen-omfattar", deprecated = false }
+"24.1280.totalpoang-2022" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2022", deprecated = false }
+"24.1280.totalpoang-2023" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2023", deprecated = false }
+"24.1280.totalpoang-2024" = { slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2024", deprecated = false }
+"24.66.sun2000niva-old" = { slug = "hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden", deprecated = false }
+"24.66.sun2000niva-grov" = { slug = "hogsta-utbildningens-niva-sun2000-grovt-aggregat-till-fyra-varden", deprecated = false }
+"24.66.sun2020niva-2-foregaende-ar" = { slug = "hogsta-utbildningens-niva-foregaende-ar-sun2020-tva-forsta-positionerna", deprecated = false }
+"24.66.sun2020niva-foregaende-ar" = { slug = "hogsta-utbildningens-niva-foregaende-ar-sun2020-fullstandig-kod", deprecated = false }
+"24.66.sun2000niva-1" = { slug = "hogsta-utbildningens-niva-sun2000-forsta-positionen", deprecated = false }
+"24.66.isced2011niva-1" = { slug = "hogsta-utbildningens-niva-isced2011-enstalligt-kallkodfalt", deprecated = false }
+"24.66.sun2000niva-2" = { slug = "hogsta-utbildningens-niva-sun2000-tva-forsta-positionerna", deprecated = false }
+"24.66.sun2020niva-2" = { slug = "hogsta-utbildningens-niva-sun2020-tva-forsta-positionerna", deprecated = false }
+"24.66.sun2020niva-1" = { slug = "hogsta-utbildningens-niva-sun2020-forsta-positionen", deprecated = false }
+"24.66.sun2020niva-old" = { slug = "hogsta-utbildningens-niva-sun2020-aldre-aggregat-till-sju-varden", deprecated = false }
+"24.66.sun2020niva-grov" = { slug = "hogsta-utbildningens-niva-sun2020-grovt-aggregat-till-fyra-varden", deprecated = false }
+"24.65.isced-f-2013-2" = { slug = "utbildningsinriktning-isced-f-2013-tvastalligt-kallkodfalt", deprecated = false }
+"24.65.sun2000inr-1" = { slug = "hogsta-utbildningens-inriktning-sun2000-forsta-positionen", deprecated = false }
+"24.65.sun2000inr-2" = { slug = "hogsta-utbildningens-inriktning-sun2000-tva-forsta-positionerna", deprecated = false }
+"24.65.sun2000inr-3" = { slug = "hogsta-utbildningens-inriktning-sun2000-tre-forsta-positionerna", deprecated = false }
+"24.65.sun2020inr-3" = { slug = "hogsta-utbildningens-inriktning-sun2020-tre-forsta-positionerna", deprecated = false }
+"24.65.sun2020inr-2" = { slug = "hogsta-utbildningens-inriktning-sun2020-tva-forsta-positionerna", deprecated = false }
+"24.65.sun2020inr-1" = { slug = "hogsta-utbildningens-inriktning-sun2020-forsta-positionen", deprecated = false }
+"24.7062.fblanmigarplus2" = { slug = "folkbokforingslan-vid-slutet-av-andra-aret-efter-migrationsaret", deprecated = false }
+"24.31017.fblakomigarplus2" = { slug = "folkbokforingskommun-vid-slutet-av-andra-aret-efter-migrationsaret", deprecated = false }
+"24.32924.utlbakkodar1" = "utlbakkodar1"
+"24.32924.utlbakkodar12" = "utlbakkodar12"
+"24.32924.utlbakkodar2" = "utlbakkodar2"
+"24.37993.vald" = "vald"
+"24.37993.vald-ny" = "vald-ny"
+"24.6416.sun2020grp-detalj" = "sun2020grp-detalj"
 
 # register 240
 
@@ -1839,176 +1779,6 @@ fields = ["availability", "period"]
 reason = "The exact supplied delivery has no safely representable availability period. Person-År, accumulated-register and quarterly table labels establish grain or cohort context but not delivery years. HT1988–VT2024 retains semester precision without literal day bounds; no daily range is invented. Population dates are retained as population metadata, not availability. Preserve every original physical column, source field, unknown/pooled scope and raw coding association; only the affected unsupported occurrence, unavailable state or unscopeable coding remains unavailable. No year-independent availability or neighbouring-period borrowing."
 evidence = "Complete accepted native families (UREG48/941originals; SCB economic assistance22/28originals plus actual Kommune prerequisite), maintained production compilation, real primary/summary/integer identifier support and all independently bound canonical books. Exact complete originals and raw bound coding multiplicity are guarded. Proof: Batch50-period70-source-proof.json."
 expected_evidence_sha256 = "ec66d11c6a3560062aaafd64a9a6c93f05382cd9bcbd72490a7f41b24d4d546e"
-
-[[variable]]
-native_id = "24.763.kallkod-6"
-slug = "utbildningens-kallkod-for-aldre-personer-fodda-19111926-rams-och-lisa"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2013"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2013"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2014"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2014"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2015"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2015"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2016"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2016"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2017"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2017"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2018"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2018"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2019"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2019"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2020"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2020"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2021"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2021"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.poang-kurs"
-slug = "poang-som-kursen-omfattar"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2022"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2022"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2023"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2023"
-deprecated = false
-
-[[variable]]
-native_id = "24.1280.totalpoang-2024"
-slug = "lasta-gymnasiala-kurspoang-for-personer-med-gymnasieintyg-2024"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2000niva-old"
-slug = "hogsta-utbildningens-niva-sun2000-aldre-aggregat-till-sju-varden"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2000niva-grov"
-slug = "hogsta-utbildningens-niva-sun2000-grovt-aggregat-till-fyra-varden"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2020niva-2-foregaende-ar"
-slug = "hogsta-utbildningens-niva-foregaende-ar-sun2020-tva-forsta-positionerna"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2020niva-foregaende-ar"
-slug = "hogsta-utbildningens-niva-foregaende-ar-sun2020-fullstandig-kod"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2000niva-1"
-slug = "hogsta-utbildningens-niva-sun2000-forsta-positionen"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.isced2011niva-1"
-slug = "hogsta-utbildningens-niva-isced2011-enstalligt-kallkodfalt"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2000niva-2"
-slug = "hogsta-utbildningens-niva-sun2000-tva-forsta-positionerna"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2020niva-2"
-slug = "hogsta-utbildningens-niva-sun2020-tva-forsta-positionerna"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2020niva-1"
-slug = "hogsta-utbildningens-niva-sun2020-forsta-positionen"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2020niva-old"
-slug = "hogsta-utbildningens-niva-sun2020-aldre-aggregat-till-sju-varden"
-deprecated = false
-
-[[variable]]
-native_id = "24.66.sun2020niva-grov"
-slug = "hogsta-utbildningens-niva-sun2020-grovt-aggregat-till-fyra-varden"
-deprecated = false
-
-[[variable]]
-native_id = "24.65.isced-f-2013-2"
-slug = "utbildningsinriktning-isced-f-2013-tvastalligt-kallkodfalt"
-deprecated = false
-
-[[variable]]
-native_id = "24.65.sun2000inr-1"
-slug = "hogsta-utbildningens-inriktning-sun2000-forsta-positionen"
-deprecated = false
-
-[[variable]]
-native_id = "24.65.sun2000inr-2"
-slug = "hogsta-utbildningens-inriktning-sun2000-tva-forsta-positionerna"
-deprecated = false
-
-[[variable]]
-native_id = "24.65.sun2000inr-3"
-slug = "hogsta-utbildningens-inriktning-sun2000-tre-forsta-positionerna"
-deprecated = false
-
-[[variable]]
-native_id = "24.65.sun2020inr-3"
-slug = "hogsta-utbildningens-inriktning-sun2020-tre-forsta-positionerna"
-deprecated = false
-
-[[variable]]
-native_id = "24.65.sun2020inr-2"
-slug = "hogsta-utbildningens-inriktning-sun2020-tva-forsta-positionerna"
-deprecated = false
-
-[[variable]]
-native_id = "24.65.sun2020inr-1"
-slug = "hogsta-utbildningens-inriktning-sun2020-forsta-positionen"
-deprecated = false
-
-[[variable]]
-native_id = "24.7062.fblanmigarplus2"
-slug = "folkbokforingslan-vid-slutet-av-andra-aret-efter-migrationsaret"
-deprecated = false
-
-[[variable]]
-native_id = "24.31017.fblakomigarplus2"
-slug = "folkbokforingskommun-vid-slutet-av-andra-aret-efter-migrationsaret"
-deprecated = false
 
 [[identity.column_owner]]
 variable = "24.763"
@@ -7718,26 +7488,6 @@ columns = { Vald = "24.37993.vald", Vald_ny = "24.37993.vald-ny" }
 columns_ref = "Complete source-native family and physical-coordinate review. Concurrent columns are separate source-explicit activity, outcome, purpose, provider, payment or education-selection roles. Literal physical histories remain separate; suffixes do not supply meanings absent from the source. Reviewed source evidence: Batch52-AES-UREG-source-review.json."
 expected_evidence_sha256 = "1f491767d9fabd82d874606228211bac679f6333cc2d805300a4e0e6431d30dd"
 
-[[variable]]
-native_id = "24.32924.utlbakkodar1"
-slug = "utlbakkodar1"
-
-[[variable]]
-native_id = "24.32924.utlbakkodar12"
-slug = "utlbakkodar12"
-
-[[variable]]
-native_id = "24.32924.utlbakkodar2"
-slug = "utlbakkodar2"
-
-[[variable]]
-native_id = "24.37993.vald"
-slug = "vald"
-
-[[variable]]
-native_id = "24.37993.vald-ny"
-slug = "vald-ny"
-
 [[acknowledge]]
 code = "missing_coding_period"
 subject = "scb/ureg/medborgarskapsland"
@@ -7977,10 +7727,6 @@ reason = "The source establishes this distinct student-background role but suppl
 evidence = "Complete accepted AES16 native families150 originals / UREG3 native families64 originals; complete physical peer closure and recursive panel prerequisites. Actual primary, summary and integer-identifier support retained. Native identity decisions separate every concurrent source-explicit operation. Batch52-AES-UREG-source-review.json and Batch52-AES-UREG-source-proof.json. Standing user policy retains unknown availability and historical coding gaps without guessed encoding."
 expected_evidence_sha256 = "40b9be69292c1132020e0f447acf1b95c4038ef6ffb6fd0c156e64f033450961"
 expected_diagnostic_sha256 = "4c128909fbdb474857a9497733e7a06e131507831ebf5ca4c63b51750350849d"
-
-[[variable]]
-native_id = "24.6416.sun2020grp-detalj"
-slug = "sun2020grp-detalj"
 
 [[identity.partition]]
 variable = "24.6416"

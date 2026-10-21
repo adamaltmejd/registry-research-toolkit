@@ -7,26 +7,10 @@ native_id = "12"
 native_id = "12.120"
 slug = "people"
 
-[[variable]]
-native_id = "12.1201"
-slug = "pdiag"
-
-[[variable]]
-native_id = "12.1203"
-slug = "alder"
-
-[[variable]]
-native_id = "12.1204"
-slug = "pciv"
-
-[[variable]]
-native_id = "12.1205"
-slug = "region"
-
-[[variable]]
-native_id = "12.1206"
-slug = "ha"
-
-[[variable]]
-native_id = "12.1207"
-slug = "hb"
+[variable]
+"12.1201" = "pdiag"
+"12.1203" = "alder"
+"12.1204" = "pciv"
+"12.1205" = "region"
+"12.1206" = "ha"
+"12.1207" = "hb"

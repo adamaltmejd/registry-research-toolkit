@@ -20,86 +20,41 @@ panel_entity_key = "fastighetsbeteckning"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Priser för nyproducerade bostäder
-
-[[variable]]
-native_id = "72.26"
-slug = "fastighetsbeteckning"
-
-
-[[variable]]
-native_id = "72.2187"
-slug = "agarkategori"
-
-[[variable]]
-native_id = "72.2298"
-slug = "ursprunglig-byggnadsperiod"
-
-[[variable]]
-native_id = "72.2299"
-slug = "lagenhetstyp"
-
-[[variable]]
-native_id = "72.17040"
-slug = "ombyggnads-id"
-
-[[variable]]
-native_id = "72.17046"
-slug = "antal-lagenheter-totalt"
-
-[[variable]]
-native_id = "72.17415"
-slug = "ombyggnation-paborjande"
-
-[[variable]]
-native_id = "72.17421"
-slug = "ombyggnation-fardigstallande"
-
-[[variable]]
-native_id = "72.17427"
-slug = "bostadsarea-fore"
-
-[[variable]]
-native_id = "72.17428"
-slug = "bostadsarea-tillkommande"
-
-[[variable]]
-native_id = "72.17429"
-slug = "bostadsarea-utgaende"
-
-[[variable]]
-native_id = "72.17487"
-slug = "rivnings-id"
-
-[[variable]]
-native_id = "72.17488"
-slug = "rivning-paborjande"
-
-[[variable]]
-native_id = "72.17489"
-slug = "rivning-paborjande-prel"
-
-[[variable]]
-native_id = "72.17490"
-slug = "rivningsorsak"
+"72.26" = "fastighetsbeteckning"
+"72.2187" = "agarkategori"
+"72.2298" = "ursprunglig-byggnadsperiod"
+"72.2299" = "lagenhetstyp"
+"72.17040" = "ombyggnads-id"
+"72.17046" = "antal-lagenheter-totalt"
+"72.17415" = "ombyggnation-paborjande"
+"72.17421" = "ombyggnation-fardigstallande"
+"72.17427" = "bostadsarea-fore"
+"72.17428" = "bostadsarea-tillkommande"
+"72.17429" = "bostadsarea-utgaende"
+"72.17487" = "rivnings-id"
+"72.17488" = "rivning-paborjande"
+"72.17489" = "rivning-paborjande-prel"
+"72.17490" = "rivningsorsak"
 
 # register 73 (priser-nyproducerade-bostader)
-
-[[variable]]
-native_id = "72.4472"
-slug = "upplatelseform"
-
-[[variable]]
-native_id = "72.5092"
-slug = "hustyp"
-
-[[variable]]
-native_id = "72.17413"
-slug = "husbeteckning"
-
-[[variable]]
-native_id = "72.21429"
-slug = "totalbostadsarea"
+"72.4472" = "upplatelseform"
+"72.5092" = "hustyp"
+"72.17413" = "husbeteckning"
+"72.21429" = "totalbostadsarea"
+"72.2187.agarkat" = "agarkat"
+"72.2187.agarekat" = "agarekat"
+"72.2187.agarkategori" = "agarkategori-2187"
+"72.2299.lagenhetstyp" = "lagenhetstyp-2299"
+"72.2299.lghkod" = "lghkod"
+"72.2299.lghtyp" = "lghtyp"
+"72.17490.rivors" = "rivors"
+"72.17490.rivningsorsak" = "rivningsorsak-17490"
+"72.17046.antlgh" = "antlgh"
+"72.17046.paborjadelgh" = "paborjadelgh"
+"72.17046.totantlgh" = "totantlgh"
+"72.17046.totlgh" = "totlgh"
 
 # register 73
 
@@ -226,54 +181,6 @@ variable = "72.17046"
 columns = { AntLgh = "72.17046.antlgh", PaborjadeLgh = "72.17046.paborjadelgh", TotAntLgh = "72.17046.totantlgh", TotLgh = "72.17046.totlgh" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "50d82e623cd40706ba7494b3ec21d385d0a59fa229abf6a2ea606701322b4497"
-
-[[variable]]
-native_id = "72.2187.agarkat"
-slug = "agarkat"
-
-[[variable]]
-native_id = "72.2187.agarekat"
-slug = "agarekat"
-
-[[variable]]
-native_id = "72.2187.agarkategori"
-slug = "agarkategori-2187"
-
-[[variable]]
-native_id = "72.2299.lagenhetstyp"
-slug = "lagenhetstyp-2299"
-
-[[variable]]
-native_id = "72.2299.lghkod"
-slug = "lghkod"
-
-[[variable]]
-native_id = "72.2299.lghtyp"
-slug = "lghtyp"
-
-[[variable]]
-native_id = "72.17490.rivors"
-slug = "rivors"
-
-[[variable]]
-native_id = "72.17490.rivningsorsak"
-slug = "rivningsorsak-17490"
-
-[[variable]]
-native_id = "72.17046.antlgh"
-slug = "antlgh"
-
-[[variable]]
-native_id = "72.17046.paborjadelgh"
-slug = "paborjadelgh"
-
-[[variable]]
-native_id = "72.17046.totantlgh"
-slug = "totantlgh"
-
-[[variable]]
-native_id = "72.17046.totlgh"
-slug = "totlgh"
 
 [[representation.parallel]]
 valid_from = "2012-01-01"

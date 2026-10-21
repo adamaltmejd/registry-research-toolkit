@@ -5,12 +5,11 @@ native_id = {{naming_id kind=register provider=fk register_key=remote}}
 [[variant]]
 slug = "default"
 native_id = {{naming_id kind=register_variant provider=fk register_key=remote member_key=_default}}
-[[variable]]
-slug = "amount"
-native_id = {{naming_id kind=variable provider=fk register_key=remote member_key=AMOUNT}}
-[[variable]]
-slug = "delkod"
-native_id = {{naming_id kind=variable provider=fk register_key=remote member_key=DELKOD}}
+
+[variable]
+{{naming_id kind=variable provider=fk register_key=remote member_key=AMOUNT}} = "amount"
+{{naming_id kind=variable provider=fk register_key=remote member_key=DELKOD}} = "delkod"
+
 [[errata.column]]
 variant = "_default"
 column = "DELKOD"

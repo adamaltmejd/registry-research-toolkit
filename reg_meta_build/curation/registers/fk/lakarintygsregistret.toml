@@ -11,8 +11,6 @@ panel_entity_key = "lopnr"
 panel_time_key = "period-from"
 panel_time_grain = "row"
 
+[variable]
 # Tandvårdsstödet
-
-[[variable]]
-native_id = "7970092672219058188.LOPNR"
-slug = "lopnr"
+"7970092672219058188.LOPNR" = "lopnr"

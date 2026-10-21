@@ -49,606 +49,213 @@ panel_entity_key = "eget-personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Konjunkturstatistik, löner för kommuner (KLK)
-
-[[variable]]
-native_id = "86.3268"
-slug = "ordningsnummer-inom-kosthushallet"
-
-
-[[variable]]
-native_id = "86.3273"
-slug = "lopnummer-kosthushall"
-
-
-[[variable]]
-native_id = "86.4544"
-slug = "eget-personnr"
-
-
-[[variable]]
-native_id = "86.5708"
-slug = "kundnr"
-
-
-[[variable]]
-native_id = "86.30360"
-slug = "hushallsid"
-
-
-[[variable]]
-native_id = "86.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "86.462"
-slug = "stratum"
-
-[[variable]]
-native_id = "86.2767"
-slug = "boyta-kvm"
-
-[[variable]]
-native_id = "86.3189"
-slug = "antal-rum-exkl-kok"
-
-[[variable]]
-native_id = "86.3192"
-slug = "forfogande-over-bostaden"
-
-[[variable]]
-native_id = "86.3193"
-slug = "typ-av-boende"
-
-[[variable]]
-native_id = "86.3197"
-slug = "antal-barn-0-19-ar"
-
-[[variable]]
-native_id = "86.3220"
-slug = "konsumtionsenhet"
-
-[[variable]]
-native_id = "86.3224"
-slug = "hushallets-vikt"
-
-[[variable]]
-native_id = "86.3225"
-slug = "hushallets-disponibla-inkomst"
-
-[[variable]]
-native_id = "86.3271"
-slug = "vikt"
-
-[[variable]]
-native_id = "86.6169"
-slug = "hushallsutgift"
-
-[[variable]]
-native_id = "86.21242"
-slug = "konsumtionsenhet-2004"
-
-[[variable]]
-native_id = "86.29408"
-slug = "hushallstyp-kosthushall"
-
-[[variable]]
-native_id = "86.40441"
-slug = "utgift-forbrukningsvaror"
-
-[[variable]]
-native_id = "86.40447"
-slug = "utgift-for-klader"
-
-[[variable]]
-native_id = "86.40451"
-slug = "utgift-for-skor"
-
-[[variable]]
-native_id = "86.40455"
-slug = "utgift-for-inkop-av-bil"
-
-[[variable]]
-native_id = "86.40480"
-slug = "utgift-hushallstjanster"
-
-[[variable]]
-native_id = "86.40481"
-slug = "utgift-klader-skor"
-
-[[variable]]
-native_id = "86.40483"
-slug = "utgift-for-transport"
-
-[[variable]]
-native_id = "86.40484"
-slug = "utgift-fritid-kultur"
-
-[[variable]]
-native_id = "86.40485"
-slug = "utgift-for-bostad"
-
-[[variable]]
-native_id = "86.40486"
-slug = "utgift-skattepliktiga-formaner"
-
-[[variable]]
-native_id = "86.40487"
-slug = "totala-utgifter"
-
-[[variable]]
-native_id = "86.40488"
-slug = "utgift-for-livsmedel"
-
-[[variable]]
-native_id = "86.40887"
-slug = "utgift-for-bord"
-
-[[variable]]
-native_id = "86.40895"
-slug = "utgift-for-sangar"
-
-[[variable]]
-native_id = "86.40897"
-slug = "utgift-for-utemobler"
-
-[[variable]]
-native_id = "86.40909"
-slug = "utgift-for-spis"
-
-[[variable]]
-native_id = "86.40912"
-slug = "utgift-for-kyl-frys"
-
-[[variable]]
-native_id = "86.40913"
-slug = "utgift-for-diskmaskin"
-
-[[variable]]
-native_id = "86.40915"
-slug = "utgift-tvattmaskin-tork"
-
-[[variable]]
-native_id = "86.40922"
-slug = "utgift-for-glas-porslin"
-
-[[variable]]
-native_id = "86.40927"
-slug = "utgift-for-verktyg"
-
-[[variable]]
-native_id = "86.40937"
-slug = "utgift-for-tandvard"
-
-[[variable]]
-native_id = "86.40952"
-slug = "utgift-husvagn-slapvagn"
-
-[[variable]]
-native_id = "86.40954"
-slug = "utgift-for-cykel"
-
-[[variable]]
-native_id = "86.40961"
-slug = "utgift-for-taxi"
-
-[[variable]]
-native_id = "86.40991"
-slug = "utgift-internetabonnemang"
-
-[[variable]]
-native_id = "86.41002"
-slug = "utgift-musikinstrument"
-
-[[variable]]
-native_id = "86.41003"
-slug = "utgift-for-bat-batmotor"
-
-[[variable]]
-native_id = "86.41011"
-slug = "utgift-for-fototjanster"
-
-[[variable]]
-native_id = "86.41016"
-slug = "utgift-for-sallskapsdjur"
-
-[[variable]]
-native_id = "86.41017"
-slug = "utgift-for-veterinar"
-
-[[variable]]
-native_id = "86.41022"
-slug = "utgift-for-blommor"
-
-[[variable]]
-native_id = "86.41033"
-slug = "utgift-idrottsevenemang"
-
-[[variable]]
-native_id = "86.41047"
-slug = "utgift-for-vaskor"
-
-[[variable]]
-native_id = "86.41054"
-slug = "utgift-sjuk-olycksfallsfors"
-
-[[variable]]
-native_id = "86.41057"
-slug = "utgift-fackavg-a-kassa"
+"86.3268" = "ordningsnummer-inom-kosthushallet"
+"86.3273" = "lopnummer-kosthushall"
+"86.4544" = "eget-personnr"
+"86.5708" = "kundnr"
+"86.30360" = "hushallsid"
+"86.241" = "alder-31-12"
+"86.462" = "stratum"
+"86.2767" = "boyta-kvm"
+"86.3189" = "antal-rum-exkl-kok"
+"86.3192" = "forfogande-over-bostaden"
+"86.3193" = "typ-av-boende"
+"86.3197" = "antal-barn-0-19-ar"
+"86.3220" = "konsumtionsenhet"
+"86.3224" = "hushallets-vikt"
+"86.3225" = "hushallets-disponibla-inkomst"
+"86.3271" = "vikt"
+"86.6169" = "hushallsutgift"
+"86.21242" = "konsumtionsenhet-2004"
+"86.29408" = "hushallstyp-kosthushall"
+"86.40441" = "utgift-forbrukningsvaror"
+"86.40447" = "utgift-for-klader"
+"86.40451" = "utgift-for-skor"
+"86.40455" = "utgift-for-inkop-av-bil"
+"86.40480" = "utgift-hushallstjanster"
+"86.40481" = "utgift-klader-skor"
+"86.40483" = "utgift-for-transport"
+"86.40484" = "utgift-fritid-kultur"
+"86.40485" = "utgift-for-bostad"
+"86.40486" = "utgift-skattepliktiga-formaner"
+"86.40487" = "totala-utgifter"
+"86.40488" = "utgift-for-livsmedel"
+"86.40887" = "utgift-for-bord"
+"86.40895" = "utgift-for-sangar"
+"86.40897" = "utgift-for-utemobler"
+"86.40909" = "utgift-for-spis"
+"86.40912" = "utgift-for-kyl-frys"
+"86.40913" = "utgift-for-diskmaskin"
+"86.40915" = "utgift-tvattmaskin-tork"
+"86.40922" = "utgift-for-glas-porslin"
+"86.40927" = "utgift-for-verktyg"
+"86.40937" = "utgift-for-tandvard"
+"86.40952" = "utgift-husvagn-slapvagn"
+"86.40954" = "utgift-for-cykel"
+"86.40961" = "utgift-for-taxi"
+"86.40991" = "utgift-internetabonnemang"
+"86.41002" = "utgift-musikinstrument"
+"86.41003" = "utgift-for-bat-batmotor"
+"86.41011" = "utgift-for-fototjanster"
+"86.41016" = "utgift-for-sallskapsdjur"
+"86.41017" = "utgift-for-veterinar"
+"86.41022" = "utgift-for-blommor"
+"86.41033" = "utgift-idrottsevenemang"
+"86.41047" = "utgift-for-vaskor"
+"86.41054" = "utgift-sjuk-olycksfallsfors"
+"86.41057" = "utgift-fackavg-a-kassa"
 
 # register 89 (klk)
-
-[[variable]]
-native_id = "86.31"
-slug = "forsamling"
-
-[[variable]]
-native_id = "86.49"
-slug = "lan"
-
-[[variable]]
-native_id = "86.388"
-slug = "antal-barn"
-
-[[variable]]
-native_id = "86.779"
-slug = "utbildningsniva-1-position"
-
-[[variable]]
-native_id = "86.1569"
-slug = "fodelseland"
-
-[[variable]]
-native_id = "86.2463"
-slug = "undersokningsar"
-
-[[variable]]
-native_id = "86.3218"
-slug = "inkomstranta"
-
-[[variable]]
-native_id = "86.3223"
-slug = "antal-individer-kosthushallet"
-
-[[variable]]
-native_id = "86.3265"
-slug = "datumreg"
-
-[[variable]]
-native_id = "86.4454"
-slug = "individ-hushallsid"
-
-[[variable]]
-native_id = "86.4472"
-slug = "upplatelseform"
-
-[[variable]]
-native_id = "86.5696"
-slug = "stora-n-per-stratum"
-
-[[variable]]
-native_id = "86.7900"
-slug = "byggnadsar"
-
-[[variable]]
-native_id = "86.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "86.8167"
-slug = "antal-svarande-objekt"
-
-[[variable]]
-native_id = "86.15195"
-slug = "redovisningsar"
-
-[[variable]]
-native_id = "86.16075"
-slug = "hushallsforestandare"
-
-[[variable]]
-native_id = "86.16510"
-slug = "rantebidrag"
-
-[[variable]]
-native_id = "86.17411"
-slug = "boarea"
-
-[[variable]]
-native_id = "86.21273"
-slug = "imputering-boyta"
-
-[[variable]]
-native_id = "86.22273"
-slug = "disponibel-inkomst-kosthushall-2004"
-
-[[variable]]
-native_id = "86.22328"
-slug = "region-fyra-delar"
-
-[[variable]]
-native_id = "86.22335"
-slug = "konsumtionsenhetsvikt-2004"
-
-[[variable]]
-native_id = "86.22368"
-slug = "bilinnehav-antal-bilar"
-
-[[variable]]
-native_id = "86.30781"
-slug = "koktyp"
-
-[[variable]]
-native_id = "86.31997"
-slug = "typ-av-uppgift"
-
-[[variable]]
-native_id = "86.32773"
-slug = "antal-personer-i-hushallet"
-
-[[variable]]
-native_id = "86.32957"
-slug = "kommunkod"
-
-[[variable]]
-native_id = "86.35335"
-slug = "regionindelning"
-
-[[variable]]
-native_id = "86.35579"
-slug = "hushallsforestandaren"
-
-[[variable]]
-native_id = "86.35581"
-slug = "relation-till-urvalsperson"
-
-[[variable]]
-native_id = "86.35704"
-slug = "hushallsvikt-kalibrerad"
-
-[[variable]]
-native_id = "86.35992"
-slug = "antal-rum"
-
-[[variable]]
-native_id = "86.36030"
-slug = "uppvarmningsutgift-annat-bransle"
-
-[[variable]]
-native_id = "86.36031"
-slug = "uppvarmningsutgift-el"
-
-[[variable]]
-native_id = "86.36032"
-slug = "uppvarmningsutgift-fjarrvarme"
-
-[[variable]]
-native_id = "86.36033"
-slug = "uppvarmningsutgift-olja"
-
-[[variable]]
-native_id = "86.36034"
-slug = "uppvarmningsutgift-biobransle"
-
-[[variable]]
-native_id = "86.37949"
-slug = "hushallsforestandarens-alder"
-
-[[variable]]
-native_id = "86.38249"
-slug = "fodd-i-sverige-eller-utomlands"
-
-[[variable]]
-native_id = "86.40881"
-slug = "utgift-fritidsbostad-forsakring"
-
-[[variable]]
-native_id = "86.40948"
-slug = "utgift-bilforsakring"
-
-[[variable]]
-native_id = "86.40957"
-slug = "utgift-forsakring-annat-fordon"
-
-[[variable]]
-native_id = "86.41007"
-slug = "utgift-batforsakring"
-
-[[variable]]
-native_id = "86.45856"
-slug = "urvalskvartal"
+"86.31" = "forsamling"
+"86.49" = "lan"
+"86.388" = "antal-barn"
+"86.779" = "utbildningsniva-1-position"
+"86.1569" = "fodelseland"
+"86.2463" = "undersokningsar"
+"86.3218" = "inkomstranta"
+"86.3223" = "antal-individer-kosthushallet"
+"86.3265" = "datumreg"
+"86.4454" = "individ-hushallsid"
+"86.4472" = "upplatelseform"
+"86.5696" = "stora-n-per-stratum"
+"86.7900" = "byggnadsar"
+"86.8137" = "huvudman"
+"86.8167" = "antal-svarande-objekt"
+"86.15195" = "redovisningsar"
+"86.16075" = "hushallsforestandare"
+"86.16510" = "rantebidrag"
+"86.17411" = "boarea"
+"86.21273" = "imputering-boyta"
+"86.22273" = "disponibel-inkomst-kosthushall-2004"
+"86.22328" = "region-fyra-delar"
+"86.22335" = "konsumtionsenhetsvikt-2004"
+"86.22368" = "bilinnehav-antal-bilar"
+"86.30781" = "koktyp"
+"86.31997" = "typ-av-uppgift"
+"86.32773" = "antal-personer-i-hushallet"
+"86.32957" = "kommunkod"
+"86.35335" = "regionindelning"
+"86.35579" = "hushallsforestandaren"
+"86.35581" = "relation-till-urvalsperson"
+"86.35704" = "hushallsvikt-kalibrerad"
+"86.35992" = "antal-rum"
+"86.36030" = "uppvarmningsutgift-annat-bransle"
+"86.36031" = "uppvarmningsutgift-el"
+"86.36032" = "uppvarmningsutgift-fjarrvarme"
+"86.36033" = "uppvarmningsutgift-olja"
+"86.36034" = "uppvarmningsutgift-biobransle"
+"86.37949" = "hushallsforestandarens-alder"
+"86.38249" = "fodd-i-sverige-eller-utomlands"
+"86.40881" = "utgift-fritidsbostad-forsakring"
+"86.40948" = "utgift-bilforsakring"
+"86.40957" = "utgift-forsakring-annat-fordon"
+"86.41007" = "utgift-batforsakring"
+"86.45856" = "urvalskvartal"
 
 # register 89
-
-[[variable]]
-native_id = "86.15.civid"
-slug = "civilstand"
-
-[[variable]]
-native_id = "86.15.civurv"
-slug = "civilstand-urval"
-
-[[variable]]
-native_id = "86.25796.delurv"
-slug = "delurval"
-
-[[variable]]
-native_id = "86.3270.bsyssel"
-slug = "sysselsattningstyp"
-
-[[variable]]
-native_id = "86.75.carb1"
-slug = "arbetsinkomst"
+"86.15.civid" = "civilstand"
+"86.15.civurv" = "civilstand-urval"
+"86.25796.delurv" = "delurval"
+"86.3270.bsyssel" = "sysselsattningstyp"
+"86.75.carb1" = "arbetsinkomst"
 
 # register 97
-
-[[variable]]
-native_id = "86.66.person-2"
-slug = "utbp-person-2"
-
-[[variable]]
-native_id = "86.66.person-3"
-slug = "utbp-person-3"
-
-[[variable]]
-native_id = "86.66.person-4"
-slug = "utbp-person-4"
-
-[[variable]]
-native_id = "86.66.person-5"
-slug = "utbp-person-5"
-
-[[variable]]
-native_id = "86.66.person-6"
-slug = "utbp-person-6"
-
-[[variable]]
-native_id = "86.66.person-7"
-slug = "utbp-person-7"
-
-[[variable]]
-native_id = "86.66.person-8"
-slug = "utbp-person-8"
-
-[[variable]]
-native_id = "86.66.person-1"
-slug = "utbp"
-
-[[variable]]
-native_id = "86.302.person-2"
-slug = "fodelsedatum-person-2"
-
-[[variable]]
-native_id = "86.302.person-4"
-slug = "fodelsedatum-person-4"
-
-[[variable]]
-native_id = "86.302.person-5"
-slug = "fodelsedatum-person-5"
-
-[[variable]]
-native_id = "86.302.person-6"
-slug = "fodelsedatum-person-6"
-
-[[variable]]
-native_id = "86.302.person-7"
-slug = "fodelsedatum-person-7"
-
-[[variable]]
-native_id = "86.302.person-8"
-slug = "fodelsedatum-person-8"
-
-[[variable]]
-native_id = "86.302.person-1"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "86.302.person-3"
-slug = "fodelsedatum-person-3"
-
-[[variable]]
-native_id = "86.18187.person-2"
-slug = "skuldranta-m-m-person-2"
-
-[[variable]]
-native_id = "86.18187.person-3"
-slug = "skuldranta-m-m-person-3"
-
-[[variable]]
-native_id = "86.18187.person-4"
-slug = "skuldranta-m-m-person-4"
-
-[[variable]]
-native_id = "86.18187.person-5"
-slug = "skuldranta-m-m-person-5"
-
-[[variable]]
-native_id = "86.18187.person-6"
-slug = "skuldranta-m-m-person-6"
-
-[[variable]]
-native_id = "86.18187.person-7"
-slug = "skuldranta-m-m-person-7"
-
-[[variable]]
-native_id = "86.18187.person-8"
-slug = "skuldranta-m-m-person-8"
-
-[[variable]]
-native_id = "86.18187.person-1"
-slug = "skuldranta-m-m"
-
-[[variable]]
-native_id = "86.40903.literal-vk2506"
-slug = "utgift-ovriga-tillbehor-literal-vk2506"
-
-[[variable]]
-native_id = "86.40903.literal-vk2321"
-slug = "utgift-ovriga-tillbehor"
-
-[[variable]]
-native_id = "86.40904.literal-vk2127"
-slug = "utgift-sanglinne"
-
-[[variable]]
-native_id = "86.40904.literal-vk2331"
-slug = "utgift-sanglinne-literal-vk2331"
-
-[[variable]]
-native_id = "86.40919.literal-vk2362"
-slug = "utgift-reparation-hyra-tillbehor"
-
-[[variable]]
-native_id = "86.40919.literal-vk2645"
-slug = "utgift-reparation-hyra-tillbehor-literal-vk2645"
-
-[[variable]]
-native_id = "86.40919.literal-vk2605"
-slug = "utgift-reparation-hyra-tillbehor-literal-vk2605"
-
-[[variable]]
-native_id = "86.40946.literal-vk2525"
-slug = "vk25-literal-vk2525"
-
-[[variable]]
-native_id = "86.40946.literal-vk2504"
-slug = "vk25"
-
-[[variable]]
-native_id = "86.45373.literal-u105"
-slug = "u10-literal-u105"
-
-[[variable]]
-native_id = "86.45373.aggregation-copy"
-slug = "u10"
-
-[[variable]]
-native_id = "86.45390.vehicle-loans"
-slug = "u22-vehicle-loans"
-
-[[variable]]
-native_id = "86.45390.other-loans"
-slug = "u22-other-loans"
-
-[[variable]]
-native_id = "86.45390.total-excluding-mortgages"
-slug = "u22"
-
-[[variable]]
-native_id = "86.45391.organisations"
-slug = "u24-organisations"
-
-[[variable]]
-native_id = "86.45391.private-persons"
-slug = "u24-private-persons"
-
-[[variable]]
-native_id = "86.45391.total"
-slug = "u24"
-
-[[variable]]
-native_id = "86.46210.source-native-question"
-slug = "hut-del"
+"86.66.person-2" = "utbp-person-2"
+"86.66.person-3" = "utbp-person-3"
+"86.66.person-4" = "utbp-person-4"
+"86.66.person-5" = "utbp-person-5"
+"86.66.person-6" = "utbp-person-6"
+"86.66.person-7" = "utbp-person-7"
+"86.66.person-8" = "utbp-person-8"
+"86.66.person-1" = "utbp"
+"86.302.person-2" = "fodelsedatum-person-2"
+"86.302.person-4" = "fodelsedatum-person-4"
+"86.302.person-5" = "fodelsedatum-person-5"
+"86.302.person-6" = "fodelsedatum-person-6"
+"86.302.person-7" = "fodelsedatum-person-7"
+"86.302.person-8" = "fodelsedatum-person-8"
+"86.302.person-1" = "fodelsedatum"
+"86.302.person-3" = "fodelsedatum-person-3"
+"86.18187.person-2" = "skuldranta-m-m-person-2"
+"86.18187.person-3" = "skuldranta-m-m-person-3"
+"86.18187.person-4" = "skuldranta-m-m-person-4"
+"86.18187.person-5" = "skuldranta-m-m-person-5"
+"86.18187.person-6" = "skuldranta-m-m-person-6"
+"86.18187.person-7" = "skuldranta-m-m-person-7"
+"86.18187.person-8" = "skuldranta-m-m-person-8"
+"86.18187.person-1" = "skuldranta-m-m"
+"86.40903.literal-vk2506" = "utgift-ovriga-tillbehor-literal-vk2506"
+"86.40903.literal-vk2321" = "utgift-ovriga-tillbehor"
+"86.40904.literal-vk2127" = "utgift-sanglinne"
+"86.40904.literal-vk2331" = "utgift-sanglinne-literal-vk2331"
+"86.40919.literal-vk2362" = "utgift-reparation-hyra-tillbehor"
+"86.40919.literal-vk2645" = "utgift-reparation-hyra-tillbehor-literal-vk2645"
+"86.40919.literal-vk2605" = "utgift-reparation-hyra-tillbehor-literal-vk2605"
+"86.40946.literal-vk2525" = "vk25-literal-vk2525"
+"86.40946.literal-vk2504" = "vk25"
+"86.45373.literal-u105" = "u10-literal-u105"
+"86.45373.aggregation-copy" = "u10"
+"86.45390.vehicle-loans" = "u22-vehicle-loans"
+"86.45390.other-loans" = "u22-other-loans"
+"86.45390.total-excluding-mortgages" = "u22"
+"86.45391.organisations" = "u24-organisations"
+"86.45391.private-persons" = "u24-private-persons"
+"86.45391.total" = "u24"
+"86.46210.source-native-question" = "hut-del"
+"86.40955.u0722" = "u0722"
+"86.40955.vk2524" = "vk2"
+"86.40955.vk2627" = "vk2627"
+"86.40446.rad106" = "rad106"
+"86.40446.vk2773" = "vk277"
+"86.40446.vk2777" = "vk2777"
+"86.44.bkon" = "bkon"
+"86.44.bkonz" = "bkonz"
+"86.44.pkoen2" = "pkoen"
+"86.44.pkoen3" = "pkoen3"
+"86.44.pkoen4" = "pkoen4"
+"86.44.pkoen5" = "pkoen5"
+"86.44.pkoen6" = "pkoen6"
+"86.44.pkoen7" = "pkoen7"
+"86.44.pkoen8" = "pkoen8"
+"86.44.ubkoen" = "ubkoen"
+"86.6267.bald" = "bald"
+"86.6267.pald2" = "pald"
+"86.6267.pald3" = "pald3"
+"86.6267.pald4" = "pald4"
+"86.6267.pald5" = "pald5"
+"86.6267.pald6" = "pald6"
+"86.6267.pald7" = "pald7"
+"86.6267.pald8" = "pald8"
+"86.6267.ubald" = "ubald"
+"86.75.carb2" = "carb2"
+"86.75.carb3" = "carb3"
+"86.75.carb4" = "carb4"
+"86.75.carb5" = "carb5"
+"86.75.carb6" = "carb6"
+"86.75.carb7" = "carb7"
+"86.75.carb8" = "carb8"
+"86.75.scarb00" = "scarb0"
+"86.75.scarb01" = "scarb01"
+"86.75.scarb02" = "scarb02"
+"86.11193.hviktes" = "hviktes"
+"86.11193.wvikt00" = "wvikt00"
+"86.11193.wvikt01" = "wvikt01"
+"86.11193.wvikt99" = "wvikt"
+"86.4545.p2sei" = "p2sei"
+"86.4545.p3sei" = "p3sei"
+"86.4545.p4sei" = "p4sei"
+"86.4545.p5sei" = "p5sei"
+"86.4545.p6sei" = "p6sei"
+"86.4545.p7sei" = "p7sei"
+"86.4545.p8sei" = "p8sei"
+"86.4545.socek1" = "socek"
+"86.4545.socek2" = "socek2"
+"86.4545.socek3" = "socek3"
+"86.4545.socek4" = "socek4"
+"86.4545.socek5" = "socek5"
+"86.4545.upsei" = "upsei"
 
 [[identity.partition]]
 variable = "86.66"
@@ -1192,211 +799,3 @@ variable = "86.4545"
 columns = { P2SEI = "86.4545.p2sei", P3SEI = "86.4545.p3sei", P4SEI = "86.4545.p4sei", P5SEI = "86.4545.p5sei", P6SEI = "86.4545.p6sei", P7SEI = "86.4545.p7sei", P8SEI = "86.4545.p8sei", SOCEK1 = "86.4545.socek1", SOCEK2 = "86.4545.socek2", SOCEK3 = "86.4545.socek3", SOCEK4 = "86.4545.socek4", SOCEK5 = "86.4545.socek5", UPSEI = "86.4545.upsei", p2sei = "86.4545.p2sei", p3sei = "86.4545.p3sei", p4sei = "86.4545.p4sei", p5sei = "86.4545.p5sei", p6sei = "86.4545.p6sei", p7sei = "86.4545.p7sei", socek1 = "86.4545.socek1", socek2 = "86.4545.socek2", socek3 = "86.4545.socek3", socek4 = "86.4545.socek4", socek5 = "86.4545.socek5", upsei = "86.4545.upsei" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "e685cd43f7c7315008e9d390c220fe40838d74d7daee45a406b3d86a43c0a989"
-
-[[variable]]
-native_id = "86.40955.u0722"
-slug = "u0722"
-
-[[variable]]
-native_id = "86.40955.vk2524"
-slug = "vk2"
-
-[[variable]]
-native_id = "86.40955.vk2627"
-slug = "vk2627"
-
-[[variable]]
-native_id = "86.40446.rad106"
-slug = "rad106"
-
-[[variable]]
-native_id = "86.40446.vk2773"
-slug = "vk277"
-
-[[variable]]
-native_id = "86.40446.vk2777"
-slug = "vk2777"
-
-[[variable]]
-native_id = "86.44.bkon"
-slug = "bkon"
-
-[[variable]]
-native_id = "86.44.bkonz"
-slug = "bkonz"
-
-[[variable]]
-native_id = "86.44.pkoen2"
-slug = "pkoen"
-
-[[variable]]
-native_id = "86.44.pkoen3"
-slug = "pkoen3"
-
-[[variable]]
-native_id = "86.44.pkoen4"
-slug = "pkoen4"
-
-[[variable]]
-native_id = "86.44.pkoen5"
-slug = "pkoen5"
-
-[[variable]]
-native_id = "86.44.pkoen6"
-slug = "pkoen6"
-
-[[variable]]
-native_id = "86.44.pkoen7"
-slug = "pkoen7"
-
-[[variable]]
-native_id = "86.44.pkoen8"
-slug = "pkoen8"
-
-[[variable]]
-native_id = "86.44.ubkoen"
-slug = "ubkoen"
-
-[[variable]]
-native_id = "86.6267.bald"
-slug = "bald"
-
-[[variable]]
-native_id = "86.6267.pald2"
-slug = "pald"
-
-[[variable]]
-native_id = "86.6267.pald3"
-slug = "pald3"
-
-[[variable]]
-native_id = "86.6267.pald4"
-slug = "pald4"
-
-[[variable]]
-native_id = "86.6267.pald5"
-slug = "pald5"
-
-[[variable]]
-native_id = "86.6267.pald6"
-slug = "pald6"
-
-[[variable]]
-native_id = "86.6267.pald7"
-slug = "pald7"
-
-[[variable]]
-native_id = "86.6267.pald8"
-slug = "pald8"
-
-[[variable]]
-native_id = "86.6267.ubald"
-slug = "ubald"
-
-[[variable]]
-native_id = "86.75.carb2"
-slug = "carb2"
-
-[[variable]]
-native_id = "86.75.carb3"
-slug = "carb3"
-
-[[variable]]
-native_id = "86.75.carb4"
-slug = "carb4"
-
-[[variable]]
-native_id = "86.75.carb5"
-slug = "carb5"
-
-[[variable]]
-native_id = "86.75.carb6"
-slug = "carb6"
-
-[[variable]]
-native_id = "86.75.carb7"
-slug = "carb7"
-
-[[variable]]
-native_id = "86.75.carb8"
-slug = "carb8"
-
-[[variable]]
-native_id = "86.75.scarb00"
-slug = "scarb0"
-
-[[variable]]
-native_id = "86.75.scarb01"
-slug = "scarb01"
-
-[[variable]]
-native_id = "86.75.scarb02"
-slug = "scarb02"
-
-[[variable]]
-native_id = "86.11193.hviktes"
-slug = "hviktes"
-
-[[variable]]
-native_id = "86.11193.wvikt00"
-slug = "wvikt00"
-
-[[variable]]
-native_id = "86.11193.wvikt01"
-slug = "wvikt01"
-
-[[variable]]
-native_id = "86.11193.wvikt99"
-slug = "wvikt"
-
-[[variable]]
-native_id = "86.4545.p2sei"
-slug = "p2sei"
-
-[[variable]]
-native_id = "86.4545.p3sei"
-slug = "p3sei"
-
-[[variable]]
-native_id = "86.4545.p4sei"
-slug = "p4sei"
-
-[[variable]]
-native_id = "86.4545.p5sei"
-slug = "p5sei"
-
-[[variable]]
-native_id = "86.4545.p6sei"
-slug = "p6sei"
-
-[[variable]]
-native_id = "86.4545.p7sei"
-slug = "p7sei"
-
-[[variable]]
-native_id = "86.4545.p8sei"
-slug = "p8sei"
-
-[[variable]]
-native_id = "86.4545.socek1"
-slug = "socek"
-
-[[variable]]
-native_id = "86.4545.socek2"
-slug = "socek2"
-
-[[variable]]
-native_id = "86.4545.socek3"
-slug = "socek3"
-
-[[variable]]
-native_id = "86.4545.socek4"
-slug = "socek4"
-
-[[variable]]
-native_id = "86.4545.socek5"
-slug = "socek5"
-
-[[variable]]
-native_id = "86.4545.upsei"
-slug = "upsei"

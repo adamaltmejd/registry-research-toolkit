@@ -29,76 +29,28 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Regionala befolkningsprognoser (Statund)
-
-[[variable]]
-native_id = "397.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "397.44"
-slug = "kon"
-
-[[variable]]
-native_id = "397.6145"
-slug = "studerat-pa-distans"
-
-[[variable]]
-native_id = "397.32721"
-slug = "distansundervisning"
+"397.57" = "personnr"
+"397.44" = "kon"
+"397.6145" = "studerat-pa-distans"
+"397.32721" = "distansundervisning"
 
 # register 404 (bas)
-
-[[variable]]
-native_id = "397.26"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "397.66"
-slug = "sun2000niva"
-
-[[variable]]
-native_id = "397.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "397.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "397.271"
-slug = "medborgarskapsland"
-
-[[variable]]
-native_id = "397.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "397.749"
-slug = "aldersgrupp"
-
-[[variable]]
-native_id = "397.866"
-slug = "fodd-i-sverige-utomlands"
-
-[[variable]]
-native_id = "397.1557"
-slug = "kalenderar"
-
-[[variable]]
-native_id = "397.2628"
-slug = "insamlingsdatum"
-
-[[variable]]
-native_id = "397.6556"
-slug = "fodelseland-varldsdel"
+"397.26" = "fastighetsbeteckning"
+"397.66" = "sun2000niva"
+"397.241" = "alder-31-12"
+"397.257" = "fodelseland-rtb"
+"397.271" = "medborgarskapsland"
+"397.332" = "senaste-invandringsdatum"
+"397.749" = "aldersgrupp"
+"397.866" = "fodd-i-sverige-utomlands"
+"397.1557" = "kalenderar"
+"397.2628" = "insamlingsdatum"
+"397.6556" = "fodelseland-varldsdel"
 
 # register 400
-
-[[variable]]
-native_id = "397.36.lankom"
-slug = "lan-kommun-kod"
+"397.36.lankom" = "lan-kommun-kod"
 
 # register 400
 

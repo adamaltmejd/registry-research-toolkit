@@ -38,13 +38,7 @@ panel_entity_key = ["persid", "persid-barn"]
 panel_time_key = "del-from-datum"
 panel_time_grain = "row"
 
+[variable]
 # Tillfällig föräldrapenning
-
-[[variable]]
-native_id = "7724610645254369578.PERSID"
-slug = "persid"
-
-
-[[variable]]
-native_id = "7724610645254369578.PERSID_BARN"
-slug = "persid-barn"
+"7724610645254369578.PERSID" = "persid"
+"7724610645254369578.PERSID_BARN" = "persid-barn"

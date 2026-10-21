@@ -11,105 +11,37 @@ panel_entity_key = "husbeteckning"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Energistatistik för småhus
-
-[[variable]]
-native_id = "73.17413"
-slug = "husbeteckning"
-
-
-[[variable]]
-native_id = "73.21412"
-slug = "ovriga-upplysningar-blankett"
-
-[[variable]]
-native_id = "73.21422"
-slug = "tidsatgang-kostnadsblankett"
-
-[[variable]]
-native_id = "73.37437"
-slug = "ovriga-upplysningar"
+"73.17413" = "husbeteckning"
+"73.21412" = "ovriga-upplysningar-blankett"
+"73.21422" = "tidsatgang-kostnadsblankett"
+"73.37437" = "ovriga-upplysningar"
 
 # register 74 (energi-smahus)
-
-[[variable]]
-native_id = "73.21421.tidsatgang"
-slug = "tidsatgang-husblankett"
+"73.21421.tidsatgang" = "tidsatgang-husblankett"
 
 # register 8 (fordonsreg)
-
-[[variable]]
-native_id = "73.16423"
-slug = "orgnr-foretaget"
-
-[[variable]]
-native_id = "73.729"
-slug = "mervardesskatt-netto"
-
-[[variable]]
-native_id = "73.4472"
-slug = "upplatelseform"
-
-[[variable]]
-native_id = "73.5113"
-slug = "byggherre"
-
-[[variable]]
-native_id = "73.15195"
-slug = "redovisningsar"
-
-[[variable]]
-native_id = "73.17046"
-slug = "antal-lagenheter-totalt"
-
-[[variable]]
-native_id = "73.17232"
-slug = "byggherrekategori"
-
-[[variable]]
-native_id = "73.17235"
-slug = "fardigstallandear-manad"
-
-[[variable]]
-native_id = "73.17236"
-slug = "paborjandear-manad"
-
-[[variable]]
-native_id = "73.17373"
-slug = "bruttoarea-totalt"
-
-[[variable]]
-native_id = "73.17378"
-slug = "byggherrens-adress"
-
-[[variable]]
-native_id = "73.17379"
-slug = "byggherrens-postadress"
-
-[[variable]]
-native_id = "73.17380"
-slug = "byggherrens-postnummer"
-
-[[variable]]
-native_id = "73.19086"
-slug = "antal-lagenheter"
-
-[[variable]]
-native_id = "73.21097"
-slug = "lokalarea-totalt"
-
-[[variable]]
-native_id = "73.22863"
-slug = "lansregion"
+"73.16423" = "orgnr-foretaget"
+"73.729" = "mervardesskatt-netto"
+"73.4472" = "upplatelseform"
+"73.5113" = "byggherre"
+"73.15195" = "redovisningsar"
+"73.17046" = "antal-lagenheter-totalt"
+"73.17232" = "byggherrekategori"
+"73.17235" = "fardigstallandear-manad"
+"73.17236" = "paborjandear-manad"
+"73.17373" = "bruttoarea-totalt"
+"73.17378" = "byggherrens-adress"
+"73.17379" = "byggherrens-postadress"
+"73.17380" = "byggherrens-postnummer"
+"73.19086" = "antal-lagenheter"
+"73.21097" = "lokalarea-totalt"
+"73.22863" = "lansregion"
 
 # register 74
+"73.21077.antvaningsplanfh" = "antal-vaningsplan-flerbostadshus"
+"73.21077.vaningsplansmahus" = "antal-vaningsplan-smahus"
 
-[[variable]]
-native_id = "73.21077.antvaningsplanfh"
-slug = "antal-vaningsplan-flerbostadshus"
-
-[[variable]]
-native_id = "73.21077.vaningsplansmahus"
-slug = "antal-vaningsplan-smahus"
 
 # register 75

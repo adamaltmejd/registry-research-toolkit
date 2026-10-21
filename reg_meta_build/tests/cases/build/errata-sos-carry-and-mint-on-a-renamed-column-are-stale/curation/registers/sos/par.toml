@@ -11,9 +11,10 @@ deldatamangd = "PAR_OV"
 variable = "INVARN8"
 name = "target"
 column = "INVARN9"
-[[variable]]
-native_id = "5891427617861710725.INVARN9"
-slug = "new-name"
+
+[variable]
+"5891427617861710725.INVARN9" = "new-name"
+
 [[errata.occurrence_carry]]
 variable = "5891427617861710725.INVARN8"
 variant = "PAR_OV"

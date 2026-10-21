@@ -29,8 +29,6 @@ panel_entity_key = "lopnr"
 panel_time_key = "startdatum"
 panel_time_grain = "row"
 
+[variable]
 # Assistansersättning
-
-[[variable]]
-native_id = "5285952033367956531.Lopnr"
-slug = "lopnr"
+"5285952033367956531.Lopnr" = "lopnr"

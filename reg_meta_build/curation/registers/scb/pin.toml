@@ -65,532 +65,144 @@ panel_entity_key = "orgnr-12"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
+[variable]
 # Utförarregistret
-
-[[variable]]
-native_id = "382.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "382.87"
-slug = "foradlingsvarde"
-
-[[variable]]
-native_id = "382.2686"
-slug = "manadslon"
-
-[[variable]]
-native_id = "382.2846"
-slug = "lopnummer-urvalsenheter"
-
-[[variable]]
-native_id = "382.4028"
-slug = "stratum-storlek"
-
-[[variable]]
-native_id = "382.4030"
-slug = "lillan"
-
-[[variable]]
-native_id = "382.4042"
-slug = "firmanamn"
-
-[[variable]]
-native_id = "382.4066"
-slug = "storleksgrupp"
-
-[[variable]]
-native_id = "382.4081"
-slug = "period"
-
-[[variable]]
-native_id = "382.4256"
-slug = "nettoomsattning"
-
-[[variable]]
-native_id = "382.4262"
-slug = "kostnader-handelsvaror"
-
-[[variable]]
-native_id = "382.4266"
-slug = "kostnader-for-ravaror"
-
-[[variable]]
-native_id = "382.4269"
-slug = "summa-kostnader-ravaror-handelsvaror"
-
-[[variable]]
-native_id = "382.4820"
-slug = "intakter-av-handel"
-
-[[variable]]
-native_id = "382.4821"
-slug = "intakter-av-industri"
-
-[[variable]]
-native_id = "382.4822"
-slug = "intakter-av-ovrigt"
-
-[[variable]]
-native_id = "382.4903"
-slug = "ar-och-kvartal"
-
-[[variable]]
-native_id = "382.4969"
-slug = "kvantitetsenhet"
-
-[[variable]]
-native_id = "382.5072"
-slug = "moms"
-
-[[variable]]
-native_id = "382.6306"
-slug = "antal-arbetade-timmar"
-
-[[variable]]
-native_id = "382.6392"
-slug = "antal-sysselsatta"
-
-[[variable]]
-native_id = "382.7782"
-slug = "fardigstallda-hus"
-
-[[variable]]
-native_id = "382.17357"
-slug = "timlon"
-
-[[variable]]
-native_id = "382.18952"
-slug = "lagerutveckling"
-
-[[variable]]
-native_id = "382.21317"
-slug = "produktionsvolymer"
-
-[[variable]]
-native_id = "382.25033"
-slug = "kapacitetsutnyttjandet"
-
-[[variable]]
-native_id = "382.29270"
-slug = "prisindex"
-
-[[variable]]
-native_id = "382.33064"
-slug = "handelsmarginal"
-
-[[variable]]
-native_id = "382.37037"
-slug = "nettoomsattning-export"
-
-[[variable]]
-native_id = "382.37038"
-slug = "nettoomsattning-hemma"
-
-[[variable]]
-native_id = "382.37039"
-slug = "industriomsattning-export"
-
-[[variable]]
-native_id = "382.37040"
-slug = "industriomsattning-hemma"
-
-[[variable]]
-native_id = "382.37756"
-slug = "industriomsattning"
-
-[[variable]]
-native_id = "382.37757"
-slug = "handelsomsattning"
-
-[[variable]]
-native_id = "382.37758"
-slug = "tjansteomsattning"
-
-[[variable]]
-native_id = "382.41603"
-slug = "temperatur"
-
-[[variable]]
-native_id = "382.41615"
-slug = "tjansteomsattning-hemmamarknad"
-
-[[variable]]
-native_id = "382.41616"
-slug = "tjansteomsattning-exportmarknad"
-
-[[variable]]
-native_id = "382.41617"
-slug = "handelsomsattning-hemmamarknad"
-
-[[variable]]
-native_id = "382.41618"
-slug = "handelsomsattning-exportmarknad"
-
-[[variable]]
-native_id = "382.41622"
-slug = "antal-landningar"
-
-[[variable]]
-native_id = "382.41623"
-slug = "passagerare-luftfart"
-
-[[variable]]
-native_id = "382.41625"
-slug = "farledsavgifter"
-
-[[variable]]
-native_id = "382.41626"
-slug = "antal-lotsningar"
-
-[[variable]]
-native_id = "382.41627"
-slug = "lotsavgifter"
-
-[[variable]]
-native_id = "382.50024"
-slug = "referensmanad-pin"
-
-[[variable]]
-native_id = "382.50025"
-slug = "referensar-pin"
-
-[[variable]]
-native_id = "382.50042"
-slug = "scbid-pin"
-
-[[variable]]
-native_id = "382.50055"
-slug = "referenskvartal-pin"
-
-[[variable]]
-native_id = "382.50056"
-slug = "nettoomsattning-modellskattad-pin"
-
-[[variable]]
-native_id = "382.50216"
-slug = "referensmanad-obs-pin"
+"382.56" = "person-orgnr"
+"382.87" = "foradlingsvarde"
+"382.2686" = "manadslon"
+"382.2846" = "lopnummer-urvalsenheter"
+"382.4028" = "stratum-storlek"
+"382.4030" = "lillan"
+"382.4042" = "firmanamn"
+"382.4066" = "storleksgrupp"
+"382.4081" = "period"
+"382.4256" = "nettoomsattning"
+"382.4262" = "kostnader-handelsvaror"
+"382.4266" = "kostnader-for-ravaror"
+"382.4269" = "summa-kostnader-ravaror-handelsvaror"
+"382.4820" = "intakter-av-handel"
+"382.4821" = "intakter-av-industri"
+"382.4822" = "intakter-av-ovrigt"
+"382.4903" = "ar-och-kvartal"
+"382.4969" = "kvantitetsenhet"
+"382.5072" = "moms"
+"382.6306" = "antal-arbetade-timmar"
+"382.6392" = "antal-sysselsatta"
+"382.7782" = "fardigstallda-hus"
+"382.17357" = "timlon"
+"382.18952" = "lagerutveckling"
+"382.21317" = "produktionsvolymer"
+"382.25033" = "kapacitetsutnyttjandet"
+"382.29270" = "prisindex"
+"382.33064" = "handelsmarginal"
+"382.37037" = "nettoomsattning-export"
+"382.37038" = "nettoomsattning-hemma"
+"382.37039" = "industriomsattning-export"
+"382.37040" = "industriomsattning-hemma"
+"382.37756" = "industriomsattning"
+"382.37757" = "handelsomsattning"
+"382.37758" = "tjansteomsattning"
+"382.41603" = "temperatur"
+"382.41615" = "tjansteomsattning-hemmamarknad"
+"382.41616" = "tjansteomsattning-exportmarknad"
+"382.41617" = "handelsomsattning-hemmamarknad"
+"382.41618" = "handelsomsattning-exportmarknad"
+"382.41622" = "antal-landningar"
+"382.41623" = "passagerare-luftfart"
+"382.41625" = "farledsavgifter"
+"382.41626" = "antal-lotsningar"
+"382.41627" = "lotsavgifter"
+"382.50024" = "referensmanad-pin"
+"382.50025" = "referensar-pin"
+"382.50042" = "scbid-pin"
+"382.50055" = "referenskvartal-pin"
+"382.50056" = "nettoomsattning-modellskattad-pin"
+"382.50216" = "referensmanad-obs-pin"
 
 # register 389 (kkv)
-
-[[variable]]
-native_id = "382.55"
-slug = "omsattning-enligt-moms"
-
-[[variable]]
-native_id = "382.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "382.814"
-slug = "faxnummer"
-
-[[variable]]
-native_id = "382.1086"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "382.1795"
-slug = "blankettnummer"
-
-[[variable]]
-native_id = "382.2956"
-slug = "orderingang-exportmarknad"
-
-[[variable]]
-native_id = "382.2957"
-slug = "orderingang-hemmamarknad"
-
-[[variable]]
-native_id = "382.2958"
-slug = "total-orderingang"
-
-[[variable]]
-native_id = "382.4038"
-slug = "antal-anstallda-enligt-fdb"
-
-[[variable]]
-native_id = "382.4040"
-slug = "foretagsenhetens-startar"
-
-[[variable]]
-native_id = "382.4045"
-slug = "koncernmarkering"
-
-[[variable]]
-native_id = "382.4079"
-slug = "omsattningsvarde"
-
-[[variable]]
-native_id = "382.5084"
-slug = "inrikes-omsattning"
-
-[[variable]]
-native_id = "382.28064"
-slug = "imputeringsstatus"
-
-[[variable]]
-native_id = "382.31002"
-slug = "urvalsversion"
-
-[[variable]]
-native_id = "382.38045"
-slug = "naringsgren-sni-5-siffer"
+"382.55" = "omsattning-enligt-moms"
+"382.467" = "telefonnummer"
+"382.814" = "faxnummer"
+"382.1086" = "namn-juridiska-enheten"
+"382.1795" = "blankettnummer"
+"382.2956" = "orderingang-exportmarknad"
+"382.2957" = "orderingang-hemmamarknad"
+"382.2958" = "total-orderingang"
+"382.4038" = "antal-anstallda-enligt-fdb"
+"382.4040" = "foretagsenhetens-startar"
+"382.4045" = "koncernmarkering"
+"382.4079" = "omsattningsvarde"
+"382.5084" = "inrikes-omsattning"
+"382.28064" = "imputeringsstatus"
+"382.31002" = "urvalsversion"
+"382.38045" = "naringsgren-sni-5-siffer"
 
 # register 383
-
-[[variable]]
-native_id = "382.1654.mobil"
-slug = "kontaktperson-mobilnr"
-
-[[variable]]
-native_id = "382.1724.epost"
-slug = "e-postadress-kontaktperson"
-
-[[variable]]
-native_id = "382.1724.epostuppg"
-slug = "e-postadress-kontaktperson-2"
-
-[[variable]]
-native_id = "382.4053.sni2007upp"
-slug = "bransch-enligt-uppgiftslamnaren"
-
-[[variable]]
-native_id = "382.4053.sni92upp"
-slug = "bransch-enligt-uppgiftslamnaren-2"
+"382.1654.mobil" = "kontaktperson-mobilnr"
+"382.1724.epost" = "e-postadress-kontaktperson"
+"382.1724.epostuppg" = "e-postadress-kontaktperson-2"
+"382.4053.sni2007upp" = "bransch-enligt-uppgiftslamnaren"
+"382.4053.sni92upp" = "bransch-enligt-uppgiftslamnaren-2"
 
 # register 389
-
 # ==== registers/scb/pin.toml (register 382) ====
-
-[[variable]]
-native_id = "382.43.source-positive"
-slug = "kvartal"
-
-[[variable]]
-native_id = "382.73.source-positive"
-slug = "ar"
-
-[[variable]]
-native_id = "382.466.source-positive"
-slug = "upprakningstal"
-
-[[variable]]
-native_id = "382.1454.source-positive"
-slug = "venr"
-
-[[variable]]
-native_id = "382.2642.source-positive"
-slug = "antal-anstallda-verksamhetsenhet"
-
-[[variable]]
-native_id = "382.2913.source-positive"
-slug = "annan-orsak-kapacitetsutnyttjande"
-
-[[variable]]
-native_id = "382.2914.source-positive"
-slug = "brist-pa-kvalificerad-arbetskraft"
-
-[[variable]]
-native_id = "382.2915.source-positive"
-slug = "brist-pa-okvalificerad-arbetskraft"
-
-[[variable]]
-native_id = "382.2918.source-positive"
-slug = "observationsnummer"
-
-[[variable]]
-native_id = "382.2919.source-positive"
-slug = "otillracklig-efterfragan"
-
-[[variable]]
-native_id = "382.2920.source-positive"
-slug = "produktionsstorning"
-
-[[variable]]
-native_id = "382.2921.source-positive"
-slug = "urvalsar"
-
-[[variable]]
-native_id = "382.2924.source-positive"
-slug = "beskrivning-av-orsak"
-
-[[variable]]
-native_id = "382.2925.source-positive"
-slug = "brist-pa-insatsvaror"
-
-[[variable]]
-native_id = "382.3310.source-positive"
-slug = "branschgrupp"
-
-[[variable]]
-native_id = "382.3578.source-positive"
-slug = "orgnr-12"
-
-[[variable]]
-native_id = "382.4027.source-positive"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "382.5179.source-positive"
-slug = "aktivt-organisationsnummer"
-
-[[variable]]
-native_id = "382.5181.source-positive"
-slug = "urvalsstorlek"
-
-[[variable]]
-native_id = "382.15169.sni92"
-slug = "sni"
-
-[[variable]]
-native_id = "382.15169.sni2007"
-slug = "bransch-sni2007"
-
-[[variable]]
-native_id = "382.50051.insubsetname"
-slug = "insubsetname"
-
-[[variable]]
-native_id = "382.50051.outsubsetname"
-slug = "insubsetname-outsubsetname"
-
-[[variable]]
-native_id = "382.50051.subsetname"
-slug = "insubsetname-subsetname"
-
-[[variable]]
-native_id = "382.50052.source-positive"
-slug = "subsetid"
-
-[[variable]]
-native_id = "382.50078.source-positive"
-slug = "omsattning-moms-hemma-blankett"
-
-[[variable]]
-native_id = "382.50079.source-positive"
-slug = "omsattning-moms-hemma-momsreg"
-
-[[variable]]
-native_id = "382.50083.classid22bl-imputed"
-slug = "imputerat-varde-flagga-classid22bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid01bl-imputed"
-slug = "imputerat-varde-flagga"
-
-[[variable]]
-native_id = "382.50083.classid01mr-imputed"
-slug = "imputerat-varde-flagga-classid01mr-imputed"
-
-[[variable]]
-native_id = "382.50083.classid02bl-imputed"
-slug = "imputerat-varde-flagga-classid02bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid02mr-imputed"
-slug = "imputerat-varde-flagga-classid02mr-imputed"
-
-[[variable]]
-native_id = "382.50083.classid03bl-imputed"
-slug = "imputerat-varde-flagga-classid03bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid03mr-imputed"
-slug = "imputerat-varde-flagga-classid03mr-imputed"
-
-[[variable]]
-native_id = "382.50083.classid04bl-imputed"
-slug = "imputerat-varde-flagga-classid04bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid05bl-imputed"
-slug = "imputerat-varde-flagga-classid05bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid06bl-imputed"
-slug = "imputerat-varde-flagga-classid06bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid07bl-imputed"
-slug = "imputerat-varde-flagga-classid07bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid10bl-imputed"
-slug = "imputerat-varde-flagga-classid10bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid08bl-imputed"
-slug = "imputerat-varde-flagga-classid08bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid09bl-imputed"
-slug = "imputerat-varde-flagga-classid09bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid11bl-imputed"
-slug = "imputerat-varde-flagga-classid11bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid12bl-imputed"
-slug = "imputerat-varde-flagga-classid12bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid13bl-imputed"
-slug = "imputerat-varde-flagga-classid13bl-imputed"
-
-[[variable]]
-native_id = "382.50083.classid13mr-imputed"
-slug = "imputerat-varde-flagga-classid13mr-imputed"
-
-[[variable]]
-native_id = "382.50032.inmarketname"
-slug = "inmarketname"
-
-[[variable]]
-native_id = "382.50032.marketname"
-slug = "marketname"
-
-[[variable]]
-native_id = "382.50032.outmarketname"
-slug = "outmarketname"
-
-[[variable]]
-native_id = "382.50049.invariableid"
-slug = "variabel-kod-pin"
-
-[[variable]]
-native_id = "382.50049.outvariableid"
-slug = "outvariableid"
-
-[[variable]]
-native_id = "382.50049.variableid"
-slug = "variableid"
-
-[[variable]]
-native_id = "382.50050.invariablename"
-slug = "invariablename"
-
-[[variable]]
-native_id = "382.50050.outvariablename"
-slug = "outvariablename"
-
-[[variable]]
-native_id = "382.50050.variablename"
-slug = "variablename"
-
-[[variable]]
-native_id = "382.50053.classid"
-slug = "variabelklass-kod-pin"
-
-[[variable]]
-native_id = "382.50053.inclassid"
-slug = "inclassid"
-
-[[variable]]
-native_id = "382.50053.outclassid"
-slug = "outclassid"
+"382.43.source-positive" = "kvartal"
+"382.73.source-positive" = "ar"
+"382.466.source-positive" = "upprakningstal"
+"382.1454.source-positive" = "venr"
+"382.2642.source-positive" = "antal-anstallda-verksamhetsenhet"
+"382.2913.source-positive" = "annan-orsak-kapacitetsutnyttjande"
+"382.2914.source-positive" = "brist-pa-kvalificerad-arbetskraft"
+"382.2915.source-positive" = "brist-pa-okvalificerad-arbetskraft"
+"382.2918.source-positive" = "observationsnummer"
+"382.2919.source-positive" = "otillracklig-efterfragan"
+"382.2920.source-positive" = "produktionsstorning"
+"382.2921.source-positive" = "urvalsar"
+"382.2924.source-positive" = "beskrivning-av-orsak"
+"382.2925.source-positive" = "brist-pa-insatsvaror"
+"382.3310.source-positive" = "branschgrupp"
+"382.3578.source-positive" = "orgnr-12"
+"382.4027.source-positive" = "naringsgren"
+"382.5179.source-positive" = "aktivt-organisationsnummer"
+"382.5181.source-positive" = "urvalsstorlek"
+"382.15169.sni92" = "sni"
+"382.15169.sni2007" = "bransch-sni2007"
+"382.50051.insubsetname" = "insubsetname"
+"382.50051.outsubsetname" = "insubsetname-outsubsetname"
+"382.50051.subsetname" = "insubsetname-subsetname"
+"382.50052.source-positive" = "subsetid"
+"382.50078.source-positive" = "omsattning-moms-hemma-blankett"
+"382.50079.source-positive" = "omsattning-moms-hemma-momsreg"
+"382.50083.classid22bl-imputed" = "imputerat-varde-flagga-classid22bl-imputed"
+"382.50083.classid01bl-imputed" = "imputerat-varde-flagga"
+"382.50083.classid01mr-imputed" = "imputerat-varde-flagga-classid01mr-imputed"
+"382.50083.classid02bl-imputed" = "imputerat-varde-flagga-classid02bl-imputed"
+"382.50083.classid02mr-imputed" = "imputerat-varde-flagga-classid02mr-imputed"
+"382.50083.classid03bl-imputed" = "imputerat-varde-flagga-classid03bl-imputed"
+"382.50083.classid03mr-imputed" = "imputerat-varde-flagga-classid03mr-imputed"
+"382.50083.classid04bl-imputed" = "imputerat-varde-flagga-classid04bl-imputed"
+"382.50083.classid05bl-imputed" = "imputerat-varde-flagga-classid05bl-imputed"
+"382.50083.classid06bl-imputed" = "imputerat-varde-flagga-classid06bl-imputed"
+"382.50083.classid07bl-imputed" = "imputerat-varde-flagga-classid07bl-imputed"
+"382.50083.classid10bl-imputed" = "imputerat-varde-flagga-classid10bl-imputed"
+"382.50083.classid08bl-imputed" = "imputerat-varde-flagga-classid08bl-imputed"
+"382.50083.classid09bl-imputed" = "imputerat-varde-flagga-classid09bl-imputed"
+"382.50083.classid11bl-imputed" = "imputerat-varde-flagga-classid11bl-imputed"
+"382.50083.classid12bl-imputed" = "imputerat-varde-flagga-classid12bl-imputed"
+"382.50083.classid13bl-imputed" = "imputerat-varde-flagga-classid13bl-imputed"
+"382.50083.classid13mr-imputed" = "imputerat-varde-flagga-classid13mr-imputed"
+"382.50032.inmarketname" = "inmarketname"
+"382.50032.marketname" = "marketname"
+"382.50032.outmarketname" = "outmarketname"
+"382.50049.invariableid" = "variabel-kod-pin"
+"382.50049.outvariableid" = "outvariableid"
+"382.50049.variableid" = "variableid"
+"382.50050.invariablename" = "invariablename"
+"382.50050.outvariablename" = "outvariablename"
+"382.50050.variablename" = "variablename"
+"382.50053.classid" = "variabelklass-kod-pin"
+"382.50053.inclassid" = "inclassid"
+"382.50053.outclassid" = "outclassid"
 
 [[identity.partition]]
 variable = "382.2846"

@@ -11,9 +11,10 @@ slug = "firms"
 [[variant]]
 native_id = "1.30"
 slug = "third"
-[[variable]]
-native_id = "1.5.reviewed"
-slug = "answer"
+
+[variable]
+"1.5.reviewed" = "answer"
+
 [[identity.column_owner]]
 variable = "1.5"
 variant = "1.10"

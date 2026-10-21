@@ -59,240 +59,74 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Komvux som anpassad utbildning
-
-[[variable]]
-native_id = "249.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "249.4"
-slug = "datum"
-
-[[variable]]
-native_id = "249.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "249.73"
-slug = "ar"
-
-[[variable]]
-native_id = "249.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "249.1579"
-slug = "termin"
-
-[[variable]]
-native_id = "249.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "249.8552"
-slug = "gymnasieforbund-id"
-
-[[variable]]
-native_id = "249.8557"
-slug = "utbildningsanordnare"
-
-[[variable]]
-native_id = "249.14640"
-slug = "betyg"
-
-[[variable]]
-native_id = "249.14653"
-slug = "kurs-i-komvux"
-
-[[variable]]
-native_id = "249.14658"
-slug = "typ-av-undervisning"
-
-[[variable]]
-native_id = "249.14672"
-slug = "kurs"
-
-[[variable]]
-native_id = "249.28311"
-slug = "kursdeltid"
-
-[[variable]]
-native_id = "249.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "249.29427"
-slug = "gymnasieforbundets-namn"
-
-[[variable]]
-native_id = "249.30545"
-slug = "termin-for-kursen"
-
-[[variable]]
-native_id = "249.32756"
-slug = "nyinskriven-elev"
-
-[[variable]]
-native_id = "249.32791"
-slug = "utfardandedatum"
-
-[[variable]]
-native_id = "249.40036"
-slug = "tidigare-utbildning"
-
-[[variable]]
-native_id = "249.40049"
-slug = "avslutad-kurs"
+"249.57" = "personnr"
+"249.4" = "datum"
+"249.56" = "person-orgnr"
+"249.73" = "ar"
+"249.257" = "fodelseland-rtb"
+"249.1579" = "termin"
+"249.6809" = "folkbokforingskommun"
+"249.8552" = "gymnasieforbund-id"
+"249.8557" = "utbildningsanordnare"
+"249.14640" = "betyg"
+"249.14653" = "kurs-i-komvux"
+"249.14658" = "typ-av-undervisning"
+"249.14672" = "kurs"
+"249.28311" = "kursdeltid"
+"249.29426" = "tidigaste-invandringsdatum"
+"249.29427" = "gymnasieforbundets-namn"
+"249.30545" = "termin-for-kursen"
+"249.32756" = "nyinskriven-elev"
+"249.32791" = "utfardandedatum"
+"249.40036" = "tidigare-utbildning"
+"249.40049" = "avslutad-kurs"
 
 # register 250 (komvux-anpassad)
-
-[[variable]]
-native_id = "249.14815.skolkommun"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "249.36.hemkommun"
-slug = "hemkommun"
-
-[[variable]]
-native_id = "249.36.skolkommun"
-slug = "skolenhet-kommun"
-
-[[variable]]
-native_id = "249.38417.gyfid"
-slug = "kommunalforbund-id"
-
-[[variable]]
-native_id = "249.38417.gyfnamn"
-slug = "kommunalforbund-namn"
+"249.14815.skolkommun" = "skolkommun"
+"249.36.hemkommun" = "hemkommun"
+"249.36.skolkommun" = "skolenhet-kommun"
+"249.38417.gyfid" = "kommunalforbund-id"
+"249.38417.gyfnamn" = "kommunalforbund-namn"
 
 # register 25 (iot)
-
-[[variable]]
-native_id = "249.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "249.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "249.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "249.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "249.4693"
-slug = "gymnasieprogram"
-
-[[variable]]
-native_id = "249.8006"
-slug = "verksamhetsform-skolvasendet"
-
-[[variable]]
-native_id = "249.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "249.8701"
-slug = "kopt-utbildning-i-komvux"
-
-[[variable]]
-native_id = "249.14642"
-slug = "niva-vuxenutbildning"
-
-[[variable]]
-native_id = "249.14651"
-slug = "avklarade-undervisningstimmar"
-
-[[variable]]
-native_id = "249.14652"
-slug = "utbildningsatgard-vux"
-
-[[variable]]
-native_id = "249.14655"
-slug = "kursstart"
-
-[[variable]]
-native_id = "249.14656"
-slug = "kursslut"
-
-[[variable]]
-native_id = "249.14657"
-slug = "datumavbrott"
-
-[[variable]]
-native_id = "249.18398"
-slug = "lokal-kurs"
-
-[[variable]]
-native_id = "249.28163"
-slug = "statsbidrag"
-
-[[variable]]
-native_id = "249.29141"
-slug = "provversion"
-
-[[variable]]
-native_id = "249.32792"
-slug = "typ-av-gymnasieexamen"
-
-[[variable]]
-native_id = "249.32798"
-slug = "totalt-poang-slutbetyg"
-
-[[variable]]
-native_id = "249.36646"
-slug = "orsak-ej-inrapporterat-betyg"
-
-[[variable]]
-native_id = "249.39842"
-slug = "ar-for-komvuxutbildning"
-
-[[variable]]
-native_id = "249.40077"
-slug = "undervisningstimmar"
+"249.34" = "juridisk-form"
+"249.241" = "alder-31-12"
+"249.1378" = "fodelsear"
+"249.1993" = "skolans-identitetsnummer"
+"249.4693" = "gymnasieprogram"
+"249.8006" = "verksamhetsform-skolvasendet"
+"249.8137" = "huvudman"
+"249.8701" = "kopt-utbildning-i-komvux"
+"249.14642" = "niva-vuxenutbildning"
+"249.14651" = "avklarade-undervisningstimmar"
+"249.14652" = "utbildningsatgard-vux"
+"249.14655" = "kursstart"
+"249.14656" = "kursslut"
+"249.14657" = "datumavbrott"
+"249.18398" = "lokal-kurs"
+"249.28163" = "statsbidrag"
+"249.29141" = "provversion"
+"249.32792" = "typ-av-gymnasieexamen"
+"249.32798" = "totalt-poang-slutbetyg"
+"249.36646" = "orsak-ej-inrapporterat-betyg"
+"249.39842" = "ar-for-komvuxutbildning"
+"249.40077" = "undervisningstimmar"
 
 # register 250
-
-[[variable]]
-native_id = "249.1086.orgnamn"
-slug = "namn-juridiska-enheten"
-
-[[variable]]
-native_id = "249.30455.ma-a-pom"
-slug = "a-poang-merit"
-
-[[variable]]
-native_id = "249.32757.poang1"
-slug = "poangomfattning-grundlaggande"
-
-[[variable]]
-native_id = "249.32758.poang2"
-slug = "poangomfattning-gymnasial"
-
-[[variable]]
-native_id = "249.38417.kfid"
-slug = "kommunalforbund-id-2"
-
-[[variable]]
-native_id = "249.38417.kfnamn"
-slug = "kommunalforbund-namn-2"
-
-[[variable]]
-native_id = "249.8534.komgrupp17"
-slug = "kommungrupp-kod"
+"249.1086.orgnamn" = "namn-juridiska-enheten"
+"249.30455.ma-a-pom" = "a-poang-merit"
+"249.32757.poang1" = "poangomfattning-grundlaggande"
+"249.32758.poang2" = "poangomfattning-gymnasial"
+"249.38417.kfid" = "kommunalforbund-id-2"
+"249.38417.kfnamn" = "kommunalforbund-namn-2"
+"249.8534.komgrupp17" = "kommungrupp-kod"
 
 # register 25
-
-[[variable]]
-native_id = "249.66.sun2020niva-2"
-slug = "sun2020niva-2"
+"249.66.sun2020niva-2" = "sun2020niva-2"
+"249.8534.kommungrupp" = "kommungrupp"
+"249.8534.kommungrupp-text" = "kommungrupp-text"
 
 [[identity.partition]]
 variable = "249.66"
@@ -491,14 +325,6 @@ editions = ["2014 vårterminen", "2015 vårterminen", "2016 vårterminen", "2017
 source_editions = ["2013 höstterminen", "2014 höstterminen", "2015 höstterminen", "2016 höstterminen", "2017 höstterminen", "2018 höstterminen", "2019 höstterminen", "2020 höstterminen", "2021 höstterminen", "2022 höstterminen", "2023 höstterminen", "2024 höstterminen", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024"]
 evidence = "Complete accepted Komvux source: all321edition parents explicitly distinguish calendar-year, academic-year, spring-term and autumn-term operations. Four terse or misspelled descriptions are witnessed by their own methodology text. Preserve these contexts separately without treating overlapping date ranges or labels as equivalent deliveries. Every raw period, parent fact, operation, type, flag, list and association remains unchanged. No date or table assignment is inferred. Proof: Batch50-Komvux-context12-source-proof.json."
 noted = "2026-10-02"
-
-[[variable]]
-native_id = "249.8534.kommungrupp"
-slug = "kommungrupp"
-
-[[variable]]
-native_id = "249.8534.kommungrupp-text"
-slug = "kommungrupp-text"
 
 [[identity.partition]]
 variable = "249.8534"

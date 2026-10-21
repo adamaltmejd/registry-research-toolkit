@@ -214,9 +214,9 @@ def test_register_tree_guard_reads_the_loaders_pin_path(catalog, tmp_path, capsy
     (root / GLOBAL_FREEZE_STATE_FILE).write_text('scb = "curating"\n', encoding="utf-8")
     _commit_all(root, "init")
     pin = provider / "sample.auto.toml"
-    pin.write_text('[[variable]]\nnative_id = "1.44"\nslug = "kon"\n', "utf-8")
+    pin.write_text('[variable]\n"1.44" = "kon"\n', "utf-8")
     (provider / "family" / "sample.auto.toml").write_text(
-        '[[variable]]\nnative_id = "1.45"\nslug = "alder"\n', encoding="utf-8"
+        '[variable]\n"1.45" = "alder"\n', encoding="utf-8"
     )
 
     code, data = run_precheck(db_dir, root, capsys)

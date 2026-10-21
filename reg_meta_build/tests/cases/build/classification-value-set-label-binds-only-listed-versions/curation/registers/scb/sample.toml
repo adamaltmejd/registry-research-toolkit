@@ -5,18 +5,10 @@ native_id = "1"
 [[variant]]
 native_id = "1.10"
 slug = "people"
-[[variable]]
-native_id = "1.101"
-slug = "value"
-[[variable]]
-native_id = "1.102"
-slug = "detailed"
-[[variable]]
-native_id = "1.103"
-slug = "grouped"
-[[variable]]
-native_id = "1.104"
-slug = "pooled"
-[[variable]]
-native_id = "1.105"
-slug = "mixed"
+
+[variable]
+"1.101" = "value"
+"1.102" = "detailed"
+"1.103" = "grouped"
+"1.104" = "pooled"
+"1.105" = "mixed"

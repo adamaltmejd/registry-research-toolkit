@@ -56,78 +56,27 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Befolkningens arbetsmarknadsstatus
-
-[[variable]]
-native_id = "400.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "400.241"
-slug = "alder-31-12"
-
-[[variable]]
-native_id = "400.254"
-slug = "folkbokforingsdatum"
-
-[[variable]]
-native_id = "400.257"
-slug = "fodelseland-rtb"
-
-[[variable]]
-native_id = "400.279"
-slug = "alder-vid-handelsen"
-
-[[variable]]
-native_id = "400.283"
-slug = "dodsdatum"
-
-[[variable]]
-native_id = "400.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "400.339"
-slug = "flyttningsgrans"
-
-[[variable]]
-native_id = "400.388"
-slug = "antal-barn"
-
-[[variable]]
-native_id = "400.3410"
-slug = "utvandringsdatum"
-
-[[variable]]
-native_id = "400.29339"
-slug = "hushallstyp-bostadshushall"
-
-[[variable]]
-native_id = "400.29832"
-slug = "lopnummer-bostadshushall"
+"400.57" = "personnr"
+"400.241" = "alder-31-12"
+"400.254" = "folkbokforingsdatum"
+"400.257" = "fodelseland-rtb"
+"400.279" = "alder-vid-handelsen"
+"400.283" = "dodsdatum"
+"400.305" = "fodelseland-mor"
+"400.339" = "flyttningsgrans"
+"400.388" = "antal-barn"
+"400.3410" = "utvandringsdatum"
+"400.29339" = "hushallstyp-bostadshushall"
+"400.29832" = "lopnummer-bostadshushall"
 
 # register 404
-
-[[variable]]
-native_id = "400.16297.byggper"
-slug = "nybyggnadsar"
-
-[[variable]]
-native_id = "400.26.fastbet"
-slug = "fastighetsbeteckning"
-
-[[variable]]
-native_id = "400.36.kommung"
-slug = "kommungrupp"
-
-[[variable]]
-native_id = "400.3730.uuid-fast"
-slug = "fastighetens-identitetsnummer"
-
-[[variable]]
-native_id = "400.558.nykoprefix"
-slug = "forsamling-stockholm"
+"400.16297.byggper" = "nybyggnadsar"
+"400.26.fastbet" = "fastighetsbeteckning"
+"400.36.kommung" = "kommungrupp"
+"400.3730.uuid-fast" = "fastighetens-identitetsnummer"
+"400.558.nykoprefix" = "forsamling-stockholm"
 
 # register 404
 

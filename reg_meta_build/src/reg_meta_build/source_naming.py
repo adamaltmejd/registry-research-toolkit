@@ -6,10 +6,9 @@ binding. No new slug is derived here.
 
 from __future__ import annotations
 
-import tomllib
 from collections import defaultdict
 from dataclasses import asdict
-from typing import TYPE_CHECKING, Any, Literal, NamedTuple, Self, cast
+from typing import TYPE_CHECKING, Any, Literal, NamedTuple, Self
 
 from pydantic import BaseModel, ConfigDict, model_validator
 
@@ -22,6 +21,7 @@ from reg_meta_build.fqid_slugs import (
     _parse_variable_id,
     _parse_variant_id,
     _validate_entry,
+    _variable_pin_location,
     freeze_state,
     load_freeze_states,
 )
@@ -376,48 +376,50 @@ def _register_naming_entries(tree: CurationTree, register: RegisterCuration):
             "[register]",
         )
     ]
-    for table, rows, kind in (
-        ("variant", register.variant, "register_variant"),
-        ("variable", register.variable, "variable"),
-    ):
-        for index, row in enumerate(rows, 1):
-            raw = row.model_dump(mode="json", exclude={"native_id"}, exclude_unset=True)
-            entries.append(
-                (
-                    _tracked_naming_entry(
-                        revision,
-                        cast("EntityKind", kind),
-                        row.native_id,
-                        raw,
-                        info.provider,
-                        "authored",
-                    ),
-                    f"[[{table}]] entry {index}",
-                )
+    for index, row in enumerate(register.variant, 1):
+        raw = row.model_dump(mode="json", exclude={"native_id"}, exclude_unset=True)
+        entries.append(
+            (
+                _tracked_naming_entry(
+                    revision,
+                    "register_variant",
+                    row.native_id,
+                    raw,
+                    info.provider,
+                    "authored",
+                ),
+                f"[[variant]] entry {index}",
             )
+        )
+    for native_id, pin in register.variable.items():
+        entries.append(
+            (
+                _tracked_naming_entry(
+                    revision,
+                    "variable",
+                    native_id,
+                    pin.model_dump(mode="json", exclude_unset=True),
+                    info.provider,
+                    "authored",
+                ),
+                _variable_pin_location(native_id),
+            )
+        )
     auto = path.with_name(path.stem + ".auto.toml")
     if auto.is_file():
         auto_revision = _curation_naming_revision(auto)
-        raw_rows = tomllib.loads(auto.read_text(encoding="utf-8")).get("variable", [])
-        for index, entry in enumerate(
-            _load_register_auto_file(auto, info.provider, str(info.native_id)), 1
-        ):
-            raw = {
-                key: value
-                for key, value in raw_rows[index - 1].items()
-                if key != "native_id"
-            }
+        for entry in _load_register_auto_file(auto, info.provider, str(info.native_id)):
             entries.append(
                 (
                     _tracked_naming_entry(
                         auto_revision,
                         "variable",
                         entry.source_id,
-                        raw,
+                        {"slug": entry.slug},
                         info.provider,
                         "generated",
                     ),
-                    f"[[variable]] entry {index}",
+                    _variable_pin_location(entry.source_id),
                 )
             )
     return tuple(entries)

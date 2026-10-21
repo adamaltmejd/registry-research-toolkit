@@ -42,7 +42,7 @@
           "curation/registers/scb/sample.toml#variable/1.5.other"
         ]
       ],
-      "note": "Each unmatched pin is a stale entry located at its [[variable]] pin, as in split-partition-split-naming-stale-when-it-matches-no-delivered-column, where every literal is bound."
+      "note": "Each unmatched pin is a stale entry located at its [variable] pin, as in split-partition-split-naming-stale-when-it-matches-no-delivered-column, where every literal is bound."
     },
     {
       "table": "issues",

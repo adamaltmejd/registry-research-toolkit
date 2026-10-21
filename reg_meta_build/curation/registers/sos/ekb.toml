@@ -20,1896 +20,486 @@ panel_entity_key = "personnr"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
+[variable]
 # Cancerregistret (CAN)
+"5352018376318353790.PNR" = "personnr"
+"5352018376318353790.ANNATBELOPP01" = "belopp-annat-januari"
+"5352018376318353790.ANNATBELOPP02" = "belopp-annat-februari"
+"5352018376318353790.ANNATBELOPP03" = "belopp-annat-mars"
+"5352018376318353790.ANNATBELOPP04" = "belopp-annat-april"
+"5352018376318353790.ANNATBELOPP05" = "belopp-annat-maj"
+"5352018376318353790.ANNATBELOPP06" = "belopp-annat-juni"
+"5352018376318353790.ANNATBELOPP07" = "belopp-annat-juli"
+"5352018376318353790.ANNATBELOPP08" = "belopp-annat-augusti"
+"5352018376318353790.ANNATBELOPP09" = "belopp-annat-september"
+"5352018376318353790.ANNATBELOPP10" = "belopp-annat-oktober"
+"5352018376318353790.ANNATBELOPP11" = "belopp-annat-november"
+"5352018376318353790.ANNATBELOPP12" = "belopp-annat-december"
+"5352018376318353790.ANNATIND01" = "ovrigt-annat-januari"
+"5352018376318353790.ANNATIND02" = "ovrigt-annat-februari"
+"5352018376318353790.ANNATIND03" = "ovrigt-annat-mars"
+"5352018376318353790.ANNATIND04" = "ovrigt-annat-april"
+"5352018376318353790.ANNATIND05" = "ovrigt-annat-maj"
+"5352018376318353790.ANNATIND06" = "ovrigt-annat-juni"
+"5352018376318353790.ANNATIND07" = "ovrigt-annat-juli"
+"5352018376318353790.ANNATIND08" = "ovrigt-annat-augusti"
+"5352018376318353790.ANNATIND09" = "ovrigt-annat-september"
+"5352018376318353790.ANNATIND10" = "ovrigt-annat-oktober"
+"5352018376318353790.ANNATIND11" = "ovrigt-annat-november"
+"5352018376318353790.ANNATIND12" = "ovrigt-annat-december"
+"5352018376318353790.ANTBARN0" = "antal-barn-0-ar"
+"5352018376318353790.ANTBARN00" = "antal-barn-00-ar"
+"5352018376318353790.ANTBARN0015" = "antal-barn-under-16-ar"
+"5352018376318353790.ANTBARN0017" = "antal-barn-under-18-ar"
+"5352018376318353790.ANTBARN01" = "antal-barn-01-ar"
+"5352018376318353790.ANTBARN02" = "antal-barn-02-ar"
+"5352018376318353790.ANTBARN03" = "antal-barn-03-ar"
+"5352018376318353790.ANTBARN04" = "antal-barn-04-ar"
+"5352018376318353790.ANTBARN05" = "antal-barn-05-ar"
+"5352018376318353790.ANTBARN06" = "antal-barn-06-ar"
+"5352018376318353790.ANTBARN07" = "antal-barn-07-ar"
+"5352018376318353790.ANTBARN08" = "antal-barn-08-ar"
+"5352018376318353790.ANTBARN09" = "antal-barn-09-ar"
+"5352018376318353790.ANTBARN1" = "antal-barn-1-ar"
+"5352018376318353790.ANTBARN10" = "antal-barn-10-ar"
+"5352018376318353790.ANTBARN11" = "antal-barn-11-ar"
+"5352018376318353790.ANTBARN12" = "antal-barn-12-ar"
+"5352018376318353790.ANTBARN13" = "antal-barn-13-ar"
+"5352018376318353790.ANTBARN14" = "antal-barn-14-ar"
+"5352018376318353790.ANTBARN15" = "antal-barn-15-ar"
+"5352018376318353790.ANTBARN16" = "antal-barn-16-ar"
+"5352018376318353790.ANTBARN1617" = "antal-barn-16-17-ar-2"
+"5352018376318353790.ANTBARN17" = "antal-barn-17-ar"
+"5352018376318353790.ANTBARN2" = "antal-barn-2-ar"
+"5352018376318353790.ANTBARN3" = "antal-barn-3-ar"
+"5352018376318353790.ANTBARN4" = "antal-barn-4-ar"
+"5352018376318353790.ANTBARN5" = "antal-barn-5-ar"
+"5352018376318353790.ANTBARN6" = "antal-barn-6-ar"
+"5352018376318353790.ANTBARN7" = "antal-barn-7-ar"
+"5352018376318353790.ANTBARN8" = "antal-barn-8-ar"
+"5352018376318353790.ANTBARN9" = "antal-barn-9-ar"
+"5352018376318353790.ANTPERS1821" = "antal-ovriga-personer-18-21-ar"
+"5352018376318353790.AVSLUT01" = "avslutskod-januari"
+"5352018376318353790.AVSLUT02" = "avslutskod-februari"
+"5352018376318353790.AVSLUT03" = "avslutskod-mars"
+"5352018376318353790.AVSLUT04" = "avslutskod-april"
+"5352018376318353790.AVSLUT05" = "avslutskod-maj"
+"5352018376318353790.AVSLUT06" = "avslutskod-juni"
+"5352018376318353790.AVSLUT07" = "avslutskod-juli"
+"5352018376318353790.AVSLUT08" = "avslutskod-augusti"
+"5352018376318353790.AVSLUT09" = "avslutskod-september"
+"5352018376318353790.AVSLUT10" = "avslutskod-oktober"
+"5352018376318353790.AVSLUT11" = "avslutskod-november"
+"5352018376318353790.AVSLUT12" = "avslutskod-december"
+"5352018376318353790.AVSLUTHH01" = "avslutskod-hushallet-januari"
+"5352018376318353790.AVSLUTHH02" = "avslutskod-hushallet-februari"
+"5352018376318353790.AVSLUTHH03" = "avslutskod-hushallet-mars"
+"5352018376318353790.AVSLUTHH04" = "avslutskod-hushallet-april"
+"5352018376318353790.AVSLUTHH05" = "avslutskod-hushallet-maj"
+"5352018376318353790.AVSLUTHH06" = "avslutskod-hushallet-juni"
+"5352018376318353790.AVSLUTHH07" = "avslutskod-hushallet-juli"
+"5352018376318353790.AVSLUTHH08" = "avslutskod-hushallet-augusti"
+"5352018376318353790.AVSLUTHH09" = "avslutskod-hushallet-september"
+"5352018376318353790.AVSLUTHH10" = "avslutskod-hushallet-oktober"
+"5352018376318353790.AVSLUTHH11" = "avslutskod-hushallet-november"
+"5352018376318353790.AVSLUTHH12" = "avslutskod-hushallet-december"
+"5352018376318353790.BARN1617" = "antal-barn-16-17-ar"
+"5352018376318353790.EKBBELOPP01" = "ekonomiskt-bistand-januari"
+"5352018376318353790.EKBBELOPP02" = "ekonomiskt-bistand-februari"
+"5352018376318353790.EKBBELOPP03" = "ekonomiskt-bistand-mars"
+"5352018376318353790.EKBBELOPP04" = "ekonomiskt-bistand-april"
+"5352018376318353790.EKBBELOPP05" = "ekonomiskt-bistand-maj"
+"5352018376318353790.EKBBELOPP06" = "ekonomiskt-bistand-juni"
+"5352018376318353790.EKBBELOPP07" = "ekonomiskt-bistand-juli"
+"5352018376318353790.EKBBELOPP08" = "ekonomiskt-bistand-augusti"
+"5352018376318353790.EKBBELOPP09" = "ekonomiskt-bistand-september"
+"5352018376318353790.EKBBELOPP10" = "ekonomiskt-bistand-oktober"
+"5352018376318353790.EKBBELOPP11" = "ekonomiskt-bistand-november"
+"5352018376318353790.EKBBELOPP12" = "ekonomiskt-bistand-december"
+"5352018376318353790.EKBUTB01" = "ekonomiskt-bistand-utbetalt-januari"
+"5352018376318353790.EKBUTB02" = "ekonomiskt-bistand-utbetalt-februari"
+"5352018376318353790.EKBUTB03" = "ekonomiskt-bistand-utbetalt-mars"
+"5352018376318353790.EKBUTB04" = "ekonomiskt-bistand-utbetalt-april"
+"5352018376318353790.EKBUTB05" = "ekonomiskt-bistand-utbetalt-maj"
+"5352018376318353790.EKBUTB06" = "ekonomiskt-bistand-utbetalt-juni"
+"5352018376318353790.EKBUTB07" = "ekonomiskt-bistand-utbetalt-juli"
+"5352018376318353790.EKBUTB08" = "ekonomiskt-bistand-utbetalt-augusti"
+"5352018376318353790.EKBUTB09" = "ekonomiskt-bistand-utbetalt-september"
+"5352018376318353790.EKBUTB10" = "ekonomiskt-bistand-utbetalt-oktober"
+"5352018376318353790.EKBUTB11" = "ekonomiskt-bistand-utbetalt-november"
+"5352018376318353790.EKBUTB12" = "ekonomiskt-bistand-utbetalt-december"
+"5352018376318353790.ELSKULDBELOPP01" = "livsforing-elskuld-januari"
+"5352018376318353790.ELSKULDBELOPP02" = "livsforing-elskuld-februari"
+"5352018376318353790.ELSKULDBELOPP03" = "livsforing-elskuld-mars"
+"5352018376318353790.ELSKULDBELOPP04" = "livsforing-elskuld-april"
+"5352018376318353790.ELSKULDBELOPP05" = "livsforing-elskuld-maj"
+"5352018376318353790.ELSKULDBELOPP06" = "livsforing-elskuld-juni"
+"5352018376318353790.ELSKULDBELOPP07" = "livsforing-elskuld-juli"
+"5352018376318353790.ELSKULDBELOPP08" = "livsforing-elskuld-augusti"
+"5352018376318353790.ELSKULDBELOPP09" = "livsforing-elskuld-september"
+"5352018376318353790.ELSKULDBELOPP10" = "livsforing-elskuld-oktober"
+"5352018376318353790.ELSKULDBELOPP11" = "livsforing-elskuld-november"
+"5352018376318353790.ELSKULDBELOPP12" = "livsforing-elskuld-december"
+"5352018376318353790.ELSKULDIND01" = "ovrigt-elskuld-januari"
+"5352018376318353790.ELSKULDIND02" = "ovrigt-elskuld-februari"
+"5352018376318353790.ELSKULDIND03" = "ovrigt-elskuld-mars"
+"5352018376318353790.ELSKULDIND04" = "ovrigt-elskuld-april"
+"5352018376318353790.ELSKULDIND05" = "ovrigt-elskuld-maj"
+"5352018376318353790.ELSKULDIND06" = "ovrigt-elskuld-juni"
+"5352018376318353790.ELSKULDIND07" = "ovrigt-elskuld-juli"
+"5352018376318353790.ELSKULDIND08" = "ovrigt-elskuld-augusti"
+"5352018376318353790.ELSKULDIND09" = "ovrigt-elskuld-september"
+"5352018376318353790.ELSKULDIND10" = "ovrigt-elskuld-oktober"
+"5352018376318353790.ELSKULDIND11" = "ovrigt-elskuld-november"
+"5352018376318353790.ELSKULDIND12" = "ovrigt-elskuld-december"
+"5352018376318353790.FODAR" = "fodelsear"
+"5352018376318353790.FODDAT" = "fodelsedatum"
+"5352018376318353790.FODDATN" = "fodelsedatum-numerisk"
+"5352018376318353790.FSTOD" = "forsorjningsstod-belopp"
+"5352018376318353790.FSTODBELOPP01" = "forsorjningsstod-januari"
+"5352018376318353790.FSTODBELOPP02" = "forsorjningsstod-februari"
+"5352018376318353790.FSTODBELOPP03" = "forsorjningsstod-mars"
+"5352018376318353790.FSTODBELOPP04" = "forsorjningsstod-april"
+"5352018376318353790.FSTODBELOPP05" = "forsorjningsstod-maj"
+"5352018376318353790.FSTODBELOPP06" = "forsorjningsstod-juni"
+"5352018376318353790.FSTODBELOPP07" = "forsorjningsstod-juli"
+"5352018376318353790.FSTODBELOPP08" = "forsorjningsstod-augusti"
+"5352018376318353790.FSTODBELOPP09" = "forsorjningsstod-september"
+"5352018376318353790.FSTODBELOPP10" = "forsorjningsstod-oktober"
+"5352018376318353790.FSTODBELOPP11" = "forsorjningsstod-november"
+"5352018376318353790.FSTODBELOPP12" = "forsorjningsstod-december"
+"5352018376318353790.FSTODBOENDEBELOPP01" = "forsorjningsstod-boende-januari"
+"5352018376318353790.FSTODBOENDEBELOPP02" = "forsorjningsstod-boende-februari"
+"5352018376318353790.FSTODBOENDEBELOPP03" = "forsorjningsstod-boende-mars"
+"5352018376318353790.FSTODBOENDEBELOPP04" = "forsorjningsstod-boende-april"
+"5352018376318353790.FSTODBOENDEBELOPP05" = "forsorjningsstod-boende-maj"
+"5352018376318353790.FSTODBOENDEBELOPP06" = "forsorjningsstod-boende-juni"
+"5352018376318353790.FSTODBOENDEBELOPP07" = "forsorjningsstod-boende-juli"
+"5352018376318353790.FSTODBOENDEBELOPP08" = "forsorjningsstod-boende-augusti"
+"5352018376318353790.FSTODBOENDEBELOPP09" = "forsorjningsstod-boende-september"
+"5352018376318353790.FSTODBOENDEBELOPP10" = "forsorjningsstod-boende-oktober"
+"5352018376318353790.FSTODBOENDEBELOPP11" = "forsorjningsstod-boende-november"
+"5352018376318353790.FSTODBOENDEBELOPP12" = "forsorjningsstod-boende-december"
+"5352018376318353790.HID" = "hushallsid"
+"5352018376318353790.HINDER01" = "forsorjningshinder-januari"
+"5352018376318353790.HINDER02" = "forsorjningshinder-februari"
+"5352018376318353790.HINDER03" = "forsorjningshinder-mars"
+"5352018376318353790.HINDER04" = "forsorjningshinder-april"
+"5352018376318353790.HINDER05" = "forsorjningshinder-maj"
+"5352018376318353790.HINDER06" = "forsorjningshinder-juni"
+"5352018376318353790.HINDER07" = "forsorjningshinder-juli"
+"5352018376318353790.HINDER08" = "forsorjningshinder-augusti"
+"5352018376318353790.HINDER09" = "forsorjningshinder-september"
+"5352018376318353790.HINDER10" = "forsorjningshinder-oktober"
+"5352018376318353790.HINDER11" = "forsorjningshinder-november"
+"5352018376318353790.HINDER12" = "forsorjningshinder-december"
+"5352018376318353790.HSBEL" = "halso-sjukvard-belopp"
+"5352018376318353790.HSBELOPP01" = "livsforing-halso-sjukvard-januari"
+"5352018376318353790.HSBELOPP02" = "livsforing-halso-sjukvard-februari"
+"5352018376318353790.HSBELOPP03" = "livsforing-halso-sjukvard-mars"
+"5352018376318353790.HSBELOPP04" = "livsforing-halso-sjukvard-april"
+"5352018376318353790.HSBELOPP05" = "livsforing-halso-sjukvard-maj"
+"5352018376318353790.HSBELOPP06" = "livsforing-halso-sjukvard-juni"
+"5352018376318353790.HSBELOPP07" = "livsforing-halso-sjukvard-juli"
+"5352018376318353790.HSBELOPP08" = "livsforing-halso-sjukvard-augusti"
+"5352018376318353790.HSBELOPP09" = "livsforing-halso-sjukvard-september"
+"5352018376318353790.HSBELOPP10" = "livsforing-halso-sjukvard-oktober"
+"5352018376318353790.HSBELOPP11" = "livsforing-halso-sjukvard-november"
+"5352018376318353790.HSBELOPP12" = "livsforing-halso-sjukvard-december"
+"5352018376318353790.HSIND" = "utbetalning-livsforing-ovrigt"
+"5352018376318353790.HSIND01" = "ovrigt-halso-sjukvard-januari"
+"5352018376318353790.HSIND02" = "ovrigt-halso-sjukvard-februari"
+"5352018376318353790.HSIND03" = "ovrigt-halso-sjukvard-mars"
+"5352018376318353790.HSIND04" = "ovrigt-halso-sjukvard-april"
+"5352018376318353790.HSIND05" = "ovrigt-halso-sjukvard-maj"
+"5352018376318353790.HSIND06" = "ovrigt-halso-sjukvard-juni"
+"5352018376318353790.HSIND07" = "ovrigt-halso-sjukvard-juli"
+"5352018376318353790.HSIND08" = "ovrigt-halso-sjukvard-augusti"
+"5352018376318353790.HSIND09" = "ovrigt-halso-sjukvard-september"
+"5352018376318353790.HSIND10" = "ovrigt-halso-sjukvard-oktober"
+"5352018376318353790.HSIND11" = "ovrigt-halso-sjukvard-november"
+"5352018376318353790.HSIND12" = "ovrigt-halso-sjukvard-december"
+"5352018376318353790.HTYP" = "hushallstyp"
+"5352018376318353790.HYRESSKULDBELOPP01" = "livsforing-hyresskuld-januari"
+"5352018376318353790.HYRESSKULDBELOPP02" = "livsforing-hyresskuld-februari"
+"5352018376318353790.HYRESSKULDBELOPP03" = "livsforing-hyresskuld-mars"
+"5352018376318353790.HYRESSKULDBELOPP04" = "livsforing-hyresskuld-april"
+"5352018376318353790.HYRESSKULDBELOPP05" = "livsforing-hyresskuld-maj"
+"5352018376318353790.HYRESSKULDBELOPP06" = "livsforing-hyresskuld-juni"
+"5352018376318353790.HYRESSKULDBELOPP07" = "livsforing-hyresskuld-juli"
+"5352018376318353790.HYRESSKULDBELOPP08" = "livsforing-hyresskuld-augusti"
+"5352018376318353790.HYRESSKULDBELOPP09" = "livsforing-hyresskuld-september"
+"5352018376318353790.HYRESSKULDBELOPP10" = "livsforing-hyresskuld-oktober"
+"5352018376318353790.HYRESSKULDBELOPP11" = "livsforing-hyresskuld-november"
+"5352018376318353790.HYRESSKULDBELOPP12" = "livsforing-hyresskuld-december"
+"5352018376318353790.HYRESSKULDIND01" = "ovrigt-hyresskuld-januari"
+"5352018376318353790.HYRESSKULDIND02" = "ovrigt-hyresskuld-februari"
+"5352018376318353790.HYRESSKULDIND03" = "ovrigt-hyresskuld-mars"
+"5352018376318353790.HYRESSKULDIND04" = "ovrigt-hyresskuld-april"
+"5352018376318353790.HYRESSKULDIND05" = "ovrigt-hyresskuld-maj"
+"5352018376318353790.HYRESSKULDIND06" = "ovrigt-hyresskuld-juni"
+"5352018376318353790.HYRESSKULDIND07" = "ovrigt-hyresskuld-juli"
+"5352018376318353790.HYRESSKULDIND08" = "ovrigt-hyresskuld-augusti"
+"5352018376318353790.HYRESSKULDIND09" = "ovrigt-hyresskuld-september"
+"5352018376318353790.HYRESSKULDIND10" = "ovrigt-hyresskuld-oktober"
+"5352018376318353790.HYRESSKULDIND11" = "ovrigt-hyresskuld-november"
+"5352018376318353790.HYRESSKULDIND12" = "ovrigt-hyresskuld-december"
+"5352018376318353790.IEBELOPP01" = "introduktionsersattning-januari"
+"5352018376318353790.IEBELOPP02" = "introduktionsersattning-februari"
+"5352018376318353790.IEBELOPP03" = "introduktionsersattning-mars"
+"5352018376318353790.IEBELOPP04" = "introduktionsersattning-april"
+"5352018376318353790.IEBELOPP05" = "introduktionsersattning-maj"
+"5352018376318353790.IEBELOPP06" = "introduktionsersattning-juni"
+"5352018376318353790.IEBELOPP07" = "introduktionsersattning-juli"
+"5352018376318353790.IEBELOPP08" = "introduktionsersattning-augusti"
+"5352018376318353790.IEBELOPP09" = "introduktionsersattning-september"
+"5352018376318353790.IEBELOPP10" = "introduktionsersattning-oktober"
+"5352018376318353790.IEBELOPP11" = "introduktionsersattning-november"
+"5352018376318353790.IEBELOPP12" = "introduktionsersattning-december"
+"5352018376318353790.INSALDST01" = "aldste-insats-arbetsforberedande"
+"5352018376318353790.INSALDST02" = "aldste-insats-arbetspraktik"
+"5352018376318353790.INSALDST03" = "aldste-insats-jobbsokaraktivitet"
+"5352018376318353790.INSALDST04" = "aldste-insats-kurs"
+"5352018376318353790.INSALDST05" = "aldste-insats-studievagledning"
+"5352018376318353790.INSALDST06" = "aldste-insats-ovriga-arbetsmarknads"
+"5352018376318353790.INSALDST07" = "aldste-insats-ej-aktuellt-arbetsmarknads"
+"5352018376318353790.INSYNGST01" = "yngstes-insats-arbetsforberedande"
+"5352018376318353790.INSYNGST02" = "yngstes-insats-arbetspraktik"
+"5352018376318353790.INSYNGST03" = "yngstes-insats-jobbsokaraktivitet"
+"5352018376318353790.INSYNGST04" = "yngstes-insats-kurs"
+"5352018376318353790.INSYNGST05" = "yngstes-insats-studie-yrkesvagledning"
+"5352018376318353790.INSYNGST06" = "yngstes-insats-ovriga-kommunala"
+"5352018376318353790.INSYNGST07" = "yngstes-insats-ej-kommunala"
+"5352018376318353790.KOMMUN" = "kommunkod"
+"5352018376318353790.LK" = "lan-kommun-fran-folkbokforing"
+"5352018376318353790.OVRIGSKULDBELOPP01" = "livsforing-ovrig-skuld-januari"
+"5352018376318353790.OVRIGSKULDBELOPP02" = "livsforing-ovrig-skuld-februari"
+"5352018376318353790.OVRIGSKULDBELOPP03" = "livsforing-ovrig-skuld-mars"
+"5352018376318353790.OVRIGSKULDBELOPP04" = "livsforing-ovrig-skuld-april"
+"5352018376318353790.OVRIGSKULDBELOPP05" = "livsforing-ovrig-skuld-maj"
+"5352018376318353790.OVRIGSKULDBELOPP06" = "livsforing-ovrig-skuld-juni"
+"5352018376318353790.OVRIGSKULDBELOPP07" = "livsforing-ovrig-skuld-juli"
+"5352018376318353790.OVRIGSKULDBELOPP08" = "livsforing-ovrig-skuld-augusti"
+"5352018376318353790.OVRIGSKULDBELOPP09" = "livsforing-ovrig-skuld-september"
+"5352018376318353790.OVRIGSKULDBELOPP10" = "livsforing-ovrig-skuld-oktober"
+"5352018376318353790.OVRIGSKULDBELOPP11" = "livsforing-ovrig-skuld-november"
+"5352018376318353790.OVRIGSKULDBELOPP12" = "livsforing-ovrig-skuld-december"
+"5352018376318353790.OVRIGSKULDIND01" = "ovrig-skuld-januari"
+"5352018376318353790.OVRIGSKULDIND02" = "ovrig-skuld-februari"
+"5352018376318353790.OVRIGSKULDIND03" = "ovrig-skuld-mars"
+"5352018376318353790.OVRIGSKULDIND04" = "ovrig-skuld-april"
+"5352018376318353790.OVRIGSKULDIND05" = "ovrig-skuld-maj"
+"5352018376318353790.OVRIGSKULDIND06" = "ovrig-skuld-juni"
+"5352018376318353790.OVRIGSKULDIND07" = "ovrig-skuld-juli"
+"5352018376318353790.OVRIGSKULDIND08" = "ovrig-skuld-augusti"
+"5352018376318353790.OVRIGSKULDIND09" = "ovrig-skuld-september"
+"5352018376318353790.OVRIGSKULDIND10" = "ovrig-skuld-oktober"
+"5352018376318353790.OVRIGSKULDIND11" = "ovrig-skuld-november"
+"5352018376318353790.OVRIGSKULDIND12" = "ovrig-skuld-december"
+"5352018376318353790.PERSONNR_ALDST" = "personnr-aldsta-sokande"
+"5352018376318353790.PERSONNR_YNGST" = "personnr-yngsta-sokande"
+"5352018376318353790.PNRQ" = "personnummerkvalitet"
+"5352018376318353790.SOK1ALDER" = "alder-sokande-1"
+"5352018376318353790.SOK1HINDER" = "hinder-sokande-1"
+"5352018376318353790.SOK1HINDER01" = "aldstes-hinder-januari-sok1"
+"5352018376318353790.SOK1HINDER02" = "aldstes-hinder-februari-sok1"
+"5352018376318353790.SOK1HINDER03" = "aldstes-hinder-mars-sok1"
+"5352018376318353790.SOK1HINDER04" = "aldstes-hinder-april-sok1"
+"5352018376318353790.SOK1HINDER05" = "aldstes-hinder-maj-sok1"
+"5352018376318353790.SOK1HINDER06" = "aldstes-hinder-juni-sok1"
+"5352018376318353790.SOK1HINDER07" = "aldstes-hinder-juli-sok1"
+"5352018376318353790.SOK1HINDER08" = "aldstes-hinder-augusti-sok1"
+"5352018376318353790.SOK1HINDER09" = "aldstes-hinder-september-sok1"
+"5352018376318353790.SOK1HINDER10" = "aldstes-hinder-oktober-sok1"
+"5352018376318353790.SOK1HINDER11" = "aldstes-hinder-november-sok1"
+"5352018376318353790.SOK1HINDER12" = "aldstes-hinder-december-sok1"
+"5352018376318353790.SOK2HINDER" = "hinder-sokande-2"
+"5352018376318353790.SOK2HINDER01" = "sok2-hinder-januari"
+"5352018376318353790.SOK2HINDER02" = "sok2-hinder-februari"
+"5352018376318353790.SOK2HINDER03" = "sok2-hinder-mars"
+"5352018376318353790.SOK2HINDER04" = "sok2-hinder-april"
+"5352018376318353790.SOK2HINDER05" = "sok2-hinder-maj"
+"5352018376318353790.SOK2HINDER06" = "sok2-hinder-juni"
+"5352018376318353790.SOK2HINDER07" = "sok2-hinder-juli"
+"5352018376318353790.SOK2HINDER08" = "sok2-hinder-augusti"
+"5352018376318353790.SOK2HINDER09" = "sok2-hinder-september"
+"5352018376318353790.SOK2HINDER10" = "sok2-hinder-oktober"
+"5352018376318353790.SOK2HINDER11" = "sok2-hinder-november"
+"5352018376318353790.SOK2HINDER12" = "sok2-hinder-december"
+"5352018376318353790.SOKALDSTALDER" = "alder-sokande-aldst"
+"5352018376318353790.SOKALDSTAVSLUT01" = "avslutskod-aldsta-sokande-januari"
+"5352018376318353790.SOKALDSTAVSLUT02" = "avslutskod-aldsta-sokande-februari"
+"5352018376318353790.SOKALDSTAVSLUT03" = "avslutskod-aldsta-sokande-mars"
+"5352018376318353790.SOKALDSTAVSLUT04" = "avslutskod-aldsta-sokande-april"
+"5352018376318353790.SOKALDSTAVSLUT05" = "avslutskod-aldsta-sokande-maj"
+"5352018376318353790.SOKALDSTAVSLUT06" = "avslutskod-aldsta-sokande-juni"
+"5352018376318353790.SOKALDSTAVSLUT07" = "avslutskod-aldsta-sokande-juli"
+"5352018376318353790.SOKALDSTAVSLUT08" = "avslutskod-aldsta-sokande-augusti"
+"5352018376318353790.SOKALDSTAVSLUT09" = "avslutskod-aldsta-sokande-september"
+"5352018376318353790.SOKALDSTAVSLUT10" = "avslutskod-aldsta-sokande-oktober"
+"5352018376318353790.SOKALDSTAVSLUT11" = "avslutskod-aldsta-sokande-november"
+"5352018376318353790.SOKALDSTAVSLUT12" = "avslutskod-aldsta-sokande-december"
+"5352018376318353790.SOKALDSTHINDER01" = "aldstes-hinder-januari"
+"5352018376318353790.SOKALDSTHINDER02" = "aldstes-hinder-februari"
+"5352018376318353790.SOKALDSTHINDER03" = "aldstes-hinder-mars"
+"5352018376318353790.SOKALDSTHINDER04" = "aldstes-hinder-april"
+"5352018376318353790.SOKALDSTHINDER05" = "aldstes-hinder-maj"
+"5352018376318353790.SOKALDSTHINDER06" = "aldstes-hinder-juni"
+"5352018376318353790.SOKALDSTHINDER07" = "aldstes-hinder-juli"
+"5352018376318353790.SOKALDSTHINDER08" = "aldstes-hinder-augusti"
+"5352018376318353790.SOKALDSTHINDER09" = "aldstes-hinder-september"
+"5352018376318353790.SOKALDSTHINDER10" = "aldstes-hinder-oktober"
+"5352018376318353790.SOKALDSTHINDER11" = "aldstes-hinder-november"
+"5352018376318353790.SOKALDSTHINDER12" = "aldstes-hinder-december"
+"5352018376318353790.SOKALDSTPNR" = "personnr-aldsta-sokande-2"
+"5352018376318353790.SOKINS01" = "arbetsforberedande-insatser"
+"5352018376318353790.SOKINS01_01" = "arbetsforberedande-insatser-januari"
+"5352018376318353790.SOKINS01_02" = "arbetsforberedande-insatser-februari"
+"5352018376318353790.SOKINS01_03" = "arbetsforberedande-insatser-mars"
+"5352018376318353790.SOKINS01_04" = "arbetsforberedande-insatser-april"
+"5352018376318353790.SOKINS01_05" = "arbetsforberedande-insatser-maj"
+"5352018376318353790.SOKINS01_06" = "arbetsforberedande-insatser-juni"
+"5352018376318353790.SOKINS01_07" = "arbetsforberedande-insatser-juli"
+"5352018376318353790.SOKINS01_08" = "arbetsforberedande-insatser-augusti"
+"5352018376318353790.SOKINS01_09" = "arbetsforberedande-insatser-september"
+"5352018376318353790.SOKINS01_10" = "arbetsforberedande-insatser-oktober"
+"5352018376318353790.SOKINS01_11" = "arbetsforberedande-insatser-november"
+"5352018376318353790.SOKINS01_12" = "arbetsforberedande-insatser-december"
+"5352018376318353790.SOKINS02" = "arbetspraktik"
+"5352018376318353790.SOKINS02_01" = "arbetspraktik-januari"
+"5352018376318353790.SOKINS02_02" = "arbetspraktik-februari"
+"5352018376318353790.SOKINS02_03" = "arbetspraktik-mars"
+"5352018376318353790.SOKINS02_04" = "arbetspraktik-april"
+"5352018376318353790.SOKINS02_05" = "arbetspraktik-maj"
+"5352018376318353790.SOKINS02_06" = "arbetspraktik-juni"
+"5352018376318353790.SOKINS02_07" = "arbetspraktik-juli"
+"5352018376318353790.SOKINS02_08" = "arbetspraktik-augusti"
+"5352018376318353790.SOKINS02_09" = "arbetspraktik-september"
+"5352018376318353790.SOKINS02_10" = "arbetspraktik-oktober"
+"5352018376318353790.SOKINS02_11" = "arbetspraktik-november"
+"5352018376318353790.SOKINS02_12" = "arbetspraktik-december"
+"5352018376318353790.SOKINS03" = "jobbsokaraktivitet"
+"5352018376318353790.SOKINS03_01" = "jobbsokaraktivitet-januari"
+"5352018376318353790.SOKINS03_02" = "jobbsokaraktivitet-februari"
+"5352018376318353790.SOKINS03_03" = "jobbsokaraktivitet-mars"
+"5352018376318353790.SOKINS03_04" = "jobbsokaraktivitet-april"
+"5352018376318353790.SOKINS03_05" = "jobbsokaraktivitet-maj"
+"5352018376318353790.SOKINS03_06" = "jobbsokaraktivitet-juni"
+"5352018376318353790.SOKINS03_07" = "jobbsokaraktivitet-juli"
+"5352018376318353790.SOKINS03_08" = "jobbsokaraktivitet-augusti"
+"5352018376318353790.SOKINS03_09" = "jobbsokaraktivitet-september"
+"5352018376318353790.SOKINS03_10" = "jobbsokaraktivitet-oktober"
+"5352018376318353790.SOKINS03_11" = "jobbsokaraktivitet-november"
+"5352018376318353790.SOKINS03_12" = "jobbsokaraktivitet-december"
+"5352018376318353790.SOKINS04" = "kurs"
+"5352018376318353790.SOKINS04_01" = "kurs-januari"
+"5352018376318353790.SOKINS04_02" = "kurs-februari"
+"5352018376318353790.SOKINS04_03" = "kurs-mars"
+"5352018376318353790.SOKINS04_04" = "kurs-april"
+"5352018376318353790.SOKINS04_05" = "kurs-maj"
+"5352018376318353790.SOKINS04_06" = "kurs-juni"
+"5352018376318353790.SOKINS04_07" = "kurs-juli"
+"5352018376318353790.SOKINS04_08" = "kurs-augusti"
+"5352018376318353790.SOKINS04_09" = "kurs-september"
+"5352018376318353790.SOKINS04_10" = "kurs-oktober"
+"5352018376318353790.SOKINS04_11" = "kurs-november"
+"5352018376318353790.SOKINS04_12" = "kurs-december"
+"5352018376318353790.SOKINS05" = "studie-yrkesvagledning"
+"5352018376318353790.SOKINS05_01" = "studie-yrkesvagledning-januari"
+"5352018376318353790.SOKINS05_02" = "studie-yrkesvagledning-februari"
+"5352018376318353790.SOKINS05_03" = "studie-yrkesvagledning-mars"
+"5352018376318353790.SOKINS05_04" = "studie-yrkesvagledning-april"
+"5352018376318353790.SOKINS05_05" = "studie-yrkesvagledning-maj"
+"5352018376318353790.SOKINS05_06" = "studie-yrkesvagledning-juni"
+"5352018376318353790.SOKINS05_07" = "studie-yrkesvagledning-juli"
+"5352018376318353790.SOKINS05_08" = "studie-yrkesvagledning-augusti"
+"5352018376318353790.SOKINS05_09" = "studie-yrkesvagledning-september"
+"5352018376318353790.SOKINS05_10" = "studie-yrkesvagledning-oktober"
+"5352018376318353790.SOKINS05_11" = "studie-yrkesvagledning-november"
+"5352018376318353790.SOKINS05_12" = "studie-yrkesvagledning-december"
+"5352018376318353790.SOKINS06" = "ovriga-arbetsmarknadsinsatser"
+"5352018376318353790.SOKINS06_01" = "arbetsmarknadsinsatser-januari"
+"5352018376318353790.SOKINS06_02" = "arbetsmarknadsinsatser-februari"
+"5352018376318353790.SOKINS06_03" = "arbetsmarknadsinsatser-mars"
+"5352018376318353790.SOKINS06_04" = "arbetsmarknadsinsatser-april"
+"5352018376318353790.SOKINS06_05" = "arbetsmarknadsinsatser-maj"
+"5352018376318353790.SOKINS06_06" = "arbetsmarknadsinsatser-juni"
+"5352018376318353790.SOKINS06_07" = "arbetsmarknadsinsatser-juli"
+"5352018376318353790.SOKINS06_08" = "arbetsmarknadsinsatser-augusti"
+"5352018376318353790.SOKINS06_09" = "arbetsmarknadsinsatser-september"
+"5352018376318353790.SOKINS06_10" = "arbetsmarknadsinsatser-oktober"
+"5352018376318353790.SOKINS06_11" = "arbetsmarknadsinsatser-november"
+"5352018376318353790.SOKINS06_12" = "arbetsmarknadsinsatser-december"
+"5352018376318353790.SOKINS07" = "ej-arbetsmarknadsinsatser"
+"5352018376318353790.SOKINS07_01" = "ej-arbetsmarknadsinsatser-januari"
+"5352018376318353790.SOKINS07_02" = "ej-arbetsmarknadsinsatser-februari"
+"5352018376318353790.SOKINS07_03" = "ej-arbetsmarknadsinsatser-mars"
+"5352018376318353790.SOKINS07_04" = "ej-arbetsmarknadsinsatser-april"
+"5352018376318353790.SOKINS07_05" = "ej-arbetsmarknadsinsatser-maj"
+"5352018376318353790.SOKINS07_06" = "ej-arbetsmarknadsinsatser-juni"
+"5352018376318353790.SOKINS07_07" = "ej-arbetsmarknadsinsatser-juli"
+"5352018376318353790.SOKINS07_08" = "ej-arbetsmarknadsinsatser-augusti"
+"5352018376318353790.SOKINS07_09" = "ej-arbetsmarknadsinsatser-september"
+"5352018376318353790.SOKINS07_10" = "ej-arbetsmarknadsinsatser-oktober"
+"5352018376318353790.SOKINS07_11" = "ej-arbetsmarknadsinsatser-november"
+"5352018376318353790.SOKINS07_12" = "ej-arbetsmarknadsinsatser-december"
+"5352018376318353790.SOKYNGSTALDER" = "alder-sokande-yngst"
+"5352018376318353790.SOKYNGSTAVSLUT01" = "avslutskod-yngsta-sokande-januari"
+"5352018376318353790.SOKYNGSTAVSLUT02" = "avslutskod-yngsta-sokande-februari"
+"5352018376318353790.SOKYNGSTAVSLUT03" = "avslutskod-yngsta-sokande-mars"
+"5352018376318353790.SOKYNGSTAVSLUT04" = "avslutskod-yngsta-sokande-april"
+"5352018376318353790.SOKYNGSTAVSLUT05" = "avslutskod-yngsta-sokande-maj"
+"5352018376318353790.SOKYNGSTAVSLUT06" = "avslutskod-yngsta-sokande-juni"
+"5352018376318353790.SOKYNGSTAVSLUT07" = "avslutskod-yngsta-sokande-juli"
+"5352018376318353790.SOKYNGSTAVSLUT08" = "avslutskod-yngsta-sokande-augusti"
+"5352018376318353790.SOKYNGSTAVSLUT09" = "avslutskod-yngsta-sokande-september"
+"5352018376318353790.SOKYNGSTAVSLUT10" = "avslutskod-yngsta-sokande-oktober"
+"5352018376318353790.SOKYNGSTAVSLUT11" = "avslutskod-yngsta-sokande-november"
+"5352018376318353790.SOKYNGSTAVSLUT12" = "avslutskod-yngsta-sokande-december"
+"5352018376318353790.SOKYNGSTHINDER01" = "yngstes-hinder-januari"
+"5352018376318353790.SOKYNGSTHINDER02" = "yngstes-hinder-februari"
+"5352018376318353790.SOKYNGSTHINDER03" = "yngstes-hinder-mars"
+"5352018376318353790.SOKYNGSTHINDER04" = "yngstes-hinder-april"
+"5352018376318353790.SOKYNGSTHINDER05" = "yngstes-hinder-maj"
+"5352018376318353790.SOKYNGSTHINDER06" = "yngstes-hinder-juni"
+"5352018376318353790.SOKYNGSTHINDER07" = "yngstes-hinder-juli"
+"5352018376318353790.SOKYNGSTHINDER08" = "yngstes-hinder-augusti"
+"5352018376318353790.SOKYNGSTHINDER09" = "yngstes-hinder-september"
+"5352018376318353790.SOKYNGSTHINDER10" = "yngstes-hinder-oktober"
+"5352018376318353790.SOKYNGSTHINDER11" = "yngstes-hinder-november"
+"5352018376318353790.SOKYNGSTHINDER12" = "yngstes-hinder-december"
+"5352018376318353790.SOKYNGSTPNR" = "personnr-yngsta-sokande-2"
+"5352018376318353790.TANDVBELOPP01" = "tandvard-belopp-januari"
+"5352018376318353790.TANDVBELOPP02" = "tandvard-belopp-februari"
+"5352018376318353790.TANDVBELOPP03" = "tandvard-belopp-mars"
+"5352018376318353790.TANDVBELOPP04" = "tandvard-belopp-april"
+"5352018376318353790.TANDVBELOPP05" = "tandvard-belopp-maj"
+"5352018376318353790.TANDVBELOPP06" = "tandvard-belopp-juni"
+"5352018376318353790.TANDVBELOPP07" = "tandvard-belopp-juli"
+"5352018376318353790.TANDVBELOPP08" = "tandvard-belopp-augusti"
+"5352018376318353790.TANDVBELOPP09" = "tandvard-belopp-september"
+"5352018376318353790.TANDVBELOPP10" = "tandvard-belopp-oktober"
+"5352018376318353790.TANDVBELOPP11" = "tandvard-belopp-november"
+"5352018376318353790.TANDVBELOPP12" = "tandvard-belopp-december"
+"5352018376318353790.TANDVIND01" = "tandvard-januari"
+"5352018376318353790.TANDVIND02" = "tandvard-februari"
+"5352018376318353790.TANDVIND03" = "tandvard-mars"
+"5352018376318353790.TANDVIND04" = "tandvard-april"
+"5352018376318353790.TANDVIND05" = "tandvard-maj"
+"5352018376318353790.TANDVIND06" = "tandvard-juni"
+"5352018376318353790.TANDVIND07" = "tandvard-juli"
+"5352018376318353790.TANDVIND08" = "tandvard-augusti"
+"5352018376318353790.TANDVIND09" = "tandvard-september"
+"5352018376318353790.TANDVIND10" = "tandvard-oktober"
+"5352018376318353790.TANDVIND11" = "tandvard-november"
+"5352018376318353790.TANDVIND12" = "tandvard-december"
+"5352018376318353790.UTLHH" = "utlanskt-hushall"
+
+# #1603 batch-e (#1633): SWECOV's EKB household and person tables share a
+# steward-assigned household-year link key that SoS does not document. It is not
+# HID (hushallsid), which SoS builds from the household members' personnummer.
+"5352018376318353790.P1105_LopNr_EKB" = "lopnr-hushall-ar"
 
-[[variable]]
-native_id = "5352018376318353790.PNR"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP01"
-slug = "belopp-annat-januari"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP02"
-slug = "belopp-annat-februari"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP03"
-slug = "belopp-annat-mars"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP04"
-slug = "belopp-annat-april"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP05"
-slug = "belopp-annat-maj"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP06"
-slug = "belopp-annat-juni"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP07"
-slug = "belopp-annat-juli"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP08"
-slug = "belopp-annat-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP09"
-slug = "belopp-annat-september"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP10"
-slug = "belopp-annat-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP11"
-slug = "belopp-annat-november"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATBELOPP12"
-slug = "belopp-annat-december"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND01"
-slug = "ovrigt-annat-januari"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND02"
-slug = "ovrigt-annat-februari"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND03"
-slug = "ovrigt-annat-mars"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND04"
-slug = "ovrigt-annat-april"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND05"
-slug = "ovrigt-annat-maj"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND06"
-slug = "ovrigt-annat-juni"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND07"
-slug = "ovrigt-annat-juli"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND08"
-slug = "ovrigt-annat-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND09"
-slug = "ovrigt-annat-september"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND10"
-slug = "ovrigt-annat-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND11"
-slug = "ovrigt-annat-november"
-
-[[variable]]
-native_id = "5352018376318353790.ANNATIND12"
-slug = "ovrigt-annat-december"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN0"
-slug = "antal-barn-0-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN00"
-slug = "antal-barn-00-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN0015"
-slug = "antal-barn-under-16-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN0017"
-slug = "antal-barn-under-18-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN01"
-slug = "antal-barn-01-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN02"
-slug = "antal-barn-02-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN03"
-slug = "antal-barn-03-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN04"
-slug = "antal-barn-04-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN05"
-slug = "antal-barn-05-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN06"
-slug = "antal-barn-06-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN07"
-slug = "antal-barn-07-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN08"
-slug = "antal-barn-08-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN09"
-slug = "antal-barn-09-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN1"
-slug = "antal-barn-1-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN10"
-slug = "antal-barn-10-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN11"
-slug = "antal-barn-11-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN12"
-slug = "antal-barn-12-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN13"
-slug = "antal-barn-13-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN14"
-slug = "antal-barn-14-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN15"
-slug = "antal-barn-15-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN16"
-slug = "antal-barn-16-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN1617"
-slug = "antal-barn-16-17-ar-2"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN17"
-slug = "antal-barn-17-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN2"
-slug = "antal-barn-2-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN3"
-slug = "antal-barn-3-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN4"
-slug = "antal-barn-4-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN5"
-slug = "antal-barn-5-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN6"
-slug = "antal-barn-6-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN7"
-slug = "antal-barn-7-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN8"
-slug = "antal-barn-8-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTBARN9"
-slug = "antal-barn-9-ar"
-
-[[variable]]
-native_id = "5352018376318353790.ANTPERS1821"
-slug = "antal-ovriga-personer-18-21-ar"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT01"
-slug = "avslutskod-januari"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT02"
-slug = "avslutskod-februari"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT03"
-slug = "avslutskod-mars"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT04"
-slug = "avslutskod-april"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT05"
-slug = "avslutskod-maj"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT06"
-slug = "avslutskod-juni"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT07"
-slug = "avslutskod-juli"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT08"
-slug = "avslutskod-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT09"
-slug = "avslutskod-september"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT10"
-slug = "avslutskod-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT11"
-slug = "avslutskod-november"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUT12"
-slug = "avslutskod-december"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH01"
-slug = "avslutskod-hushallet-januari"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH02"
-slug = "avslutskod-hushallet-februari"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH03"
-slug = "avslutskod-hushallet-mars"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH04"
-slug = "avslutskod-hushallet-april"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH05"
-slug = "avslutskod-hushallet-maj"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH06"
-slug = "avslutskod-hushallet-juni"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH07"
-slug = "avslutskod-hushallet-juli"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH08"
-slug = "avslutskod-hushallet-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH09"
-slug = "avslutskod-hushallet-september"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH10"
-slug = "avslutskod-hushallet-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH11"
-slug = "avslutskod-hushallet-november"
-
-[[variable]]
-native_id = "5352018376318353790.AVSLUTHH12"
-slug = "avslutskod-hushallet-december"
-
-[[variable]]
-native_id = "5352018376318353790.BARN1617"
-slug = "antal-barn-16-17-ar"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP01"
-slug = "ekonomiskt-bistand-januari"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP02"
-slug = "ekonomiskt-bistand-februari"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP03"
-slug = "ekonomiskt-bistand-mars"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP04"
-slug = "ekonomiskt-bistand-april"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP05"
-slug = "ekonomiskt-bistand-maj"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP06"
-slug = "ekonomiskt-bistand-juni"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP07"
-slug = "ekonomiskt-bistand-juli"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP08"
-slug = "ekonomiskt-bistand-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP09"
-slug = "ekonomiskt-bistand-september"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP10"
-slug = "ekonomiskt-bistand-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP11"
-slug = "ekonomiskt-bistand-november"
-
-[[variable]]
-native_id = "5352018376318353790.EKBBELOPP12"
-slug = "ekonomiskt-bistand-december"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB01"
-slug = "ekonomiskt-bistand-utbetalt-januari"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB02"
-slug = "ekonomiskt-bistand-utbetalt-februari"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB03"
-slug = "ekonomiskt-bistand-utbetalt-mars"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB04"
-slug = "ekonomiskt-bistand-utbetalt-april"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB05"
-slug = "ekonomiskt-bistand-utbetalt-maj"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB06"
-slug = "ekonomiskt-bistand-utbetalt-juni"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB07"
-slug = "ekonomiskt-bistand-utbetalt-juli"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB08"
-slug = "ekonomiskt-bistand-utbetalt-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB09"
-slug = "ekonomiskt-bistand-utbetalt-september"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB10"
-slug = "ekonomiskt-bistand-utbetalt-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB11"
-slug = "ekonomiskt-bistand-utbetalt-november"
-
-[[variable]]
-native_id = "5352018376318353790.EKBUTB12"
-slug = "ekonomiskt-bistand-utbetalt-december"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP01"
-slug = "livsforing-elskuld-januari"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP02"
-slug = "livsforing-elskuld-februari"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP03"
-slug = "livsforing-elskuld-mars"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP04"
-slug = "livsforing-elskuld-april"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP05"
-slug = "livsforing-elskuld-maj"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP06"
-slug = "livsforing-elskuld-juni"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP07"
-slug = "livsforing-elskuld-juli"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP08"
-slug = "livsforing-elskuld-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP09"
-slug = "livsforing-elskuld-september"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP10"
-slug = "livsforing-elskuld-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP11"
-slug = "livsforing-elskuld-november"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDBELOPP12"
-slug = "livsforing-elskuld-december"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND01"
-slug = "ovrigt-elskuld-januari"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND02"
-slug = "ovrigt-elskuld-februari"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND03"
-slug = "ovrigt-elskuld-mars"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND04"
-slug = "ovrigt-elskuld-april"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND05"
-slug = "ovrigt-elskuld-maj"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND06"
-slug = "ovrigt-elskuld-juni"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND07"
-slug = "ovrigt-elskuld-juli"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND08"
-slug = "ovrigt-elskuld-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND09"
-slug = "ovrigt-elskuld-september"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND10"
-slug = "ovrigt-elskuld-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND11"
-slug = "ovrigt-elskuld-november"
-
-[[variable]]
-native_id = "5352018376318353790.ELSKULDIND12"
-slug = "ovrigt-elskuld-december"
-
-[[variable]]
-native_id = "5352018376318353790.FODAR"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "5352018376318353790.FODDAT"
-slug = "fodelsedatum"
-
-[[variable]]
-native_id = "5352018376318353790.FODDATN"
-slug = "fodelsedatum-numerisk"
-
-[[variable]]
-native_id = "5352018376318353790.FSTOD"
-slug = "forsorjningsstod-belopp"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP01"
-slug = "forsorjningsstod-januari"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP02"
-slug = "forsorjningsstod-februari"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP03"
-slug = "forsorjningsstod-mars"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP04"
-slug = "forsorjningsstod-april"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP05"
-slug = "forsorjningsstod-maj"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP06"
-slug = "forsorjningsstod-juni"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP07"
-slug = "forsorjningsstod-juli"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP08"
-slug = "forsorjningsstod-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP09"
-slug = "forsorjningsstod-september"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP10"
-slug = "forsorjningsstod-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP11"
-slug = "forsorjningsstod-november"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBELOPP12"
-slug = "forsorjningsstod-december"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP01"
-slug = "forsorjningsstod-boende-januari"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP02"
-slug = "forsorjningsstod-boende-februari"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP03"
-slug = "forsorjningsstod-boende-mars"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP04"
-slug = "forsorjningsstod-boende-april"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP05"
-slug = "forsorjningsstod-boende-maj"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP06"
-slug = "forsorjningsstod-boende-juni"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP07"
-slug = "forsorjningsstod-boende-juli"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP08"
-slug = "forsorjningsstod-boende-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP09"
-slug = "forsorjningsstod-boende-september"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP10"
-slug = "forsorjningsstod-boende-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP11"
-slug = "forsorjningsstod-boende-november"
-
-[[variable]]
-native_id = "5352018376318353790.FSTODBOENDEBELOPP12"
-slug = "forsorjningsstod-boende-december"
-
-[[variable]]
-native_id = "5352018376318353790.HID"
-slug = "hushallsid"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER01"
-slug = "forsorjningshinder-januari"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER02"
-slug = "forsorjningshinder-februari"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER03"
-slug = "forsorjningshinder-mars"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER04"
-slug = "forsorjningshinder-april"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER05"
-slug = "forsorjningshinder-maj"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER06"
-slug = "forsorjningshinder-juni"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER07"
-slug = "forsorjningshinder-juli"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER08"
-slug = "forsorjningshinder-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER09"
-slug = "forsorjningshinder-september"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER10"
-slug = "forsorjningshinder-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER11"
-slug = "forsorjningshinder-november"
-
-[[variable]]
-native_id = "5352018376318353790.HINDER12"
-slug = "forsorjningshinder-december"
-
-[[variable]]
-native_id = "5352018376318353790.HSBEL"
-slug = "halso-sjukvard-belopp"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP01"
-slug = "livsforing-halso-sjukvard-januari"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP02"
-slug = "livsforing-halso-sjukvard-februari"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP03"
-slug = "livsforing-halso-sjukvard-mars"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP04"
-slug = "livsforing-halso-sjukvard-april"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP05"
-slug = "livsforing-halso-sjukvard-maj"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP06"
-slug = "livsforing-halso-sjukvard-juni"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP07"
-slug = "livsforing-halso-sjukvard-juli"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP08"
-slug = "livsforing-halso-sjukvard-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP09"
-slug = "livsforing-halso-sjukvard-september"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP10"
-slug = "livsforing-halso-sjukvard-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP11"
-slug = "livsforing-halso-sjukvard-november"
-
-[[variable]]
-native_id = "5352018376318353790.HSBELOPP12"
-slug = "livsforing-halso-sjukvard-december"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND"
-slug = "utbetalning-livsforing-ovrigt"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND01"
-slug = "ovrigt-halso-sjukvard-januari"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND02"
-slug = "ovrigt-halso-sjukvard-februari"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND03"
-slug = "ovrigt-halso-sjukvard-mars"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND04"
-slug = "ovrigt-halso-sjukvard-april"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND05"
-slug = "ovrigt-halso-sjukvard-maj"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND06"
-slug = "ovrigt-halso-sjukvard-juni"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND07"
-slug = "ovrigt-halso-sjukvard-juli"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND08"
-slug = "ovrigt-halso-sjukvard-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND09"
-slug = "ovrigt-halso-sjukvard-september"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND10"
-slug = "ovrigt-halso-sjukvard-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND11"
-slug = "ovrigt-halso-sjukvard-november"
-
-[[variable]]
-native_id = "5352018376318353790.HSIND12"
-slug = "ovrigt-halso-sjukvard-december"
-
-[[variable]]
-native_id = "5352018376318353790.HTYP"
-slug = "hushallstyp"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP01"
-slug = "livsforing-hyresskuld-januari"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP02"
-slug = "livsforing-hyresskuld-februari"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP03"
-slug = "livsforing-hyresskuld-mars"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP04"
-slug = "livsforing-hyresskuld-april"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP05"
-slug = "livsforing-hyresskuld-maj"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP06"
-slug = "livsforing-hyresskuld-juni"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP07"
-slug = "livsforing-hyresskuld-juli"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP08"
-slug = "livsforing-hyresskuld-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP09"
-slug = "livsforing-hyresskuld-september"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP10"
-slug = "livsforing-hyresskuld-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP11"
-slug = "livsforing-hyresskuld-november"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDBELOPP12"
-slug = "livsforing-hyresskuld-december"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND01"
-slug = "ovrigt-hyresskuld-januari"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND02"
-slug = "ovrigt-hyresskuld-februari"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND03"
-slug = "ovrigt-hyresskuld-mars"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND04"
-slug = "ovrigt-hyresskuld-april"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND05"
-slug = "ovrigt-hyresskuld-maj"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND06"
-slug = "ovrigt-hyresskuld-juni"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND07"
-slug = "ovrigt-hyresskuld-juli"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND08"
-slug = "ovrigt-hyresskuld-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND09"
-slug = "ovrigt-hyresskuld-september"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND10"
-slug = "ovrigt-hyresskuld-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND11"
-slug = "ovrigt-hyresskuld-november"
-
-[[variable]]
-native_id = "5352018376318353790.HYRESSKULDIND12"
-slug = "ovrigt-hyresskuld-december"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP01"
-slug = "introduktionsersattning-januari"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP02"
-slug = "introduktionsersattning-februari"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP03"
-slug = "introduktionsersattning-mars"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP04"
-slug = "introduktionsersattning-april"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP05"
-slug = "introduktionsersattning-maj"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP06"
-slug = "introduktionsersattning-juni"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP07"
-slug = "introduktionsersattning-juli"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP08"
-slug = "introduktionsersattning-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP09"
-slug = "introduktionsersattning-september"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP10"
-slug = "introduktionsersattning-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP11"
-slug = "introduktionsersattning-november"
-
-[[variable]]
-native_id = "5352018376318353790.IEBELOPP12"
-slug = "introduktionsersattning-december"
-
-[[variable]]
-native_id = "5352018376318353790.INSALDST01"
-slug = "aldste-insats-arbetsforberedande"
-
-[[variable]]
-native_id = "5352018376318353790.INSALDST02"
-slug = "aldste-insats-arbetspraktik"
-
-[[variable]]
-native_id = "5352018376318353790.INSALDST03"
-slug = "aldste-insats-jobbsokaraktivitet"
-
-[[variable]]
-native_id = "5352018376318353790.INSALDST04"
-slug = "aldste-insats-kurs"
-
-[[variable]]
-native_id = "5352018376318353790.INSALDST05"
-slug = "aldste-insats-studievagledning"
-
-[[variable]]
-native_id = "5352018376318353790.INSALDST06"
-slug = "aldste-insats-ovriga-arbetsmarknads"
-
-[[variable]]
-native_id = "5352018376318353790.INSALDST07"
-slug = "aldste-insats-ej-aktuellt-arbetsmarknads"
-
-[[variable]]
-native_id = "5352018376318353790.INSYNGST01"
-slug = "yngstes-insats-arbetsforberedande"
-
-[[variable]]
-native_id = "5352018376318353790.INSYNGST02"
-slug = "yngstes-insats-arbetspraktik"
-
-[[variable]]
-native_id = "5352018376318353790.INSYNGST03"
-slug = "yngstes-insats-jobbsokaraktivitet"
-
-[[variable]]
-native_id = "5352018376318353790.INSYNGST04"
-slug = "yngstes-insats-kurs"
-
-[[variable]]
-native_id = "5352018376318353790.INSYNGST05"
-slug = "yngstes-insats-studie-yrkesvagledning"
-
-[[variable]]
-native_id = "5352018376318353790.INSYNGST06"
-slug = "yngstes-insats-ovriga-kommunala"
-
-[[variable]]
-native_id = "5352018376318353790.INSYNGST07"
-slug = "yngstes-insats-ej-kommunala"
-
-[[variable]]
-native_id = "5352018376318353790.KOMMUN"
-slug = "kommunkod"
-
-[[variable]]
-native_id = "5352018376318353790.LK"
-slug = "lan-kommun-fran-folkbokforing"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP01"
-slug = "livsforing-ovrig-skuld-januari"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP02"
-slug = "livsforing-ovrig-skuld-februari"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP03"
-slug = "livsforing-ovrig-skuld-mars"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP04"
-slug = "livsforing-ovrig-skuld-april"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP05"
-slug = "livsforing-ovrig-skuld-maj"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP06"
-slug = "livsforing-ovrig-skuld-juni"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP07"
-slug = "livsforing-ovrig-skuld-juli"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP08"
-slug = "livsforing-ovrig-skuld-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP09"
-slug = "livsforing-ovrig-skuld-september"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP10"
-slug = "livsforing-ovrig-skuld-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP11"
-slug = "livsforing-ovrig-skuld-november"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDBELOPP12"
-slug = "livsforing-ovrig-skuld-december"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND01"
-slug = "ovrig-skuld-januari"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND02"
-slug = "ovrig-skuld-februari"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND03"
-slug = "ovrig-skuld-mars"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND04"
-slug = "ovrig-skuld-april"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND05"
-slug = "ovrig-skuld-maj"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND06"
-slug = "ovrig-skuld-juni"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND07"
-slug = "ovrig-skuld-juli"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND08"
-slug = "ovrig-skuld-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND09"
-slug = "ovrig-skuld-september"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND10"
-slug = "ovrig-skuld-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND11"
-slug = "ovrig-skuld-november"
-
-[[variable]]
-native_id = "5352018376318353790.OVRIGSKULDIND12"
-slug = "ovrig-skuld-december"
-
-[[variable]]
-native_id = "5352018376318353790.PERSONNR_ALDST"
-slug = "personnr-aldsta-sokande"
-
-[[variable]]
-native_id = "5352018376318353790.PERSONNR_YNGST"
-slug = "personnr-yngsta-sokande"
-
-[[variable]]
-native_id = "5352018376318353790.PNRQ"
-slug = "personnummerkvalitet"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1ALDER"
-slug = "alder-sokande-1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER"
-slug = "hinder-sokande-1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER01"
-slug = "aldstes-hinder-januari-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER02"
-slug = "aldstes-hinder-februari-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER03"
-slug = "aldstes-hinder-mars-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER04"
-slug = "aldstes-hinder-april-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER05"
-slug = "aldstes-hinder-maj-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER06"
-slug = "aldstes-hinder-juni-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER07"
-slug = "aldstes-hinder-juli-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER08"
-slug = "aldstes-hinder-augusti-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER09"
-slug = "aldstes-hinder-september-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER10"
-slug = "aldstes-hinder-oktober-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER11"
-slug = "aldstes-hinder-november-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK1HINDER12"
-slug = "aldstes-hinder-december-sok1"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER"
-slug = "hinder-sokande-2"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER01"
-slug = "sok2-hinder-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER02"
-slug = "sok2-hinder-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER03"
-slug = "sok2-hinder-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER04"
-slug = "sok2-hinder-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER05"
-slug = "sok2-hinder-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER06"
-slug = "sok2-hinder-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER07"
-slug = "sok2-hinder-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER08"
-slug = "sok2-hinder-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER09"
-slug = "sok2-hinder-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER10"
-slug = "sok2-hinder-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER11"
-slug = "sok2-hinder-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOK2HINDER12"
-slug = "sok2-hinder-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTALDER"
-slug = "alder-sokande-aldst"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT01"
-slug = "avslutskod-aldsta-sokande-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT02"
-slug = "avslutskod-aldsta-sokande-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT03"
-slug = "avslutskod-aldsta-sokande-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT04"
-slug = "avslutskod-aldsta-sokande-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT05"
-slug = "avslutskod-aldsta-sokande-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT06"
-slug = "avslutskod-aldsta-sokande-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT07"
-slug = "avslutskod-aldsta-sokande-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT08"
-slug = "avslutskod-aldsta-sokande-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT09"
-slug = "avslutskod-aldsta-sokande-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT10"
-slug = "avslutskod-aldsta-sokande-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT11"
-slug = "avslutskod-aldsta-sokande-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTAVSLUT12"
-slug = "avslutskod-aldsta-sokande-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER01"
-slug = "aldstes-hinder-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER02"
-slug = "aldstes-hinder-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER03"
-slug = "aldstes-hinder-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER04"
-slug = "aldstes-hinder-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER05"
-slug = "aldstes-hinder-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER06"
-slug = "aldstes-hinder-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER07"
-slug = "aldstes-hinder-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER08"
-slug = "aldstes-hinder-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER09"
-slug = "aldstes-hinder-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER10"
-slug = "aldstes-hinder-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER11"
-slug = "aldstes-hinder-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTHINDER12"
-slug = "aldstes-hinder-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKALDSTPNR"
-slug = "personnr-aldsta-sokande-2"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01"
-slug = "arbetsforberedande-insatser"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_01"
-slug = "arbetsforberedande-insatser-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_02"
-slug = "arbetsforberedande-insatser-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_03"
-slug = "arbetsforberedande-insatser-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_04"
-slug = "arbetsforberedande-insatser-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_05"
-slug = "arbetsforberedande-insatser-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_06"
-slug = "arbetsforberedande-insatser-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_07"
-slug = "arbetsforberedande-insatser-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_08"
-slug = "arbetsforberedande-insatser-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_09"
-slug = "arbetsforberedande-insatser-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_10"
-slug = "arbetsforberedande-insatser-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_11"
-slug = "arbetsforberedande-insatser-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS01_12"
-slug = "arbetsforberedande-insatser-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02"
-slug = "arbetspraktik"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_01"
-slug = "arbetspraktik-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_02"
-slug = "arbetspraktik-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_03"
-slug = "arbetspraktik-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_04"
-slug = "arbetspraktik-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_05"
-slug = "arbetspraktik-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_06"
-slug = "arbetspraktik-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_07"
-slug = "arbetspraktik-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_08"
-slug = "arbetspraktik-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_09"
-slug = "arbetspraktik-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_10"
-slug = "arbetspraktik-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_11"
-slug = "arbetspraktik-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS02_12"
-slug = "arbetspraktik-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03"
-slug = "jobbsokaraktivitet"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_01"
-slug = "jobbsokaraktivitet-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_02"
-slug = "jobbsokaraktivitet-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_03"
-slug = "jobbsokaraktivitet-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_04"
-slug = "jobbsokaraktivitet-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_05"
-slug = "jobbsokaraktivitet-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_06"
-slug = "jobbsokaraktivitet-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_07"
-slug = "jobbsokaraktivitet-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_08"
-slug = "jobbsokaraktivitet-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_09"
-slug = "jobbsokaraktivitet-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_10"
-slug = "jobbsokaraktivitet-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_11"
-slug = "jobbsokaraktivitet-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS03_12"
-slug = "jobbsokaraktivitet-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04"
-slug = "kurs"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_01"
-slug = "kurs-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_02"
-slug = "kurs-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_03"
-slug = "kurs-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_04"
-slug = "kurs-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_05"
-slug = "kurs-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_06"
-slug = "kurs-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_07"
-slug = "kurs-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_08"
-slug = "kurs-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_09"
-slug = "kurs-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_10"
-slug = "kurs-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_11"
-slug = "kurs-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS04_12"
-slug = "kurs-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05"
-slug = "studie-yrkesvagledning"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_01"
-slug = "studie-yrkesvagledning-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_02"
-slug = "studie-yrkesvagledning-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_03"
-slug = "studie-yrkesvagledning-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_04"
-slug = "studie-yrkesvagledning-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_05"
-slug = "studie-yrkesvagledning-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_06"
-slug = "studie-yrkesvagledning-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_07"
-slug = "studie-yrkesvagledning-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_08"
-slug = "studie-yrkesvagledning-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_09"
-slug = "studie-yrkesvagledning-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_10"
-slug = "studie-yrkesvagledning-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_11"
-slug = "studie-yrkesvagledning-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS05_12"
-slug = "studie-yrkesvagledning-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06"
-slug = "ovriga-arbetsmarknadsinsatser"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_01"
-slug = "arbetsmarknadsinsatser-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_02"
-slug = "arbetsmarknadsinsatser-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_03"
-slug = "arbetsmarknadsinsatser-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_04"
-slug = "arbetsmarknadsinsatser-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_05"
-slug = "arbetsmarknadsinsatser-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_06"
-slug = "arbetsmarknadsinsatser-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_07"
-slug = "arbetsmarknadsinsatser-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_08"
-slug = "arbetsmarknadsinsatser-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_09"
-slug = "arbetsmarknadsinsatser-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_10"
-slug = "arbetsmarknadsinsatser-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_11"
-slug = "arbetsmarknadsinsatser-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS06_12"
-slug = "arbetsmarknadsinsatser-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07"
-slug = "ej-arbetsmarknadsinsatser"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_01"
-slug = "ej-arbetsmarknadsinsatser-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_02"
-slug = "ej-arbetsmarknadsinsatser-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_03"
-slug = "ej-arbetsmarknadsinsatser-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_04"
-slug = "ej-arbetsmarknadsinsatser-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_05"
-slug = "ej-arbetsmarknadsinsatser-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_06"
-slug = "ej-arbetsmarknadsinsatser-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_07"
-slug = "ej-arbetsmarknadsinsatser-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_08"
-slug = "ej-arbetsmarknadsinsatser-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_09"
-slug = "ej-arbetsmarknadsinsatser-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_10"
-slug = "ej-arbetsmarknadsinsatser-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_11"
-slug = "ej-arbetsmarknadsinsatser-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKINS07_12"
-slug = "ej-arbetsmarknadsinsatser-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTALDER"
-slug = "alder-sokande-yngst"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT01"
-slug = "avslutskod-yngsta-sokande-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT02"
-slug = "avslutskod-yngsta-sokande-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT03"
-slug = "avslutskod-yngsta-sokande-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT04"
-slug = "avslutskod-yngsta-sokande-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT05"
-slug = "avslutskod-yngsta-sokande-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT06"
-slug = "avslutskod-yngsta-sokande-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT07"
-slug = "avslutskod-yngsta-sokande-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT08"
-slug = "avslutskod-yngsta-sokande-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT09"
-slug = "avslutskod-yngsta-sokande-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT10"
-slug = "avslutskod-yngsta-sokande-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT11"
-slug = "avslutskod-yngsta-sokande-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTAVSLUT12"
-slug = "avslutskod-yngsta-sokande-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER01"
-slug = "yngstes-hinder-januari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER02"
-slug = "yngstes-hinder-februari"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER03"
-slug = "yngstes-hinder-mars"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER04"
-slug = "yngstes-hinder-april"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER05"
-slug = "yngstes-hinder-maj"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER06"
-slug = "yngstes-hinder-juni"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER07"
-slug = "yngstes-hinder-juli"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER08"
-slug = "yngstes-hinder-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER09"
-slug = "yngstes-hinder-september"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER10"
-slug = "yngstes-hinder-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER11"
-slug = "yngstes-hinder-november"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTHINDER12"
-slug = "yngstes-hinder-december"
-
-[[variable]]
-native_id = "5352018376318353790.SOKYNGSTPNR"
-slug = "personnr-yngsta-sokande-2"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP01"
-slug = "tandvard-belopp-januari"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP02"
-slug = "tandvard-belopp-februari"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP03"
-slug = "tandvard-belopp-mars"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP04"
-slug = "tandvard-belopp-april"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP05"
-slug = "tandvard-belopp-maj"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP06"
-slug = "tandvard-belopp-juni"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP07"
-slug = "tandvard-belopp-juli"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP08"
-slug = "tandvard-belopp-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP09"
-slug = "tandvard-belopp-september"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP10"
-slug = "tandvard-belopp-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP11"
-slug = "tandvard-belopp-november"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVBELOPP12"
-slug = "tandvard-belopp-december"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND01"
-slug = "tandvard-januari"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND02"
-slug = "tandvard-februari"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND03"
-slug = "tandvard-mars"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND04"
-slug = "tandvard-april"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND05"
-slug = "tandvard-maj"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND06"
-slug = "tandvard-juni"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND07"
-slug = "tandvard-juli"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND08"
-slug = "tandvard-augusti"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND09"
-slug = "tandvard-september"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND10"
-slug = "tandvard-oktober"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND11"
-slug = "tandvard-november"
-
-[[variable]]
-native_id = "5352018376318353790.TANDVIND12"
-slug = "tandvard-december"
-
-[[variable]]
-native_id = "5352018376318353790.UTLHH"
-slug = "utlanskt-hushall"
 # register 5369119272181688462
 
 # Batch47: exact unresolved dictionary links remain visible limitations.
@@ -2515,14 +1105,6 @@ fields = ["coding"]
 reason = "The supplied source coding evidence for this exact field cannot enumerate any associated members. Preserve all identifier/age meaning, original metadata, physical fields, periods and source coding material. Do not invent a finite value domain or interpret a format declaration as an enumerated list; this exact unsupported membership remains unavailable."
 evidence = "Complete accepted source register and maintained naming/correction/binding replay, actual full inline source sessions and canonical book references. Exact full-original/coding guard. Proof: Batch51-SOS-source-limits13-proof.json. Existing unavailable-domain and unknown-availability policy; no invented encoding or date."
 expected_evidence_sha256 = "5b042766ef5da888294fec874fe19e240669b2f8ab7c917396751207e904af56"
-
-# #1603 batch-e (#1633): SWECOV's EKB household and person tables share a
-# steward-assigned household-year link key that SoS does not document. It is not
-# HID (hushallsid), which SoS builds from the household members' personnummer.
-
-[[variable]]
-native_id = "5352018376318353790.P1105_LopNr_EKB"
-slug = "lopnr-hushall-ar"
 
 [[errata.column]]
 variant = "EKB_MANAD"

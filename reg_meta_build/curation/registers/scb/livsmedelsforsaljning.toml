@@ -11,170 +11,61 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Lönesummor, arbetsgivaravgifter och preliminär A-skatt (LAPS)
-
-[[variable]]
-native_id = "176.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "176.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "176.467"
-slug = "telefonnummer"
-
-[[variable]]
-native_id = "176.1653"
-slug = "kommentar-uppgiftslamnare"
-
-[[variable]]
-native_id = "176.1728"
-slug = "blankettens-statuskod"
-
-[[variable]]
-native_id = "176.1794"
-slug = "antal-skattedeklarationer"
-
-[[variable]]
-native_id = "176.1799"
-slug = "kontaktpersonens-namn-1"
-
-[[variable]]
-native_id = "176.1801"
-slug = "redovisningsperiod-slut"
-
-[[variable]]
-native_id = "176.1802"
-slug = "redovisningsperiod-start"
-
-[[variable]]
-native_id = "176.1803"
-slug = "registerstatus"
-
-[[variable]]
-native_id = "176.1811"
-slug = "variabelnummer"
-
-[[variable]]
-native_id = "176.8162"
-slug = "antal-svarande-enheter"
-
-[[variable]]
-native_id = "176.16965"
-slug = "antal-manader-bokslut"
-
-[[variable]]
-native_id = "176.17594"
-slug = "agg-fran-frigaende-hons"
-
-[[variable]]
-native_id = "176.17604"
-slug = "nr-produktkod"
-
-[[variable]]
-native_id = "176.19052"
-slug = "naringsgren-for-statistiken"
-
-[[variable]]
-native_id = "176.19538"
-slug = "upprakningsfaktor"
-
-[[variable]]
-native_id = "176.36753"
-slug = "forsaljning-med-12-moms"
-
-[[variable]]
-native_id = "176.36754"
-slug = "forsaljning-med-25-moms"
-
-[[variable]]
-native_id = "176.36755"
-slug = "forsaljning-med-6-moms"
-
-[[variable]]
-native_id = "176.36759"
-slug = "foregaende-forsaljning-12-moms"
-
-[[variable]]
-native_id = "176.36760"
-slug = "foregaende-forsaljning-25-moms"
-
-[[variable]]
-native_id = "176.36761"
-slug = "foregaende-forsaljning-6-moms"
-
-[[variable]]
-native_id = "176.36786"
-slug = "variabelbeteckning"
-
-[[variable]]
-native_id = "176.36787"
-slug = "variabelnamn"
+"176.56" = "person-orgnr"
+"176.34" = "juridisk-form"
+"176.467" = "telefonnummer"
+"176.1653" = "kommentar-uppgiftslamnare"
+"176.1728" = "blankettens-statuskod"
+"176.1794" = "antal-skattedeklarationer"
+"176.1799" = "kontaktpersonens-namn-1"
+"176.1801" = "redovisningsperiod-slut"
+"176.1802" = "redovisningsperiod-start"
+"176.1803" = "registerstatus"
+"176.1811" = "variabelnummer"
+"176.8162" = "antal-svarande-enheter"
+"176.16965" = "antal-manader-bokslut"
+"176.17594" = "agg-fran-frigaende-hons"
+"176.17604" = "nr-produktkod"
+"176.19052" = "naringsgren-for-statistiken"
+"176.19538" = "upprakningsfaktor"
+"176.36753" = "forsaljning-med-12-moms"
+"176.36754" = "forsaljning-med-25-moms"
+"176.36755" = "forsaljning-med-6-moms"
+"176.36759" = "foregaende-forsaljning-12-moms"
+"176.36760" = "foregaende-forsaljning-25-moms"
+"176.36761" = "foregaende-forsaljning-6-moms"
+"176.36786" = "variabelbeteckning"
+"176.36787" = "variabelnamn"
 
 # register 181 (fmr)
-
-[[variable]]
-native_id = "176.466.upprakningsfaktor"
-slug = "upprakningstal"
+"176.466.upprakningsfaktor" = "upprakningstal"
 
 # register 182 (fou)
-
-[[variable]]
-native_id = "176.666"
-slug = "anstallda-storleksklass"
-
-[[variable]]
-native_id = "176.675"
-slug = "anstallda-ku"
-
-[[variable]]
-native_id = "176.814"
-slug = "faxnummer"
-
-[[variable]]
-native_id = "176.1723"
-slug = "inkommen-blankett-datum"
-
-[[variable]]
-native_id = "176.1724"
-slug = "e-postadress-kontaktperson"
-
-[[variable]]
-native_id = "176.1795"
-slug = "blankettnummer"
-
-[[variable]]
-native_id = "176.1810"
-slug = "imputerad"
-
-[[variable]]
-native_id = "176.1937"
-slug = "kommentar"
-
-[[variable]]
-native_id = "176.4053"
-slug = "bransch-enligt-uppgiftslamnaren"
-
-[[variable]]
-native_id = "176.4256"
-slug = "nettoomsattning"
-
-[[variable]]
-native_id = "176.23815"
-slug = "tidsatgang-besvara-blankett"
-
-[[variable]]
-native_id = "176.35643"
-slug = "epost-kontaktperson"
+"176.666" = "anstallda-storleksklass"
+"176.675" = "anstallda-ku"
+"176.814" = "faxnummer"
+"176.1723" = "inkommen-blankett-datum"
+"176.1724" = "e-postadress-kontaktperson"
+"176.1795" = "blankettnummer"
+"176.1810" = "imputerad"
+"176.1937" = "kommentar"
+"176.4053" = "bransch-enligt-uppgiftslamnaren"
+"176.4256" = "nettoomsattning"
+"176.23815" = "tidsatgang-besvara-blankett"
+"176.35643" = "epost-kontaktperson"
 
 # register 179
-
-[[variable]]
-native_id = "176.4027.ng1"
-slug = "naringsgren"
+"176.4027.ng1" = "naringsgren"
+"176.1814.coicop4" = "coicop4"
+"176.1814.coicop5" = "coicop5"
+"176.1801.redperslut" = "redperslut"
+"176.1801.v2tom" = "v2tom"
+"176.19052.ngs1je" = "ngs1je"
+"176.19052.ngs" = "ngs"
+"176.1653.kommentar" = "kommentar-1653"
+"176.1653.uppgiftkommentar" = "uppgiftkommentar"
 
 # register 182
 
@@ -631,38 +522,6 @@ variable = "176.1653"
 columns = { Kommentar = "176.1653.kommentar", uppgiftkommentar = "176.1653.uppgiftkommentar" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "6014a735b2bff5d1e9be35207710e78a8eaebda871b26430efc5bca8c7b6dd21"
-
-[[variable]]
-native_id = "176.1814.coicop4"
-slug = "coicop4"
-
-[[variable]]
-native_id = "176.1814.coicop5"
-slug = "coicop5"
-
-[[variable]]
-native_id = "176.1801.redperslut"
-slug = "redperslut"
-
-[[variable]]
-native_id = "176.1801.v2tom"
-slug = "v2tom"
-
-[[variable]]
-native_id = "176.19052.ngs1je"
-slug = "ngs1je"
-
-[[variable]]
-native_id = "176.19052.ngs"
-slug = "ngs"
-
-[[variable]]
-native_id = "176.1653.kommentar"
-slug = "kommentar-1653"
-
-[[variable]]
-native_id = "176.1653.uppgiftkommentar"
-slug = "uppgiftkommentar"
 
 [[acknowledge]]
 code = "missing_coding_period"

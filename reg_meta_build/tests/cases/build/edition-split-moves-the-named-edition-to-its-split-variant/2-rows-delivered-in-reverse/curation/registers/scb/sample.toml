@@ -9,9 +9,10 @@ slug = "flow"
 native_id = "1.2.stock"
 slug = "stock"
 description = "The 31 December stock edition of the flow variant."
-[[variable]]
-native_id = "1.5"
-slug = "shared"
+
+[variable]
+"1.5" = "shared"
+
 [[identity.edition_split]]
 variant = "1.2"
 split = "1.2.stock"

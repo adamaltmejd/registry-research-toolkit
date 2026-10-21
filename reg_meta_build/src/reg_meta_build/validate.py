@@ -205,7 +205,7 @@ def validate_built_db(
     populated; it feeds the steward entity-key curation gate
     (``_check_entity_key_vars_curated``). It is refused without ``flavored``:
     a global build needs no gate, because compile already refuses any variable
-    without an authored ``[[variable]]`` pin (``unresolved_catalog_identity``,
+    without an authored ``[variable]`` pin (``unresolved_catalog_identity``,
     #1222). ``None`` skips the steward gate.
 
     """

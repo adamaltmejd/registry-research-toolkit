@@ -23,9 +23,9 @@ def test_fohm_thin_slug_entries_follow_authored_columns() -> None:
             (root / f"curation/registers/fohm/{register}.auto.toml").read_text()
         )
         for column in columns:
-            entry = next(
-                item
-                for item in auto["variable"]
-                if item["native_id"].endswith(f".{column}")
+            slug = next(
+                slug
+                for native_id, slug in auto["variable"].items()
+                if native_id.endswith(f".{column}")
             )
-            assert entry["slug"] == derive_variable_slug(column)
+            assert slug == derive_variable_slug(column)

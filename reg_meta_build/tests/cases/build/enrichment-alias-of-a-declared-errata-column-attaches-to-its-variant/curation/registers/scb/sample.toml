@@ -5,12 +5,10 @@ native_id = "1"
 [[variant]]
 native_id = "1.2"
 slug = "people"
-[[variable]]
-native_id = "1.5"
-slug = "a"
-[[variable]]
-native_id = "1.NewCol"
-slug = "new-col"
+
+[variable]
+"1.5" = "a"
+"1.NewCol" = "new-col"
 
 [[errata.column]]
 variant = "people"

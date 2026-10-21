@@ -20,28 +20,13 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Förmögenhetsregistret
-
-[[variable]]
-native_id = "227.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "227.119"
-slug = "varukod-kn"
-
-[[variable]]
-native_id = "227.4339"
-slug = "imputerat-varde-kostnader-ravaror"
-
-[[variable]]
-native_id = "227.8101"
-slug = "externa-kostnader-vatten-avlopp"
-
-[[variable]]
-native_id = "227.19052"
-slug = "naringsgren-for-statistiken"
+"227.56" = "person-orgnr"
+"227.119" = "varukod-kn"
+"227.4339" = "imputerat-varde-kostnader-ravaror"
+"227.8101" = "externa-kostnader-vatten-avlopp"
+"227.19052" = "naringsgren-for-statistiken"
 
 # register 228
 

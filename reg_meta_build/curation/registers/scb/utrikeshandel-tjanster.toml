@@ -17,25 +17,14 @@ panel_entity_key = "person-orgnr"
 panel_time_key = ["redovisningsar", "kvartal"]
 panel_time_grain = "row"
 
+[variable]
 # Arbetsgivardeklarationer, huvuduppgifter (AGI/Huvud) — canonical-SCB content on the
 # `scb` provider with a low-band mint_canonical_scb id (the employer-level header
 # sibling of the individual-level register 392; absent from SCB's machine export).
+"3084667015646526536.Peorgnr" = "person-orgnr"
+"3084667015646526536.Ar" = "redovisningsar"
+"3084667015646526536.Intakt" = "intakt-export"
+"3084667015646526536.Kostnad" = "kostnad-import"
 
-[[variable]]
-native_id = "3084667015646526536.Peorgnr"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "3084667015646526536.Ar"
-slug = "redovisningsar"
-
-[[variable]]
-native_id = "3084667015646526536.Intakt"
-slug = "intakt-export"
-
-[[variable]]
-native_id = "3084667015646526536.Kostnad"
-slug = "kostnad-import"
 
 # register 32

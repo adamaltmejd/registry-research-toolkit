@@ -11,110 +11,40 @@ panel_entity_key = "personnr"
 panel_time_key = ["ar", "manad"]
 panel_time_grain = "row"
 
+[variable]
 # Geografidatabasen (GDB)
-
-[[variable]]
-native_id = "60.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "60.50"
-slug = "manad"
-
-[[variable]]
-native_id = "60.1854"
-slug = "sektorkod-enl-kls"
-
-[[variable]]
-native_id = "60.2736"
-slug = "sektor"
-
-[[variable]]
-native_id = "60.7450"
-slug = "matmanad"
-
-[[variable]]
-native_id = "60.27169"
-slug = "lonepop-man"
+"60.57" = "personnr"
+"60.50" = "manad"
+"60.1854" = "sektorkod-enl-kls"
+"60.2736" = "sektor"
+"60.7450" = "matmanad"
+"60.27169" = "lonepop-man"
 
 # register 70 (gdb)
-
-[[variable]]
-native_id = "60.1834.lonepopman"
-slug = "lonepopulation-2"
+"60.1834.lonepopman" = "lonepopulation-2"
 
 # register 7 (ftr)
-
-[[variable]]
-native_id = "60.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "60.109"
-slug = "tjanstgoringsomfattning"
-
-[[variable]]
-native_id = "60.1822"
-slug = "fasta-lonetillagg"
-
-[[variable]]
-native_id = "60.1832"
-slug = "lonebeteckning"
-
-[[variable]]
-native_id = "60.1837"
-slug = "naturaformaner"
-
-[[variable]]
-native_id = "60.1838"
-slug = "overtidstillagg"
-
-[[variable]]
-native_id = "60.1844"
-slug = "rorliga-lonetillagg"
-
-[[variable]]
-native_id = "60.1846"
-slug = "tjanstledighet"
-
-[[variable]]
-native_id = "60.1852"
-slug = "tjanstebenamning"
-
-[[variable]]
-native_id = "60.1853"
-slug = "naringsgren-enligt-nr"
-
-[[variable]]
-native_id = "60.3098"
-slug = "faktiskt-arbetad-tid"
-
-[[variable]]
-native_id = "60.3129"
-slug = "avtalsenlig-veckoarbetstid"
-
-[[variable]]
-native_id = "60.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "60.5083"
-slug = "anstallningsform"
-
-[[variable]]
-native_id = "60.15882"
-slug = "semestertillagg"
-
-[[variable]]
-native_id = "60.15926"
-slug = "foraldrapenningtillagg"
+"60.1839" = "orgnr"
+"60.109" = "tjanstgoringsomfattning"
+"60.1822" = "fasta-lonetillagg"
+"60.1832" = "lonebeteckning"
+"60.1837" = "naturaformaner"
+"60.1838" = "overtidstillagg"
+"60.1844" = "rorliga-lonetillagg"
+"60.1846" = "tjanstledighet"
+"60.1852" = "tjanstebenamning"
+"60.1853" = "naringsgren-enligt-nr"
+"60.3098" = "faktiskt-arbetad-tid"
+"60.3129" = "avtalsenlig-veckoarbetstid"
+"60.4027" = "naringsgren"
+"60.5083" = "anstallningsform"
+"60.15882" = "semestertillagg"
+"60.15926" = "foraldrapenningtillagg"
 
 # register 70
-
-[[variable]]
-native_id = "60.1834.lonepop"
-slug = "lonepopulation"
+"60.1834.lonepop" = "lonepopulation"
+"60.4027.sni2007" = "sni2007"
+"60.4027.sni92" = "sni92"
 
 # register 70
 
@@ -124,14 +54,6 @@ variable = "60.4027"
 columns = { SNI2007 = "60.4027.sni2007", SNI92 = "60.4027.sni92" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "45678cb26c8a5d2762708030bb9f8b8aa52754018dddb0a2ed1cba1e5dcdf470"
-
-[[variable]]
-native_id = "60.4027.sni2007"
-slug = "sni2007"
-
-[[variable]]
-native_id = "60.4027.sni92"
-slug = "sni92"
 
 [[acknowledge]]
 code = "missing_coding_period"

@@ -23,132 +23,44 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Trädbränsle-, torv- och avfallspriser
-
-[[variable]]
-native_id = "353.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "353.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "353.1839"
-slug = "orgnr"
-
-[[variable]]
-native_id = "353.26032"
-slug = "integrerad-elev-anpassad"
-
-[[variable]]
-native_id = "353.40835"
-slug = "integrerad-sarskolelev"
+"353.57" = "personnr"
+"353.56" = "person-orgnr"
+"353.1839" = "orgnr"
+"353.26032" = "integrerad-elev-anpassad"
+"353.40835" = "integrerad-sarskolelev"
 
 # register 355 (tradbransle-torv)
-
-[[variable]]
-native_id = "353.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "353.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "353.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "353.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "353.1554"
-slug = "ar-termin-aktiviteten"
-
-[[variable]]
-native_id = "353.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "353.4642"
-slug = "faderns-fodelseland"
-
-[[variable]]
-native_id = "353.4643"
-slug = "moderns-fodelseland"
-
-[[variable]]
-native_id = "353.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "353.7817"
-slug = "deltagit-sva"
-
-[[variable]]
-native_id = "353.8552"
-slug = "gymnasieforbund-id"
-
-[[variable]]
-native_id = "353.23867"
-slug = "klassbeteckning"
-
-[[variable]]
-native_id = "353.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "353.29427"
-slug = "gymnasieforbundets-namn"
-
-[[variable]]
-native_id = "353.30471"
-slug = "direktovergang"
-
-[[variable]]
-native_id = "353.30654"
-slug = "skolenhetens-namn"
-
-[[variable]]
-native_id = "353.32873"
-slug = "larling"
-
-[[variable]]
-native_id = "353.35887"
-slug = "nyligen-invandrad"
-
-[[variable]]
-native_id = "353.40833"
-slug = "central-insamlingsenhet"
+"353.34" = "juridisk-form"
+"353.323" = "personnr-far"
+"353.324" = "personnr-mor"
+"353.332" = "senaste-invandringsdatum"
+"353.1554" = "ar-termin-aktiviteten"
+"353.1996" = "skolform"
+"353.4642" = "faderns-fodelseland"
+"353.4643" = "moderns-fodelseland"
+"353.6809" = "folkbokforingskommun"
+"353.7817" = "deltagit-sva"
+"353.8552" = "gymnasieforbund-id"
+"353.23867" = "klassbeteckning"
+"353.29426" = "tidigaste-invandringsdatum"
+"353.29427" = "gymnasieforbundets-namn"
+"353.30471" = "direktovergang"
+"353.30654" = "skolenhetens-namn"
+"353.32873" = "larling"
+"353.35887" = "nyligen-invandrad"
+"353.40833" = "central-insamlingsenhet"
 
 # register 355
-
-[[variable]]
-native_id = "353.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "353.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "353.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "353.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "353.8137.hman"
-slug = "huvudman"
-
-[[variable]]
-native_id = "353.8137.hmannamn"
-slug = "huvudman-namn"
+"353.8073.sun2000niva-mor" = "sun-niva-mor"
+"353.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"353.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"353.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"353.8137.hman" = "huvudman"
+"353.8137.hmannamn" = "huvudman-namn"
+"353.30471.direkt" = "direkt"
+"353.30471.direkt9" = "direkt9"
 
 # register 355
 
@@ -158,11 +70,3 @@ variable = "353.30471"
 columns = { Direkt = "353.30471.direkt", Direkt9 = "353.30471.direkt9" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "d08cd56ed5466526d4bc69dd6a9638eab21ed5fe3541abe14137c9ac8ac193f8"
-
-[[variable]]
-native_id = "353.30471.direkt"
-slug = "direkt"
-
-[[variable]]
-native_id = "353.30471.direkt9"
-slug = "direkt9"

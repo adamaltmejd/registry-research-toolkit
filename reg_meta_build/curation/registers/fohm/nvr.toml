@@ -11,9 +11,5 @@ panel_entity_key = "personnr"
 panel_time_key = "vaccinationsdatum"
 panel_time_grain = "row"
 
-
-
-
-[[variable]]
-native_id = "7553527605692442211.personnummer"
-slug = "personnr"
+[variable]
+"7553527605692442211.personnummer" = "personnr"

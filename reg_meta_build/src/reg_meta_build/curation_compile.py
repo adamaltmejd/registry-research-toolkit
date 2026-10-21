@@ -2256,7 +2256,7 @@ def _partition_family_relevant(
 _UNASSIGNED_COMPETING = "unassigned_identity_competing_ownership"
 _UNASSIGNED_COMPETING_FIX = (
     "Keep one [[identity.unassigned]] entry per native family and remove that "
-    "family's split naming ([[variable]] native_id = '<family>.<split>'), "
+    "family's split naming ([variable] pin '<family>.<split>'), "
     "[[identity.partition]], [[identity.column_owner]], [[identity.split]] and "
     "[[identity.rename]]: an unassigned family has no owner."
 )

@@ -11,6 +11,7 @@ panel_entity_key = "eget-personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # #539: entity-key slug pins (slug-space drift reslug fallout). Measuring #143
 # drift as COUNT(DISTINCT variable_slug(...)) instead of raw delivery columns
 # reslugged ~1,265 SCB variables from verbose name-fallbacks to their stable
@@ -19,8 +20,4 @@ panel_time_grain = "delivery"
 # a curated `panel_entity_key` (or classification_links) ref depends on, so pin
 # each back to the slug its ref expects (same mechanism as the #526/#528 pins).
 # Generated + verified collision-free against a real-seed build; see #539.
-
-
-[[variable]]
-native_id = "414.4544"
-slug = "eget-personnr"
+"414.4544" = "eget-personnr"

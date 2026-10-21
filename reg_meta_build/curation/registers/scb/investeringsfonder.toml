@@ -8,1692 +8,427 @@ native_id = "254.549"
 slug = "investeringsfonder-utdata"
 display_group = "Utdata"
 
+[variable]
 # Innovation i företagssektorn
-
-[[variable]]
-native_id = "254.19748"
-slug = "aktiva-rantefonder"
-
-[[variable]]
-native_id = "254.19750"
-slug = "aktiva-penningmarknadsfonder"
-
-[[variable]]
-native_id = "254.19751"
-slug = "aktiva-aktiefonder"
-
-[[variable]]
-native_id = "254.19891"
-slug = "aktiva-blandfonder"
-
-[[variable]]
-native_id = "254.19894"
-slug = "aktiva-fond-i-fonder"
-
-[[variable]]
-native_id = "254.19895"
-slug = "aktiva-ovriga-fonder"
-
-[[variable]]
-native_id = "254.19896"
-slug = "aktiva-fonder-total"
-
-[[variable]]
-native_id = "254.19897"
-slug = "fondformogenhet-rantefonder"
-
-[[variable]]
-native_id = "254.19898"
-slug = "fondformogenhet-penningmarknadsfonder"
-
-[[variable]]
-native_id = "254.20001"
-slug = "fondformogenhet-aktiefonder"
-
-[[variable]]
-native_id = "254.20002"
-slug = "fondformogenhet-blandfonder"
-
-[[variable]]
-native_id = "254.20003"
-slug = "fondformogenhet-fond-i-fonder"
-
-[[variable]]
-native_id = "254.20004"
-slug = "fondformogenhet-ovriga-fonder"
-
-[[variable]]
-native_id = "254.20005"
-slug = "fondformogenhet-fonder-totalt"
-
-[[variable]]
-native_id = "254.20006"
-slug = "nettospar-aterinv-hushall"
-
-[[variable]]
-native_id = "254.20008"
-slug = "nettospar-aterinv-hh-icke"
-
-[[variable]]
-native_id = "254.20014"
-slug = "nettospar-aterinv-sv-icke-fin"
-
-[[variable]]
-native_id = "254.20015"
-slug = "nettospar-aterinv-kommuner"
-
-[[variable]]
-native_id = "254.20016"
-slug = "nettospar-aterinv-socialforsakring"
-
-[[variable]]
-native_id = "254.20017"
-slug = "nettospar-aterinv-ovriga"
-
-[[variable]]
-native_id = "254.20018"
-slug = "nettospar-aterinv-utlandska"
-
-[[variable]]
-native_id = "254.20019"
-slug = "nettospar-aterinv-sektorer-totalt"
-
-[[variable]]
-native_id = "254.20020"
-slug = "fondformogenhet-hushall"
-
-[[variable]]
-native_id = "254.20021"
-slug = "fondformogenhet-hh-ickevinstdrivande"
-
-[[variable]]
-native_id = "254.20022"
-slug = "fondformogenhet-sv-finansiella-frtg"
-
-[[variable]]
-native_id = "254.20023"
-slug = "fondformogenhet-fondforsakring-ej-ppm"
-
-[[variable]]
-native_id = "254.20024"
-slug = "fondformogenhet-sv-fin-frtg-varav-ppm"
-
-[[variable]]
-native_id = "254.20025"
-slug = "nettospar-aterinv-fondforsakring"
-
-[[variable]]
-native_id = "254.20026"
-slug = "nettospar-aterinv-sv-finansiella"
-
-[[variable]]
-native_id = "254.20027"
-slug = "nettospar-aterinv-ppm"
-
-[[variable]]
-native_id = "254.20028"
-slug = "fondformogenhet-sv-icke-finansiella-frtg"
-
-[[variable]]
-native_id = "254.20029"
-slug = "fondformogenhet-kommuner"
-
-[[variable]]
-native_id = "254.20030"
-slug = "fondformogenhet-socialforsakring"
-
-[[variable]]
-native_id = "254.20031"
-slug = "fondformogenhet-ovriga-sv-innehavare"
-
-[[variable]]
-native_id = "254.20032"
-slug = "fondformogenhet-utlandska-innehavare"
-
-[[variable]]
-native_id = "254.20033"
-slug = "brutto-rantefonder-inbetalt"
-
-[[variable]]
-native_id = "254.20034"
-slug = "brutto-rantefonder-utbetalt"
-
-[[variable]]
-native_id = "254.20035"
-slug = "nettosparande-i-rantefonder-totalt"
-
-[[variable]]
-native_id = "254.20036"
-slug = "brutto-penningmarknadsfond-inbetalt"
-
-[[variable]]
-native_id = "254.20038"
-slug = "brutto-penningmarknadsfond-utbetalt"
-
-[[variable]]
-native_id = "254.20039"
-slug = "netto-penningmarknadsfonder-totalt"
-
-[[variable]]
-native_id = "254.20040"
-slug = "brutto-aktiefonder-inbetalt"
-
-[[variable]]
-native_id = "254.20041"
-slug = "brutto-aktiefonder-utbetalt"
-
-[[variable]]
-native_id = "254.20043"
-slug = "nettosparande-i-aktiefonder-totalt"
-
-[[variable]]
-native_id = "254.20044"
-slug = "brutto-blandfonder-inbetalt"
-
-[[variable]]
-native_id = "254.20046"
-slug = "brutto-blandfonder-utbetalt"
-
-[[variable]]
-native_id = "254.20049"
-slug = "nettosparande-i-blandfonder-totalt"
-
-[[variable]]
-native_id = "254.20051"
-slug = "brutto-fond-i-fonder-inbetalt"
-
-[[variable]]
-native_id = "254.20053"
-slug = "brutto-fond-i-fonder-utbetalt"
-
-[[variable]]
-native_id = "254.20055"
-slug = "nettosparande-i-fond-i-fonder-totalt"
-
-[[variable]]
-native_id = "254.20058"
-slug = "brutto-ovriga-fonder-inbetalt"
-
-[[variable]]
-native_id = "254.20060"
-slug = "brutto-ovriga-fonder-utbetalt"
-
-[[variable]]
-native_id = "254.20062"
-slug = "nettosparande-i-ovriga-fonder-totalt"
-
-[[variable]]
-native_id = "254.20063"
-slug = "brutto-fonder-totalt-inbetalt"
-
-[[variable]]
-native_id = "254.20064"
-slug = "brutto-fonder-totalt-utbetalt"
-
-[[variable]]
-native_id = "254.20066"
-slug = "nettosparande-fonder-sektorer-totalt"
-
-[[variable]]
-native_id = "254.20069"
-slug = "brutto-rantefonder-hushall-inbetalt"
-
-[[variable]]
-native_id = "254.20070"
-slug = "brutto-rantefonder-hushall-utbetalt"
-
-[[variable]]
-native_id = "254.20071"
-slug = "nettosparande-i-rantefonder-hushall"
-
-[[variable]]
-native_id = "254.20072"
-slug = "brutto-penningmarknadsfond-hh-inbetalt"
-
-[[variable]]
-native_id = "254.20073"
-slug = "brutto-penningmarknadsfond-hh-utbetalt"
-
-[[variable]]
-native_id = "254.20074"
-slug = "netto-penningmarknadsfonder-hushall"
-
-[[variable]]
-native_id = "254.20075"
-slug = "brutto-aktiefonder-hushall-inbetalt"
-
-[[variable]]
-native_id = "254.20078"
-slug = "brutto-aktiefonder-hushall-utbetalt"
-
-[[variable]]
-native_id = "254.20080"
-slug = "nettosparande-i-aktiefonder-hushall"
-
-[[variable]]
-native_id = "254.20082"
-slug = "brutto-blandfonder-hushall-inbetalt"
-
-[[variable]]
-native_id = "254.20085"
-slug = "brutto-blandfonder-hushall-utbetalt"
-
-[[variable]]
-native_id = "254.20086"
-slug = "nettosparande-i-blandfonder-hushall"
-
-[[variable]]
-native_id = "254.20087"
-slug = "brutto-fond-i-fonder-hushall-inbetalt"
-
-[[variable]]
-native_id = "254.20089"
-slug = "brutto-fond-i-fonder-hushall-utbetalt"
-
-[[variable]]
-native_id = "254.20090"
-slug = "nettosparande-i-fond-i-fonder-hushall"
-
-[[variable]]
-native_id = "254.20091"
-slug = "brutto-ovriga-fonder-hushall-inbetalt"
-
-[[variable]]
-native_id = "254.20092"
-slug = "brutto-ovriga-fonder-hushall-utbetalt"
-
-[[variable]]
-native_id = "254.20093"
-slug = "nettosparande-i-ovriga-fonder-hushall"
-
-[[variable]]
-native_id = "254.20094"
-slug = "brutto-fonder-totalt-hushall-inbetalt"
-
-[[variable]]
-native_id = "254.20095"
-slug = "brutto-fonder-totalt-hushall-utbetalt"
-
-[[variable]]
-native_id = "254.20096"
-slug = "nettosparande-fonder-total-hushall"
-
-[[variable]]
-native_id = "254.20097"
-slug = "placeringar-likvida-medel"
-
-[[variable]]
-native_id = "254.20101"
-slug = "placeringar-aktier"
-
-[[variable]]
-native_id = "254.20102"
-slug = "placeringar-noterade-aktier"
-
-[[variable]]
-native_id = "254.20103"
-slug = "placeringar-noterade-icke-fin-aktier"
-
-[[variable]]
-native_id = "254.20104"
-slug = "placeringar-noterade-fin-aktier"
-
-[[variable]]
-native_id = "254.20105"
-slug = "placeringar-noterade-utl-aktier"
-
-[[variable]]
-native_id = "254.20106"
-slug = "placeringar-handelsnoterade-aktier"
-
-[[variable]]
-native_id = "254.20107"
-slug = "placeringar-handelsnoterade-fin-aktier"
-
-[[variable]]
-native_id = "254.20108"
-slug = "placeringar-handelsnoterade-icke-fin"
-
-[[variable]]
-native_id = "254.20109"
-slug = "placeringar-handelsnoterade-utl"
-
-[[variable]]
-native_id = "254.20110"
-slug = "placeringar-onoterade-aktier"
-
-[[variable]]
-native_id = "254.20111"
-slug = "placeringar-rantebarande-totalt"
-
-[[variable]]
-native_id = "254.20112"
-slug = "placeringar-rantebarande-bank"
-
-[[variable]]
-native_id = "254.20113"
-slug = "placeringar-certifikat-totalt"
-
-[[variable]]
-native_id = "254.20114"
-slug = "placeringar-certifikat-stat"
-
-[[variable]]
-native_id = "254.20115"
-slug = "placeringar-certifikat-kommun"
-
-[[variable]]
-native_id = "254.20116"
-slug = "placeringar-certifikat-fin-inst"
-
-[[variable]]
-native_id = "254.20117"
-slug = "placeringar-certifikat-ovr-sv"
-
-[[variable]]
-native_id = "254.20118"
-slug = "placeringar-certifikat-utl"
-
-[[variable]]
-native_id = "254.20119"
-slug = "placeringar-obligationer-stat"
-
-[[variable]]
-native_id = "254.20120"
-slug = "placeringar-obligationer-totalt"
-
-[[variable]]
-native_id = "254.20124"
-slug = "placeringar-obligationer-kommun"
-
-[[variable]]
-native_id = "254.20125"
-slug = "placeringar-obligationer-fin-inst"
-
-[[variable]]
-native_id = "254.20126"
-slug = "placeringar-obligationer-ovr-sv-motpart"
-
-[[variable]]
-native_id = "254.20127"
-slug = "placeringar-i-obligationer-utl"
-
-[[variable]]
-native_id = "254.20128"
-slug = "placeringar-i-sv-vp-fonder"
-
-[[variable]]
-native_id = "254.20129"
-slug = "placeringar-i-utl-vp-fonder"
-
-[[variable]]
-native_id = "254.20130"
-slug = "placeringar-i-derivatinstrument"
-
-[[variable]]
-native_id = "254.20131"
-slug = "placeringar-i-ovriga-fin-instrument"
-
-[[variable]]
-native_id = "254.20132"
-slug = "placeringar-totalt-fonder-totalt"
-
-[[variable]]
-native_id = "254.20133"
-slug = "ovriga-fordringar-skulder-fonder-totalt"
-
-[[variable]]
-native_id = "254.20134"
-slug = "fondernas-varde-fonder-totalt"
-
-[[variable]]
-native_id = "254.20170"
-slug = "bruttosparande-fonder-ickefin-inbetalt"
-
-[[variable]]
-native_id = "254.20171"
-slug = "bruttosparande-fonder-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20172"
-slug = "bruttosparande-fonder-livfor-inbetalt"
-
-[[variable]]
-native_id = "254.20173"
-slug = "bruttosparande-fonder-ppm-inbetalt"
-
-[[variable]]
-native_id = "254.20174"
-slug = "bruttosparande-fonder-kommuner-inbetalt"
-
-[[variable]]
-native_id = "254.20175"
-slug = "bruttosparande-fonder-socialfor-inbetalt"
-
-[[variable]]
-native_id = "254.20176"
-slug = "bruttosparande-fond-hh-penspar-inbetalt"
-
-[[variable]]
-native_id = "254.20177"
-slug = "bruttosparande-fond-ickevinst-inbetalt"
-
-[[variable]]
-native_id = "254.20178"
-slug = "bruttosparande-fonder-ovr-sv-inbetalt"
-
-[[variable]]
-native_id = "254.20179"
-slug = "bruttosparande-fonder-utlandet-inbetalt"
-
-[[variable]]
-native_id = "254.20180"
-slug = "bruttosparande-ickefin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20181"
-slug = "bruttosparande-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20182"
-slug = "bruttosparande-livforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20183"
-slug = "bruttosparande-rantefond-ppm-inbetalt"
-
-[[variable]]
-native_id = "254.20184"
-slug = "bruttosparande-kommuner-inbetalt"
-
-[[variable]]
-native_id = "254.20186"
-slug = "bruttosparande-hh-indivpenspar-inbetalt"
-
-[[variable]]
-native_id = "254.20188"
-slug = "bruttosparande-socialforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20189"
-slug = "bruttosparande-hh-ickevinst-org-inbetalt"
-
-[[variable]]
-native_id = "254.20190"
-slug = "bruttosparande-rantefond-ovr-sv-inbetalt"
-
-[[variable]]
-native_id = "254.20192"
-slug = "bruttosparande-utlandet-inbetalt"
-
-[[variable]]
-native_id = "254.20218"
-slug = "bruttosparande-fonder-ickefin-utbetalt"
-
-[[variable]]
-native_id = "254.20219"
-slug = "bruttosparande-fonder-fin-frtg-utbetalt"
-
-[[variable]]
-native_id = "254.20220"
-slug = "bruttosparande-fonder-livfor-utbetalt"
-
-[[variable]]
-native_id = "254.20221"
-slug = "bruttosparande-fonder-ppm-utbetalt"
-
-[[variable]]
-native_id = "254.20222"
-slug = "bruttosparande-fonder-kommuner-utbetalt"
-
-[[variable]]
-native_id = "254.20223"
-slug = "bruttosparande-fonder-socialfor-utbetalt"
-
-[[variable]]
-native_id = "254.20224"
-slug = "bruttosparande-fond-hh-penspar-utbetalt"
-
-[[variable]]
-native_id = "254.20225"
-slug = "bruttosparande-fond-ickevinst-utbetalt"
-
-[[variable]]
-native_id = "254.20226"
-slug = "bruttosparande-fonder-ovr-sv-utbetalt"
-
-[[variable]]
-native_id = "254.20227"
-slug = "bruttosparande-fonder-utlandet-utbetalt"
-
-[[variable]]
-native_id = "254.20228"
-slug = "nettosparande-fonder-hh-indivpenspar"
-
-[[variable]]
-native_id = "254.20229"
-slug = "fondformogenhet-hh-indivpenspar"
-
-[[variable]]
-native_id = "254.20230"
-slug = "bruttosparande-ickefin-frtg-utbetalt"
-
-[[variable]]
-native_id = "254.20231"
-slug = "bruttosparande-fin-frtg-utbetalt"
-
-[[variable]]
-native_id = "254.20232"
-slug = "bruttosparande-livforsakring-utbetalt"
-
-[[variable]]
-native_id = "254.20233"
-slug = "bruttosparande-rantefond-ppm-utbetalt"
-
-[[variable]]
-native_id = "254.20234"
-slug = "bruttosparande-kommuner-utbetalt"
-
-[[variable]]
-native_id = "254.20235"
-slug = "bruttosparande-socialforsakring-utbetalt"
-
-[[variable]]
-native_id = "254.20236"
-slug = "bruttosparande-hh-indivpenspar-utbetalt"
-
-[[variable]]
-native_id = "254.20237"
-slug = "bruttosparande-hh-ickevinst-org-utbetalt"
-
-[[variable]]
-native_id = "254.20238"
-slug = "bruttosparande-rantefond-ovr-sv-utbetalt"
-
-[[variable]]
-native_id = "254.20239"
-slug = "bruttosparande-utlandet-utbetalt"
-
-[[variable]]
-native_id = "254.20240"
-slug = "nettosparande-rantefonder-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20241"
-slug = "nettosparande-i-rantefonder-fin-frtg-ssd"
-
-[[variable]]
-native_id = "254.20242"
-slug = "nettosparande-rantefonder-livsforsakring"
-
-[[variable]]
-native_id = "254.20243"
-slug = "nettosparande-i-rantefonder-ppm-ssd"
-
-[[variable]]
-native_id = "254.20244"
-slug = "nettosparande-i-rantefonder-kommuner-ssd"
-
-[[variable]]
-native_id = "254.20245"
-slug = "nettosparande-rantefond-socialforsakring"
-
-[[variable]]
-native_id = "254.20246"
-slug = "nettosparande-rantefond-hh-indivpenspar"
-
-[[variable]]
-native_id = "254.20247"
-slug = "nettosparande-rantefond-hh-ickevinst-org"
-
-[[variable]]
-native_id = "254.20248"
-slug = "nettosparande-rantefonder-ovr-sv"
-
-[[variable]]
-native_id = "254.20249"
-slug = "nettosparande-i-rantefonder-utlandet-ssd"
-
-[[variable]]
-native_id = "254.20250"
-slug = "fondformogenhet-rantefonder-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20252"
-slug = "fondformogenhet-rantefonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20254"
-slug = "fondformogenhet-rantefond-livsforsakring"
-
-[[variable]]
-native_id = "254.20255"
-slug = "fondformogenhet-rantefonder-ppm-ssd"
-
-[[variable]]
-native_id = "254.20257"
-slug = "fondformogenhet-rantefonder-kommuner-ssd"
-
-[[variable]]
-native_id = "254.20266"
-slug = "fondformogenhet-rantefond-socialfor"
-
-[[variable]]
-native_id = "254.20269"
-slug = "fondformogenhet-rantefonder-hushall"
-
-[[variable]]
-native_id = "254.20270"
-slug = "fondformogenhet-rantefond-hh-penspar"
-
-[[variable]]
-native_id = "254.20273"
-slug = "fondformogenhet-rantefond-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20274"
-slug = "fondformogenhet-rantefonder-utlandet-ssd"
-
-[[variable]]
-native_id = "254.20276"
-slug = "fondformogenhet-kortrantefond-ickefin"
-
-[[variable]]
-native_id = "254.20278"
-slug = "fondformogenhet-kortrantefond-finfrtg"
-
-[[variable]]
-native_id = "254.20287"
-slug = "fondformogenhet-kortrantefond-fin-frtg"
-
-[[variable]]
-native_id = "254.20288"
-slug = "fondformogenhet-kortrantefond-livsfor"
-
-[[variable]]
-native_id = "254.20289"
-slug = "fondformogenhet-kortrantefond-ppm-ssd"
-
-[[variable]]
-native_id = "254.20290"
-slug = "fondformogenhet-kortrantefond-kommuner"
-
-[[variable]]
-native_id = "254.20291"
-slug = "fondformogenhet-kortrantefond-socialfor"
-
-[[variable]]
-native_id = "254.20293"
-slug = "fondformogenhet-kortrantefond-hh-individ"
-
-[[variable]]
-native_id = "254.20294"
-slug = "fondformogenhet-kortrantefond-ickevinst"
-
-[[variable]]
-native_id = "254.20295"
-slug = "fondformogenhet-kortrantefond-ovr-sv"
-
-[[variable]]
-native_id = "254.20296"
-slug = "fondformogenhet-kortrantefond-utlandet"
-
-[[variable]]
-native_id = "254.20301"
-slug = "fondformogenhet-kortrantefond-hh"
-
-[[variable]]
-native_id = "254.20303"
-slug = "fondformogenhet-langrantefond-icke-fin"
-
-[[variable]]
-native_id = "254.20304"
-slug = "fondformogenhet-langrantefond-fin-frtg"
-
-[[variable]]
-native_id = "254.20305"
-slug = "fondformogenhet-langrantefond-totalt"
-
-[[variable]]
-native_id = "254.20306"
-slug = "fondformogenhet-langrantefond-hh"
-
-[[variable]]
-native_id = "254.20307"
-slug = "fondformogenhet-langrantefond-livsfor"
-
-[[variable]]
-native_id = "254.20308"
-slug = "fondformogenhet-langrantefond-ppm"
-
-[[variable]]
-native_id = "254.20309"
-slug = "fondformogenhet-langrantefond-kommuner"
-
-[[variable]]
-native_id = "254.20310"
-slug = "fondformogenhet-langrantefond-socialfor"
-
-[[variable]]
-native_id = "254.20311"
-slug = "fondformogenhet-langrantefond-hh-individ"
-
-[[variable]]
-native_id = "254.20312"
-slug = "fondformogenhet-langrantefond-ickevinst"
-
-[[variable]]
-native_id = "254.20313"
-slug = "fondformogenhet-langrantefond-ovr-sv"
-
-[[variable]]
-native_id = "254.20314"
-slug = "fondformogenhet-langrantefond-utlandet"
-
-[[variable]]
-native_id = "254.20316"
-slug = "fondformogenhet-aktiefonder-ickefin"
-
-[[variable]]
-native_id = "254.20317"
-slug = "fondformogenhet-aktiefonder-fin-frtg-ssd"
-
-[[variable]]
-native_id = "254.20318"
-slug = "fondformogenhet-aktiefonder-livsfor"
-
-[[variable]]
-native_id = "254.20319"
-slug = "fondformogenhet-aktiefonder-ppm-ssd"
-
-[[variable]]
-native_id = "254.20320"
-slug = "fondformogenhet-aktiefonder-kommuner-ssd"
-
-[[variable]]
-native_id = "254.20321"
-slug = "fondformogenhet-aktiefonder-socialfor"
-
-[[variable]]
-native_id = "254.20322"
-slug = "fondformogenhet-aktiefonder-hh"
-
-[[variable]]
-native_id = "254.20323"
-slug = "fondformogenhet-aktiefonder-hh-penspar"
-
-[[variable]]
-native_id = "254.20324"
-slug = "fondformogenhet-aktiefonder-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20325"
-slug = "fondformogenhet-aktiefonder-ovr-sv"
-
-[[variable]]
-native_id = "254.20326"
-slug = "fondformogenhet-aktiefonder-utlandet"
-
-[[variable]]
-native_id = "254.20327"
-slug = "fondformogenhet-blandfonder-ickefin"
-
-[[variable]]
-native_id = "254.20329"
-slug = "fondformogenhet-blandfonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20330"
-slug = "fondformogenhet-blandfonder-livsfor"
-
-[[variable]]
-native_id = "254.20331"
-slug = "fondformogenhet-blandfonder-ppm"
-
-[[variable]]
-native_id = "254.20332"
-slug = "fondformogenhet-blandfonder-kommuner"
-
-[[variable]]
-native_id = "254.20333"
-slug = "fondformogenhet-blandfonder-socialfor"
-
-[[variable]]
-native_id = "254.20334"
-slug = "fondformogenhet-blandfonder-hh"
-
-[[variable]]
-native_id = "254.20335"
-slug = "fondformogenhet-blandfonder-hh-penspar"
-
-[[variable]]
-native_id = "254.20336"
-slug = "fondformogenhet-blandfonder-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20337"
-slug = "fondformogenhet-blandfonder-ovr-sv"
-
-[[variable]]
-native_id = "254.20338"
-slug = "fondformogenhet-blandfonder-utlandet"
-
-[[variable]]
-native_id = "254.20339"
-slug = "fondformogenhet-fondfond-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20340"
-slug = "fondformogenhet-fond-i-fonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20341"
-slug = "fondformogenhet-fondfond-livsforsakring"
-
-[[variable]]
-native_id = "254.20342"
-slug = "fondformogenhet-fond-i-fonder-ppm"
-
-[[variable]]
-native_id = "254.20343"
-slug = "fondformogenhet-fond-i-fonder-kommuner"
-
-[[variable]]
-native_id = "254.20344"
-slug = "fondformogenhet-fondfond-socialfor"
-
-[[variable]]
-native_id = "254.20345"
-slug = "fondformogenhet-fond-i-fonder-hh"
-
-[[variable]]
-native_id = "254.20346"
-slug = "fondformogenhet-fondfond-hh-penspar"
-
-[[variable]]
-native_id = "254.20347"
-slug = "fondformogenhet-fondfond-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20348"
-slug = "fondformogenhet-fondfond-ovr-sv"
-
-[[variable]]
-native_id = "254.20349"
-slug = "fondformogenhet-fond-i-fonder-utlandet"
-
-[[variable]]
-native_id = "254.20350"
-slug = "fondformogenhet-ovr-fond-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20351"
-slug = "fondformogenhet-ovriga-fonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20352"
-slug = "fondformogenhet-ovr-fond-livsforsakring"
-
-[[variable]]
-native_id = "254.20353"
-slug = "fondformogenhet-ovriga-fonder-ppm"
-
-[[variable]]
-native_id = "254.20354"
-slug = "fondformogenhet-ovriga-fonder-kommuner"
-
-[[variable]]
-native_id = "254.20355"
-slug = "fondformogenhet-ovr-fond-socialfor"
-
-[[variable]]
-native_id = "254.20357"
-slug = "fondformogenhet-ovriga-fonder-hh"
-
-[[variable]]
-native_id = "254.20358"
-slug = "fondformogenhet-ovr-fond-hh-indivpenspar"
-
-[[variable]]
-native_id = "254.20359"
-slug = "fondformogenhet-ovr-fond-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20360"
-slug = "fondformogenhet-ovr-fond-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20361"
-slug = "fondformogenhet-ovriga-fonder-utland"
-
-[[variable]]
-native_id = "254.20362"
-slug = "korta-rantefonder-icke-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20363"
-slug = "korta-rantefonder-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20364"
-slug = "korta-rantefonder-livforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20365"
-slug = "korta-rantefonder-ppm-inbetalt"
-
-[[variable]]
-native_id = "254.20366"
-slug = "korta-rantefonder-kommuner-inbetalt"
-
-[[variable]]
-native_id = "254.20367"
-slug = "korta-rantefonder-socialfor-inbetalt"
-
-[[variable]]
-native_id = "254.20368"
-slug = "korta-rantefonder-hh-penspar-inbetalt"
-
-[[variable]]
-native_id = "254.20369"
-slug = "korta-rantefonder-hh-ickevinst-inbetalt"
-
-[[variable]]
-native_id = "254.20370"
-slug = "korta-rantefonder-ovr-sv-inbetalt"
-
-[[variable]]
-native_id = "254.20371"
-slug = "korta-rantefonder-utlandet-inbetalt"
-
-[[variable]]
-native_id = "254.20373"
-slug = "langa-rantefonder-icke-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20374"
-slug = "langa-rantefonder-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20375"
-slug = "langa-rantefonder-sektorer-tot-inbetalt"
-
-[[variable]]
-native_id = "254.20376"
-slug = "langa-rantefonder-livforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20377"
-slug = "langa-rantefonder-ppm-inbetalt"
-
-[[variable]]
-native_id = "254.20378"
-slug = "langa-rantefonder-kommuner-inbetalt"
-
-[[variable]]
-native_id = "254.20379"
-slug = "langa-rantefonder-socialfor-inbetalt"
-
-[[variable]]
-native_id = "254.20380"
-slug = "langa-rantefonder-hh-inbetalt"
-
-[[variable]]
-native_id = "254.20381"
-slug = "langa-rantefonder-hh-penspar-inbetalt"
-
-[[variable]]
-native_id = "254.20382"
-slug = "langa-rantefonder-hh-ickevinst-inbetalt"
-
-[[variable]]
-native_id = "254.20383"
-slug = "langa-rantefonder-ovr-sektorer-inbetalt"
-
-[[variable]]
-native_id = "254.20384"
-slug = "langa-rantefonder-utlandet-inbetalt"
-
-[[variable]]
-native_id = "254.20391"
-slug = "aktiefonder-icke-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20392"
-slug = "aktiefonder-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20393"
-slug = "aktiefonder-livforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20395"
-slug = "aktiefonder-ppm-inbetalt"
-
-[[variable]]
-native_id = "254.20396"
-slug = "aktiefonder-kommuner-inbetalt"
-
-[[variable]]
-native_id = "254.20397"
-slug = "aktiefonder-hh-pensionsspar-inbetalt"
-
-[[variable]]
-native_id = "254.20398"
-slug = "aktiefonder-hh-ickevinst-org-inbetalt"
-
-[[variable]]
-native_id = "254.20399"
-slug = "aktiefonder-ovr-sv-sektorer-inbetalt"
-
-[[variable]]
-native_id = "254.20400"
-slug = "aktiefonder-utlandet-inbetalt"
-
-[[variable]]
-native_id = "254.20401"
-slug = "blandfonder-icke-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20402"
-slug = "blandfonder-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20403"
-slug = "blandfonder-livforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20404"
-slug = "blandfonder-ppm-inbetalt"
-
-[[variable]]
-native_id = "254.20405"
-slug = "blandfonder-kommuner-inbetalt"
-
-[[variable]]
-native_id = "254.20406"
-slug = "blandfonder-socialforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20407"
-slug = "blandfonder-hh-pensionsspar-inbetalt"
-
-[[variable]]
-native_id = "254.20408"
-slug = "blandfonder-hh-ickevinst-org-inbetalt"
-
-[[variable]]
-native_id = "254.20409"
-slug = "blandfonder-ovr-sv-sektorer-inbetalt"
-
-[[variable]]
-native_id = "254.20410"
-slug = "blandfonder-utlandet-inbetalt"
-
-[[variable]]
-native_id = "254.20411"
-slug = "fond-i-fonder-icke-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20412"
-slug = "ovriga-fonder-icke-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20413"
-slug = "fond-i-fonder-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20414"
-slug = "fond-i-fonder-livforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20415"
-slug = "fond-i-fonder-ppm-inbetalt"
-
-[[variable]]
-native_id = "254.20416"
-slug = "fond-i-fonder-kommuner-inbetalt"
-
-[[variable]]
-native_id = "254.20417"
-slug = "fond-i-fonder-socialforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20418"
-slug = "fond-i-fonder-hh-pensionsspar-inbetalt"
-
-[[variable]]
-native_id = "254.20419"
-slug = "fond-i-fonder-hh-ickevinst-org-inbetalt"
-
-[[variable]]
-native_id = "254.20420"
-slug = "fond-i-fonder-ovr-sv-sektorer-inbetalt"
-
-[[variable]]
-native_id = "254.20421"
-slug = "fond-i-fonder-utlandet-inbetalt"
-
-[[variable]]
-native_id = "254.20422"
-slug = "ovriga-fonder-fin-frtg-inbetalt"
-
-[[variable]]
-native_id = "254.20423"
-slug = "ovriga-fonder-livforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20424"
-slug = "ovriga-fonder-ppm-inbetalt"
-
-[[variable]]
-native_id = "254.20425"
-slug = "ovriga-fonder-kommuner-inbetalt"
-
-[[variable]]
-native_id = "254.20426"
-slug = "ovriga-fonder-socialforsakring-inbetalt"
-
-[[variable]]
-native_id = "254.20427"
-slug = "ovriga-fonder-hh-pensionsspar-inbetalt"
-
-[[variable]]
-native_id = "254.20428"
-slug = "ovriga-fonder-hh-ickevinst-org-inbetalt"
-
-[[variable]]
-native_id = "254.20429"
-slug = "ovriga-fonder-ovr-sv-sektorer-inbetalt"
-
-[[variable]]
-native_id = "254.20430"
-slug = "ovriga-fonder-utlandet-inbetalt"
-
-[[variable]]
-native_id = "254.20522"
-slug = "korta-rantefonder-ickefin-frtg-utbetalt"
-
-[[variable]]
-native_id = "254.20523"
-slug = "korta-rantefonder-fin-frtg-utbetalt"
-
-[[variable]]
-native_id = "254.20524"
-slug = "korta-rantefonder-livforsakring-utbetalt"
-
-[[variable]]
-native_id = "254.20525"
-slug = "korta-rantefonder-ppm-utbetalt"
-
-[[variable]]
-native_id = "254.20526"
-slug = "korta-rantefonder-kommuner-utbetalt"
-
-[[variable]]
-native_id = "254.20527"
-slug = "korta-rantefonder-socialfor-utbetalt"
-
-[[variable]]
-native_id = "254.20528"
-slug = "korta-rantefonder-hh-penspar-utbetalt"
-
-[[variable]]
-native_id = "254.20529"
-slug = "korta-rantefonder-hh-ickevinst-utbetalt"
-
-[[variable]]
-native_id = "254.20530"
-slug = "korta-rantefonder-ovr-sektorer-utbetalt"
-
-[[variable]]
-native_id = "254.20531"
-slug = "korta-rantefonder-utlandet-utbetalt"
-
-[[variable]]
-native_id = "254.20532"
-slug = "langa-rantefonder-ickefin-frtg-utbetalt"
-
-[[variable]]
-native_id = "254.20533"
-slug = "langa-rantefonder-fin-frtg-utbetalt"
-
-[[variable]]
-native_id = "254.20534"
-slug = "langa-rantefonder-sektorer-tot-utbetalt"
-
-[[variable]]
-native_id = "254.20535"
-slug = "langa-rantefonder-livforsakring-utbetalt"
-
-[[variable]]
-native_id = "254.20536"
-slug = "langa-rantefonder-ppm-utbetalt"
-
-[[variable]]
-native_id = "254.20537"
-slug = "langa-rantefonder-kommuner-utbetalt"
-
-[[variable]]
-native_id = "254.20538"
-slug = "langa-rantefonder-socialfor-utbetalt"
-
-[[variable]]
-native_id = "254.20539"
-slug = "bruttosparande-langrantefond-hh-penspar"
-
-[[variable]]
-native_id = "254.20540"
-slug = "bruttosparande-langrantefond-hh-ickefin"
-
-[[variable]]
-native_id = "254.20541"
-slug = "bruttosparande-langrantefond-ovr-sv"
-
-[[variable]]
-native_id = "254.20542"
-slug = "bruttosparande-langrantefond-utlandet"
-
-[[variable]]
-native_id = "254.20543"
-slug = "bruttosparande-aktiefonder-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20544"
-slug = "bruttosparande-aktiefonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20545"
-slug = "bruttosparande-aktiefonder-livforsakring"
-
-[[variable]]
-native_id = "254.20546"
-slug = "bruttosparande-aktiefonder-kommuner"
-
-[[variable]]
-native_id = "254.20547"
-slug = "bruttosparande-aktiefonder-socialfor"
-
-[[variable]]
-native_id = "254.20548"
-slug = "bruttosparande-aktiefonder-hh-penspar"
-
-[[variable]]
-native_id = "254.20549"
-slug = "bruttosparande-aktiefonder-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20550"
-slug = "bruttosparande-aktiefonder-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20551"
-slug = "bruttosparande-aktiefonder-utlandet"
-
-[[variable]]
-native_id = "254.20552"
-slug = "bruttosparande-blandfonder-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20554"
-slug = "bruttosparande-blandfonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20556"
-slug = "bruttosparande-blandfonder-livforsakring"
-
-[[variable]]
-native_id = "254.20558"
-slug = "bruttosparande-blandfonder-ppm"
-
-[[variable]]
-native_id = "254.20559"
-slug = "bruttosparande-blandfonder-kommuner"
-
-[[variable]]
-native_id = "254.20560"
-slug = "bruttosparande-blandfonder-socialfor"
-
-[[variable]]
-native_id = "254.20561"
-slug = "bruttosparande-blandfonder-hh-penspar"
-
-[[variable]]
-native_id = "254.20563"
-slug = "bruttosparande-blandfonder-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20564"
-slug = "bruttosparande-blandfonder-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20565"
-slug = "bruttosparande-blandfonder-utlandet"
-
-[[variable]]
-native_id = "254.20566"
-slug = "bruttosparande-fondfond-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20567"
-slug = "bruttosparande-fondfond-fin-frtg"
-
-[[variable]]
-native_id = "254.20568"
-slug = "bruttosparande-fondfond-livsforsakring"
-
-[[variable]]
-native_id = "254.20569"
-slug = "bruttosparande-fondfond-ppm"
-
-[[variable]]
-native_id = "254.20570"
-slug = "bruttosparande-fondfond-kommuner"
-
-[[variable]]
-native_id = "254.20571"
-slug = "bruttosparande-fondfond-socialforsakring"
-
-[[variable]]
-native_id = "254.20572"
-slug = "bruttosparande-fondfond-hh-indivpenspar"
-
-[[variable]]
-native_id = "254.20573"
-slug = "bruttosparande-fondfond-hh-ickevinst-org"
-
-[[variable]]
-native_id = "254.20574"
-slug = "bruttosparande-fondfond-ovr-sv-sektorer"
-
-[[variable]]
-native_id = "254.20575"
-slug = "bruttosparande-fondfond-utlandet"
-
-[[variable]]
-native_id = "254.20576"
-slug = "bruttosparande-ovr-fonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20577"
-slug = "bruttosparande-ovr-fonder-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20578"
-slug = "bruttosparande-ovr-fonder-livsforsakring"
-
-[[variable]]
-native_id = "254.20579"
-slug = "bruttosparande-ovr-fonder-ppm"
-
-[[variable]]
-native_id = "254.20580"
-slug = "bruttosparande-ovr-fonder-kommuner"
-
-[[variable]]
-native_id = "254.20581"
-slug = "bruttosparande-ovr-fonder-socialfor"
-
-[[variable]]
-native_id = "254.20582"
-slug = "bruttosparande-ovr-fonder-hh-penspar"
-
-[[variable]]
-native_id = "254.20583"
-slug = "bruttosparande-ovr-fonder-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20584"
-slug = "bruttosparande-ovr-fonder-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20585"
-slug = "bruttosparande-ovr-fonder-utlandet"
-
-[[variable]]
-native_id = "254.20586"
-slug = "nettosparande-kortrantefond-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20587"
-slug = "nettosparande-kortrantefond-livsfor"
-
-[[variable]]
-native_id = "254.20588"
-slug = "nettosparande-kortrantefond-fin-frtg"
-
-[[variable]]
-native_id = "254.20589"
-slug = "nettosparande-kortrantefond-ppm"
-
-[[variable]]
-native_id = "254.20590"
-slug = "nettosparande-kortrantefond-kommuner"
-
-[[variable]]
-native_id = "254.20591"
-slug = "nettosparande-kortrantefond-socialfor"
-
-[[variable]]
-native_id = "254.20592"
-slug = "nettosparande-kortrantefond-hh-penspar"
-
-[[variable]]
-native_id = "254.20593"
-slug = "nettosparande-kortrantefond-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20594"
-slug = "nettosparande-kortrantefond-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20595"
-slug = "nettosparande-kortrantefond-utlandet"
-
-[[variable]]
-native_id = "254.20596"
-slug = "nettosparande-langrantefond-sektorer-tot"
-
-[[variable]]
-native_id = "254.20597"
-slug = "nettosparande-aktiefonder-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20598"
-slug = "nettosparande-langrantefond-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20599"
-slug = "nettosparande-langrantefond-fin-frtg"
-
-[[variable]]
-native_id = "254.20600"
-slug = "nettosparande-langrantefond-livsfor"
-
-[[variable]]
-native_id = "254.20601"
-slug = "nettosparande-langrantefond-ppm"
-
-[[variable]]
-native_id = "254.20602"
-slug = "nettosparande-langrantefond-kommuner"
-
-[[variable]]
-native_id = "254.20603"
-slug = "nettosparande-langrantefond-socialfor"
-
-[[variable]]
-native_id = "254.20604"
-slug = "nettosparande-langrantefond-hh"
-
-[[variable]]
-native_id = "254.20605"
-slug = "nettosparande-langrantefond-hh-penspar"
-
-[[variable]]
-native_id = "254.20606"
-slug = "nettosparande-langrantefond-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20607"
-slug = "nettosparande-langrantefond-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20608"
-slug = "nettosparande-langrantefond-utlandet"
-
-[[variable]]
-native_id = "254.20609"
-slug = "nettosparande-aktiefonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20610"
-slug = "nettosparande-aktiefonder-livsforsakring"
-
-[[variable]]
-native_id = "254.20611"
-slug = "nettosparande-aktiefonder-ppm"
-
-[[variable]]
-native_id = "254.20612"
-slug = "nettosparande-aktiefonder-kommuner"
-
-[[variable]]
-native_id = "254.20613"
-slug = "nettosparande-aktiefonder-socialfor"
-
-[[variable]]
-native_id = "254.20614"
-slug = "nettosparande-aktiefonder-hh-penspar"
-
-[[variable]]
-native_id = "254.20615"
-slug = "nettosparande-aktiefonder-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20616"
-slug = "nettosparande-aktiefonder-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20617"
-slug = "nettosparande-aktiefonder-utlandet"
-
-[[variable]]
-native_id = "254.20618"
-slug = "nettosparande-blandfonder-ickefin-frtg"
-
-[[variable]]
-native_id = "254.20619"
-slug = "nettosparande-blandfonder-fin-frtg"
-
-[[variable]]
-native_id = "254.20620"
-slug = "nettosparande-blandfonder-livsforsakring"
-
-[[variable]]
-native_id = "254.20621"
-slug = "nettosparande-blandfonder-ppm"
-
-[[variable]]
-native_id = "254.20622"
-slug = "nettosparande-blandfonder-kommuner"
-
-[[variable]]
-native_id = "254.20623"
-slug = "nettosparande-blandfonder-socialfor"
-
-[[variable]]
-native_id = "254.20624"
-slug = "nettosparande-blandfonder-hh-penspar"
-
-[[variable]]
-native_id = "254.20625"
-slug = "nettosparande-blandfonder-hh-ickevinst"
-
-[[variable]]
-native_id = "254.20626"
-slug = "nettosparande-blandfonder-ovr-sv"
-
-[[variable]]
-native_id = "254.20627"
-slug = "nettosparande-blandfonder-utlandet"
-
-[[variable]]
-native_id = "254.20628"
-slug = "nettosparande-fondfond-icke-fin-frtg"
-
-[[variable]]
-native_id = "254.20629"
-slug = "nettosparande-fondfond-fin-frtg"
-
-[[variable]]
-native_id = "254.20630"
-slug = "nettosparande-fondfond-livsforsakring"
-
-[[variable]]
-native_id = "254.20631"
-slug = "nettosparande-fondfond-ppm"
-
-[[variable]]
-native_id = "254.20632"
-slug = "nettosparande-fondfond-kommuner"
-
-[[variable]]
-native_id = "254.20633"
-slug = "nettosparande-fondfond-socialforsakring"
-
-[[variable]]
-native_id = "254.20634"
-slug = "nettosparande-fondfond-individpensspar"
-
-[[variable]]
-native_id = "254.20635"
-slug = "nettosparande-fondfond-ickevinstorg"
-
-[[variable]]
-native_id = "254.20636"
-slug = "nettosparande-fondfond-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20637"
-slug = "nettosparande-fondfond-utl"
-
-[[variable]]
-native_id = "254.20640"
-slug = "nettosparande-ovr-fond-icke-fin-frtg"
-
-[[variable]]
-native_id = "254.20641"
-slug = "nettosparande-ovr-fond-fin-frtg"
-
-[[variable]]
-native_id = "254.20642"
-slug = "nettosparande-ovr-fond-livforsakring"
-
-[[variable]]
-native_id = "254.20643"
-slug = "nettosparande-ovr-fond-ppm"
-
-[[variable]]
-native_id = "254.20644"
-slug = "nettosparande-ovr-fond-kommuner"
-
-[[variable]]
-native_id = "254.20645"
-slug = "nettosparande-ovr-fond-socialforsakring"
-
-[[variable]]
-native_id = "254.20646"
-slug = "nettosparande-ovr-fond-individpensspar"
-
-[[variable]]
-native_id = "254.20647"
-slug = "nettosparande-ovr-fond-ickevinstorg"
-
-[[variable]]
-native_id = "254.20648"
-slug = "nettosparande-ovr-fond-ovr-sektorer"
-
-[[variable]]
-native_id = "254.20649"
-slug = "nettosparande-ovr-fond-utl"
+"254.19748" = "aktiva-rantefonder"
+"254.19750" = "aktiva-penningmarknadsfonder"
+"254.19751" = "aktiva-aktiefonder"
+"254.19891" = "aktiva-blandfonder"
+"254.19894" = "aktiva-fond-i-fonder"
+"254.19895" = "aktiva-ovriga-fonder"
+"254.19896" = "aktiva-fonder-total"
+"254.19897" = "fondformogenhet-rantefonder"
+"254.19898" = "fondformogenhet-penningmarknadsfonder"
+"254.20001" = "fondformogenhet-aktiefonder"
+"254.20002" = "fondformogenhet-blandfonder"
+"254.20003" = "fondformogenhet-fond-i-fonder"
+"254.20004" = "fondformogenhet-ovriga-fonder"
+"254.20005" = "fondformogenhet-fonder-totalt"
+"254.20006" = "nettospar-aterinv-hushall"
+"254.20008" = "nettospar-aterinv-hh-icke"
+"254.20014" = "nettospar-aterinv-sv-icke-fin"
+"254.20015" = "nettospar-aterinv-kommuner"
+"254.20016" = "nettospar-aterinv-socialforsakring"
+"254.20017" = "nettospar-aterinv-ovriga"
+"254.20018" = "nettospar-aterinv-utlandska"
+"254.20019" = "nettospar-aterinv-sektorer-totalt"
+"254.20020" = "fondformogenhet-hushall"
+"254.20021" = "fondformogenhet-hh-ickevinstdrivande"
+"254.20022" = "fondformogenhet-sv-finansiella-frtg"
+"254.20023" = "fondformogenhet-fondforsakring-ej-ppm"
+"254.20024" = "fondformogenhet-sv-fin-frtg-varav-ppm"
+"254.20025" = "nettospar-aterinv-fondforsakring"
+"254.20026" = "nettospar-aterinv-sv-finansiella"
+"254.20027" = "nettospar-aterinv-ppm"
+"254.20028" = "fondformogenhet-sv-icke-finansiella-frtg"
+"254.20029" = "fondformogenhet-kommuner"
+"254.20030" = "fondformogenhet-socialforsakring"
+"254.20031" = "fondformogenhet-ovriga-sv-innehavare"
+"254.20032" = "fondformogenhet-utlandska-innehavare"
+"254.20033" = "brutto-rantefonder-inbetalt"
+"254.20034" = "brutto-rantefonder-utbetalt"
+"254.20035" = "nettosparande-i-rantefonder-totalt"
+"254.20036" = "brutto-penningmarknadsfond-inbetalt"
+"254.20038" = "brutto-penningmarknadsfond-utbetalt"
+"254.20039" = "netto-penningmarknadsfonder-totalt"
+"254.20040" = "brutto-aktiefonder-inbetalt"
+"254.20041" = "brutto-aktiefonder-utbetalt"
+"254.20043" = "nettosparande-i-aktiefonder-totalt"
+"254.20044" = "brutto-blandfonder-inbetalt"
+"254.20046" = "brutto-blandfonder-utbetalt"
+"254.20049" = "nettosparande-i-blandfonder-totalt"
+"254.20051" = "brutto-fond-i-fonder-inbetalt"
+"254.20053" = "brutto-fond-i-fonder-utbetalt"
+"254.20055" = "nettosparande-i-fond-i-fonder-totalt"
+"254.20058" = "brutto-ovriga-fonder-inbetalt"
+"254.20060" = "brutto-ovriga-fonder-utbetalt"
+"254.20062" = "nettosparande-i-ovriga-fonder-totalt"
+"254.20063" = "brutto-fonder-totalt-inbetalt"
+"254.20064" = "brutto-fonder-totalt-utbetalt"
+"254.20066" = "nettosparande-fonder-sektorer-totalt"
+"254.20069" = "brutto-rantefonder-hushall-inbetalt"
+"254.20070" = "brutto-rantefonder-hushall-utbetalt"
+"254.20071" = "nettosparande-i-rantefonder-hushall"
+"254.20072" = "brutto-penningmarknadsfond-hh-inbetalt"
+"254.20073" = "brutto-penningmarknadsfond-hh-utbetalt"
+"254.20074" = "netto-penningmarknadsfonder-hushall"
+"254.20075" = "brutto-aktiefonder-hushall-inbetalt"
+"254.20078" = "brutto-aktiefonder-hushall-utbetalt"
+"254.20080" = "nettosparande-i-aktiefonder-hushall"
+"254.20082" = "brutto-blandfonder-hushall-inbetalt"
+"254.20085" = "brutto-blandfonder-hushall-utbetalt"
+"254.20086" = "nettosparande-i-blandfonder-hushall"
+"254.20087" = "brutto-fond-i-fonder-hushall-inbetalt"
+"254.20089" = "brutto-fond-i-fonder-hushall-utbetalt"
+"254.20090" = "nettosparande-i-fond-i-fonder-hushall"
+"254.20091" = "brutto-ovriga-fonder-hushall-inbetalt"
+"254.20092" = "brutto-ovriga-fonder-hushall-utbetalt"
+"254.20093" = "nettosparande-i-ovriga-fonder-hushall"
+"254.20094" = "brutto-fonder-totalt-hushall-inbetalt"
+"254.20095" = "brutto-fonder-totalt-hushall-utbetalt"
+"254.20096" = "nettosparande-fonder-total-hushall"
+"254.20097" = "placeringar-likvida-medel"
+"254.20101" = "placeringar-aktier"
+"254.20102" = "placeringar-noterade-aktier"
+"254.20103" = "placeringar-noterade-icke-fin-aktier"
+"254.20104" = "placeringar-noterade-fin-aktier"
+"254.20105" = "placeringar-noterade-utl-aktier"
+"254.20106" = "placeringar-handelsnoterade-aktier"
+"254.20107" = "placeringar-handelsnoterade-fin-aktier"
+"254.20108" = "placeringar-handelsnoterade-icke-fin"
+"254.20109" = "placeringar-handelsnoterade-utl"
+"254.20110" = "placeringar-onoterade-aktier"
+"254.20111" = "placeringar-rantebarande-totalt"
+"254.20112" = "placeringar-rantebarande-bank"
+"254.20113" = "placeringar-certifikat-totalt"
+"254.20114" = "placeringar-certifikat-stat"
+"254.20115" = "placeringar-certifikat-kommun"
+"254.20116" = "placeringar-certifikat-fin-inst"
+"254.20117" = "placeringar-certifikat-ovr-sv"
+"254.20118" = "placeringar-certifikat-utl"
+"254.20119" = "placeringar-obligationer-stat"
+"254.20120" = "placeringar-obligationer-totalt"
+"254.20124" = "placeringar-obligationer-kommun"
+"254.20125" = "placeringar-obligationer-fin-inst"
+"254.20126" = "placeringar-obligationer-ovr-sv-motpart"
+"254.20127" = "placeringar-i-obligationer-utl"
+"254.20128" = "placeringar-i-sv-vp-fonder"
+"254.20129" = "placeringar-i-utl-vp-fonder"
+"254.20130" = "placeringar-i-derivatinstrument"
+"254.20131" = "placeringar-i-ovriga-fin-instrument"
+"254.20132" = "placeringar-totalt-fonder-totalt"
+"254.20133" = "ovriga-fordringar-skulder-fonder-totalt"
+"254.20134" = "fondernas-varde-fonder-totalt"
+"254.20170" = "bruttosparande-fonder-ickefin-inbetalt"
+"254.20171" = "bruttosparande-fonder-fin-frtg-inbetalt"
+"254.20172" = "bruttosparande-fonder-livfor-inbetalt"
+"254.20173" = "bruttosparande-fonder-ppm-inbetalt"
+"254.20174" = "bruttosparande-fonder-kommuner-inbetalt"
+"254.20175" = "bruttosparande-fonder-socialfor-inbetalt"
+"254.20176" = "bruttosparande-fond-hh-penspar-inbetalt"
+"254.20177" = "bruttosparande-fond-ickevinst-inbetalt"
+"254.20178" = "bruttosparande-fonder-ovr-sv-inbetalt"
+"254.20179" = "bruttosparande-fonder-utlandet-inbetalt"
+"254.20180" = "bruttosparande-ickefin-frtg-inbetalt"
+"254.20181" = "bruttosparande-fin-frtg-inbetalt"
+"254.20182" = "bruttosparande-livforsakring-inbetalt"
+"254.20183" = "bruttosparande-rantefond-ppm-inbetalt"
+"254.20184" = "bruttosparande-kommuner-inbetalt"
+"254.20186" = "bruttosparande-hh-indivpenspar-inbetalt"
+"254.20188" = "bruttosparande-socialforsakring-inbetalt"
+"254.20189" = "bruttosparande-hh-ickevinst-org-inbetalt"
+"254.20190" = "bruttosparande-rantefond-ovr-sv-inbetalt"
+"254.20192" = "bruttosparande-utlandet-inbetalt"
+"254.20218" = "bruttosparande-fonder-ickefin-utbetalt"
+"254.20219" = "bruttosparande-fonder-fin-frtg-utbetalt"
+"254.20220" = "bruttosparande-fonder-livfor-utbetalt"
+"254.20221" = "bruttosparande-fonder-ppm-utbetalt"
+"254.20222" = "bruttosparande-fonder-kommuner-utbetalt"
+"254.20223" = "bruttosparande-fonder-socialfor-utbetalt"
+"254.20224" = "bruttosparande-fond-hh-penspar-utbetalt"
+"254.20225" = "bruttosparande-fond-ickevinst-utbetalt"
+"254.20226" = "bruttosparande-fonder-ovr-sv-utbetalt"
+"254.20227" = "bruttosparande-fonder-utlandet-utbetalt"
+"254.20228" = "nettosparande-fonder-hh-indivpenspar"
+"254.20229" = "fondformogenhet-hh-indivpenspar"
+"254.20230" = "bruttosparande-ickefin-frtg-utbetalt"
+"254.20231" = "bruttosparande-fin-frtg-utbetalt"
+"254.20232" = "bruttosparande-livforsakring-utbetalt"
+"254.20233" = "bruttosparande-rantefond-ppm-utbetalt"
+"254.20234" = "bruttosparande-kommuner-utbetalt"
+"254.20235" = "bruttosparande-socialforsakring-utbetalt"
+"254.20236" = "bruttosparande-hh-indivpenspar-utbetalt"
+"254.20237" = "bruttosparande-hh-ickevinst-org-utbetalt"
+"254.20238" = "bruttosparande-rantefond-ovr-sv-utbetalt"
+"254.20239" = "bruttosparande-utlandet-utbetalt"
+"254.20240" = "nettosparande-rantefonder-ickefin-frtg"
+"254.20241" = "nettosparande-i-rantefonder-fin-frtg-ssd"
+"254.20242" = "nettosparande-rantefonder-livsforsakring"
+"254.20243" = "nettosparande-i-rantefonder-ppm-ssd"
+"254.20244" = "nettosparande-i-rantefonder-kommuner-ssd"
+"254.20245" = "nettosparande-rantefond-socialforsakring"
+"254.20246" = "nettosparande-rantefond-hh-indivpenspar"
+"254.20247" = "nettosparande-rantefond-hh-ickevinst-org"
+"254.20248" = "nettosparande-rantefonder-ovr-sv"
+"254.20249" = "nettosparande-i-rantefonder-utlandet-ssd"
+"254.20250" = "fondformogenhet-rantefonder-ickefin-frtg"
+"254.20252" = "fondformogenhet-rantefonder-fin-frtg"
+"254.20254" = "fondformogenhet-rantefond-livsforsakring"
+"254.20255" = "fondformogenhet-rantefonder-ppm-ssd"
+"254.20257" = "fondformogenhet-rantefonder-kommuner-ssd"
+"254.20266" = "fondformogenhet-rantefond-socialfor"
+"254.20269" = "fondformogenhet-rantefonder-hushall"
+"254.20270" = "fondformogenhet-rantefond-hh-penspar"
+"254.20273" = "fondformogenhet-rantefond-hh-ickevinst"
+"254.20274" = "fondformogenhet-rantefonder-utlandet-ssd"
+"254.20276" = "fondformogenhet-kortrantefond-ickefin"
+"254.20278" = "fondformogenhet-kortrantefond-finfrtg"
+"254.20287" = "fondformogenhet-kortrantefond-fin-frtg"
+"254.20288" = "fondformogenhet-kortrantefond-livsfor"
+"254.20289" = "fondformogenhet-kortrantefond-ppm-ssd"
+"254.20290" = "fondformogenhet-kortrantefond-kommuner"
+"254.20291" = "fondformogenhet-kortrantefond-socialfor"
+"254.20293" = "fondformogenhet-kortrantefond-hh-individ"
+"254.20294" = "fondformogenhet-kortrantefond-ickevinst"
+"254.20295" = "fondformogenhet-kortrantefond-ovr-sv"
+"254.20296" = "fondformogenhet-kortrantefond-utlandet"
+"254.20301" = "fondformogenhet-kortrantefond-hh"
+"254.20303" = "fondformogenhet-langrantefond-icke-fin"
+"254.20304" = "fondformogenhet-langrantefond-fin-frtg"
+"254.20305" = "fondformogenhet-langrantefond-totalt"
+"254.20306" = "fondformogenhet-langrantefond-hh"
+"254.20307" = "fondformogenhet-langrantefond-livsfor"
+"254.20308" = "fondformogenhet-langrantefond-ppm"
+"254.20309" = "fondformogenhet-langrantefond-kommuner"
+"254.20310" = "fondformogenhet-langrantefond-socialfor"
+"254.20311" = "fondformogenhet-langrantefond-hh-individ"
+"254.20312" = "fondformogenhet-langrantefond-ickevinst"
+"254.20313" = "fondformogenhet-langrantefond-ovr-sv"
+"254.20314" = "fondformogenhet-langrantefond-utlandet"
+"254.20316" = "fondformogenhet-aktiefonder-ickefin"
+"254.20317" = "fondformogenhet-aktiefonder-fin-frtg-ssd"
+"254.20318" = "fondformogenhet-aktiefonder-livsfor"
+"254.20319" = "fondformogenhet-aktiefonder-ppm-ssd"
+"254.20320" = "fondformogenhet-aktiefonder-kommuner-ssd"
+"254.20321" = "fondformogenhet-aktiefonder-socialfor"
+"254.20322" = "fondformogenhet-aktiefonder-hh"
+"254.20323" = "fondformogenhet-aktiefonder-hh-penspar"
+"254.20324" = "fondformogenhet-aktiefonder-hh-ickevinst"
+"254.20325" = "fondformogenhet-aktiefonder-ovr-sv"
+"254.20326" = "fondformogenhet-aktiefonder-utlandet"
+"254.20327" = "fondformogenhet-blandfonder-ickefin"
+"254.20329" = "fondformogenhet-blandfonder-fin-frtg"
+"254.20330" = "fondformogenhet-blandfonder-livsfor"
+"254.20331" = "fondformogenhet-blandfonder-ppm"
+"254.20332" = "fondformogenhet-blandfonder-kommuner"
+"254.20333" = "fondformogenhet-blandfonder-socialfor"
+"254.20334" = "fondformogenhet-blandfonder-hh"
+"254.20335" = "fondformogenhet-blandfonder-hh-penspar"
+"254.20336" = "fondformogenhet-blandfonder-hh-ickevinst"
+"254.20337" = "fondformogenhet-blandfonder-ovr-sv"
+"254.20338" = "fondformogenhet-blandfonder-utlandet"
+"254.20339" = "fondformogenhet-fondfond-ickefin-frtg"
+"254.20340" = "fondformogenhet-fond-i-fonder-fin-frtg"
+"254.20341" = "fondformogenhet-fondfond-livsforsakring"
+"254.20342" = "fondformogenhet-fond-i-fonder-ppm"
+"254.20343" = "fondformogenhet-fond-i-fonder-kommuner"
+"254.20344" = "fondformogenhet-fondfond-socialfor"
+"254.20345" = "fondformogenhet-fond-i-fonder-hh"
+"254.20346" = "fondformogenhet-fondfond-hh-penspar"
+"254.20347" = "fondformogenhet-fondfond-hh-ickevinst"
+"254.20348" = "fondformogenhet-fondfond-ovr-sv"
+"254.20349" = "fondformogenhet-fond-i-fonder-utlandet"
+"254.20350" = "fondformogenhet-ovr-fond-ickefin-frtg"
+"254.20351" = "fondformogenhet-ovriga-fonder-fin-frtg"
+"254.20352" = "fondformogenhet-ovr-fond-livsforsakring"
+"254.20353" = "fondformogenhet-ovriga-fonder-ppm"
+"254.20354" = "fondformogenhet-ovriga-fonder-kommuner"
+"254.20355" = "fondformogenhet-ovr-fond-socialfor"
+"254.20357" = "fondformogenhet-ovriga-fonder-hh"
+"254.20358" = "fondformogenhet-ovr-fond-hh-indivpenspar"
+"254.20359" = "fondformogenhet-ovr-fond-hh-ickevinst"
+"254.20360" = "fondformogenhet-ovr-fond-ovr-sektorer"
+"254.20361" = "fondformogenhet-ovriga-fonder-utland"
+"254.20362" = "korta-rantefonder-icke-fin-frtg-inbetalt"
+"254.20363" = "korta-rantefonder-fin-frtg-inbetalt"
+"254.20364" = "korta-rantefonder-livforsakring-inbetalt"
+"254.20365" = "korta-rantefonder-ppm-inbetalt"
+"254.20366" = "korta-rantefonder-kommuner-inbetalt"
+"254.20367" = "korta-rantefonder-socialfor-inbetalt"
+"254.20368" = "korta-rantefonder-hh-penspar-inbetalt"
+"254.20369" = "korta-rantefonder-hh-ickevinst-inbetalt"
+"254.20370" = "korta-rantefonder-ovr-sv-inbetalt"
+"254.20371" = "korta-rantefonder-utlandet-inbetalt"
+"254.20373" = "langa-rantefonder-icke-fin-frtg-inbetalt"
+"254.20374" = "langa-rantefonder-fin-frtg-inbetalt"
+"254.20375" = "langa-rantefonder-sektorer-tot-inbetalt"
+"254.20376" = "langa-rantefonder-livforsakring-inbetalt"
+"254.20377" = "langa-rantefonder-ppm-inbetalt"
+"254.20378" = "langa-rantefonder-kommuner-inbetalt"
+"254.20379" = "langa-rantefonder-socialfor-inbetalt"
+"254.20380" = "langa-rantefonder-hh-inbetalt"
+"254.20381" = "langa-rantefonder-hh-penspar-inbetalt"
+"254.20382" = "langa-rantefonder-hh-ickevinst-inbetalt"
+"254.20383" = "langa-rantefonder-ovr-sektorer-inbetalt"
+"254.20384" = "langa-rantefonder-utlandet-inbetalt"
+"254.20391" = "aktiefonder-icke-fin-frtg-inbetalt"
+"254.20392" = "aktiefonder-fin-frtg-inbetalt"
+"254.20393" = "aktiefonder-livforsakring-inbetalt"
+"254.20395" = "aktiefonder-ppm-inbetalt"
+"254.20396" = "aktiefonder-kommuner-inbetalt"
+"254.20397" = "aktiefonder-hh-pensionsspar-inbetalt"
+"254.20398" = "aktiefonder-hh-ickevinst-org-inbetalt"
+"254.20399" = "aktiefonder-ovr-sv-sektorer-inbetalt"
+"254.20400" = "aktiefonder-utlandet-inbetalt"
+"254.20401" = "blandfonder-icke-fin-frtg-inbetalt"
+"254.20402" = "blandfonder-fin-frtg-inbetalt"
+"254.20403" = "blandfonder-livforsakring-inbetalt"
+"254.20404" = "blandfonder-ppm-inbetalt"
+"254.20405" = "blandfonder-kommuner-inbetalt"
+"254.20406" = "blandfonder-socialforsakring-inbetalt"
+"254.20407" = "blandfonder-hh-pensionsspar-inbetalt"
+"254.20408" = "blandfonder-hh-ickevinst-org-inbetalt"
+"254.20409" = "blandfonder-ovr-sv-sektorer-inbetalt"
+"254.20410" = "blandfonder-utlandet-inbetalt"
+"254.20411" = "fond-i-fonder-icke-fin-frtg-inbetalt"
+"254.20412" = "ovriga-fonder-icke-fin-frtg-inbetalt"
+"254.20413" = "fond-i-fonder-fin-frtg-inbetalt"
+"254.20414" = "fond-i-fonder-livforsakring-inbetalt"
+"254.20415" = "fond-i-fonder-ppm-inbetalt"
+"254.20416" = "fond-i-fonder-kommuner-inbetalt"
+"254.20417" = "fond-i-fonder-socialforsakring-inbetalt"
+"254.20418" = "fond-i-fonder-hh-pensionsspar-inbetalt"
+"254.20419" = "fond-i-fonder-hh-ickevinst-org-inbetalt"
+"254.20420" = "fond-i-fonder-ovr-sv-sektorer-inbetalt"
+"254.20421" = "fond-i-fonder-utlandet-inbetalt"
+"254.20422" = "ovriga-fonder-fin-frtg-inbetalt"
+"254.20423" = "ovriga-fonder-livforsakring-inbetalt"
+"254.20424" = "ovriga-fonder-ppm-inbetalt"
+"254.20425" = "ovriga-fonder-kommuner-inbetalt"
+"254.20426" = "ovriga-fonder-socialforsakring-inbetalt"
+"254.20427" = "ovriga-fonder-hh-pensionsspar-inbetalt"
+"254.20428" = "ovriga-fonder-hh-ickevinst-org-inbetalt"
+"254.20429" = "ovriga-fonder-ovr-sv-sektorer-inbetalt"
+"254.20430" = "ovriga-fonder-utlandet-inbetalt"
+"254.20522" = "korta-rantefonder-ickefin-frtg-utbetalt"
+"254.20523" = "korta-rantefonder-fin-frtg-utbetalt"
+"254.20524" = "korta-rantefonder-livforsakring-utbetalt"
+"254.20525" = "korta-rantefonder-ppm-utbetalt"
+"254.20526" = "korta-rantefonder-kommuner-utbetalt"
+"254.20527" = "korta-rantefonder-socialfor-utbetalt"
+"254.20528" = "korta-rantefonder-hh-penspar-utbetalt"
+"254.20529" = "korta-rantefonder-hh-ickevinst-utbetalt"
+"254.20530" = "korta-rantefonder-ovr-sektorer-utbetalt"
+"254.20531" = "korta-rantefonder-utlandet-utbetalt"
+"254.20532" = "langa-rantefonder-ickefin-frtg-utbetalt"
+"254.20533" = "langa-rantefonder-fin-frtg-utbetalt"
+"254.20534" = "langa-rantefonder-sektorer-tot-utbetalt"
+"254.20535" = "langa-rantefonder-livforsakring-utbetalt"
+"254.20536" = "langa-rantefonder-ppm-utbetalt"
+"254.20537" = "langa-rantefonder-kommuner-utbetalt"
+"254.20538" = "langa-rantefonder-socialfor-utbetalt"
+"254.20539" = "bruttosparande-langrantefond-hh-penspar"
+"254.20540" = "bruttosparande-langrantefond-hh-ickefin"
+"254.20541" = "bruttosparande-langrantefond-ovr-sv"
+"254.20542" = "bruttosparande-langrantefond-utlandet"
+"254.20543" = "bruttosparande-aktiefonder-ickefin-frtg"
+"254.20544" = "bruttosparande-aktiefonder-fin-frtg"
+"254.20545" = "bruttosparande-aktiefonder-livforsakring"
+"254.20546" = "bruttosparande-aktiefonder-kommuner"
+"254.20547" = "bruttosparande-aktiefonder-socialfor"
+"254.20548" = "bruttosparande-aktiefonder-hh-penspar"
+"254.20549" = "bruttosparande-aktiefonder-hh-ickevinst"
+"254.20550" = "bruttosparande-aktiefonder-ovr-sektorer"
+"254.20551" = "bruttosparande-aktiefonder-utlandet"
+"254.20552" = "bruttosparande-blandfonder-ickefin-frtg"
+"254.20554" = "bruttosparande-blandfonder-fin-frtg"
+"254.20556" = "bruttosparande-blandfonder-livforsakring"
+"254.20558" = "bruttosparande-blandfonder-ppm"
+"254.20559" = "bruttosparande-blandfonder-kommuner"
+"254.20560" = "bruttosparande-blandfonder-socialfor"
+"254.20561" = "bruttosparande-blandfonder-hh-penspar"
+"254.20563" = "bruttosparande-blandfonder-hh-ickevinst"
+"254.20564" = "bruttosparande-blandfonder-ovr-sektorer"
+"254.20565" = "bruttosparande-blandfonder-utlandet"
+"254.20566" = "bruttosparande-fondfond-ickefin-frtg"
+"254.20567" = "bruttosparande-fondfond-fin-frtg"
+"254.20568" = "bruttosparande-fondfond-livsforsakring"
+"254.20569" = "bruttosparande-fondfond-ppm"
+"254.20570" = "bruttosparande-fondfond-kommuner"
+"254.20571" = "bruttosparande-fondfond-socialforsakring"
+"254.20572" = "bruttosparande-fondfond-hh-indivpenspar"
+"254.20573" = "bruttosparande-fondfond-hh-ickevinst-org"
+"254.20574" = "bruttosparande-fondfond-ovr-sv-sektorer"
+"254.20575" = "bruttosparande-fondfond-utlandet"
+"254.20576" = "bruttosparande-ovr-fonder-fin-frtg"
+"254.20577" = "bruttosparande-ovr-fonder-ickefin-frtg"
+"254.20578" = "bruttosparande-ovr-fonder-livsforsakring"
+"254.20579" = "bruttosparande-ovr-fonder-ppm"
+"254.20580" = "bruttosparande-ovr-fonder-kommuner"
+"254.20581" = "bruttosparande-ovr-fonder-socialfor"
+"254.20582" = "bruttosparande-ovr-fonder-hh-penspar"
+"254.20583" = "bruttosparande-ovr-fonder-hh-ickevinst"
+"254.20584" = "bruttosparande-ovr-fonder-ovr-sektorer"
+"254.20585" = "bruttosparande-ovr-fonder-utlandet"
+"254.20586" = "nettosparande-kortrantefond-ickefin-frtg"
+"254.20587" = "nettosparande-kortrantefond-livsfor"
+"254.20588" = "nettosparande-kortrantefond-fin-frtg"
+"254.20589" = "nettosparande-kortrantefond-ppm"
+"254.20590" = "nettosparande-kortrantefond-kommuner"
+"254.20591" = "nettosparande-kortrantefond-socialfor"
+"254.20592" = "nettosparande-kortrantefond-hh-penspar"
+"254.20593" = "nettosparande-kortrantefond-hh-ickevinst"
+"254.20594" = "nettosparande-kortrantefond-ovr-sektorer"
+"254.20595" = "nettosparande-kortrantefond-utlandet"
+"254.20596" = "nettosparande-langrantefond-sektorer-tot"
+"254.20597" = "nettosparande-aktiefonder-ickefin-frtg"
+"254.20598" = "nettosparande-langrantefond-ickefin-frtg"
+"254.20599" = "nettosparande-langrantefond-fin-frtg"
+"254.20600" = "nettosparande-langrantefond-livsfor"
+"254.20601" = "nettosparande-langrantefond-ppm"
+"254.20602" = "nettosparande-langrantefond-kommuner"
+"254.20603" = "nettosparande-langrantefond-socialfor"
+"254.20604" = "nettosparande-langrantefond-hh"
+"254.20605" = "nettosparande-langrantefond-hh-penspar"
+"254.20606" = "nettosparande-langrantefond-hh-ickevinst"
+"254.20607" = "nettosparande-langrantefond-ovr-sektorer"
+"254.20608" = "nettosparande-langrantefond-utlandet"
+"254.20609" = "nettosparande-aktiefonder-fin-frtg"
+"254.20610" = "nettosparande-aktiefonder-livsforsakring"
+"254.20611" = "nettosparande-aktiefonder-ppm"
+"254.20612" = "nettosparande-aktiefonder-kommuner"
+"254.20613" = "nettosparande-aktiefonder-socialfor"
+"254.20614" = "nettosparande-aktiefonder-hh-penspar"
+"254.20615" = "nettosparande-aktiefonder-hh-ickevinst"
+"254.20616" = "nettosparande-aktiefonder-ovr-sektorer"
+"254.20617" = "nettosparande-aktiefonder-utlandet"
+"254.20618" = "nettosparande-blandfonder-ickefin-frtg"
+"254.20619" = "nettosparande-blandfonder-fin-frtg"
+"254.20620" = "nettosparande-blandfonder-livsforsakring"
+"254.20621" = "nettosparande-blandfonder-ppm"
+"254.20622" = "nettosparande-blandfonder-kommuner"
+"254.20623" = "nettosparande-blandfonder-socialfor"
+"254.20624" = "nettosparande-blandfonder-hh-penspar"
+"254.20625" = "nettosparande-blandfonder-hh-ickevinst"
+"254.20626" = "nettosparande-blandfonder-ovr-sv"
+"254.20627" = "nettosparande-blandfonder-utlandet"
+"254.20628" = "nettosparande-fondfond-icke-fin-frtg"
+"254.20629" = "nettosparande-fondfond-fin-frtg"
+"254.20630" = "nettosparande-fondfond-livsforsakring"
+"254.20631" = "nettosparande-fondfond-ppm"
+"254.20632" = "nettosparande-fondfond-kommuner"
+"254.20633" = "nettosparande-fondfond-socialforsakring"
+"254.20634" = "nettosparande-fondfond-individpensspar"
+"254.20635" = "nettosparande-fondfond-ickevinstorg"
+"254.20636" = "nettosparande-fondfond-ovr-sektorer"
+"254.20637" = "nettosparande-fondfond-utl"
+"254.20640" = "nettosparande-ovr-fond-icke-fin-frtg"
+"254.20641" = "nettosparande-ovr-fond-fin-frtg"
+"254.20642" = "nettosparande-ovr-fond-livforsakring"
+"254.20643" = "nettosparande-ovr-fond-ppm"
+"254.20644" = "nettosparande-ovr-fond-kommuner"
+"254.20645" = "nettosparande-ovr-fond-socialforsakring"
+"254.20646" = "nettosparande-ovr-fond-individpensspar"
+"254.20647" = "nettosparande-ovr-fond-ickevinstorg"
+"254.20648" = "nettosparande-ovr-fond-ovr-sektorer"
+"254.20649" = "nettosparande-ovr-fond-utl"

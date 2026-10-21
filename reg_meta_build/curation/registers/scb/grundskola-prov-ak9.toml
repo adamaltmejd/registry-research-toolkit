@@ -153,298 +153,88 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Svenska utlandsskolor: elever, lärare och utbildningsresultat
-
-[[variable]]
-native_id = "190.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "190.3635"
-slug = "skolans-namn"
-
-[[variable]]
-native_id = "190.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "190.7817"
-slug = "deltagit-sva"
-
-[[variable]]
-native_id = "190.8190"
-slug = "inriktning-fristaende"
-
-[[variable]]
-native_id = "190.8517"
-slug = "provtyp-for-engelska-a"
-
-[[variable]]
-native_id = "190.8518"
-slug = "provtyp-for-engelska-b"
-
-[[variable]]
-native_id = "190.8521"
-slug = "provtyp-for-engelska-c"
-
-[[variable]]
-native_id = "190.8522"
-slug = "provtyp-for-svenska-a"
-
-[[variable]]
-native_id = "190.8523"
-slug = "provtyp-for-svenska-b"
-
-[[variable]]
-native_id = "190.8524"
-slug = "provtyp-for-svenska-c"
-
-[[variable]]
-native_id = "190.8525"
-slug = "provtyp-for-matematik-a"
-
-[[variable]]
-native_id = "190.8526"
-slug = "provtyp-for-matematik-b1"
-
-[[variable]]
-native_id = "190.8527"
-slug = "provtyp-for-matematik-b2"
-
-[[variable]]
-native_id = "190.8528"
-slug = "provtyp-for-matematik-c"
-
-[[variable]]
-native_id = "190.24273"
-slug = "provtyp-naturvetenskap-b"
-
-[[variable]]
-native_id = "190.30451"
-slug = "so-a-delt"
-
-[[variable]]
-native_id = "190.30452"
-slug = "so-b-delt"
-
-[[variable]]
-native_id = "190.30646"
-slug = "undervisningsgrupp-i-no"
-
-[[variable]]
-native_id = "190.30654"
-slug = "skolenhetens-namn"
-
-[[variable]]
-native_id = "190.30684"
-slug = "provtyp-for-no1"
-
-[[variable]]
-native_id = "190.30685"
-slug = "provtyp-for-no2"
-
-[[variable]]
-native_id = "190.30686"
-slug = "provtyp-for-no3"
-
-[[variable]]
-native_id = "190.30847"
-slug = "antal-delprov-no"
-
-[[variable]]
-native_id = "190.30848"
-slug = "provtyp-for-no-b"
-
-[[variable]]
-native_id = "190.30857"
-slug = "deltagande-i-prov-i-no"
+"190.57" = "personnr"
+"190.3635" = "skolans-namn"
+"190.6809" = "folkbokforingskommun"
+"190.7817" = "deltagit-sva"
+"190.8190" = "inriktning-fristaende"
+"190.8517" = "provtyp-for-engelska-a"
+"190.8518" = "provtyp-for-engelska-b"
+"190.8521" = "provtyp-for-engelska-c"
+"190.8522" = "provtyp-for-svenska-a"
+"190.8523" = "provtyp-for-svenska-b"
+"190.8524" = "provtyp-for-svenska-c"
+"190.8525" = "provtyp-for-matematik-a"
+"190.8526" = "provtyp-for-matematik-b1"
+"190.8527" = "provtyp-for-matematik-b2"
+"190.8528" = "provtyp-for-matematik-c"
+"190.24273" = "provtyp-naturvetenskap-b"
+"190.30451" = "so-a-delt"
+"190.30452" = "so-b-delt"
+"190.30646" = "undervisningsgrupp-i-no"
+"190.30654" = "skolenhetens-namn"
+"190.30684" = "provtyp-for-no1"
+"190.30685" = "provtyp-for-no2"
+"190.30686" = "provtyp-for-no3"
+"190.30847" = "antal-delprov-no"
+"190.30848" = "provtyp-for-no-b"
+"190.30857" = "deltagande-i-prov-i-no"
 
 # register 192 (svenska-utlandsskolor)
-
-[[variable]]
-native_id = "190.67.utlbakgr"
-slug = "utlbakgr-alt"
+"190.67.utlbakgr" = "utlbakgr-alt"
 
 # register 192 (svenska-utlandsskolor)
-
-[[variable]]
-native_id = "190.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "190.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "190.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "190.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "190.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "190.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "190.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "190.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "190.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "190.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "190.8187"
-slug = "utlandsk-bakgrund"
-
-[[variable]]
-native_id = "190.8207"
-slug = "ma-delt-a"
-
-[[variable]]
-native_id = "190.8211"
-slug = "ma-delt-c"
-
-[[variable]]
-native_id = "190.8245"
-slug = "provbetyg-matematik"
-
-[[variable]]
-native_id = "190.8246"
-slug = "betyg-delprov-a-svenska"
-
-[[variable]]
-native_id = "190.8276"
-slug = "ej-deltagit-i-svenska"
-
-[[variable]]
-native_id = "190.8480"
-slug = "provbetyg-svenska"
-
-[[variable]]
-native_id = "190.8489"
-slug = "betyg-delprov-a-engelska"
-
-[[variable]]
-native_id = "190.8492"
-slug = "betyg-delprov-b-engelska"
-
-[[variable]]
-native_id = "190.24275"
-slug = "provbetyg-fysik"
-
-[[variable]]
-native_id = "190.24277"
-slug = "provbetyg-kemi"
-
-[[variable]]
-native_id = "190.27376"
-slug = "svenska-delprov-a"
-
-[[variable]]
-native_id = "190.27377"
-slug = "sv-delprov-b"
-
-[[variable]]
-native_id = "190.27378"
-slug = "sv-delprov-c"
-
-[[variable]]
-native_id = "190.28165"
-slug = "engelska-delprov-a"
-
-[[variable]]
-native_id = "190.28167"
-slug = "en-delprov-b"
-
-[[variable]]
-native_id = "190.28168"
-slug = "en-delprov-c"
-
-[[variable]]
-native_id = "190.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "190.30448"
-slug = "ma-delt-b"
-
-[[variable]]
-native_id = "190.30449"
-slug = "ma-delt-d"
-
-[[variable]]
-native_id = "190.30454"
-slug = "kursplan-i-svenska"
-
-[[variable]]
-native_id = "190.30642"
-slug = "provbetyg-geografi"
-
-[[variable]]
-native_id = "190.30643"
-slug = "provbetyg-historia"
-
-[[variable]]
-native_id = "190.30644"
-slug = "provbetyg-samhallskunskap"
-
-[[variable]]
-native_id = "190.30645"
-slug = "provbetyg-religion"
-
-[[variable]]
-native_id = "190.39019"
-slug = "nyinvandring"
+"190.56" = "person-orgnr"
+"190.34" = "juridisk-form"
+"190.305" = "fodelseland-mor"
+"190.323" = "personnr-far"
+"190.324" = "personnr-mor"
+"190.332" = "senaste-invandringsdatum"
+"190.1378" = "fodelsear"
+"190.1993" = "skolans-identitetsnummer"
+"190.1996" = "skolform"
+"190.8137" = "huvudman"
+"190.8187" = "utlandsk-bakgrund"
+"190.8207" = "ma-delt-a"
+"190.8211" = "ma-delt-c"
+"190.8245" = "provbetyg-matematik"
+"190.8246" = "betyg-delprov-a-svenska"
+"190.8276" = "ej-deltagit-i-svenska"
+"190.8480" = "provbetyg-svenska"
+"190.8489" = "betyg-delprov-a-engelska"
+"190.8492" = "betyg-delprov-b-engelska"
+"190.24275" = "provbetyg-fysik"
+"190.24277" = "provbetyg-kemi"
+"190.27376" = "svenska-delprov-a"
+"190.27377" = "sv-delprov-b"
+"190.27378" = "sv-delprov-c"
+"190.28165" = "engelska-delprov-a"
+"190.28167" = "en-delprov-b"
+"190.28168" = "en-delprov-c"
+"190.29426" = "tidigaste-invandringsdatum"
+"190.30448" = "ma-delt-b"
+"190.30449" = "ma-delt-d"
+"190.30454" = "kursplan-i-svenska"
+"190.30642" = "provbetyg-geografi"
+"190.30643" = "provbetyg-historia"
+"190.30644" = "provbetyg-samhallskunskap"
+"190.30645" = "provbetyg-religion"
+"190.39019" = "nyinvandring"
 
 # register 192
-
-[[variable]]
-native_id = "190.30455.ma-a-pom"
-slug = "a-poang-merit"
-
-[[variable]]
-native_id = "190.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "190.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "190.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "190.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "190.8073.sunniva-mor"
-slug = "sun-niva-mor-3"
-
-[[variable]]
-native_id = "190.8073.sunniva-mor-omkodad"
-slug = "sun-niva-mor-omkodad"
-
-[[variable]]
-native_id = "190.8073.sunniva-old-mor"
-slug = "sun-niva-old-mor"
+"190.30455.ma-a-pom" = "a-poang-merit"
+"190.8073.sun2000niva-mor" = "sun-niva-mor"
+"190.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"190.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"190.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"190.8073.sunniva-mor" = "sun-niva-mor-3"
+"190.8073.sunniva-mor-omkodad" = "sun-niva-mor-omkodad"
+"190.8073.sunniva-old-mor" = "sun-niva-old-mor"
+"190.67.utlbakgr2" = "utlbakgr2"
+"190.67.utl-bakg-sv" = "utl-bakg-sv"
+"190.67.utlsvbakg" = "utlsvbakg"
 
 # register 193
 
@@ -454,15 +244,3 @@ variable = "190.67"
 columns = { UTLBAKGR = "190.67.utlbakgr", UTLBAKGR2 = "190.67.utlbakgr2", UTL_BAKG_SV = "190.67.utl-bakg-sv", UtlSvBakg = "190.67.utlsvbakg", Utlbakgr = "190.67.utlbakgr" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "7804da3a6c795e8b8dddaf04ecf26107c8daf7eaa7005d9923061740ecf0819c"
-
-[[variable]]
-native_id = "190.67.utlbakgr2"
-slug = "utlbakgr2"
-
-[[variable]]
-native_id = "190.67.utl-bakg-sv"
-slug = "utl-bakg-sv"
-
-[[variable]]
-native_id = "190.67.utlsvbakg"
-slug = "utlsvbakg"

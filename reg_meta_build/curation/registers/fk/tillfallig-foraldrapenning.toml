@@ -38,53 +38,22 @@ panel_entity_key = "lopnr-barn"
 panel_time_key = "del-from-datum"
 panel_time_grain = "row"
 
+[variable]
 # Sjuk- och aktivitetsersättning
-
-[[variable]]
-native_id = "6486633934264544358.LOPNR"
-slug = "lopnr"
-
-
-[[variable]]
-native_id = "6486633934264544358.LOPNR_BARN"
-slug = "lopnr-barn"
-
-
-[[variable]]
-native_id = "6486633934264544358.A10"
-slug = "adoption-10-dagar"
-
-[[variable]]
-native_id = "6486633934264544358.ASJ"
-slug = "allvarligt-sjukt-barn"
-
-[[variable]]
-native_id = "6486633934264544358.DAB"
-slug = "barn-avliden"
-
-[[variable]]
-native_id = "6486633934264544358.F10"
-slug = "fodsel-10-dagar"
-
-[[variable]]
-native_id = "6486633934264544358.KD"
-slug = "kontaktdagar"
-
-[[variable]]
-native_id = "6486633934264544358.OVS"
-slug = "ordinarie-vardares-sjukdom"
-
-[[variable]]
-native_id = "6486633934264544358.VAB"
-slug = "vard-av-barn"
+"6486633934264544358.LOPNR" = "lopnr"
+"6486633934264544358.LOPNR_BARN" = "lopnr-barn"
+"6486633934264544358.A10" = "adoption-10-dagar"
+"6486633934264544358.ASJ" = "allvarligt-sjukt-barn"
+"6486633934264544358.DAB" = "barn-avliden"
+"6486633934264544358.F10" = "fodsel-10-dagar"
+"6486633934264544358.KD" = "kontaktdagar"
+"6486633934264544358.OVS" = "ordinarie-vardares-sjukdom"
+"6486633934264544358.VAB" = "vard-av-barn"
 
 # #1603 batch-e (#1633): SWECOV's FK_TFP_DELFALL_lev4 delivers the delförmån code in
 # long format, one row per occurrence. FK documents only the positional
 # DELFORMAN_KOD_1..3, so the any-position column is minted.
-
-[[variable]]
-native_id = "6486633934264544358.DELFORMAN_KOD"
-slug = "delforman-kod"
+"6486633934264544358.DELFORMAN_KOD" = "delforman-kod"
 
 [[errata.column]]
 variant = "6486633934264544358.delfall1-1-8"

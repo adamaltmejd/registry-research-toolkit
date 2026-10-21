@@ -123,14 +123,14 @@ def catalog(tmp_path: Path, request, prepared_cache) -> CatalogFixture:
     (registers / "sample.toml").write_text(
         '[register]\nprovider = "scb"\nslug = "sample"\nnative_id = "1"\n'
         '[[variant]]\nnative_id = "1.10"\nslug = "people"\n'
-        '[[variable]]\nnative_id = "1.101"\nslug = "value"\n',
+        '[variable]\n"1.101" = "value"\n',
         encoding="utf-8",
     )
     if second:
         (registers / "other.toml").write_text(
             '[register]\nprovider = "scb"\nslug = "other"\nnative_id = "2"\n'
             '[[variant]]\nnative_id = "2.20"\nslug = "people"\n'
-            f'[[variable]]\nnative_id = "2.{other_var}"\nslug = "value"\n',
+            f'[variable]\n"2.{other_var}" = "value"\n',
             encoding="utf-8",
         )
     return CatalogFixture(prepared.prepared, prepared.commit, prepared.digest, curation)

@@ -73,136 +73,43 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Förskola
-
-[[variable]]
-native_id = "305.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "305.67"
-slug = "utlsvbakg"
-
-[[variable]]
-native_id = "305.8485"
-slug = "sv-eller-sva"
+"305.57" = "personnr"
+"305.67" = "utlsvbakg"
+"305.8485" = "sv-eller-sva"
 
 # register 307 (forskola)
-
-[[variable]]
-native_id = "305.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "305.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "305.305"
-slug = "fodelseland-mor"
-
-[[variable]]
-native_id = "305.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "305.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "305.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "305.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "305.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "305.3635"
-slug = "skolans-namn"
-
-[[variable]]
-native_id = "305.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "305.8137"
-slug = "huvudman"
-
-[[variable]]
-native_id = "305.8187"
-slug = "utlandsk-bakgrund"
-
-[[variable]]
-native_id = "305.8276"
-slug = "ej-deltagit-i-svenska"
-
-[[variable]]
-native_id = "305.14815"
-slug = "skolkommun"
-
-[[variable]]
-native_id = "305.27376"
-slug = "svenska-delprov-a"
-
-[[variable]]
-native_id = "305.27377"
-slug = "sv-delprov-b"
-
-[[variable]]
-native_id = "305.27378"
-slug = "sv-delprov-c"
-
-[[variable]]
-native_id = "305.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "305.30454"
-slug = "kursplan-i-svenska"
-
-[[variable]]
-native_id = "305.30654"
-slug = "skolenhetens-namn"
-
-[[variable]]
-native_id = "305.39019"
-slug = "nyinvandring"
+"305.56" = "person-orgnr"
+"305.34" = "juridisk-form"
+"305.305" = "fodelseland-mor"
+"305.323" = "personnr-far"
+"305.324" = "personnr-mor"
+"305.332" = "senaste-invandringsdatum"
+"305.1993" = "skolans-identitetsnummer"
+"305.1996" = "skolform"
+"305.3635" = "skolans-namn"
+"305.6809" = "folkbokforingskommun"
+"305.8137" = "huvudman"
+"305.8187" = "utlandsk-bakgrund"
+"305.8276" = "ej-deltagit-i-svenska"
+"305.14815" = "skolkommun"
+"305.27376" = "svenska-delprov-a"
+"305.27377" = "sv-delprov-b"
+"305.27378" = "sv-delprov-c"
+"305.29426" = "tidigaste-invandringsdatum"
+"305.30454" = "kursplan-i-svenska"
+"305.30654" = "skolenhetens-namn"
+"305.39019" = "nyinvandring"
 
 # register 307
-
-[[variable]]
-native_id = "305.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "305.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "305.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "305.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
-
-[[variable]]
-native_id = "305.8073.sunniva-mor"
-slug = "sun-niva-mor-3"
-
-[[variable]]
-native_id = "305.8073.sunniva-mor-omkodad"
-slug = "sun-niva-mor-omkodad"
-
-[[variable]]
-native_id = "305.8073.sunniva-old-mor"
-slug = "sun-niva-old-mor"
+"305.8073.sun2000niva-mor" = "sun-niva-mor"
+"305.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"305.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"305.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
+"305.8073.sunniva-mor" = "sun-niva-mor-3"
+"305.8073.sunniva-mor-omkodad" = "sun-niva-mor-omkodad"
+"305.8073.sunniva-old-mor" = "sun-niva-old-mor"
 
 # register 307
 

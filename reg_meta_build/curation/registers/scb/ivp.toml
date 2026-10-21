@@ -63,130 +63,51 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Kvartalsvis bränslestatistik
-
-[[variable]]
-native_id = "135.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "135.119"
-slug = "varukod-kn"
-
-[[variable]]
-native_id = "135.1853.ngnr"
-slug = "naringsgren-enligt-nr"
-
-[[variable]]
-native_id = "135.2478"
-slug = "antal-anstallda"
-
-[[variable]]
-native_id = "135.4027"
-slug = "naringsgren"
-
-[[variable]]
-native_id = "135.4969"
-slug = "kvantitetsenhet"
-
-[[variable]]
-native_id = "135.44373"
-slug = "typ-av-returravara"
+"135.56" = "person-orgnr"
+"135.119" = "varukod-kn"
+"135.1853.ngnr" = "naringsgren-enligt-nr"
+"135.2478" = "antal-anstallda"
+"135.4027" = "naringsgren"
+"135.4969" = "kvantitetsenhet"
+"135.44373" = "typ-av-returravara"
 
 # register 139 (branslestatistik)
-
-[[variable]]
-native_id = "135.3307.metlev"
-slug = "imputeringsmetod-lev"
-
-[[variable]]
-native_id = "135.3307.mettot"
-slug = "imputeringsmetod-tot"
-
-[[variable]]
-native_id = "135.4992.levkvant"
-slug = "leverad-kvantitet"
-
-[[variable]]
-native_id = "135.5003.totb"
-slug = "totb-kvant1"
+"135.3307.metlev" = "imputeringsmetod-lev"
+"135.3307.mettot" = "imputeringsmetod-tot"
+"135.4992.levkvant" = "leverad-kvantitet"
+"135.5003.totb" = "totb-kvant1"
 
 # register 139 (branslestatistik)
-
-[[variable]]
-native_id = "135.1141"
-slug = "sektortillhorighet"
-
-[[variable]]
-native_id = "135.1641"
-slug = "naringsgren-arbetsstalle"
-
-[[variable]]
-native_id = "135.1798"
-slug = "inkommen"
-
-[[variable]]
-native_id = "135.2636"
-slug = "kontrollnr-redovisningsenh"
-
-[[variable]]
-native_id = "135.5006"
-slug = "imputkalla"
-
-[[variable]]
-native_id = "135.5016"
-slug = "bortfallskod"
-
-[[variable]]
-native_id = "135.20973"
-slug = "typkod-lonbearbetning"
-
-[[variable]]
-native_id = "135.21009"
-slug = "undersokningsar"
+"135.1141" = "sektortillhorighet"
+"135.1641" = "naringsgren-arbetsstalle"
+"135.1798" = "inkommen"
+"135.2636" = "kontrollnr-redovisningsenh"
+"135.5006" = "imputkalla"
+"135.5016" = "bortfallskod"
+"135.20973" = "typkod-lonbearbetning"
+"135.21009" = "undersokningsar"
 
 # register 139
+"135.4992.totkvant" = "total-kvantitet"
+"135.1853.asngnr" = "naringsgren-arbetsstalle-enligt-nr"
+"135.1853.vengnr" = "naringsgren-verksamhetsenhet-enligt-nr"
+"135.3307.metlev2" = "imputeringsmetod-lev-enhet2"
+"135.3307.mettot2" = "imputeringsmetod-tot-enhet2"
+"135.4992.levkvant2" = "leverad-kvantitet-enhet2"
+"135.4992.totkvant2" = "total-kvantitet-enhet2"
+"135.5003.levb" = "bortfall-leverad-kvantitet-enhet1"
+"135.5003.levb2" = "bortfall-leverad-kvantitet-enhet2"
+"135.5003.totb2" = "bortfall-total-kvantitet-enhet2"
+"135.4969.kvantenhet" = "kvantenhet-4969"
+"135.4969.kvantenhet2" = "kvantenhet2"
+"135.4027.asni" = "asni"
+"135.4027.vengs" = "vengs"
+"135.4027.vsni" = "vsni-4027"
 
-[[variable]]
-native_id = "135.4992.totkvant"
-slug = "total-kvantitet"
-
-[[variable]]
-native_id = "135.1853.asngnr"
-slug = "naringsgren-arbetsstalle-enligt-nr"
-
-[[variable]]
-native_id = "135.1853.vengnr"
-slug = "naringsgren-verksamhetsenhet-enligt-nr"
-
-[[variable]]
-native_id = "135.3307.metlev2"
-slug = "imputeringsmetod-lev-enhet2"
-
-[[variable]]
-native_id = "135.3307.mettot2"
-slug = "imputeringsmetod-tot-enhet2"
-
-[[variable]]
-native_id = "135.4992.levkvant2"
-slug = "leverad-kvantitet-enhet2"
-
-[[variable]]
-native_id = "135.4992.totkvant2"
-slug = "total-kvantitet-enhet2"
-
-[[variable]]
-native_id = "135.5003.levb"
-slug = "bortfall-leverad-kvantitet-enhet1"
-
-[[variable]]
-native_id = "135.5003.levb2"
-slug = "bortfall-leverad-kvantitet-enhet2"
-
-[[variable]]
-native_id = "135.5003.totb2"
-slug = "bortfall-total-kvantitet-enhet2"
+# Pre-2008 Typkod: own variable, never typkod-lonbearbetning (#1621, #1603).
+"135.Typkod" = "typkod-1996-2007"
 
 [[identity.partition]]
 data_warning = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
@@ -201,31 +122,6 @@ variable = "135.4027"
 columns = { Asni = "135.4027.asni", VEngs = "135.4027.vengs", Vsni = "135.4027.vsni" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "6e144e43ba57cc17e7dfcb65301ab39cb0ec48558a244073d43155d5feba79f2"
-
-[[variable]]
-native_id = "135.4969.kvantenhet"
-slug = "kvantenhet-4969"
-
-[[variable]]
-native_id = "135.4969.kvantenhet2"
-slug = "kvantenhet2"
-
-[[variable]]
-native_id = "135.4027.asni"
-slug = "asni"
-
-[[variable]]
-native_id = "135.4027.vengs"
-slug = "vengs"
-
-[[variable]]
-native_id = "135.4027.vsni"
-slug = "vsni-4027"
-
-# Pre-2008 Typkod: own variable, never typkod-lonbearbetning (#1621, #1603).
-[[variable]]
-native_id = "135.Typkod"
-slug = "typkod-1996-2007"
 
 # ── #1603 A2: SWECOV IVP_1996–IVP_2001 ──
 

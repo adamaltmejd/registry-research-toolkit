@@ -8,93 +8,38 @@ slug = "people"
 [[variant]]
 native_id = "1.11"
 slug = "second"
-[[variable]]
-native_id = "1.401"
-slug = "seq"
-[[variable]]
-native_id = "1.402"
-slug = "blk"
-[[variable]]
-native_id = "1.403"
-slug = "h56"
-[[variable]]
-native_id = "1.404"
-slug = "case"
-[[variable]]
-native_id = "1.405"
-slug = "dia"
-[[variable]]
-native_id = "1.406"
-slug = "grain"
-[[variable]]
-native_id = "1.411"
-slug = "noname"
-[[variable]]
-native_id = "1.412"
-slug = "nodef"
-[[variable]]
-native_id = "1.413"
-slug = "nocol"
-[[variable]]
-native_id = "1.414"
-slug = "notype"
-[[variable]]
-native_id = "1.415"
-slug = "noperiod"
-[[variable]]
-native_id = "1.416"
-slug = "rename"
-[[variable]]
-native_id = "1.417"
-slug = "redefine"
-[[variable]]
-native_id = "1.418"
-slug = "codeliv"
-[[variable]]
-native_id = "1.419"
-slug = "distinct"
-[[variable]]
-native_id = "1.421"
-slug = "checked"
-[[variable]]
-native_id = "1.422"
-slug = "anchor"
-[[variable]]
-native_id = "1.441"
-slug = "units-seq"
-[[variable]]
-native_id = "1.442"
-slug = "units-same"
-[[variable]]
-native_id = "1.443"
-slug = "units-columnless"
-[[variable]]
-native_id = "1.444"
-slug = "units-missing"
-[[variable]]
-native_id = "1.451"
-slug = "pooled"
-[[variable]]
-native_id = "1.452"
-slug = "pooled-coded"
-[[variable]]
-native_id = "1.461"
-slug = "colless-unplaced"
-[[variable]]
-native_id = "1.471"
-slug = "ty-conflict"
-[[variable]]
-native_id = "1.472"
-slug = "ty-widen"
-[[variable]]
-native_id = "1.481"
-slug = "coded"
-[[variable]]
-native_id = "1.430.gaturest"
-slug = "gaturest"
-[[variable]]
-native_id = "1.430.pgaturest"
-slug = "pgaturest"
+
+[variable]
+"1.401" = "seq"
+"1.402" = "blk"
+"1.403" = "h56"
+"1.404" = "case"
+"1.405" = "dia"
+"1.406" = "grain"
+"1.411" = "noname"
+"1.412" = "nodef"
+"1.413" = "nocol"
+"1.414" = "notype"
+"1.415" = "noperiod"
+"1.416" = "rename"
+"1.417" = "redefine"
+"1.418" = "codeliv"
+"1.419" = "distinct"
+"1.421" = "checked"
+"1.422" = "anchor"
+"1.441" = "units-seq"
+"1.442" = "units-same"
+"1.443" = "units-columnless"
+"1.444" = "units-missing"
+"1.451" = "pooled"
+"1.452" = "pooled-coded"
+"1.461" = "colless-unplaced"
+"1.471" = "ty-conflict"
+"1.472" = "ty-widen"
+"1.481" = "coded"
+"1.430.gaturest" = "gaturest"
+"1.430.pgaturest" = "pgaturest"
+
 [[identity.partition]]
 variable = "1.430"
 columns = { GatuRest = "1.430.gaturest", Gaturest = "1.430.gaturest", PGaturest = "1.430.pgaturest" }

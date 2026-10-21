@@ -11,53 +11,21 @@ panel_entity_key = "person-orgnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Barnregistret
-
-[[variable]]
-native_id = "330.56"
-slug = "person-orgnr"
-
-
-[[variable]]
-native_id = "330.27200"
-slug = "agandetyp"
-
-[[variable]]
-native_id = "330.27405"
-slug = "emitterade-vardepapper"
+"330.56" = "person-orgnr"
+"330.27200" = "agandetyp"
+"330.27405" = "emitterade-vardepapper"
 
 # register 333 (breg)
+"330.34" = "juridisk-form"
+"330.1141" = "sektortillhorighet"
+"330.26047" = "antal-aktier"
+"330.26911" = "markering-borslista"
+"330.28744" = "vardepapperstyp"
+"330.28808" = "referensperiod"
+"330.28852" = "marknadspris"
+"330.41711" = "foretagets-bransch-naringsgren"
 
-[[variable]]
-native_id = "330.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "330.1141"
-slug = "sektortillhorighet"
-
-[[variable]]
-native_id = "330.26047"
-slug = "antal-aktier"
-
-[[variable]]
-native_id = "330.26911"
-slug = "markering-borslista"
-
-[[variable]]
-native_id = "330.28744"
-slug = "vardepapperstyp"
-
-[[variable]]
-native_id = "330.28808"
-slug = "referensperiod"
-
-[[variable]]
-native_id = "330.28852"
-slug = "marknadspris"
-
-[[variable]]
-native_id = "330.41711"
-slug = "foretagets-bransch-naringsgren"
 
 # register 333

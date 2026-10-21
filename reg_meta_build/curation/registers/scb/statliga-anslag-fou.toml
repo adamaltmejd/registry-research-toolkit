@@ -8,51 +8,39 @@ native_id = "293.807"
 slug = "_default"
 display_group = "Statliga anslag till forskning och utveckling"
 
+[variable]
 # Statistik för avrinningsområden
-
-[[variable]]
-native_id = "293.98"
-slug = "referensar"
-
-[[variable]]
-native_id = "293.25190"
-slug = "anslagsnamn"
-
-[[variable]]
-native_id = "293.25191"
-slug = "anslagsnummer"
-
-[[variable]]
-native_id = "293.25192"
-slug = "anslagsbelopp"
-
-[[variable]]
-native_id = "293.25195"
-slug = "preliminara-anslag-fou"
-
-[[variable]]
-native_id = "293.25223"
-slug = "andel-fou"
-
-[[variable]]
-native_id = "293.25224"
-slug = "departementkod"
-
-[[variable]]
-native_id = "293.25227"
-slug = "utgiftsomrade"
-
-[[variable]]
-native_id = "293.25230"
-slug = "anslag-foregaende-ar"
-
-[[variable]]
-native_id = "293.25231"
-slug = "akod"
-
-[[variable]]
-native_id = "293.25232"
-slug = "politikomrade"
+"293.98" = "referensar"
+"293.25190" = "anslagsnamn"
+"293.25191" = "anslagsnummer"
+"293.25192" = "anslagsbelopp"
+"293.25195" = "preliminara-anslag-fou"
+"293.25223" = "andel-fou"
+"293.25224" = "departementkod"
+"293.25227" = "utgiftsomrade"
+"293.25230" = "anslag-foregaende-ar"
+"293.25231" = "akod"
+"293.25232" = "politikomrade"
+"293.25224.departement" = "departement"
+"293.25224.ministry" = "ministry"
+"293.25224.dep-kod" = "dep-kod"
+"293.25192.anslag-ar" = "anslag-ar"
+"293.25192.appropriation" = "appropriation"
+"293.25192.anslag" = "anslag"
+"293.25195.fou-2007" = "fou-2007"
+"293.25195.fou-anslag" = "fou-anslag"
+"293.25195.fou-ar" = "fou-ar"
+"293.25195.gbard" = "gbard"
+"293.25195.obs-value-p" = "obs-value-p"
+"293.25227.expenditure-area" = "expenditure-area"
+"293.25227.utgiftsomrade" = "utgiftsomrade-25227"
+"293.25191.anslagsnr" = "anslagsnr"
+"293.25191.budgetitem" = "budgetitem"
+"293.25191.nrar" = "nrar"
+"293.25191.nr2007" = "nr2007"
+"293.25191.nr2010" = "nr2010"
+"293.25190.anslagsnamn" = "anslagsnamn-25190"
+"293.25190.budgetitem-name" = "budgetitem-name"
 
 # register 294 (avrinningsomraden)
 
@@ -97,86 +85,6 @@ variable = "293.25190"
 columns = { ANSLAGSNAMN = "293.25190.anslagsnamn", Anslagsnamn = "293.25190.anslagsnamn", BUDGETITEM_NAME = "293.25190.budgetitem-name", anslagsnamn = "293.25190.anslagsnamn" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "a72a5f0468814ead4d7080362e2b0bbfa630e9785ced24bd89db564891c93f9f"
-
-[[variable]]
-native_id = "293.25224.departement"
-slug = "departement"
-
-[[variable]]
-native_id = "293.25224.ministry"
-slug = "ministry"
-
-[[variable]]
-native_id = "293.25224.dep-kod"
-slug = "dep-kod"
-
-[[variable]]
-native_id = "293.25192.anslag-ar"
-slug = "anslag-ar"
-
-[[variable]]
-native_id = "293.25192.appropriation"
-slug = "appropriation"
-
-[[variable]]
-native_id = "293.25192.anslag"
-slug = "anslag"
-
-[[variable]]
-native_id = "293.25195.fou-2007"
-slug = "fou-2007"
-
-[[variable]]
-native_id = "293.25195.fou-anslag"
-slug = "fou-anslag"
-
-[[variable]]
-native_id = "293.25195.fou-ar"
-slug = "fou-ar"
-
-[[variable]]
-native_id = "293.25195.gbard"
-slug = "gbard"
-
-[[variable]]
-native_id = "293.25195.obs-value-p"
-slug = "obs-value-p"
-
-[[variable]]
-native_id = "293.25227.expenditure-area"
-slug = "expenditure-area"
-
-[[variable]]
-native_id = "293.25227.utgiftsomrade"
-slug = "utgiftsomrade-25227"
-
-[[variable]]
-native_id = "293.25191.anslagsnr"
-slug = "anslagsnr"
-
-[[variable]]
-native_id = "293.25191.budgetitem"
-slug = "budgetitem"
-
-[[variable]]
-native_id = "293.25191.nrar"
-slug = "nrar"
-
-[[variable]]
-native_id = "293.25191.nr2007"
-slug = "nr2007"
-
-[[variable]]
-native_id = "293.25191.nr2010"
-slug = "nr2010"
-
-[[variable]]
-native_id = "293.25190.anslagsnamn"
-slug = "anslagsnamn-25190"
-
-[[variable]]
-native_id = "293.25190.budgetitem-name"
-slug = "budgetitem-name"
 
 [[acknowledge]]
 code = "missing_coding_period"

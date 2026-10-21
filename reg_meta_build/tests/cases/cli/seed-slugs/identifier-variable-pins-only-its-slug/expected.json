@@ -6,12 +6,9 @@
     },
     "curation/registers/scb/sample.auto.toml": {
       "toml": {
-        "variable": [
-          {
-            "native_id": "1.LopNr",
-            "slug": "lopnr"
-          }
-        ]
+        "variable": {
+          "1.LopNr": "lopnr"
+        }
       },
       "excludes": [
         "panel_entity_key",

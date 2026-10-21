@@ -8,18 +8,13 @@ slug = "people"
 [[variant]]
 native_id = "1.20"
 slug = "others"
-[[variable]]
-native_id = "1.101"
-slug = "value"
-[[variable]]
-native_id = "1.102"
-slug = "omit"
-[[variable]]
-native_id = "1.103"
-slug = "untyped"
-[[variable]]
-native_id = "1.104"
-slug = "par"
+
+[variable]
+"1.101" = "value"
+"1.102" = "omit"
+"1.103" = "untyped"
+"1.104" = "par"
+
 [[identity.partition]]
 variable = "1.104"
 columns = { PAR_A = "1.104", PAR_B = "1.104" }

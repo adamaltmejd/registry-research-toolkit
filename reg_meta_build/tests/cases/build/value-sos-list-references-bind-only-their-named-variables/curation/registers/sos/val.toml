@@ -9,101 +9,36 @@ native_id = {{naming_id kind=register_variant provider=sos register_key=val memb
 [[variant]]
 slug = "val-b"
 native_id = {{naming_id kind=register_variant provider=sos register_key=val member_key=VAL_B}}
-[[variable]]
-slug = "explicit"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=EXPLICIT}}
-[[variable]]
-slug = "civil"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CIVIL}}
-[[variable]]
-slug = "civilnp"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CIVILNP}}
-[[variable]]
-slug = "anchored"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=ANCHORED}}
-[[variable]]
-slug = "first"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=FIRST}}
-[[variable]]
-slug = "second"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=SECOND}}
-[[variable]]
-slug = "outsider"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=OUTSIDER}}
-[[variable]]
-slug = "ambiga"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=AMBIGA}}
-[[variable]]
-slug = "ambigb"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=AMBIGB}}
-[[variable]]
-slug = "conflict"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CONFLICT}}
-[[variable]]
-slug = "unresolved"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=UNRESOLVED}}
-[[variable]]
-slug = "resolved"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=RESOLVED}}
-[[variable]]
-slug = "inline"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=INLINE}}
-[[variable]]
-slug = "cvalid"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CVALID}}
-[[variable]]
-slug = "day"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=DAY}}
-[[variable]]
-slug = "month"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=MONTH}}
-[[variable]]
-slug = "baddate"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=BADDATE}}
-[[variable]]
-slug = "reversed"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=REVERSED}}
-[[variable]]
-slug = "blank"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=BLANK}}
-[[variable]]
-slug = "idinline"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDINLINE}}
-[[variable]]
-slug = "idperiod"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDPERIOD}}
-[[variable]]
-slug = "idday"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDDAY}}
 
-[[variable]]
-slug = "idclamp"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDCLAMP}}
-
-[[variable]]
-slug = "civilop"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CIVILOP}}
-[[variable]]
-slug = "civilcp"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CIVILCP}}
-[[variable]]
-slug = "civilh"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CIVILH}}
-[[variable]]
-slug = "civilhs"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CIVILHS}}
-[[variable]]
-slug = "civilr"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=CIVILR}}
-
-[[variable]]
-slug = "idmix"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDMIX}}
-
-[[variable]]
-slug = "idclamps"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=IDCLAMPS}}
-
-[[variable]]
-slug = "suffix"
-native_id = {{naming_id kind=variable provider=sos register_key=val member_key=SUFFIX}}
+[variable]
+{{naming_id kind=variable provider=sos register_key=val member_key=EXPLICIT}} = "explicit"
+{{naming_id kind=variable provider=sos register_key=val member_key=CIVIL}} = "civil"
+{{naming_id kind=variable provider=sos register_key=val member_key=CIVILNP}} = "civilnp"
+{{naming_id kind=variable provider=sos register_key=val member_key=ANCHORED}} = "anchored"
+{{naming_id kind=variable provider=sos register_key=val member_key=FIRST}} = "first"
+{{naming_id kind=variable provider=sos register_key=val member_key=SECOND}} = "second"
+{{naming_id kind=variable provider=sos register_key=val member_key=OUTSIDER}} = "outsider"
+{{naming_id kind=variable provider=sos register_key=val member_key=AMBIGA}} = "ambiga"
+{{naming_id kind=variable provider=sos register_key=val member_key=AMBIGB}} = "ambigb"
+{{naming_id kind=variable provider=sos register_key=val member_key=CONFLICT}} = "conflict"
+{{naming_id kind=variable provider=sos register_key=val member_key=UNRESOLVED}} = "unresolved"
+{{naming_id kind=variable provider=sos register_key=val member_key=RESOLVED}} = "resolved"
+{{naming_id kind=variable provider=sos register_key=val member_key=INLINE}} = "inline"
+{{naming_id kind=variable provider=sos register_key=val member_key=CVALID}} = "cvalid"
+{{naming_id kind=variable provider=sos register_key=val member_key=DAY}} = "day"
+{{naming_id kind=variable provider=sos register_key=val member_key=MONTH}} = "month"
+{{naming_id kind=variable provider=sos register_key=val member_key=BADDATE}} = "baddate"
+{{naming_id kind=variable provider=sos register_key=val member_key=REVERSED}} = "reversed"
+{{naming_id kind=variable provider=sos register_key=val member_key=BLANK}} = "blank"
+{{naming_id kind=variable provider=sos register_key=val member_key=IDINLINE}} = "idinline"
+{{naming_id kind=variable provider=sos register_key=val member_key=IDPERIOD}} = "idperiod"
+{{naming_id kind=variable provider=sos register_key=val member_key=IDDAY}} = "idday"
+{{naming_id kind=variable provider=sos register_key=val member_key=IDCLAMP}} = "idclamp"
+{{naming_id kind=variable provider=sos register_key=val member_key=CIVILOP}} = "civilop"
+{{naming_id kind=variable provider=sos register_key=val member_key=CIVILCP}} = "civilcp"
+{{naming_id kind=variable provider=sos register_key=val member_key=CIVILH}} = "civilh"
+{{naming_id kind=variable provider=sos register_key=val member_key=CIVILHS}} = "civilhs"
+{{naming_id kind=variable provider=sos register_key=val member_key=CIVILR}} = "civilr"
+{{naming_id kind=variable provider=sos register_key=val member_key=IDMIX}} = "idmix"
+{{naming_id kind=variable provider=sos register_key=val member_key=IDCLAMPS}} = "idclamps"
+{{naming_id kind=variable provider=sos register_key=val member_key=SUFFIX}} = "suffix"

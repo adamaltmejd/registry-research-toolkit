@@ -20,215 +20,66 @@ slug = "foretag"
 native_id = "6.61"
 slug = "arbetsstallen"
 
-[[variable]]
-native_id = "6.601"
-slug = "f1"
-
-[[variable]]
-native_id = "6.602"
-slug = "f2"
+[variable]
+"6.601" = "f1"
+"6.602" = "f2"
 
 # Succession candidates: the same column under two var_ids in adjacent years.
-[[variable]]
-native_id = "6.31395"
-slug = "forvink-ers-aktiv"
-
-[[variable]]
-native_id = "6.47670"
-slug = "forvink-ers"
+"6.31395" = "forvink-ers-aktiv"
+"6.47670" = "forvink-ers"
 
 # The same shape, already joined by a curated replaced_by edge (relations.toml).
-[[variable]]
-native_id = "6.41660"
-slug = "anninkf"
-
-[[variable]]
-native_id = "6.37046"
-slug = "anninkf04"
+"6.41660" = "anninkf"
+"6.37046" = "anninkf04"
 
 # The same shape, but var 700 also delivers (as KODX) beside var 701 in 2020.
-[[variable]]
-native_id = "6.700"
-slug = "kod-gammal"
-
-[[variable]]
-native_id = "6.701"
-slug = "kod-ny"
+"6.700" = "kod-gammal"
+"6.701" = "kod-ny"
 
 # The same shape with a year's gap (2018, then 2020).
-[[variable]]
-native_id = "6.800"
-slug = "ort-gammal"
-
-[[variable]]
-native_id = "6.801"
-slug = "ort-ny"
+"6.800" = "ort-gammal"
+"6.801" = "ort-ny"
 
 # Concept-group families: digit-suffixed slugs.
-[[variable]]
-native_id = "6.9001"
-slug = "morsak1"
-
-[[variable]]
-native_id = "6.9002"
-slug = "morsak2"
-
-[[variable]]
-native_id = "6.9003"
-slug = "morsak3"
-
-[[variable]]
-native_id = "6.9011"
-slug = "flop1"
-
-[[variable]]
-native_id = "6.9012"
-slug = "flop2"
-
-[[variable]]
-native_id = "6.9013"
-slug = "flop3"
-
-[[variable]]
-native_id = "6.9021"
-slug = "tillsyn-1-skolbarn-1"
-
-[[variable]]
-native_id = "6.9022"
-slug = "tillsyn-1-skolbarn-2"
-
-[[variable]]
-native_id = "6.9023"
-slug = "tillsyn-1-skolbarn-3"
-
-[[variable]]
-native_id = "6.9031"
-slug = "artal-person-1"
-
-[[variable]]
-native_id = "6.9032"
-slug = "artal-person-2"
-
-[[variable]]
-native_id = "6.9033"
-slug = "artal-person-3"
-
-[[variable]]
-native_id = "6.9034"
-slug = "artal-person4"
-
-[[variable]]
-native_id = "6.9035"
-slug = "artal-person5"
-
-[[variable]]
-native_id = "6.9036"
-slug = "artal-person6"
-
-[[variable]]
-native_id = "6.9041"
-slug = "foo-1"
-
-[[variable]]
-native_id = "6.9042"
-slug = "foo-2"
-
-[[variable]]
-native_id = "6.9043"
-slug = "foo-3"
-
-[[variable]]
-native_id = "6.9044"
-slug = "foo4"
-
-[[variable]]
-native_id = "6.9045"
-slug = "foo5"
-
-[[variable]]
-native_id = "6.9046"
-slug = "foo6"
-
-[[variable]]
-native_id = "6.9051"
-slug = "q1"
-
-[[variable]]
-native_id = "6.9052"
-slug = "q2"
-
-[[variable]]
-native_id = "6.9053"
-slug = "q3"
-
-[[variable]]
-native_id = "6.9061"
-slug = "sun-niva2000"
-
-[[variable]]
-native_id = "6.9062"
-slug = "sun-niva2010"
-
-[[variable]]
-native_id = "6.9063"
-slug = "inkomst1-2000"
-
-[[variable]]
-native_id = "6.9064"
-slug = "inkomst1-2010"
-
-[[variable]]
-native_id = "6.9071"
-slug = "kod3"
-
-[[variable]]
-native_id = "6.9072"
-slug = "kod7"
-
-[[variable]]
-native_id = "6.9073"
-slug = "kod11"
-
-[[variable]]
-native_id = "6.9081"
-slug = "dodsorsak1"
-
-[[variable]]
-native_id = "6.9082"
-slug = "dodsorsak2"
-
-[[variable]]
-native_id = "6.9083"
-slug = "dodsorsak3"
-
-[[variable]]
-native_id = "6.9084"
-slug = "dodsorsak-text"
-
-[[variable]]
-native_id = "6.9091"
-slug = "ink1"
-
-[[variable]]
-native_id = "6.9092"
-slug = "ink2"
-
-[[variable]]
-native_id = "6.9101"
-slug = "solo1"
-
-[[variable]]
-native_id = "6.9111"
-slug = "agi1lonfink"
-
-[[variable]]
-native_id = "6.9112"
-slug = "agi2lonfink"
-
-[[variable]]
-native_id = "6.9121"
-slug = "diag1"
-
-[[variable]]
-native_id = "6.9122"
-slug = "diag2"
+"6.9001" = "morsak1"
+"6.9002" = "morsak2"
+"6.9003" = "morsak3"
+"6.9011" = "flop1"
+"6.9012" = "flop2"
+"6.9013" = "flop3"
+"6.9021" = "tillsyn-1-skolbarn-1"
+"6.9022" = "tillsyn-1-skolbarn-2"
+"6.9023" = "tillsyn-1-skolbarn-3"
+"6.9031" = "artal-person-1"
+"6.9032" = "artal-person-2"
+"6.9033" = "artal-person-3"
+"6.9034" = "artal-person4"
+"6.9035" = "artal-person5"
+"6.9036" = "artal-person6"
+"6.9041" = "foo-1"
+"6.9042" = "foo-2"
+"6.9043" = "foo-3"
+"6.9044" = "foo4"
+"6.9045" = "foo5"
+"6.9046" = "foo6"
+"6.9051" = "q1"
+"6.9052" = "q2"
+"6.9053" = "q3"
+"6.9061" = "sun-niva2000"
+"6.9062" = "sun-niva2010"
+"6.9063" = "inkomst1-2000"
+"6.9064" = "inkomst1-2010"
+"6.9071" = "kod3"
+"6.9072" = "kod7"
+"6.9073" = "kod11"
+"6.9081" = "dodsorsak1"
+"6.9082" = "dodsorsak2"
+"6.9083" = "dodsorsak3"
+"6.9084" = "dodsorsak-text"
+"6.9091" = "ink1"
+"6.9092" = "ink2"
+"6.9101" = "solo1"
+"6.9111" = "agi1lonfink"
+"6.9112" = "agi2lonfink"
+"6.9121" = "diag1"
+"6.9122" = "diag2"

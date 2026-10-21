@@ -41,166 +41,55 @@ panel_entity_key = "personnr"
 panel_time_key = "period"
 panel_time_grain = "delivery"
 
+[variable]
 # Annan pedagogisk verksamhet
-
-[[variable]]
-native_id = "378.57"
-slug = "personnr"
-
-
-[[variable]]
-native_id = "378.6809"
-slug = "folkbokforingskommun"
-
-[[variable]]
-native_id = "378.7914"
-slug = "arskurs"
+"378.57" = "personnr"
+"378.6809" = "folkbokforingskommun"
+"378.7914" = "arskurs"
 
 # register 379 (annan-pedagogisk-verksamhet)
-
-[[variable]]
-native_id = "378.32454.sun2020niva-for-grupperad"
-slug = "sun2020niva-for-grupperad"
-
-[[variable]]
-native_id = "378.32454.sun2020niva-mor-grupperad"
-slug = "sun2020niva-mor-grupperad"
-
-[[variable]]
-native_id = "378.8073.sun2020niva-for-grupperad"
-slug = "moderns-utbildningsniva"
-
-[[variable]]
-native_id = "378.8073.sun2020niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad-2"
+"378.32454.sun2020niva-for-grupperad" = "sun2020niva-for-grupperad"
+"378.32454.sun2020niva-mor-grupperad" = "sun2020niva-mor-grupperad"
+"378.8073.sun2020niva-for-grupperad" = "moderns-utbildningsniva"
+"378.8073.sun2020niva-mor-grupperad" = "sun-niva-mor-grupperad-2"
 
 # register 379 (annan-pedagogisk-verksamhet)
-
-[[variable]]
-native_id = "378.56"
-slug = "person-orgnr"
-
-[[variable]]
-native_id = "378.34"
-slug = "juridisk-form"
-
-[[variable]]
-native_id = "378.323"
-slug = "personnr-far"
-
-[[variable]]
-native_id = "378.324"
-slug = "personnr-mor"
-
-[[variable]]
-native_id = "378.332"
-slug = "senaste-invandringsdatum"
-
-[[variable]]
-native_id = "378.517"
-slug = "senaste-invandringsar"
-
-[[variable]]
-native_id = "378.1378"
-slug = "fodelsear"
-
-[[variable]]
-native_id = "378.1993"
-slug = "skolans-identitetsnummer"
-
-[[variable]]
-native_id = "378.1996"
-slug = "skolform"
-
-[[variable]]
-native_id = "378.3635"
-slug = "skolans-namn"
-
-[[variable]]
-native_id = "378.4642"
-slug = "faderns-fodelseland"
-
-[[variable]]
-native_id = "378.4643"
-slug = "moderns-fodelseland"
-
-[[variable]]
-native_id = "378.7814"
-slug = "atgardsprogram"
-
-[[variable]]
-native_id = "378.7816"
-slug = "anpassad-studigang"
-
-[[variable]]
-native_id = "378.15712"
-slug = "stodundervisning"
-
-[[variable]]
-native_id = "378.23867"
-slug = "klassbeteckning"
-
-[[variable]]
-native_id = "378.29426"
-slug = "tidigaste-invandringsdatum"
-
-[[variable]]
-native_id = "378.30654"
-slug = "skolenhetens-namn"
-
-[[variable]]
-native_id = "378.31989"
-slug = "lopnr-elev"
-
-[[variable]]
-native_id = "378.32721"
-slug = "distansundervisning"
-
-[[variable]]
-native_id = "378.35887"
-slug = "nyligen-invandrad"
-
-[[variable]]
-native_id = "378.40103"
-slug = "utbildningsform"
-
-[[variable]]
-native_id = "378.48467"
-slug = "anpassad-grundskola-kursplan"
+"378.56" = "person-orgnr"
+"378.34" = "juridisk-form"
+"378.323" = "personnr-far"
+"378.324" = "personnr-mor"
+"378.332" = "senaste-invandringsdatum"
+"378.517" = "senaste-invandringsar"
+"378.1378" = "fodelsear"
+"378.1993" = "skolans-identitetsnummer"
+"378.1996" = "skolform"
+"378.3635" = "skolans-namn"
+"378.4642" = "faderns-fodelseland"
+"378.4643" = "moderns-fodelseland"
+"378.7814" = "atgardsprogram"
+"378.7816" = "anpassad-studigang"
+"378.15712" = "stodundervisning"
+"378.23867" = "klassbeteckning"
+"378.29426" = "tidigaste-invandringsdatum"
+"378.30654" = "skolenhetens-namn"
+"378.31989" = "lopnr-elev"
+"378.32721" = "distansundervisning"
+"378.35887" = "nyligen-invandrad"
+"378.40103" = "utbildningsform"
+"378.48467" = "anpassad-grundskola-kursplan"
 
 # register 379
-
-[[variable]]
-native_id = "378.8073.sun2000niva-1-mor"
-slug = "sun-niva-1-mor"
-
-[[variable]]
-native_id = "378.8073.sun2000niva-mor"
-slug = "sun-niva-mor"
-
-[[variable]]
-native_id = "378.8073.sun2000niva-mor-grupperad"
-slug = "sun-niva-mor-grupperad"
-
-[[variable]]
-native_id = "378.8073.sun2000niva-old-mor"
-slug = "sun-niva-old-mor"
-
-[[variable]]
-native_id = "378.8073.sun2000niva-sv-mor"
-slug = "sun-niva-sv-mor"
-
-[[variable]]
-native_id = "378.8073.sun2020niva-mor"
-slug = "sun-niva-mor-2"
-
-[[variable]]
-native_id = "378.8137.hman"
-slug = "huvudman"
-
-[[variable]]
-native_id = "378.8137.hmannamn"
-slug = "huvudman-namn"
+"378.8073.sun2000niva-1-mor" = "sun-niva-1-mor"
+"378.8073.sun2000niva-mor" = "sun-niva-mor"
+"378.8073.sun2000niva-mor-grupperad" = "sun-niva-mor-grupperad"
+"378.8073.sun2000niva-old-mor" = "sun-niva-old-mor"
+"378.8073.sun2000niva-sv-mor" = "sun-niva-sv-mor"
+"378.8073.sun2020niva-mor" = "sun-niva-mor-2"
+"378.8137.hman" = "huvudman"
+"378.8137.hmannamn" = "huvudman-namn"
+"378.67.utlbakgr" = "utlbakgr"
+"378.67.utlbakgr2" = "utlbakgr2"
+"378.67.utl-bakg" = "utl-bakg"
 
 # register 379
 
@@ -210,15 +99,3 @@ variable = "378.67"
 columns = { UtlBakGr = "378.67.utlbakgr", UtlBakGr2 = "378.67.utlbakgr2", Utl_BakG = "378.67.utl-bakg" }
 columns_ref = "Full source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
 expected_evidence_sha256 = "ca0856a697811b1de39ee7e8d0466fc29d009b7824a4b468c68eadd116164cfc"
-
-[[variable]]
-native_id = "378.67.utlbakgr"
-slug = "utlbakgr"
-
-[[variable]]
-native_id = "378.67.utlbakgr2"
-slug = "utlbakgr2"
-
-[[variable]]
-native_id = "378.67.utl-bakg"
-slug = "utl-bakg"
