@@ -42,6 +42,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FRONTEND = ROOT / "reg_webapp/frontend"
+# The repo takes new releases immediately (`exclude-newer = false` in pyproject.toml), but
+# project-less `uvx` reads only the host uv config, which may delay them; without this a
+# freshly bumped tool pin fails locally until the host cutoff passes.
+os.environ["UV_EXCLUDE_NEWER"] = "false"
 CONFORMANCE = "uv run python -m pytest conformance -q -n auto"
 # A raised write limit: the suite and release admission replay many projects from one
 # address (conformance/test_mcp.py's burst case drops it to pin the default).
