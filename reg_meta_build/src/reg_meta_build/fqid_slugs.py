@@ -980,13 +980,12 @@ def load_slug_dir(
     it (``CurationTree.registers``); passing it skips a second parse of the register
     tree, the dominant cost. ``None`` parses it here.
 
-    A ``churning`` zone's ``<provider>.auto.toml`` is SKIPPED: while churning the
-    auto file is ephemeral (rewritten every build, not committed — see
-    DESIGN.md § "Slug immutability"), so a leftover untracked file from a prior
-    build is not part of the in-memory baseline. Loading it would inflate
-    ``snapshot_payload`` with phantom variable slugs and false-fail the
-    ``precheck-slugs`` snapshot diff. A pinned (curating/frozen) zone's committed
-    ``<provider>.auto.toml`` IS the baseline and still loads. Mirrors the freeze gate in
+    A ``churning`` zone's ``<register-slug>.auto.toml`` is SKIPPED: while churning
+    the auto file is rewritten every build, so a file left by a prior build is not
+    part of the in-memory baseline. Loading it would inflate ``snapshot_payload``
+    with phantom variable slugs and false-fail the ``precheck-slugs`` snapshot
+    diff. A pinned (curating/frozen) zone's committed ``<register-slug>.auto.toml``
+    IS the baseline and still loads. Mirrors the freeze gate in
     ``populate_variable_slugs``. Non-auto provider TOMLs are state-independent and
     always load.
     """
