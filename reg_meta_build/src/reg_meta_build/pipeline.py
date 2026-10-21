@@ -1555,7 +1555,6 @@ def _resolve(
                         source=declaration.source,
                         subject=str(declaration.metadata.get("slug")),
                         hierarchy=declaration.hierarchy,
-                        prefix_widths=declaration.prefix_widths,
                         book_refs=tuple(
                             SourceRecordRef(
                                 source=declaration.source,
@@ -1597,7 +1596,7 @@ def _resolve(
                         "Keep sentinel codes out of the book's canonical code "
                         "set and valid_from at or before valid_to; fix a source "
                         "parent_code cycle or a parent deeper than its child, or "
-                        'declare hierarchy = "flat" or "code_prefix".',
+                        'declare hierarchy = "flat".',
                     ) from exc
                 # `load_classifications` refuses a slug declared twice, so each
                 # compiled codebook names a distinct book.

@@ -63,7 +63,7 @@ the behavior in plain words. For example,
   | `source-relation-`     | literal source relationships, unbound code lists and source findings                                                                                                             |
   | `value-`               | source code lists bound by native member, member name or declared list name: item and row validity, list references, declared-identifier drops                                   |
   | `naming-`              | generated and authored slug pins under the zone freeze states, and slugs two identities collide on                                                                               |
-  | `edition-`             | SCB preliminary/final editions, `[[identity.edition_split]]` and `[[errata.edition_period]]`                                                                                     |
+  | `edition-`             | SCB preliminary/final editions, unparseable edition names and `[[identity.edition_split]]`                                                                                       |
   | `dependency-`          | curated groups, tags, panel keys and relations whose catalog dependency is withheld                                                                                              |
   | `coverage-`            | delivery the formed variables owe the catalog, written or explicitly withdrawn                                                                                                   |
   | `source-rows-`         | physical source rows the build refuses when it loads a scope or a support join                                                                                                   |

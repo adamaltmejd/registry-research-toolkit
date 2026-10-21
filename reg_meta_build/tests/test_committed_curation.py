@@ -42,10 +42,6 @@ if TYPE_CHECKING:
     from reg_meta_build.curation_tree import CurationTree
 
 
-# Overlay families the model accepts but no committed register declares yet. Remove
-# an entry when its first declaration lands.
-_NOT_YET_DECLARED = {"errata.edition_period"}
-
 # SCB's grouped SNI reporting labels, unbound in eda7462a. Some grouped codes are also
 # valid codes in the detailed books (`01` in SNI2002), so a label rule naming one can
 # bind a grouped value set to a detailed book without a stale or nonconforming
@@ -102,7 +98,7 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
         for path in families
         if not any(_field(register, path) for register in tree.registers)
     }
-    assert undeclared == _NOT_YET_DECLARED, sorted(undeclared ^ _NOT_YET_DECLARED)
+    assert not undeclared, sorted(undeclared)
 
     slug_dir = repo_slug_dir()
     assert slug_dir == REPO_CURATION
@@ -146,10 +142,8 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
     # and passes the build's canonical-code rule: one label per code and no blank
     # code. A book that fails it is withheld by the build with
     # conflicting_classification_labels or unknown_classification_member, and a
-    # parent_code naming no code of the book (unless the book is declared flat),
-    # or a prefix-book code without a declared prefix in the book, is an
-    # unresolved_classification_parent error, and a prefix-book code of an
-    # undeclared width is undeclared_classification_code_width. Its tree and curated
+    # parent_code naming no code of the book (unless the book is declared flat)
+    # is an unresolved_classification_parent error. Its tree and curated
     # sentinels then pass the build's book model, which refuses a parent cycle, a
     # parent no shallower than its child, and a sentinel also in the canonical
     # code set (classification_entry_invalid at build).
@@ -173,7 +167,6 @@ def test_committed_curation_loads(repo_tree: CurationTree) -> None:
             source=path.name,
             subject=entry.classification.slug,
             hierarchy=entry.classification.hierarchy,
-            prefix_widths=entry.classification.prefix_widths,
         )
         issues = resolved.diagnostics
         assert not issues, [(issue.code, issue.detail) for issue in issues]

@@ -37,4 +37,3 @@ source_editions = ["2020"]
 register = "scb/parallel"
 variable = "income"
 delivery_column = "first"
-provenance = "delivery list"

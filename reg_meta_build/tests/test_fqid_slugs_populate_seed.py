@@ -220,7 +220,7 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
         assert counts == {"register": 1, "register_variant": 1}
 
     def test_variable_metadata_only_is_accepted(self, tmp_path: Path):
-        # No slug — just deprecation / replaced_by / same_as metadata. Parsed
+        # No slug — just deprecation metadata. Parsed
         # and round-tripped but never applied; should not raise.
         d = tmp_path / "slugs"
         d.mkdir()

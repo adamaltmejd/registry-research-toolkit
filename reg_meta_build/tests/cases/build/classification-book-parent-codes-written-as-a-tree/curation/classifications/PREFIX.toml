@@ -1,7 +1,0 @@
-[classification]
-short_name = "PREFIX"
-slug = "prefix"
-name = "Prefix"
-codes_file = "prefix.csv"
-hierarchy = "code_prefix"
-prefix_widths = [2, 4, 6]

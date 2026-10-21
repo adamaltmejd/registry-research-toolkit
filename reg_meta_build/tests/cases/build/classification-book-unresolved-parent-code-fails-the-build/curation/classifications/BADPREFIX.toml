@@ -1,7 +1,0 @@
-[classification]
-short_name = "BADPREFIX"
-slug = "badprefix"
-name = "Bad prefix"
-codes_file = "badprefix.csv"
-hierarchy = "code_prefix"
-prefix_widths = [2, 4]
