@@ -17,9 +17,6 @@ describe("PeriodWindowSlider", () => {
     // The default: the shown span IS the active selection (year-grain), not a
     // sub-annual projection — the sub-annual-cue tests override this.
     subAnnualPeriod: null as string | null,
-    // A real selection/window is set in these tests (not the no-op full-history
-    // default), so the availability gap is live (#639).
-    hasSelection: true,
     // The user has chosen the shown selection (an explicit ?period or a drag),
     // so the USER-deviation hint is live (Fix B); the default-seed-suppression
     // case is its own test below.
@@ -77,7 +74,6 @@ describe("PeriodWindowSlider", () => {
       max: 2020,
       coverage: null,
       subAnnualPeriod: null,
-      hasSelection: true,
       userChosen: true,
       selection: { from: 2000, to: 2010 },
       window: { from: 2000, to: 2010 },
