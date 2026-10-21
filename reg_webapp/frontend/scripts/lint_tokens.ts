@@ -169,8 +169,9 @@ const EXEMPT: Record<string, string> = {
 
 /** Non-color tokens whose custom property is not simply `--<name>`.
  *
- * The scale spends three weights across its eight levels, so four heading
- * levels share --heading-weight and body/body-sm/mono share --body-weight.
+ * The scale spends four weights across its ten levels: display and h1 share
+ * --display-weight, h2 and h3 share --heading-weight, body/body-sm/mono/axis
+ * share --body-weight, and the label and column levels have their own.
  * Mapping many spec tokens onto one property is what makes the property a
  * ROLE: should the spec ever weight h3 apart from h1, this lint fails until
  * tokens.css splits them. */
@@ -189,14 +190,23 @@ const PROPERTY_OF: Record<string, string> = {
   "typography.body-sm.fontSize": "--text-sm",
   "typography.label.fontSize": "--text-micro",
   "typography.mono.fontSize": "--text-mono",
-  "typography.display.fontWeight": "--heading-weight",
-  "typography.h1.fontWeight": "--heading-weight",
+  "typography.column.fontSize": "--text-column",
+  "typography.axis.fontSize": "--text-axis",
+  "spacing.5": "--space-5",
+  "spacing.6": "--space-6",
+  "spacing.col-providers": "--col-providers",
+  "spacing.col-list": "--col-list",
+  "spacing.lane-height": "--lane-height",
+  "typography.display.fontWeight": "--display-weight",
+  "typography.h1.fontWeight": "--display-weight",
   "typography.h2.fontWeight": "--heading-weight",
   "typography.h3.fontWeight": "--heading-weight",
   "typography.body.fontWeight": "--body-weight",
   "typography.body-sm.fontWeight": "--body-weight",
   "typography.mono.fontWeight": "--body-weight",
   "typography.label.fontWeight": "--micro-label-weight",
+  "typography.column.fontWeight": "--column-weight",
+  "typography.axis.fontWeight": "--body-weight",
 };
 
 /** A color role is `--<role>` by rule; every other token is named above. */

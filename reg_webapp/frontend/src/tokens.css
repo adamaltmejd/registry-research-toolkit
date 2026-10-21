@@ -1,7 +1,7 @@
 /* ───────────────────────────────────────────────────────────────────────────
    reg_webapp design tokens — the CSS implementation of the design language in
    reg_webapp/frontend/DESIGN.md. That file is the source of truth for every
-   value below (its YAML front matter is normative), and src/design_md.test.ts
+   value below (its YAML front matter is normative), and `bun run lint:tokens`
    fails when the two disagree: change the spec first, then this file.
 
    Two-layer architecture (DESIGN.md → "Colors"):
@@ -161,32 +161,32 @@
      LAYER 1 — PRIMITIVE RAMPS (never referenced by components)
      ════════════════════════════════════════════════════════════════════════ */
 
-  /* Neutral ramp — ink (1) → paper (12). */
-  --gray-1: #151618;
+  /* Neutral ramp — ink (1) → paper (12). Cooler and a touch greener than the
+     first ramp so the pine accent sits in the same family. */
+  --gray-1: #121412;
   --gray-2: #232527;
   --gray-3: #34373a;
   --gray-4: #474a4e;
-  --gray-5: #5f6368;
-  --gray-6: #6b6f74;
-  --gray-7: #9a9ea3;
-  --gray-8: #b9bbc0;
-  --gray-9: #dcdde0;
-  --gray-10: #e6e6e5;
-  --gray-11: #efefee;
-  --gray-12: #f7f7f6;
+  --gray-5: #5a605c;
+  --gray-6: #6b706d;
+  --gray-7: #8b918d;
+  --gray-8: #b9bdba;
+  --gray-9: #dadcd9;
+  --gray-10: #e4e6e3;
+  --gray-11: #f0f1ef;
+  --gray-12: #fafaf8;
 
-  /* Categorical palette — tags result/node TYPE (REG/VAR/CODE/classification/
-     group). Its own sub-system: never reuse the accent or status hues for type
-     identity, or "is a variable" and "is selected/an error" collide. */
+  /* Categorical palette — node TYPE (register / variable / code / classification /
+     group). Shown ONLY in a mixed list (search results, mentions, a project's
+     sources); a homogeneous list carries no type mark at all (DESIGN.md → Colors). */
   --cat-reg: #1f7a7a; /* teal — registers */
   --cat-var: #4b4b9e; /* indigo — variables */
   --cat-code: #9a6b1a; /* gold — value-set codes */
   --cat-class: #7a3f8c; /* plum — classifications */
-  --cat-group: #2f6b3f; /* moss — concept groups */
+  --cat-group: #2f6b3f; /* moss — variable groups */
 
-  /* Facet-axis data palette — concept-group dimensions, NOT node type, status,
-     or chrome. Muted hues let rows/pills show "same axis family" without
-     colliding with selection or validation semantics. */
+  /* Facet-axis data palette — lane grouping and facet chips inside a LaneGraph.
+     Data, not chrome, not status. */
   --facet-axis-0: #4f6f8f; /* steel */
   --facet-axis-1: #6f7c3f; /* olive */
   --facet-axis-2: #8a5f88; /* mauve */
@@ -198,78 +198,72 @@
      LAYER 2 — SEMANTIC ROLES (the layer components consume)
      ════════════════════════════════════════════════════════════════════════ */
 
-  /* Backgrounds & surfaces. */
-  --bg: var(--gray-12); /* neutral paper */
-  --surface: #ffffff;
-  --surface-raised: #ffffff;
+  /* Sheet & surfaces. */
+  --bg: var(--gray-12); /* the canvas, a hair off white */
+  --surface: #ffffff; /* where work happens: panes, inputs, chips, dialogs */
+  --surface-raised: #ffffff; /* same sheet; depth is tonal, panes cast no shadow */
+  /* the selected item in a browse column, wells */
   --surface-sunken: var(--gray-11);
+  --surface-hover: var(--gray-11);
 
-  /* Text. */
+  /* Ink. */
   --text: var(--gray-1);
+  /* labels, descriptions, unselected items (6.4:1) */
   --text-muted: var(--gray-5);
-  --text-faint: var(--gray-6);
+  /* hints and out-of-window chips ONLY (3.2:1): never for text that must be read */
+  --text-faint: var(--gray-7);
 
-  /* Borders. */
+  /* Rules. `border` is the hairline between rows and columns; `border-strong` is
+     an INK hairline and means structure: the rule above a section, a default
+     button's border, a column chip's stroke, a graph axis. */
   --border: var(--gray-9);
-  --border-strong: var(--gray-8);
+  --border-strong: var(--gray-1);
 
-  /* Accent — interactive chrome ONLY (links, primary buttons, selection, focus,
-     active nav). NEVER a status color (DESIGN.md accent-vs-status). The accent
-     is INK: the base is monochrome and every chromatic value is spent on
-     meaning. A per-provider theme (deferred) is a remap of the accent roles and
-     nothing else, so keep the seam this narrow. */
-  --accent: var(--gray-1); /* fills, borders, links, focus, active chrome */
-  --accent-fg: #ffffff; /* text/icon on an accent fill (18:1) */
-  --accent-bg: var(--gray-10); /* the tint an accent mark sits on */
-  /* Accent-COLORED TEXT on a soft tint/surface — the role for callers that
-     already distinguish fill from text. Both resolve to ink in this theme; the
-     split is what lets a re-tint give text its own AA-cleared stop. */
-  --accent-ink: var(--gray-1);
+  /* Accent — pine, the OWNERSHIP colour. Exactly one idea: this is yours, or this
+     is where you are. Primary button fill, the in-project bar and count on a
+     column item, the selected row's bar, focus, the study-window bounds. Never a
+     status (`ok` is a verdict; `accent` is ownership), never a type, never
+     decoration. A per-provider theme remaps these roles and nothing else. */
+  --accent: #0f6e5c;
+  --accent-hover: #0c5c4d; /* primary button hover */
+  --accent-fg: #ffffff; /* text/icon on an accent fill (6.2:1) */
+  --accent-bg: #dcefe9; /* the in-project wash: selected rows, the study-window band */
+  --accent-soft: #eaf5f1; /* the project banner's fill; the current lane in a graph */
+  --accent-ink: #0b5546; /* accent-coloured TEXT on bg/surface/accent-bg (8.7:1) */
 
-  /* Categorical TEXT stops — the AA-cleared text ink per categorical hue,
-     mirroring --accent-ink. The raw --cat-* hues (Layer 1) are tuned as FILLS;
-     as badge text on their own 10% tint teal (--cat-reg) and gold (--cat-code)
-     fall just under WCAG AA (4.1–4.5:1). Darkening the hue 15% toward black
-     clears AA for all five while the border + fill keep the full hue (so type
-     identity is intact). Tag reads these for its categorical `color`; the fill
-     + border still color-mix the raw --cat-* hue. */
-  --cat-reg-ink: color-mix(in srgb, var(--cat-reg) 85%, black);
-  --cat-var-ink: color-mix(in srgb, var(--cat-var) 85%, black);
-  --cat-code-ink: color-mix(in srgb, var(--cat-code) 85%, black);
-  --cat-class-ink: color-mix(in srgb, var(--cat-class) 85%, black);
-  --cat-group-ink: color-mix(in srgb, var(--cat-group) 85%, black);
+  /* Categorical TEXT stops — each hue 85% toward black, so a type label clears AA
+     on its own 10% tint. Literal (not color-mix) so DESIGN.md can pin them. */
+  --cat-reg-ink: #1a6868;
+  --cat-var-ink: #404087;
+  --cat-code-ink: #835b16;
+  --cat-class-ink: #683677;
+  --cat-group-ink: #285b36;
 
-  /* Facet-axis TEXT stops. Components use these paired with the raw facet-axis
-     hue for tint/border, mirroring categorical tags but keeping facet data in a
-     separate sub-system from node-type identity. */
-  --facet-axis-0-ink: color-mix(in srgb, var(--facet-axis-0) 78%, black);
-  --facet-axis-1-ink: color-mix(in srgb, var(--facet-axis-1) 78%, black);
-  --facet-axis-2-ink: color-mix(in srgb, var(--facet-axis-2) 78%, black);
-  --facet-axis-3-ink: color-mix(in srgb, var(--facet-axis-3) 78%, black);
-  --facet-axis-4-ink: color-mix(in srgb, var(--facet-axis-4) 78%, black);
-  --facet-axis-5-ink: color-mix(in srgb, var(--facet-axis-5) 78%, black);
+  /* Facet-axis TEXT stops — 78% toward black. */
+  --facet-axis-0-ink: #3e5770;
+  --facet-axis-1-ink: #576131;
+  --facet-axis-2-ink: #6c4a6a;
+  --facet-axis-3-ink: #785334;
+  --facet-axis-4-ink: #3e645a;
+  --facet-axis-5-ink: #535074;
 
-  /* Data-viz EDGE encoding (#810) — graph-relation marks, NOT chrome. The
-     history graph draws relationship edges between nodes; an edge is DATA, so
-     (like --cat-*) it gets its own viz sub-system and must never borrow the
-     accent (then "is selected" and "is a succession edge" collide) or a status
-     hue (an edge isn't an error/warning). One relation kind:
-       - succession (DIRECTED, the chronological predecessor→successor flow): a
-         desaturated steel that reads as a connective flow line, quieter than
-         the ink accent and darker than the cat-var indigo so the two never read
-         as the same mark. ≈4.6:1 on --surface — an AA-legible hairline/arrow. */
-  --viz-edge-succession: #4a6b86; /* desaturated steel — directed flow */
+  /* Data-viz — the time components (Timeline, VariableRow, LaneGraph). Time is
+     the only axis relations are drawn on; these are its marks, never chrome. */
+  --viz-span: #ffffff; /* a column span's fill; its stroke is --border-strong */
+  --viz-span-out: var(--border); /* stroke of a span outside the study window */
+  --viz-edge-succession: var(--text); /* solid arrow: definition change */
+  /* dashed arrow: renamed, same definition */
+  --viz-edge-rename: var(--text-muted);
+  --viz-edition: #ffffff; /* edition ticks cut into a coverage bar */
 
-  /* Status roles — AA-cleared FOREGROUND values (text/glyph). Each is paired
-     with a glyph in the UI, never hue alone. The *-bg roles are SEPARATE fill
-     tints for badges/rows — never use a fill tint as a text color. The only
-     chromatic chrome in the system: the accent is ink, so a status hue can
-     never read as chrome. */
+  /* Status roles — AA-cleared FOREGROUND values, each paired with a glyph (✕ ▲ i ✓)
+     and text. The *-bg roles are SEPARATE fill tints, never text. */
   --err: #b3261e;
   --err-bg: #fbe9e7;
-  --err-border: #f0a8a8; /* the error hairline on banners/badges */
-  --warn: #7a5c00;
+  --err-border: #f0a8a8; /* the error hairline on status rows */
+  --warn: #7a5c00; /* also the "definition changed" mark on a timeline */
   --warn-bg: #f7f0d8;
+  --warn-hatch: #c9a200; /* the hatch stroke for a delivery gap (non-text) */
   --info: #2f5f8f;
   --info-bg: #e6eef7;
   --ok: #1e7a3c;
@@ -282,27 +276,28 @@
   --font-mono:
     "IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
 
-  /* Type scale (roles components read). */
-  --text-display: 2.25rem;
-  --text-h1: 1.75rem;
-  --text-h2: 1.375rem;
-  --text-h3: 1.125rem;
-  --text-body: 1rem;
-  --text-sm: 0.85rem;
-  --text-micro: 0.75rem;
-  /* Mono sets optically larger than the UI face at the same size, so an
-     identifier running inline with UI text steps down. Relative on purpose: it
-     scales with whatever level the identifier sits in. */
-  --text-mono: 0.92em;
+  /* Type scale (roles components read). Denser than before: body is 14px. */
+  --text-display: 2.75rem;
+  --text-h1: 1.625rem;
+  --text-h2: 1.125rem;
+  --text-h3: 0.9375rem;
+  --text-body: 0.875rem;
+  --text-sm: 0.8125rem;
+  --text-micro: 0.6875rem;
+  --text-mono: 0.92em; /* identifiers inline: relative, steps down inside any level */
+  --text-column: 0.75rem; /* a column name in a ColumnChip or lane span */
+  --text-axis: 0.625rem; /* axis years and lane headers */
 
-  /* The scale spends three weights: headings, body copy (which body-sm and the
-     mono face inherit from the page), and the label level below. Hierarchy
-     comes from size and weight, never from case or tracking. */
+  /* Weights: display and h1 are the only loud thing on a page (700, tight
+     tracking); h2/h3 at 600; body 400; the label level and column names at 500. */
+  --display-weight: 700;
+  --display-tracking: -0.035em;
+  --h1-tracking: -0.03em;
   --heading-weight: 600;
   --body-weight: 400;
+  --column-weight: 500;
 
-  /* The label level (DESIGN.md → typography.label), composed by the
-     `.micro-label` utility in lib/ui/utilities.css. */
+  /* The label level (DESIGN.md → typography.label), composed by `.micro-label`. */
   --micro-label-size: var(--text-micro);
   --micro-label-weight: 500;
 
@@ -311,28 +306,39 @@
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
-  --radius-sm: 5px; /* controls (inputs, buttons, chips) */
-  --radius: 8px; /* panels/cards */
+  --space-5: 1.5rem; /* detail-pane padding */
+  --space-6: 2rem; /* between major sections in a pane */
+  --radius-sm: 3px; /* controls, chips, column chips, lane spans, inputs */
+  --radius: 4px; /* banner, dialogs, status rows */
+  --col-providers: 190px; /* first browse column */
+  --col-list: 230px; /* second browse column */
+  --lane-height: 58px; /* one lane in a LaneGraph */
 
   /* ── Elevation ───────────────────────────────────────────────────────── */
-  /* One soft shadow for raised panels/cards/popovers. No heavy drop shadows. */
+  /* Depth is tonal. Only a FLOATING layer (dialog, popover, drawer, the command
+     palette) casts this; panes and banners are separated by hairlines. Kept under
+     its old name so existing consumers resolve; Panel/DataTable should drop it
+     when the column layout lands. */
   --elevation-raised:
-    0 1px 2px rgba(21, 22, 24, 0.06), 0 2px 8px rgba(21, 22, 24, 0.08);
-  /* Modal/drawer backdrop overlay (the mobile drawer scrim). Mixed from the
-     darkest ramp stop so a later dark-mode remap can re-tint it via the ramp,
-     not a literal. */
+    0 1px 2px rgba(18, 20, 18, 0.06), 0 4px 14px rgba(18, 20, 18, 0.1);
+  --elevation-float: var(--elevation-raised);
   --scrim: color-mix(in srgb, var(--gray-1) 40%, transparent);
 
   /* ── Interaction states ──────────────────────────────────────────────── */
-  /* Accessible keyboard focus outline: a 2px --accent-bg gap under a 3px ink
-     line (an outline, not a color-only shift), so it stays visible on an
-     ink-filled control too. */
   --focus-ring: 0 0 0 2px var(--accent-bg), 0 0 0 3px var(--accent);
-  --surface-hover: var(--gray-11);
 
   /* ── Motion ──────────────────────────────────────────────────────────── */
-  /* Small + functional (popover/disclosure transitions), not decorative. */
-  --motion-fast: 140ms;
+  /* Three steps and two curves (DESIGN.md → Motion). Hover and colour are quick;
+     things that move take base; layers that arrive take slow. No springs. Under
+     prefers-reduced-motion every transition collapses to an opacity fade at
+     --duration-quick. --motion-fast is the old name for --duration-quick. */
+  --duration-quick: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --motion-fast: var(--duration-quick);
+  --ease-out: cubic-bezier(0.2, 0, 0, 1); /* arriving, growing */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* leaving, shrinking */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1); /* colour and hover */
 }
 
 /* Base typography + the explicit light-theme pin. Every role above assumes a

@@ -1,5 +1,6 @@
 import "./tokens.css";
 import "./lib/ui/utilities.css";
+import "./lib/ui/motion.css";
 import { mount } from "svelte";
 import App from "./App.svelte";
 import { IndexedDBPersistence } from "./lib/indexeddb_persistence";
