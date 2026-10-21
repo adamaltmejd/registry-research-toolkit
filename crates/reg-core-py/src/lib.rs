@@ -143,10 +143,7 @@ mod reg_core_py {
 
     /// Interval lists cross as tuples, not lists: the build keeps them in frozen
     /// dataclasses and dict keys and compares them with `==` against other tuples.
-    fn interval_tuple(
-        py: Python<'_>,
-        intervals: Vec<Interval>,
-    ) -> PyResult<Bound<'_, PyTuple>> {
+    fn interval_tuple(py: Python<'_>, intervals: Vec<Interval>) -> PyResult<Bound<'_, PyTuple>> {
         PyTuple::new(py, intervals)
     }
 
@@ -175,11 +172,7 @@ mod reg_core_py {
 
     /// The intervals two ascending, disjoint lists share (`reg_core::overlap`).
     #[pyfunction]
-    fn overlap(
-        py: Python<'_>,
-        a: Vec<Interval>,
-        b: Vec<Interval>,
-    ) -> PyResult<Bound<'_, PyTuple>> {
+    fn overlap(py: Python<'_>, a: Vec<Interval>, b: Vec<Interval>) -> PyResult<Bound<'_, PyTuple>> {
         interval_tuple(py, reg_core::overlap(&a, &b))
     }
 
