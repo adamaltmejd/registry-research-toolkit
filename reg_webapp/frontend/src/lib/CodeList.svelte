@@ -67,7 +67,9 @@ function depthOf(code: Code): number | null {
             {formatWindow(evidence.valid_from ?? null, evidence.valid_to ?? null) || "unknown period"}:
             {evidence.members.filter(([member]) => member === code.code).map(([, meaning]) => meaning).join("; ")}
           </span>
-          <Collapsible.Root><Collapsible.Trigger class="evidence-toggle">Source evidence</Collapsible.Trigger><Collapsible.Content><p>{evidence.provenance}</p></Collapsible.Content></Collapsible.Root>
+          {#if evidence.provenance}
+            <Collapsible.Root><Collapsible.Trigger class="evidence-toggle">Source evidence</Collapsible.Trigger><Collapsible.Content><p>{evidence.provenance}</p></Collapsible.Content></Collapsible.Root>
+          {/if}
         {/each}
       {/if}</span>
   </li>

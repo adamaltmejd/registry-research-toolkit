@@ -237,9 +237,17 @@ class ResolvedScopedSentinels(_ResolvedWindow):
         Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")], ...
     ] = Field(min_length=1)
     members: tuple[tuple[str, str], ...] = Field(min_length=1)
+    # The decision's source locators; empty when it cites none (#1708).
     provenance: str
 
-    _text = field_validator("delivery_column_name", "provenance")(_require_trimmed)
+    _text = field_validator("delivery_column_name")(_require_trimmed)
+
+    @field_validator("provenance")
+    @classmethod
+    def _trimmed_provenance(cls, value: str) -> str:
+        if value != value.strip():
+            raise ValueError("a certificate's provenance must be trimmed")
+        return value
 
     @model_validator(mode="after")
     def _unique_evidence(self) -> Self:
@@ -562,7 +570,9 @@ def _merged_links(run: list[ResolvedState]) -> tuple[ResolvedClassificationLink,
                                 f for c in group for f in c.source_fingerprints
                             )
                         ),
-                        "provenance": "\n".join(c.provenance for c in group),
+                        "provenance": "\n".join(
+                            dict.fromkeys(c.provenance for c in group if c.provenance)
+                        ),
                     }
                 )
             )

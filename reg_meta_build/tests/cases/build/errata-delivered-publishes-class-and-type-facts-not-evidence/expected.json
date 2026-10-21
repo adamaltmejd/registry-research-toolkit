@@ -1,0 +1,27 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "states",
+      "where": {"variable": "v5"},
+      "fields": ["variable", "column", "valid_from", "valid_to", "provenance"],
+      "note": "The delivered 2020 state names the class and storage-type facts, not the evidence or the case",
+      "rows": [
+        ["v5", "Q", "2018-01-01", "2018-12-31", null],
+        ["v5", "Q", "2020-01-01", "2020-12-31", "errata:omitted-column-in-version\nCurated data_type: none\nDocumented Datatyp: 2018=integer"]
+      ]
+    },
+    {
+      "table": "cases",
+      "fields": ["case_id", "status", "reason"],
+      "note": "The evidence stays in the report ledger",
+      "rows": [
+        ["curation/registers/scb/sample.toml#/errata.delivered/1", "applicable", "errata:omitted-column-in-version\nSWECOV extract per Operator ruling #1234\n\nMONA aggregate check"]
+      ]
+    }
+  ]
+}

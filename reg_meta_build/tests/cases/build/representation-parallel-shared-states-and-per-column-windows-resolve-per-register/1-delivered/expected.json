@@ -90,19 +90,6 @@
       ]
     },
     {
-      "table": "states",
-      "where": {
-        "register": "twice",
-        "provenance": {"contains": [
-          "curation/registers/scb/twice.toml#/representation.parallel/1: Reviewed parallel columns",
-          "curation/registers/scb/twice.toml#/representation.parallel/2: Second review of the same columns"
-        ]}
-      },
-      "fields": ["valid_from", "valid_to"],
-      "note": "The composed state names both entries, each with its evidence.",
-      "rows": [["2022-01-01", "2022-12-31"]]
-    },
-    {
       "table": "issues",
       "where": {"subject": "scb/sibling/income"},
       "fields": ["code", "fields", "withheld_output", "valid_from", "valid_to"],

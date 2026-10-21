@@ -210,28 +210,11 @@
       "where": {
         "variable": "checked",
         "valid_from": "2002-01-01",
-        "provenance": {"contains": "errata:omitted-column-in-version\naccepted delivery"}
+        "provenance": {"contains": "errata:omitted-column-in-version\nCurated data_type: "}
       },
       "fields": ["variable"],
       "rows": [["checked"]],
       "note": "test_formation_coverage_carries_correction_attributions: the correction that formed the state is its provenance."
-    },
-    {
-      "table": "states",
-      "where": {
-        "variable": ["gaturest", "pgaturest"],
-        "provenance": {"contains": "column ownership: Y-167 fixture reference"}
-      },
-      "fields": ["variable", "valid_from"],
-      "rows": [
-        ["gaturest", "1999-01-01"],
-        ["gaturest", "2005-01-01"],
-        ["gaturest", "2010-01-01"],
-        ["gaturest", "2015-01-01"],
-        ["pgaturest", "2020-01-01"],
-        ["pgaturest", "2025-01-01"]
-      ],
-      "note": "FDB: every owned state carries the partition's column-ownership reference (the old test's `provenance.endswith('column ownership: Y-167 fixture reference')`)."
     },
     {
       "table": "states",
