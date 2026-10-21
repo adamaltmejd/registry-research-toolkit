@@ -1,15 +1,24 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import { getShow, type RegisterShow, type VariantModel } from "./api";
+import type { RegisterShow, VariantModel } from "./api";
+import { stubApi } from "./api-test-helpers";
 import VariantBrowser from "./VariantBrowser.svelte";
 import { datedVersions, lisaVersion, variant } from "./variants-test-helpers";
 
-// The page reads the register's variants off its `show` node.
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getShow: vi.fn() };
-});
+/** The page reads the register's variants off its `show` node: answer that one
+ * read with `answer`, or fail it with an `Error`. */
+function serveShow(answer: RegisterShow | Error) {
+  stubApi((url) => {
+    if (!url.pathname.startsWith("/api/catalog/")) {
+      return undefined;
+    }
+    if (answer instanceof Error) {
+      throw answer;
+    }
+    return answer;
+  });
+}
 
 /** The register's `show` node carrying `variants`. */
 function registerWith(...variants: VariantModel[]): RegisterShow {
@@ -24,16 +33,12 @@ function registerWith(...variants: VariantModel[]): RegisterShow {
   };
 }
 
-beforeEach(() => {
-  vi.mocked(getShow).mockReset();
-});
-
 // The fold and grouping RULES are unit-tested in `variants.test.ts`; these
 // assert what the page does with them.
 
 describe("VariantBrowser — folded versions (Y-79)", () => {
   it("renders an unchanged run as ONE block, naming the delivery it prints", async () => {
-    vi.mocked(getShow).mockResolvedValue(
+    serveShow(
       registerWith(
         variant("individer-16plus", {
           name: "Individer, 16 år och äldre",
@@ -67,7 +72,7 @@ describe("VariantBrowser — folded versions (Y-79)", () => {
   });
 
   it("opens a new block on a genuinely changed population, keeping both frames", async () => {
-    vi.mocked(getShow).mockResolvedValue(
+    serveShow(
       registerWith(
         variant("individer", {
           name: "Individer",
@@ -113,7 +118,7 @@ describe("VariantBrowser — folded versions (Y-79)", () => {
     // One delivery can carry two frames, and reg_meta may deliver both under
     // the SAME name — the metadata loops are unkeyed precisely because a name
     // is not an identity here, so neither row may collapse into the other.
-    vi.mocked(getShow).mockResolvedValue(
+    serveShow(
       registerWith(
         variant("standard", {
           name: "Standard",
@@ -172,7 +177,7 @@ describe("VariantBrowser — folded versions (Y-79)", () => {
   });
 
   it("keeps a text-free delivery visible instead of folding its neighbours across it", async () => {
-    vi.mocked(getShow).mockResolvedValue(
+    serveShow(
       registerWith(
         variant("standard", {
           name: "Standard",
@@ -204,7 +209,7 @@ describe("VariantBrowser — folded versions (Y-79)", () => {
 
 describe("VariantBrowser — variant family segments (#376/Y-79)", () => {
   it("renders a family as one entry with its segments and each segment's population", async () => {
-    vi.mocked(getShow).mockResolvedValue(
+    serveShow(
       registerWith(
         // The catalog orders variants by SLUG, so the successor arrives FIRST —
         // the segments must still read oldest delivery first.
@@ -275,7 +280,7 @@ describe("VariantBrowser — variant family segments (#376/Y-79)", () => {
   });
 
   it("heads a variant that has no name with its display_group, printed once", async () => {
-    vi.mocked(getShow).mockResolvedValue(
+    serveShow(
       registerWith(
         variant("kuagg", {
           // No `name`, so the entry heading itself falls back to the group —
@@ -304,7 +309,7 @@ describe("VariantBrowser — page states (Y-79)", () => {
   it("says a register has no variants and points back at it", async () => {
     // The page is deep-linkable, so an empty list is a real state here — unlike
     // the register page's summary, which suppresses itself entirely.
-    vi.mocked(getShow).mockResolvedValue(registerWith());
+    serveShow(registerWith());
 
     await render(VariantBrowser, { registerFqid: "scb/empty" });
 
@@ -317,7 +322,7 @@ describe("VariantBrowser — page states (Y-79)", () => {
   });
 
   it("surfaces a failed load as an alert", async () => {
-    vi.mocked(getShow).mockRejectedValue(new Error("boom"));
+    serveShow(new Error("boom"));
 
     await render(VariantBrowser, { registerFqid: "scb/lisa" });
 

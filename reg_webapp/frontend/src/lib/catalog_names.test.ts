@@ -40,7 +40,9 @@ function stubCatalog(root: () => ShowNode) {
 beforeEach(() => {
   // The cache is a session singleton: start each case from an empty one.
   resetCatalogNames();
-  stubCatalog(() => rootShow({ fqid: "scb", name: "Statistiska Centralbyrån" }));
+  stubCatalog(() =>
+    rootShow({ fqid: "scb", name: "Statistiska Centralbyrån" }),
+  );
 });
 
 /** Ask for the names (which STARTS the reads), then wait out those reads. Every

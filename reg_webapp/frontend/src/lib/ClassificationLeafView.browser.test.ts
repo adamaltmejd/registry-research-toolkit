@@ -1,20 +1,38 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-svelte";
-import type { ClassificationShow } from "./api";
-import { getGraph, getValues } from "./api";
+import type { ClassificationShow, RelationshipGraph } from "./api";
+import { stubApi } from "./api-test-helpers";
 import ClassificationLeafView from "./ClassificationLeafView.svelte";
 
 // The classification leaf rendered through the unified SubjectView shell (#638 PR1).
 // The codes are the `values` facet; the picker surface is the #906 compact edition
-// DAG, fetched via `getGraph(node.fqid)` — stubbed empty here so it omits itself (its
+// DAG, fetched from `/api/graph/<fqid>` — stubbed empty here so it omits itself (its
 // own failure domain; the leaf renders regardless). This guards the shell wiring: the
 // title (nodeLabel = name), the short-name meta dl, and the codes panel.
 
-vi.mock("./api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./api")>();
-  return { ...actual, getGraph: vi.fn(), getValues: vi.fn() };
-});
+/** Answer the leaf's two reads: the edition graph with `graph` (empty by
+ * default) and the codes with two first-level codes. */
+function serveGraph(
+  graph: RelationshipGraph = { nodes: [], edges: [], focus_id: null },
+) {
+  stubApi((url) => {
+    if (url.pathname.startsWith("/api/graph/")) {
+      return graph;
+    }
+    if (!url.pathname.startsWith("/api/values/")) {
+      return undefined;
+    }
+    return {
+      items: [
+        { code: "1", label: "Förgymnasial", level: 1, is_valid: true },
+        { code: "3", label: "Eftergymnasial", level: 1, is_valid: true },
+      ],
+      next_cursor: null,
+      total: 2,
+    };
+  });
+}
 
 function node(overrides: Partial<ClassificationShow> = {}): ClassificationShow {
   return {
@@ -32,21 +50,7 @@ function node(overrides: Partial<ClassificationShow> = {}): ClassificationShow {
 }
 
 beforeEach(() => {
-  vi.mocked(getGraph).mockReset();
-  vi.mocked(getGraph).mockResolvedValue({
-    nodes: [],
-    edges: [],
-    focus_id: null,
-  });
-  vi.mocked(getValues).mockReset();
-  vi.mocked(getValues).mockResolvedValue({
-    items: [
-      { code: "1", label: "Förgymnasial", level: 1, is_valid: true },
-      { code: "3", label: "Eftergymnasial", level: 1, is_valid: true },
-    ],
-    next_cursor: null,
-    total: 2,
-  });
+  serveGraph();
 });
 
 describe("ClassificationLeafView (#638 shell)", () => {
@@ -81,7 +85,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
   });
 
   it("renders the compact classification edition graph when the graph fetch has editions", async () => {
-    vi.mocked(getGraph).mockResolvedValue({
+    serveGraph({
       nodes: [
         {
           kind: "classification",
@@ -140,7 +144,7 @@ describe("ClassificationLeafView (#638 shell)", () => {
   });
 
   it("omits sibling-only succession chains when the viewed edition has no edge", async () => {
-    vi.mocked(getGraph).mockResolvedValue({
+    serveGraph({
       nodes: [
         {
           kind: "classification",

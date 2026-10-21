@@ -93,9 +93,7 @@ describe("DocMentionsPanel (#402)", () => {
   it("omits the whole section when this register has no ingested docs", async () => {
     // The index EXISTS but THIS register has no docs — a resolved-empty state, so
     // the whole section is omitted (no "no docs for this register" wall).
-    serveDocs(
-      mentions({ register_ingested: false }),
-    );
+    serveDocs(mentions({ register_ingested: false }));
     await render(DocMentionsPanel, { node: node() });
 
     await expect
@@ -104,9 +102,7 @@ describe("DocMentionsPanel (#402)", () => {
   });
 
   it("omits the whole section when the index is present but has zero hits", async () => {
-    serveDocs(
-      mentions({ register_ingested: true, total: 0 }),
-    );
+    serveDocs(mentions({ register_ingested: true, total: 0 }));
     await render(DocMentionsPanel, { node: node() });
 
     await expect
