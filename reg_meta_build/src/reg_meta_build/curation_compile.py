@@ -3901,7 +3901,7 @@ def compile_native_naming(
                             "name": "_default"
                             if target.source_key[-1] == "not-applicable"
                             else target.source_key[-1],
-                            "description": None,
+                            "description": declaration.naming.description,
                             "display_group": declaration.naming.display_group,
                             "panel_entity_key": declaration.naming.panel_entity_key,
                             "panel_time_key": declaration.naming.panel_time_key,

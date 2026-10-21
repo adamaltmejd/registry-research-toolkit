@@ -8,6 +8,7 @@ slug = "flow"
 [[variant]]
 native_id = "1.2.stock"
 slug = "stock"
+description = "The 31 December stock edition of the flow variant."
 [[variable]]
 native_id = "1.5"
 slug = "shared"

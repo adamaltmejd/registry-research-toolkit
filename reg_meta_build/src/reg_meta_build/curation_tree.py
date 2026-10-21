@@ -302,6 +302,7 @@ class RegisterVariantSlug(_CurationModel):
     native_id: str
     slug: str
     display_group: str | None = None
+    description: str | None = None
     panel_entity_key: str | list[str] | None = None
     panel_time_key: str | list[str] | None = None
     panel_time_grain: str | None = None
