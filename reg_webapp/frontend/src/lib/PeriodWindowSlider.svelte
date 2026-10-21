@@ -206,6 +206,10 @@ const unavailable = $derived.by(() => {
 // year `?period` the URL carries (the consumer's source of truth, rendered
 // honestly past the clamp). An INVERTED coverage has no band (Fix D) and so no
 // gaps — a gap label against the inverted edges would contradict the readout.
+// simplify: an explicit `?period` before an inverted coverage's start loses the
+// honest "Not delivered before <from>" (a `userChosen`-gated open-end branch
+// would keep it); add that branch if inverted coverage stops being a rare
+// data anomaly.
 const gaps = $derived(
   notDeliveredGaps({ from, to }, bandEdges).map((g) => ({
     left: leftPct(g.from),
