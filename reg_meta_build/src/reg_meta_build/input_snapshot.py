@@ -21,12 +21,10 @@ import hashlib
 import io
 import json
 import os
-import platform
 import re
 import shutil
 import sqlite3
 import subprocess
-import sys
 import tempfile
 import time
 from contextlib import contextmanager
@@ -37,13 +35,11 @@ from urllib.parse import quote
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from .dbdiff import TableIgnore, diff_db_content, format_report
 from .source_evidence import SourceRevision
 from .source_files import _file_sha256
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Generator, Iterator, Mapping, Sequence
-    from typing import IO
 
 SNAPSHOT_SCHEMA_VERSION = 1
 CONVERTER_VERSION = 1
@@ -64,21 +60,6 @@ LISA_LAYOUT = "lisa-variable-list-2024-2025-v1"
 
 _BUNDLE_INVENTORY_ROOTS = ("catalog", "supplemental")
 
-_GIT_PACK_SETTINGS = (
-    ("core.compression", "9"),
-    ("pack.compression", "9"),
-    ("pack.depth", "50"),
-    ("pack.threads", "1"),
-    ("pack.useSparse", "true"),
-    ("pack.window", "10"),
-    ("pack.windowMemory", "0"),
-    ("repack.useDeltaBaseOffset", "true"),
-    ("repack.writeBitmaps", "false"),
-)
-
-_REPLAY_DB_IGNORE = {
-    "import_manifest": TableIgnore(skip_where="key IN ('import_date', 'input_dir')")
-}
 
 SCB_CSV_FILES = (
     "Registerinformation.csv",
@@ -416,57 +397,6 @@ class SnapshotManifest(_Model):
         return self
 
 
-class AuxiliaryPin(_Model):
-    name: str
-    present: bool
-    size: int | None = None
-    sha256: str | None = None
-
-    @model_validator(mode="after")
-    def _valid_presence(self) -> Self:
-        if self.present:
-            if self.size is None or self.size < 0 or self.sha256 is None:
-                raise ValueError("present auxiliary input requires size and sha256")
-            if not _HASH_RE.fullmatch(self.sha256):
-                raise ValueError("auxiliary sha256 must be lowercase hexadecimal")
-        elif self.size is not None or self.sha256 is not None:
-            raise ValueError("absent auxiliary input cannot carry size or sha256")
-        return self
-
-
-class BuildLock(_Model):
-    format: Literal["reg-meta-build-replay-lock"]
-    schema_version: Literal[1]
-    input_repository_commit: str
-    snapshot_path: str
-    snapshot_manifest_sha256: str
-    snapshot_schema_version: int
-    snapshot_converter_version: int
-    builder_commit: str
-    uv_lock_sha256: str
-    python_runtime: str
-    providers: tuple[str, ...]
-    build_options: dict[str, bool | int | str]
-    auxiliary_inputs: tuple[AuxiliaryPin, ...]
-    result_db_sha256: str
-
-    @model_validator(mode="after")
-    def _valid_lock(self) -> Self:
-        hashes = (
-            self.snapshot_manifest_sha256,
-            self.uv_lock_sha256,
-            self.result_db_sha256,
-        )
-        if not all(_HASH_RE.fullmatch(value) for value in hashes):
-            raise ValueError("build-lock hashes must be lowercase SHA256 values")
-        if not self.providers or len(set(self.providers)) != len(self.providers):
-            raise ValueError("providers must be non-empty and unique")
-        names = [item.name for item in self.auxiliary_inputs]
-        if len(names) != len(set(names)):
-            raise ValueError("auxiliary input names must be unique")
-        return self
-
-
 class BundleFile(_Model):
     path: str
     present: bool
@@ -714,7 +644,7 @@ def _json_line(value: object) -> bytes:
 
 
 def _manifest_bytes(
-    manifest: SnapshotManifest | CatalogBundleManifest | BuildLock,
+    manifest: SnapshotManifest | CatalogBundleManifest,
 ) -> bytes:
     return (
         json.dumps(
@@ -1882,183 +1812,6 @@ def _file_identity(stat: os.stat_result) -> tuple[int, int, int, int]:
     return (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
 
 
-def _sample_ordinals(total_records: int, limit: int) -> Iterator[int]:
-    """Yield fixed source ordinals spanning the whole stream, including its ends."""
-    if total_records <= limit:
-        yield from range(total_records)
-    elif limit == 1:
-        yield total_records // 2
-    else:
-        for sample_index in range(limit):
-            yield sample_index * (total_records - 1) // (limit - 1)
-
-
-def _sample_rows(
-    rows: Iterator[list[RawCell]], total_records: int, limit: int
-) -> Iterator[list[RawCell]]:
-    targets = iter(_sample_ordinals(total_records, limit))
-    target = next(targets, None)
-    for ordinal, row in enumerate(rows):
-        if target is not None and ordinal == target:
-            yield row
-            target = next(targets, None)
-
-
-def _ordered_normalized_rows(
-    root: Path,
-    normalized_files: Sequence[NormalizedFile],
-    field_count: int,
-) -> Iterator[tuple[int | str, ...]]:
-    ordinal = 0
-    for normalized in normalized_files:
-        for line_number, fields in _iter_tsv(root / normalized.path):
-            if len(fields) != field_count:
-                raise SnapshotError(
-                    f"{normalized.path}: line {line_number} has the wrong field count"
-                )
-            yield (ordinal, *fields)
-            ordinal += 1
-
-
-def _sqlite_normalized_tables_control(
-    root: Path,
-    files: Sequence[SnapshotFile],
-    database: Path,
-) -> dict[str, Any]:
-    logical_tables: list[tuple[str, tuple[NormalizedFile, ...], int]] = []
-    for item in files:
-        for group in item.groups:
-            logical_tables.append(
-                (
-                    f"{item.name}:{group.name}",
-                    (group.dictionary,),
-                    len(group.positions) + 1,
-                )
-            )
-        logical_tables.append(
-            (
-                f"{item.name}:records",
-                item.records,
-                len(item.groups) + len(item.inline_positions),
-            )
-        )
-
-    table_rows: dict[str, int] = {}
-    table_field_counts: dict[str, int] = {}
-    conn = sqlite3.connect(database)
-    try:
-        conn.execute("PRAGMA journal_mode=OFF")
-        conn.execute("PRAGMA synchronous=OFF")
-        for table_index, (logical_name, normalized_files, field_count) in enumerate(
-            logical_tables
-        ):
-            table_name = f"normalized_{table_index:04d}"
-            columns = ", ".join(
-                f"field_{field_index:04d} TEXT NOT NULL"
-                for field_index in range(field_count)
-            )
-            conn.execute(
-                f"CREATE TABLE {table_name} "
-                f"(occurrence_ordinal INTEGER PRIMARY KEY, {columns})"
-            )
-            placeholders = ", ".join("?" for _index in range(field_count + 1))
-            conn.executemany(
-                f"INSERT INTO {table_name} VALUES ({placeholders})",
-                _ordered_normalized_rows(root, normalized_files, field_count),
-            )
-            table_rows[logical_name] = conn.execute(
-                f"SELECT COUNT(*) FROM {table_name}"
-            ).fetchone()[0]
-            table_field_counts[logical_name] = field_count
-        conn.commit()
-    finally:
-        conn.close()
-    return {
-        "bytes": database.stat().st_size,
-        "logical_tables": len(table_rows),
-        "logical_rows": sum(table_rows.values()),
-        "table_rows": table_rows,
-        "table_field_counts": table_field_counts,
-        "ordering": "zero-based occurrence ordinal per logical table",
-    }
-
-
-def measure_codec_sample(
-    inventory_path: Path,
-    *,
-    limits: Mapping[str, int] | None = None,
-    codec_sample_lines: int = 100_000,
-) -> dict[str, Any]:
-    """Compare codecs on bounded, evenly spaced records across each source stream."""
-    started = time.perf_counter()
-    inventory_path = inventory_path.resolve()
-    inventory = load_inventory(inventory_path)
-    source_dir = _source_inventory(inventory_path, inventory)
-    default_limits = {
-        "Registerinformation.csv": 100_000,
-        "Vardemangder.csv": 1_000_000,
-    }
-    selected_limits = {**default_limits, **(limits or {})}
-    if any(limit < 1 for limit in selected_limits.values()):
-        raise SnapshotError("codec sample limits must be positive")
-    codec_sample = _CodecSample(codec_sample_lines)
-    with tempfile.TemporaryDirectory(prefix="regmeta-input-codec-") as temporary:
-        workspace = Path(temporary)
-        source_root = workspace / "source"
-        normalized_root = workspace / "normalized"
-        source_root.mkdir()
-        population_records: dict[str, int] = {}
-        sample_records: dict[str, int] = {}
-        prepared_files: list[SnapshotFile] = []
-        file_limits: dict[str, int] = {}
-        raw_bytes = 0
-        for item in inventory.files:
-            source = source_dir / item.name
-            if not source.is_file():
-                continue
-            limit = selected_limits.get(item.name, 100_000)
-            file_limits[item.name] = limit
-            source_identity = _file_identity(source.stat())
-            with open_lossless_csv(source) as (header, rows):
-                population_records[item.name] = sum(1 for _row in rows)
-            sample = source_root / item.name
-            with open_lossless_csv(source) as (header, rows):
-                _write_csv(
-                    sample,
-                    header,
-                    _sample_rows(rows, population_records[item.name], limit),
-                )
-            if _file_identity(source.stat()) != source_identity:
-                raise SnapshotError(
-                    f"source CSV changed during codec sampling: {source}"
-                )
-            prepared = _prepare_file(
-                sample, normalized_root, item.required, codec_sample
-            )
-            prepared_files.append(prepared)
-            sample_records[item.name] = prepared.record_count
-            raw_bytes += sample.stat().st_size
-        sqlite_control = _sqlite_normalized_tables_control(
-            normalized_root,
-            prepared_files,
-            workspace / "normalized-tables-control.sqlite",
-        )
-        return {
-            "sampling": {
-                "method": "evenly-spaced-source-ordinals-v1",
-                "source_passes": 2,
-            },
-            "limits": file_limits,
-            "population_records": population_records,
-            "sample_records": sample_records,
-            "logical_sample_csv_bytes": raw_bytes,
-            "normalized_sample_bytes": tree_size(normalized_root),
-            "sqlite_normalized_tables_control": sqlite_control,
-            "codec_sample": codec_sample.by_kind,
-            "elapsed_seconds": time.perf_counter() - started,
-        }
-
-
 def _git_bytes(repo: Path, *args: str, input_bytes: bytes | None = None) -> bytes:
     try:
         # Git read commands may otherwise refresh accepted index evidence on disk.
@@ -2448,88 +2201,6 @@ def _verify_git_snapshot_materialization(
                 f"unexpectedly selected={sorted(selected - expected_selected)}"
             )
     return omitted
-
-
-def _read_git_blob(
-    stdin: IO[bytes], stdout: IO[bytes], object_spec: str, *, retain: bool = False
-) -> tuple[int, str, bytes | None]:
-    stdin.write(object_spec.encode("utf-8") + b"\n")
-    stdin.flush()
-    response = stdout.readline()
-    if response.endswith(b" missing\n"):
-        path = object_spec.partition(":")[2]
-        raise SnapshotError(f"snapshot artifact is missing from pinned commit: {path}")
-    parts = response.rstrip(b"\n").split()
-    if len(parts) != 3 or parts[1] != b"blob":
-        raise SnapshotError(f"invalid Git blob response for {object_spec!r}")
-    try:
-        size = int(parts[2])
-    except ValueError as exc:
-        raise SnapshotError(f"invalid Git blob size for {object_spec!r}") from exc
-    remaining = size
-    digest = hashlib.sha256()
-    payload = bytearray() if retain else None
-    while remaining:
-        chunk = stdout.read(min(remaining, 1024 * 1024))
-        if not chunk:
-            raise SnapshotError(f"truncated Git blob for {object_spec!r}")
-        digest.update(chunk)
-        if payload is not None:
-            payload.extend(chunk)
-        remaining -= len(chunk)
-    if stdout.read(1) != b"\n":
-        raise SnapshotError(f"invalid Git blob terminator for {object_spec!r}")
-    return size, digest.hexdigest(), bytes(payload) if payload is not None else None
-
-
-def _verify_committed_snapshot(
-    repo: Path, commit: str, snapshot_path: str
-) -> tuple[SnapshotManifest, str]:
-    try:
-        with subprocess.Popen(
-            ["git", "-C", str(repo), "cat-file", "--batch"],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        ) as process:
-            assert process.stdin is not None
-            assert process.stdout is not None
-            assert process.stderr is not None
-            manifest_repo_path = _snapshot_repo_path(snapshot_path, MANIFEST_NAME)
-            _, manifest_sha256, manifest_bytes = _read_git_blob(
-                process.stdin,
-                process.stdout,
-                f"{commit}:{manifest_repo_path}",
-                retain=True,
-            )
-            assert manifest_bytes is not None
-            try:
-                manifest = SnapshotManifest.model_validate_json(manifest_bytes)
-            except ValueError as exc:
-                raise SnapshotError(
-                    f"invalid snapshot manifest in pinned commit: {exc}"
-                ) from exc
-            for item in manifest.files:
-                for normalized in _normalized_files(item):
-                    repo_path = _snapshot_repo_path(snapshot_path, normalized.path)
-                    size, sha256, _ = _read_git_blob(
-                        process.stdin, process.stdout, f"{commit}:{repo_path}"
-                    )
-                    if size != normalized.size or sha256 != normalized.sha256:
-                        raise SnapshotError(
-                            "normalized artifact hash/size mismatch in pinned commit: "
-                            f"{normalized.path}"
-                        )
-            process.stdin.close()
-            stderr = process.stderr.read().decode("utf-8", errors="replace").strip()
-            return_code = process.wait()
-            if return_code:
-                raise SnapshotError(
-                    f"git cat-file --batch failed in {repo}: {stderr or return_code}"
-                )
-            return manifest, manifest_sha256
-    except OSError as exc:
-        raise SnapshotError(f"cannot inspect pinned input commit: {exc}") from exc
 
 
 def open_scb_snapshot(selection: ScbSnapshotSelection) -> ScbSnapshotReader:
@@ -3089,291 +2760,7 @@ def verify_input_bundle(
     return bundle.manifest
 
 
-def create_build_lock(
-    snapshot: Path,
-    recorded_db: Path,
-    output: Path,
-    *,
-    providers: Sequence[str],
-    build_options: Mapping[str, bool | int | str],
-    auxiliary_inputs: Mapping[str, Path | None],
-) -> BuildLock:
-    """Bind exact inputs/code and authenticate one retained recorded database."""
-    snapshot = snapshot.resolve()
-    recorded_db = recorded_db.resolve()
-    output = output.resolve()
-    if output.exists():
-        raise SnapshotError(
-            f"build lock already exists and will not be overwritten: {output}"
-        )
-    input_repo = Path(_git(snapshot, "rev-parse", "--show-toplevel"))
-    builder_repo, builder_commit = _builder_source_identity()
-    snapshot_path = snapshot.relative_to(input_repo).as_posix()
-    worktree_manifest = load_manifest(snapshot)
-    _require_complete_normalized_inventory(snapshot, worktree_manifest)
-    input_commit = clean_git_commit(input_repo)
-    committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
-        input_repo, input_commit, snapshot_path
-    )
-    manifest = verify_snapshot(snapshot)
-    if manifest != committed_manifest:
-        raise SnapshotError("worktree snapshot manifest differs from pinned commit")
-    uv_lock = builder_repo / "uv.lock"
-    if not recorded_db.is_file():
-        raise SnapshotError(f"recorded result DB is missing: {recorded_db}")
-    auxiliary: list[AuxiliaryPin] = []
-    for name, path in sorted(auxiliary_inputs.items()):
-        if path is None:
-            auxiliary.append(AuxiliaryPin(name=name, present=False))
-        else:
-            resolved = path.resolve()
-            if not resolved.is_file():
-                raise SnapshotError(f"auxiliary input is missing: {name}={resolved}")
-            auxiliary.append(
-                AuxiliaryPin(
-                    name=name,
-                    present=True,
-                    size=resolved.stat().st_size,
-                    sha256=_file_sha256(resolved),
-                )
-            )
-    lock = BuildLock(
-        format="reg-meta-build-replay-lock",
-        schema_version=1,
-        input_repository_commit=input_commit,
-        snapshot_path=snapshot_path,
-        snapshot_manifest_sha256=committed_manifest_sha256,
-        snapshot_schema_version=committed_manifest.schema_version,
-        snapshot_converter_version=committed_manifest.converter_version,
-        builder_commit=builder_commit,
-        uv_lock_sha256=_file_sha256(uv_lock),
-        python_runtime=f"{sys.implementation.name}-{platform.python_version()}",
-        providers=tuple(providers),
-        build_options=dict(sorted(build_options.items())),
-        auxiliary_inputs=tuple(auxiliary),
-        result_db_sha256=_file_sha256(recorded_db),
-    )
-    output.parent.mkdir(parents=True, exist_ok=True)
-    temporary_fd, temporary_name = tempfile.mkstemp(
-        prefix=f".{output.name}.", suffix=".tmp", dir=output.parent
-    )
-    os.close(temporary_fd)
-    temporary = Path(temporary_name)
-    try:
-        temporary.write_bytes(_manifest_bytes(lock))
-        temporary.replace(output)
-    finally:
-        temporary.unlink(missing_ok=True)
-    return lock
-
-
-def verify_build_lock(
-    lock_path: Path,
-    snapshot: Path,
-    *,
-    auxiliary_inputs: Mapping[str, Path | None],
-    recorded_db: Path | None = None,
-    replay_db: Path | None = None,
-) -> BuildLock:
-    """Verify pins, authenticate a recorded DB, and optionally compare a replay."""
-    try:
-        lock = BuildLock.model_validate_json(lock_path.read_bytes())
-    except (OSError, ValueError) as exc:
-        raise SnapshotError(f"invalid build lock {lock_path}: {exc}") from exc
-    snapshot = snapshot.resolve()
-    recorded_db = recorded_db.resolve() if recorded_db is not None else None
-    replay_db = replay_db.resolve() if replay_db is not None else None
-    if replay_db is not None and recorded_db is None:
-        raise SnapshotError("replay comparison requires the recorded result DB")
-    input_repo = Path(_git(snapshot, "rev-parse", "--show-toplevel"))
-    builder_repo, builder_commit = _builder_source_identity()
-    uv_lock = builder_repo / "uv.lock"
-    if recorded_db is not None and not recorded_db.is_file():
-        raise SnapshotError(f"recorded result DB is missing: {recorded_db}")
-    if replay_db is not None and not replay_db.is_file():
-        raise SnapshotError(f"replay result DB is missing: {replay_db}")
-    snapshot_path = snapshot.relative_to(input_repo).as_posix()
-    worktree_manifest = load_manifest(snapshot)
-    _require_complete_normalized_inventory(snapshot, worktree_manifest)
-    input_commit = clean_git_commit(input_repo)
-    checks = {
-        "input repository commit": (
-            input_commit,
-            lock.input_repository_commit,
-        ),
-        "builder commit": (builder_commit, lock.builder_commit),
-        "snapshot path": (
-            snapshot_path,
-            lock.snapshot_path,
-        ),
-        "uv.lock": (_file_sha256(uv_lock), lock.uv_lock_sha256),
-        "Python runtime": (
-            f"{sys.implementation.name}-{platform.python_version()}",
-            lock.python_runtime,
-        ),
-    }
-    for label, (actual, expected) in checks.items():
-        if actual != expected:
-            raise SnapshotError(
-                f"{label} pin mismatch: expected {expected}, got {actual}"
-            )
-    committed_manifest, committed_manifest_sha256 = _verify_committed_snapshot(
-        input_repo, input_commit, snapshot_path
-    )
-    if committed_manifest_sha256 != lock.snapshot_manifest_sha256:
-        raise SnapshotError(
-            "snapshot manifest pin mismatch: expected "
-            f"{lock.snapshot_manifest_sha256}, got {committed_manifest_sha256}"
-        )
-    manifest = verify_snapshot(snapshot)
-    if manifest != committed_manifest:
-        raise SnapshotError("worktree snapshot manifest differs from pinned commit")
-    version_checks = {
-        "snapshot schema version": (
-            manifest.schema_version,
-            lock.snapshot_schema_version,
-        ),
-        "snapshot converter version": (
-            manifest.converter_version,
-            lock.snapshot_converter_version,
-        ),
-    }
-    for label, (actual, expected) in version_checks.items():
-        if actual != expected:
-            raise SnapshotError(
-                f"{label} pin mismatch: expected {expected}, got {actual}"
-            )
-    expected_aux = {item.name: item for item in lock.auxiliary_inputs}
-    if set(auxiliary_inputs) != set(expected_aux):
-        raise SnapshotError("auxiliary input names do not match the build lock")
-    for name, path in auxiliary_inputs.items():
-        expected = expected_aux[name]
-        if path is None:
-            if expected.present:
-                raise SnapshotError(f"auxiliary input {name} is unexpectedly absent")
-            continue
-        if not expected.present or not path.is_file():
-            raise SnapshotError(
-                f"auxiliary input {name} presence does not match the lock"
-            )
-        if (
-            path.stat().st_size != expected.size
-            or _file_sha256(path) != expected.sha256
-        ):
-            raise SnapshotError(f"auxiliary input {name} hash/size mismatch")
-    if recorded_db is not None and _file_sha256(recorded_db) != lock.result_db_sha256:
-        raise SnapshotError("recorded result DB hash does not match the build lock")
-    if replay_db is not None:
-        assert recorded_db is not None
-        try:
-            report = diff_db_content(
-                recorded_db,
-                replay_db,
-                ignore=_REPLAY_DB_IGNORE,
-            )
-        except (OSError, sqlite3.Error) as exc:
-            raise SnapshotError(f"cannot compare replay result DB: {exc}") from exc
-        if not report.identical:
-            raise SnapshotError(
-                "replay result DB differs from the authenticated recorded DB:\n"
-                f"{format_report(report)}"
-            )
-    return lock
-
-
-def tree_size(path: Path) -> int:
-    return sum(item.stat().st_size for item in path.rglob("*") if item.is_file())
-
-
-def _git_object_sizes(repo: Path) -> tuple[int, int]:
-    values = {
-        key: int(value)
-        for line in _git(repo, "count-objects", "-v").splitlines()
-        for key, separator, value in (line.partition(":"),)
-        if separator and value.strip().isdigit()
-    }
-    return values.get("size", 0) * 1024, values.get("size-pack", 0) * 1024
-
-
-def measure_git_history(initial: Path, update: Path) -> dict[str, Any]:
-    """Measure initial and one-update Git growth in an isolated temporary repo."""
-    initial = initial.resolve()
-    update = update.resolve()
-    with tempfile.TemporaryDirectory(prefix="regmeta-input-git-") as temporary:
-        repo = Path(temporary)
-        _git(repo, "init", "-q")
-        _git(repo, "config", "user.email", "snapshot@example.invalid")
-        _git(repo, "config", "user.name", "Snapshot measurement")
-        # A developer's global signing would add a signature to the measured objects.
-        _git(repo, "config", "commit.gpgsign", "false")
-        for name, value in _GIT_PACK_SETTINGS:
-            _git(repo, "config", "--local", name, value)
-
-        def install(source: Path) -> None:
-            for child in repo.iterdir():
-                if child.name == ".git":
-                    continue
-                if child.is_dir():
-                    shutil.rmtree(child)
-                else:
-                    child.unlink()
-            for child in source.iterdir():
-                target = repo / child.name
-                if child.is_dir():
-                    shutil.copytree(child, target)
-                else:
-                    shutil.copy2(child, target)
-
-        install(initial)
-        _git(repo, "add", "-A")
-        _git(repo, "commit", "-q", "-m", "initial")
-        initial_loose, _ = _git_object_sizes(repo)
-        effective_pack_settings = {
-            name: _git(repo, "config", "--get", name)
-            for name, _value in _GIT_PACK_SETTINGS
-        }
-        _git(repo, "gc", "--prune=now")
-        _, initial_pack = _git_object_sizes(repo)
-        install(update)
-        _git(repo, "add", "-N", ".")
-        numstat = _git(repo, "diff", "--numstat")
-        changed_files = len([line for line in numstat.splitlines() if line])
-        inserted = deleted = 0
-        for line in numstat.splitlines():
-            add, remove, _name = line.split("\t", 2)
-            if add.isdigit():
-                inserted += int(add)
-            if remove.isdigit():
-                deleted += int(remove)
-        if numstat:
-            _git(repo, "add", "-A")
-            _git(repo, "commit", "-q", "-m", "update")
-            update_loose, _ = _git_object_sizes(repo)
-            _git(repo, "gc", "--prune=now")
-            _, final_pack = _git_object_sizes(repo)
-        else:
-            _git(repo, "reset", "-q")
-            update_loose = 0
-            final_pack = initial_pack
-        return {
-            "git_version": _git(repo, "--version"),
-            "git_gc": "git gc --prune=now",
-            "git_pack_settings": effective_pack_settings,
-            "initial_working_tree_bytes": tree_size(initial),
-            "update_working_tree_bytes": tree_size(update),
-            "initial_loose_object_bytes": initial_loose,
-            "initial_packed_object_bytes": initial_pack,
-            "update_loose_object_bytes": update_loose,
-            "two_commit_packed_object_bytes": final_pack,
-            "incremental_packed_object_bytes": final_pack - initial_pack,
-            "changed_files": changed_files,
-            "inserted_lines": inserted,
-            "deleted_lines": deleted,
-        }
-
-
 __all__ = [
-    "BuildLock",
     "CatalogBundleManifest",
     "CatalogBundleReader",
     "CatalogBundleSelection",
@@ -3389,19 +2776,15 @@ __all__ = [
     "SupplementalDataset",
     "clean_git_commit",
     "converter_source_commit",
-    "create_build_lock",
     "input_bundle_repository",
     "load_inventory",
     "load_manifest",
-    "measure_codec_sample",
-    "measure_git_history",
     "open_input_bundle",
     "open_lossless_csv",
     "open_scb_snapshot",
     "prepare_input_bundle",
     "prepare_snapshot",
     "restore_snapshot",
-    "verify_build_lock",
     "verify_input_bundle",
     "verify_snapshot",
 ]
