@@ -9,16 +9,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  # hatchling+editables: locked so an offline
-  # `uv sync --no-build-isolation` can build
-  # the editable workspace members without dynamic build-backend resolution
-  # (uv's offline resolver refuses registry lookups for build-system.requires).
-  "editables>=0.6",
-  "hatchling>=1.32.0",
   "httpx2>=2.4.0",
   "hypothesis>=6.155.2",
   "maturin>=1.15.0",
-  "openpyxl>=3.1.5",
   "pytest>=9.0.3",
   "pytest-xdist>=3.8.0",
   "ruff>=0.15.17",
@@ -59,7 +52,6 @@ extend-select = [
   "TID",  # tidy imports
   "TC",   # type-checking imports
   "PTH",  # pathlib
-  "NPY",  # numpy
   "FURB", # refurb
 ]
 # ISC004 (new in ruff 0.16's ISC group) flags the deliberate wrapped-long-string
@@ -75,10 +67,10 @@ combine-as-imports = true
 
 [tool.ty.src]
 # Tests use sibling-module sys.path injection and JSON-shaped fixtures that
-# defeat ty's narrowing. The three excluded scripts import optional deps (xlrd,
-# openpyxl, pymupdf4llm) that aren't in workspace pyproject.toml. None of
-# these categories are part of the shipped library surface, so exclude from the
-# type baseline.
+# defeat ty's narrowing. The three excluded scripts lazily import one-off deps
+# that aren't in any workspace pyproject.toml (xlrd, certifi, pymupdf4llm). None
+# of these categories are part of the shipped library surface, so exclude from
+# the type baseline.
 exclude = [
   "**/tests/**",
   "scripts/extract_lkf.py",

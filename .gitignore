@@ -15,7 +15,6 @@ dist/
 # Tools
 .ruff_cache/
 .pytest_cache/
-.mypy_cache/
 .hypothesis/
 node_modules/
 # Cargo workspace build output (root Cargo.toml)
