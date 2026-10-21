@@ -135,21 +135,26 @@ def resolve_variable_successions(
     metadata: ResolvedMetadata,
     variables: tuple[ResolvedVariable, ...],
     classifications: tuple[ResolvedClassificationSuccession, ...],
+    ladder_sources: Mapping[str, str],
 ) -> ResolvedMetadata:
     """Add existing classification-derived variable links before writing the DB.
 
     Explicit source/curated edges retain their richer attribution. Validate the
     combined graph so a derived edge cannot close a cycle through those edges.
+    A variable the name ladder renamed streams under the source name it replaced
+    (`ladder_sources`, by FQID): the ladder names classification-edition siblings
+    apart, and the lift must still see them as one family.
     """
     edges = variable_vintage_succession_edges(
         (
             (
-                f"{v.register_ref.provider}/{v.register_ref.slug}",
-                v.name,
+                register,
+                ladder_sources.get(f"{register}/{v.slug}", v.name),
                 v.slug,
                 link.classification,
             )
             for v in variables
+            for register in (f"{v.register_ref.provider}/{v.register_ref.slug}",)
             for domain in (
                 *v.states,
                 *(window for alias in v.aliases for window in alias.windows),

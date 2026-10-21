@@ -493,6 +493,7 @@ class ScopeOutcome:
     parent_variants: dict[NativeKey, ResolvedVariant] = field(default_factory=dict)
     parent_editions: dict[NativeKey, ResolvedEdition] = field(default_factory=dict)
     variables: dict[NativeKey, ResolvedVariable | None] = field(default_factory=dict)
+    ladder_sources: dict[str, str] = field(default_factory=dict)
     withheld: dict[DependencyKey, tuple[ResolutionDiagnostic, ...]] = field(
         default_factory=dict
     )
@@ -749,6 +750,7 @@ def _resolve_scope(key: ScopeKey, journal: list[ScopeAction]) -> ScopeOutcome:
         parent_variants=result.parents.variants,
         parent_editions=result.parents.editions,
         variables=result.variables,
+        ladder_sources=result.ladder_sources,
         withheld=result.withheld_dependencies,
         added_lines=tuple(added_lines),
         evidence=tuple(evidence),
@@ -1379,6 +1381,7 @@ def _resolve(
     seen_scopes, seen_cases, seen_coding = set(), set(), set()
     coverage: list[CoverageObligation] = []
     parents, variant_registers, variables, withheld, evidence = {}, {}, {}, {}, {}
+    ladder_sources: dict[str, str] = {}
     books = {}
     withheld_books: dict[str, tuple[ResolutionDiagnostic, ...]] = {}
     data_warnings = {}
@@ -1853,6 +1856,7 @@ def _resolve(
                     if variable_key in variables:
                         raise ValueError("repeated variable family across scopes")
                     variables[variable_key] = variable
+                ladder_sources.update(outcome.ladder_sources)
                 for dependency, causes in outcome.withheld.items():
                     if dependency in withheld:
                         raise ValueError("repeated withheld dependency across scopes")
@@ -2200,7 +2204,7 @@ def _resolve(
                 for value in withheld_successions:
                     issue(value)
                 final_metadata = resolve_variable_successions(
-                    lineage.metadata, lineage.variables, successions
+                    lineage.metadata, lineage.variables, successions, ladder_sources
                 )
                 # Mandatory in both modes, whatever else the ledger holds: losing
                 # supported delivery is our bug, and no curation error may stand in

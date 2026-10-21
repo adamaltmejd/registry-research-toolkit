@@ -1,0 +1,27 @@
+{
+  "projections": [
+    {
+      "table": "issues",
+      "where": {"severity": "error"},
+      "fields": ["code"],
+      "rows": []
+    },
+    {
+      "table": "variables",
+      "fields": ["variable", "name"],
+      "rows": [
+        ["sun2000inr", "Utbildningsinriktning (SUN2000Inr)"],
+        ["sun2020inr", "Utbildningsinriktning (SUN2020Inr)"]
+      ],
+      "note": "The siblings share a definition, so each takes its own column."
+    },
+    {
+      "table": "successions",
+      "fields": ["grain", "predecessor", "successor", "effective_year", "note"],
+      "rows": [
+        ["variable", "scb/sample/sun2000inr", "scb/sample/sun2020inr", 2020, "derived:classification_vintage_lift"]
+      ],
+      "note": "The lift of the curated sun2000-inriktning -> sun2020-inriktning edge, at its year, between the two renamed siblings."
+    }
+  ]
+}

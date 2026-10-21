@@ -111,6 +111,9 @@ class ScopeResolution:
     # How often a diagnostic resolution took a path a strict one refuses (the two
     # forks below); nonzero bars its resolved bundle from a strict materialization.
     strict_refusals: int
+    # Variable FQID → the source name the ladder replaced (#1736). Name-keyed
+    # derivations that group siblings, such as the vintage lift, key on it.
+    ladder_sources: dict[str, str]
 
 
 def declared_register_fqids(
@@ -984,8 +987,10 @@ def resolve_source_scope(
     # The ladder name also replaces the source name on the variable's states and
     # per-column alias windows, which readers show in place of the variable's name;
     # a state with its own (corrected) name keeps it.
+    ladder_sources: dict[str, str] = {}
     for key, name in name_colliding_variables(formed_names, source_names).items():
         variable, source = formed_names[key], source_names[key]
+        ladder_sources[formed_at[key][0]] = source
         variables[key] = variable.model_copy(
             update={
                 "name": name,
@@ -1262,6 +1267,7 @@ def resolve_source_scope(
         tuple(coverage),
         dict(Counter(issue.code for issue in acknowledged)),
         strict_refusals,
+        ladder_sources,
     )
 
 
