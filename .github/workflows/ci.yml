@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           version: "0.12.11"
       # `uv sync` builds the reg-core-py extension (maturin) from crates/.
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2.9.2
+      - uses: Swatinem/rust-cache@v2.9.3
       - run: uv sync --frozen
       # ruff, panache and ty; commands and tool pins: scripts/gate.py.
       - run: uv run --no-project scripts/gate.py lint
@@ -39,12 +39,12 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2.9.2
+      - uses: Swatinem/rust-cache@v2.9.3
       # A prebuilt binary for `crates`' unused-dependency check; never compiled here.
-      - uses: taiki-e/install-action@v2.87.26
+      - uses: taiki-e/install-action@v2.87.29
         with:
           tool: cargo-machete@0.9.2
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           version: "0.12.11"
       - run: uv sync --frozen
@@ -78,12 +78,12 @@ jobs:
             budget: 2
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           version: "0.12.11"
       # `uv sync` builds the reg-core-py extension (maturin) from crates/.
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2.9.2
+      - uses: Swatinem/rust-cache@v2.9.3
       - run: uv sync --frozen
       - run: uv run python -m pytest "${{ matrix.suite }}" -n auto
         env:
@@ -134,12 +134,12 @@ jobs:
       # they get: without this step the gates run on whatever node the runner
       # happens to ship, and stop exercising the one production builds use.
       # Pinned to reg_webapp/Dockerfile's version — bump both together.
-      - uses: actions/setup-node@v7.0.0
+      - uses: actions/setup-node@v7.1.0
         with:
-          node-version: "26.8.1"
+          node-version: "26.12.0"
       - uses: oven-sh/setup-bun@v2.2.0
         with:
-          bun-version: "1.4.2"
+          bun-version: "1.4.3"
       # reg-core-wasm (`bun run gen:wasm`, which the gate runs): Rust for wasm32 and
       # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
       # both together with container-build.yml's edge-deploy-swecov job; a mismatch fails the
@@ -147,8 +147,8 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2.9.2
-      - uses: taiki-e/install-action@v2.87.26
+      - uses: Swatinem/rust-cache@v2.9.3
+      - uses: taiki-e/install-action@v2.87.29
         with:
           tool: wasm-bindgen@0.2.129
       - run: bun install --frozen-lockfile
@@ -174,7 +174,7 @@ jobs:
       # projects), build, the codegen drift check (TS types are codegen'd from the
       # committed Rust `openapi.json` snapshot, so regenerating must leave them
       # unchanged) and the built app's bootstrap smoke.
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.3.0
         with:
           version: "0.12.11"
       - run: uv run --no-project scripts/gate.py frontend

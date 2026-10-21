@@ -93,9 +93,9 @@ def lint() -> None:
     # The only home of the ty and panache pins; Rust formatting is in `crates`.
     run("uv run ruff check")
     run("uv run ruff format --check")
-    run("uvx --from panache-cli==3.9.0 panache format --check .")
-    run("uvx --from panache-cli==3.9.0 panache lint .")
-    run("uvx --from ty==0.0.79 ty check")
+    run("uvx --from panache-cli==3.17.0 panache format --check .")
+    run("uvx --from panache-cli==3.17.0 panache lint .")
+    run("uvx --from ty==0.0.90 ty check")
 
 
 def g0(packages: list[str] | None = None) -> None:
